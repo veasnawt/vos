@@ -61,6 +61,10 @@ Build output goes to `build/<ARCH>/`; the x86_64 self-checking test image goes t
 The kernel is freestanding (no libc, no host OS dependency at runtime).
 The `m1-32bit` tag marks the original known-good 32-bit baseline.
 
+## Documentation
+- `docs/architecture/native-software-platform.md` – proposed native application model,
+  SDK/ABI, security, packaging and compatibility architecture (design only, not implemented)
+
 ## History
 VOS was developed under the working name MyOS until 2026-10-17. Commits up
 to `5fd25cc` (including the `m1-32bit` tag) use the old name, for example in
