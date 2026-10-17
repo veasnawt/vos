@@ -103,6 +103,9 @@ void irq_handle(struct exc_frame *f)
         else
             stats.unexpected++;         /* a masked line: counted, acknowledged, never handled */
         chip->eoi(irq);
+        /* Nothing nests (IF = 0), so the acknowledged line must have left service. */
+        if (chip->in_service() & (1u << irq))
+            panic("irq: still in service at the controller after EOI");
     }
     handling = 0;
 }

@@ -64,9 +64,10 @@ struct irq_stats {
 void irq_init(void);
 /*
  * Handle one hardware interrupt taken from ring 3 (frame vector 0x20-0x2F):
- * classify it at the controller, count it, acknowledge it before returning.
- * Panics for a vector that is not in service at the controller, for nesting
- * and if IF is set.
+ * classify it at the controller, count it, acknowledge it before returning
+ * and check that it left service. Panics for a vector that is not in service
+ * at the controller, for one still in service after EOI, for nesting and if
+ * IF is set.
  */
 struct exc_frame;
 void irq_handle(struct exc_frame *f);
