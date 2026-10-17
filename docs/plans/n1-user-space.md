@@ -162,11 +162,41 @@ stage is implemented.
   - Not done: the allocator itself (N1.3); `entry_version` of the memory map is not yet checked
     (N1.3 refuses version != 0); modules above 1 GiB are rejected, not supported.
 
-### N1.3 — Physical page allocator [Planned]
+### N1.3 — Physical page allocator [Implemented and verified]
 - Bitmap over frames below 1 GiB, normalization rules of section 7, zeroed frames on
   allocation, double-free and range checks, free counter, poisoning in test builds.
 - **Tests:** synthetic memory-map self-test (section 7.3); 128 MiB and 2 GiB boots;
   allocate/free round trip restores the free count; no allocation intersects a reservation.
+- **Status (verified 2026-10-17):** `pmm.{c,h}`, tests in `selftest_pmm.c`; `make test-all`
+  passes (14 runs). Implementation notes and deviations:
+  - **Two bitmaps, not one.** `avail` (fixed after init: proven allocatable) and `alloc`
+    (currently handed out), 32 KiB each, static in `.bss`. One bit per frame cannot tell an
+    allocated frame from a protected one, so a single bitmap could not reject a free of a kernel
+    or module frame. Both bitmaps lie inside the reserved kernel image (checked by test).
+  - Memory-map validation lives in the parser (`d8a5327`): `entry_version` must be 0, at least
+    one entry, no trailing partial entry; `pmm_init_in` re-checks version and entry size.
+  - API: `pmm_init`, `pmm_alloc_frame(&phys)` (zeroed frame, `*phys = 0` on failure),
+    `pmm_free_frame` (rejects unaligned, out-of-range, protected and not-allocated frames with
+    no state change), `pmm_free_count`, `pmm_kernel` (read-only view), `pmm_check_in`
+    (recounts and checks invariants). Allocation is deterministic first-fit with a word hint.
+    A broken invariant panics; invalid frees return errors (callers must treat them as bugs).
+  - Observed (QEMU `pc`, GRUB 2.14): 128 MiB → 32443 usable frames in production (available
+    `[1 MiB, 0x7fe0000)` = 32480 frames minus 37 kernel frames); 2 GiB → 261830 in the test image
+    (261888 frames below 1 GiB minus 58), 1073610752 bytes above 1 GiB reported as ignored.
+  - Tests: 41 synthetic cases (hand-computed counts plus a per-frame oracle sharing no code with
+    `pmm.c`), 43 on the real allocator (whole bitmap equals the oracle on the real map; CR3 page
+    tables, stack, GDT/IDT, bitmaps, info block and modules are unavailable and unfreeable; 1000
+    unique zeroed allocations and an exact round trip; zeroing proven over a poisoned frame),
+    `pmm-exhaust` (drains all 32423 frames, ENOMEM with address 0, full restore). In the
+    `modules` image the 1000 allocations straddle the two module frames and skip exactly them.
+    Mutation check: removing the protect pass, reservation pass, inward rounding, zeroing,
+    double-free, protection, alignment and version checks, hint lowering, or the 2^64 overflow
+    rule each fails a test; the 1 MiB clip is backed by a second defensive pass (removing both
+    fails).
+  - Not verified / limits: frames are reachable only through the 1 GiB boot alias; RAM above
+    1 GiB is unused; single CPU, no locking (interrupts are off); poisoning only in test builds;
+    no protection against a caller that keeps using a freed frame; free-count accounting is
+    O(frames) to verify, allocation is O(words) worst case.
 
 ### N1.4 — Page tables, layout, identity-map removal [Planned]
 - Map/unmap/translate with intermediate-table allocation; `invlpg` on unmap; audit function.
@@ -266,12 +296,13 @@ for the same range, contain zero-length entries, or have `base + length` overflo
 "in use" information comes from the reservation table (kernel image, Multiboot2 info, modules,
 physical 0–1 MiB).
 
-### 7.2 Algorithm [Planned]
+### 7.2 Algorithm [Implemented in N1.3]
 The allocator bitmap covers frames `[0, 1 GiB)`. Initialization is order-independent and
 "unusable wins":
 
-1. **Validate the tag.** `entry_size >= 24` and a multiple of 8 [Implemented]; `entry_version`
-   must be 0, otherwise the allocator refuses to initialize (panic) rather than guess.
+1. **Validate the tag.** `entry_size >= 24` and a multiple of 8, `entry_version` 0, at least one
+   entry, no partial entry — checked by the parser (boot panics otherwise) and again by
+   `pmm_init_in` (`PMM_EMMAP`).
 2. **Mark every frame used.**
 3. **Free pass.** For each entry with type 1 (available): skip `length == 0`; if `base + length`
    overflows, skip the entry; clip to `[1 MiB, 1 GiB)`; round the start **up** and the end **down**
@@ -279,9 +310,11 @@ The allocator bitmap covers frames `[0, 1 GiB)`. Initialization is order-indepen
 4. **Protect pass.** For each entry with any other type (reserved, ACPI reclaimable, ACPI NVS,
    bad memory, unknown): if `base + length` overflows, treat the end as `2^64`; round the start
    **down** and the end **up**; set the bits for every intersecting frame below 1 GiB.
-5. **Reservation pass.** Set the bits for every reservation, rounded outward.
+5. **Reservation pass.** Set the bits for every reservation, rounded outward. The implementation
+   then clears everything below 1 MiB once more (defence in depth).
 6. **Count and report** free frames; in test builds assert that no free frame intersects any
-   non-available entry or reservation.
+   non-available entry or reservation. (Implemented with inverted polarity: the `avail` bitmap
+   starts all-zero and "used" means `avail` clear or `alloc` set.)
 
 Because steps 4 and 5 run after step 3 and only ever set bits, overlapping or contradictory
 entries always resolve to "not allocatable", regardless of order. ACPI-reclaimable memory is
@@ -295,7 +328,7 @@ replace steps 3–4: the allocator must still normalize the whole map. The exist
 treat a non-available entry whose end overflows as extending to 2^64, and ignore available
 entries that overflow.
 
-### 7.3 Tests [Planned]
+### 7.3 Tests [Implemented in N1.3]
 - A `VOS_TEST` self-test runs the same normalization code on synthetic maps into a small test
   bitmap: unsorted entries, available range overlapping a reserved one (both orders), duplicate
   entries, zero length, overflow (`base = 2^64 - 4096`), unaligned bounds, an unknown type, and a
