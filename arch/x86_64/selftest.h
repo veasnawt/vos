@@ -19,6 +19,8 @@ int selftest_pmm_exhaust(const struct boot_info *bi);
 
 /* Page-table manager, identity-map removal and kernel survival (restores all state). */
 int selftest_vmm(void);
+/* User address spaces and ring 3 (restores all state). */
+int selftest_user(void);
 /* Isolated test cases: each ends in a CPU page fault (never returns). */
 void selftest_vmm_fault_lowaccess(void);
 void selftest_vmm_fault_stale_tlb(void);

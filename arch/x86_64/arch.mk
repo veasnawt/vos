@@ -8,9 +8,9 @@ ARCH_CFLAGS     := -m64 -mcmodel=kernel -mno-red-zone -mgeneral-regs-only \
 ARCH_ASFLAGS    := -m64
 ARCH_LDFLAGS    := -m elf_x86_64 -z max-page-size=0x1000
 ARCH_OBJS       := boot.o entry.o kernel.o bootinfo.o console.o cpu.o exception.o gdt.o idt.o \
-                   lib.o panic.o pmm.o resv.o vmm.o
+                   lib.o panic.o pmm.o process.o resv.o vmm.o
 ifeq ($(VOS_TEST),1)
-ARCH_OBJS       += selftest.o selftest_pmm.o selftest_vmm.o
+ARCH_OBJS       += selftest.o selftest_pmm.o selftest_user.o selftest_vmm.o
 endif
 QEMU            := qemu-system-x86_64
 MULTIBOOT_CHECK := --is-x86-multiboot2
@@ -31,9 +31,11 @@ arch-test: iso
 	    scripts/test.sh $(ISO) $(BUILD)/serial.log 'Hello from VOS!' 'boot: checks passed'
 	$(MAKE) --no-print-directory ARCH=$(ARCH) VOS_TEST=1 iso
 	scripts/exit-test.sh boot-128M $(TEST_ISO) 33 'selftest: pmm-synthetic ' \
-	    'selftest: pmm-kernel ' 'selftest: 1000 frames from ' 'selftest: vmm ' 'VOS-TEST: PASS' --
+	    'selftest: pmm-kernel ' 'selftest: 1000 frames from ' 'selftest: vmm ' 'selftest: user ' \
+	    'VOS-TEST: PASS' --
 	MEM=2G scripts/exit-test.sh boot-2G $(TEST_ISO) 33 'selftest: pmm-synthetic ' \
-	    'selftest: pmm-kernel ' 'selftest: 1000 frames from ' 'selftest: vmm ' 'VOS-TEST: PASS' --
+	    'selftest: pmm-kernel ' 'selftest: 1000 frames from ' 'selftest: vmm ' 'selftest: user ' \
+	    'VOS-TEST: PASS' --
 	scripts/exit-test.sh no-long-mode $(TEST_ISO) 35 'CPU lacks long mode' -cpu qemu32
 	$(MAKE) --no-print-directory ARCH=$(ARCH) VOS_TEST=1 VOS_TEST_CASE=panic iso
 	scripts/exit-test.sh panic build/$(ARCH)-test-panic/vos.iso 35 \
@@ -54,7 +56,7 @@ arch-test: iso
 	scripts/exit-test.sh modules build/$(ARCH)-test-modules/vos.iso 33 \
 	    'boot: kernel command line "' 'vos.test=1' 'boot: modules 2' 'boot: module 0 ' \
 	    'boot: module 1 ' 'selftest: modules ' 'selftest: pmm-kernel ' 'selftest: vmm ' \
-	    'VOS-TEST: PASS' --
+	    'selftest: user ' 'VOS-TEST: PASS' --
 	$(MAKE) --no-print-directory ARCH=$(ARCH) VOS_TEST=1 VOS_TEST_CASE=pmm-exhaust iso
 	scripts/exit-test.sh pmm-exhaust build/$(ARCH)-test-pmm-exhaust/vos.iso 33 \
 	    'selftest: drained ' 'selftest: pmm-exhaust ' 'VOS-TEST: PASS' --

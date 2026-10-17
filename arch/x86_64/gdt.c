@@ -5,6 +5,8 @@
 
 #define KERNEL_ENTRY_STACK_SIZE 16384
 #define IST1_STACK_SIZE         4096
+#define STACK_CANARY            0xC0DEC0DEC0DEC0DEULL
+#define CANARY_WORDS            8       /* at the lowest addresses: overflow hits them first */
 
 struct tss {
     uint32_t reserved0;
@@ -49,6 +51,16 @@ uint64_t gdt_tss_ist1(void)
     return tss.ist[IST_DOUBLE_FAULT - 1];
 }
 
+int gdt_stack_canaries_intact(void)
+{
+    const uint64_t *e = (const uint64_t *)kernel_entry_stack, *d = (const uint64_t *)ist1_stack;
+
+    for (int i = 0; i < CANARY_WORDS; i++)
+        if (e[i] != STACK_CANARY || d[i] != STACK_CANARY)
+            return 0;
+    return 1;
+}
+
 int gdt_in_ist1_stack(uint64_t addr)
 {
     return addr >= (uint64_t)ist1_stack && addr < (uint64_t)ist1_stack + sizeof(ist1_stack);
@@ -56,6 +68,10 @@ int gdt_in_ist1_stack(uint64_t addr)
 
 void gdt_init(void)
 {
+    for (int i = 0; i < CANARY_WORDS; i++) {
+        ((uint64_t *)kernel_entry_stack)[i] = STACK_CANARY;
+        ((uint64_t *)ist1_stack)[i] = STACK_CANARY;
+    }
     tss.rsp[0] = (uint64_t)kernel_entry_stack + sizeof(kernel_entry_stack);
     tss.ist[IST_DOUBLE_FAULT - 1] = (uint64_t)ist1_stack + sizeof(ist1_stack);
     /* Base beyond the TSS limit: no I/O permission bitmap, so CPL 3 gets no port access. */
