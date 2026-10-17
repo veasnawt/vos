@@ -56,6 +56,11 @@ include $(ARCH_DIR)/arch.mk
 
 OBJS := $(addprefix $(BUILD)/,$(ARCH_OBJS))
 
+# x86_64 has a user space (runtime and applications), built separately.
+ifeq ($(ARCH),x86_64)
+include user/user.mk
+endif
+
 .PHONY: all verify iso run test test-all arch-test clean
 all: $(KERNEL)
 
