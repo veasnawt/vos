@@ -276,15 +276,45 @@ stage is implemented.
     restore, `cld`, dispatch, CR3 switch-back, frame release, U bit on PML4[511], code/stack
     permissions, fault state, re-run guard) were each detected. With user IF=1, an IRQ from the
     unprogrammed PIC arrives on vector 8 and is caught only by the selector check.
-  - **Open:** plan 8.2 says FPU/SSE are unavailable. SSE is (#UD, CR4.OSFXSR = 0) but x87 is
-    usable from ring 3 (CR0.EM = 0) and its state is not cleared between processes. Needs a
-    decision (CR0.EM = 1 or FNINIT on entry) before more than one program exists.
+  - **Open (resolved in N1.6):** x87 was usable from ring 3 (CR0.EM = 0); N1.6 sets CR0.EM.
   - **Not tested:** SMEP (kernel execution of a user page), SMAP (disabled), NMI/#MC during user
     mode, real hardware.
 
-### N1.6 — System-call ABI v0 and user-memory access [Planned]
+### N1.6 — System-call ABI v0 and user-memory access [Implemented and verified]
 - `exit`, `debug_write` (section 8.1). `copy_from_user` per section 9.3, written so that SMAP
   bracketing and an exception fixup can be added without changing callers. SMAP stays disabled.
+- **Status (verified 2026-10-17):** `syscall.{c,h}`, `usercopy.{c,h}`, resume path in `entry.S`
+  and `process.c`, CR0.EM in `cpu.c`; tests in `selftest_user.c` / `user_progs.S`. `make
+  test-all` passes (19 QEMU runs plus the negative `forge-check` boot); 122 user cases run in
+  boot-128M, boot-2G, modules and cpu-max.
+  - **Resume:** a non-terminating `int $0x80` is dispatched, the result stored in the saved rax,
+    the frame re-validated (CS 0x23, SS 0x1B, IF 0, IOPL 0, lower-half RIP/RSP, process CR3,
+    frame at the top of TSS.RSP0, canaries) and `TRAP_RESUME` returned; only then does the stub
+    restore all registers from the frame and IRETQ the CPU-pushed frame, back to the instruction
+    after `int $0x80` in the same process. Exit and exceptions still end the process.
+  - **Registers:** every register except rax, and RFLAGS (CF and DF tested), are preserved; this
+    deviates from section 8.1's reservation of rcx/r11 (per the N1.6 request); a SYSCALL-based
+    ABI will need a new ABI version. Test builds poison all live registers after the frame is
+    saved, so a register the resume path forgot would be visible (this caught a vacuous test).
+  - **`copy_from_user`:** section 9.3 as written, except that the bytes are read through the
+    kernel alias of the validated frames instead of through the user address: the kernel never
+    dereferences a user pointer, the copy cannot fault, and it needs no `stac`/`clac` when SMAP
+    is enabled. All pages are validated before the first byte is copied.
+  - **`debug_write`:** length > 256 → `-VOS_EINVAL` (checked first), invalid bytes →
+    `-VOS_EFAULT`, length 0 → 0 without examining the pointer. Output: every line prefixed by
+    the kernel with `user[<name>]: ` (also after embedded newlines), every byte outside 0x20–0x7E
+    except newline printed as `?`, always ending at a line end. `exit-test.sh` matches kernel
+    markers only outside `user[` lines; `forge-check` proves a user-printed marker is not found.
+  - **x87:** CR0.EM = 1 with MP = TS = 0 (read back). The kernel `.text` of every build contains no
+    x87/MMX/SSE instruction (disassembly check). User `fld1` → #NM, `pxor %mm0` and `xorps` →
+    #UD; the process is killed, the kernel continues. QEMU TCG does not trap `emms` (an emulator
+    deviation from the SDM); it only resets the tag word, unreadable from ring 3 without x87.
+  - **Fault injection (all detected):** lost register restores (r11, rcx, rdi, rbx, r15, rax), no
+    length limit, no sanitizing, prefix on the first line only, reading the user pointer directly
+    (kernel #PF), positive ENOSYS, no CR0.EM, no user-line filter in the harness, and in
+    `copy_from_user` no U check, a weakened range check, first-page-only validation.
+  - **Not done / not tested:** SMAP (still disabled; section 9.4 prerequisites 2–6 remain for any
+    future direct user access), `copy_to_user`, real hardware.
 
 ### N1.7 — User runtime and `hello` (build only) [Planned]
 - `user/` tree: `crt0.S` (section 8.3), system-call stubs (the only place `int $0x80` appears),
@@ -409,12 +439,14 @@ entries that overflow.
 
 ## 8. ABI v0 and executable requirements
 
-### 8.1 System calls [Planned]
+### 8.1 System calls [Implemented in N1.6]
 - Entry: `int $0x80`. Number in `rax`; arguments in `rdi, rsi, rdx, r10, r8, r9`; result in
   `rax` (non-negative = success, negative = VOS error).
-- **Clobbers:** `rax`, `rcx`, `r11` (reserving `rcx`/`r11` now keeps stubs valid when SYSCALL,
-  which overwrites them, replaces `int $0x80`). All other general-purpose registers and RFLAGS
-  are preserved.
+- **Clobbers:** `rax` only (implemented in N1.6, as requested then). All other general-purpose
+  registers, RFLAGS and the user stack, including the red zone, are preserved. (The original
+  plan reserved `rcx`/`r11` for a later SYSCALL entry; such an entry will need a new ABI
+  version.)
+- No floating point: x87 instructions raise #NM, MMX/SSE #UD (CR0.EM = 1).
 - Unused argument registers are ignored.
 
 | Number | Name | Arguments | Result |
@@ -440,7 +472,7 @@ lets a later loader reject v0 binaries.
 | RFLAGS | `0x2` (IF = 0, IOPL = 0, DF = 0, AC = 0) |
 | CS / SS | `0x23` / `0x1B` |
 | FS/GS base, TLS | none |
-| FPU/SSE | unavailable (#UD) |
+| FPU/SSE | unavailable: x87 → #NM, MMX/SSE → #UD (CR0.EM = 1 since N1.6) |
 
 ### 8.3 Stack alignment (concern A)
 **[Fact]** The System V AMD64 psABI requires the stack to be "16 (32 or 64) byte aligned
@@ -540,7 +572,7 @@ leave the rest zero, map user-accessible with W only for `PF_W` and NX unless `P
 - **Single-thread assumption.** Validation of user memory followed by a copy is race-free only
   because there is one thread, interrupts are off and there is no demand paging.
 
-### 9.3 `copy_from_user` [Planned]
+### 9.3 `copy_from_user` [Implemented in N1.6; reads through the kernel alias, see N1.6 status]
 1. `len > limit` → `-VOS_EINVAL`; `len == 0` → success.
 2. `end = ptr + len` must not overflow; `[ptr, end)` must lie in `[0x400000, 0x0000800000000000)`.
 3. Walk the current user page tables for every page in the range: present and U/S at every
