@@ -162,8 +162,13 @@ void kernel_main(uint32_t mb2_magic, uint32_t mb2_info)
     serial_puts(first_failure ? "boot: FAILED\r\n" : "boot: checks passed\r\n");
 #ifdef VOS_TEST
     check(selftest_bootinfo() == 0, "bootinfo/reservation self-test");
+    check(selftest_pmm_synthetic() == 0, "pmm synthetic self-test");
+    check(selftest_pmm_kernel(&bi, &boot_resv) == 0, "pmm kernel self-test");
 #ifdef VOS_TEST_CASE_modules
     check(selftest_modules(&bi, &boot_resv) == 0, "GRUB module delivery");
+#endif
+#ifdef VOS_TEST_CASE_pmm_exhaust
+    check(selftest_pmm_exhaust(&bi) == 0, "pmm exhaustion");
 #endif
 #endif
 #ifdef VOS_TEST_CASE_panic
