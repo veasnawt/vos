@@ -8,6 +8,9 @@
 #define EFER_LMA        (1ULL << 10)
 #define EFER_NXE        (1ULL << 11)
 
+#define CR0_MP          (1ULL << 1)
+#define CR0_EM          (1ULL << 2)
+#define CR0_TS          (1ULL << 3)
 #define CR0_WP          (1ULL << 16)
 #define CR4_UMIP        (1ULL << 11)
 #define CR4_SMEP        (1ULL << 20)
@@ -106,7 +109,10 @@ static inline void cpu_halt(void)
     __asm__ volatile ("hlt");
 }
 
-/* Enable CR0.WP, EFER.NXE (required) and SMEP/UMIP (when present). */
+/*
+ * Enable CR0.WP, EFER.NXE (required) and SMEP/UMIP (when present), and set
+ * CR0.EM so x87 instructions raise #NM and MMX/SSE raise #UD (ABI v0: no FPU).
+ */
 void cpu_init_protections(void);
 
 #endif

@@ -424,6 +424,24 @@ up_guard:
     NOFAULT
 up_guard_end:
 
+PROG x87                            /* CR0.EM = 1: #NM */
+up_x87:
+    fld1
+    NOFAULT
+up_x87_end:
+
+PROG mmx                            /* CR0.EM = 1: #UD (QEMU TCG lets EMMS through, see plan) */
+up_mmx:
+    pxor %mm0, %mm0
+    NOFAULT
+up_mmx_end:
+
+PROG sse                            /* CR0.EM = 1 (and CR4.OSFXSR = 0): #UD */
+up_sse:
+    xorps %xmm0, %xmm0
+    NOFAULT
+up_sse_end:
+
 /*
  * uint64_t call_check_callee_saved(int (*fn)(void *), void *arg, int *result)
  * Loads known values into rbx, rbp, r12-r15, calls fn(arg), stores its result

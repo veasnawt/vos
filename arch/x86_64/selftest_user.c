@@ -59,6 +59,9 @@ DECLARE_PROG(nullread);
 DECLARE_PROG(codewrite);
 DECLARE_PROG(execstack);
 DECLARE_PROG(guard);
+DECLARE_PROG(x87);
+DECLARE_PROG(mmx);
+DECLARE_PROG(sse);
 #define PROG(n) up_##n, (size_t)(up_##n##_end - up_##n)
 uint64_t call_check_callee_saved(int (*fn)(void *), void *arg, int *result);
 
@@ -503,6 +506,15 @@ static void test_user_faults(void)
         expect(killed_by(13, 0), "UMIP on: user sgdt raises #GP(0)");
     else
         expect(last.state == PROC_EXITED && last.exit_status == 1, "UMIP off: user sgdt executes");
+
+    /* No FPU for user programs (ABI v0): the CPU enforces it through CR0.EM. */
+    expect((read_cr0() & CR0_EM) && !(read_cr0() & (CR0_MP | CR0_TS)), "CR0.EM = 1, MP = 0, TS = 0");
+    run_prog("x87", PROG(x87), 0, 0);
+    expect(killed_by(7, 0) && last.trap.rip == PROC_CODE_VA, "user fld1: #NM, process killed");
+    run_prog("mmx", PROG(mmx), 0, 0);
+    expect(killed_by(6, 0) && last.trap.rip == PROC_CODE_VA, "user MMX pxor: #UD");
+    run_prog("sse", PROG(sse), 0, 0);
+    expect(killed_by(6, 0) && last.trap.rip == PROC_CODE_VA, "user xorps: #UD");
 
     /* The kernel launches a normal program after all of these. */
     expect(run_prog("exit42", PROG(exit42), 0, 0) == PROC_EXITED && last.exit_status == 42,

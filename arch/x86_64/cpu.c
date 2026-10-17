@@ -32,7 +32,12 @@ void cpu_init_protections(void)
     }
 
     wrmsr(MSR_EFER, rdmsr(MSR_EFER) | EFER_NXE);
-    write_cr0(read_cr0() | CR0_WP);
+    /*
+     * EM = 1 (MP = 0, TS = 0): no x87 for anyone. The kernel is built with
+     * -mgeneral-regs-only and contains no x87/MMX/SSE instruction, so only
+     * user code is affected: x87 -> #NM, MMX/SSE -> #UD (Intel SDM 2.5).
+     */
+    write_cr0((read_cr0() | CR0_WP | CR0_EM) & ~(CR0_MP | CR0_TS));
     uint64_t cr4 = read_cr4();
     if (smep)
         cr4 |= CR4_SMEP;
@@ -40,7 +45,8 @@ void cpu_init_protections(void)
         cr4 |= CR4_UMIP;
     write_cr4(cr4);
 
-    if (!(rdmsr(MSR_EFER) & EFER_NXE) || !(read_cr0() & CR0_WP) ||
+    if (!(rdmsr(MSR_EFER) & EFER_NXE) || !(read_cr0() & CR0_WP) || !(read_cr0() & CR0_EM) ||
+        (read_cr0() & (CR0_MP | CR0_TS)) ||
         (smep && !(read_cr4() & CR4_SMEP)) || (umip && !(read_cr4() & CR4_UMIP)))
         panic("CPU protection bits did not stick");
 
@@ -49,6 +55,7 @@ void cpu_init_protections(void)
     serial_puts(" umip=");
     serial_puts(umip ? "on" : "unsupported");
     serial_puts(smap ? " smap=disabled(deferred)" : " smap=unsupported");
+    serial_puts(" x87=off(em)");
     serial_puts("\r\ncpu: cr0=");
     serial_hex(read_cr0());
     serial_puts(" cr4=");
