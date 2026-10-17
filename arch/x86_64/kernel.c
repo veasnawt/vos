@@ -267,6 +267,7 @@ void kernel_main(uint32_t mb2_magic, uint32_t mb2_info)
 #endif
 #ifdef VOS_TEST
     selftest_kmap_case(first_failure != 0);
+    selftest_sched_case(&bi, first_failure != 0);
 #endif
 #ifdef VOS_TEST_CASE_panic
     panic("test case: deliberate panic");

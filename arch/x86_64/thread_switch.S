@@ -13,9 +13,11 @@
  * idle_halt
  *   The idle thread's wait: "sti; hlt", then cli. STI delays interrupt
  *   recognition by one instruction, so an interrupt pending at the sti, or
- *   arriving while halted, is taken with the return address idle_after_hlt;
- *   the only kernel code that ever runs with IF = 1 is this hlt and the cli
- *   at idle_after_hlt (sched_idle_irq accepts a ring-0 IRQ only there).
+ *   arriving while halted, is taken with the return address idle_after_hlt.
+ *   The IRETQ back restores IF = 1, so another interrupt that became pending
+ *   can be taken before the cli there, with the same return address. The
+ *   only kernel code that ever runs with IF = 1 is this hlt and the cli at
+ *   idle_after_hlt (sched_idle_irq accepts a ring-0 IRQ only there).
  *
  * thread_start
  *   The return address of a new thread's initial frame (thread.c). Entered by

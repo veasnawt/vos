@@ -4,6 +4,8 @@
  * what they observed in kernel memory, and the boot thread checks it.
  */
 #include "selftest.h"
+#include "app.h"
+#include "bootinfo.h"
 #include "console.h"
 #include "cpu.h"
 #include "gdt.h"
@@ -11,6 +13,7 @@
 #include "kmap.h"
 #include "lib.h"
 #include "memlayout.h"
+#include "panic.h"
 #include "thread.h"
 #include "vmm.h"
 
@@ -269,8 +272,22 @@ static void test_idle(void)
 
     thread_sleep(5);                    /* nothing else can run: only the idle thread */
     sched_test_last_idle_irq(&rip, &rflags, &rsp, &lo, &hi);
-    expect(irq_ticks() - t0 >= 5 && s->idle_irqs - irqs0 >= 5 && s->idle_halts - halts0 >= 5,
-           "boot thread asleep 5 ticks: the idle thread halted and took the timer IRQs in ring 0");
+    /*
+     * Every tick of the sleep is an IRQ taken by the idle thread. A halt can
+     * see more than one: the IRETQ back restores IF = 1, so an IRQ that became
+     * pending meanwhile is taken just before the cli (RIP still after hlt).
+     */
+    int ok = irq_ticks() - t0 >= 5 && s->idle_irqs - irqs0 == irq_ticks() - t0 && s->idle_halts - halts0 >= 1;
+    if (!ok) {
+        serial_puts("selftest:   ticks ");
+        serial_dec(irq_ticks() - t0);
+        serial_puts(" idle irqs ");
+        serial_dec(s->idle_irqs - irqs0);
+        serial_puts(" halts ");
+        serial_dec(s->idle_halts - halts0);
+        serial_puts("\r\n");
+    }
+    expect(ok, "boot thread asleep 5 ticks: the idle thread halted and took every timer IRQ in ring 0");
     expect(rip == (uint64_t)idle_after_hlt && (rflags & (RFLAGS_IF | RFLAGS_IOPL)) == RFLAGS_IF &&
            rsp > lo && rsp <= hi, "idle IRQ frame: RIP after hlt, IF 1, IOPL 0, on the idle thread's own stack");
     expect(!(read_rflags() & RFLAGS_IF) && thread_is_boot() && irq_chip()->in_service() == 0,
@@ -428,4 +445,74 @@ int selftest_sched(void)
     serial_dec(failures);
     serial_puts(" failed\r\n");
     return failures;
+}
+
+/* ---- isolated cases: each ends in a panic or a CPU exception (exit status 35) ---- */
+
+#if defined(VOS_TEST_CASE_thread_overflow) || defined(VOS_TEST_CASE_sched_deadlock) || \
+    defined(VOS_TEST_CASE_proc_on_worker)
+#define SCHED_CASE 1
+#endif
+
+#ifdef VOS_TEST_CASE_thread_overflow
+static uint64_t __attribute__((noinline)) recurse(uint64_t n)
+{
+    volatile uint8_t buf[256];
+
+    buf[n & 255] = (uint8_t)n;
+    if (n == ~0ULL)
+        return 0;
+    return recurse(n + 1) + buf[n & 255];
+}
+
+static void overflow_worker(void *arg)
+{
+    (void)arg;
+    serial_puts("fault-test: unbounded recursion on a kernel thread's stack\r\n");
+    serial_puts("fault-test: expect vec=8 err=0x0 cr2page=");
+    serial_hex(thread_current()->stack_lo - THREAD_GUARD_SIZE);
+    serial_puts(" stack=ist1\r\n");
+    recurse(0);
+}
+#endif
+
+#ifdef VOS_TEST_CASE_proc_on_worker
+static const struct boot_info *case_bi;
+
+static void proc_worker(void *arg)
+{
+    (void)arg;
+    serial_puts("sched-test: a worker thread tries to run the boot application\r\n");
+    app_run_boot_module(case_bi);
+}
+#endif
+
+void selftest_sched_case(const struct boot_info *bi, int self_tests_failed)
+{
+    (void)bi;
+#ifdef SCHED_CASE
+    if (self_tests_failed) {
+        serial_puts("sched-test: skipped, a self-test failed\r\n");
+        return;
+    }
+#endif
+    (void)self_tests_failed;
+#ifdef VOS_TEST_CASE_thread_overflow
+    thread_create("overflow", overflow_worker, 0);
+    thread_yield();
+#endif
+#ifdef VOS_TEST_CASE_sched_deadlock
+    static struct wait_queue never;
+    serial_puts("sched-test: the boot thread blocks on a queue nobody wakes\r\n");
+    thread_block(&never);
+#endif
+#ifdef VOS_TEST_CASE_proc_on_worker
+    case_bi = bi;
+    thread_create("proc", proc_worker, 0);
+    thread_yield();
+#endif
+#ifdef SCHED_CASE
+    serial_puts("sched-test: the case returned\r\n");
+    panic("test case: expected failure did not happen");
+#endif
 }

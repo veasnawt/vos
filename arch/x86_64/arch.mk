@@ -145,6 +145,18 @@ arch-test: iso
 	scripts/exit-test.sh kernel-irq-vector build/$(ARCH)-test-kernel-irq-vector/vos.iso 35 \
 	    'selftest: irq ' 'exc: IRQ vector 0x20 in ring 0' \
 	    'panic: hardware interrupt vector in ring 0 (the kernel runs with IF=0)' 'VOS-TEST: FAIL' --
+	$(MAKE) --no-print-directory ARCH=$(ARCH) VOS_TEST=1 VOS_TEST_CASE=thread-overflow iso
+	scripts/exit-test.sh thread-overflow build/$(ARCH)-test-thread-overflow/vos.iso 35 'selftest: sched ' \
+	    'exc: #DF vec=8 err=0x0 cs=0x8' 'stack=ist1' 'panic: #DF double fault' 'VOS-TEST: FAIL' --
+	scripts/check-fault.sh build/$(ARCH)-test-thread-overflow/thread-overflow.serial.log
+	$(MAKE) --no-print-directory ARCH=$(ARCH) VOS_TEST=1 VOS_TEST_CASE=sched-deadlock iso
+	scripts/exit-test.sh sched-deadlock build/$(ARCH)-test-sched-deadlock/vos.iso 35 'selftest: sched ' \
+	    'sched-test: the boot thread blocks on a queue nobody wakes' \
+	    'panic: sched: every thread is blocked and none sleeps (lost wakeup?)' 'VOS-TEST: FAIL' --
+	$(MAKE) --no-print-directory ARCH=$(ARCH) VOS_TEST=1 VOS_TEST_CASE=proc-on-worker iso
+	scripts/exit-test.sh proc-on-worker build/$(ARCH)-test-proc-on-worker/vos.iso 35 'selftest: sched ' \
+	    'sched-test: a worker thread tries to run the boot application' \
+	    'panic: process: user programs run only on the boot thread (N2.2)' 'VOS-TEST: FAIL' --
 	$(MAKE) --no-print-directory ARCH=$(ARCH) VOS_TEST=1 VOS_TEST_CASE=irq iso
 	scripts/exit-test.sh irq build/$(ARCH)-test-irq/vos.iso 33 'irq: 8259 master 0x20-0x27' \
 	    'suite: t-spin expect=budget ticks=50 ok=0 => PASS' 'suite: t-irqregs expect=budget ticks=50 ok=0 => PASS' \

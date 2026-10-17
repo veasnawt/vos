@@ -62,7 +62,7 @@ ifeq ($(ARCH),x86_64)
 include user/user.mk
 endif
 
-.PHONY: all verify iso run test test-all arch-test clean
+.PHONY: all verify iso run debug test test-all arch-test clean
 all: $(KERNEL)
 
 $(BUILD):
@@ -93,6 +93,12 @@ iso: verify $(foreach f,$(ARCH_ISO_FILES) $(ISO_FILES),$(firstword $(subst :, ,$
 
 run: iso
 	$(QEMU) -cdrom $(ISO)
+
+# Like run, but QEMU waits for a debugger on TCP port 1234 (-s -S) and prints
+# the serial port here. GDB is not installed by the build; see
+# docs/plans/n2-foundation.md (tooling) for the commands.
+debug: iso
+	$(QEMU) -cdrom $(ISO) -serial stdio -display none -no-reboot -s -S
 
 # Headless QEMU tests for the selected ARCH; see arch/<name>/arch.mk.
 test: arch-test
