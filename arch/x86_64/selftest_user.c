@@ -9,6 +9,7 @@
 #include "selftest.h"
 #include "console.h"
 #include "cpu.h"
+#include "exception.h"
 #include "gdt.h"
 #include "lib.h"
 #include "memlayout.h"
@@ -192,13 +193,14 @@ static int run_prog(const char *name, const uint8_t *code, size_t len, int has_a
     int ok = result == last.state && (result == PROC_EXITED || result == PROC_KILLED) &&
              rerun == PROC_ESTATE && mismatch == 0 && pmm_free_count() == f0 &&
              gdt_stack_canaries_intact() && (read_cr3() & PTE_ADDR) == vmm_kernel_root() &&
-             last.trap.cs == GDT_USER_CS && last.trap.ss == GDT_USER_DS;
+             last.trap.cs == GDT_USER_CS && last.trap.ss == GDT_USER_DS &&
+             last.trap.kframe + sizeof(struct exc_frame) == gdt_tss_rsp0();
     if (!ok) {
         serial_puts("selftest: run post-conditions failed for ");
         serial_puts(name);
         serial_puts("\r\n");
     }
-    expect(ok, "run: ended with CS 0x23/SS 0x1B, kernel resumed intact, no rerun, no leak");
+    expect(ok, "run: CS 0x23/SS 0x1B frame at the top of RSP0, kernel resumed intact, no rerun, no leak");
     return result;
 }
 
@@ -241,6 +243,12 @@ static void test_ring3_exit(void)
         cycles_ok &= run_prog("exit42", PROG(exit42), 0, 0) == PROC_EXITED && last.exit_status == 42;
     expect(cycles_ok && pmm_free_count() == f0 && pmm_check_in(pmm_kernel()) == PMM_OK,
            "20 ring-3 runs leak nothing");
+
+    /* The canary check used after every run detects an overwritten word. */
+    gdt_test_smash_canary(1);
+    int detected = !gdt_stack_canaries_intact();
+    gdt_test_smash_canary(0);
+    expect(detected && gdt_stack_canaries_intact(), "RSP0 canary check detects corruption");
 }
 
 /* ---- user faults end the process, never the kernel ---- */

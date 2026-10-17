@@ -219,6 +219,7 @@ void proc_user_trap(struct exc_frame *f)
     p->trap.cr2 = f->vector == 14 ? read_cr2() : 0;
     p->trap.rax = f->rax;
     p->trap.rdi = f->rdi;
+    p->trap.kframe = (uint64_t)f;
 
     if (f->vector == IDT_SYSCALL) {
         if (f->rax == SYS_EXIT) {

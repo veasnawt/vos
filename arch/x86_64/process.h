@@ -46,6 +46,7 @@
 struct proc_trap {
     uint64_t vector, error, rip, cs, rflags, rsp, ss, cr2;
     uint64_t rax, rdi;
+    uint64_t kframe;                    /* kernel address of the saved frame (on the RSP0 stack) */
 };
 
 struct process {

@@ -20,6 +20,10 @@ uint64_t gdt_tss_rsp0(void);
 uint64_t gdt_tss_ist1(void);
 /* Nonzero if the canaries at the bottom of the RSP0 and IST1 stacks are intact. */
 int gdt_stack_canaries_intact(void);
+#ifdef VOS_TEST
+/* Test hook: overwrite (1) or restore (0) one RSP0 stack canary word. */
+void gdt_test_smash_canary(int smash);
+#endif
 /* Nonzero if addr lies inside the double-fault IST stack. */
 int gdt_in_ist1_stack(uint64_t addr);
 

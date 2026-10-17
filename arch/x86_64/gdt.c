@@ -61,6 +61,13 @@ int gdt_stack_canaries_intact(void)
     return 1;
 }
 
+#ifdef VOS_TEST
+void gdt_test_smash_canary(int smash)
+{
+    ((uint64_t *)kernel_entry_stack)[CANARY_WORDS - 1] = smash ? 0 : STACK_CANARY;
+}
+#endif
+
 int gdt_in_ist1_stack(uint64_t addr)
 {
     return addr >= (uint64_t)ist1_stack && addr < (uint64_t)ist1_stack + sizeof(ist1_stack);
