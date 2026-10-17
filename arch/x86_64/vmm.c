@@ -423,6 +423,70 @@ int vmm_init(void)
     return VMM_OK;
 }
 
+struct dtr {
+    uint16_t limit;
+    uint64_t base;
+} __attribute__((packed));
+
+int vmm_remove_identity(void)
+{
+    struct vmm_mapping m;
+    struct dtr gdtr, idtr;
+    uint64_t rip, rsp;
+    uint16_t tr;
+
+    __asm__ volatile ("lea 0(%%rip), %0" : "=r"(rip));
+    __asm__ volatile ("mov %%rsp, %0" : "=r"(rsp));
+    __asm__ volatile ("sgdt %0" : "=m"(gdtr));
+    __asm__ volatile ("sidt %0" : "=m"(idtr));
+    __asm__ volatile ("str %0" : "=r"(tr));
+
+    diag = "";
+    if (!kernel_root || (read_cr3() & PTE_ADDR) != kernel_root)
+        diag = "not running on the kernel address space";
+    else if (rip < KERNEL_VMA)
+        diag = "still executing below the higher half";
+    else if (rsp < KERNEL_VMA)
+        diag = "stack below the higher half";
+    else if (gdtr.base < KERNEL_VMA || idtr.base < KERNEL_VMA)
+        diag = "GDT or IDT below the higher half";
+    else if (tr != GDT_TSS || gdt_tss_base() < KERNEL_VMA || gdt_tss_rsp0() < KERNEL_VMA ||
+             gdt_tss_ist1() < KERNEL_VMA)
+        diag = "TSS or its stacks below the higher half";
+    if (*diag)
+        return VMM_ESTATE;
+
+    uint64_t *l4 = phys_to_virt(kernel_root);
+    for (int i = 1; i < 256; i++) {
+        if (l4[i]) {
+            diag = "unexpected lower-half PML4 entry";
+            return VMM_ESTATE;
+        }
+    }
+    if (!(l4[0] & PTE_P) || (l4[0] & PTE_PS)) {
+        diag = "identity map not present as expected";
+        return VMM_ESTATE;
+    }
+
+    l4[0] = 0;
+    uint64_t cr4 = read_cr4();
+    if (cr4 & CR4_PGE) {                /* global entries survive a CR3 reload */
+        write_cr4(cr4 & ~CR4_PGE);
+        write_cr4(cr4);
+    }
+    write_cr3(read_cr3());              /* drop every cached translation */
+
+    if (vmm_lookup(kernel_root, PMM_LOW_LIMIT, &m) != VMM_ENOTMAPPED ||
+        vmm_lookup(kernel_root, 0, &m) != VMM_ENOTMAPPED ||
+        vmm_lookup(kernel_root, BOOT_MAP_LIMIT - 1, &m) != VMM_ENOTMAPPED ||
+        vmm_lookup(kernel_root, KERNEL_VMA + PMM_LOW_LIMIT, &m) != VMM_OK ||
+        m.pa != PMM_LOW_LIMIT) {
+        diag = "page tables do not match the expected state after removal";
+        return VMM_ESTATE;
+    }
+    return VMM_OK;
+}
+
 uint64_t vmm_kernel_root(void)
 {
     return kernel_root;

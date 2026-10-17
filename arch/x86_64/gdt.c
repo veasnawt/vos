@@ -34,6 +34,21 @@ static struct tss tss __attribute__((aligned(16)));
 static uint8_t kernel_entry_stack[KERNEL_ENTRY_STACK_SIZE] __attribute__((aligned(16)));
 static uint8_t ist1_stack[IST1_STACK_SIZE] __attribute__((aligned(16)));
 
+uint64_t gdt_tss_base(void)
+{
+    return (uint64_t)&tss;
+}
+
+uint64_t gdt_tss_rsp0(void)
+{
+    return tss.rsp[0];
+}
+
+uint64_t gdt_tss_ist1(void)
+{
+    return tss.ist[IST_DOUBLE_FAULT - 1];
+}
+
 int gdt_in_ist1_stack(uint64_t addr)
 {
     return addr >= (uint64_t)ist1_stack && addr < (uint64_t)ist1_stack + sizeof(ist1_stack);

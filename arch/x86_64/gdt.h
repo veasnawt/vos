@@ -14,6 +14,10 @@
 
 /* Load the GDT, reload the segment registers and load the task register. */
 void gdt_init(void);
+/* Virtual addresses of the TSS and of its RSP0 and IST1 stack tops. */
+uint64_t gdt_tss_base(void);
+uint64_t gdt_tss_rsp0(void);
+uint64_t gdt_tss_ist1(void);
 /* Nonzero if addr lies inside the double-fault IST stack. */
 int gdt_in_ist1_stack(uint64_t addr);
 

@@ -82,6 +82,14 @@ struct vmm_audit {
 /* Adopt the boot PML4 (CR3) as the kernel address space and verify its shape. */
 int vmm_init(void);
 uint64_t vmm_kernel_root(void);
+/*
+ * Remove the boot identity map (PML4[0]) after verifying that RIP, RSP, the
+ * GDT, IDT and TSS (and its RSP0/IST1 stacks) all use higher-half addresses
+ * and that no other lower-half entry exists; then reload CR3 and confirm the
+ * low half no longer translates while the kernel alias still does. The boot
+ * tables themselves stay in place (they are part of the kernel image).
+ */
+int vmm_remove_identity(void);
 
 int vmm_map(uint64_t root, uint64_t va, uint64_t pa, unsigned flags);
 int vmm_unmap(uint64_t root, uint64_t va, uint64_t *pa);

@@ -168,6 +168,41 @@ void kernel_main(uint32_t mb2_magic, uint32_t mb2_info)
         panic("vmm: initialization failed");
     }
 
+    /* Every pointer kept from boot must use the kernel alias, not the identity map. */
+    int bi_high = (uint64_t)bi.mmap >= KERNEL_VMA && (!bi.loader || (uint64_t)bi.loader >= KERNEL_VMA) &&
+                  (!bi.cmdline || (uint64_t)bi.cmdline >= KERNEL_VMA);
+    for (uint32_t i = 0; i < bi.module_count; i++)
+        bi_high &= (uint64_t)bi.modules[i].cmdline >= KERNEL_VMA;
+    if (!bi_high)
+        panic("vmm: boot information is reached through the identity map");
+#ifdef VOS_TEST
+    /* Evidence for kernel-lowaccess: this low address translates before removal. */
+    serial_puts("vmm: identity probe 0x100000 = ");
+    serial_hex(*(volatile uint32_t *)PMM_LOW_LIMIT);
+    serial_puts("\r\n");
+#endif
+    verr = vmm_remove_identity();
+    if (verr != VMM_OK) {
+        serial_puts("vmm: identity map removal refused: ");
+        serial_puts(vmm_diagnostic());
+        serial_puts("\r\n");
+        panic("vmm: identity map removal failed");
+    }
+    struct vmm_audit audit;
+    if (vmm_audit_space(vmm_kernel_root(), 1, &audit) != VMM_OK) {
+        serial_puts("vmm: audit: ");
+        serial_puts(audit.first_error);
+        serial_puts(" at ");
+        serial_hex(audit.first_error_va);
+        serial_puts("\r\n");
+        panic("vmm: kernel page tables failed the audit");
+    }
+    serial_puts("vmm: identity map removed; kernel alias ");
+    serial_dec(audit.large_upper);
+    serial_puts(" x 2 MiB supervisor pages, ");
+    serial_dec(audit.tables_lower);
+    serial_puts(" lower-half tables\r\n");
+
     serial_puts(first_failure ? "boot: FAILED\r\n" : "boot: checks passed\r\n");
 #ifdef VOS_TEST
     check(selftest_bootinfo() == 0, "bootinfo/reservation self-test");
