@@ -408,7 +408,7 @@ static void test_debug_write(void)
            "emit: escape, DEL, non-ASCII, tab and NUL become ?");
     expect(emits("x", 0, ""), "emit: nothing for length 0");
 
-    int r = run_prog("hello", PROG(hello), 0, 0);
+    int r = run_prog("hello-asm", PROG(hello), 0, 0);
     expect(r == PROC_EXITED && last.exit_status == 0 && last.syscalls == 2,
            "debug_write returns its length to the same process, registers preserved, twice");
     if (last.exit_status != 0) {

@@ -7,6 +7,7 @@
 #include <stddef.h>
 #include <stdint.h>
 
+#include "app.h"
 #include "bootinfo.h"
 #include "console.h"
 #include "cpu.h"
@@ -206,6 +207,9 @@ void kernel_main(uint32_t mb2_magic, uint32_t mb2_info)
     /* Immediately, before anything else can flush the TLB: proves the CR3 reload too. */
     selftest_vmm_fault_lowaccess();
 #endif
+
+    /* The first native application: GRUB module "hello", run in ring 3. */
+    check(app_run_boot_module(&bi), "boot application ran and exited with status 0");
 
     serial_puts(first_failure ? "boot: FAILED\r\n" : "boot: checks passed\r\n");
 #ifdef VOS_TEST

@@ -4,7 +4,10 @@
 #
 # Boots headless in QEMU and passes only if every MARKER appears on serial,
 # no serial line matches FAIL_PATTERN, and QEMU is still running GRACE
-# seconds later. QEMU runs with -no-reboot, so a guest reset or crash makes
+# seconds later. Lines starting with "user[" are written by user programs
+# (the kernel adds that prefix): a MARKER starting with "user[" must be in
+# such a line, any other MARKER and FAIL_PATTERN only in the other lines, so
+# a program can neither forge a kernel marker nor fail the test with text. QEMU runs with -no-reboot, so a guest reset or crash makes
 # it exit, which fails the test. A timeout never passes.
 # Env: QEMU (default qemu-system-i386), TIMEOUT (15), GRACE (1),
 #      FAIL_PATTERN (extended regex, default 'magic BAD').
@@ -36,9 +39,16 @@ echo "test.sh: $QEMU -cdrom $ISO -display none -serial file:$LOG -no-reboot -boo
 QPID=$!
 trap 'kill "$QPID" 2>/dev/null' EXIT
 
+marker_found() {
+    case $1 in
+        'user['*) grep -a '^user\[' "$LOG" 2>/dev/null | grep -qaF -- "$1" ;;
+        *)        grep -av '^user\[' "$LOG" 2>/dev/null | grep -qaF -- "$1" ;;
+    esac
+}
+
 seen_all() {
     local m
-    for m in "${EXPECTED[@]}"; do grep -qF -- "$m" "$LOG" 2>/dev/null || return 1; done
+    for m in "${EXPECTED[@]}"; do marker_found "$m" || return 1; done
 }
 
 alive() { kill -0 "$QPID" 2>/dev/null; }
@@ -62,7 +72,8 @@ sleep "$GRACE"
 alive || exited
 kill "$QPID" 2>/dev/null; wait "$QPID" 2>/dev/null
 
-grep -qE -- "$FAIL_PATTERN" "$LOG" && fail "serial output matches failure pattern '$FAIL_PATTERN'"
+grep -av '^user\[' "$LOG" | grep -qaE -- "$FAIL_PATTERN" &&
+    fail "kernel serial output matches failure pattern '$FAIL_PATTERN'"
 
 echo "--- serial output ---"; cat "$LOG"; echo "---------------------"
 echo "TEST PASS: QEMU booted $ISO and serial output matched"

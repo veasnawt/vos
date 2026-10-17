@@ -34,7 +34,8 @@ $(error VOS_TEST_CASE requires VOS_TEST=1)
 endif
 
 # Per-image GRUB configuration and extra ISO files ("source:path-in-iso").
-# Test cases may override them in tests/<ARCH>/<case>.mk.
+# Test cases may override them in tests/<ARCH>/<case>.mk. arch.mk may add
+# ARCH_ISO_FILES, which every image of that architecture carries.
 GRUB_CFG  := $(ARCH_DIR)/grub.cfg
 ISO_FILES :=
 ifneq ($(VOS_TEST_CASE),)
@@ -80,12 +81,12 @@ verify: $(KERNEL)
 	grub-file $(MULTIBOOT_CHECK) $(KERNEL)
 	@echo "$(ARCH): Multiboot header OK"
 
-iso: verify
+iso: verify $(foreach f,$(ARCH_ISO_FILES) $(ISO_FILES),$(firstword $(subst :, ,$(f))))
 	rm -rf $(BUILD)/isodir
 	mkdir -p $(BUILD)/isodir/boot/grub
 	cp $(KERNEL) $(BUILD)/isodir/boot/vos.bin
 	cp $(GRUB_CFG) $(BUILD)/isodir/boot/grub/grub.cfg
-	for f in $(ISO_FILES); do \
+	for f in $(ARCH_ISO_FILES) $(ISO_FILES); do \
 	    mkdir -p $(BUILD)/isodir/$$(dirname $${f#*:}); cp $${f%%:*} $(BUILD)/isodir/$${f#*:}; \
 	done
 	grub-mkrescue -o $(ISO) $(BUILD)/isodir

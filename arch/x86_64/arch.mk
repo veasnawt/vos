@@ -8,11 +8,13 @@ ARCH_CFLAGS     := -m64 -mcmodel=kernel -mno-red-zone -mgeneral-regs-only \
 ARCH_ASFLAGS    := -m64
 ARCH_LDFLAGS    := -m elf_x86_64 -z max-page-size=0x1000
 ARCH_OBJS       := boot.o entry.o usermode.o kernel.o bootinfo.o console.o cpu.o exception.o gdt.o idt.o \
-                   lib.o panic.o pmm.o process.o resv.o syscall.o usercopy.o vmm.o elf.o loader.o
+                   lib.o loader.o panic.o pmm.o process.o resv.o syscall.o usercopy.o vmm.o elf.o app.o
 ifeq ($(VOS_TEST),1)
 ARCH_OBJS       += selftest.o selftest_pmm.o selftest_user.o selftest_vmm.o user_progs.o
 endif
 QEMU            := qemu-system-x86_64
+# The boot application, delivered by GRUB as a Multiboot2 module (grub.cfg).
+ARCH_ISO_FILES   = $(USER_BUILD)/hello.elf:boot/hello.elf
 MULTIBOOT_CHECK := --is-x86-multiboot2
 
 # 1. Production image (halts after boot): serial smoke test.
@@ -29,11 +31,13 @@ MULTIBOOT_CHECK := --is-x86-multiboot2
 # 4. User space (no QEMU): hello.elf is built and validated, the negative ELF
 #    tests run, and no kernel image may contain the application (user-test).
 arch-test: iso
-	QEMU=$(QEMU) FAIL_PATTERN='FAILED|check failed|boot error' \
-	    scripts/test.sh $(ISO) $(BUILD)/serial.log 'Hello from VOS!' 'boot: checks passed'
+	QEMU=$(QEMU) FAIL_PATTERN='FAILED|check failed|boot error|rejected|killed' \
+	    scripts/test.sh $(ISO) $(BUILD)/serial.log 'Hello from VOS!' 'boot: checks passed' \
+	    'elf: hello: ET_EXEC entry 0x400000' 'user[hello]: Hello from VOS!' \
+	    'proc[hello]: exited status 0, all frames reclaimed'
 	$(MAKE) --no-print-directory ARCH=$(ARCH) VOS_TEST=1 iso
-	scripts/exit-test.sh boot-128M $(TEST_ISO) 33 'user[hello]: Hello from VOS!' \
-	    'user[hello]: second call resumed' 'user[badptr]: ABCD' 'user[forge]: VOS-FORGED-MARKER' \
+	scripts/exit-test.sh boot-128M $(TEST_ISO) 33 'user[hello-asm]: Hello from VOS!' \
+	    'user[hello-asm]: second call resumed' 'user[badptr]: ABCD' 'user[forge]: VOS-FORGED-MARKER' \
 	    'user[forge]: VOS-TEST: PASS?' 'user[forge]: ?[2J???' 'selftest: pmm-synthetic ' \
 	    'selftest: pmm-kernel ' 'selftest: 1000 frames from ' 'selftest: vmm ' 'selftest: user ' \
 	    'VOS-TEST: PASS' --
