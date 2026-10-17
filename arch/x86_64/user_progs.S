@@ -621,3 +621,61 @@ call_check_callee_saved:
 .size call_check_callee_saved, . - call_check_callee_saved
 
 .section .note.GNU-stack, "", @progbits
+
+/*
+ * uint64_t yield_check_callee_saved(uint64_t seed, uint64_t rounds)   (N2.2)
+ * Loads rbx, rbp, r12-r15 with values derived from seed, calls thread_yield
+ * `rounds` times (other threads run in between with their own values) and
+ * returns the OR of (register ^ expected) over all rounds: 0 if every switch
+ * restored all callee-saved registers of this thread.
+ */
+.macro SEEDREG reg, k
+    mov %rdi, \reg
+    xor $\k, \reg
+.endm
+.macro SEEDCHK reg, k
+    mov %rdi, %rax
+    xor $\k, %rax
+    xor \reg, %rax
+    or %rax, (%rsp)
+.endm
+.section .text
+.global yield_check_callee_saved
+.type yield_check_callee_saved, @function
+yield_check_callee_saved:
+    pushq %rbx
+    pushq %rbp
+    pushq %r12
+    pushq %r13
+    pushq %r14
+    pushq %r15
+    pushq %rdi                      /* 16(%rsp): seed */
+    pushq %rsi                      /*  8(%rsp): rounds left */
+    pushq $0                        /*  0(%rsp): accumulated difference; 9 pushes: 16-aligned */
+1:  mov 16(%rsp), %rdi
+    SEEDREG %rbx, 0x11
+    SEEDREG %rbp, 0x22
+    SEEDREG %r12, 0x33
+    SEEDREG %r13, 0x44
+    SEEDREG %r14, 0x55
+    SEEDREG %r15, 0x66
+    call thread_yield
+    mov 16(%rsp), %rdi
+    SEEDCHK %rbx, 0x11
+    SEEDCHK %rbp, 0x22
+    SEEDCHK %r12, 0x33
+    SEEDCHK %r13, 0x44
+    SEEDCHK %r14, 0x55
+    SEEDCHK %r15, 0x66
+    decq 8(%rsp)
+    jnz 1b
+    popq %rax
+    add $16, %rsp
+    popq %r15
+    popq %r14
+    popq %r13
+    popq %r12
+    popq %rbp
+    popq %rbx
+    ret
+.size yield_check_callee_saved, . - yield_check_callee_saved

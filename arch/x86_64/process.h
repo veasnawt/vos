@@ -113,6 +113,8 @@ int proc_run(struct process *p);
  * proc_run's caller instead; the process never runs again.
  */
 uint64_t proc_user_trap(struct exc_frame *f);
+/* Nonzero while a user program runs (between ring-3 entry and its exit or fault). */
+int proc_running(void);
 /* Release everything the process owns; the kernel root must be active. */
 void proc_destroy(struct process *p);
 

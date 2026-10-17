@@ -9,6 +9,7 @@
 #include "lib.h"
 #include "panic.h"
 #include "pmm.h"
+#include "thread.h"
 #include "vmm.h"
 
 /* The one process that may exist (created and not yet destroyed), and the one running. */
@@ -290,6 +291,8 @@ int proc_run(struct process *p)
 
     if (!p || p != live || p->state != PROC_READY || current)
         return PROC_ESTATE;
+    if (!thread_is_boot())
+        panic("process: user programs run only on the boot thread (N2.2)");
     __asm__ volatile ("pushfq\n\tpopq %0" : "=r"(rflags));
     if (rflags & RFLAGS_IF)
         panic("process: interrupts enabled at user entry");
@@ -319,6 +322,11 @@ __attribute__((noreturn)) static void finish(struct process *p)
 {
     write_cr3(vmm_kernel_root());
     user_return(&p->kernel_rsp, p->state);
+}
+
+int proc_running(void)
+{
+    return current != NULL;
 }
 
 uint64_t proc_user_trap(struct exc_frame *f)
