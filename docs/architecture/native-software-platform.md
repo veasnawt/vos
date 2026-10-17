@@ -2,9 +2,9 @@
 
 | | |
 |---|---|
-| Status | **Proposal (design only).** Nothing in this document is implemented unless marked *Current*. |
-| Date | 2026-10-17 |
-| Code baseline | commit `7c06bc6` (`chore: rename project from MyOS to VOS`) |
+| Status | **Proposal.** Section 3 describes what milestone N1 implemented (tagged *Current*); everything else remains a proposal unless marked *Current*. |
+| Date | 2026-10-17 (written at `7c06bc6`; section 3 and the status notes updated after N1 at `74501a7`) |
+| Code baseline | after N1: the x86_64 kernel runs a separately built native application in ring 3 |
 | Scope | Native application model and public software interfaces of VOS, plus the separate compatibility architecture |
 | Out of scope | Implementing any of it; kernel Stage 2/3 work; UEFI |
 
@@ -86,18 +86,60 @@ recommendations:
 
 ---
 
-## 3. Current baseline [Current]
+## 3. Current state after N1 [Current]
 
-Everything from section 4 onward is a proposal or future work. Today:
+Milestone N1 (`docs/plans/n1-user-space.md`, stages N1.0–N1.10) took the x86_64 kernel from
+"boots and prints" to "loads and runs a separately built native program in ring 3, isolated
+from the kernel". The exact application interface is in `docs/abi/syscall-v0.md`. Everything
+from section 4 onward is still a proposal or future work unless tagged *Current*.
 
 | Area | State in the repository |
 |---|---|
-| Targets | `ARCH=i386` (default, Multiboot 1, 32-bit) and `ARCH=x86_64` (Multiboot2, experimental) |
-| x86_64 boot | GRUB loads an ELF64 image; `arch/x86_64/boot.S` checks CPUID, builds boot page tables (2 MiB pages; identity and `0xFFFFFFFF80000000` both mapping physical 0–1 GiB), enables long mode, jumps to the higher half |
-| Kernel C code | `arch/x86_64/kernel.c`: serial + VGA text output, bounds-checked Multiboot2 parsing, a boot-time reservation table (kernel image, Multiboot2 info block), self-checks |
-| Not present | IDT/exception handlers, own GDT/TSS (a boot GDT lives in identity-mapped low memory), interrupts (disabled), timer, physical/virtual memory manager, heap, threads, scheduler, user mode, system calls, any file system or driver beyond COM1/VGA |
-| Executable format today | The kernel itself is ELF64 (x86_64) / ELF32 (i386), linked with GNU ld; the x86_64 linker script uses explicit program headers (no RWX segment) |
-| Tests | `make test-all`: serial smoke tests plus strict `VOS_TEST=1` images that report via QEMU `isa-debug-exit` (status 33 = pass, 35 = expected failure); timeouts, missing markers and triple faults fail |
+| Targets | `ARCH=i386` (default, Multiboot 1, 32-bit, unchanged since N0) and `ARCH=x86_64` (Multiboot2, where all N1 work lives) |
+| Boot and CPU | GRUB loads the ELF64 kernel and modules; `boot.S` enters long mode and the higher half (`0xFFFFFFFF80000000`). The kernel enables CR0.WP, EFER.NXE (required), SMEP/SMAP/UMIP when present, and CR0.EM (no x87). |
+| Segments and interrupts | Own GDT (kernel and user segments, 64-bit TSS with a 16 KiB ring-0 entry stack and an IST stack for double faults, no I/O bitmap); 256-entry IDT: exception vectors 0–31 (DPL 0) and `int $0x80` (DPL 3). Interrupts stay disabled; there is no timer. |
+| Exceptions | Every exception is classified by the CPU-pushed CS: ring 0 → diagnostic and panic; ring 3 → the process is killed with the vector, error code and fault address recorded. |
+| Physical memory | Bitmap allocator over frames in [1 MiB, 1 GiB); the Multiboot2 map is validated and "unusable wins"; kernel, boot structures, modules and low memory are reserved; frames are zeroed on allocation. RAM above 1 GiB is unused. |
+| Virtual memory | 4-level page tables, 4 KiB user mappings with validated permissions, an audit of whole hierarchies; the boot identity map is removed; the kernel uses a supervisor-only 2 MiB-page alias of physical 0–1 GiB (writable and executable: no kernel W^X). |
+| Processes | One synchronous process at a time: a fresh PML4 sharing only the kernel entry; code/data/stack from fresh frames; entry via `iretq` with all registers zeroed; full teardown that returns every frame. No scheduler, threads or concurrency. |
+| System calls | ABI v0 over `int $0x80`: `exit`, `debug_write`; unknown numbers return `-VOS_ENOSYS`; all registers but `rax` preserved. |
+| User memory | `copy_from_user` validates every page (user bit at all levels) and copies through the kernel alias, never through the user address. |
+| Executables | Static ELF64 `ET_EXEC` with a mandatory VOS ABI note; validated in the kernel before any allocation (and at build time by `scripts/check-user-elf.sh`). |
+| User space | `user/`: a minimal runtime (`crt0.S`, system-call stubs, ABI note, linker script) and `hello`, built separately from the kernel; 41 isolation-test programs in `user/suite`. |
+| Applications | GRUB delivers `hello.elf` as a module; the kernel validates, loads and runs it in ring 3 at boot: `user[hello]: Hello from VOS!`, then `proc[hello]: exited status 0, all frames reclaimed`. |
+| Tests | `make test-all` (sequential QEMU runs with timeouts): smoke tests, strict `VOS_TEST=1` images reporting through `isa-debug-exit` (33 = pass, 35 = expected failure), kernel self-tests, deliberate kernel faults, the 41-case isolation suite under qemu64, 2 GiB and `-cpu max`, SMEP/SMAP cases with controls, and static ELF tests. |
+| Not present | Timer, interrupt controller, scheduler, threads, more than one process, IPC, kernel heap, file systems, drivers beyond COM1/VGA, input, graphics, networking, packages, a shell. |
+
+### 3.1 Security boundaries after N1 [Current]
+
+**Implemented and tested (in QEMU):**
+- Ring-3 privilege separation: CS 0x23/SS 0x1B in every user frame; privileged instructions,
+  port I/O and exception gates other than `0x80` raise `#GP` from ring 3.
+- Supervisor-only kernel mappings: user reads and writes of kernel pages raise `#PF` with the
+  U bit set; the kernel bytes stay unchanged.
+- Page-level protections: code not writable; data, read-only data and stack not executable;
+  never writable and executable; null and stack guard pages unmapped.
+- Fault handling: a ring-3 fault ends only that process; nothing after the faulting instruction
+  runs; kernel faults panic.
+- User-memory validation: invalid pointers, lengths and ranges are refused without the kernel
+  touching user addresses.
+- ELF rejection: malformed executables are rejected for a specific reason before any allocation.
+- Resource cleanup: every frame and page table returns after exit, fault, rejection and
+  allocation failure; no data survives into the next process; boot modules stay reserved.
+- SMEP, SMAP and UMIP behave as expected under `-cpu max` (absent on the default `qemu64`).
+
+**Not provided or not verified:**
+- Kernel W^X (the 2 MiB kernel alias is writable and executable).
+- Real hardware (everything ran under QEMU TCG).
+- Isolation between concurrent processes (only one process exists at a time).
+- Timer-driven preemption (a program that never exits keeps the CPU).
+- FPU/SIMD context management (FP/SIMD is disabled instead).
+- DMA/IOMMU protection.
+- Side-channel mitigations (the kernel is mapped, supervisor-only, in every address space).
+- Robust NMI and machine-check handling (no IST stacks for them).
+- General-purpose drivers and system services.
+
+None of this amounts to production-grade security; it is a tested foundation.
 
 ---
 
@@ -314,6 +356,10 @@ manifest**, not in a new container. Recommendation: **no custom format**.
 [Open] Whether to request an official `EI_OSABI` value later (requires the gABI maintainers'
 process; not needed for the note-based approach).
 
+[Current] N1 implemented the first-milestone row: static `ET_EXEC` at `0x400000`, segment rules
+as above, plus the limits in `docs/abi/syscall-v0.md`. The note differs from this proposal: its
+section is `.note.vos` and its descriptor holds only the ABI version (no minimum API level).
+
 ### 7.4 Loader placement [Proposal]
 
 - **Kernel loader** only for the very first user process (`init`), from an initial ramdisk
@@ -322,6 +368,11 @@ process; not needed for the note-based approach).
   (create address space, map memory object with permissions, start thread). This keeps ELF
   parsing out of the kernel's steady-state attack surface.
 - The loader is a prime fuzzing target (section 8.5; threat T1 in section 11.2).
+
+[Current] In N1 the kernel loads only the boot application (`hello`), straight from a
+Multiboot2 module; there is no initial ramdisk, `init` process or app manager yet. The loader
+is covered by 69 corrupted-file tests and a host build compared with the build-time validator,
+but it has not been fuzzed.
 
 ---
 
@@ -687,6 +738,17 @@ pages on 2026-10-17 and must be re-checked (exact version, SPDX headers) at impo
 All milestones target `ARCH=x86_64`; `ARCH=i386` stays the default build and keeps its tests.
 Each milestone ends with `make test-all` green and its own strict `VOS_TEST` checks.
 
+[Current] **Status after N1.** The N1 plan reached row N8 by a shorter path that skipped rows
+N4 and N5: one synchronous process needs neither a timer nor a scheduler. Done: N1 (GDT/TSS,
+256-entry IDT, exceptions), N2 (physical memory), N8 (separately built `hello`, CPL 3, a
+faulting program killed while the kernel continues). Partly done: N3 (own page-table manager
+and identity map removed, but the kernel still uses the boot tables' 2 MiB alias: no direct map
+of all RAM, no kernel W^X, no heap), N6 (ring 3 and TSS RSP0, kernel ELF loader, Multiboot2
+module, but `int $0x80` instead of `syscall` and no initrd or `init`), N7 (ABI v0 has `exit` and
+`debug_write` only; the runtime is in-tree object files, not `libvos.a`). Not started: N4, N5,
+N9 and later. The next phase is proposed in `docs/plans/n2-foundation.md`; that plan uses its
+own numbering.
+
 | # | Milestone | Deliverable | Acceptance test (QEMU, headless) |
 |---|---|---|---|
 | N0 | *Done* | x86_64 long mode, higher half, Multiboot2 parsing, reservations, strict tests | Current `make test-all` |
@@ -709,15 +771,15 @@ Each milestone ends with `make test-all` green and its own strict `VOS_TEST` che
 
 | ID | Decision | Recommendation |
 |---|---|---|
-| D1 | Project licence (needed before importing any third-party code) | Choose before N7; permissive licences keep most components in section 15 usable |
-| D2 | x86_64 as the only target for user space; when (if ever) to switch the default from i386 | x86_64 only; keep i386 default until N8 passes, then revisit |
+| D1 | Project licence (needed before importing any third-party code) | Choose before N7; permissive licences keep most components in section 15 usable. **Still open after N1** (no licence file). |
+| D2 | x86_64 as the only target for user space; when (if ever) to switch the default from i386 | x86_64 only; keep i386 default until N8 passes, then revisit. **N8 has passed: due for a decision.** |
 | D3 | Kernel structure | Hybrid, moving drivers outward (section 5) |
 | D4 | Public ABI boundary | `libvos` (static first); syscalls private |
-| D5 | Executable format | ELF64 + `.note.vos.abi`, `ELFOSABI_NONE`; static `ET_EXEC` first |
-| D6 | Loader placement | Kernel loads only `init`; user-space loader for everything else |
+| D5 | Executable format | ELF64 + `.note.vos.abi`, `ELFOSABI_NONE`; static `ET_EXEC` first. *Implemented provisionally in N1 (note section `.note.vos`, ABI version only).* |
+| D6 | Loader placement | Kernel loads only `init`; user-space loader for everything else. *N1: the kernel loads the boot application; no user-space loader yet.* |
 | D7 | Capability model | Handles with rights; no ambient authority; namespaces from manifests |
 | D8 | Languages | C kernel; C ABI SDK; Rust apps via custom target later; Rust in kernel deferred |
-| D9 | Toolchain installs | Install GDB at N1; `x86_64-elf` GCC cross toolchain at or after N7; no local LLVM build |
+| D9 | Toolchain installs | Install GDB at N1; `x86_64-elf` GCC cross toolchain at or after N7; no local LLVM build. *N1 was completed without GDB or a cross toolchain (host gcc with explicit flags).* |
 | D10 | C library strategy | Own minimal runtime now; evaluate newlib vs musl for a later POSIX layer |
 | D11 | Window protocol | Own minimal protocol; Wayland only as a compatibility bridge |
 | D12 | Package model | Existing archive format, per-file hashes, signed manifest, TUF-style repository, API levels |
