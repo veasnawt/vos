@@ -104,7 +104,7 @@ stage is implemented.
   `panic` case exits 35 with `panic: test case: deliberate panic` and `VOS-TEST: FAIL`; i386
   binary byte-identical.
 
-### N1.1 — CPU protections, kernel GDT/TSS, IDT, exceptions (kernel mode only) [Planned]
+### N1.1 — CPU protections, kernel GDT/TSS, IDT, exceptions (kernel mode only) [Implemented and verified]
 - CR0.WP = 1; require NX (CPUID 0x80000001 EDX bit 20) and set EFER.NXE; enable SMEP and UMIP
   when present. Log the resulting feature set.
 - GDT in `.data`: see section 6.2. TSS with RSP0 stack (16 KiB), IST1 stack for #DF (4 KiB), I/O
@@ -115,6 +115,19 @@ stage is implemented.
 - Kernel-mode exceptions panic with vector, error code, RIP, CS, RFLAGS, CR2.
 - **Tests:** compile-time cases `kernel-ud` (exit 35, `panic: #UD`, saved CS 0x08), optional
   `kernel-df` (IST1 used); `-cpu qemu64,-nx` refuses to continue (exit 35, `CPU lacks NX`).
+- **Status (verified 2026-10-17):** implemented in `cpu.c`, `gdt.c`, `idt.c`, `exception.c`
+  and `entry.S`; all of `make test-all` passes. Differences from the text above and results:
+  - `VOS_TEST_CASE=kernel-ud` / `kernel-df` map `-` to `_` in the `-DVOS_TEST_CASE_<name>`
+    macro (hyphens are not valid in C identifiers).
+  - `kernel-df` was implemented: the #GP gate is made not-present and a bad `mov %ds` forces
+    #GP -> #DF; the report shows `stack=ist1` (the frame lies in the IST1 stack).
+  - SMEP/UMIP were observed on only under `-cpu max` (`cr4=0x100820`); `qemu64` has neither.
+    Default CPU: `cr0=0x80010011 efer=0xd00`.
+  - GDT/TSS evidence: `tr=0x28`, descriptor type becomes busy after `ltr`, IST1 and RSP0
+    printed, IOPB base 104 > limit 103.
+  - Not done: a user-mode `sgdt` to prove UMIP (needs ring 3, N1.9); SMAP stays disabled;
+    NMI/#MC still use the normal stack (IST for them is deferred); kernel W^X is not provided
+    (2 MiB executable-writable kernel alias).
 
 ### N1.2 — Multiboot2 modules, command line, reservations [Planned]
 - Parse module tags (type 3: `mod_start`, `mod_end`, NUL-terminated command line) and the
