@@ -1,47 +1,63 @@
-CC      := gcc
-LD      := ld
-CFLAGS  := -m32 -std=gnu11 -ffreestanding -fno-pic -fno-pie -fno-stack-protector \
-           -fno-builtin -fno-asynchronous-unwind-tables -mno-red-zone -mno-sse -mno-mmx -O2 -Wall -Wextra
-ASFLAGS := -m32
-LDFLAGS := -m elf_i386 -nostdlib -T src/linker.ld
+# MyOS top-level build. Select the target with ARCH=<name> (default: i386).
+# Each architecture lives in arch/<name>/ and provides an arch.mk fragment.
 
-BUILD := build
-OBJS  := $(BUILD)/boot.o $(BUILD)/kernel.o
-KERNEL := $(BUILD)/myos.bin
-ISO    := $(BUILD)/myos.iso
+ARCH  ?= i386
+ARCHS := i386
 
-.PHONY: all iso verify run test clean
+.DEFAULT_GOAL := all
+
+ifeq ($(filter $(ARCH),$(ARCHS)),)
+$(error Unsupported ARCH '$(ARCH)'; choose one of: $(ARCHS))
+endif
+
+ARCH_DIR := arch/$(ARCH)
+BUILD    := build/$(ARCH)
+KERNEL   := $(BUILD)/myos.bin
+ISO      := $(BUILD)/myos.iso
+
+CC     := gcc
+LD     := ld
+CFLAGS := -std=gnu11 -ffreestanding -fno-pic -fno-pie -fno-stack-protector \
+          -fno-builtin -fno-asynchronous-unwind-tables -mno-sse -mno-mmx \
+          -O2 -Wall -Wextra
+
+# Provides ARCH_CFLAGS, ARCH_ASFLAGS, ARCH_LDFLAGS, ARCH_OBJS, QEMU,
+# MULTIBOOT_CHECK and the arch-test recipe.
+include $(ARCH_DIR)/arch.mk
+
+OBJS := $(addprefix $(BUILD)/,$(ARCH_OBJS))
+
+.PHONY: all verify iso run test arch-test clean
 all: $(KERNEL)
 
 $(BUILD):
-	mkdir -p $(BUILD)
+	mkdir -p $@
 
-$(BUILD)/boot.o: src/boot.S | $(BUILD)
-	$(CC) $(ASFLAGS) -c $< -o $@
+$(BUILD)/%.o: $(ARCH_DIR)/%.S Makefile $(ARCH_DIR)/arch.mk | $(BUILD)
+	$(CC) $(ARCH_ASFLAGS) -c $< -o $@
 
-$(BUILD)/kernel.o: src/kernel.c | $(BUILD)
-	$(CC) $(CFLAGS) -c $< -o $@
+$(BUILD)/%.o: $(ARCH_DIR)/%.c Makefile $(ARCH_DIR)/arch.mk | $(BUILD)
+	$(CC) $(CFLAGS) $(ARCH_CFLAGS) -c $< -o $@
 
-$(KERNEL): $(OBJS) src/linker.ld
-	$(LD) $(LDFLAGS) -o $@ $(OBJS)
+$(KERNEL): $(OBJS) $(ARCH_DIR)/linker.ld
+	$(LD) $(ARCH_LDFLAGS) -nostdlib -T $(ARCH_DIR)/linker.ld -o $@ $(OBJS)
 
 verify: $(KERNEL)
-	grub-file --is-x86-multiboot $(KERNEL)
-	@echo "Multiboot header OK"
+	grub-file $(MULTIBOOT_CHECK) $(KERNEL)
+	@echo "$(ARCH): Multiboot header OK"
 
 iso: verify
 	rm -rf $(BUILD)/isodir
 	mkdir -p $(BUILD)/isodir/boot/grub
 	cp $(KERNEL) $(BUILD)/isodir/boot/myos.bin
-	cp iso/boot/grub/grub.cfg $(BUILD)/isodir/boot/grub/grub.cfg
+	cp $(ARCH_DIR)/grub.cfg $(BUILD)/isodir/boot/grub/grub.cfg
 	grub-mkrescue -o $(ISO) $(BUILD)/isodir
 
 run: iso
-	qemu-system-i386 -cdrom $(ISO)
+	$(QEMU) -cdrom $(ISO)
 
-# Headless QEMU boot test; see scripts/test.sh for pass/fail rules.
-test: iso
-	scripts/test.sh $(ISO) $(BUILD)/serial.log
+# Headless QEMU tests for the selected ARCH; see arch/<name>/arch.mk.
+test: arch-test
 
 clean:
-	rm -rf $(BUILD)
+	rm -rf build
