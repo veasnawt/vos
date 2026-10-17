@@ -64,6 +64,7 @@ static void must_free(uint64_t pa, const char *what)
 /* Map a fresh zeroed frame at va and record it. */
 static int add_page(struct process *p, uint64_t va, unsigned flags, uint64_t *pa)
 {
+    *pa = 0;
     if (p->npages >= PROC_MAX_PAGES)
         return PROC_EINVAL;
     if (frame_alloc(pa) != PMM_OK)
@@ -71,9 +72,11 @@ static int add_page(struct process *p, uint64_t va, unsigned flags, uint64_t *pa
     int err = vmm_map(p->root, va, *pa, flags);
     if (err != VMM_OK) {
         must_free(*pa, "process: frame release failed");
+        *pa = 0;
         return err == VMM_ENOMEM ? PROC_ENOMEM : PROC_EINVAL;
     }
     p->page_va[p->npages] = va;
+    p->page_flags[p->npages] = (uint8_t)flags;
     p->page_pa[p->npages++] = *pa;
     return PROC_OK;
 }
@@ -85,6 +88,7 @@ static int verify_space(const struct process *p)
     const uint64_t *kl4 = phys_to_virt(vmm_kernel_root());
     struct vmm_audit a;
     struct vmm_mapping m;
+    unsigned stack = 0;
 
     if (l4[511] != kl4[511] || (l4[511] & PTE_U))
         return 0;
@@ -94,26 +98,32 @@ static int verify_space(const struct process *p)
     if (vmm_audit_space(p->root, 1, &a) != VMM_OK || a.leaves_lower != p->npages ||
         a.user_leaves != p->npages)
         return 0;
-    if (vmm_lookup(p->root, PROC_CODE_VA, &m) != VMM_OK || m.flags != (VMM_EXEC | VMM_USER))
-        return 0;
-    for (int i = 0; i < PROC_STACK_PAGES; i++)
-        if (vmm_lookup(p->root, USER_STACK_START + i * PAGE_SIZE, &m) != VMM_OK ||
-            m.flags != (VMM_WRITE | VMM_USER))
+    /* Every page exactly as recorded: frame, user bit and W/X. */
+    for (unsigned i = 0; i < p->npages; i++) {
+        uint64_t va = p->page_va[i];
+        if (vmm_lookup(p->root, va, &m) != VMM_OK || m.pa != p->page_pa[i] ||
+            m.page_size != PAGE_SIZE || m.flags != p->page_flags[i] || !(m.flags & VMM_USER))
             return 0;
-    return vmm_lookup(p->root, 0, &m) == VMM_ENOTMAPPED &&
+        if (va >= USER_STACK_START && va < USER_STACK_END) {
+            if (m.flags != (VMM_WRITE | VMM_USER))
+                return 0;
+            stack++;
+        } else if (va < USER_IMAGE_START || va >= USER_IMAGE_END) {
+            return 0;
+        }
+    }
+    return stack == PROC_STACK_PAGES &&
+           vmm_lookup(p->root, 0, &m) == VMM_ENOTMAPPED &&
+           vmm_lookup(p->root, NULL_GUARD_END - PAGE_SIZE, &m) == VMM_ENOTMAPPED &&
            vmm_lookup(p->root, USER_STACK_GUARD, &m) == VMM_ENOTMAPPED &&
-           vmm_lookup(p->root, USER_STACK_END, &m) == VMM_ENOTMAPPED &&
-           vmm_lookup(p->root, PROC_CODE_VA + PAGE_SIZE, &m) == VMM_ENOTMAPPED;
+           vmm_lookup(p->root, USER_STACK_END, &m) == VMM_ENOTMAPPED;
 }
 
-int proc_create(struct process *p, const char *name, const void *code, size_t len)
+int proc_begin(struct process *p, const char *name)
 {
-    uint64_t pa;
-    int err;
-
     if (live)
         return PROC_EBUSY;
-    if (!p || !code || len == 0 || len > PAGE_SIZE)
+    if (!p)
         return PROC_EINVAL;
     memset(p, 0, sizeof(*p));
     for (int i = 0; i < PROC_NAME_MAX && name && name[i]; i++) {
@@ -130,20 +140,56 @@ int proc_create(struct process *p, const char *name, const void *code, size_t le
         ((const uint64_t *)phys_to_virt(vmm_kernel_root()))[511];
     live = p;
     p->state = PROC_FREE;
+    return PROC_OK;
+}
 
-    if ((err = add_page(p, PROC_CODE_VA, VMM_EXEC | VMM_USER, &pa)) != PROC_OK)
-        goto fail;
-    memcpy(phys_to_virt(pa), code, len);
+int proc_add_page(struct process *p, uint64_t va, unsigned flags, uint64_t *pa)
+{
+    *pa = 0;
+    if (!p || p != live || p->state != PROC_FREE || (flags & ~(VMM_WRITE | VMM_EXEC)) ||
+        va % PAGE_SIZE != 0 || va < USER_IMAGE_START || va >= USER_IMAGE_END ||
+        p->npages >= PROC_IMAGE_PAGES)
+        return PROC_EINVAL;
+    return add_page(p, va, flags | VMM_USER, pa);
+}
+
+int proc_finish(struct process *p, uint64_t entry)
+{
+    uint64_t pa;
+    int err;
+
+    if (!p || p != live || p->state != PROC_FREE)
+        return PROC_EINVAL;
     for (int i = 0; i < PROC_STACK_PAGES; i++)
         if ((err = add_page(p, USER_STACK_START + i * PAGE_SIZE, VMM_WRITE | VMM_USER, &pa)) != PROC_OK)
-            goto fail;
-    if (!verify_space(p)) {
-        err = PROC_ESTATE;
-        goto fail;
-    }
-    p->entry = PROC_CODE_VA;
+            return err;
+    if (!verify_space(p))
+        return PROC_ESTATE;
+    struct vmm_mapping m;
+    if (vmm_lookup(p->root, entry, &m) != VMM_OK || !(m.flags & VMM_EXEC) || !(m.flags & VMM_USER))
+        return PROC_ESTATE;
+    p->entry = entry;
     p->user_rsp = PROC_ENTRY_RSP;
     p->state = PROC_READY;
+    return PROC_OK;
+}
+
+int proc_create(struct process *p, const char *name, const void *code, size_t len)
+{
+    uint64_t pa;
+    int err;
+
+    if (live)
+        return PROC_EBUSY;
+    if (!p || !code || len == 0 || len > PAGE_SIZE)
+        return PROC_EINVAL;
+    if ((err = proc_begin(p, name)) != PROC_OK)
+        return err;
+    if ((err = proc_add_page(p, PROC_CODE_VA, VMM_EXEC, &pa)) != PROC_OK)
+        goto fail;
+    memcpy(phys_to_virt(pa), code, len);
+    if ((err = proc_finish(p, PROC_CODE_VA)) != PROC_OK)
+        goto fail;
     return PROC_OK;
 
 fail:

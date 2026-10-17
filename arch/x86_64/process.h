@@ -4,11 +4,13 @@
  * Address space: a fresh PML4 whose only upper-half entry is PML4[511],
  * copied by value from the kernel PML4 (supervisor-only alias; its tables
  * belong to the kernel image and are never freed here). The lower half holds
- * only what proc_create maps, all from freshly allocated, zeroed frames:
- *   PROC_CODE_VA                    one page, user, read + execute
+ * only pages added with proc_add_page (the image, inside the user image
+ * region) and the stack, all from freshly allocated, zeroed frames:
+ *   image pages                      user, with the permissions recorded per page
  *   USER_STACK_START..USER_STACK_END four pages, user, read + write, NX
  * and nothing else: the null guard, the stack guard page below the stack and
- * the top lower-half page stay unmapped.
+ * the top lower-half page stay unmapped. Every page is checked against its
+ * recorded permissions before the process may run.
  *
  * Ownership: the process owns its root frame, the data frames listed in
  * pages[], and the lower-half page tables vmm_map created for them (released
@@ -26,7 +28,8 @@
 #define PROC_CODE_VA        USER_IMAGE_START
 #define PROC_STACK_PAGES    4
 #define PROC_ENTRY_RSP      (USER_STACK_END - 16)   /* 16-byte aligned; 16 zero bytes above */
-#define PROC_MAX_PAGES      (1 + PROC_STACK_PAGES)
+#define PROC_IMAGE_PAGES    256                     /* 1 MiB, the ELF image limit */
+#define PROC_MAX_PAGES      (PROC_IMAGE_PAGES + PROC_STACK_PAGES)
 
 /* States. */
 #define PROC_FREE       0
@@ -63,9 +66,24 @@ struct process {
     uint64_t syscalls;                  /* system calls that returned to the process */
     unsigned npages;
     uint64_t page_va[PROC_MAX_PAGES], page_pa[PROC_MAX_PAGES];
+    uint8_t page_flags[PROC_MAX_PAGES]; /* VMM_* the page was mapped with */
 };
 
 struct exc_frame;
+
+/*
+ * Building an address space in steps (used by the ELF loader):
+ *   proc_begin     root with the kernel half; the process now exists
+ *   proc_add_page  map a fresh zeroed frame at va (user image region only)
+ *                  with VMM_USER and the given W/X; returns the frame so the
+ *                  caller can fill it through the kernel alias
+ *   proc_finish    map the stack, set the entry point, verify every page,
+ *                  mark READY
+ * On any error the caller must proc_destroy (which releases everything).
+ */
+int proc_begin(struct process *p, const char *name);
+int proc_add_page(struct process *p, uint64_t va, unsigned flags, uint64_t *pa);
+int proc_finish(struct process *p, uint64_t entry);
 
 /*
  * Build an address space holding `len` bytes of code (1..4096). `name` is

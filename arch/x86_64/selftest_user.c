@@ -70,7 +70,7 @@ uint64_t call_check_callee_saved(int (*fn)(void *), void *arg, int *result);
 #define RFLAGS_IOPL     (3ULL << 12)
 
 /* Frames one process holds: root + 5 pages + 6 tables (3 for code, 3 for stack). */
-#define PROC_FRAMES (1 + PROC_MAX_PAGES + 6)
+#define PROC_FRAMES (1 + 1 + PROC_STACK_PAGES + 6)
 
 static const uint8_t hlt_code[] = { 0xF4 };
 
@@ -130,7 +130,7 @@ static void test_address_space(void)
            proc.user_rsp % 16 == 0 && proc.user_rsp + 16 <= USER_STACK_END,
            "entry RIP and 16-byte aligned RSP with 16 bytes above it");
 
-    struct process other;
+    static struct process other;
     expect(proc_create(&other, "other", code, sizeof(code)) == PROC_EBUSY, "only one process at a time");
     expect(proc_create(&other, "other", code, 0) == PROC_EBUSY, "busy check precedes argument checks");
 
@@ -144,7 +144,7 @@ static void test_address_space(void)
 
     /* Allocation failure at every step: nothing leaks, no process remains. */
     int rollback_ok = 1;
-    for (int budget = 0; budget <= PROC_MAX_PAGES; budget++) {
+    for (int budget = 0; budget < 2 + PROC_STACK_PAGES; budget++) {
         proc_test_frame_budget(budget);
         int err = proc_create(&proc, "test", code, sizeof(code));
         proc_test_frame_budget(-1);
@@ -207,7 +207,7 @@ static void test_copy_from_user(void)
     s1[0] = 'd';
     s1[1] = 'e';
     s1[2] = 'f';
-    uint8_t *top = phys_to_virt(proc.page_pa[PROC_MAX_PAGES - 1]);
+    uint8_t *top = phys_to_virt(proc.page_pa[proc.npages - 1]);
     top[PAGE_SIZE - 1] = 'z';
 
     expect(cfu(0, 0) == 0 && cbuf_untouched_from(0), "len 0: success, pointer not examined");
