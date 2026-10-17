@@ -127,7 +127,9 @@ void proc_test_frame_budget(int n);
  */
 #define PROC_TEST_TICK_BUDGET   1000
 void proc_test_tick_budget(uint64_t n);
-extern const char PROC_REASON_BUDGET[];
+extern const char PROC_REASON_BUDGET[], PROC_REASON_IRQ_BUDGET[];
+/* Test hook: why resume would refuse frame f of process p (NULL if it would accept it). */
+const char *proc_test_frame_problem(const struct process *p, const struct exc_frame *f);
 #endif
 
 #endif

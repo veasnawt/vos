@@ -28,14 +28,35 @@ __attribute__((noreturn)) void user_return(uint64_t *kernel_rsp, int result);
  * space, the frame exactly at the top of the TSS.RSP0 stack (the CPU used
  * the right kernel stack) and intact stack canaries.
  */
+static const char *frame_problem(const struct process *p, const struct exc_frame *f)
+{
+    if (f->cs != GDT_USER_CS || f->ss != GDT_USER_DS)
+        return "not user selectors";
+    if (!(f->rflags & RFLAGS_IF) || (f->rflags & (RFLAGS_IOPL | RFLAGS_VM)) || !(f->rflags & RFLAGS_FIXED))
+        return "RFLAGS not IF=1, IOPL=0, VM=0";
+    if (f->rip >= LOWER_HALF_END || f->rsp >= LOWER_HALF_END)
+        return "RIP or RSP outside the lower half";
+    if ((read_cr3() & PTE_ADDR) != p->root)
+        return "not on the process's address space";
+    if ((uint64_t)f + sizeof(*f) != gdt_tss_rsp0())
+        return "frame not at the top of the TSS.RSP0 stack";
+    if (!gdt_stack_canaries_intact())
+        return "kernel stack canary overwritten";
+    if (read_rflags() & RFLAGS_IF)
+        return "kernel running with IF=1";
+    return NULL;
+}
+
 static uint64_t resume(struct process *p, struct exc_frame *f)
 {
-    if (f->cs != GDT_USER_CS || f->ss != GDT_USER_DS || !(f->rflags & RFLAGS_IF) ||
-        (f->rflags & (RFLAGS_IOPL | RFLAGS_VM)) || !(f->rflags & RFLAGS_FIXED) ||
-        f->rip >= LOWER_HALF_END || f->rsp >= LOWER_HALF_END ||
-        (read_cr3() & PTE_ADDR) != p->root || (uint64_t)f + sizeof(*f) != gdt_tss_rsp0() ||
-        !gdt_stack_canaries_intact() || (read_rflags() & RFLAGS_IF))
+    const char *why = frame_problem(p, f);
+
+    if (why) {
+        serial_puts("process: invalid user frame: ");
+        serial_puts(why);
+        serial_puts("\r\n");
         panic("process: refusing to resume an invalid user frame");
+    }
     return TRAP_RESUME;
 }
 
@@ -58,10 +79,16 @@ static void record(struct proc_trap *t, const struct exc_frame *f)
 static int frame_budget = -1;
 static uint64_t tick_budget = PROC_TEST_TICK_BUDGET;
 const char PROC_REASON_BUDGET[] = "test tick budget";
+const char PROC_REASON_IRQ_BUDGET[] = "test interrupt budget (timer ticks not advancing)";
 
 void proc_test_tick_budget(uint64_t n)
 {
     tick_budget = n;
+}
+
+const char *proc_test_frame_problem(const struct process *p, const struct exc_frame *f)
+{
+    return frame_problem(p, f);
 }
 
 void proc_test_frame_budget(int n)
@@ -311,13 +338,17 @@ uint64_t proc_user_trap(struct exc_frame *f)
         p->ticks = irq_ticks() - p->tick_start;
         record(&p->last_irq, f);
 #ifdef VOS_TEST
-        if (tick_budget && p->ticks >= tick_budget) {
+        /* Normally irqs == ticks (only IRQ0 is unmasked); the second bound catches a stuck counter. */
+        if (tick_budget && (p->ticks >= tick_budget || p->irqs >= 2 * tick_budget + 16)) {
             record(&p->trap, f);
             p->state = PROC_KILLED;
-            p->reason = PROC_REASON_BUDGET;
-            serial_puts("proc: killed by the test tick budget after ");
+            p->reason = p->ticks >= tick_budget ? PROC_REASON_BUDGET : PROC_REASON_IRQ_BUDGET;
+            serial_puts(p->reason == PROC_REASON_BUDGET ? "proc: killed by the test tick budget after " :
+                        "proc: killed by the test interrupt budget (ticks not advancing) after ");
             serial_dec(p->ticks);
-            serial_puts(" timer ticks (cs=");
+            serial_puts(" timer ticks, ");
+            serial_dec(p->irqs);
+            serial_puts(" interrupts (cs=");
             serial_hex(f->cs);
             serial_puts(" rip=");
             serial_hex(f->rip);

@@ -539,6 +539,54 @@ static int budget_kill(uint64_t ticks)
 }
 
 /*
+ * The checks resume() makes before IRETQ to ring 3 (after a system call or an
+ * IRQ), on crafted frames placed exactly where the CPU puts them: the top of
+ * the idle TSS.RSP0 stack. Real frames never violate them, so this is the
+ * only way to show that each check exists.
+ */
+static int frame_refused(struct process *p, struct exc_frame *f, const struct exc_frame *good,
+                         uint64_t *field, uint64_t bad)
+{
+    *f = *good;
+    *field = bad;
+    const char *why = proc_test_frame_problem(p, f);
+    *f = *good;
+    return why != NULL;
+}
+
+static void test_resume_validation(void)
+{
+    static struct process fake;
+    struct exc_frame *f = (struct exc_frame *)(gdt_tss_rsp0() - sizeof(struct exc_frame));
+    struct exc_frame good, copy;
+
+    memset(&fake, 0, sizeof(fake));
+    fake.root = read_cr3() & PTE_ADDR;
+    memset(&good, 0, sizeof(good));
+    good.cs = GDT_USER_CS;
+    good.ss = GDT_USER_DS;
+    good.rflags = 0x202;
+    good.rip = PROC_CODE_VA;
+    good.rsp = PROC_ENTRY_RSP;
+    *f = good;
+    expect(proc_test_frame_problem(&fake, f) == NULL, "resume check accepts a valid user frame at the top of RSP0");
+    expect(frame_refused(&fake, f, &good, &f->rflags, 0x2), "resume check refuses IF=0");
+    expect(frame_refused(&fake, f, &good, &f->rflags, 0x3202), "resume check refuses IOPL=3");
+    expect(frame_refused(&fake, f, &good, &f->rflags, 0x1202), "resume check refuses IOPL=1");
+    expect(frame_refused(&fake, f, &good, &f->rflags, 0x20202), "resume check refuses VM=1");
+    expect(frame_refused(&fake, f, &good, &f->rflags, 0x200), "resume check refuses a cleared fixed bit 1");
+    expect(frame_refused(&fake, f, &good, &f->cs, GDT_KERNEL_CS), "resume check refuses the kernel CS");
+    expect(frame_refused(&fake, f, &good, &f->ss, GDT_KERNEL_DS), "resume check refuses the kernel SS");
+    expect(frame_refused(&fake, f, &good, &f->rip, KERNEL_VMA), "resume check refuses a kernel RIP");
+    expect(frame_refused(&fake, f, &good, &f->rsp, LOWER_HALF_END), "resume check refuses a non-lower-half RSP");
+    copy = good;
+    expect(proc_test_frame_problem(&fake, &copy) != NULL, "resume check refuses a frame not at the top of RSP0");
+    fake.root = 0x1000;
+    expect(proc_test_frame_problem(&fake, f) != NULL, "resume check refuses a foreign address space");
+    memset(f, 0, sizeof(*f));
+}
+
+/*
  * N2.1: hardware interrupts delivered by the CPU while ring 3 runs (IF = 1).
  * The tick budget is a test-only kill switch; nothing else ends these programs.
  */
@@ -606,6 +654,7 @@ int selftest_user(void)
     test_ring3_exit();
     test_debug_write();
     test_user_faults();
+    test_resume_validation();
     test_irq_ring3();
     serial_puts("selftest: user ");
     serial_dec(cases);
