@@ -61,7 +61,7 @@ arch-test: iso
 	    scripts/test.sh $(ISO) $(BUILD)/serial.log 'Hello from VOS!' 'boot: checks passed' \
 	    'elf: hello: ET_EXEC entry 0x400000' 'user[hello]: Hello from VOS!' \
 	    'proc[hello]: exited status 0, all frames reclaimed' 'kmap: after the TLB flush the CPU refused' \
-	    'vmm: audit passed: ' 'sched: 8 thread records, 7 guarded stacks of 16 KiB'
+	    'vmm: audit passed: ' 'sched: 16 thread records, 15 guarded stacks of 16 KiB'
 	$(MAKE) --no-print-directory ARCH=$(ARCH) VOS_TEST=1 iso
 	scripts/exit-test.sh boot-128M $(TEST_ISO) 33 'user[hello-asm]: Hello from VOS!' \
 	    'user[hello-asm]: second call resumed' 'user[badptr]: ABCD' 'user[forge]: VOS-FORGED-MARKER' \
