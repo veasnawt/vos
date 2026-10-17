@@ -355,9 +355,50 @@ stage is implemented.
     at least one test fail. Two gaps found by the tests were fixed (TLS was accepted; a missing
     note gave an empty `PT_NOTE`).
 
-### N1.8 — Static ELF64 loader, `hello` runs [Planned]
+### N1.8 — Static ELF64 loader, `hello` runs [Implemented and verified]
 - Validation of section 8.4 before any allocation; copy segments; map with section 6.1
   permissions; map stack; enter. Production GRUB configuration adds `module2 /boot/hello.elf hello`.
+- **Status (verified 2026-10-17):** `elf.{c,h}` (validator), `loader.{c,h}`, `app.{c,h}`,
+  generalized `process.c`; tests in `selftest_elf.c`, `scripts/elfcheck.c`, two isolated images.
+  `make test-all` passes from a clean tree (21 QEMU runs, forge check, 182 user/ELF checks).
+  - **Production boot (actual output):**
+    ```
+    app: module "hello" at 0x12c000-0x12f348, 13128 bytes
+    elf: hello: ET_EXEC entry 0x400000, 3 PT_LOAD, 3 pages, VOS ABI 0
+    user[hello]: Hello from VOS!
+    proc: exit status 0 (cs=0x23 rip=0x40002a)
+    proc[hello]: exited status 0, all frames reclaimed
+    ```
+    `0x40002a` is the instruction after `int $0x80` in hello's own `vos_exit`.
+  - **Delivery and selection:** the ISO carries `hello.elf` as a separate file (built first);
+    `grub.cfg` has `module2 /boot/hello.elf hello`. The application is the module whose command
+    line is exactly `hello`: none → nothing runs; several → ambiguous, none runs, boot fails.
+  - **Validation:** `elf_validate` implements section 8.4 plus the N1.7 additions, with every
+    64-bit field below 2^40 and every read bounds-checked, before anything is allocated; one error
+    code per rule group. Built unchanged as a host tool, it agrees with `check-user-elf.sh` on 67
+    of 70 test files; the other 3 are rejected only by build-time checks. **Trust boundary:**
+    relocation/dynamic/TLS sections, `%fs`/`%gs` operands and x87/SSE code are build-time checks
+    only; a file that evades them is still confined (x87/SSE trap, FS/GS base 0).
+  - **Loading:** each `PT_LOAD` page is a fresh zeroed frame receiving exactly its file bytes,
+    mapped user with W only for `PF_W`, X only for `PF_X`; the module is read through the kernel
+    alias, never mapped into the process, and stays reserved. Stack and guard as in N1.5; every
+    page is verified against its recorded frame and permissions before entry; any failure
+    destroys the partial process.
+  - **Trusted report (deviation):** the request asked for the kernel's exit report as
+    `user[hello]: exited status 0`, but a program can print exactly that line with
+    `debug_write`. The kernel reports `proc[hello]: exited status 0, all frames reclaimed`; the
+    harnesses (`exit-test.sh`, and now `test.sh`) match `user[` markers only in user lines and all
+    other markers and failure patterns only in kernel lines. The N1.6 built-in program formerly
+    named `hello` is now `hello-asm`.
+  - **Evidence:** exit frame CS 0x23/SS 0x1B (CPU-pushed), RIP after `int $0x80` in hello's code,
+    entry = `e_entry`, one returning system call; pages compared byte by byte with the module;
+    69 corrupted executables rejected through `load_elf` for their own reason with no frame
+    allocated; exhaustion at every step rolls back; app-ambiguous and app-reject refuse to run.
+  - **Mutation check:** 20 rules of `elf.c` disabled one at a time, all detected (17 by the host
+    comparison; the bounds, 2^40 and duplicate-note rules are backed by later checks and caught
+    by the in-kernel reason checks).
+  - **Not tested:** real hardware; more than one application; images larger than the 32 KiB
+    buffer used by the mutation tests (the 1 MiB limit itself is tested).
 
 ### N1.9 — Isolation and fault suite, cleanup, SMAP enablement [Planned]
 - Test ISO with one module per scenario, expectations in module command lines, kernel-side
@@ -537,7 +578,7 @@ _start:
 - **Test:** `t_stack_align` declares a 16-byte-aligned local array in `main` and in a nested
   call and checks its address; GCC relies on the incoming alignment, so a misaligned entry fails.
 
-### 8.4 ELF64 requirements (concern E) [Build-time validator in N1.7; loader planned for N1.8]
+### 8.4 ELF64 requirements (concern E) [Build-time validator in N1.7; kernel loader in N1.8]
 All arithmetic is overflow-checked, and validation finishes before any allocation. Section
 headers are ignored entirely; nothing is read through `e_shoff`.
 
@@ -673,7 +714,7 @@ parallel.
 | K2 | N1.1 | `-cpu qemu64,-nx` | Exit 35, `CPU lacks NX` |
 | M1 | N1.3 | Synthetic memory maps | All fixed expectations match |
 | K3 | N1.4 | `kernel-lowaccess` | Exit 35, #PF panic at the low address |
-| U1 | N1.8 | `hello` | `user[hello]: Hello from VOS!` and `exited status 0` |
+| U1 | N1.8 | `hello` | `user[hello]: Hello from VOS!` (user line) and the kernel line `proc[hello]: exited status 0` |
 | U2 | N1.5/N1.8 | Ring-3 frame | Saved CS 0x23, SS 0x1B, RIP inside the program's executable segment |
 | U3 | N1.6 | Invalid arguments | NULL, kernel address, unmapped, partly mapped, overflowing, non-canonical, oversize → expected errors, logged by the kernel; unknown number → `-VOS_ENOSYS` |
 | U4 | N1.9 | Kernel write / read | #PF P=1,W=1,U=1 / P=1,U=1; target bytes unchanged; process killed |
