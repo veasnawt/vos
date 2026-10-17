@@ -66,7 +66,9 @@ The last lines should be:
     proc[hello]: exited status 0, all frames reclaimed
     boot: checks passed
 
-(Addresses can differ.) How to read them:
+(Addresses can differ.) When `timeout` stops QEMU it prints
+`qemu-system-x86_64: terminating on signal 15 ... (timeout)` and exits with status 124; that
+is expected, because the kernel halts instead of powering off. How to read the lines:
 
 - `user[hello]: Hello from VOS!` was written by the program itself. The kernel adds the
   `user[hello]:` prefix to every line a program prints, so programs cannot imitate kernel

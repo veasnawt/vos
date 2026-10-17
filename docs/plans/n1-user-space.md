@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| Status | **Approved direction; finalized plan.** Only stage N1.0 is authorized for implementation. Every later stage needs explicit approval. |
+| Status | **Complete.** Stages N1.0–N1.10 were implemented and verified one at a time, each after explicit approval (final verification 2026-10-17). The next phase is proposed in `docs/plans/n2-foundation.md`. |
 | Date | 2026-10-17 |
 | Baseline | commit `828e5a1` (`docs: propose VOS native software architecture`) |
 | Target | `ARCH=x86_64` only. `ARCH=i386` stays the default build and keeps its regression tests. |
@@ -456,8 +456,29 @@ stage is implemented.
     NMI/#MC during user mode; more than one process at a time (not supported); timing or cache
     side channels; DMA; the kernel's own W^X (2 MiB alias, writable and executable).
 
-### N1.10 — Documentation [Planned]
+### N1.10 — Documentation [Implemented and verified]
 - ABI v0 reference, architecture document roadmap/status update, README.
+- **Status (verified 2026-10-17):** `docs/abi/syscall-v0.md` (ABI v0 as implemented; its
+  constants were checked against `syscall.h`, `vos/syscall.h`, `memlayout.h`, `process.h`,
+  `usermode.S` and `elf.{c,h}`); the architecture document's section 3 (state after N1 and a
+  security-boundaries summary) and status notes; a rewritten README; `docs/plans/n2-foundation.md`
+  (planning only); `docs/vision/product-direction.md` (provisional). No implementation file
+  changed in N1.10.
+  - README boot command, run exactly as documented (`timeout 10 qemu-system-x86_64 -cdrom
+    build/x86_64/vos.iso -display none -serial stdio -no-reboot`, output captured in full): QEMU
+    stopped by `timeout` (status 124, expected since the kernel halts); the serial output ends
+    with the documented lines `app: module "hello" ...`, `elf: hello: ET_EXEC entry 0x400000,
+    3 PT_LOAD, 3 pages, VOS ABI 0`, `user[hello]: Hello from VOS!`, `proc: exit status 0
+    (cs=0x23 rip=0x40002a)`, `proc[hello]: exited status 0, all frames reclaimed`,
+    `boot: checks passed`.
+  - Final regression from a clean tree: `make test`, `make ARCH=x86_64 test` and
+    `make test-all` pass (27 QEMU runs, both forge checks, the serial 0x01 check, 231 user/ELF
+    checks, the 41-case suite under qemu64, 2 GiB and `-cpu max` with equal free frames before
+    and after); no warnings; `git diff --check` clean; i386 `vos.bin` SHA-256
+    `0760e7eb8ecfcb8545f4126f5a369b0fadfc5163ad9e95c5fba2a81d45afb9dd` (the `828e5a1` baseline);
+    `hello.elf` SHA-256 `c6c64161…cd06` (unchanged since N1.7).
+  - Known stale text found (not changed, since N1.10 changes no code): the kernel's boot line
+    `idt: vector 0x80 present, DPL 3 (provisional exit only)` predates `debug_write` (N1.6).
 
 ---
 
@@ -725,10 +746,25 @@ without `stac` must panic with a supervisor page fault; a user program that sets
 access must still fault; an invalid pointer must return `-VOS_EFAULT` with AC clear afterwards.
 
 ### 9.5 Not guaranteed by N1
-Kernel W^X; SMEP/SMAP/UMIP on the default `qemu64` model (absent there); protection against
-speculative-execution leaks (kernel mapped supervisor-only in every user address space, no
-page-table isolation; untestable in TCG); ASLR/KASLR; kernel stack guard pages; preemption (an
-infinite user loop hangs the system); use of RAM above 1 GiB; thread-safe user-memory access.
+N1's protections were verified only in QEMU TCG (`qemu64` and `-cpu max`); nothing ran on real
+hardware. N1 does **not** provide or guarantee:
+- **Kernel W^X:** the kernel runs from a 2 MiB-page alias of physical 0–1 GiB that is writable
+  and executable; a kernel bug could write to kernel code or to any user frame.
+- **SMEP/SMAP/UMIP on CPUs without them:** they are enabled only when present (not on the
+  default `qemu64` model); SMAP and SMEP were tested only under `-cpu max`.
+- **Concurrent isolation:** only one process exists at a time; isolation between processes that
+  run simultaneously, shared memory and threads are untested because they do not exist.
+- **Preemption:** there is no timer; a program that never exits keeps the CPU forever.
+- **FPU/SIMD:** disabled (CR0.EM), not managed; no FP-capable programs.
+- **Speculative-execution and other side channels:** the kernel stays mapped (supervisor-only)
+  in every address space; no page-table isolation; untestable in TCG.
+- **DMA/IOMMU protection**, and drivers beyond COM1 and VGA text.
+- **Robust NMI and machine-check handling:** only #DF has an IST stack.
+- ASLR/KASLR, kernel stack guard pages, RAM above 1 GiB, `copy_to_user`, and user-memory access
+  that stays safe once more than one thread can run (the `copy_from_user` argument relies on
+  one process, one CPU and interrupts off).
+- Fuzzing of the ELF loader (it has 69 corrupted-file tests and a cross-check with the
+  build-time validator, but no fuzzer).
 
 ---
 
@@ -809,26 +845,61 @@ ABI v0 are documented.
 
 ---
 
-## 13. Commit sequence
+## 13. Commit history (actual)
 
-| # | Commit | Stage |
-|---|---|---|
-| 1 | `docs: finalize N1 user-space implementation plan` | plan |
-| 2 | `test: improve x86_64 exit-test diagnostics` | N1.0 |
-| 3 | `refactor(x86_64): prepare kernel infrastructure for user space` | N1.0 |
-| 4 | `feat(x86_64): kernel GDT/TSS, IDT and exception handling` | N1.1 |
-| 5 | `feat(x86_64): parse Multiboot2 modules and reserve them` | N1.2 |
-| 6 | `feat(x86_64): add bitmap physical page allocator` | N1.3 |
-| 7 | `feat(x86_64): add page-table manager and remove the identity map` | N1.4 |
-| 8 | `feat(x86_64): enter ring 3 with a built-in test page` | N1.5 |
-| 9 | `feat(x86_64): add system-call ABI v0 with user-pointer validation` | N1.6 |
-| 10 | `feat(user): add separately built user runtime and hello` | N1.7 |
-| 11 | `feat(x86_64): load static ELF64 modules and run hello` | N1.8 |
-| 12 | `test(x86_64): add user isolation and fault test suite` | N1.9 |
-| 13 | `docs: document N1, ABI v0 and update the roadmap` | N1.10 |
+The plan proposed 13 commits; the stages were implemented in smaller, separately verified
+commits. All commits after the baseline `828e5a1`, from `git log --reverse 828e5a1..` (46 up
+to the N2/vision documents, plus the closing commit that adds this list):
 
-The test-script commit precedes the refactor because the new `panic` test uses the
-multiple-marker form.
+| # | Commit | Subject | Stage |
+|---|---|---|---|
+| 1 | `6be2769` | docs: finalize N1 user-space implementation plan | plan |
+| 2 | `634790f` | test: improve x86_64 exit-test diagnostics | N1.0 |
+| 3 | `5d48937` | refactor(x86_64): prepare kernel infrastructure for user space | N1.0 |
+| 4 | `7d04db6` | docs: record N1.0 implementation status | N1.0 |
+| 5 | `8449cc5` | feat(x86_64): kernel GDT/TSS, IDT and exception handling | N1.1 |
+| 6 | `368f43a` | docs: record N1.1 implementation status | N1.1 |
+| 7 | `6a7b4f8` | feat(x86_64): parse Multiboot2 modules and command line, reserve them | N1.2 |
+| 8 | `7935f20` | test(x86_64): add boot-info self-tests and GRUB module image | N1.2 |
+| 9 | `7d67147` | docs: record N1.2 implementation status and reservation rules | N1.2 |
+| 10 | `d8a5327` | fix(x86_64): validate Multiboot2 memory map before allocation | N1.3 |
+| 11 | `f1342f3` | feat(x86_64): add bitmap physical page allocator | N1.3 |
+| 12 | `de2ec8f` | test(x86_64): verify physical frame allocation and reservations | N1.3 |
+| 13 | `6399adf` | docs: record N1.3 implementation status | N1.3 |
+| 14 | `7489d57` | feat(x86_64): add virtual memory page-table manager | N1.4 |
+| 15 | `d6216fa` | feat(x86_64): remove boot identity mapping | N1.4 |
+| 16 | `0288f82` | test(x86_64): verify memory mappings and isolation | N1.4 |
+| 17 | `0478590` | docs: record N1.4 implementation status | N1.4 |
+| 18 | `d84c9fa` | feat(x86_64): add minimal process address space and cleanup | N1.5 |
+| 19 | `c15121f` | feat(x86_64): enter ring 3 and handle user exit | N1.5 |
+| 20 | `07330aa` | feat(x86_64): isolate user faults from kernel faults | N1.5 |
+| 21 | `81d5ac8` | test(x86_64): verify ring-3 isolation and teardown | N1.5 |
+| 22 | `c30edf2` | docs: record N1.5 implementation status | N1.5 |
+| 23 | `4ea7a8e` | feat(x86_64): return from system calls to the same process | N1.6 |
+| 24 | `6997487` | feat(x86_64): add copy_from_user with page-table validation | N1.6 |
+| 25 | `a86ab5f` | feat(x86_64): add debug_write with sanitized, kernel-prefixed output | N1.6 |
+| 26 | `70ca83f` | fix(x86_64): disable x87 with CR0.EM for ABI v0 | N1.6 |
+| 27 | `4cf311a` | test(x86_64): poison registers on kernel entry in test builds | N1.6 |
+| 28 | `79076d8` | docs: record N1.6 implementation status | N1.6 |
+| 29 | `43c11d7` | feat(user): add VOS ABI v0 runtime and startup code | N1.7 |
+| 30 | `99c43f8` | feat(user): build first native hello application | N1.7 |
+| 31 | `d6c6298` | test(user): validate static ELF64 executable profile | N1.7 |
+| 32 | `bdaef0b` | docs: record N1.7 implementation status | N1.7 |
+| 33 | `3e5ab64` | feat(x86_64): validate VOS ELF64 executables | N1.8 |
+| 34 | `8f84201` | feat(x86_64): load ELF segments into isolated user memory | N1.8 |
+| 35 | `02879b9` | feat(x86_64): execute hello from GRUB module | N1.8 |
+| 36 | `d9f01ea` | test(x86_64): verify native ELF execution and rejection | N1.8 |
+| 37 | `bca35e0` | docs: record N1.8 implementation status | N1.8 |
+| 38 | `8694dfb` | fix(user): detect SSE register operands in the build-time validator | N1.9 |
+| 39 | `edabda4` | feat(x86_64): accept up to 64 boot modules | N1.9 |
+| 40 | `38277a7` | feat(x86_64): enable SMAP and clear AC on every kernel entry | N1.9 |
+| 41 | `d63e25d` | test(x86_64): isolation suite of separately built ELF fixtures | N1.9 |
+| 42 | `74501a7` | docs: record N1.9 implementation status | N1.9 |
+| 43 | `21eda9b` | docs: document VOS native syscall ABI v0 | N1.10 |
+| 44 | `0c4a2f2` | docs: describe the N1 kernel in the README and architecture document | N1.10 |
+| 45 | `43b0df8` | docs: propose N2 operating-system foundation roadmap | N1.10 |
+| 46 | `c63e77c` | docs: record provisional VOS product direction | N1.10 |
+| 47 | (this commit) | docs: close N1 native user-space milestone | N1.10 |
 
 ---
 
@@ -841,11 +912,20 @@ objects, app and service managers, packages (architecture document sections 10�
 
 ---
 
-## 15. Open decisions (unchanged, pending)
-- Licence: `MIT OR Apache-2.0` remains the provisional recommendation; no licence file is added
-  until an explicit decision.
-- GDB installation (recommended before N1.1; not installed).
-- Whether U15 (`-cpu max`, SMAP) is part of N1 or a follow-up.
+## 15. Open decisions (after N1)
+- **Licence:** still undecided; `MIT OR Apache-2.0` remains the provisional recommendation; no
+  licence file has been added. Needed before any third-party code or outside reuse.
+- **Default architecture:** `ARCH=i386` stays the default (unchanged). The architecture
+  document's D2 said to revisit this once the first native application ran, which it now does.
+  Recommendation: decide before N2 starts whether `ARCH=x86_64` becomes the default, since all
+  further work is x86_64-only and i386 only guards its own unchanged binary.
+- **GDB and cross toolchain:** neither GDB nor an `x86_64-elf` cross toolchain is installed; N1
+  was completed with the host gcc and explicit flags, QEMU logs and in-kernel diagnostics.
+  Recommendation: install GDB (with QEMU's gdbstub) before N2.3 (context switching), and
+  consider a cross toolchain when the host gcc's defaults become a burden. Both need approval.
+- **Resolved — U15 / SMAP:** SMAP was enabled in N1.9 when the CPU has it, with `clac` on every
+  kernel entry; no `stac`/`clac` bracketing was needed because the kernel never accesses user
+  pages through user addresses (section 9.4 and the N1.9 status).
 
 ## References
 - System V AMD64 psABI, `low-level-sys-info.tex` —
