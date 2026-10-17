@@ -427,7 +427,9 @@ int selftest_pmm_kernel(const struct boot_info *bi, const struct resv_table *t)
     expect_protected(k, pdpt_hi, "boot higher-half PDPT protected");
     expect(pdpt_lo != 0, "boot identity PDPT known");
     expect_protected(k, pdpt_lo, "boot identity PDPT protected");
-    expect_protected(k, pd, "boot page directory protected");
+    expect_protected(k, pd, "kernel page directory protected");
+    expect_protected(k, ((const uint64_t *)phys_to_virt(pd))[0] & 0x000FFFFFFFFFF000ULL,
+                     "kernel page table (phys 0-2 MiB) protected");
     expect_protected(k, rsp - KERNEL_VMA, "current kernel stack protected");
     expect_protected(k, gdtr.base - KERNEL_VMA, "GDT protected");
     expect_protected(k, idtr.base - KERNEL_VMA, "IDT protected");

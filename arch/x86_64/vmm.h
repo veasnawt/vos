@@ -9,10 +9,12 @@
  *   - va must be canonical, 4 KiB aligned, in the lower half, outside the
  *     null guard [0, 4 MiB) and below the highest lower-half page. The upper
  *     half (kernel alias and everything else) is never modified.
- *   - pa must be 4 KiB aligned and inside [1 MiB, 1 GiB), the range the
- *     physical allocator manages.
- *   - flags: VMM_WRITE, VMM_EXEC, VMM_USER; writable + executable is refused.
- *     A page without VMM_EXEC gets NX.
+ *   - pa must be 4 KiB aligned and a frame currently allocated from the
+ *     physical allocator, so inside [1 MiB, 1 GiB) and never a frame of the
+ *     kernel image, a module or the boot information.
+ *   - flags: VMM_WRITE, VMM_EXEC, VMM_USER; writable + executable is refused,
+ *     and so is VMM_EXEC without VMM_USER: only the kernel text (kmap.c) is
+ *     executable in ring 0. A page without VMM_EXEC gets NX.
  *   - an existing mapping, or a large page in the way, is never overwritten.
  * Intermediate entries created here are present + writable (+ user in the
  * lower half); the leaf alone decides the effective permissions.
@@ -52,8 +54,8 @@
 #define VMM_ENONCANON   2   /* va not canonical */
 #define VMM_ERANGE      3   /* va in the null guard or the top lower-half page */
 #define VMM_EKERNEL     4   /* va in the upper half: never changed by vmm_map/unmap */
-#define VMM_EPHYS       5   /* pa outside [1 MiB, 1 GiB) */
-#define VMM_EFLAGS      6   /* unknown flag, or writable + executable */
+#define VMM_EPHYS       5   /* pa not a PMM-allocated frame in [1 MiB, 1 GiB) */
+#define VMM_EFLAGS      6   /* unknown flag, writable + executable, or supervisor executable */
 #define VMM_EEXIST      7   /* va already mapped */
 #define VMM_ENOTMAPPED  8   /* va not mapped */
 #define VMM_ELARGE      9   /* a 1 GiB / 2 MiB page covers va */
@@ -74,6 +76,8 @@ struct vmm_audit {
     uint64_t leaves_lower;      /* 4 KiB mappings in the lower half */
     uint64_t user_leaves;       /* effective user-accessible leaves */
     uint64_t large_upper;       /* 2 MiB kernel alias pages */
+    uint64_t leaves_upper;      /* 4 KiB upper-half mappings (the kernel map's page table) */
+    uint64_t exec_supervisor;   /* leaves executable in ring 0 that are not user pages */
     uint64_t errors;
     const char *first_error;
     uint64_t first_error_va;
@@ -97,9 +101,14 @@ int vmm_lookup(uint64_t root, uint64_t va, struct vmm_mapping *m);
 
 /*
  * Walk the whole hierarchy under `root` without following any malformed
- * entry. With kernel_half set, the upper half must be exactly the kernel
- * alias: PML4[511] -> PDPT[510] -> 512 supervisor 2 MiB pages of phys
- * [0, 1 GiB), nothing else. Returns VMM_OK if no error was found.
+ * entry. In every address space no leaf may be writable and executable
+ * (effective permissions), no non-user leaf may be executable unless it maps
+ * kernel text, no mapping of kernel text may be writable, no leaf may cover
+ * a stack guard page, and lower-half leaves must map frames in [1 MiB,
+ * 1 GiB) outside the kernel image. With kernel_half set, the upper half must
+ * be exactly the W^X kernel map (kmap.h): PML4[511] -> PDPT[510] -> PD[0] a
+ * page table matching kmap_expected_pte, PD[1..511] matching
+ * kmap_expected_pde, nothing else. Returns VMM_OK if no error was found.
  */
 int vmm_audit_space(uint64_t root, int kernel_half, struct vmm_audit *a);
 

@@ -13,6 +13,7 @@
 #include "cpu.h"
 #include "gdt.h"
 #include "idt.h"
+#include "kmap.h"
 #include "memlayout.h"
 #include "multiboot2.h"
 #include "panic.h"
@@ -189,6 +190,25 @@ void kernel_main(uint32_t mb2_magic, uint32_t mb2_info)
         serial_puts("\r\n");
         panic("vmm: identity map removal failed");
     }
+    serial_puts("vmm: identity map removed\r\n");
+#ifdef VOS_TEST_CASE_kernel_lowaccess
+    /* Immediately, before anything else can flush the TLB: proves the CR3 reload too. */
+    selftest_vmm_fault_lowaccess();
+#endif
+
+    /* Kernel W^X: text R-X, rodata R, everything else NX, stack guard pages unmapped. */
+    if (kmap_init(&bi) != 0) {
+        const struct kmap_fail *f = kmap_failure();
+
+        serial_puts("kmap: refused: ");
+        serial_puts(f->what ? f->what : "?");
+        serial_puts(": ");
+        serial_puts(f->problem ? f->problem : "?");
+        serial_puts(" at ");
+        serial_hex(f->va);
+        serial_puts("\r\n");
+        panic("kmap: kernel W^X map failed");
+    }
     struct vmm_audit audit;
     if (vmm_audit_space(vmm_kernel_root(), 1, &audit) != VMM_OK) {
         serial_puts("vmm: audit: ");
@@ -198,15 +218,15 @@ void kernel_main(uint32_t mb2_magic, uint32_t mb2_info)
         serial_puts("\r\n");
         panic("vmm: kernel page tables failed the audit");
     }
-    serial_puts("vmm: identity map removed; kernel alias ");
+    serial_puts("vmm: audit passed: kernel alias ");
+    serial_dec(audit.leaves_upper);
+    serial_puts(" x 4 KiB + ");
     serial_dec(audit.large_upper);
     serial_puts(" x 2 MiB supervisor pages, ");
+    serial_dec(audit.exec_supervisor);
+    serial_puts(" ring-0 executable (all kernel text, none writable), ");
     serial_dec(audit.tables_lower);
     serial_puts(" lower-half tables\r\n");
-#ifdef VOS_TEST_CASE_kernel_lowaccess
-    /* Immediately, before anything else can flush the TLB: proves the CR3 reload too. */
-    selftest_vmm_fault_lowaccess();
-#endif
 
     /* The first native application: GRUB module "hello", run in ring 3. */
     check(app_run_boot_module(&bi), "boot application ran and exited with status 0");

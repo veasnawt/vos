@@ -13,6 +13,7 @@
 #include "console.h"
 #include "cpu.h"
 #include "gdt.h"
+#include "kmap.h"
 #include "lib.h"
 #include "memlayout.h"
 #include "panic.h"
@@ -80,7 +81,7 @@ static int audit_ok(uint64_t tables, uint64_t leaves, uint64_t user)
     struct vmm_audit a;
 
     return vmm_audit_space(vmm_kernel_root(), 1, &a) == VMM_OK && a.tables_lower == tables &&
-           a.leaves_lower == leaves && a.user_leaves == user && a.large_upper == 512;
+           a.leaves_lower == leaves && a.user_leaves == user && a.large_upper == KMAP_LARGE_PAGES;
 }
 
 static int mapped_to(uint64_t va, uint64_t pa, unsigned flags)
@@ -111,8 +112,13 @@ static void test_layout_and_survival(void)
            "boot identity PDPT kept intact, never PMM-owned");
 
     expect(vmm_lookup(K, KERNEL_VMA + PMM_LOW_LIMIT + 0x123, &m) == VMM_OK &&
-           m.pa == PMM_LOW_LIMIT + 0x123 && m.page_size == 0x200000 &&
-           m.flags == (VMM_WRITE | VMM_EXEC), "alias: 2 MiB, supervisor, W+X (documented limit)");
+           m.pa == PMM_LOW_LIMIT + 0x123 && m.page_size == PAGE_SIZE && m.flags == 0,
+           "alias of the boot code page: 4 KiB, supervisor, read-only, NX");
+    expect(vmm_lookup(K, KERNEL_VMA + 0x200123, &m) == VMM_OK && m.pa == 0x200123 &&
+           m.page_size == 0x200000 && m.flags == VMM_WRITE &&
+           vmm_lookup(K, KERNEL_ALIAS_END - 1, &m) == VMM_OK && m.pa == BOOT_MAP_LIMIT - 1 &&
+           m.page_size == 0x200000 && m.flags == VMM_WRITE,
+           "alias above 2 MiB: 2 MiB pages, supervisor, writable, NX");
     expect(vmm_lookup(K, KERNEL_ALIAS_END, &m) == VMM_ENOTMAPPED &&
            vmm_lookup(K, UPPER_HALF_START, &m) == VMM_ENOTMAPPED &&
            vmm_lookup(K, 0x0000800000000000ULL, &m) == VMM_ENONCANON,
@@ -160,6 +166,8 @@ static void test_map_unmap(void)
     expect(audit_ok(3, 1, 0), "audit: 3 lower tables, 1 leaf, 0 user leaves");
 
     /* Invalid and conflicting requests change nothing. */
+    uint64_t free_frame = alloc();
+    release(free_frame);
     static const struct { uint64_t va, pa; unsigned flags; int err; const char *what; } bad[] = {
         { VT, 0, VMM_WRITE, VMM_EEXIST, "duplicate mapping refused" },
         { VT + 8, 0, 0, VMM_EALIGN, "misaligned virtual address refused" },
@@ -177,6 +185,9 @@ static void test_map_unmap(void)
         { VT2, 1ULL << 52, 0, VMM_EPHYS, "frame beyond physical addressing refused" },
         { VT2, 0, VMM_WRITE | VMM_EXEC, VMM_EFLAGS, "writable + executable refused" },
         { VT2, 0, VMM_WRITE | VMM_EXEC | VMM_USER, VMM_EFLAGS, "user W+X refused" },
+        { VT2, 0, VMM_EXEC, VMM_EFLAGS, "supervisor executable page refused (only kernel text runs in ring 0)" },
+        { VT2, 1, 0, VMM_EPHYS, "kernel text frame refused" },
+        { VT2, 2, 0, VMM_EPHYS, "free frame refused" },
         { VT2, 0, 0x8, VMM_EFLAGS, "unknown flag refused" },
     };
     for (unsigned i = 0; i < sizeof(bad) / sizeof(bad[0]); i++) {
@@ -184,12 +195,14 @@ static void test_map_unmap(void)
         uint64_t frame = bad[i].pa ? bad[i].pa : d2;
         if (bad[i].err == VMM_EALIGN && bad[i].pa == 8)
             frame = d2 + 8;
+        if (bad[i].pa == 1)
+            frame = ((uint64_t)selftest_vmm - KERNEL_VMA) & ~(PAGE_SIZE - 1);
+        if (bad[i].pa == 2)
+            frame = free_frame;
         int err = vmm_map(K, bad[i].va, frame, bad[i].flags);
         expect(err == bad[i].err && pmm_free_count() == f && mapped_to(VT, d1, VMM_WRITE) &&
                audit_ok(3, 1, 0), bad[i].what);
     }
-    uint64_t free_frame = alloc();
-    release(free_frame);
     expect(vmm_map(0x200001, VT2, d2, 0) == VMM_EROOT && vmm_map(PMM_LIMIT, VT2, d2, 0) == VMM_EROOT &&
            vmm_map(free_frame, VT2, d2, 0) == VMM_EROOT && vmm_map(0, VT2, d2, 0) == VMM_EROOT,
            "invalid roots refused (misaligned, >= 1 GiB, free frame, 0)");
@@ -226,9 +239,9 @@ static void test_map_unmap(void)
            vmm_unmap(K, 0x0000800000000000ULL, &pa) == VMM_ENONCANON && audit_ok(0, 0, 0),
            "invalid unmaps refused");
 
-    /* Executable supervisor page: NX clear in the leaf. */
-    expect(vmm_map(K, VT, d1, VMM_EXEC) == VMM_OK && mapped_to(VT, d1, VMM_EXEC) &&
-           vmm_unmap(K, VT, &pa) == VMM_OK, "executable supervisor page represented");
+    /* Executable user page: NX clear in the leaf. */
+    expect(vmm_map(K, VT, d1, VMM_EXEC | VMM_USER) == VMM_OK && mapped_to(VT, d1, VMM_EXEC | VMM_USER) &&
+           vmm_unmap(K, VT, &pa) == VMM_OK, "executable user page represented");
 
     /* Allocation failure part-way: everything allocated by the call is released. */
     for (int budget = 0; budget < 3; budget++) {
@@ -457,18 +470,25 @@ void selftest_vmm_fault_stale_tlb(void)
     no_fault("unmapped page still readable");
 }
 
-/* Executing from a page without VMM_EXEC must fault (NX); an executable page must run. */
+static void __attribute__((noinline)) nx_control(void)
+{
+    __asm__ volatile ("" : : : "memory");
+}
+
+/*
+ * Executing from a page without VMM_EXEC must fault (NX). The control is a
+ * call into the kernel text: since N2.0 vmm_map refuses supervisor-executable
+ * pages, so the kernel text is the only code ring 0 can run.
+ */
 void selftest_vmm_fault_nx(void)
 {
-    uint64_t x = alloc(), n = alloc();
+    uint64_t n = alloc();
 
-    *(volatile uint8_t *)phys_to_virt(x) = 0xC3;            /* ret */
-    *(volatile uint8_t *)phys_to_virt(n) = 0xC3;
-    if (vmm_map(vmm_kernel_root(), VT2, x, VMM_EXEC) != VMM_OK ||
-        vmm_map(vmm_kernel_root(), VT, n, VMM_WRITE) != VMM_OK)
+    *(volatile uint8_t *)phys_to_virt(n) = 0xC3;            /* ret */
+    if (vmm_map(vmm_kernel_root(), VT, n, VMM_WRITE) != VMM_OK)
         panic("test case: setup failed");
-    ((void (*)(void))VT2)();
-    serial_puts("vmm-test: executable control page returned\r\n");
+    nx_control();
+    serial_puts("vmm-test: kernel text control returned\r\n");
     ((void (*)(void))VT)();
     no_fault("NX page executed");
 }

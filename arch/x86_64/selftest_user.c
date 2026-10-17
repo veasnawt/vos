@@ -11,6 +11,7 @@
 #include "cpu.h"
 #include "exception.h"
 #include "gdt.h"
+#include "kmap.h"
 #include "lib.h"
 #include "memlayout.h"
 #include "panic.h"
@@ -104,7 +105,7 @@ static void test_address_space(void)
             others++;
     expect(others == 0 && l4[0] && l4[255], "only PML4[0], [255] and [511] are present");
     expect(vmm_audit_space(proc.root, 1, &a) == VMM_OK && a.tables_lower == 6 &&
-           a.leaves_lower == 5 && a.user_leaves == 5 && a.large_upper == 512,
+           a.leaves_lower == 5 && a.user_leaves == 5 && a.large_upper == KMAP_LARGE_PAGES,
            "audit: alias intact, 6 tables, 5 user leaves, no W+X");
 
     expect(vmm_lookup(proc.root, PROC_CODE_VA, &m) == VMM_OK && m.flags == (VMM_EXEC | VMM_USER) &&

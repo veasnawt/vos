@@ -10,6 +10,7 @@
 #include "console.h"
 #include "cpu.h"
 #include "gdt.h"
+#include "kmap.h"
 #include "lib.h"
 #include "loader.h"
 #include "memlayout.h"
@@ -152,7 +153,7 @@ static void test_load_and_run(void)
     expect(none_in_module && tp.npages == im.pages + PROC_STACK_PAGES,
            "no user page maps a frame of the GRUB module");
     expect(vmm_audit_space(tp.root, 1, &a) == VMM_OK && a.user_leaves == tp.npages &&
-           a.leaves_lower == tp.npages && a.large_upper == 512,
+           a.leaves_lower == tp.npages && a.large_upper == KMAP_LARGE_PAGES,
            "audit: only the process pages are user-accessible; kernel half supervisor-only");
     expect(vmm_lookup(tp.root, (uint64_t)phys_to_virt(mod_start), &m) == VMM_OK && !(m.flags & VMM_USER),
            "the module's kernel alias is supervisor-only in the process root");

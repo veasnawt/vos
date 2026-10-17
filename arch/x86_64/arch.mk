@@ -9,7 +9,7 @@ ARCH_CFLAGS     := -g -m64 -mcmodel=kernel -mno-red-zone -mgeneral-regs-only \
 ARCH_ASFLAGS    := -g -m64
 ARCH_LDFLAGS    := -m elf_x86_64 -z max-page-size=0x1000
 ARCH_OBJS       := boot.o entry.o usermode.o kernel.o bootinfo.o console.o cpu.o exception.o gdt.o idt.o \
-                   lib.o loader.o panic.o pmm.o process.o resv.o syscall.o usercopy.o vmm.o elf.o app.o
+                   lib.o loader.o panic.o pmm.o process.o resv.o syscall.o usercopy.o vmm.o kmap.o elf.o app.o
 ifeq ($(VOS_TEST),1)
 ARCH_OBJS       += selftest.o selftest_cpu.o selftest_elf.o selftest_pmm.o selftest_suite.o selftest_user.o \
                    selftest_vmm.o user_progs.o
@@ -92,7 +92,7 @@ arch-test: iso
 	    'cr2=0x200000000000 ' 'panic: #PF page fault' 'VOS-TEST: FAIL' --
 	$(MAKE) --no-print-directory ARCH=$(ARCH) VOS_TEST=1 VOS_TEST_CASE=vmm-nx iso
 	scripts/exit-test.sh vmm-nx build/$(ARCH)-test-vmm-nx/vos.iso 35 \
-	    'vmm-test: executable control page returned' \
+	    'vmm-test: kernel text control returned' \
 	    'exc: #PF vec=14 err=0x11 cs=0x8 rip=0x200000000000 ' 'cr2=0x200000000000 ' \
 	    'panic: #PF page fault' 'VOS-TEST: FAIL' --
 	$(MAKE) --no-print-directory ARCH=$(ARCH) VOS_TEST=1 VOS_TEST_CASE=vmm-readonly iso

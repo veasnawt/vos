@@ -11,7 +11,9 @@
  *   0x0000000000000000-0x000000003fffffff -> phys 0-1 GiB  identity, boot only
  *   0xffffffff80000000-0xffffffffbfffffff -> phys 0-1 GiB  kernel (KERNEL_VMA)
  * The boot GDT stays in the identity-mapped area until a later stage
- * replaces it.
+ * replaces it. These mappings are writable and executable; kernel_main
+ * removes the identity map and kmap.c replaces the kernel directory with the
+ * W^X kernel map before anything else runs (N2.0).
  */
 
 .set KERNEL_VMA,        0xFFFFFFFF80000000
