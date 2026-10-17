@@ -24,6 +24,21 @@ void serial_puts(const char *s)
     }
 }
 
+void serial_puts_safe(const char *s)
+{
+    char buf[2] = { 0, 0 };
+    int n = 0;
+
+    for (; *s; s++, n++) {
+        if (n == 120) {
+            serial_puts("...");
+            return;
+        }
+        buf[0] = (*s >= 0x20 && *s < 0x7F) ? *s : '?';
+        serial_puts(buf);
+    }
+}
+
 void serial_hex(uint64_t v)
 {
     char buf[19];

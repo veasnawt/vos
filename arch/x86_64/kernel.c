@@ -7,6 +7,7 @@
 #include <stddef.h>
 #include <stdint.h>
 
+#include "bootinfo.h"
 #include "console.h"
 #include "cpu.h"
 #include "gdt.h"
@@ -14,8 +15,7 @@
 #include "memlayout.h"
 #include "multiboot2.h"
 #include "panic.h"
-
-#define MB2_INFO_MAX    0x10000u        /* sanity bound for the info block */
+#include "resv.h"
 
 #define BOOT_CS         GDT_KERNEL_CS
 
@@ -25,26 +25,10 @@
 #define TEST_EXIT_FAIL  0x11            /* QEMU exit status 35 */
 #endif
 
-#define ARRAY_SIZE(a)   (sizeof(a) / sizeof((a)[0]))
-
 /* Physical bounds of the loaded image, from linker.ld. */
 extern char __kernel_phys_start[], __kernel_phys_end[];
 
-/* A physical range in use at boot that must never be handed out as free. */
-struct phys_range {
-    uint64_t start, end;                /* [start, end), page-aligned outward */
-    const char *what;
-};
-
-struct boot_info {
-    uint64_t info_start, info_end;      /* Multiboot2 information block */
-    const char *loader;
-    const struct mb2_tag_mmap *mmap;
-    uint32_t mmap_entries;
-};
-
-static struct phys_range boot_reserved[2];
-static size_t boot_reserved_count;
+static struct resv_table boot_resv;
 static const char *first_failure;
 static volatile uint64_t bss_probe;     /* boot.S zeroes .bss, so this must read 0 */
 
@@ -57,88 +41,6 @@ static void check(int ok, const char *what)
     serial_puts("\r\n");
     if (!first_failure)
         first_failure = what;
-}
-
-static const struct mb2_mmap_entry *mmap_entry(const struct mb2_tag_mmap *m, uint32_t i)
-{
-    return (const void *)((const uint8_t *)m + sizeof(*m) + (size_t)i * m->entry_size);
-}
-
-/* Validate the Multiboot2 information block and record the tags we use. */
-static int parse_multiboot2(uint64_t info_phys, struct boot_info *bi)
-{
-    if (info_phys == 0 || info_phys % MB2_TAG_ALIGN != 0 ||
-        info_phys + sizeof(struct mb2_info) > BOOT_MAP_LIMIT)
-        return 0;
-
-    const uint8_t *base = phys_to_virt(info_phys);
-    uint32_t total = ((const struct mb2_info *)base)->total_size;
-
-    if (total < sizeof(struct mb2_info) + sizeof(struct mb2_tag) ||
-        total > MB2_INFO_MAX || info_phys + total > BOOT_MAP_LIMIT)
-        return 0;
-    bi->info_start = info_phys;
-    bi->info_end = info_phys + total;
-
-    uint32_t off = sizeof(struct mb2_info);
-    while (off + sizeof(struct mb2_tag) <= total) {
-        const struct mb2_tag *tag = (const void *)(base + off);
-
-        if (tag->size < sizeof(*tag) || tag->size > total - off)
-            return 0;
-        switch (tag->type) {
-        case MB2_TAG_END:
-            return bi->mmap != NULL;
-        case MB2_TAG_LOADER_NAME: {
-            const struct mb2_tag_string *s = (const void *)tag;
-            uint32_t len = tag->size - sizeof(*tag);
-
-            if (len > 0 && s->string[len - 1] == '\0')
-                bi->loader = s->string;
-            break;
-        }
-        case MB2_TAG_MMAP: {
-            const struct mb2_tag_mmap *m = (const void *)tag;
-
-            if (tag->size < sizeof(*m) || m->entry_size < sizeof(struct mb2_mmap_entry) ||
-                m->entry_size % 8 != 0)
-                return 0;
-            bi->mmap = m;
-            bi->mmap_entries = (tag->size - sizeof(*m)) / m->entry_size;
-            break;
-        }
-        }
-        off += (tag->size + MB2_TAG_ALIGN - 1) & ~(uint32_t)(MB2_TAG_ALIGN - 1);
-    }
-    return 0;                           /* no end tag */
-}
-
-static int in_usable_ram(const struct boot_info *bi, uint64_t start, uint64_t end)
-{
-    for (uint32_t i = 0; i < bi->mmap_entries; i++) {
-        const struct mb2_mmap_entry *e = mmap_entry(bi->mmap, i);
-
-        if (e->type == MB2_MMAP_AVAILABLE && start >= e->base && end <= e->base + e->length)
-            return 1;
-    }
-    return 0;
-}
-
-/*
- * Record [start, end) as in use, rounded outward to whole pages. The exact
- * range must lie in usable RAM inside the boot mapping.
- */
-static int reserve(const struct boot_info *bi, uint64_t start, uint64_t end, const char *what)
-{
-    if (boot_reserved_count >= ARRAY_SIZE(boot_reserved) || start >= end ||
-        end > BOOT_MAP_LIMIT || !in_usable_ram(bi, start, end))
-        return 0;
-
-    struct phys_range *r = &boot_reserved[boot_reserved_count++];
-    r->start = start & ~(PAGE_SIZE - 1);
-    r->end = (end + PAGE_SIZE - 1) & ~(PAGE_SIZE - 1);
-    r->what = what;
-    return 1;
 }
 
 void kernel_main(uint32_t mb2_magic, uint32_t mb2_info)
@@ -172,44 +74,69 @@ void kernel_main(uint32_t mb2_magic, uint32_t mb2_info)
     cpu_init_protections();
 
     check(mb2_magic == MB2_BOOTLOADER_MAGIC, "Multiboot2 magic");
-    int have_info = mb2_magic == MB2_BOOTLOADER_MAGIC && parse_multiboot2(mb2_info, &bi);
-    check(have_info, "Multiboot2 information and memory map");
+    const char *err = "bad Multiboot2 magic";
+    if (mb2_magic == MB2_BOOTLOADER_MAGIC)
+        err = mb2_parse(phys_to_virt(mb2_info), mb2_info, &bi);
+    if (err)
+        panic(err);
 
-    if (have_info) {
-        uint64_t usable = 0;
+    uint64_t usable = 0;
 
-        for (uint32_t i = 0; i < bi.mmap_entries; i++) {
-            const struct mb2_mmap_entry *e = mmap_entry(bi.mmap, i);
-            if (e->type == MB2_MMAP_AVAILABLE)
-                usable += e->length;
-        }
-        serial_puts("boot: loader \"");
-        serial_puts(bi.loader ? bi.loader : "?");
-        serial_puts("\", memory map ");
-        serial_dec(bi.mmap_entries);
-        serial_puts(" entries, ");
-        serial_dec(usable);
-        serial_puts(" bytes usable\r\n");
-        serial_puts("boot: multiboot2 info at ");
-        serial_hex(bi.info_start);
-        serial_puts("-");
-        serial_hex(bi.info_end);
-        serial_puts("\r\n");
-
-        check(reserve(&bi, (uintptr_t)__kernel_phys_start, (uintptr_t)__kernel_phys_end,
-                      "kernel image"), "kernel image lies in usable RAM");
-        check(reserve(&bi, bi.info_start, bi.info_end, "multiboot2 info"),
-              "multiboot2 info lies in usable RAM");
-        for (size_t i = 0; i < boot_reserved_count; i++) {
-            serial_puts("boot: reserved ");
-            serial_hex(boot_reserved[i].start);
-            serial_puts("-");
-            serial_hex(boot_reserved[i].end);
-            serial_puts(" ");
-            serial_puts(boot_reserved[i].what);
-            serial_puts("\r\n");
-        }
+    for (uint32_t i = 0; i < bi.mmap_entries; i++) {
+        const struct mb2_mmap_entry *e = (const void *)((const uint8_t *)bi.mmap +
+                                         sizeof(*bi.mmap) + (size_t)i * bi.mmap->entry_size);
+        if (e->type == MB2_MMAP_AVAILABLE)
+            usable += e->length;
     }
+    serial_puts("boot: loader \"");
+    serial_puts(bi.loader ? bi.loader : "?");
+    serial_puts("\", memory map ");
+    serial_dec(bi.mmap_entries);
+    serial_puts(" entries, ");
+    serial_dec(usable);
+    serial_puts(" bytes usable\r\n");
+    serial_puts("boot: multiboot2 info at ");
+    serial_hex(bi.info_start);
+    serial_puts("-");
+    serial_hex(bi.info_end);
+    serial_puts("\r\n");
+    serial_puts("boot: kernel command line ");
+    if (bi.cmdline) {
+        serial_puts("\"");
+        serial_puts_safe(bi.cmdline);
+        serial_puts("\"\r\n");
+    } else {
+        serial_puts("absent\r\n");
+    }
+    serial_puts("boot: modules ");
+    serial_dec(bi.module_count);
+    serial_puts("\r\n");
+    for (uint32_t i = 0; i < bi.module_count; i++) {
+        serial_puts("boot: module ");
+        serial_dec(i);
+        serial_puts(" ");
+        serial_hex(bi.modules[i].start);
+        serial_puts("-");
+        serial_hex(bi.modules[i].end);
+        serial_puts(" \"");
+        serial_puts_safe(bi.modules[i].cmdline);
+        serial_puts("\"\r\n");
+    }
+
+    resv_init(&boot_resv);
+    err = boot_reserve(&bi, (uintptr_t)__kernel_phys_start, (uintptr_t)__kernel_phys_end,
+                       &boot_resv);
+    for (size_t i = 0; i < boot_resv.count; i++) {
+        serial_puts("boot: reserved ");
+        serial_hex(boot_resv.r[i].start);
+        serial_puts("-");
+        serial_hex(boot_resv.r[i].end);
+        serial_puts(" ");
+        serial_puts(boot_resv.r[i].what);
+        serial_puts("\r\n");
+    }
+    if (err)
+        panic(err);
 
     serial_puts(first_failure ? "boot: FAILED\r\n" : "boot: checks passed\r\n");
 #ifdef VOS_TEST_CASE_panic

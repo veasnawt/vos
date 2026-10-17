@@ -8,7 +8,9 @@
 #define MB2_TAG_ALIGN           8
 
 #define MB2_TAG_END             0
+#define MB2_TAG_CMDLINE         1
 #define MB2_TAG_LOADER_NAME     2
+#define MB2_TAG_MODULE          3
 #define MB2_TAG_MMAP            6
 
 #define MB2_MMAP_AVAILABLE      1
@@ -27,6 +29,13 @@ struct mb2_tag {
 struct mb2_tag_string {
     struct mb2_tag tag;
     char string[];              /* NUL-terminated */
+};
+
+struct mb2_tag_module {
+    struct mb2_tag tag;
+    uint32_t mod_start;         /* physical, inclusive */
+    uint32_t mod_end;           /* physical, exclusive */
+    char cmdline[];             /* NUL-terminated */
 };
 
 struct mb2_tag_mmap {

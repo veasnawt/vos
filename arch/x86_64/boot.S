@@ -46,6 +46,9 @@ mb2_header:
     .long MB2_ARCH_I386
     .long mb2_header_end - mb2_header
     .long 0x100000000 - (MB2_HEADER_MAGIC + MB2_ARCH_I386 + (mb2_header_end - mb2_header))
+    .short 6                        /* module alignment tag: type */
+    .short 0                        /*                       flags */
+    .long 8                         /*                       size */
     .short 0                        /* end tag: type */
     .short 0                        /*          flags */
     .long 8                         /*          size */
