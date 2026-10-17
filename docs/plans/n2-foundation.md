@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| Status | **Approved as the current development plan (2026-10-18), revised after the N2 architecture review.** Only N2.0 is authorized; every later stage needs explicit approval. Sections marked [Proposal] or [Option] are still design, not implementation. |
+| Status | **Approved as the current development plan (2026-10-18), revised after the N2 architecture review.** **N2.0 is complete (2026-10-18, section 3.1).** N2.1 and every later stage need explicit approval. Sections marked [Proposal] or [Option] are still design, not implementation. |
 | Date | 2026-10-17, revised 2026-10-18 |
 | Starting point | N1 complete (see `docs/plans/n1-user-space.md`, `docs/abi/syscall-v0.md`) |
 | Target | `ARCH=x86_64`; the i386 kernel stays as it is |
@@ -69,6 +69,94 @@ Each stage keeps `make test-all` green, adds deterministic tests and stops for r
 Order: N2.0 → N2.1 → N2.2 → N2.3 → N2.4 → N2.5. Guard pages and IST stacks come before any
 asynchronous entry (N2.1).
 
+### 3.1 N2.0 result: kernel W^X and protected kernel stacks (complete)
+
+**Memory map of the kernel alias** (production image; addresses from `nm` and the boot log;
+"phys" is the frame, the virtual address is `0xFFFFFFFF80000000` + phys):
+
+| Phys range | Before N2.0 (boot tables) | After N2.0 (`kmap.c`) |
+|---|---|---|
+| `0x0`–`0xFFFFF` (low memory, VGA) | part of one 2 MiB page, RW **X** | 256 x 4 KiB, RW NX |
+| `0x100000` (Multiboot2 header, 32-bit boot code) | " | 4 KiB, R NX |
+| `0x101000`–`0x106FFF` (boot data, boot PML4/PDPTs/PD) | " | 4 KiB, RW NX |
+| `0x107000`–`0x10EFFF` (`.text`, 8 pages) | " | 4 KiB, **R X** (the only ring-0 executable pages) |
+| `0x10F000`–`0x111FFF` (`.rodata`) | " | 4 KiB, R NX |
+| `0x112000`–`0x13AFFF` (`.data`, `.bss`) | " | 4 KiB, RW NX, except the guards below |
+| `0x113000`, `0x119000`, `0x11B000`, `0x11D000`, `0x11F000` | " | **not present**: guards below the boot stack, IST1, IST2, IST3 and the RSP0 entry stack |
+| `0x13B000`–`0x1FFFFF` (free frames, info block, modules) | " | 4 KiB, RW NX |
+| `0x200000`–`0x3FFFFFFF` | 511 x 2 MiB, RW **X** | 511 x 2 MiB, RW NX |
+
+PML4[511] and PDPT[510] are unchanged; `kmap_init` points PDPT[510] at a new page directory
+whose entry 0 is one page table for phys 0–2 MiB. User address spaces copy PML4[511] by value
+and therefore share the new map. `phys_to_virt()` remains valid for every frame below 1 GiB
+except the five guard frames. The boot page directory is zeroed after the switch.
+
+**Stacks.** Boot kernel stack 16 KiB, RSP0 entry stack 16 KiB, IST1 (#DF), IST2 (NMI), IST3
+(#MC) 4 KiB each; each sits directly above its own unmapped 4 KiB guard page, and keeps its
+canaries.
+
+**Transition.** `kmap_init` runs once, after the identity map is removed: it builds the tables
+from linker symbols and the guard list, checks them (layout, then every address the running
+kernel needs: text, the running code and its caller, every IDT handler, all stacks, GDT, IDT,
+TSS, the active PML4 and PDPT, the new tables, allocator state and bitmaps, `.data`/`.bss`,
+boot data, VGA, boot information, modules and one probe per 2 MiB page), primes the TLB by
+touching a text page and a guard page through the old map, switches PDPT[510], flushes all
+non-global translations (CR4.PGE toggled if set, CR3 reloaded), requires the CPU to refuse a
+text write (#PF error 0x3) and a guard read (error 0x0) through two armed, fault-tolerant probe
+instructions, and repeats the checks on the live tables through `vmm_lookup`. If anything after
+the switch fails, it restores the old PDPT entry and reports; the kernel then panics.
+
+**Rollback limits.** Rollback only helps when the new map still lets the kernel run its check
+code. If the switch itself removed the running code, its stack or the exception path, the CPU
+faults (or triple-faults and resets) before any check can run. The pre-switch check exists for
+that reason; it cannot cover errors in the checker itself.
+
+**Rules enforced from now on.** `vmm_map` refuses executable mappings without `VMM_USER` and
+frames not allocated from the PMM (so never kernel-image, module or info-block frames). The
+audit rejects, in every address space: effective W+X leaves; ring-0-executable leaves other
+than kernel text (user pages excepted, see limits); writable mappings of kernel text; any leaf
+covering a guard page; lower-half leaves on kernel-image frames. For the kernel half it compares
+every entry with the intended layout.
+
+**Evidence (QEMU TCG, `make test`):** `selftest: kmap 49 cases, 0 failed` in every test image
+(live layout page by page, 1 GiB alias translation, verifier refusing ten defective table copies
+and ten running-address defects, audit refusing nine alias-bypass hierarchies, IST and guard
+layout); nine isolated CPU-fault cases whose `exc:` line is compared with the expected vector,
+error code and CR2/RIP by `scripts/check-fault.sh`: kernel write to text and to `.rodata`
+(#PF 0x3), execution of `.data` and of a free frame through a 2 MiB alias page (#PF 0x11, RIP =
+CR2), a guard-page read (#PF 0x0), kernel stack overflow (#DF on IST1, CR2 in the boot-stack
+guard), `int $2` and `int $18` (IST2 and IST3 — gate and stack tests only, not hardware events),
+and a **genuine NMI** injected with QEMU's monitor command `nmi` while the kernel waits in
+`cli; hlt` (`scripts/nmi-test.sh`; delivered on IST2, RIP right after `hlt`). Twenty source
+mutations (text writable, data executable, guard mapped, guard list lost, required address
+dropped, IST wrong, alias rules removed, TLB flush removed, over-broad probe recovery, ...) were
+each caught by at least one test; the TLB-flush mutation was caught only after the probe check
+was added.
+
+**Regression at the end of N2.0:** `make test`, `make ARCH=x86_64 test` and `make test-all`
+pass (36 QEMU runs in `test-all`, all nine fault comparisons, 249 user/ELF checks, the 41-case
+suite under qemu64, 2 GiB and `-cpu max` with equal free frames before and after);
+`make ARCH=i386 test` passes and the i386 `vos.bin` SHA-256 is still
+`0760e7eb8ecfcb8545f4126f5a369b0fadfc5163ad9e95c5fba2a81d45afb9dd`; `hello.elf` is unchanged
+(`c6c64161…cd06`). User entry RFLAGS stay `0x2` (IF=0); there is still no timer.
+
+**Limits of N2.0 (known, not fixed):**
+- Machine checks: CR4.MCE is not enabled, so a real machine check shuts the machine down
+  instead of raising #MC; no machine check was injected (only the `int $18` gate test).
+- The NMI test uses QEMU's injection under TCG; real hardware NMIs (watchdogs, IPIs) are not
+  tested. An NMI that arrives while the NMI handler runs is not handled specially (the handler
+  panics; there is no nested-NMI logic).
+- With SMEP off (`qemu64`), ring 0 can still execute user code pages; the kernel can write the
+  frames of user code through its alias (that is how the loader fills them). With SMEP on
+  (`-cpu max`) the CPU refuses ring-0 execution of user pages.
+- Guard pages are 4 KiB: an access that skips more than 4 KiB below a stack (a large local
+  array) would reach the memory below the guard. There is no stack probing.
+- RSP0-stack overflow from a system call and IST-stack overflow are not exercised by CPU tests;
+  their guards are verified unmapped through the page tables and the audit.
+- The 4 KiB table covers only phys 0–2 MiB; a linker assertion stops the build if the kernel
+  image grows beyond it.
+- Everything ran under QEMU TCG only.
+
 **Deferred beyond N2:** a general kernel heap, `SYSCALL`/`SYSRET`, a `spawn` system call and a
 user-visible `wait`, LAPIC/IOAPIC/ACPI, SMP, more than one thread per process, FPU/SIMD state,
 RAM above 1 GiB, device interrupts, storage, file systems, networking, graphics, a shell.
@@ -81,7 +169,7 @@ RAM above 1 GiB, device interrupts, storage, file systems, networking, graphics,
 - **[Option] Local APIC timer + mask the 8259:** the modern path, per-CPU, needed for SMP later;
   its frequency must be calibrated (against the PIT or with CPUID/TSC information).
 - **[Option] HPET or TSC-deadline:** more precise; more discovery work (ACPI) and not needed yet.
-- **[Proposal]** Local APIC timer, calibrated once against the PIT, with the 8259 masked. The
+- **[Superseded by N2-D2: PIT and 8259 for N2]** Local APIC timer, calibrated once against the PIT, with the 8259 masked. The
   I/O APIC (and therefore ACPI MADT parsing) only becomes necessary for device interrupts, which
   N2 does not need beyond the timer.
 
@@ -166,14 +254,14 @@ Approved with the revised roadmap (2026-10-18):
 | N2-D3 | Non-preemptible kernel; only code interrupted in ring 3 (or idle) is preempted |
 | N2-D4 | Bounded channels with copied messages, non-blocking send, blocking receive |
 | N2-D5 | Keep `int $0x80`; ABI v1 is an additive extension; v0 programs keep running |
-| N2-D7 | Kernel W^X first (N2.0), by remapping the existing alias in place |
+| N2-D7 | Kernel W^X first (N2.0), by remapping the existing alias in place (done: a new directory under the existing PDPT[510]) |
 | N2-D9 | `ARCH=x86_64` becomes the default build; `ARCH=i386` stays buildable and tested |
 | N2-D10 | Static object pools instead of a general kernel heap in N2 |
 
 Still open: N2-D6 details (whether v0 programs may use v1 calls — the proposal is no, they get
 `-VOS_ENOSYS`), N2-D8 (installing GDB; not done in N2.0, see section 8), and whether to enable
-CR4.MCE (without it a machine check shuts the machine down instead of raising #MC; noted in
-N2.0).
+CR4.MCE (without it a machine check shuts the machine down instead of raising #MC; see the
+N2.0 limits in section 3.1).
 
 ## 8. Tooling (recorded, not installed)
 
@@ -183,5 +271,5 @@ GDB is not installed. When approved: `sudo apt install gdb`, then debug with
 from N2.0 so the debugger and `addr2line` can show source lines; the i386 flags are unchanged.
 A cross toolchain is not needed yet.
 
-Carried over from N1 and still open: the project licence; whether `ARCH=x86_64` becomes the
-default (see the N1 plan, section 15).
+Carried over from N1 and still open: the project licence. (`ARCH=x86_64` became the default in
+N2.0, decision N2-D9.)

@@ -13,7 +13,8 @@ tested in the QEMU emulator.
 
 1. GRUB loads the kernel (`vos.bin`) and the program `hello.elf` as a boot module.
 2. The kernel switches to 64-bit mode, sets up its own memory management and CPU protections,
-   and checks the boot information.
+   and checks the boot information. It then maps itself W^X: only its code is executable, its
+   code and constants are read-only, and its stacks have unmapped guard pages below them.
 3. It validates `hello.elf`, copies it into a fresh, isolated user address space and runs it in
    ring 3 (user mode).
 4. `hello` prints through the kernel's `debug_write` system call and exits with status 0.
@@ -60,7 +61,7 @@ end, so `timeout` stops QEMU after a few seconds):
 
 The last lines should be:
 
-    app: module "hello" at 0x12c000-0x12f348, 13128 bytes
+    app: module "hello" at 0x160000-0x163348, 13128 bytes
     elf: hello: ET_EXEC entry 0x400000, 3 PT_LOAD, 3 pages, VOS ABI 0
     user[hello]: Hello from VOS!
     proc: exit status 0 (cs=0x23 rip=0x40002a)
@@ -95,8 +96,13 @@ Every QEMU run is headless, sequential and has a timeout. The x86_64 tests inclu
 - test images built with `VOS_TEST=1`, which report pass (exit status 33) or an expected
   failure (35) through QEMU's `isa-debug-exit` device (`scripts/exit-test.sh`); a test passes
   only with the right exit status **and** the expected kernel messages;
-- kernel self-tests (boot information, memory managers, page tables, user mode, ELF loading);
+- kernel self-tests (boot information, memory managers, page tables, the W^X kernel map and its
+  checker, user mode, ELF loading);
 - deliberate kernel faults, which must panic with the expected diagnostics;
+- kernel memory-protection cases (since N2.0): the kernel writing its own code or constants,
+  executing data or a free page, reading a stack guard page, overflowing its stack, and NMI and
+  machine-check entry (one NMI injected through the QEMU monitor); `scripts/check-fault.sh`
+  compares the CPU-reported fault with what each case expected;
 - an isolation suite of 41 small programs that try forbidden things (write kernel memory,
   execute data, run privileged instructions, pass bad pointers, ...) and must each end exactly
   as their test configuration says, with `hello` run again after each one; it runs with 128 MiB,
@@ -108,7 +114,7 @@ Every QEMU run is headless, sequential and has a timeout. The x86_64 tests inclu
 - `Makefile` – shared build; includes `arch/<ARCH>/arch.mk` and, for x86_64, `user/user.mk`
 - `arch/i386/` – the 32-bit kernel
 - `arch/x86_64/` – the 64-bit kernel: boot (`boot.S`), CPU and interrupts (`cpu.c`, `gdt.c`,
-  `idt.c`, `entry.S`, `exception.c`), memory (`pmm.c`, `vmm.c`, `resv.c`, `bootinfo.c`),
+  `idt.c`, `entry.S`, `exception.c`), memory (`pmm.c`, `vmm.c`, `kmap.c`, `resv.c`, `bootinfo.c`),
   processes and system calls (`process.c`, `usermode.S`, `syscall.c`, `usercopy.c`), executables
   (`elf.c`, `loader.c`, `app.c`), and `selftest*.c` for test builds
 - `user/` – user space: `include/vos/syscall.h`, `lib/` (runtime, ABI note, linker script),
@@ -125,7 +131,8 @@ The `m1-32bit` tag marks the original known-good 32-bit baseline.
 - `docs/plans/n1-user-space.md` – the completed N1 milestone: design, stages and verified results
 - `docs/architecture/native-software-platform.md` – the long-term native software architecture
   (proposal), with the current state and security boundaries in its section 3
-- `docs/plans/n2-foundation.md` – proposed next milestone (planning only)
+- `docs/plans/n2-foundation.md` – the N2 roadmap; N2.0 (kernel W^X, protected stacks) is done,
+  later stages need approval
 - `docs/vision/product-direction.md` – provisional long-term product direction (not a specification)
 
 ## History
