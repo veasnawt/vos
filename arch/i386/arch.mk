@@ -9,4 +9,4 @@ MULTIBOOT_CHECK := --is-x86-multiboot
 
 # Headless boot; passes only on the expected serial output (see scripts/test.sh).
 arch-test: iso
-	scripts/test.sh $(ISO) $(BUILD)/serial.log
+	QEMU=$(QEMU) scripts/test.sh $(ISO) $(BUILD)/serial.log 'Hello from MyOS!' 'Multiboot magic OK'

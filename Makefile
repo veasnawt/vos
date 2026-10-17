@@ -2,7 +2,7 @@
 # Each architecture lives in arch/<name>/ and provides an arch.mk fragment.
 
 ARCH  ?= i386
-ARCHS := i386
+ARCHS := i386 x86_64
 
 .DEFAULT_GOAL := all
 
@@ -12,6 +12,14 @@ endif
 
 ARCH_DIR := arch/$(ARCH)
 BUILD    := build/$(ARCH)
+TEST_ISO := build/$(ARCH)-test/myos.iso
+
+# MYOS_TEST=1 builds the self-checking test image into build/<ARCH>-test/.
+ifeq ($(MYOS_TEST),1)
+BUILD     := build/$(ARCH)-test
+TEST_DEFS := -DMYOS_TEST
+endif
+
 KERNEL   := $(BUILD)/myos.bin
 ISO      := $(BUILD)/myos.iso
 
@@ -22,22 +30,22 @@ CFLAGS := -std=gnu11 -ffreestanding -fno-pic -fno-pie -fno-stack-protector \
           -O2 -Wall -Wextra
 
 # Provides ARCH_CFLAGS, ARCH_ASFLAGS, ARCH_LDFLAGS, ARCH_OBJS, QEMU,
-# MULTIBOOT_CHECK and the arch-test recipe.
+# MULTIBOOT_CHECK and the arch-test recipe (which may use TEST_ISO).
 include $(ARCH_DIR)/arch.mk
 
 OBJS := $(addprefix $(BUILD)/,$(ARCH_OBJS))
 
-.PHONY: all verify iso run test arch-test clean
+.PHONY: all verify iso run test test-all arch-test clean
 all: $(KERNEL)
 
 $(BUILD):
 	mkdir -p $@
 
 $(BUILD)/%.o: $(ARCH_DIR)/%.S Makefile $(ARCH_DIR)/arch.mk | $(BUILD)
-	$(CC) $(ARCH_ASFLAGS) -c $< -o $@
+	$(CC) $(ARCH_ASFLAGS) $(TEST_DEFS) -MMD -MP -c $< -o $@
 
 $(BUILD)/%.o: $(ARCH_DIR)/%.c Makefile $(ARCH_DIR)/arch.mk | $(BUILD)
-	$(CC) $(CFLAGS) $(ARCH_CFLAGS) -c $< -o $@
+	$(CC) $(CFLAGS) $(ARCH_CFLAGS) $(TEST_DEFS) -MMD -MP -c $< -o $@
 
 $(KERNEL): $(OBJS) $(ARCH_DIR)/linker.ld
 	$(LD) $(ARCH_LDFLAGS) -nostdlib -T $(ARCH_DIR)/linker.ld -o $@ $(OBJS)
@@ -59,5 +67,10 @@ run: iso
 # Headless QEMU tests for the selected ARCH; see arch/<name>/arch.mk.
 test: arch-test
 
+test-all:
+	@set -e; for a in $(ARCHS); do $(MAKE) --no-print-directory ARCH=$$a test; done
+
 clean:
 	rm -rf build
+
+-include $(OBJS:.o=.d)
