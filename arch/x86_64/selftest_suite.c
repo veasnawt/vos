@@ -1,11 +1,12 @@
 /*
- * N1.9 isolation suite (VOS_TEST_CASE=suite).
+ * N1.9 isolation suite (VOS_TEST_CASE=suite), also the runner of the N2.1
+ * timer-interrupt cases (VOS_TEST_CASE=irq).
  *
  * Every GRUB module whose command line starts with "t-" is one case. The
  * rest of the command line is the expected outcome, written in the suite's
  * GRUB configuration (trusted test configuration), never taken from the
  * program:
- *   expect=exit|fault|reject|umip|smapac
+ *   expect=exit|fault|reject|umip|smapac|budget
  *   status=N                 exit status (expect=exit)
  *   vec=N err=N              exception vector and error code (expect=fault)
  *   cr2=ADDR|stack|guard|image   fault address, exact or a region
@@ -13,6 +14,9 @@
  *   ok= enosys= einval= efault=  kernel-counted system-call results
  *   elf=NAME                 loader error (expect=reject)
  *   nohello                  do not rerun hello after this case
+ *   ticks=N                  test tick budget for this case (expect=budget: the program
+ *                            must still be running in ring 3 when it is killed after
+ *                            exactly N timer ticks, interrupted with IF 1 and IOPL 0)
  * umip: #GP(0) if CR4.UMIP is set, else exit 0. smapac: exit 0 if SMAP is
  * enabled (the kernel saw AC clear), else exit 1.
  *
@@ -25,6 +29,7 @@
 #include "console.h"
 #include "cpu.h"
 #include "gdt.h"
+#include "irq.h"
 #include "lib.h"
 #include "loader.h"
 #include "memlayout.h"
@@ -38,6 +43,7 @@
 #define EXP_REJECT  3
 #define EXP_UMIP    4
 #define EXP_SMAPAC  5
+#define EXP_BUDGET  6
 
 #define CR2_ANY     0
 #define CR2_EXACT   1
@@ -50,6 +56,7 @@ struct expect {
     int64_t status;
     uint64_t vec, err, cr2;
     int cr2_kind, ripcr2, nohello, elf;
+    uint64_t ticks;                         /* 0: the default test budget */
     int64_t ok, enosys, einval, efault;     /* -1: not checked */
 };
 
@@ -134,7 +141,7 @@ static int parse(const char *cmd, char *name, struct expect *e)
         if (word_eq(k, kl, "expect"))
             e->kind = word_eq(v, vl, "exit") ? EXP_EXIT : word_eq(v, vl, "fault") ? EXP_FAULT :
                       word_eq(v, vl, "reject") ? EXP_REJECT : word_eq(v, vl, "umip") ? EXP_UMIP :
-                      word_eq(v, vl, "smapac") ? EXP_SMAPAC : 0;
+                      word_eq(v, vl, "smapac") ? EXP_SMAPAC : word_eq(v, vl, "budget") ? EXP_BUDGET : 0;
         else if (word_eq(k, kl, "status"))
             e->status = (int64_t)number(v, vl, &ok);
         else if (word_eq(k, kl, "vec"))
@@ -148,6 +155,8 @@ static int parse(const char *cmd, char *name, struct expect *e)
                 e->cr2 = number(v, vl, &ok);
         } else if (word_eq(k, kl, "ripcr2"))
             e->ripcr2 = 1;
+        else if (word_eq(k, kl, "ticks"))
+            e->ticks = number(v, vl, &ok);
         else if (word_eq(k, kl, "nohello"))
             e->nohello = 1;
         else if (word_eq(k, kl, "ok"))
@@ -163,7 +172,7 @@ static int parse(const char *cmd, char *name, struct expect *e)
         else
             ok = 0;
     }
-    if (e->kind == 0 || (e->kind == EXP_REJECT && e->elf < 0))
+    if (e->kind == 0 || (e->kind == EXP_REJECT && e->elf < 0) || (e->kind == EXP_BUDGET && !e->ticks))
         ok = 0;
     return ok;
 }
@@ -263,7 +272,9 @@ int selftest_suite(const struct boot_info *bi)
             why = r == PROC_EEXEC ? elf_strerror(eerr) : "could not be loaded";
             goto checks;
         }
+        proc_test_tick_budget(e.ticks ? e.ticks : PROC_TEST_TICK_BUDGET);
         int st = proc_run(&sp);
+        proc_test_tick_budget(PROC_TEST_TICK_BUDGET);
         static struct process done;
         done = sp;
         proc_destroy(&sp);
@@ -282,6 +293,15 @@ int selftest_suite(const struct boot_info *bi)
             why = "final frame not from CPL 3";
         else if (!counters_ok(&e, &done))
             why = "system-call results differ";
+        else if (kind == EXP_BUDGET && (st != PROC_KILLED || done.reason != PROC_REASON_BUDGET))
+            why = st == PROC_EXITED ? "exited" : "killed for another reason";
+        else if (kind == EXP_BUDGET && (done.ticks != e.ticks || done.irqs < e.ticks ||
+                                         done.trap.vector != IRQ_VECTOR_BASE + IRQ_TIMER ||
+                                         (done.trap.rflags & (RFLAGS_IF | RFLAGS_IOPL)) != RFLAGS_IF ||
+                                         done.trap.rip < USER_IMAGE_START || done.trap.rip >= USER_IMAGE_END))
+            why = "interrupted frame or tick count differs";
+        else if (kind != EXP_BUDGET && done.reason == PROC_REASON_BUDGET)
+            why = "ran out of the test tick budget";
         else if (kind == EXP_EXIT && (st != PROC_EXITED || done.exit_status != e.status))
             why = st == PROC_EXITED ? "wrong exit status" : "killed";
         else if (kind == EXP_FAULT && (st != PROC_KILLED || done.trap.vector != e.vec ||
@@ -312,6 +332,10 @@ int selftest_suite(const struct boot_info *bi)
         serial_hex(done.trap.cr2);
         serial_puts(" status=");
         serial_dec((uint32_t)done.exit_status);
+        serial_puts(" irqs=");
+        serial_dec(done.irqs);
+        serial_puts(" ticks=");
+        serial_dec(done.ticks);
         serial_puts(" ok/enosys/einval/efault=");
         serial_dec(done.sys_ok);
         serial_puts("/");

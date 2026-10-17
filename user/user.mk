@@ -51,12 +51,13 @@ $(foreach a,$(USER_APPS),$(eval $(call USER_APP,$(a))))
 
 # N1.9 isolation-suite fixtures (user/suite): real VOS executables built like
 # applications. regs has its own entry point (no crt0) to see the raw entry
-# state. bad-<kind>.elf are malformed copies of hello.elf (scripts/mkbadelf.sh).
+# state; irqregs (N2.1) is assembly called as main by crt0. bad-<kind>.elf are malformed copies of hello.elf (scripts/mkbadelf.sh).
 SUITE_DIR    := $(USER_BUILD)/suite
 SUITE_C      := $(basename $(notdir $(wildcard $(USER_DIR)/suite/*.c)))
 SUITE_OWN    := regs
+SUITE_S      := irqregs
 SUITE_BAD    := magic dyn wx entry abi interp trunc overlap
-SUITE_ELFS   := $(addprefix $(SUITE_DIR)/,$(addsuffix .elf,$(SUITE_C) $(SUITE_OWN))) \
+SUITE_ELFS   := $(addprefix $(SUITE_DIR)/,$(addsuffix .elf,$(SUITE_C) $(SUITE_S) $(SUITE_OWN))) \
                 $(addprefix $(SUITE_DIR)/bad-,$(addsuffix .elf,$(SUITE_BAD)))
 
 $(SUITE_DIR)/%.elf: $(USER_BUILD)/suite/%.o $(USER_RT) $(USER_LDS)

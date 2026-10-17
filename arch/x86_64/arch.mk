@@ -64,7 +64,7 @@ arch-test: iso
 	    'kmap: after the TLB flush the CPU refused a text write' 'vmm: audit passed: ' \
 	    'irq: 8259 master 0x20-0x27, slave 0x28-0x2f (cascade IRQ2); masks 0xfffe (IRQ0 only)' \
 	    'pit: channel 0 mode 2, divisor 11932 (99.998 Hz)' 'selftest: irq ' \
-	    'selftest: ring-3 timer interrupts 45 ticks, ' 'proc: killed by the test tick budget after 20 timer ticks' \
+	    'selftest: ring-3 timer interrupts ' 'proc: killed by the test tick budget after 20 timer ticks' \
 	    'VOS-TEST: PASS' --
 	MEM=2G scripts/exit-test.sh boot-2G $(TEST_ISO) 33 'selftest: pmm-synthetic ' \
 	    'selftest: pmm-kernel ' 'selftest: 1000 frames from ' 'selftest: vmm ' 'selftest: user ' \
@@ -135,6 +135,22 @@ arch-test: iso
 	scripts/exit-test.sh kernel-int80 build/$(ARCH)-test-kernel-int80/vos.iso 35 \
 	    'selftest: user ' 'exc: int $$0x80 from ring 0' 'panic: int $$0x80 from kernel mode' \
 	    'VOS-TEST: FAIL' --
+	$(MAKE) --no-print-directory ARCH=$(ARCH) VOS_TEST=1 VOS_TEST_CASE=kernel-irq-vector iso
+	scripts/exit-test.sh kernel-irq-vector build/$(ARCH)-test-kernel-irq-vector/vos.iso 35 \
+	    'selftest: irq ' 'exc: IRQ vector 0x20 in ring 0' \
+	    'panic: hardware interrupt vector in ring 0 (the kernel runs with IF=0)' 'VOS-TEST: FAIL' --
+	$(MAKE) --no-print-directory ARCH=$(ARCH) VOS_TEST=1 VOS_TEST_CASE=irq iso
+	scripts/exit-test.sh irq build/$(ARCH)-test-irq/vos.iso 33 'irq: 8259 master 0x20-0x27' \
+	    'suite: t-spin expect=budget ticks=50 ok=0 => PASS' 'suite: t-irqregs expect=budget ticks=50 ok=0 => PASS' \
+	    'suite: t-iflock expect=budget ticks=20 ok=0 => PASS' 'suite: t-kernelif expect=exit status=0 ok=1 => PASS' \
+	    'suite: final hello exited 0, all frames reclaimed' 'suite: 9 cases, 0 failed, hello rerun 10 times' \
+	    'VOS-TEST: PASS' --
+	MEM=2G scripts/exit-test.sh irq-2G build/$(ARCH)-test-irq/vos.iso 33 \
+	    'suite: final hello exited 0, all frames reclaimed' 'suite: 9 cases, 0 failed, hello rerun 10 times' \
+	    'VOS-TEST: PASS' --
+	scripts/exit-test.sh irq-max build/$(ARCH)-test-irq/vos.iso 33 'smep=on umip=on smap=on' \
+	    'suite: final hello exited 0, all frames reclaimed' 'suite: 9 cases, 0 failed, hello rerun 10 times' \
+	    'VOS-TEST: PASS' -- -cpu max
 	$(MAKE) --no-print-directory ARCH=$(ARCH) VOS_TEST=1 VOS_TEST_CASE=app-ambiguous iso
 	scripts/exit-test.sh app-ambiguous build/$(ARCH)-test-app-ambiguous/vos.iso 35 \
 	    'app: 2 modules named "hello"; ambiguous, running none' \

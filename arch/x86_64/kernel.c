@@ -245,7 +245,7 @@ void kernel_main(uint32_t mb2_magic, uint32_t mb2_info)
     check(selftest_irq() == 0, "irq self-test");
     check(selftest_user() == 0, "user self-test");
     check(selftest_elf(&bi) == 0, "elf self-test");
-#ifdef VOS_TEST_CASE_suite
+#if defined(VOS_TEST_CASE_suite) || defined(VOS_TEST_CASE_irq)
     check(selftest_suite(&bi) == 0, "isolation suite");
 #endif
 #ifdef VOS_TEST_CASE_smep_exec
@@ -269,6 +269,9 @@ void kernel_main(uint32_t mb2_magic, uint32_t mb2_info)
 #endif
 #ifdef VOS_TEST_CASE_kernel_ud
     __asm__ volatile ("ud2");
+#endif
+#ifdef VOS_TEST_CASE_kernel_irq_vector
+    __asm__ volatile ("int $0x20");     /* an IRQ vector in ring 0 breaks the IF policy */
 #endif
 #ifdef VOS_TEST_CASE_kernel_int80
     __asm__ volatile ("int $0x80");     /* ring 0 must never use the user gate */
