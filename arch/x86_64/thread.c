@@ -259,6 +259,9 @@ static void check_switch(const struct thread *next)
         panic("sched: thread stack canary overwritten");
     if (next->stack < 0 && next->proc)
         panic("sched: a user thread without its own kernel stack");
+    /* Every interrupt is acknowledged before any switch (preemption included). */
+    if (irq_chip() && irq_chip()->in_service())
+        panic("sched: switch while an interrupt is still in service");
 }
 
 /* Runs in the thread just switched to: its address space and RSP0 must be its own. */
