@@ -8,7 +8,7 @@ ARCH_CFLAGS     := -m64 -mcmodel=kernel -mno-red-zone -mgeneral-regs-only \
 ARCH_ASFLAGS    := -m64
 ARCH_LDFLAGS    := -m elf_x86_64 -z max-page-size=0x1000
 ARCH_OBJS       := boot.o entry.o usermode.o kernel.o bootinfo.o console.o cpu.o exception.o gdt.o idt.o \
-                   lib.o panic.o pmm.o process.o resv.o syscall.o usercopy.o vmm.o
+                   lib.o panic.o pmm.o process.o resv.o syscall.o usercopy.o vmm.o elf.o
 ifeq ($(VOS_TEST),1)
 ARCH_OBJS       += selftest.o selftest_pmm.o selftest_user.o selftest_vmm.o user_progs.o
 endif
