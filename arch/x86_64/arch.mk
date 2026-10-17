@@ -26,6 +26,8 @@ MULTIBOOT_CHECK := --is-x86-multiboot2
 #    expected error code and CR2 (status 35).
 # Every test image runs the bootinfo and pmm self-tests; any failure turns
 # VOS-TEST: PASS (33) into VOS-TEST: FAIL (35).
+# 4. User space (no QEMU): hello.elf is built and validated, the negative ELF
+#    tests run, and no kernel image may contain the application (user-test).
 arch-test: iso
 	QEMU=$(QEMU) FAIL_PATTERN='FAILED|check failed|boot error' \
 	    scripts/test.sh $(ISO) $(BUILD)/serial.log 'Hello from VOS!' 'boot: checks passed'
@@ -87,3 +89,4 @@ arch-test: iso
 	scripts/exit-test.sh kernel-int80 build/$(ARCH)-test-kernel-int80/vos.iso 35 \
 	    'selftest: user ' 'exc: int $$0x80 from ring 0' 'panic: int $$0x80 from kernel mode' \
 	    'VOS-TEST: FAIL' --
+	$(MAKE) --no-print-directory ARCH=$(ARCH) user-test

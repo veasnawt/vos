@@ -5,6 +5,7 @@
 #   make ARCH=x86_64 user        build build/x86_64/user/<app>.elf
 #   make ARCH=x86_64 user-check  validate every application (scripts/check-user-elf.sh)
 #   make ARCH=x86_64 user-test   validation plus negative tests (scripts/test-user-elf.sh)
+# Nothing here is put on the boot ISO or executed (that is N1.8).
 
 USER_DIR   := user
 USER_BUILD := build/$(ARCH)/user
@@ -23,8 +24,9 @@ USER_CFLAGS  := -std=gnu11 -O2 -Wall -Wextra -m64 -mcmodel=small \
                 -fcf-protection=none -fno-asynchronous-unwind-tables -fno-unwind-tables \
                 -mgeneral-regs-only
 USER_ASFLAGS := -m64 -I$(USER_DIR)/include
-USER_LDFLAGS := -m elf_x86_64 -nostdlib -static -z noexecstack -z max-page-size=0x1000 \
-                -z norelro --build-id=none -T $(USER_LDS)
+USER_LDFLAGS_BASE := -m elf_x86_64 -nostdlib -static -z noexecstack -z max-page-size=0x1000 \
+                     -z norelro --build-id=none
+USER_LDFLAGS := $(USER_LDFLAGS_BASE) -T $(USER_LDS)
 
 USER_ELFS := $(addprefix $(USER_BUILD)/,$(addsuffix .elf,$(USER_APPS)))
 
@@ -49,5 +51,14 @@ $(foreach a,$(USER_APPS),$(eval $(call USER_APP,$(a))))
 
 user-check: $(USER_ELFS)
 	@set -e; for f in $(USER_ELFS); do scripts/check-user-elf.sh $$f; done
+
+# Validation, profile and separation checks, and negative tests. Static only:
+# nothing is loaded or run. The kernel images are checked not to contain the
+# application.
+user-test: user-check $(USER_RT) $(KERNEL)
+	USER_CC="$(CC)" USER_CFLAGS="$(USER_CFLAGS)" USER_LD="$(LD)" \
+	USER_LDFLAGS="$(USER_LDFLAGS_BASE)" USER_LDS=$(USER_LDS) \
+	KERNEL_SYSCALL_H=arch/x86_64/syscall.h USER_SYSCALL_H=$(USER_DIR)/include/vos/syscall.h \
+	    scripts/test-user-elf.sh $(USER_BUILD) $(KERNEL) $(wildcard build/$(ARCH)-test*/vos.bin)
 
 -include $(shell find $(USER_BUILD) -name '*.d' 2>/dev/null)

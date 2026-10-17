@@ -8,7 +8,8 @@
  *   data    RW-  initialized data, then .bss
  * plus PT_NOTE (the ABI note, 4-byte aligned) and a non-executable
  * PT_GNU_STACK. Headers are not loaded. No interpreter, dynamic section,
- * TLS, RELRO or GNU property note is produced.
+ * TLS, RELRO or GNU property note is produced; a program using TLS fails to
+ * link.
  */
 OUTPUT_FORMAT(elf64-x86-64)
 OUTPUT_ARCH(i386:x86-64)
@@ -35,6 +36,14 @@ SECTIONS
     . = ALIGN(0x1000);
     .data : { *(.data .data.*) } :data
     .bss : { *(.bss .bss.*) *(COMMON) } :data
+
+    /* ABI v0 has no thread-local storage (no FS/GS base): refuse to link it. */
+    .tdata : { *(.tdata .tdata.*) } :data
+    .tbss : { *(.tbss .tbss.*) } :data
+    ASSERT(SIZEOF(.tdata) == 0 && SIZEOF(.tbss) == 0, "VOS ABI v0 has no thread-local storage")
+
+    /* Exactly one 20-byte VOS ABI note: link user/lib/abi_note.S once. */
+    ASSERT(SIZEOF(.note.vos) == 20, "VOS executables need exactly one VOS ABI note")
 
     /*
      * Only metadata VOS does not use is dropped. Anything that would make the
