@@ -30,12 +30,16 @@ arch-test: iso
 	QEMU=$(QEMU) FAIL_PATTERN='FAILED|check failed|boot error' \
 	    scripts/test.sh $(ISO) $(BUILD)/serial.log 'Hello from VOS!' 'boot: checks passed'
 	$(MAKE) --no-print-directory ARCH=$(ARCH) VOS_TEST=1 iso
-	scripts/exit-test.sh boot-128M $(TEST_ISO) 33 'selftest: pmm-synthetic ' \
+	scripts/exit-test.sh boot-128M $(TEST_ISO) 33 'user[hello]: Hello from VOS!' \
+	    'user[hello]: second call resumed' 'user[badptr]: ABCD' 'user[forge]: VOS-FORGED-MARKER' \
+	    'user[forge]: VOS-TEST: PASS?' 'user[forge]: ?[2J???' 'selftest: pmm-synthetic ' \
 	    'selftest: pmm-kernel ' 'selftest: 1000 frames from ' 'selftest: vmm ' 'selftest: user ' \
 	    'VOS-TEST: PASS' --
 	MEM=2G scripts/exit-test.sh boot-2G $(TEST_ISO) 33 'selftest: pmm-synthetic ' \
 	    'selftest: pmm-kernel ' 'selftest: 1000 frames from ' 'selftest: vmm ' 'selftest: user ' \
 	    'VOS-TEST: PASS' --
+	@echo "forge-check: a kernel marker printed only by a user program must NOT be found"
+	! scripts/exit-test.sh forge-check $(TEST_ISO) 33 'VOS-FORGED-MARKER' 'VOS-TEST: PASS' -- >/dev/null 2>&1
 	scripts/exit-test.sh no-long-mode $(TEST_ISO) 35 'CPU lacks long mode' -cpu qemu32
 	$(MAKE) --no-print-directory ARCH=$(ARCH) VOS_TEST=1 VOS_TEST_CASE=panic iso
 	scripts/exit-test.sh panic build/$(ARCH)-test-panic/vos.iso 35 \

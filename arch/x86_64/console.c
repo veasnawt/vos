@@ -15,13 +15,17 @@ void serial_init(void)
     outb(COM1 + 4, 0x03);
 }
 
+void serial_putc(char c)
+{
+    while (!(inb(COM1 + 5) & 0x20))
+        ;
+    outb(COM1, (uint8_t)c);
+}
+
 void serial_puts(const char *s)
 {
-    for (; *s; s++) {
-        while (!(inb(COM1 + 5) & 0x20))
-            ;
-        outb(COM1, (uint8_t)*s);
-    }
+    for (; *s; s++)
+        serial_putc(*s);
 }
 
 void serial_puts_safe(const char *s)

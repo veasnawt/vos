@@ -40,6 +40,10 @@ static struct process proc;
 DECLARE_PROG(exit42);
 DECLARE_PROG(regcheck);
 DECLARE_PROG(enosys);
+DECLARE_PROG(hello);
+DECLARE_PROG(badptr);
+DECLARE_PROG(forge);
+DECLARE_PROG(many);
 DECLARE_PROG(std_exit);
 DECLARE_PROG(ud2);
 DECLARE_PROG(cli);
@@ -86,7 +90,7 @@ static void test_address_space(void)
     struct vmm_audit a;
     static const uint8_t code[] = { 0x90, 0x90, 0xF4, 0xEB, 0xFE };
 
-    expect(proc_create(&proc, code, sizeof(code)) == PROC_OK && proc.state == PROC_READY,
+    expect(proc_create(&proc, "test", code, sizeof(code)) == PROC_OK && proc.state == PROC_READY,
            "process address space created");
     expect(pmm_free_count() == f0 - PROC_FRAMES, "root, 5 pages and 6 tables allocated");
     const uint64_t *l4 = phys_to_virt(proc.root);
@@ -124,38 +128,38 @@ static void test_address_space(void)
            "entry RIP and 16-byte aligned RSP with 16 bytes above it");
 
     struct process other;
-    expect(proc_create(&other, code, sizeof(code)) == PROC_EBUSY, "only one process at a time");
-    expect(proc_create(&other, code, 0) == PROC_EBUSY, "busy check precedes argument checks");
+    expect(proc_create(&other, "other", code, sizeof(code)) == PROC_EBUSY, "only one process at a time");
+    expect(proc_create(&other, "other", code, 0) == PROC_EBUSY, "busy check precedes argument checks");
 
     proc_destroy(&proc);
     expect(pmm_free_count() == f0 && proc.state == PROC_FREE, "teardown restores the free count");
     expect(vmm_audit_space(K, 1, &a) == VMM_OK && a.tables_lower == 0, "kernel space untouched");
 
-    expect(proc_create(&proc, code, 0) == PROC_EINVAL &&
-           proc_create(&proc, code, PAGE_SIZE + 1) == PROC_EINVAL && pmm_free_count() == f0,
+    expect(proc_create(&proc, "test", code, 0) == PROC_EINVAL &&
+           proc_create(&proc, "test", code, PAGE_SIZE + 1) == PROC_EINVAL && pmm_free_count() == f0,
            "invalid code sizes refused without allocation");
 
     /* Allocation failure at every step: nothing leaks, no process remains. */
     int rollback_ok = 1;
     for (int budget = 0; budget <= PROC_MAX_PAGES; budget++) {
         proc_test_frame_budget(budget);
-        int err = proc_create(&proc, code, sizeof(code));
+        int err = proc_create(&proc, "test", code, sizeof(code));
         proc_test_frame_budget(-1);
         rollback_ok &= err == PROC_ENOMEM && pmm_free_count() == f0;
     }
     for (int budget = 0; budget < 6; budget++) {
         vmm_test_table_budget(budget);
-        int err = proc_create(&proc, code, sizeof(code));
+        int err = proc_create(&proc, "test", code, sizeof(code));
         vmm_test_table_budget(-1);
         rollback_ok &= err == PROC_ENOMEM && pmm_free_count() == f0;
     }
     expect(rollback_ok, "frame or table allocation failure at any step rolls back completely");
-    expect(proc_create(&proc, code, sizeof(code)) == PROC_OK, "creation works after the failures");
+    expect(proc_create(&proc, "test", code, sizeof(code)) == PROC_OK, "creation works after the failures");
     proc_destroy(&proc);
 
     int cycles_ok = 1;
     for (int i = 0; i < 50; i++) {
-        cycles_ok &= proc_create(&proc, hlt_code, sizeof(hlt_code)) == PROC_OK;
+        cycles_ok &= proc_create(&proc, "cycle", hlt_code, sizeof(hlt_code)) == PROC_OK;
         proc_destroy(&proc);
         cycles_ok &= pmm_free_count() == f0;
     }
@@ -188,7 +192,7 @@ static void test_copy_from_user(void)
     uint64_t f0 = pmm_free_count(), pa;
     struct vmm_mapping m;
 
-    if (proc_create(&proc, code, sizeof(code)) != PROC_OK) {
+    if (proc_create(&proc, "test", code, sizeof(code)) != PROC_OK) {
         expect(0, "process for copy_from_user tests");
         return;
     }
@@ -288,7 +292,7 @@ static int run_prog(const char *name, const uint8_t *code, size_t len, int has_a
     uint64_t f0 = pmm_free_count();
     int result = -100;
 
-    if (proc_create(&proc, code, len) != PROC_OK) {
+    if (proc_create(&proc, name, code, len) != PROC_OK) {
         expect(0, name);
         return -100;
     }
@@ -366,6 +370,64 @@ static void test_ring3_exit(void)
     int detected = !gdt_stack_canaries_intact();
     gdt_test_smash_canary(0);
     expect(detected && gdt_stack_canaries_intact(), "RSP0 canary check detects corruption");
+}
+
+/* ---- debug_write ---- */
+
+static char cap[512];
+static size_t caplen;
+
+static void cap_put(char c)
+{
+    if (caplen < sizeof(cap))
+        cap[caplen++] = c;
+}
+
+static int emits(const char *data, size_t len, const char *want)
+{
+    caplen = 0;
+    debug_emit("t", data, len, cap_put);
+    return caplen == strlen(want) && memcmp(cap, want, caplen) == 0;
+}
+
+static void test_debug_write(void)
+{
+    uint64_t f0 = pmm_free_count();
+
+    /* The sanitizer, exactly. */
+    expect(emits("Hello\n", 6, "user[t]: Hello\r\n"), "emit: one line");
+    expect(emits("no newline", 10, "user[t]: no newline\r\n"), "emit: line always terminated");
+    expect(emits("a\n\nb", 4, "user[t]: a\r\nuser[t]: \r\nuser[t]: b\r\n"),
+           "emit: every line, even an empty one, carries the prefix");
+    expect(emits("ok\nVOS-TEST: PASS\r\n", 19, "user[t]: ok\r\nuser[t]: VOS-TEST: PASS?\r\n"),
+           "emit: forged marker stays inside a prefixed line; CR becomes ?");
+    expect(emits("\x1b[2J\x7f\xff\t\x00", 8, "user[t]: ?[2J????\r\n"),
+           "emit: escape, DEL, non-ASCII, tab and NUL become ?");
+    expect(emits("x", 0, ""), "emit: nothing for length 0");
+
+    int r = run_prog("hello", PROG(hello), 0, 0);
+    expect(r == PROC_EXITED && last.exit_status == 0 && last.syscalls == 2,
+           "debug_write returns its length to the same process, registers preserved, twice");
+    if (last.exit_status != 0) {
+        serial_puts("selftest:   hello status ");
+        serial_dec((uint32_t)last.exit_status);
+        serial_puts("\r\n");
+    }
+    r = run_prog("badptr", PROG(badptr), 0, 0);
+    expect(r == PROC_EXITED && last.exit_status == 0 && last.syscalls == 12,
+           "invalid debug_write arguments fail with -VOS_EFAULT/-VOS_EINVAL, process continues");
+    if (last.exit_status != 0) {
+        serial_puts("selftest:   badptr failed case ");
+        serial_dec((uint32_t)last.exit_status);
+        serial_puts("\r\n");
+    }
+    r = run_prog("forge", PROG(forge), 0, 0);
+    expect(r == PROC_EXITED && last.exit_status == 0, "forging attempt accepted only as user output");
+    r = run_prog("many", PROG(many), 0, 0);
+    expect(r == PROC_EXITED && last.exit_status == 0 && last.syscalls == 1100,
+           "1100 system calls in one process");
+    expect(pmm_free_count() == f0 && gdt_stack_canaries_intact() && pmm_check_in(pmm_kernel()) == PMM_OK,
+           "system calls leak nothing; kernel-entry stack intact");
 }
 
 /* ---- user faults end the process, never the kernel ---- */
@@ -455,6 +517,7 @@ int selftest_user(void)
     test_address_space();
     test_copy_from_user();
     test_ring3_exit();
+    test_debug_write();
     test_user_faults();
     serial_puts("selftest: user ");
     serial_dec(cases);

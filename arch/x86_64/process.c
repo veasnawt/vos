@@ -106,7 +106,7 @@ static int verify_space(const struct process *p)
            vmm_lookup(p->root, PROC_CODE_VA + PAGE_SIZE, &m) == VMM_ENOTMAPPED;
 }
 
-int proc_create(struct process *p, const void *code, size_t len)
+int proc_create(struct process *p, const char *name, const void *code, size_t len)
 {
     uint64_t pa;
     int err;
@@ -116,6 +116,12 @@ int proc_create(struct process *p, const void *code, size_t len)
     if (!p || !code || len == 0 || len > PAGE_SIZE)
         return PROC_EINVAL;
     memset(p, 0, sizeof(*p));
+    for (int i = 0; i < PROC_NAME_MAX && name && name[i]; i++) {
+        char c = name[i];
+        p->name[i] = (c >= 'a' && c <= 'z') || (c >= '0' && c <= '9') || c == '-' ? c : '_';
+    }
+    if (!p->name[0])
+        p->name[0] = '_';
 
     if (frame_alloc(&p->root) != PMM_OK)
         return PROC_ENOMEM;

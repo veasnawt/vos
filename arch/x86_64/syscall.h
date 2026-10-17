@@ -30,6 +30,15 @@
 struct process;
 struct exc_frame;
 
+/*
+ * Write untrusted bytes as lines "user[<name>]: <text>\r\n" through put().
+ * '\n' ends a line; every other byte outside printable ASCII (0x20-0x7E),
+ * including '\r' and escape sequences, becomes '?'. Every line, also the
+ * first one after an embedded newline, carries the kernel-generated prefix,
+ * and the output always ends at a line end. len 0 writes nothing.
+ */
+void debug_emit(const char *name, const char *data, uint64_t len, void (*put)(char));
+
 /* Handle every system call except exit; returns the value for the user's rax. */
 int64_t syscall_dispatch(struct process *p, struct exc_frame *f);
 

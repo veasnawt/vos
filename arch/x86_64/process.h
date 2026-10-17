@@ -49,8 +49,11 @@ struct proc_trap {
     uint64_t kframe;                    /* kernel address of the saved frame (on the RSP0 stack) */
 };
 
+#define PROC_NAME_MAX   15
+
 struct process {
     int state;
+    char name[PROC_NAME_MAX + 1];       /* kernel-assigned; [a-z0-9_-] only */
     uint64_t root;                      /* PML4 frame */
     uint64_t entry, user_rsp;
     uint64_t kernel_rsp;                /* saved by enter_user, consumed by user_return */
@@ -64,8 +67,12 @@ struct process {
 
 struct exc_frame;
 
-/* Build an address space holding `len` bytes of code (1..4096). */
-int proc_create(struct process *p, const void *code, size_t len);
+/*
+ * Build an address space holding `len` bytes of code (1..4096). `name` is
+ * chosen by the kernel; characters outside [a-z0-9_-] become '_' and it is
+ * cut to PROC_NAME_MAX characters.
+ */
+int proc_create(struct process *p, const char *name, const void *code, size_t len);
 /*
  * Run a READY process in ring 3 until it exits or is killed; returns the
  * final state (PROC_EXITED or PROC_KILLED), or PROC_ESTATE if it is not

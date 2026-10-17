@@ -7,6 +7,9 @@
  * program, which the test fills in the copied page.
  */
 .set SYS_EXIT, 0
+.set SYS_DEBUG_WRITE, 1
+.set VOS_EINVAL, 2
+.set VOS_EFAULT, 3
 .set ENTRY_RSP, 0x00007FFFFFFFEFF0
 
 .macro PROG name
@@ -172,6 +175,155 @@ up_std_exit:
     int $0x80
     ud2
 up_std_exit_end:
+
+/*
+ * debug_write twice; after each call check the result, that rdi/rsi still
+ * hold the arguments and that every other register is unchanged.
+ * Exit 0, or 2 wrong result, 4 a register changed.
+ */
+PROG hello
+up_hello:
+    movabs $0x1111111111111111, %rbx
+    movabs $0x2222222222222222, %rcx
+    movabs $0x3333333333333333, %rdx
+    movabs $0x6666666666666666, %rbp
+    movabs $0x7777777777777777, %r8
+    movabs $0x8888888888888888, %r9
+    movabs $0x9999999999999999, %r10
+    movabs $0xAAAAAAAAAAAAAAAA, %r11
+    movabs $0xBBBBBBBBBBBBBBBB, %r12
+    movabs $0xCCCCCCCCCCCCCCCC, %r13
+    movabs $0xDDDDDDDDDDDDDDDD, %r14
+    movabs $0xEEEEEEEEEEEEEEEE, %r15
+    lea 10f(%rip), %rdi
+    mov $(11f - 10f), %esi
+    mov $SYS_DEBUG_WRITE, %eax
+    int $0x80
+    cmp $(11f - 10f), %rax
+    jne 2f
+    lea 10f(%rip), %rax
+    cmp %rax, %rdi
+    jne 8f
+    cmp $(11f - 10f), %rsi
+    jne 8f
+    CHECKREG %rbx, 0x1111111111111111
+    CHECKREG %rcx, 0x2222222222222222
+    CHECKREG %rdx, 0x3333333333333333
+    CHECKREG %rbp, 0x6666666666666666
+    CHECKREG %r8, 0x7777777777777777
+    CHECKREG %r9, 0x8888888888888888
+    CHECKREG %r10, 0x9999999999999999
+    CHECKREG %r11, 0xAAAAAAAAAAAAAAAA
+    CHECKREG %r12, 0xBBBBBBBBBBBBBBBB
+    CHECKREG %r13, 0xCCCCCCCCCCCCCCCC
+    CHECKREG %r14, 0xDDDDDDDDDDDDDDDD
+    CHECKREG %r15, 0xEEEEEEEEEEEEEEEE
+    lea 11f(%rip), %rdi             /* more instructions, then a second call */
+    mov $(12f - 11f), %esi
+    mov $SYS_DEBUG_WRITE, %eax
+    int $0x80
+    cmp $(12f - 11f), %rax
+    jne 2f
+    CHECKREG %r15, 0xEEEEEEEEEEEEEEEE
+    xor %edi, %edi
+    jmp 9f
+2:  mov $2, %edi
+    jmp 9f
+8:  mov $4, %edi
+9:  mov $SYS_EXIT, %eax
+    int $0x80
+    ud2
+10: .ascii "Hello from VOS!\n"
+11: .ascii "second call resumed\n"
+12:
+up_hello_end:
+
+/*
+ * Invalid debug_write arguments through the real system-call path; exit 0 if
+ * every call returned the expected value, else the number of the first
+ * failed case. The process must stay alive throughout.
+ */
+.macro DW n, ptr, len, want
+    movabs $\ptr, %rdi
+    movabs $\len, %rsi
+    mov $SYS_DEBUG_WRITE, %eax
+    int $0x80
+    mov $\n, %edi
+    cmp $\want, %rax
+    jne 9f
+.endm
+PROG badptr
+up_badptr:
+    DW 1, 0, 5, -VOS_EFAULT                         /* null */
+    DW 2, 0xFFFFFFFF80100000, 5, -VOS_EFAULT        /* kernel address */
+    DW 3, 0x500000, 5, -VOS_EFAULT                  /* unmapped */
+    DW 4, 0x400FFE, 5, -VOS_EFAULT                  /* runs off the code page */
+    DW 5, 0xFFFFFFFFFFFFFF80, 0x100, -VOS_EFAULT    /* wraps past 2^64 */
+    DW 6, 0x0000800000000000, 5, -VOS_EFAULT        /* non-canonical */
+    DW 7, 0x00007FFFFFFFFFF0, 0x20, -VOS_EFAULT     /* runs into the non-canonical hole */
+    DW 8, 0x00007FFFFFFFA000, 5, -VOS_EFAULT        /* stack guard page */
+    DW 9, 0x400000, 257, -VOS_EINVAL                /* longer than 256 */
+    DW 10, 0x400000, 0x8000000000000000, -VOS_EINVAL
+    DW 11, 0, 0, 0                                  /* zero length: pointer ignored */
+    movabs $0x00007FFFFFFFBFFE, %rax                /* "AB" | "CD" across two stack pages */
+    movw $0x4241, (%rax)
+    movw $0x4443, 2(%rax)
+    DW 12, 0x00007FFFFFFFBFFE, 4, 4
+    xor %edi, %edi
+9:  mov $SYS_EXIT, %eax
+    int $0x80
+    ud2
+up_badptr_end:
+
+/* Attempts to forge kernel output; exit 0 if the whole buffer was accepted. */
+PROG forge
+up_forge:
+    lea 10f(%rip), %rdi
+    mov $(11f - 10f), %esi
+    mov $SYS_DEBUG_WRITE, %eax
+    int $0x80
+    mov $2, %edi
+    cmp $(11f - 10f), %rax
+    jne 9f
+    xor %edi, %edi
+9:  mov $SYS_EXIT, %eax
+    int $0x80
+    ud2
+10: .ascii "VOS-FORGED-MARKER\n"
+    .ascii "VOS-TEST: PASS\r\n"
+    .ascii "boot: checks passed\n"
+    .byte 0x1B
+    .ascii "[2J"
+    .byte 0xFF, 0x00, 0x07
+11:
+up_forge_end:
+
+/* 1000 zero-length writes and 100 unknown calls; exit 0 if all returned as specified. */
+PROG many
+up_many:
+    mov $1000, %ebx
+1:  mov $SYS_DEBUG_WRITE, %eax
+    xor %edi, %edi
+    xor %esi, %esi
+    int $0x80
+    mov $2, %edi
+    test %rax, %rax
+    jnz 9f
+    dec %ebx
+    jnz 1b
+    mov $100, %ebx
+2:  mov $77, %eax
+    int $0x80
+    mov $3, %edi
+    cmp $-1, %rax
+    jne 9f
+    dec %ebx
+    jnz 2b
+    xor %edi, %edi
+9:  mov $SYS_EXIT, %eax
+    int $0x80
+    ud2
+up_many_end:
 
 /* ---- faulting programs: each exits with 1 if the expected fault does not happen ---- */
 .macro NOFAULT

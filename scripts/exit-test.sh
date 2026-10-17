@@ -11,6 +11,10 @@
 # Passes only if ALL of these hold:
 #   - QEMU exits on its own with EXPECTED_STATUS (a timeout never passes),
 #   - the serial log contains every MARKER,
+#     where a MARKER starting with "user[" must appear in a line written by a
+#     user program (those lines start with "user[", added by the kernel) and
+#     any other MARKER must appear in a line that does NOT start with "user[",
+#     so user output can never satisfy a kernel marker,
 #   - QEMU logged no triple fault.
 # QEMU runs with -no-reboot, so any guest reset makes it exit with status 0,
 # which can never equal an isa-debug-exit status (always odd).
@@ -71,8 +75,14 @@ case $status in
     124 | 137) problems+=("timed out after ${TIMEOUT}s (QEMU killed)");;
     *) problems+=("QEMU exit status $status, expected $EXPECT");;
 esac
+marker_found() {
+    case $1 in
+        'user['*) grep -a '^user\[' "$LOG" 2>/dev/null | grep -qaF -- "$1" ;;
+        *)        grep -av '^user\[' "$LOG" 2>/dev/null | grep -qaF -- "$1" ;;
+    esac
+}
 for m in "${MARKERS[@]}"; do
-    grep -qF -- "$m" "$LOG" 2>/dev/null || problems+=("serial marker not found: '$m'")
+    marker_found "$m" || problems+=("serial marker not found: '$m'")
 done
 grep -qi 'triple fault' "$QLOG" 2>/dev/null && problems+=("QEMU logged a triple fault")
 
