@@ -452,6 +452,9 @@ static void idle_main(void *arg)
         idle_halt();                    /* IF = 1 only inside; back with IF = 0 */
         if (read_rflags() & RFLAGS_IF)
             panic("sched: idle resumed with interrupts enabled");
+        /* Every IRQ taken in the wait was acknowledged before it returned here. */
+        if (irq_chip()->in_service())
+            panic("sched: an interrupt is still in service after the idle wait");
     }
 }
 
