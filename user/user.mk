@@ -8,7 +8,7 @@
 
 USER_DIR   := user
 USER_BUILD := build/$(ARCH)/user
-USER_APPS  :=
+USER_APPS  := hello
 USER_LDS   := $(USER_DIR)/lib/user.ld
 USER_RT    := $(addprefix $(USER_BUILD)/lib/,crt0.o syscall.o abi_note.o)
 
