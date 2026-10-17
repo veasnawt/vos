@@ -11,7 +11,7 @@ ARCH_LDFLAGS    := -m elf_x86_64 -z max-page-size=0x1000
 ARCH_OBJS       := boot.o entry.o usermode.o kernel.o bootinfo.o console.o cpu.o exception.o gdt.o idt.o \
                    lib.o loader.o panic.o pmm.o process.o resv.o syscall.o usercopy.o vmm.o kmap.o irq.o pic.o pit.o thread.o thread_switch.o elf.o app.o
 ifeq ($(VOS_TEST),1)
-ARCH_OBJS       += selftest.o selftest_cpu.o selftest_elf.o selftest_irq.o selftest_kmap.o selftest_sched.o selftest_pmm.o selftest_suite.o \
+ARCH_OBJS       += selftest.o selftest_cpu.o selftest_elf.o selftest_irq.o selftest_kmap.o selftest_mp.o selftest_sched.o selftest_pmm.o selftest_suite.o \
                    selftest_user.o selftest_vmm.o user_progs.o
 endif
 QEMU            := qemu-system-x86_64
@@ -38,6 +38,9 @@ MULTIBOOT_CHECK := --is-x86-multiboot2
 #    N2.2: thread-overflow (#DF on IST1, CR2 in the thread's guard page),
 #    and sched-deadlock (lost-wakeup panic) must end in the expected failure
 #    (status 35).
+#    N2.3: the mp image runs separately built programs at the same time
+#    (isolation, fairness, faults, exhaustion, reclamation) under qemu64,
+#    2 GiB and -cpu max.
 # 5. Isolation suite (N1.9): 41 separately built fixtures, each with its
 #    expected outcome in the trusted GRUB configuration, run under qemu64,
 #    2 GiB and -cpu max (SMEP/UMIP/SMAP on); SMEP and SMAP cases with -cpu
@@ -156,6 +159,13 @@ arch-test: iso
 	scripts/exit-test.sh sched-deadlock build/$(ARCH)-test-sched-deadlock/vos.iso 35 'selftest: sched ' \
 	    'sched-test: the boot thread blocks on a queue nobody wakes' \
 	    'panic: sched: every thread is blocked and none sleeps (lost wakeup?)' 'VOS-TEST: FAIL' --
+	$(MAKE) --no-print-directory ARCH=$(ARCH) VOS_TEST=1 VOS_TEST_CASE=mp iso
+	scripts/exit-test.sh mp build/$(ARCH)-test-mp/vos.iso 33 'mp: memtag1 + memtag2 + irqregs:' \
+	    'mp: 3 x spin (fairness):' 'user[hello]: Hello from VOS!' 'selftest: mp ' ' cases, 0 failed' \
+	    'VOS-TEST: PASS' --
+	MEM=2G scripts/exit-test.sh mp-2G build/$(ARCH)-test-mp/vos.iso 33 'selftest: mp ' 'VOS-TEST: PASS' --
+	scripts/exit-test.sh mp-max build/$(ARCH)-test-mp/vos.iso 33 'smep=on umip=on smap=on' 'selftest: mp ' \
+	    'VOS-TEST: PASS' -- -cpu max
 	$(MAKE) --no-print-directory ARCH=$(ARCH) VOS_TEST=1 VOS_TEST_CASE=irq iso
 	scripts/exit-test.sh irq build/$(ARCH)-test-irq/vos.iso 33 'irq: 8259 master 0x20-0x27' \
 	    'suite: t-spin expect=budget ticks=50 ok=0 => PASS' 'suite: t-irqregs expect=budget ticks=50 ok=0 => PASS' \

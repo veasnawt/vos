@@ -3,7 +3,11 @@
 #define VOS_X86_64_SELFTEST_H
 
 #include "bootinfo.h"
+#include "process.h"
 #include "resv.h"
+
+/* Process records shared by the multi-process tests (the kernel has no heap). */
+extern struct process selftest_procs[PROC_TABLE];
 
 /* Runs the real parser/reservation code on synthetic inputs. */
 int selftest_bootinfo(void);
@@ -31,6 +35,8 @@ int selftest_irq(void);
 int selftest_sched(void);
 /* Isolated scheduler cases (thread stack overflow, deadlock). */
 void selftest_sched_case(const struct boot_info *bi, int self_tests_failed);
+/* N2.3: separately built programs from GRUB modules running at the same time (VOS_TEST_CASE=mp). */
+int selftest_mp(const struct boot_info *bi);
 /* Page-table manager, identity-map removal and kernel survival (restores all state). */
 int selftest_vmm(void);
 /* User address spaces and ring 3 (restores all state). */

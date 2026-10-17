@@ -38,7 +38,8 @@ static void expect(int ok, const char *what)
 
 static struct process proc;
 /* Process records shared by the multi-process tests (static: the kernel has no heap). */
-static struct process procs[PROC_TABLE];
+struct process selftest_procs[PROC_TABLE];
+#define procs selftest_procs
 
 /* user_progs.S */
 #define DECLARE_PROG(n) extern const uint8_t up_##n[], up_##n##_end[]
