@@ -10,7 +10,8 @@ ARCH_LDFLAGS    := -m elf_x86_64 -z max-page-size=0x1000
 ARCH_OBJS       := boot.o entry.o usermode.o kernel.o bootinfo.o console.o cpu.o exception.o gdt.o idt.o \
                    lib.o loader.o panic.o pmm.o process.o resv.o syscall.o usercopy.o vmm.o elf.o app.o
 ifeq ($(VOS_TEST),1)
-ARCH_OBJS       += selftest.o selftest_elf.o selftest_pmm.o selftest_user.o selftest_vmm.o user_progs.o
+ARCH_OBJS       += selftest.o selftest_cpu.o selftest_elf.o selftest_pmm.o selftest_user.o \
+                   selftest_vmm.o user_progs.o
 endif
 QEMU            := qemu-system-x86_64
 # The boot application, delivered by GRUB as a Multiboot2 module (grub.cfg).
@@ -27,6 +28,8 @@ MULTIBOOT_CHECK := --is-x86-multiboot2
 #    vmm-stale-tlb, vmm-nx and vmm-readonly must end in a real #PF with the
 #    expected error code and CR2 (status 35); app-ambiguous and app-reject
 #    must refuse to run the GRUB-delivered application (status 35).
+# 5. SMEP and SMAP cases (N1.9): with -cpu max they must end in a supervisor
+#    #PF; with qemu64 they must show the access succeeding (control).
 # Every test image runs the bootinfo and pmm self-tests; any failure turns
 # VOS-TEST: PASS (33) into VOS-TEST: FAIL (35).
 # 4. User space (no QEMU): hello.elf is built and validated, the negative ELF
@@ -57,7 +60,7 @@ arch-test: iso
 	    'tss: rsp0=' 'idt: 32 exception vectors loaded, df ist=1' 'idt: vector 0x80 present, DPL 3' \
 	    'cpu: wp=on nx=on' 'VOS-TEST: PASS' --
 	scripts/exit-test.sh no-nx $(TEST_ISO) 35 'panic: CPU lacks NX' 'VOS-TEST: FAIL' -- -cpu qemu64,-nx
-	scripts/exit-test.sh cpu-max $(TEST_ISO) 33 'smep=on umip=on' 'selftest: user ' 'VOS-TEST: PASS' \
+	scripts/exit-test.sh cpu-max $(TEST_ISO) 33 'smep=on umip=on smap=on' 'selftest: user ' 'VOS-TEST: PASS' \
 	    -- -cpu max
 	$(MAKE) --no-print-directory ARCH=$(ARCH) VOS_TEST=1 VOS_TEST_CASE=kernel-ud iso
 	scripts/exit-test.sh kernel-ud build/$(ARCH)-test-kernel-ud/vos.iso 35 \
@@ -104,4 +107,16 @@ arch-test: iso
 	scripts/exit-test.sh app-reject build/$(ARCH)-test-app-reject/vos.iso 35 \
 	    'elf: hello: rejected: PT_LOAD outside [0x400000, 0x40000000)' \
 	    'boot: check failed: boot application' 'selftest: elf 1 cases, 0 failed' 'VOS-TEST: FAIL' --
+	$(MAKE) --no-print-directory ARCH=$(ARCH) VOS_TEST=1 VOS_TEST_CASE=smep-exec iso
+	scripts/exit-test.sh smep-max build/$(ARCH)-test-smep-exec/vos.iso 35 \
+	    'smep: kernel calling the user page at 0x400000' 'exc: #PF vec=14 err=0x11 cs=0x8 rip=0x400000 ' \
+	    'cr2=0x400000 ' 'panic: #PF page fault' -- -cpu max
+	scripts/exit-test.sh smep-qemu64 build/$(ARCH)-test-smep-exec/vos.iso 33 \
+	    'smep: the kernel executed a user page (SMEP not enabled)' 'VOS-TEST: PASS' --
+	$(MAKE) --no-print-directory ARCH=$(ARCH) VOS_TEST=1 VOS_TEST_CASE=smap-touch iso
+	scripts/exit-test.sh smap-max build/$(ARCH)-test-smap-touch/vos.iso 35 \
+	    'smap: user sets AC, kernel reads the user page 0x400000' 'exc: #PF vec=14 err=0x1 cs=0x8' \
+	    'cr2=0x400000 ' 'panic: #PF page fault' -- -cpu max
+	scripts/exit-test.sh smap-qemu64 build/$(ARCH)-test-smap-touch/vos.iso 33 \
+	    'smap: the kernel read a user page (SMAP not enabled)' 'VOS-TEST: PASS' --
 	$(MAKE) --no-print-directory ARCH=$(ARCH) user-test

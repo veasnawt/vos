@@ -442,6 +442,21 @@ up_sse:
     NOFAULT
 up_sse_end:
 
+/* Set AC, then make the kernel read this program's own code page directly. */
+PROG smaptouch
+up_smaptouch:
+    pushfq
+    orq $0x40000, (%rsp)
+    popfq
+    mov $0x400000, %edi
+    mov $0x7E57, %eax
+    int $0x80
+    mov $SYS_EXIT, %eax
+    xor %edi, %edi
+    int $0x80
+    ud2
+up_smaptouch_end:
+
 /*
  * uint64_t call_check_callee_saved(int (*fn)(void *), void *arg, int *result)
  * Loads known values into rbx, rbp, r12-r15, calls fn(arg), stores its result

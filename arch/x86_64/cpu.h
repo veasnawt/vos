@@ -14,6 +14,10 @@
 #define CR0_WP          (1ULL << 16)
 #define CR4_UMIP        (1ULL << 11)
 #define CR4_SMEP        (1ULL << 20)
+#define CR4_SMAP        (1ULL << 21)
+
+/* 1 once CR4.SMAP is set; the entry stub then executes clac (entry.S). */
+extern uint8_t cpu_smap_enabled;
 
 static inline void outb(uint16_t port, uint8_t val)
 {

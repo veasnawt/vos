@@ -27,6 +27,12 @@
 
 #define DEBUG_WRITE_MAX     256
 
+#ifdef VOS_TEST
+/* Test builds only, never part of the ABI. */
+#define SYS_TEST_KERNEL_AC  0x7E5A  /* returns 1 if RFLAGS.AC is set inside the kernel */
+#define SYS_TEST_TOUCH_USER 0x7E57  /* the kernel reads the byte at rdi directly: a simulated bug */
+#endif
+
 struct process;
 struct exc_frame;
 

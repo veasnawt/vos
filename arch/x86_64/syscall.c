@@ -53,6 +53,15 @@ int64_t syscall_dispatch(struct process *p, struct exc_frame *f)
     switch (f->rax) {
     case SYS_DEBUG_WRITE:
         return sys_debug_write(p, f->rdi, f->rsi);
+#ifdef VOS_TEST
+    case SYS_TEST_KERNEL_AC: {
+        uint64_t flags;
+        __asm__ volatile ("pushfq\n\tpopq %0" : "=r"(flags));
+        return (flags >> 18) & 1;
+    }
+    case SYS_TEST_TOUCH_USER:
+        return *(volatile uint8_t *)f->rdi;     /* SMAP must stop this */
+#endif
     default:
         return -VOS_ENOSYS;
     }

@@ -219,6 +219,12 @@ void kernel_main(uint32_t mb2_magic, uint32_t mb2_info)
     check(selftest_vmm() == 0, "vmm self-test");
     check(selftest_user() == 0, "user self-test");
     check(selftest_elf(&bi) == 0, "elf self-test");
+#ifdef VOS_TEST_CASE_smep_exec
+    selftest_smep_exec();
+#endif
+#ifdef VOS_TEST_CASE_smap_touch
+    selftest_smap_touch();
+#endif
 #ifdef VOS_TEST_CASE_modules
     check(selftest_modules(&bi, &boot_resv) == 0, "GRUB module delivery");
 #endif

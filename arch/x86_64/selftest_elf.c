@@ -346,6 +346,10 @@ int selftest_elf(const struct boot_info *bi)
 #if defined(VOS_TEST_CASE_modules) || defined(VOS_TEST_CASE_app_ambiguous) || defined(VOS_TEST_CASE_app_reject)
     const struct app_result *r = app_last();
 #endif
+#if defined(VOS_TEST_CASE_smep_exec) || defined(VOS_TEST_CASE_smap_touch)
+    (void)n;
+    goto out;                           /* these images test the CPU, not the loader */
+#endif
 #if defined(VOS_TEST_CASE_modules)
     expect(n == 0 && r->modules == 0 && !r->ran, "no hello module: nothing was run");
     goto out;

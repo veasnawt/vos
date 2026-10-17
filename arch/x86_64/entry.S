@@ -96,7 +96,10 @@ exc_common:
     mov %rax, %r15
 #endif
     cld
-    mov %rsp, %rdi                  /* struct exc_frame * */
+    testb $1, cpu_smap_enabled(%rip)
+    jz 4f
+    clac                            /* RFLAGS.AC is user-controlled: SMAP needs it clear */
+4:  mov %rsp, %rdi                  /* struct exc_frame * */
     mov %rsp, %rbp
     and $-16, %rsp
     call exception_handler

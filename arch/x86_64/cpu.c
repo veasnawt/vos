@@ -7,10 +7,15 @@
 #define CPUID7_EBX_SMAP     (1u << 20)
 #define CPUID7_ECX_UMIP     (1u << 2)   /* CPUID 7.0 ECX */
 
+uint8_t cpu_smap_enabled;
+
 /*
  * Enable the protections the kernel mappings allow. NX is mandatory. SMEP and
- * UMIP are enabled when present: every mapping is supervisor-only, so neither
- * can fault kernel code. SMAP stays off until user-memory access exists.
+ * UMIP are enabled when present: the kernel never executes or describes user
+ * pages. SMAP is enabled when present (N1.9): the kernel never accesses a
+ * user page through a user address (copy_from_user reads through the
+ * supervisor-only kernel alias), and every kernel entry executes clac, so a
+ * user-set RFLAGS.AC cannot open user pages to the kernel.
  */
 void cpu_init_protections(void)
 {
@@ -43,18 +48,22 @@ void cpu_init_protections(void)
         cr4 |= CR4_SMEP;
     if (umip)
         cr4 |= CR4_UMIP;
+    if (smap)
+        cr4 |= CR4_SMAP;
     write_cr4(cr4);
 
     if (!(rdmsr(MSR_EFER) & EFER_NXE) || !(read_cr0() & CR0_WP) || !(read_cr0() & CR0_EM) ||
         (read_cr0() & (CR0_MP | CR0_TS)) ||
-        (smep && !(read_cr4() & CR4_SMEP)) || (umip && !(read_cr4() & CR4_UMIP)))
+        (smep && !(read_cr4() & CR4_SMEP)) || (umip && !(read_cr4() & CR4_UMIP)) ||
+        (smap && !(read_cr4() & CR4_SMAP)))
         panic("CPU protection bits did not stick");
 
     serial_puts("cpu: wp=on nx=on smep=");
     serial_puts(smep ? "on" : "unsupported");
     serial_puts(" umip=");
     serial_puts(umip ? "on" : "unsupported");
-    serial_puts(smap ? " smap=disabled(deferred)" : " smap=unsupported");
+    cpu_smap_enabled = smap ? 1 : 0;
+    serial_puts(smap ? " smap=on" : " smap=unsupported");
     serial_puts(" x87=off(em)");
     serial_puts("\r\ncpu: cr0=");
     serial_hex(read_cr0());
