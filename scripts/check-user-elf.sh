@@ -152,7 +152,7 @@ seg=$(LC_ALL=C objdump -d --no-show-raw-insn -- "$F" 2>/dev/null | awk -F'\t' 'N
       grep -cE '%[fg]s:')
 (( seg == 0 )) || reject "$seg %fs/%gs memory operands (no TLS or FS/GS base in ABI v0)"
 fp=$(LC_ALL=C objdump -d --no-show-raw-insn -- "$F" 2>/dev/null | awk -F'\t' 'NF >= 2 {print $2}' |
-     grep -cE '^(f[a-rt-z][a-z0-9]*|fs[a-z0-9]+|wait|emms|ldmxcsr|stmxcsr|fxsave|fxrstor|xsave[a-z0-9]*|xrstor[a-z0-9]*)\b|%(xmm|ymm|zmm|mm[0-7]|st)\b')
+     grep -cE '^(f[a-rt-z][a-z0-9]*|fs[a-z0-9]+|wait|emms|ldmxcsr|stmxcsr|fxsave|fxrstor|xsave[a-z0-9]*|xrstor[a-z0-9]*)\b|%([xyz]mm[0-9]+|mm[0-7]|st)\b')
 (( fp == 0 )) || reject "$fp x87/MMX/SSE instructions in executable code (no FPU in ABI v0)"
 
 printf 'check-user-elf: %s: OK (%d PT_LOAD, entry 0x%x, %d pages, VOS ABI 0)\n' \

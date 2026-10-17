@@ -217,6 +217,10 @@ $USER_CC ${USER_CFLAGS/-fno-pie/-fpie} -fpie -c user/hello/hello.c -o "$T/hello-
 $USER_CC $USER_CFLAGS -x assembler-with-cpp -c user/tests/x87_main.S -o "$T/x87_main.o" &&
     link "$T/tc-x87.elf" "$USER_LDS" $RT "$NOTE_O" "$T/x87_main.o" &&
     expect_reject "$T/tc-x87.elf" "x87/MMX/SSE" || bad "tc-x87: build failed"
+# SSE code in main (an xmm register operand, no x87 mnemonic).
+$USER_CC $USER_CFLAGS -x assembler-with-cpp -c user/tests/sse_main.S -o "$T/sse_main.o" &&
+    link "$T/tc-sse.elf" "$USER_LDS" $RT "$NOTE_O" "$T/sse_main.o" &&
+    expect_reject "$T/tc-sse.elf" "x87/MMX/SSE" || bad "tc-sse: build failed"
 # Thread-local storage: the real linker script refuses it; without the assertion the validator does.
 $USER_CC $USER_CFLAGS -c user/tests/tls_main.c -o "$T/tls_main.o" || bad "tls_main.o: compile failed"
 link_refused tc-tls "VOS ABI v0 has no thread-local storage" $RT "$NOTE_O" "$T/tls_main.o"
@@ -224,7 +228,7 @@ link "$T/tc-tls-noassert.elf" "$T/noassert.ld" $RT "$NOTE_O" "$T/tls_main.o" &&
     expect_reject "$T/tc-tls-noassert.elf" "thread-local storage" || bad "tc-tls-noassert: link failed"
 
 # ---- 4. kernel validator (host build) versus this validator ----
-build_time_only=" tc-relocs.elf tc-x87.elf tc-tls-noassert.elf "
+build_time_only=" tc-relocs.elf tc-x87.elf tc-sse.elf tc-tls-noassert.elf "
 same=0 compared=0
 for f in "$HELLO" "$T"/*.elf; do
     "$CHECK" "$f" >/dev/null 2>&1; shell=$?
@@ -240,7 +244,7 @@ for f in "$HELLO" "$T"/*.elf; do
         bad "$(basename "$f"): shell validator $shell, kernel validator $kernel"
     fi
 done
-echo "test-user-elf: kernel validator agrees on $same of $compared files (3 build-time-only differences expected)"
+echo "test-user-elf: kernel validator agrees on $same of $compared files (4 build-time-only differences expected)"
 
 echo "test-user-elf: $pass passed, $fail failed"
 (( fail == 0 ))
