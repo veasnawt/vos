@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| Status | **Approved as the current development plan (2026-10-18), revised after the N2 architecture review.** **N2.0, N2.1 and N2.2 are complete (2026-10-18, sections 3.1–3.3).** N2.3 and every later stage need explicit approval. Sections marked [Proposal] or [Option] are still design, not implementation. |
+| Status | **Approved as the current development plan (2026-10-18), revised after the N2 architecture review.** **N2.0–N2.3 are complete (2026-10-18, sections 3.1–3.4).** N2.4 and every later stage need explicit approval. Sections marked [Proposal] or [Option] are still design, not implementation. |
 | Date | 2026-10-17, revised 2026-10-18 |
 | Starting point | N1 complete (see `docs/plans/n1-user-space.md`, `docs/abi/syscall-v0.md`) |
 | Target | `ARCH=x86_64`; the i386 kernel stays as it is |
@@ -317,6 +317,98 @@ TSS.RSP0 per thread (updated at every switch, never pointing at a freed stack), 
 the switch path, an ownership rule for the RSP0 frame check, preemption only when an interrupt
 comes from ring 3 (switching on the IRQ return path after EOI), and teardown of a process whose
 thread is not running.
+
+### 3.4 N2.3 result: multiple user processes and timer preemption (complete)
+
+**Capacity.** 16 thread records and 15 guarded 16 KiB kernel stacks (was 8/7); with the boot and
+idle threads that leaves 14 threads for processes and kernel threads. A process table of 8
+(`PROC_TABLE`; `PROC_EBUSY` beyond). The static stacks put the test image's end at `0x1e5000`
+(production `0x18b000`); the linker assertion keeps it inside the 2 MiB covered by the kernel
+map's 4 KiB table, and 20 guard pages are unmapped. Process and thread IDs are never reused.
+
+**Ownership.** Every process has exactly one thread of its own (`thread_create_user`), created by
+`proc_start` and recorded both ways (process `tid`/`kstack_top`, thread `proc`/`root`). Process
+records belong to their kernel caller (static memory, no heap); the frames and page tables of an
+address space belong to the process; the thread record and stack belong to the scheduler.
+Processes are created only by kernel code from trusted GRUB modules (ELF loader) or test
+programs; there is no spawn system call and no file-system loading.
+
+**CR3 and TSS.RSP0.** At every switch the scheduler sets TSS.RSP0 to the destination thread's
+kernel-stack top if it runs a process (the dedicated entry stack while a kernel thread runs) and
+loads the destination's CR3 if it differs (a full flush of non-global translations; the kernel
+half, PML4[511], is shared by value and supervisor-only). A switch is refused unless the target
+address space shares the kernel half and matches the thread kind (kernel threads on the kernel
+root, user threads never), the running thread is on its own address space, the stack belongs to
+the target, the canaries hold, and nothing is in service at the interrupt controller; the arriving
+thread checks its CR3 and RSP0 again. Each trap from ring 3 must sit exactly at the top of the
+current process's kernel stack, which must equal TSS.RSP0, in that process's address space. The
+fixed N1 "entry stack" check became this per-thread check.
+
+**Execution and preemption.** A process's thread enters ring 3 once (`user_enter`: RFLAGS
+`0x202`, registers zero; ABI v0 unchanged). Every later kernel entry is an interrupt on top of its
+own kernel stack. Preemption happens only there: a timer interrupt from ring 3, after
+`irq_handle` acknowledged it, if the thread's slice (2 ticks) is over and another thread is
+runnable; the thread yields inside its trap path with the complete user state in its trap frame,
+and when it runs again the frame is validated before IRETQ. Kernel code (kernel threads, system
+calls, the idle IRQ path) is never preempted. Per-process ticks count only time the process ran.
+
+**Exit and cleanup.** Exit, a user fault, the test tick budget and `proc_kill` (taking effect at
+the next kernel entry, at the latest the next timer tick, or before the first entry) end the
+process from its own thread: final state kept, the thread leaves the process's address space for
+the kernel root, waiters are woken, the thread exits; the next thread to run reaps its stack.
+`proc_wait` returns only when the thread is gone; `proc_destroy` then frees every frame and page
+table (refused while the thread exists or the address space is active). `proc_run` remains as
+`proc_start` + `proc_wait`. GRUB module frames stay reserved throughout.
+
+**Changed N1/N2.2 tests (behaviour kept).** "Only one process at a time" became: a second process
+has its own root, frames and ID; the table is bounded; nothing leaks. "The trap frame is at the
+top of the entry stack" became "at the top of the process's own kernel stack". The N2.2
+boot-thread-only rule and its `proc-on-worker` panic case are obsolete; a kernel worker thread
+now runs and destroys a process as a positive test.
+
+**Evidence (QEMU TCG).** In-kernel tests (`selftest: user`): an endless loop beside a normal
+program, which finishes; three endless loops sharing 36 ticks 12/12/12; 15 registers and DF
+intact while other processes preempt; two processes writing the same user address each seeing
+only their own value; every trap on its own kernel stack; one faulting, one exiting, one running
+on; a kill before first entry; 15 rounds without leaks; a full thread pool making `proc_start`
+fail with `PROC_ENOMEM`. The `mp` image (`selftest: mp 12 cases`) runs separately built ELF
+programs from GRUB at once: `memtag1`/`memtag2` (no shared frame, different roots, never the
+other's data), with `irqregs` beside them; three endless loops 22/22/22 ticks; `hello` and the
+system-call program beside an endless loop; a page fault ending only its process; 8 programs at
+once and the 9th refused; 10 rounds of `hello` beside an endless loop; `hello` alone afterwards
+— frames, records and threads back to baseline each time, under qemu64, 2 GiB and `-cpu max`.
+
+**Mutations.** Caught with specific evidence: wrong destination CR3 and wrong TSS.RSP0 (also with
+the arrival checks removed: the thread-entry check), no CR3 switch between processes (also with
+every CR3 check removed: the multi-process tests fail), registers clobbered at preemption, a
+killed process left running, `proc_wait` not waiting, freeing a running process (with both
+teardown checks removed: the scheduler refuses the freed root), a preempted thread lost from the
+run queue (lost-wakeup panic), frames not reclaimed, ticks counted for the wrong process (after
+adding an upper bound to the fairness tests), acknowledging the timer IRQ only after preemption
+(after adding the "nothing in service at a switch" check; a first variant was an equivalent mutant
+that could never fire). Spot checks: missing EOI, missing TLB flush, freeing a running thread's
+stack.
+
+**Regression at the end of N2.3:** `make test` and `make ARCH=x86_64 test` (44 QEMU runs each)
+and `make test-all` (45) pass; ten `check-fault.sh` comparisons and the genuine NMI case; 266
+user/ELF checks; the 41-case isolation suite, the 9-case interrupt suite and the 12-case `mp`
+image under qemu64, 2 GiB and `-cpu max` with free frames equal before and after; `selftest:
+kmap 49`, `irq 22`, `sched 37`, `user 164`, `elf 31` with 0 failures. Two clean builds of the
+x86_64 kernel are byte-identical. `make ARCH=i386 test` passes and the i386 `vos.bin` SHA-256 is
+still `0760e7eb8ecfcb8545f4126f5a369b0fadfc5163ad9e95c5fba2a81d45afb9dd`; `hello.elf` is
+unchanged (`c6c64161…cd06`).
+
+**Limits.** One CPU; one thread per process; no IPC, no spawn/wait for programs, no blocking
+system calls; static 16 KiB kernel stacks; a 2-tick round-robin slice without priorities; the
+image is within about 108 KiB of the 2 MiB limit of the kernel map's 4 KiB table (more
+stacks or test records will need stacks mapped from allocated frames or a second table); the
+kernel half is mapped in every address space (supervisor-only, no side-channel mitigation).
+
+**Constraints for N2.4.** Blocking system calls (channel receive) will block a process's thread
+inside its trap path — the same mechanism as preemption, so its frame stays at the top of its
+kernel stack; wakeups come from other threads (`thread_wake_*`) in thread context. Killing a
+blocked process needs `proc_kill` to wake it from its wait queue. Handles and channels need
+per-process tables in the process record and teardown in `proc_destroy`.
 
 **Deferred beyond N2:** a general kernel heap, `SYSCALL`/`SYSRET`, a `spawn` system call and a
 user-visible `wait`, LAPIC/IOAPIC/ACPI, SMP, more than one thread per process, FPU/SIMD state,

@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| Status | **Experimental and unstable.** Implemented in N1 (commits up to `74501a7`); amended in N2.1 (entry `rflags` `0x202`: hardware interrupts reach ring 3). Any part may change without notice; there is no compatibility promise of any kind. |
+| Status | **Experimental and unstable.** Implemented in N1 (commits up to `74501a7`); amended in N2.1 (entry `rflags` `0x202`: hardware interrupts reach ring 3); N2.3 runs several programs at once with timer preemption (no interface change). Any part may change without notice; there is no compatibility promise of any kind. |
 | Scope | The contract between a VOS user program and the kernel on `ARCH=x86_64`: entry state, system calls, memory layout, executable format. |
 | Version marker | The VOS ABI note in every executable carries ABI version `0`. A later, incompatible ABI will use a new version number, and the loader will reject versions it does not implement. |
 | Sources of truth | `arch/x86_64/syscall.{h,c}`, `usercopy.c`, `usermode.S`, `process.c`, `elf.c`, `loader.c`; `user/include/vos/syscall.h`, `user/lib/{crt0.S,syscall.S,abi_note.S,user.ld}` |
@@ -67,9 +67,11 @@ program checks this state directly with its own `_start` (`user/suite/regs.S`).
   kernel takes the interrupt on the TSS.RSP0 stack, acknowledges it and returns to the
   interrupted instruction with every register, `rflags` and the user stack unchanged. A program
   cannot observe interrupts except as time passing; there is no time or tick system call in v0.
-- There is no scheduler: an interrupt never switches to another program, and a program that
-  never exits keeps the CPU (test builds have a kernel-side tick budget that kills it; it is not
-  part of the ABI).
+- Since N2.3 several programs may run at once, each in its own address space; a timer interrupt
+  may switch to another program (about every 20 ms). This is invisible to the program apart from
+  time passing: every register, `rflags` and the user stack are restored exactly. A program that
+  never exits does not stop the others (test builds also have a kernel-side tick budget; it is
+  not part of the ABI).
 - At CPL 3 with IOPL 0, `cli` and `sti` raise `#GP(0)`, and `popfq` silently keeps IF and IOPL
   unchanged. Vectors `0x20`–`0x2F` have DPL 0, so `int $0x20`...`int $0x2f` from ring 3 raise
   `#GP`; a program cannot fake a hardware interrupt.

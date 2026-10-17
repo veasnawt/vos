@@ -4,11 +4,11 @@ VOS is an experimental, independently written operating-system kernel for x86 PC
 **not** a Linux distribution and does not use Linux, a C library or any host operating system
 at run time; GRUB loads it directly.
 
-Today VOS can boot, protect itself from the programs it runs, and run one separately built
-native program (`hello`) in user mode, with a hardware timer interrupting it about 100 times a
-second. Inside the kernel, cooperative kernel threads take turns. It has **no** graphical
-desktop, interactive shell, keyboard input, file system, networking or multitasking of user
-programs: one program runs at a time, until it exits. It has only been
+Today VOS can boot, protect itself from the programs it runs, and run separately built native
+programs (`hello` at boot, several at once in the tests) in user mode, each in its own address
+space; a hardware timer switches between them about every 20 ms. It has **no** graphical
+desktop, interactive shell, keyboard input, file system, networking, or way for programs to start
+or talk to other programs. It has only been
 tested in the QEMU emulator.
 
 ## What happens when x86_64 VOS boots
@@ -65,7 +65,7 @@ end, so `timeout` stops QEMU after a few seconds):
 
 The last lines should be:
 
-    app: module "hello" at 0x190000-0x193348, 13128 bytes
+    app: module "hello" at 0x1bc000-0x1bf348, 13128 bytes
     elf: hello: ET_EXEC entry 0x400000, 3 PT_LOAD, 3 pages, VOS ABI 0
     user[hello]: Hello from VOS!
     proc: exit status 0 (cs=0x23 rip=0x40002a)
@@ -105,6 +105,8 @@ Every QEMU run is headless, sequential and has a timeout. The x86_64 tests inclu
 - kernel self-tests (boot information, memory managers, page tables, the W^X kernel map and its
   checker, user mode, ELF loading);
 - deliberate kernel faults, which must panic with the expected diagnostics;
+- multi-process tests (since N2.3): separately built programs running at the same time —
+  memory isolation, fair sharing, endless loops beside normal programs, faults, limits;
 - kernel-thread tests (since N2.2): threads alternating, registers and stacks surviving switches,
   blocking and waking, thread exit and stack reclamation, the idle thread taking timer interrupts,
   and failure cases (thread stack overflow, deadlock);
@@ -145,8 +147,8 @@ The `m1-32bit` tag marks the original known-good 32-bit baseline.
 - `docs/architecture/native-software-platform.md` – the long-term native software architecture
   (proposal), with the current state and security boundaries in its section 3
 - `docs/plans/n2-foundation.md` – the N2 roadmap; N2.0 (kernel W^X, protected stacks), N2.1
-  (interrupt controller, timer) and N2.2 (kernel threads, scheduler) are done, later stages need
-  approval
+  (interrupt controller, timer), N2.2 (kernel threads, scheduler) and N2.3 (several processes,
+  timer preemption) are done, later stages need approval
 - `docs/vision/product-direction.md` – provisional long-term product direction (not a specification)
 
 ## History
