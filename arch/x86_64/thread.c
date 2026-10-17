@@ -458,14 +458,20 @@ static void idle_main(void *arg)
     }
 }
 
-int sched_idle_irq(const struct exc_frame *f)
+/* The frame of an IRQ taken by the idle thread in its "sti; hlt", and nothing else. */
+static int idle_frame_ok(const struct exc_frame *f, const struct thread *cur)
 {
     uint64_t lo = idle ? idle->stack_lo : 0, hi = idle ? idle->stack_hi : 0;
 
-    if (!idle || current != idle || f->cs != GDT_KERNEL_CS || f->ss != GDT_KERNEL_DS ||
-        f->rip != (uint64_t)idle_after_hlt ||
-        (f->rflags & (RFLAGS_IF | RFLAGS_IOPL | (1ULL << 17))) != RFLAGS_IF ||
-        f->rsp <= lo || f->rsp > hi || (uint64_t)f <= lo || (uint64_t)f >= hi)
+    return idle && cur == idle && f->cs == GDT_KERNEL_CS && f->ss == GDT_KERNEL_DS &&
+           f->rip == (uint64_t)idle_after_hlt &&
+           (f->rflags & (RFLAGS_IF | RFLAGS_IOPL | (1ULL << 17))) == RFLAGS_IF &&
+           f->rsp > lo && f->rsp <= hi && (uint64_t)f > lo && (uint64_t)f < hi;
+}
+
+int sched_idle_irq(const struct exc_frame *f)
+{
+    if (!idle_frame_ok(f, current))
         return 0;
     stats.idle_irqs++;
     last_idle_rip = f->rip;
@@ -475,6 +481,11 @@ int sched_idle_irq(const struct exc_frame *f)
 }
 
 #ifdef VOS_TEST
+int sched_test_idle_frame_ok(const struct exc_frame *f, int as_idle)
+{
+    return idle_frame_ok(f, as_idle ? idle : current);
+}
+
 void sched_test_last_idle_irq(uint64_t *rip, uint64_t *rflags, uint64_t *rsp, uint64_t *idle_lo,
                               uint64_t *idle_hi)
 {

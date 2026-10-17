@@ -8,6 +8,7 @@
 #include "bootinfo.h"
 #include "console.h"
 #include "cpu.h"
+#include "exception.h"
 #include "gdt.h"
 #include "irq.h"
 #include "kmap.h"
@@ -412,6 +413,52 @@ static void test_sleep_and_last_exit(void)
            s->idle_irqs > irqs0, "the last runnable thread exits: idle reaps it and runs until the sleeper wakes");
 }
 
+/*
+ * The ring-0 IRQ check on crafted frames placed in the unused low part of
+ * the idle thread's stack (the idle thread is switched out). Real frames
+ * from correct code never fail it, so this shows each condition exists.
+ */
+static int idle_frame_refused(struct exc_frame *f, const struct exc_frame *good, uint64_t *field, uint64_t bad)
+{
+    *f = *good;
+    *field = bad;
+    int ok = sched_test_idle_frame_ok(f, 1);
+    *f = *good;
+    return !ok;
+}
+
+static void test_idle_frame_check(void)
+{
+    uint64_t rip, rflags, rsp, lo, hi;
+    struct exc_frame good, *f;
+
+    sched_test_last_idle_irq(&rip, &rflags, &rsp, &lo, &hi);
+    f = (struct exc_frame *)(lo + 2048);
+    memset(&good, 0, sizeof(good));
+    good.vector = 0x20;
+    good.cs = GDT_KERNEL_CS;
+    good.ss = GDT_KERNEL_DS;
+    good.rip = (uint64_t)idle_after_hlt;
+    good.rflags = 0x202;
+    good.rsp = lo + 4096;
+    *f = good;
+    expect(sched_test_idle_frame_ok(f, 1), "idle IRQ check accepts the idle thread halted after hlt");
+    expect(!sched_test_idle_frame_ok(f, 0), "idle IRQ check refuses any thread but the idle thread");
+    expect(idle_frame_refused(f, &good, &f->rip, (uint64_t)idle_after_hlt - 1) &&
+           idle_frame_refused(f, &good, &f->rip, (uint64_t)idle_after_hlt + 1),
+           "idle IRQ check refuses any other RIP");
+    expect(idle_frame_refused(f, &good, &f->rflags, 0x2), "idle IRQ check refuses a frame with IF=0");
+    expect(idle_frame_refused(f, &good, &f->rflags, 0x3202), "idle IRQ check refuses IOPL=3");
+    expect(idle_frame_refused(f, &good, &f->rflags, 0x20202), "idle IRQ check refuses VM=1");
+    expect(idle_frame_refused(f, &good, &f->cs, GDT_USER_CS) && idle_frame_refused(f, &good, &f->ss, GDT_USER_DS),
+           "idle IRQ check refuses user selectors");
+    expect(idle_frame_refused(f, &good, &f->rsp, hi + 8) && idle_frame_refused(f, &good, &f->rsp, lo),
+           "idle IRQ check refuses a saved RSP outside the idle stack");
+    struct exc_frame elsewhere = good;
+    expect(!sched_test_idle_frame_ok(&elsewhere, 1), "idle IRQ check refuses a frame not on the idle stack");
+    memset(f, 0, sizeof(*f));
+}
+
 int selftest_sched(void)
 {
     failures = cases = 0;
@@ -422,6 +469,7 @@ int selftest_sched(void)
     test_exit_and_reap();
     test_exhaustion();
     test_idle();
+    test_idle_frame_check();
     test_block_wake();
     test_producer_consumer();
     test_sleep_and_last_exit();
