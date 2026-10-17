@@ -21,6 +21,8 @@ int selftest_pmm_exhaust(const struct boot_info *bi);
 int selftest_vmm(void);
 /* User address spaces and ring 3 (restores all state). */
 int selftest_user(void);
+/* ELF validation, loading and execution of the GRUB module "hello" (N1.8). */
+int selftest_elf(const struct boot_info *bi);
 /* Isolated test cases: each ends in a CPU page fault (never returns). */
 void selftest_vmm_fault_lowaccess(void);
 void selftest_vmm_fault_stale_tlb(void);

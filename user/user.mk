@@ -52,11 +52,18 @@ $(foreach a,$(USER_APPS),$(eval $(call USER_APP,$(a))))
 user-check: $(USER_ELFS)
 	@set -e; for f in $(USER_ELFS); do scripts/check-user-elf.sh $$f; done
 
+# The kernel's ELF validator (arch/x86_64/elf.c, unchanged) built for the host,
+# so the tests can compare it with scripts/check-user-elf.sh file by file.
+ELFCHECK := build/$(ARCH)/tools/elfcheck
+$(ELFCHECK): scripts/elfcheck.c arch/x86_64/elf.c arch/x86_64/elf.h
+	@mkdir -p $(dir $@)
+	$(CC) -std=gnu11 -O2 -Wall -Wextra -Werror -Iarch/x86_64 -o $@ scripts/elfcheck.c arch/x86_64/elf.c
+
 # Validation, profile and separation checks, and negative tests. Static only:
 # nothing is loaded or run. The kernel images are checked not to contain the
 # application.
-user-test: user-check $(USER_RT) $(KERNEL)
-	USER_CC="$(CC)" USER_CFLAGS="$(USER_CFLAGS)" USER_LD="$(LD)" \
+user-test: user-check $(USER_RT) $(KERNEL) $(ELFCHECK)
+	ELFCHECK=$(ELFCHECK) USER_CC="$(CC)" USER_CFLAGS="$(USER_CFLAGS)" USER_LD="$(LD)" \
 	USER_LDFLAGS="$(USER_LDFLAGS_BASE)" USER_LDS=$(USER_LDS) \
 	KERNEL_SYSCALL_H=arch/x86_64/syscall.h USER_SYSCALL_H=$(USER_DIR)/include/vos/syscall.h \
 	    scripts/test-user-elf.sh $(USER_BUILD) $(KERNEL) $(wildcard build/$(ARCH)-test*/vos.bin)

@@ -2,7 +2,8 @@
 # Build and negative tests for VOS user executables (N1.7; static only, nothing runs).
 # usage: test-user-elf.sh USER_BUILD_DIR KERNEL_ELF...
 # Env (from user/user.mk): USER_CC, USER_CFLAGS, USER_LD, USER_LDFLAGS (without -T),
-#   USER_LDS, KERNEL_SYSCALL_H, USER_SYSCALL_H.
+#   USER_LDS, KERNEL_SYSCALL_H, USER_SYSCALL_H, ELFCHECK (host build of the kernel's
+#   arch/x86_64/elf.c).
 #
 # 1. hello.elf is accepted, has the expected profile, uses int $0x80 only in
 #    the runtime stubs, matches the kernel's ABI numbers, and is not part of
@@ -10,6 +11,9 @@
 # 2. Every single-field corruption of hello.elf is rejected for its own reason.
 # 3. Executables built by the real toolchain with a forbidden property are
 #    rejected (or fail to link, where the linker script forbids them).
+# 4. The kernel's validator (ELFCHECK) reaches the same verdict as this
+#    script's loader profile on every file above, except the files rejected
+#    only by build-time checks it cannot make (relocations, x87, TLS sections).
 set -u
 [ $# -ge 2 ] || { echo "usage: test-user-elf.sh USER_BUILD_DIR KERNEL_ELF..." >&2; exit 2; }
 UB=$1; shift
@@ -218,6 +222,25 @@ $USER_CC $USER_CFLAGS -c user/tests/tls_main.c -o "$T/tls_main.o" || bad "tls_ma
 link_refused tc-tls "VOS ABI v0 has no thread-local storage" $RT "$NOTE_O" "$T/tls_main.o"
 link "$T/tc-tls-noassert.elf" "$T/noassert.ld" $RT "$NOTE_O" "$T/tls_main.o" &&
     expect_reject "$T/tc-tls-noassert.elf" "thread-local storage" || bad "tc-tls-noassert: link failed"
+
+# ---- 4. kernel validator (host build) versus this validator ----
+build_time_only=" tc-relocs.elf tc-x87.elf tc-tls-noassert.elf "
+same=0 compared=0
+for f in "$HELLO" "$T"/*.elf; do
+    "$CHECK" "$f" >/dev/null 2>&1; shell=$?
+    "$ELFCHECK" "$f" >/dev/null 2>&1; kernel=$?
+    (( shell <= 1 && kernel <= 1 )) || { bad "$(basename "$f"): validator error ($shell/$kernel)"; continue; }
+    compared=$((compared + 1))
+    if [[ $build_time_only == *" $(basename "$f") "* ]]; then
+        (( shell == 1 && kernel == 0 )) && ok ||
+            bad "$(basename "$f"): expected build-time-only rejection (shell 1, kernel 0), got $shell/$kernel"
+    elif (( shell == kernel )); then
+        same=$((same + 1)); ok
+    else
+        bad "$(basename "$f"): shell validator $shell, kernel validator $kernel"
+    fi
+done
+echo "test-user-elf: kernel validator agrees on $same of $compared files (3 build-time-only differences expected)"
 
 echo "test-user-elf: $pass passed, $fail failed"
 (( fail == 0 ))
