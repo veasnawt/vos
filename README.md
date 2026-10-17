@@ -5,8 +5,9 @@ VOS is an experimental, independently written operating-system kernel for x86 PC
 at run time; GRUB loads it directly.
 
 Today VOS can boot, protect itself from the programs it runs, and run one separately built
-native program (`hello`) in user mode. It has **no** graphical desktop, interactive shell,
-keyboard input, file system, networking, timer, scheduler or multitasking. It has only been
+native program (`hello`) in user mode, with a hardware timer interrupting it about 100 times a
+second. It has **no** graphical desktop, interactive shell, keyboard input, file system,
+networking, scheduler or multitasking: one program runs at a time, until it exits. It has only been
 tested in the QEMU emulator.
 
 ## What happens when x86_64 VOS boots
@@ -15,6 +16,8 @@ tested in the QEMU emulator.
 2. The kernel switches to 64-bit mode, sets up its own memory management and CPU protections,
    and checks the boot information. It then maps itself W^X: only its code is executable, its
    code and constants are read-only, and its stacks have unmapped guard pages below them.
+   It sets up the interrupt controller and the timer (100 Hz); interrupts stay off inside the
+   kernel and are on while the program runs.
 3. It validates `hello.elf`, copies it into a fresh, isolated user address space and runs it in
    ring 3 (user mode).
 4. `hello` prints through the kernel's `debug_write` system call and exits with status 0.
@@ -61,7 +64,7 @@ end, so `timeout` stops QEMU after a few seconds):
 
 The last lines should be:
 
-    app: module "hello" at 0x160000-0x163348, 13128 bytes
+    app: module "hello" at 0x165000-0x168348, 13128 bytes
     elf: hello: ET_EXEC entry 0x400000, 3 PT_LOAD, 3 pages, VOS ABI 0
     user[hello]: Hello from VOS!
     proc: exit status 0 (cs=0x23 rip=0x40002a)
@@ -99,6 +102,9 @@ Every QEMU run is headless, sequential and has a timeout. The x86_64 tests inclu
 - kernel self-tests (boot information, memory managers, page tables, the W^X kernel map and its
   checker, user mode, ELF loading);
 - deliberate kernel faults, which must panic with the expected diagnostics;
+- timer-interrupt tests (since N2.1): separately built programs that loop forever, check their
+  registers or try to switch interrupts off, run while the timer interrupts them; a test-only
+  tick budget in the kernel ends them;
 - kernel memory-protection cases (since N2.0): the kernel writing its own code or constants,
   executing data or a free page, reading a stack guard page, overflowing its stack, and NMI and
   machine-check entry (one NMI injected through the QEMU monitor); `scripts/check-fault.sh`
@@ -114,7 +120,7 @@ Every QEMU run is headless, sequential and has a timeout. The x86_64 tests inclu
 - `Makefile` – shared build; includes `arch/<ARCH>/arch.mk` and, for x86_64, `user/user.mk`
 - `arch/i386/` – the 32-bit kernel
 - `arch/x86_64/` – the 64-bit kernel: boot (`boot.S`), CPU and interrupts (`cpu.c`, `gdt.c`,
-  `idt.c`, `entry.S`, `exception.c`), memory (`pmm.c`, `vmm.c`, `kmap.c`, `resv.c`, `bootinfo.c`),
+  `idt.c`, `entry.S`, `exception.c`, `irq.c`, `pic.c`, `pit.c`), memory (`pmm.c`, `vmm.c`, `kmap.c`, `resv.c`, `bootinfo.c`),
   processes and system calls (`process.c`, `usermode.S`, `syscall.c`, `usercopy.c`), executables
   (`elf.c`, `loader.c`, `app.c`), and `selftest*.c` for test builds
 - `user/` – user space: `include/vos/syscall.h`, `lib/` (runtime, ABI note, linker script),
@@ -131,8 +137,8 @@ The `m1-32bit` tag marks the original known-good 32-bit baseline.
 - `docs/plans/n1-user-space.md` – the completed N1 milestone: design, stages and verified results
 - `docs/architecture/native-software-platform.md` – the long-term native software architecture
   (proposal), with the current state and security boundaries in its section 3
-- `docs/plans/n2-foundation.md` – the N2 roadmap; N2.0 (kernel W^X, protected stacks) is done,
-  later stages need approval
+- `docs/plans/n2-foundation.md` – the N2 roadmap; N2.0 (kernel W^X, protected stacks) and N2.1
+  (interrupt controller, timer) are done, later stages need approval
 - `docs/vision/product-direction.md` – provisional long-term product direction (not a specification)
 
 ## History

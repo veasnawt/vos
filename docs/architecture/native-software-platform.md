@@ -3,7 +3,7 @@
 | | |
 |---|---|
 | Status | **Proposal.** Section 3 describes what milestone N1 implemented (tagged *Current*); everything else remains a proposal unless marked *Current*. |
-| Date | 2026-10-17 (written at `7c06bc6`; section 3 and the status notes updated after N1 at `74501a7` and after N2.0 on 2026-10-18) |
+| Date | 2026-10-17 (written at `7c06bc6`; section 3 and the status notes updated after N1 at `74501a7`, after N2.0 and after N2.1 on 2026-10-18) |
 | Code baseline | after N1: the x86_64 kernel runs a separately built native application in ring 3 |
 | Scope | Native application model and public software interfaces of VOS, plus the separate compatibility architecture |
 | Out of scope | Implementing any of it; kernel Stage 2/3 work; UEFI |
@@ -86,7 +86,7 @@ recommendations:
 
 ---
 
-## 3. Current state after N1 and N2.0 [Current]
+## 3. Current state after N1, N2.0 and N2.1 [Current]
 
 Milestone N1 (`docs/plans/n1-user-space.md`, stages N1.0–N1.10) took the x86_64 kernel from
 "boots and prints" to "loads and runs a separately built native program in ring 3, isolated
@@ -97,7 +97,7 @@ from section 4 onward is still a proposal or future work unless tagged *Current*
 |---|---|
 | Targets | `ARCH=x86_64` (default since N2.0, Multiboot2, where all N1 and N2 work lives) and `ARCH=i386` (Multiboot 1, 32-bit, unchanged since N0) |
 | Boot and CPU | GRUB loads the ELF64 kernel and modules; `boot.S` enters long mode and the higher half (`0xFFFFFFFF80000000`). The kernel enables CR0.WP, EFER.NXE (required), SMEP/SMAP/UMIP when present, and CR0.EM (no x87). |
-| Segments and interrupts | Own GDT (kernel and user segments, 64-bit TSS with a 16 KiB ring-0 entry stack and IST stacks for #DF, NMI and #MC, each above an unmapped guard page; no I/O bitmap); 256-entry IDT: exception vectors 0–31 (DPL 0) and `int $0x80` (DPL 3). Interrupts stay disabled; there is no timer. |
+| Segments and interrupts | Own GDT (kernel and user segments, 64-bit TSS with a 16 KiB ring-0 entry stack and IST stacks for #DF, NMI and #MC, each above an unmapped guard page; no I/O bitmap); 256-entry IDT: exception vectors 0–31 and IRQ vectors 0x20–0x2F (DPL 0) and `int $0x80` (DPL 3). Since N2.1: 8259 PIC remapped to 0x20–0x2F with only IRQ0 unmasked, PIT at 99.998 Hz; the kernel always runs with IF = 0, ring 3 with IF = 1. |
 | Exceptions | Every exception is classified by the CPU-pushed CS: ring 0 → diagnostic and panic; ring 3 → the process is killed with the vector, error code and fault address recorded. |
 | Physical memory | Bitmap allocator over frames in [1 MiB, 1 GiB); the Multiboot2 map is validated and "unusable wins"; kernel, boot structures, modules and low memory are reserved; frames are zeroed on allocation. RAM above 1 GiB is unused. |
 | Virtual memory | 4-level page tables, 4 KiB user mappings with validated permissions, an audit of whole hierarchies; the boot identity map is removed. Since N2.0 the supervisor-only alias of physical 0–1 GiB is W^X: the kernel image in 4 KiB pages (text R-X, read-only data R, everything else RW NX, stack guard pages unmapped), the rest in 2 MiB RW NX pages (`kmap.c`; `docs/plans/n2-foundation.md` section 3.1). |
@@ -108,9 +108,9 @@ from section 4 onward is still a proposal or future work unless tagged *Current*
 | User space | `user/`: a minimal runtime (`crt0.S`, system-call stubs, ABI note, linker script) and `hello`, built separately from the kernel; 41 isolation-test programs in `user/suite`. |
 | Applications | GRUB delivers `hello.elf` as a module; the kernel validates, loads and runs it in ring 3 at boot: `user[hello]: Hello from VOS!`, then `proc[hello]: exited status 0, all frames reclaimed`. |
 | Tests | `make test-all` (sequential QEMU runs with timeouts): smoke tests, strict `VOS_TEST=1` images reporting through `isa-debug-exit` (33 = pass, 35 = expected failure), kernel self-tests, deliberate kernel faults, the 41-case isolation suite under qemu64, 2 GiB and `-cpu max`, SMEP/SMAP cases with controls, and static ELF tests. |
-| Not present | Timer, interrupt controller, scheduler, threads, more than one process, IPC, kernel heap, file systems, drivers beyond COM1/VGA, input, graphics, networking, packages, a shell. |
+| Not present | Scheduler, threads, more than one process, IPC, kernel heap, APIC/IOAPIC/ACPI, device interrupts other than the timer, file systems, drivers beyond COM1/VGA, input, graphics, networking, packages, a shell. |
 
-### 3.1 Security boundaries after N1 and N2.0 [Current]
+### 3.1 Security boundaries after N1, N2.0 and N2.1 [Current]
 
 **Implemented and tested (in QEMU):**
 - Ring-3 privilege separation: CS 0x23/SS 0x1B in every user frame; privileged instructions,
@@ -122,6 +122,9 @@ from section 4 onward is still a proposal or future work unless tagged *Current*
 - Kernel W^X (N2.0): only kernel text is executable in ring 0 and it is not writable through any
   mapping; kernel writes to text and read-only data, and execution of data or of free frames
   through the alias, fault; the audit enforces this in every address space.
+- Interrupts (N2.1): ring 3 cannot change IF or IOPL or raise IRQ vectors; every IRQ is checked
+  against the controller's in-service register and acknowledged; the interrupted program resumes
+  with every register intact; the kernel never runs with IF = 1.
 - Kernel stacks (N2.0): guard pages below the boot, entry and IST stacks; a kernel stack
   overflow ends in #DF on IST1; NMI and #MC have their own IST stacks (NMI delivery tested
   with a QEMU-injected NMI).
@@ -137,7 +140,8 @@ from section 4 onward is still a proposal or future work unless tagged *Current*
 **Not provided or not verified:**
 - Real hardware (everything ran under QEMU TCG).
 - Isolation between concurrent processes (only one process exists at a time).
-- Timer-driven preemption (a program that never exits keeps the CPU).
+- Timer-driven preemption: the timer interrupts programs (N2.1) but there is no scheduler, so a
+  program that never exits keeps the CPU (only test builds have a kill budget).
 - FPU/SIMD context management (FP/SIMD is disabled instead).
 - DMA/IOMMU protection.
 - Side-channel mitigations (the kernel is mapped, supervisor-only, in every address space).

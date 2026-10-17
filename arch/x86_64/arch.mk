@@ -29,6 +29,12 @@ MULTIBOOT_CHECK := --is-x86-multiboot2
 #    vmm-stale-tlb, vmm-nx and vmm-readonly must end in a real #PF with the
 #    expected error code and CR2 (status 35); app-ambiguous and app-reject
 #    must refuse to run the GRUB-delivered application (status 35).
+#    N2.0 fault cases (fault-case) are compared with scripts/check-fault.sh;
+#    nmi-real injects a genuine NMI through the QEMU monitor.
+#    N2.1: kernel-irq-vector (int $0x20 in ring 0) must panic; the irq image
+#    runs separately built programs with IF = 1 under the PIT (endless loop
+#    killed by the test tick budget, register preservation, IF/IOPL lock,
+#    kernel IF = 0, sti) under qemu64, 2 GiB and -cpu max.
 # 5. Isolation suite (N1.9): 41 separately built fixtures, each with its
 #    expected outcome in the trusted GRUB configuration, run under qemu64,
 #    2 GiB and -cpu max (SMEP/UMIP/SMAP on); SMEP and SMAP cases with -cpu

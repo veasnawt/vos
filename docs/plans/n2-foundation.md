@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| Status | **Approved as the current development plan (2026-10-18), revised after the N2 architecture review.** **N2.0 is complete (2026-10-18, section 3.1).** N2.1 and every later stage need explicit approval. Sections marked [Proposal] or [Option] are still design, not implementation. |
+| Status | **Approved as the current development plan (2026-10-18), revised after the N2 architecture review.** **N2.0 and N2.1 are complete (2026-10-18, sections 3.1 and 3.2).** N2.2 and every later stage need explicit approval. Sections marked [Proposal] or [Option] are still design, not implementation. |
 | Date | 2026-10-17, revised 2026-10-18 |
 | Starting point | N1 complete (see `docs/plans/n1-user-space.md`, `docs/abi/syscall-v0.md`) |
 | Target | `ARCH=x86_64`; the i386 kernel stays as it is |
@@ -156,6 +156,77 @@ suite under qemu64, 2 GiB and `-cpu max` with equal free frames before and after
 - The 4 KiB table covers only phys 0–2 MiB; a linker assertion stops the build if the kernel
   image grows beyond it.
 - Everything ran under QEMU TCG only.
+
+### 3.2 N2.1 result: interrupt controller and timer (complete)
+
+**Architecture.** `pic.c` drives the 8259 pair through an injectable port-I/O interface;
+`irq.c` reaches it only through `struct irq_chip` (init, mask, unmask, masks, in-service,
+begin, EOI), so a later controller can replace it; `pit.c` programs channel 0. `irq_init`
+runs once after the kernel W^X map: both chips are reinitialized with every line masked
+(ICW1 `0x11`, ICW2 `0x20`/`0x28`, ICW3 `0x04`/`0x02`, ICW4 `0x01`, OCW1 `0xFF`), the PIT
+is set to mode 2 with divisor 11932 (99.998 Hz), and only then IRQ0 is unmasked. The cascade
+line IRQ2 stays masked because no slave line is used; slave EOI and spurious-IRQ15 handling
+exist and are unit-tested.
+
+**Vector allocation.** `0x00`–`0x1F` exceptions (#DF IST1, NMI IST2, #MC IST3); `0x20`–`0x27`
+IRQ0–7; `0x28`–`0x2F` IRQ8–15; `0x80` system calls (DPL 3); all others absent. IRQ gates
+are DPL 0 interrupt gates without IST and exist before the controller is touched.
+
+**Hazard found at the start of N2.1.** The kernel had never touched the PIC: the firmware
+state (master base `0x08`, IRQ0 unmasked, BIOS PIT running) was harmless only because IF was
+0 everywhere. Running ring 3 with IF = 1 before remapping would have delivered IRQ0 on the #DF
+gate. The order is therefore IDT gates → controller remapped and masked → PIT → IRQ0 unmasked
+→ first user program.
+
+**IF policy.** The kernel always runs with IF = 0 and never executes `sti`; all gates are
+interrupt gates; the trap handler panics if entered with IF = 1; an IRQ vector from ring 0
+panics. Ring 3 runs with IF = 1, IOPL = 0 (entry RFLAGS `0x202`, ABI amendment in
+`docs/abi/syscall-v0.md`). An IRQ is taken only from ring 3, on TSS.RSP0; `irq_handle` checks
+the vector against the in-service registers (spurious IRQ7: no EOI; spurious IRQ15: master
+EOI only; any other line not in service: panic), counts it, sends EOI, checks that the line
+left service, and the program resumes after the same frame validation as a system call (now
+IF = 1, IOPL = 0, VM = 0, frame at the top of RSP0). There are no exceptions to this policy,
+not even for tests. Test builds add a kernel-side tick budget (default 1000, per test) that
+kills a ring-3 program after N ticks, plus a second bound on interrupts in case ticks stop.
+
+**Evidence (QEMU TCG).** Synthetic: 14 driver cases against a fake 8259 (exact init sequence,
+masks, EOI routing, spurious IRQ7/15, not-in-service refusal). Hardware read-back: IMR
+`0xFFFE`, nothing in service, PIT status `0x34` and counting, IDT layout. CPU-delivered
+interrupts: an endless loop interrupted from CPL 3 (CS `0x23`, IF 1, IOPL 0, RIP inside the
+loop, user RSP) and killed after exactly 5/50 ticks; 15 registers and DF intact across 20 and
+50 interrupts; `popfq` cannot clear IF or raise IOPL; `sti` raises #GP(0); the kernel sees IF =
+0 inside a system call; twelve crafted frames show each resume check; `int $0x20` in ring 0
+panics; `hello`, system calls and user faults work afterwards with frames back at baseline.
+Separately built programs (`user/suite/spin.c`, `irqregs.S`, `iflock.c`, `kernelif.c`,
+`sti.c`) run through GRUB/ELF/`proc_run` in the `irq` image under qemu64, 2 GiB and
+`-cpu max`. Observed under TCG: 50 ticks took about 0.49 s of host time; nothing depends on it.
+Nineteen source mutations (wrong remap, missing EOI, IRQ0 masked, extra line unmasked, wrong
+vector dispatch, trap gate, clobbered saved register, swapped register restore, user IF = 0,
+IOPL 3, stuck tick counter, resume accepting IF = 0 / IOPL / any stack, three spurious/EOI
+routing errors, `sti` in the kernel, PIT one-shot) were each caught with a specific diagnostic.
+The missing EOI was at first only a hang; the post-EOI in-service check was added for it. IRQ0
+masked and a one-shot PIT still end in a timeout, but only after a specific self-test failure.
+
+**Regression at the end of N2.1:** `make test` and `make ARCH=x86_64 test` (39 QEMU runs each)
+and `make test-all` (40) pass; 258 user/ELF checks; the 41-case isolation suite and the 9-case
+`irq` image under qemu64, 2 GiB and `-cpu max` with free frames equal before and after; all
+nine N2.0 fault comparisons and the genuine NMI case; `selftest: irq 22`, `user 151`,
+`kmap 49` cases with 0 failures. `make ARCH=i386 test` passes and the i386 `vos.bin` SHA-256 is
+still `0760e7eb8ecfcb8545f4126f5a369b0fadfc5163ad9e95c5fba2a81d45afb9dd`; `hello.elf` is
+unchanged. No scheduler exists.
+
+**Also fixed in N2.1:** the N2.0 audit checked text overlap page by page (about 261,000 calls
+per kernel-half audit); a constant-time check brought the isolation suite from about 21 s back
+to about 2 s. Pending IRQ0 while the kernel runs with IF = 0 also slows QEMU TCG measurably
+(about 50 % on kernel-heavy code in one measurement); real hardware has no such cost.
+
+**Constraints for N2.2.** The kernel is non-preemptible and IF = 0 everywhere in it; an idle
+thread's `sti; hlt` would be the first ring-0 IF = 1 window and needs ring-0 IRQ handling
+(today a panic), a decision on nesting and an EOI-before-switch rule. There is one RSP0 stack;
+per-thread stacks must keep the "frame at the top of RSP0" check true. Ticks are a counter
+only: no timekeeping, no timers, no sleeping. The tick budget is test-only and must not become
+the production policy. Spurious IRQ7/15 handling is tested only synthetically (QEMU produced
+none). APIC, IOAPIC, ACPI and SMP stay out.
 
 **Deferred beyond N2:** a general kernel heap, `SYSCALL`/`SYSRET`, a `spawn` system call and a
 user-visible `wait`, LAPIC/IOAPIC/ACPI, SMP, more than one thread per process, FPU/SIMD state,
