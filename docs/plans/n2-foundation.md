@@ -2,8 +2,8 @@
 
 | | |
 |---|---|
-| Status | **Planning only. Not approved.** Nothing here is implemented, and every stage needs explicit approval before work starts. |
-| Date | 2026-10-17 |
+| Status | **Approved as the current development plan (2026-10-18), revised after the N2 architecture review.** Only N2.0 is authorized; every later stage needs explicit approval. Sections marked [Proposal] or [Option] are still design, not implementation. |
+| Date | 2026-10-17, revised 2026-10-18 |
 | Starting point | N1 complete (see `docs/plans/n1-user-space.md`, `docs/abi/syscall-v0.md`) |
 | Target | `ARCH=x86_64`; the i386 kernel stays as it is |
 
@@ -47,23 +47,31 @@ frame, page table and kernel object is reclaimed.
 audio, a shell, a user-space loader or app manager, `.vapp` packages, dynamic linking, FPU/SIMD
 state, power management, real-hardware support beyond what QEMU emulates.
 
-## 3. Proposed stages
+## 3. Stages (revised after the architecture review)
 
-Each stage keeps `make test-all` green, adds its own deterministic tests and stops for review.
+The review (2026-10-18) checked the first draft against the code and changed it: the timer is
+the PIT behind the 8259 PIC instead of the local APIC (`qemu64` has no x2APIC and the xAPIC's
+registers at physical `0xFEE00000` lie outside the kernel's only mapping); fixed-size static
+object pools replace a general kernel heap; the existing kernel alias becomes the direct map
+(no new PML4 entry); the old heap and ABI stages are folded into the others.
+
+Each stage keeps `make test-all` green, adds deterministic tests and stops for review.
 
 | Stage | Content | Acceptance (examples) |
 |---|---|---|
-| **N2.0** Hardening carried over from N1 | Kernel W^X: remap the kernel with 4 KiB pages (text R-X, rodata R, data RW NX) and stop using the boot alias for code; a separate direct map of RAM (NX, supervisor) for page-table and frame access; IST stacks for NMI and #MC; guard pages under kernel stacks | A kernel write to its own text faults; executing the direct map faults; NMI injected by QEMU is handled on its own stack |
-| **N2.1** Interrupt controller and timer | Mask and remap the legacy 8259 PIC; local APIC timer (or PIT, see 4.1); IRQ entry stubs sharing the exception path; EOI; spurious-interrupt handling; interrupts enabled in user mode, disabled in the kernel at first | Tick counter advances at the expected rate (within tolerance) under QEMU; an IRQ arriving in ring 3 shows CS 0x23 in its frame and returns to the same instruction; all N1 tests still pass with interrupts on |
-| **N2.2** Kernel heap and objects | A small kernel allocator (slab-style for fixed-size objects) on top of the PMM; reference-counted kernel objects (process, thread, channel) with explicit ownership | Allocation/free round trips; no leak after create/destroy cycles; object counts return to baseline |
-| **N2.3** Threads and scheduler | Per-thread kernel stacks and saved contexts; context switch; one user thread per process at first; round-robin preemptive scheduler with an idle thread; `yield` system call | Two programs printing alternately; an endless loop no longer blocks the system; canaries on every kernel stack |
-| **N2.4** Multiple processes and lifecycle | Process table; create from boot modules (several at once); exit status; kernel-side termination (fault, policy); `wait`-style notification for the creator; CR3 switch on context switch; safe teardown while others run | Faulting process killed while others continue; frames and objects back to baseline after all exit |
-| **N2.5** Basic IPC | Handles with rights; channels carrying small messages (copied, bounded size); blocking receive with wakeup; peer-closed notification | Ping-pong between two processes; closing one end wakes the other with "peer closed"; message size and handle limits enforced |
-| **N2.6** ABI v1 and user runtime | Versioned system-call table for the new calls; `copy_to_user`; revised user-memory rules for preemption (section 5); possibly `SYSCALL` entry (section 4.4); runtime updated, still static | ABI v1 programs run; ABI v0 `hello` either still runs or is rejected by version, as decided |
-| **N2.7** Isolation suite v2 and documentation | Extend the N1.9 suite to concurrency: faults during IPC, killing a blocked process, exhausting handles/memory per process | Full suite under qemu64, 2 GiB and `-cpu max` |
+| **N2.0** Kernel memory hardening | Kernel W^X: kernel image mapped with 4 KiB pages (text R-X, read-only data R, data RW NX), the rest of the 1 GiB alias RW NX in 2 MiB pages, no writable alias of code; guard pages under the boot, kernel-entry and IST stacks; IST stacks for NMI and #MC | Kernel writes to text and read-only data fault; executing data or a free frame through the alias faults; stack overflow ends in #DF on its IST stack; all N1 tests pass |
+| **N2.1** Interrupts and timer | 8259 PIC remapped to vectors 0x20–0x2F and masked except IRQ0; PIT at about 100 Hz; IRQ dispatch, EOI, spurious IRQ7/15; kernel always IF=0, user code IF=1 (entry RFLAGS `0x202`, an ABI amendment); a test-only tick budget that kills a runaway program | Ticks counted while a program runs; IRQ frames from ring 3 return to the same instruction with all registers intact; a runaway program is killed |
+| **N2.2** Kernel threads and scheduler core | Thread records and guarded 16 KiB kernel stacks from static pools; context switch; idle thread (`sti; hlt`); round robin; kernel non-preemptible; tested with kernel threads only | Kernel threads interleave; registers and canaries intact after many switches |
+| **N2.3** Multiple user processes | Static process table, 64-bit IDs never reused, one thread per process, CR3 and TSS.RSP0 switched per thread, preemption only when an IRQ interrupts ring 3, exit/kill and reaping after the switch away, several boot modules started from trusted configuration; `proc_run` kept as a wrapper for N1 tests | Several programs run concurrently; a faulting or runaway one is removed while others continue; everything returns to baseline |
+| **N2.4** Channels, handles and ABI v1 | Static pools of channels; per-process handle tables with rights; messages up to 256 bytes copied in and out (`copy_to_user`); non-blocking send (`-VOS_EAGAIN`), blocking receive, `-VOS_EPIPE` after the peer closes; ABI v1 = v0 plus `yield`, `channel_send`, `channel_recv`, `handle_close` and new error codes; loader accepts note versions 0 and 1 | Ping-pong; peer death wakes the receiver; limits return errors, never panics; `hello` (v0) unchanged |
+| **N2.5** Concurrency and isolation suite v2, documentation | The N1.9 suite extended to concurrent processes, IPC faults, killing blocked processes and exhaustion | Full suite under qemu64, 2 GiB and `-cpu max` |
 
-Dependencies: N2.0 → N2.1 → N2.2 → N2.3 → N2.4 → N2.5 → N2.6 → N2.7. N2.0 could move later if
-time matters more than defense in depth, but it gets harder once more code depends on the alias.
+Order: N2.0 → N2.1 → N2.2 → N2.3 → N2.4 → N2.5. Guard pages and IST stacks come before any
+asynchronous entry (N2.1).
+
+**Deferred beyond N2:** a general kernel heap, `SYSCALL`/`SYSRET`, a `spawn` system call and a
+user-visible `wait`, LAPIC/IOAPIC/ACPI, SMP, more than one thread per process, FPU/SIMD state,
+RAM above 1 GiB, device interrupts, storage, file systems, networking, graphics, a shell.
 
 ## 4. Design alternatives
 
@@ -147,18 +155,33 @@ time matters more than defense in depth, but it gets harder once more code depen
 | SMP | APIC, per-CPU data, locking | Changes nearly every invariant; its own milestone |
 | Graphics | Framebuffer handoff, IPC, memory sharing | After the above |
 
-## 7. Decisions requiring approval
+## 7. Decisions
 
-| ID | Decision | Recommendation |
-|---|---|---|
-| N2-D1 | N2 scope as defined in section 2 | Approve as the bounded target |
-| N2-D2 | Timer source | Local APIC timer calibrated with the PIT |
-| N2-D3 | Kernel preemption | Non-preemptible kernel in N2 |
-| N2-D4 | IPC primitive | Bounded channels with copied messages; handle passing late in N2 |
-| N2-D5 | System-call entry | Keep `int $0x80`; new calls make ABI v1 |
-| N2-D6 | ABI v0 compatibility | Decide whether ABI v0 programs keep running after ABI v1 or are rejected |
-| N2-D7 | Order of kernel W^X (N2.0) | First, before more code depends on the alias |
-| N2-D8 | Debugging tools | Install GDB (and consider an `x86_64-elf` cross toolchain) before N2.3; both need approval |
+Approved with the revised roadmap (2026-10-18):
+
+| ID | Decision |
+|---|---|
+| N2-D1 | N2 scope and stages as in section 3 |
+| N2-D2 | PIT and 8259 PIC for N2; APICs deferred |
+| N2-D3 | Non-preemptible kernel; only code interrupted in ring 3 (or idle) is preempted |
+| N2-D4 | Bounded channels with copied messages, non-blocking send, blocking receive |
+| N2-D5 | Keep `int $0x80`; ABI v1 is an additive extension; v0 programs keep running |
+| N2-D7 | Kernel W^X first (N2.0), by remapping the existing alias in place |
+| N2-D9 | `ARCH=x86_64` becomes the default build; `ARCH=i386` stays buildable and tested |
+| N2-D10 | Static object pools instead of a general kernel heap in N2 |
+
+Still open: N2-D6 details (whether v0 programs may use v1 calls — the proposal is no, they get
+`-VOS_ENOSYS`), N2-D8 (installing GDB; not done in N2.0, see section 8), and whether to enable
+CR4.MCE (without it a machine check shuts the machine down instead of raising #MC; noted in
+N2.0).
+
+## 8. Tooling (recorded, not installed)
+
+GDB is not installed. When approved: `sudo apt install gdb`, then debug with
+`qemu-system-x86_64 -cdrom build/x86_64/vos.iso -s -S ...` and
+`gdb build/x86_64/vos.bin -ex 'target remote :1234'`. The x86_64 kernel is built with `-g`
+from N2.0 so the debugger and `addr2line` can show source lines; the i386 flags are unchanged.
+A cross toolchain is not needed yet.
 
 Carried over from N1 and still open: the project licence; whether `ARCH=x86_64` becomes the
 default (see the N1 plan, section 15).
