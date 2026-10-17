@@ -92,6 +92,11 @@ int kmap_is_text(uint64_t pa)
     return pa >= kphys(__text_start) && pa < kphys(__text_end);
 }
 
+int kmap_text_overlaps(uint64_t pa, uint64_t size)
+{
+    return pa < kphys(__text_end) && pa + size > kphys(__text_start);
+}
+
 static int is_readonly_data(uint64_t pa)
 {
     return (pa >= kphys(__rodata_start) && pa < kphys(__rodata_end)) ||

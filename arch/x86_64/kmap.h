@@ -65,6 +65,8 @@ uint64_t kmap_expected_pde(unsigned i);
 unsigned kmap_guard_pages(uint64_t *va, unsigned max);
 /* Nonzero if phys pa lies in the kernel .text (the only frames executable in ring 0). */
 int kmap_is_text(uint64_t pa);
+/* Nonzero if the frames [pa, pa + size) overlap the kernel .text. */
+int kmap_text_overlaps(uint64_t pa, uint64_t size);
 /* Nonzero if the 4 KiB frame containing phys pa is a stack guard page. */
 int kmap_is_guard(uint64_t pa);
 

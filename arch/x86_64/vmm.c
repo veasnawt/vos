@@ -319,10 +319,7 @@ static int covers_guard(uint64_t pa, uint64_t size)
 
 static int covers_text(uint64_t pa, uint64_t size)
 {
-    for (uint64_t p = pa; p - pa < size; p += PAGE_SIZE)
-        if (kmap_is_text(p))
-            return 1;
-    return 0;
+    return kmap_text_overlaps(pa, size);
 }
 
 /*
