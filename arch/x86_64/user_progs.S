@@ -73,13 +73,95 @@ up_regcheck:
     ud2
 up_regcheck_end:
 
-/* An unsupported system-call number. */
-PROG badsys
-up_badsys:
-    mov $99, %eax
+/*
+ * Load known values into every register except rax and rsp, set CF and DF,
+ * leave canaries in the red zone, make an unknown system call and check that
+ * only rax changed (to -VOS_ENOSYS = -1). Exit status: 0 = all preserved,
+ * 2 wrong result, 3 flags lost, 4 a register changed, 5 red zone touched,
+ * 6 RSP changed, 7 a second (huge) number did not return -1.
+ */
+.macro CHECKREG reg, val
+    movabs $\val, %rax
+    cmp %rax, \reg
+    jne 8f
+.endm
+PROG enosys
+up_enosys:
+    movq $0x5A5A5A5A, %rax
+    mov %rax, -16(%rsp)
+    mov %rax, -64(%rsp)
+    mov %rax, -128(%rsp)
+    movabs $0x1111111111111111, %rbx
+    movabs $0x2222222222222222, %rcx
+    movabs $0x3333333333333333, %rdx
+    movabs $0x4444444444444444, %rsi
+    movabs $0x5555555555555555, %rdi
+    movabs $0x6666666666666666, %rbp
+    movabs $0x7777777777777777, %r8
+    movabs $0x8888888888888888, %r9
+    movabs $0x9999999999999999, %r10
+    movabs $0xAAAAAAAAAAAAAAAA, %r11
+    movabs $0xBBBBBBBBBBBBBBBB, %r12
+    movabs $0xCCCCCCCCCCCCCCCC, %r13
+    movabs $0xDDDDDDDDDDDDDDDD, %r14
+    movabs $0xEEEEEEEEEEEEEEEE, %r15
+    mov $1234, %eax
+    stc
+    std
+    int $0x80
+    pushfq                          /* the flags as returned, before any instruction changes them */
+    cmp $-1, %rax
+    jne 2f
+    popq %rax
+    test $1, %al                    /* CF */
+    jz 3f
+    test $0x400, %eax               /* DF */
+    jz 3f
+    cld
+    CHECKREG %rbx, 0x1111111111111111
+    CHECKREG %rcx, 0x2222222222222222
+    CHECKREG %rdx, 0x3333333333333333
+    CHECKREG %rsi, 0x4444444444444444
+    CHECKREG %rdi, 0x5555555555555555
+    CHECKREG %rbp, 0x6666666666666666
+    CHECKREG %r8, 0x7777777777777777
+    CHECKREG %r9, 0x8888888888888888
+    CHECKREG %r10, 0x9999999999999999
+    CHECKREG %r11, 0xAAAAAAAAAAAAAAAA
+    CHECKREG %r12, 0xBBBBBBBBBBBBBBBB
+    CHECKREG %r13, 0xCCCCCCCCCCCCCCCC
+    CHECKREG %r14, 0xDDDDDDDDDDDDDDDD
+    CHECKREG %r15, 0xEEEEEEEEEEEEEEEE
+    cmpq $0x5A5A5A5A, -16(%rsp)
+    jne 5f
+    cmpq $0x5A5A5A5A, -64(%rsp)
+    jne 5f
+    cmpq $0x5A5A5A5A, -128(%rsp)
+    jne 5f
+    movabs $ENTRY_RSP, %rax
+    cmp %rax, %rsp
+    jne 6f
+    mov $-1, %rax                   /* the largest unsigned number */
+    int $0x80
+    cmp $-1, %rax
+    jne 7f
+    xor %edi, %edi
+    jmp 9f
+2:  mov $2, %edi
+    jmp 9f
+3:  mov $3, %edi
+    jmp 9f
+8:  mov $4, %edi
+    jmp 9f
+5:  mov $5, %edi
+    jmp 9f
+6:  mov $6, %edi
+    jmp 9f
+7:  mov $7, %edi
+9:  mov $SYS_EXIT, %eax
     int $0x80
     ud2
-up_badsys_end:
+up_enosys_end:
 
 /* Enter the kernel with DF set: the kernel must still work (it clears DF). */
 PROG std_exit

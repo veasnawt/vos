@@ -37,7 +37,7 @@ static struct process proc;
 #define DECLARE_PROG(n) extern const uint8_t up_##n[], up_##n##_end[]
 DECLARE_PROG(exit42);
 DECLARE_PROG(regcheck);
-DECLARE_PROG(badsys);
+DECLARE_PROG(enosys);
 DECLARE_PROG(std_exit);
 DECLARE_PROG(ud2);
 DECLARE_PROG(cli);
@@ -233,8 +233,16 @@ static void test_ring3_exit(void)
         serial_puts("\r\n");
     }
 
-    expect(run_prog("badsys", PROG(badsys), 0, 0) == PROC_KILLED && last.trap.rax == 99 &&
-           last.reason && last.trap.vector == 0x80, "unsupported system call kills the process");
+    r = run_prog("enosys", PROG(enosys), 0, 0);
+    expect(r == PROC_EXITED && last.exit_status == 0 && last.syscalls == 2,
+           "unknown system call returns -VOS_ENOSYS to the same process; all other state preserved");
+    if (last.exit_status != 0) {
+        serial_puts("selftest:   enosys status ");
+        serial_dec((uint32_t)last.exit_status);
+        serial_puts("\r\n");
+    }
+    expect(last.trap.rip > PROC_CODE_VA && ended_by_int80(&last, PROG(enosys)),
+           "the process continued after both calls and exited from its last int $0x80");
     expect(run_prog("std_exit", PROG(std_exit), 0, 0) == PROC_EXITED && last.exit_status == 7 &&
            (last.trap.rflags & RFLAGS_DF), "user DF=1 at entry: kernel still correct");
 

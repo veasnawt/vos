@@ -12,7 +12,13 @@ struct exc_frame {
     uint64_t rip, cs, rflags, rsp, ss;  /* pushed by the CPU */
 };
 
-void exception_handler(struct exc_frame *f);
+/*
+ * Returns TRAP_RESUME only to resume a validated user system-call frame (the
+ * entry stub then restores the registers and IRETQs); otherwise it does not
+ * return. The value is repeated in entry.S.
+ */
+#define TRAP_RESUME 0x52455355u
+uint64_t exception_handler(struct exc_frame *f);
 /* Human-readable name of an exception vector, e.g. "#GP general protection fault". */
 const char *exception_name(uint64_t vector);
 

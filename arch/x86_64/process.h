@@ -57,12 +57,10 @@ struct process {
     int exit_status;
     const char *reason;                 /* why it was killed */
     struct proc_trap trap;
+    uint64_t syscalls;                  /* system calls that returned to the process */
     unsigned npages;
     uint64_t page_va[PROC_MAX_PAGES], page_pa[PROC_MAX_PAGES];
 };
-
-/* Provisional system-call numbers (int $0x80, number in rax; plan section 8.1). */
-#define SYS_EXIT        0       /* rdi: status (low 32 bits); does not return */
 
 struct exc_frame;
 
@@ -75,12 +73,14 @@ int proc_create(struct process *p, const void *code, size_t len);
  */
 int proc_run(struct process *p);
 /*
- * Called by the exception dispatcher for traps whose saved CS has RPL 3:
- * records the CPU-pushed frame, ends the process (exit, or killed for an
- * exception or unsupported request), switches to the kernel CR3 and resumes
- * proc_run's caller. The process never runs again.
+ * Called by the exception dispatcher for traps whose saved CS has RPL 3.
+ * A non-terminating system call is dispatched, its result stored in the
+ * frame's rax, the frame validated, and TRAP_RESUME returned (the stub
+ * IRETQs to the same process). Exit and every exception record the
+ * CPU-pushed frame, end the process, switch to the kernel CR3 and resume
+ * proc_run's caller instead; the process never runs again.
  */
-__attribute__((noreturn)) void proc_user_trap(struct exc_frame *f);
+uint64_t proc_user_trap(struct exc_frame *f);
 /* Release everything the process owns; the kernel root must be active. */
 void proc_destroy(struct process *p);
 

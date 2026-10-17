@@ -4,6 +4,7 @@
 #include "exception.h"
 #include "gdt.h"
 #include "idt.h"
+#include "syscall.h"
 #include "lib.h"
 #include "panic.h"
 #include "pmm.h"
@@ -17,6 +18,20 @@ int enter_user(uint64_t rip, uint64_t rsp, uint64_t cr3, uint64_t *kernel_rsp);
 __attribute__((noreturn)) void user_return(uint64_t *kernel_rsp, int result);
 
 #define RFLAGS_IF       (1ULL << 9)
+#define RFLAGS_IOPL     (3ULL << 12)
+#define RFLAGS_FIXED    (1ULL << 1)
+
+/* Last checks before IRETQ returns a system call to the same process. */
+static uint64_t resume(struct process *p, struct exc_frame *f)
+{
+    if (f->cs != GDT_USER_CS || f->ss != GDT_USER_DS || (f->rflags & (RFLAGS_IF | RFLAGS_IOPL)) ||
+        !(f->rflags & RFLAGS_FIXED) || f->rip >= LOWER_HALF_END || f->rsp >= LOWER_HALF_END ||
+        (read_cr3() & PTE_ADDR) != p->root || (uint64_t)f + sizeof(*f) != gdt_tss_rsp0() ||
+        !gdt_stack_canaries_intact())
+        panic("process: refusing to resume an invalid user frame");
+    p->syscalls++;
+    return TRAP_RESUME;
+}
 
 #ifdef VOS_TEST
 static int frame_budget = -1;
@@ -198,7 +213,7 @@ __attribute__((noreturn)) static void finish(struct process *p)
     user_return(&p->kernel_rsp, p->state);
 }
 
-void proc_user_trap(struct exc_frame *f)
+uint64_t proc_user_trap(struct exc_frame *f)
 {
     struct process *p = current;
 
@@ -208,6 +223,11 @@ void proc_user_trap(struct exc_frame *f)
         panic("process: user trap with unexpected selectors");
     if ((read_cr3() & PTE_ADDR) != p->root)
         panic("process: user trap on a foreign address space");
+
+    if (f->vector == IDT_SYSCALL && f->rax != SYS_EXIT) {
+        f->rax = (uint64_t)syscall_dispatch(p, f);
+        return resume(p, f);
+    }
 
     p->trap.vector = f->vector;
     p->trap.error = f->error;
@@ -221,18 +241,11 @@ void proc_user_trap(struct exc_frame *f)
     p->trap.rdi = f->rdi;
     p->trap.kframe = (uint64_t)f;
 
-    if (f->vector == IDT_SYSCALL) {
-        if (f->rax == SYS_EXIT) {
-            p->exit_status = (int32_t)f->rdi;
-            p->state = PROC_EXITED;
-            serial_puts("proc: exit status ");
-            serial_dec((uint32_t)p->exit_status);
-        } else {
-            p->state = PROC_KILLED;
-            p->reason = "unsupported system call";
-            serial_puts("proc: killed: unsupported system call ");
-            serial_dec(f->rax);
-        }
+    if (f->vector == IDT_SYSCALL) {             /* exit */
+        p->exit_status = (int32_t)f->rdi;
+        p->state = PROC_EXITED;
+        serial_puts("proc: exit status ");
+        serial_dec((uint32_t)p->exit_status);
         serial_puts(" (cs=");
         serial_hex(f->cs);
         serial_puts(" rip=");

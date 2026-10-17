@@ -5,9 +5,12 @@
  * exception_handler(frame) on a 16-byte-aligned stack. In 64-bit mode the
  * CPU pushes SS:RSP for every interrupt, with or without a privilege change,
  * so the layout is the same for traps from ring 0 and ring 3 (from ring 3 it
- * is on the TSS.RSP0 stack). The handler never returns: kernel traps panic,
- * user traps resume the kernel through user_return.
+ * is on the TSS.RSP0 stack). Kernel traps panic; user exits and faults resume
+ * the kernel through user_return. Only a validated, non-terminating user
+ * system call returns TRAP_RESUME: the stub then restores every register from
+ * the frame (rax holds the result) and IRETQs to the same process.
  */
+.set TRAP_RESUME, 0x52455355
 .macro EXC_STUB n, has_err
 exc_stub_\n:
 .if !\has_err
@@ -76,6 +79,26 @@ exc_common:
     mov %rsp, %rbp
     and $-16, %rsp
     call exception_handler
+    cmp $TRAP_RESUME, %eax
+    jne 1f
+    mov %rbp, %rsp                  /* the frame (rbp is callee-saved) */
+    popq %r15
+    popq %r14
+    popq %r13
+    popq %r12
+    popq %r11
+    popq %r10
+    popq %r9
+    popq %r8
+    popq %rbp
+    popq %rdi
+    popq %rsi
+    popq %rdx
+    popq %rcx
+    popq %rbx
+    popq %rax
+    add $16, %rsp                   /* vector, error code */
+    iretq
 1:  cli
     hlt
     jmp 1b

@@ -56,10 +56,10 @@ static int has_error_code(uint64_t v)
  * and belongs to the current process (proc_user_trap does not return). Any
  * trap from ring 0 is a kernel error: report, then panic.
  */
-void exception_handler(struct exc_frame *f)
+uint64_t exception_handler(struct exc_frame *f)
 {
     if ((f->cs & 3) != 0)
-        proc_user_trap(f);
+        return proc_user_trap(f);
     if (f->cs != GDT_KERNEL_CS)
         panic("trap with an unexpected code segment");
     if (f->vector == IDT_SYSCALL) {
