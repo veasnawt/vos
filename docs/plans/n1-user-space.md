@@ -129,13 +129,38 @@ stage is implemented.
     NMI/#MC still use the normal stack (IST for them is deferred); kernel W^X is not provided
     (2 MiB executable-writable kernel alias).
 
-### N1.2 — Multiboot2 modules, command line, reservations [Planned]
+### N1.2 — Multiboot2 modules, command line, reservations [Implemented and verified]
 - Parse module tags (type 3: `mod_start`, `mod_end`, NUL-terminated command line) and the
   command-line tag (type 1) with the same bounds checks as today's parser.
 - Enlarge the reservation table; reserve every module and physical 0–1 MiB.
 - Reject modules outside usable RAM or at or above 1 GiB.
 - Makefile/ISO hooks: per-architecture extra ISO files and GRUB configuration (defaults keep
   today's behaviour).
+- **Status (verified 2026-10-17):** `bootinfo.c` (`mb2_parse`, `boot_reserve`), `resv.c`, and
+  `selftest.c` (VOS_TEST only). `make test-all` passes, including 78 synthetic parser/reservation
+  cases (mutation-checked: disabling the non-available-entry check, the module range, 1 GiB,
+  count and NUL checks each makes the self-test fail) and the `modules` image.
+  - Parser: tags need `size >= 8` and `<= remaining`; the end tag must be exactly 8 bytes;
+    command-line and module strings must end in NUL inside the tag; a duplicate command-line or
+    memory-map tag, a missing end tag or memory map, an empty/reversed module, a module end
+    above 1 GiB and more than 4 modules are rejected. An absent command line is `NULL`.
+  - Reservations (`resv.h`): 16 entries `[start, end)`, rounded outward, overlaps allowed and
+    meaning their union; a full table or a bad range returns an error and changes nothing. Added:
+    0–1 MiB, kernel image, info block, each module. Any error is a panic with the reason.
+  - A module (and the kernel and info ranges) must lie wholly in one available entry and touch no
+    non-available entry of any type; modules must not overlap the kernel's page span, the info
+    block (bytes) or each other. The kernel's span contains holes in which GRUB puts the info
+    block, so kernel/info reservations overlap at page level by design.
+  - `module2` delivery: the header now carries a module-alignment tag. Observed with GRUB 2.14:
+    modules are page-aligned (e.g. `0x119000`, `0x11a000`), directly after the kernel span; the
+    kernel command line contains only the arguments (`vos.test=1`), the module command line only
+    its own (`mod.arg=first`), and the production entry reports an empty command line. The parser
+    does not require alignment; the `modules` test does.
+  - Fixture: `tests/fixtures/n12-module.bin` (21 harmless bytes) and
+    `tests/x86_64/modules.{mk,grub.cfg}`; the Makefile gained `GRUB_CFG` / `ISO_FILES` hooks whose
+    defaults leave the production ISO unchanged.
+  - Not done: the allocator itself (N1.3); `entry_version` of the memory map is not yet checked
+    (N1.3 refuses version != 0); modules above 1 GiB are rejected, not supported.
 
 ### N1.3 — Physical page allocator [Planned]
 - Bitmap over frames below 1 GiB, normalization rules of section 7, zeroed frames on
@@ -261,6 +286,14 @@ The allocator bitmap covers frames `[0, 1 GiB)`. Initialization is order-indepen
 Because steps 4 and 5 run after step 3 and only ever set bits, overlapping or contradictory
 entries always resolve to "not allocatable", regardless of order. ACPI-reclaimable memory is
 treated as unusable in N1.
+
+### 7.2a Inputs provided by N1.2 [Implemented]
+`boot_resv` (`resv.h`) is a union of page-aligned ranges that may overlap; step 5 sets the bits
+for every entry. Modules, the kernel image and the info block have already been proven to lie in
+one available memory-map entry with no non-available entry intersecting them, but this does not
+replace steps 3–4: the allocator must still normalize the whole map. The existing guards
+treat a non-available entry whose end overflows as extending to 2^64, and ignore available
+entries that overflow.
 
 ### 7.3 Tests [Planned]
 - A `VOS_TEST` self-test runs the same normalization code on synthetic maps into a small test
