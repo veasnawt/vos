@@ -277,7 +277,16 @@ uint64_t proc_user_trap(struct exc_frame *f)
         panic("process: user trap on a foreign address space");
 
     if (f->vector == IDT_SYSCALL && f->rax != SYS_EXIT) {
-        f->rax = (uint64_t)syscall_dispatch(p, f);
+        int64_t res = syscall_dispatch(p, f);
+        f->rax = (uint64_t)res;
+        if (res >= 0)
+            p->sys_ok++;
+        else if (res == -VOS_ENOSYS)
+            p->sys_enosys++;
+        else if (res == -VOS_EINVAL)
+            p->sys_einval++;
+        else if (res == -VOS_EFAULT)
+            p->sys_efault++;
         return resume(p, f);
     }
 

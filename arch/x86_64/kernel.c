@@ -219,6 +219,9 @@ void kernel_main(uint32_t mb2_magic, uint32_t mb2_info)
     check(selftest_vmm() == 0, "vmm self-test");
     check(selftest_user() == 0, "user self-test");
     check(selftest_elf(&bi) == 0, "elf self-test");
+#ifdef VOS_TEST_CASE_suite
+    check(selftest_suite(&bi) == 0, "isolation suite");
+#endif
 #ifdef VOS_TEST_CASE_smep_exec
     selftest_smep_exec();
 #endif

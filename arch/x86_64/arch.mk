@@ -10,7 +10,7 @@ ARCH_LDFLAGS    := -m elf_x86_64 -z max-page-size=0x1000
 ARCH_OBJS       := boot.o entry.o usermode.o kernel.o bootinfo.o console.o cpu.o exception.o gdt.o idt.o \
                    lib.o loader.o panic.o pmm.o process.o resv.o syscall.o usercopy.o vmm.o elf.o app.o
 ifeq ($(VOS_TEST),1)
-ARCH_OBJS       += selftest.o selftest_cpu.o selftest_elf.o selftest_pmm.o selftest_user.o \
+ARCH_OBJS       += selftest.o selftest_cpu.o selftest_elf.o selftest_pmm.o selftest_suite.o selftest_user.o \
                    selftest_vmm.o user_progs.o
 endif
 QEMU            := qemu-system-x86_64
@@ -28,8 +28,11 @@ MULTIBOOT_CHECK := --is-x86-multiboot2
 #    vmm-stale-tlb, vmm-nx and vmm-readonly must end in a real #PF with the
 #    expected error code and CR2 (status 35); app-ambiguous and app-reject
 #    must refuse to run the GRUB-delivered application (status 35).
-# 5. SMEP and SMAP cases (N1.9): with -cpu max they must end in a supervisor
-#    #PF; with qemu64 they must show the access succeeding (control).
+# 5. Isolation suite (N1.9): 41 separately built fixtures, each with its
+#    expected outcome in the trusted GRUB configuration, run under qemu64,
+#    2 GiB and -cpu max (SMEP/UMIP/SMAP on); SMEP and SMAP cases with -cpu
+#    max must end in a supervisor #PF, and with qemu64 must show the access
+#    succeeding (control).
 # Every test image runs the bootinfo and pmm self-tests; any failure turns
 # VOS-TEST: PASS (33) into VOS-TEST: FAIL (35).
 # 4. User space (no QEMU): hello.elf is built and validated, the negative ELF
@@ -107,6 +110,19 @@ arch-test: iso
 	scripts/exit-test.sh app-reject build/$(ARCH)-test-app-reject/vos.iso 35 \
 	    'elf: hello: rejected: PT_LOAD outside [0x400000, 0x40000000)' \
 	    'boot: check failed: boot application' 'selftest: elf 1 cases, 0 failed' 'VOS-TEST: FAIL' --
+	$(MAKE) --no-print-directory ARCH=$(ARCH) VOS_TEST=1 VOS_TEST_CASE=suite iso
+	scripts/exit-test.sh suite build/$(ARCH)-test-suite/vos.iso 33 \
+	    'suite: CPU protections: smep=off umip=off smap=off' 'suite: final hello exited 0, all frames reclaimed' \
+	    ' cases, 0 failed, hello rerun ' 'user[t-df]: df: copied forward' 'VOS-TEST: PASS' --
+	MEM=2G scripts/exit-test.sh suite-2G build/$(ARCH)-test-suite/vos.iso 33 \
+	    'suite: final hello exited 0, all frames reclaimed' ' cases, 0 failed, hello rerun ' 'VOS-TEST: PASS' --
+	scripts/exit-test.sh suite-max build/$(ARCH)-test-suite/vos.iso 33 \
+	    'suite: CPU protections: smep=on umip=on smap=on' 'suite: final hello exited 0, all frames reclaimed' \
+	    ' cases, 0 failed, hello rerun ' 'VOS-TEST: PASS' -- -cpu max
+	@echo "suite: the byte 0x01 written by t-outb must never reach the serial port"
+	! LC_ALL=C grep -q "$$(printf '\001')" build/$(ARCH)-test-suite/suite.serial.log build/$(ARCH)-test-suite/suite-max.serial.log
+	@echo "suite-forge: a suite verdict printed only by t-forge must NOT be found"
+	! scripts/exit-test.sh suite-forge build/$(ARCH)-test-suite/vos.iso 33 'suite: t-nonexistent: PASS' -- >/dev/null 2>&1
 	$(MAKE) --no-print-directory ARCH=$(ARCH) VOS_TEST=1 VOS_TEST_CASE=smep-exec iso
 	scripts/exit-test.sh smep-max build/$(ARCH)-test-smep-exec/vos.iso 35 \
 	    'smep: kernel calling the user page at 0x400000' 'exc: #PF vec=14 err=0x11 cs=0x8 rip=0x400000 ' \

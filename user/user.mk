@@ -49,6 +49,29 @@ $(USER_BUILD)/$(1).elf: $(USER_RT) $(patsubst $(USER_DIR)/%.c,$(USER_BUILD)/%.o,
 endef
 $(foreach a,$(USER_APPS),$(eval $(call USER_APP,$(a))))
 
+# N1.9 isolation-suite fixtures (user/suite): real VOS executables built like
+# applications. regs has its own entry point (no crt0) to see the raw entry
+# state. bad-<kind>.elf are malformed copies of hello.elf (scripts/mkbadelf.sh).
+SUITE_DIR    := $(USER_BUILD)/suite
+SUITE_C      := $(basename $(notdir $(wildcard $(USER_DIR)/suite/*.c)))
+SUITE_OWN    := regs
+SUITE_BAD    := magic dyn wx entry abi interp trunc overlap
+SUITE_ELFS   := $(addprefix $(SUITE_DIR)/,$(addsuffix .elf,$(SUITE_C) $(SUITE_OWN))) \
+                $(addprefix $(SUITE_DIR)/bad-,$(addsuffix .elf,$(SUITE_BAD)))
+
+$(SUITE_DIR)/%.elf: $(USER_BUILD)/suite/%.o $(USER_RT) $(USER_LDS)
+	$(LD) $(USER_LDFLAGS) -o $@ $(USER_RT) $<
+
+$(SUITE_DIR)/regs.elf: $(USER_BUILD)/suite/regs.o $(USER_BUILD)/lib/abi_note.o $(USER_LDS)
+	$(LD) $(USER_LDFLAGS) -o $@ $(USER_BUILD)/lib/abi_note.o $<
+
+$(SUITE_DIR)/bad-%.elf: $(USER_BUILD)/hello.elf scripts/mkbadelf.sh
+	@mkdir -p $(dir $@)
+	scripts/mkbadelf.sh $< $@ $*
+
+.PHONY: user-suite
+user-suite: $(SUITE_ELFS)
+
 user-check: $(USER_ELFS)
 	@set -e; for f in $(USER_ELFS); do scripts/check-user-elf.sh $$f; done
 
@@ -62,8 +85,8 @@ $(ELFCHECK): scripts/elfcheck.c arch/x86_64/elf.c arch/x86_64/elf.h
 # Validation, profile and separation checks, and negative tests. Static only:
 # nothing is loaded or run. The kernel images are checked not to contain the
 # application.
-user-test: user-check $(USER_RT) $(KERNEL) $(ELFCHECK)
-	ELFCHECK=$(ELFCHECK) USER_CC="$(CC)" USER_CFLAGS="$(USER_CFLAGS)" USER_LD="$(LD)" \
+user-test: user-check $(USER_RT) $(KERNEL) $(ELFCHECK) $(SUITE_ELFS)
+	SUITE_DIR=$(SUITE_DIR) ELFCHECK=$(ELFCHECK) USER_CC="$(CC)" USER_CFLAGS="$(USER_CFLAGS)" USER_LD="$(LD)" \
 	USER_LDFLAGS="$(USER_LDFLAGS_BASE)" USER_LDS=$(USER_LDS) \
 	KERNEL_SYSCALL_H=arch/x86_64/syscall.h USER_SYSCALL_H=$(USER_DIR)/include/vos/syscall.h \
 	    scripts/test-user-elf.sh $(USER_BUILD) $(KERNEL) $(wildcard build/$(ARCH)-test*/vos.bin)

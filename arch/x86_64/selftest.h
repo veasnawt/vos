@@ -23,6 +23,8 @@ int selftest_vmm(void);
 int selftest_user(void);
 /* ELF validation, loading and execution of the GRUB module "hello" (N1.8). */
 int selftest_elf(const struct boot_info *bi);
+/* N1.9 isolation suite over the GRUB modules named t-* (VOS_TEST_CASE=suite). */
+int selftest_suite(const struct boot_info *bi);
 /* Isolated SMEP/SMAP cases: with the feature they end in a kernel #PF panic. */
 void selftest_smep_exec(void);
 void selftest_smap_touch(void);

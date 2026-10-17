@@ -246,5 +246,23 @@ for f in "$HELLO" "$T"/*.elf; do
 done
 echo "test-user-elf: kernel validator agrees on $same of $compared files (4 build-time-only differences expected)"
 
+# ---- 5. isolation-suite fixtures (N1.9): the expected static verdicts ----
+# Valid fixtures pass both validators; x87/sse pass the load-time profile but
+# not the build-time instruction check (the suite shows the CPU still traps
+# them); bad-* fail both, each for its own rule.
+if [ -n "${SUITE_DIR:-}" ]; then
+    for f in "$SUITE_DIR"/*.elf; do
+        n=$(basename "$f" .elf)
+        out=$("$CHECK" "$f" 2>&1); shell=$?
+        "$ELFCHECK" "$f" >/dev/null 2>&1; kernel=$?
+        case $n in
+            x87|sse) (( shell == 1 && kernel == 0 )) && grep -q 'x87/MMX/SSE' <<<"$out" && ok ||
+                         bad "suite/$n: expected build-time-only rejection, got $shell/$kernel: $out" ;;
+            bad-*)   (( shell == 1 && kernel == 1 )) && ok || bad "suite/$n: expected rejection by both, got $shell/$kernel" ;;
+            *)       (( shell == 0 && kernel == 0 )) && ok || bad "suite/$n: expected acceptance, got $shell/$kernel: $out" ;;
+        esac
+    done
+fi
+
 echo "test-user-elf: $pass passed, $fail failed"
 (( fail == 0 ))

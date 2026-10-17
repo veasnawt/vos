@@ -64,6 +64,8 @@ struct process {
     const char *reason;                 /* why it was killed */
     struct proc_trap trap;
     uint64_t syscalls;                  /* system calls that returned to the process */
+    /* How those calls ended, counted by the kernel (a trusted record for tests). */
+    uint64_t sys_ok, sys_enosys, sys_einval, sys_efault;
     unsigned npages;
     uint64_t page_va[PROC_MAX_PAGES], page_pa[PROC_MAX_PAGES];
     uint8_t page_flags[PROC_MAX_PAGES]; /* VMM_* the page was mapped with */
