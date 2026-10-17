@@ -20,6 +20,13 @@ void gdt_init(void);
 uint64_t gdt_tss_base(void);
 uint64_t gdt_tss_rsp0(void);
 uint64_t gdt_tss_ist1(void);
+/*
+ * TSS.RSP0 (N2.3): the kernel stack the CPU switches to on an interrupt from
+ * ring 3. The scheduler sets it at every switch: the top of a user thread's
+ * own kernel stack, or the dedicated entry stack while a kernel thread runs.
+ */
+void gdt_set_rsp0(uint64_t top);
+uint64_t gdt_entry_stack_top(void);
 /* Top of IST stack n (1..3), or 0. */
 uint64_t gdt_tss_ist(unsigned n);
 /* Virtual addresses of the guard pages below the RSP0 and IST stacks; returns their number. */

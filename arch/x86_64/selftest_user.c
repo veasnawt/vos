@@ -19,6 +19,7 @@
 #include "pmm.h"
 #include "process.h"
 #include "syscall.h"
+#include "thread.h"
 #include "usercopy.h"
 #include "vmm.h"
 
@@ -137,9 +138,28 @@ static void test_address_space(void)
            proc.user_rsp % 16 == 0 && proc.user_rsp + 16 <= USER_STACK_END,
            "entry RIP and 16-byte aligned RSP with 16 bytes above it");
 
-    static struct process other;
-    expect(proc_create(&other, "other", code, sizeof(code)) == PROC_EBUSY, "only one process at a time");
-    expect(proc_create(&other, "other", code, 0) == PROC_EBUSY, "busy check precedes argument checks");
+    /* N2.3: several processes may exist; each has its own root, frames and ID; the table is bounded. */
+    static struct process other, extra[PROC_TABLE];
+    uint64_t f1 = pmm_free_count();
+    expect(proc_create(&other, "other", code, sizeof(code)) == PROC_OK && other.root != proc.root &&
+           other.pid > proc.pid && other.page_pa[0] != proc.page_pa[0] && proc_count() == 2,
+           "a second process gets its own root, frames and process ID");
+    expect(proc_create(&proc, "again", code, sizeof(code)) == PROC_EINVAL && proc.state == PROC_READY,
+           "an existing process cannot be begun again");
+    unsigned made = 2;
+    int full = PROC_OK;
+    for (unsigned i = 0; i < PROC_TABLE && full == PROC_OK; i++) {
+        full = proc_create(&extra[i], "fill", code, sizeof(code));
+        made += full == PROC_OK;
+    }
+    uint64_t f2 = pmm_free_count();
+    expect(made == PROC_TABLE && full == PROC_EBUSY && proc_create(&extra[PROC_TABLE - 1], "x", code, sizeof(code)) ==
+           PROC_EBUSY && pmm_free_count() == f2, "the process table holds PROC_TABLE processes; the next is refused "
+           "with PROC_EBUSY before any allocation");
+    for (unsigned i = 0; i < made - 2; i++)
+        proc_destroy(&extra[i]);
+    proc_destroy(&other);
+    expect(pmm_free_count() == f1 && proc_count() == 1, "destroying them returns every frame");
 
     proc_destroy(&proc);
     expect(pmm_free_count() == f0 && proc.state == PROC_FREE, "teardown restores the free count");
@@ -317,13 +337,15 @@ static int run_prog(const char *name, const uint8_t *code, size_t len, int has_a
              rerun == PROC_ESTATE && mismatch == 0 && pmm_free_count() == f0 &&
              gdt_stack_canaries_intact() && (read_cr3() & PTE_ADDR) == vmm_kernel_root() &&
              last.trap.cs == GDT_USER_CS && last.trap.ss == GDT_USER_DS &&
-             last.trap.kframe + sizeof(struct exc_frame) == gdt_tss_rsp0();
+             last.trap.kframe + sizeof(struct exc_frame) == last.kstack_top && last.kstack_top &&
+             last.kstack_top != gdt_tss_rsp0();
     if (!ok) {
         serial_puts("selftest: run post-conditions failed for ");
         serial_puts(name);
         serial_puts("\r\n");
     }
-    expect(ok, "run: CS 0x23/SS 0x1B frame at the top of RSP0, kernel resumed intact, no rerun, no leak");
+    expect(ok, "run: CS 0x23/SS 0x1B frame at the top of the process thread's kernel stack, caller intact, "
+               "no rerun, no leak");
     return result;
 }
 
@@ -562,6 +584,7 @@ static void test_resume_validation(void)
 
     memset(&fake, 0, sizeof(fake));
     fake.root = read_cr3() & PTE_ADDR;
+    fake.kstack_top = gdt_tss_rsp0();   /* the idle entry stack plays the process's kernel stack */
     memset(&good, 0, sizeof(good));
     good.cs = GDT_USER_CS;
     good.ss = GDT_USER_DS;
@@ -646,6 +669,42 @@ static void test_irq_ring3(void)
     serial_puts("\r\n");
 }
 
+/*
+ * N2.3: user programs run on their own process threads, so any kernel thread
+ * may start and wait for one (N2.2 allowed only the boot thread).
+ */
+static struct process wproc;
+static int wresult, wstatus;
+static uint64_t wtop, wtid;
+
+static void run_from_worker(void *arg)
+{
+    (void)arg;
+    wresult = -100;
+    if (proc_create(&wproc, "worker-run", PROG(exit42)) != PROC_OK)
+        return;
+    wresult = proc_run(&wproc);
+    wstatus = wproc.exit_status;
+    wtop = wproc.kstack_top;
+    wtid = wproc.tid;
+    proc_destroy(&wproc);
+}
+
+static void test_process_threads(void)
+{
+    uint64_t f0 = pmm_free_count();
+    int64_t id = thread_create("runner", run_from_worker, 0);
+
+    wresult = 0;
+    for (int k = 0; k < 100 && thread_state((uint64_t)id) != THREAD_FREE; k++)
+        thread_yield();
+    expect(id > 0 && wresult == PROC_EXITED && wstatus == 42 && thread_state(wtid) == THREAD_FREE &&
+           wtop != gdt_tss_rsp0() && pmm_free_count() == f0 && proc_count() == 0,
+           "a kernel worker thread runs a process on its own thread and destroys it; nothing leaks");
+    expect(gdt_tss_rsp0() == gdt_entry_stack_top() && (read_cr3() & PTE_ADDR) == vmm_kernel_root(),
+           "on a kernel thread: TSS.RSP0 is the entry stack and CR3 the kernel root");
+}
+
 int selftest_user(void)
 {
     failures = cases = 0;
@@ -656,6 +715,7 @@ int selftest_user(void)
     test_user_faults();
     test_resume_validation();
     test_irq_ring3();
+    test_process_threads();
     serial_puts("selftest: user ");
     serial_dec(cases);
     serial_puts(" cases, ");

@@ -7,7 +7,6 @@
 #include "lib.h"
 #include "memlayout.h"
 #include "panic.h"
-#include "process.h"
 #include "vmm.h"
 
 #define STACK_CANARY        0x7EADC0DE7EADC0DEULL
@@ -146,6 +145,14 @@ int thread_state(uint64_t id)
     return THREAD_FREE;
 }
 
+uint64_t thread_stack_top(uint64_t id)
+{
+    for (unsigned i = 0; i < THREAD_MAX; i++)
+        if (pool[i].state != THREAD_FREE && pool[i].id == id)
+            return pool[i].stack_hi;
+    return 0;
+}
+
 const struct sched_stats *sched_stats(void)
 {
     return &stats;
@@ -212,15 +219,36 @@ extern char thread_start[];
 
 static struct thread *switched_from;
 
-/* Every switch happens with IF = 0, on the kernel address space, with no user program running. */
+/* The kernel half (PML4[511]) of root is the kernel's, supervisor-only. */
+static int shares_kernel_half(uint64_t root)
+{
+    const uint64_t *l4 = phys_to_virt(root), *kl4 = phys_to_virt(vmm_kernel_root());
+
+    return root && root % PAGE_SIZE == 0 && root < BOOT_MAP_LIMIT && l4[511] == kl4[511] &&
+           !(l4[511] & PTE_U);
+}
+
+/* The TSS.RSP0 a thread needs while it runs: its own stack top if it runs a user process. */
+static uint64_t rsp0_for(const struct thread *t)
+{
+    return t->proc ? t->stack_hi : gdt_entry_stack_top();
+}
+
+/*
+ * Every switch happens with IF = 0, in thread context, from a thread running
+ * on its own address space, to a runnable thread whose address space shares
+ * the kernel half: a kernel thread on the kernel root, a user thread on its
+ * process's root (never the kernel root).
+ */
 static void check_switch(const struct thread *next)
 {
     if (read_rflags() & RFLAGS_IF)
         panic("sched: switch with interrupts enabled");
-    if ((read_cr3() & PTE_ADDR) != vmm_kernel_root())
-        panic("sched: switch outside the kernel address space");
-    if (proc_running())
-        panic("sched: switch while a user program runs");
+    if ((read_cr3() & PTE_ADDR) != current->root)
+        panic("sched: the running thread is not on its own address space");
+    if (!shares_kernel_half(next->root) || (next->proc ? next->root == vmm_kernel_root()
+                                                       : next->root != vmm_kernel_root()))
+        panic("sched: target address space is not valid for the thread");
     if (next->state != THREAD_RUNNABLE)
         panic("sched: switching to a thread that is not runnable");
     if (next->rsp < next->stack_lo || next->rsp >= next->stack_hi || next->rsp % 16 != 8)
@@ -229,8 +257,17 @@ static void check_switch(const struct thread *next)
         panic("sched: thread runs on a stack it does not own");
     if (!canaries_ok(current) || !canaries_ok(next))
         panic("sched: thread stack canary overwritten");
-    if (gdt_tss_rsp0() > next->stack_lo && gdt_tss_rsp0() <= next->stack_hi)
-        panic("sched: TSS.RSP0 points into a thread stack");
+    if (next->stack < 0 && next->proc)
+        panic("sched: a user thread without its own kernel stack");
+}
+
+/* Runs in the thread just switched to: its address space and RSP0 must be its own. */
+static void check_arrival(void)
+{
+    if ((read_cr3() & PTE_ADDR) != current->root)
+        panic("sched: switched to a thread on a foreign address space");
+    if (gdt_tss_rsp0() != rsp0_for(current))
+        panic("sched: TSS.RSP0 is not the running thread's");
 }
 
 static void reap(struct thread *t)
@@ -247,6 +284,7 @@ static void finish_switch(void)
 {
     struct thread *prev = switched_from;
 
+    check_arrival();
     switched_from = NULL;
     if (prev && prev->state == THREAD_DEAD)
         reap(prev);
@@ -259,9 +297,14 @@ static void switch_to(struct thread *next)
     check_switch(next);
     next->state = THREAD_RUNNING;
     next->switches_in++;
+    next->slice_start = irq_ticks();
     current = next;
     switched_from = prev;
     stats.switches++;
+    /* The next thread's kernel-entry stack and address space (the kernel half is shared). */
+    gdt_set_rsp0(rsp0_for(next));
+    if ((read_cr3() & PTE_ADDR) != next->root)
+        write_cr3(next->root);          /* flushes every non-global translation */
     context_switch(&prev->rsp, next->rsp);
     finish_switch();                    /* back in prev, after some other thread switched to it */
 }
@@ -312,7 +355,7 @@ __attribute__((noreturn)) void thread_first_run(void)
     thread_exit();
 }
 
-static int64_t create(const char *name, thread_fn entry, void *arg, int enqueue)
+static int64_t create(const char *name, thread_fn entry, void *arg, int enqueue, uint64_t root, void *proc)
 {
     struct thread *t;
 
@@ -341,6 +384,8 @@ static int64_t create(const char *name, thread_fn entry, void *arg, int enqueue)
     t->rsp = (uint64_t)sp;
     t->entry = entry;
     t->arg = arg;
+    t->root = root;
+    t->proc = proc;
     t->state = THREAD_RUNNABLE;
     if (enqueue)
         runq_push(t);
@@ -352,7 +397,29 @@ static int64_t create(const char *name, thread_fn entry, void *arg, int enqueue)
 
 int64_t thread_create(const char *name, thread_fn entry, void *arg)
 {
-    return create(name, entry, arg, 1);
+    return create(name, entry, arg, 1, vmm_kernel_root(), NULL);
+}
+
+int64_t thread_create_user(const char *name, thread_fn entry, void *arg, uint64_t root, void *proc)
+{
+    if (!proc || root == vmm_kernel_root() || !shares_kernel_half(root))
+        return THREAD_EINVAL;
+    return create(name, entry, arg, 1, root, proc);
+}
+
+void thread_leave_user_space(void)
+{
+    if (!current->proc)
+        panic("sched: a kernel thread has no user space to leave");
+    current->proc = NULL;
+    current->root = vmm_kernel_root();
+    write_cr3(current->root);
+    gdt_set_rsp0(rsp0_for(current));
+}
+
+int sched_preempt_due(void)
+{
+    return current && current->proc && runq_head && irq_ticks() - current->slice_start >= SCHED_SLICE_TICKS;
 }
 
 static void check_entry(void)
@@ -533,7 +600,8 @@ void sched_init(void)
     boot->stack_lo = (uint64_t)kernel_stack;
     boot->stack_hi = (uint64_t)kernel_stack_top;
     current = boot;
-    if (create("idle", idle_main, 0, 0) <= 0 || !idle)
+    boot->root = vmm_kernel_root();
+    if (create("idle", idle_main, 0, 0, vmm_kernel_root(), NULL) <= 0 || !idle)
         panic("sched: cannot create the idle thread");
 
     serial_puts("sched: ");

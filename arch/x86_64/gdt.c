@@ -1,6 +1,7 @@
 #include "gdt.h"
 #include "console.h"
 #include "cpu.h"
+#include "memlayout.h"
 #include "panic.h"
 
 #define KERNEL_ENTRY_STACK_SIZE 16384
@@ -60,6 +61,18 @@ uint64_t gdt_tss_base(void)
 uint64_t gdt_tss_rsp0(void)
 {
     return tss.rsp[0];
+}
+
+uint64_t gdt_entry_stack_top(void)
+{
+    return (uint64_t)kernel_entry_stack + KERNEL_ENTRY_STACK_SIZE;
+}
+
+void gdt_set_rsp0(uint64_t top)
+{
+    if (top < KERNEL_VMA || top % 16)
+        panic("gdt: invalid TSS.RSP0");
+    tss.rsp[0] = top;
 }
 
 uint64_t gdt_tss_ist1(void)

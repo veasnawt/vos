@@ -39,6 +39,7 @@
 #define THREAD_STACK_SIZE   16384
 #define THREAD_GUARD_SIZE   4096
 #define THREAD_NAME_MAX     15
+#define SCHED_SLICE_TICKS   2       /* a user thread may be preempted after this many ticks (N2.3) */
 
 /* States. */
 #define THREAD_FREE         0   /* record unused */
@@ -74,6 +75,10 @@ struct thread {
     struct wait_queue *waiting_on;
     uint64_t wake_tick;                 /* sleeping: wake at this tick (0 = not sleeping) */
     uint64_t switches_in;               /* times this thread was switched to */
+    /* N2.3: the address space it runs in, and the process it belongs to (NULL: a kernel thread). */
+    uint64_t root;                      /* CR3 while it runs: the kernel root or its process's root */
+    void *proc;
+    uint64_t slice_start;               /* irq_ticks() when it was last switched to */
 };
 
 struct sched_stats {
@@ -86,6 +91,15 @@ struct sched_stats {
 void sched_init(void);
 /* Create a runnable kernel thread running entry(arg); returns its ID (> 0) or a THREAD_E* value. */
 int64_t thread_create(const char *name, thread_fn entry, void *arg);
+/*
+ * The same for the one thread of a user process (N2.3): it runs with CR3 =
+ * root, and while it runs TSS.RSP0 is the top of its own kernel stack.
+ */
+int64_t thread_create_user(const char *name, thread_fn entry, void *arg, uint64_t root, void *proc);
+/* The calling thread leaves its process's address space for the kernel root for good. */
+void thread_leave_user_space(void);
+/* Nonzero if a timer slice is over and another thread is waiting (the preemption test). */
+int sched_preempt_due(void);
 struct thread *thread_current(void);
 /* Give up the CPU; the caller goes to the end of the run queue. */
 void thread_yield(void);
@@ -101,6 +115,8 @@ __attribute__((noreturn)) void thread_exit(void);
 
 /* State of the thread with this ID: THREAD_FREE once it is gone (IDs are never reused). */
 int thread_state(uint64_t id);
+/* The kernel stack top of the thread with this ID (0 if none). */
+uint64_t thread_stack_top(uint64_t id);
 int thread_is_boot(void);
 const struct sched_stats *sched_stats(void);
 /* Virtual addresses of the guard pages below the thread stacks; returns their number. */

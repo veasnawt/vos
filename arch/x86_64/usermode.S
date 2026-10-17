@@ -1,40 +1,26 @@
 /*
- * Ring 0 <-> ring 3 transitions for the single synchronous process.
+ * Entry to ring 3 for a process's thread (N2.3).
  *
- * int enter_user(uint64_t rip, uint64_t rsp, uint64_t cr3, uint64_t *kernel_rsp)
- *   Saves the callee-saved registers on the current (kernel) stack, stores
- *   that RSP in *kernel_rsp, switches to the user address space and IRETQs
- *   to CS 0x23 / SS 0x1B with RFLAGS 0x202 (IF = 1, IOPL = 0, DF = 0; since
- *   N2.1 hardware interrupts reach ring 3) and every general-purpose register
- *   zero. It "returns" only through user_return. The kernel itself keeps
- *   IF = 0 up to the IRETQ, which loads IF = 1 atomically with the switch.
- *
- * void user_return(uint64_t *kernel_rsp, int result)   (does not return)
- *   Called on the TSS.RSP0 stack by the trap handler, after it has switched
- *   back to the kernel CR3. Restores the stack saved by enter_user, reloads
- *   the kernel data selectors (a CPL 3 -> 0 transition leaves SS null), and
- *   returns `result` from enter_user. The RSP0 stack contents are abandoned.
+ * void user_enter(uint64_t rip, uint64_t rsp)   (does not return)
+ *   Called on the process's own thread and kernel stack, with IF = 0, CR3 =
+ *   the process's root and TSS.RSP0 = the top of this kernel stack (both set
+ *   by the scheduler). IRETQs to CS 0x23 / SS 0x1B with RFLAGS 0x202 (IF = 1,
+ *   IOPL = 0, DF = 0) and every general-purpose register zero; DS, ES, FS and
+ *   GS are null. The kernel IF stays 0 up to the IRETQ, which loads IF = 1
+ *   atomically with the switch. The thread never comes back here: every later
+ *   kernel entry is an interrupt on top of this kernel stack (the frames below
+ *   it are abandoned), and the thread ends in thread_exit.
  */
 .set USER_CS,       0x23
 .set USER_DS,       0x1B
-.set KERNEL_DS,     0x10
 .set USER_RFLAGS,   0x202
 
 .section .text
 .code64
 
-.global enter_user
-.type enter_user, @function
-enter_user:
-    pushq %rbp
-    pushq %rbx
-    pushq %r12
-    pushq %r13
-    pushq %r14
-    pushq %r15
-    mov %rsp, (%rcx)                /* kernel context for user_return */
-    mov %rdx, %cr3                  /* kernel half is shared, so execution continues */
-
+.global user_enter
+.type user_enter, @function
+user_enter:
     pushq $USER_DS                  /* SS */
     pushq %rsi                      /* RSP */
     pushq $USER_RFLAGS              /* RFLAGS */
@@ -61,25 +47,6 @@ enter_user:
     xor %r14d, %r14d
     xor %r15d, %r15d
     iretq
-.size enter_user, . - enter_user
-
-.global user_return
-.type user_return, @function
-user_return:
-    mov (%rdi), %rsp
-    movq $0, (%rdi)                 /* the saved context can be used once */
-    mov $KERNEL_DS, %ecx
-    mov %cx, %ss
-    mov %cx, %ds
-    mov %cx, %es
-    mov %esi, %eax
-    popq %r15
-    popq %r14
-    popq %r13
-    popq %r12
-    popq %rbx
-    popq %rbp
-    ret
-.size user_return, . - user_return
+.size user_enter, . - user_enter
 
 .section .note.GNU-stack, "", @progbits

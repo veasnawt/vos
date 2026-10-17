@@ -12,12 +12,37 @@
 #include "thread.h"
 #include "vmm.h"
 
-/* The one process that may exist (created and not yet destroyed), and the one running. */
-static struct process *live, *current;
+/* The processes that exist (begun and not destroyed). */
+static struct process *table[PROC_TABLE];
+static uint64_t next_pid = 1;
 
 /* usermode.S */
-int enter_user(uint64_t rip, uint64_t rsp, uint64_t cr3, uint64_t *kernel_rsp);
-__attribute__((noreturn)) void user_return(uint64_t *kernel_rsp, int result);
+__attribute__((noreturn)) void user_enter(uint64_t rip, uint64_t rsp);
+
+static int registered(const struct process *p)
+{
+    for (unsigned i = 0; p && i < PROC_TABLE; i++)
+        if (table[i] == p)
+            return 1;
+    return 0;
+}
+
+unsigned proc_count(void)
+{
+    unsigned n = 0;
+
+    for (unsigned i = 0; i < PROC_TABLE; i++)
+        n += table[i] != NULL;
+    return n;
+}
+
+/* The process whose thread is running (NULL on a kernel thread). */
+static struct process *running(void)
+{
+    struct thread *t = thread_current();
+
+    return t ? t->proc : NULL;
+}
 
 #define RFLAGS_FIXED    (1ULL << 1)
 #define RFLAGS_VM       (1ULL << 17)
@@ -26,8 +51,8 @@ __attribute__((noreturn)) void user_return(uint64_t *kernel_rsp, int result);
  * Last checks before IRETQ returns to the same process after a system call
  * or a hardware interrupt: user selectors, IF = 1 and IOPL = 0 (ring 3 can
  * change neither), no virtual-8086 flag, lower-half RIP/RSP, its own address
- * space, the frame exactly at the top of the TSS.RSP0 stack (the CPU used
- * the right kernel stack) and intact stack canaries.
+ * space, the frame exactly at the top of its own thread's kernel stack, which
+ * is TSS.RSP0 (the CPU used the right kernel stack) and intact canaries.
  */
 static const char *frame_problem(const struct process *p, const struct exc_frame *f)
 {
@@ -39,9 +64,9 @@ static const char *frame_problem(const struct process *p, const struct exc_frame
         return "RIP or RSP outside the lower half";
     if ((read_cr3() & PTE_ADDR) != p->root)
         return "not on the process's address space";
-    if ((uint64_t)f + sizeof(*f) != gdt_tss_rsp0())
-        return "frame not at the top of the TSS.RSP0 stack";
-    if (!gdt_stack_canaries_intact())
+    if ((uint64_t)f + sizeof(*f) != p->kstack_top || p->kstack_top != gdt_tss_rsp0())
+        return "frame not at the top of the process's kernel stack (TSS.RSP0)";
+    if (!gdt_stack_canaries_intact() || !thread_canaries_intact())
         return "kernel stack canary overwritten";
     if (read_rflags() & RFLAGS_IF)
         return "kernel running with IF=1";
@@ -177,10 +202,15 @@ static int verify_space(const struct process *p)
 
 int proc_begin(struct process *p, const char *name)
 {
-    if (live)
-        return PROC_EBUSY;
-    if (!p)
+    unsigned slot = PROC_TABLE;
+
+    if (!p || registered(p))
         return PROC_EINVAL;
+    for (unsigned i = 0; i < PROC_TABLE && slot == PROC_TABLE; i++)
+        if (!table[i])
+            slot = i;
+    if (slot == PROC_TABLE)
+        return PROC_EBUSY;
     memset(p, 0, sizeof(*p));
     for (int i = 0; i < PROC_NAME_MAX && name && name[i]; i++) {
         char c = name[i];
@@ -194,7 +224,8 @@ int proc_begin(struct process *p, const char *name)
     /* The kernel half: PML4[511] by value, nothing else. */
     ((uint64_t *)phys_to_virt(p->root))[511] =
         ((const uint64_t *)phys_to_virt(vmm_kernel_root()))[511];
-    live = p;
+    table[slot] = p;
+    p->pid = next_pid++;
     p->state = PROC_FREE;
     return PROC_OK;
 }
@@ -202,7 +233,7 @@ int proc_begin(struct process *p, const char *name)
 int proc_add_page(struct process *p, uint64_t va, unsigned flags, uint64_t *pa)
 {
     *pa = 0;
-    if (!p || p != live || p->state != PROC_FREE || (flags & ~(VMM_WRITE | VMM_EXEC)) ||
+    if (!registered(p) || p->state != PROC_FREE || (flags & ~(VMM_WRITE | VMM_EXEC)) ||
         va % PAGE_SIZE != 0 || va < USER_IMAGE_START || va >= USER_IMAGE_END ||
         p->npages >= PROC_IMAGE_PAGES)
         return PROC_EINVAL;
@@ -214,7 +245,7 @@ int proc_finish(struct process *p, uint64_t entry)
     uint64_t pa;
     int err;
 
-    if (!p || p != live || p->state != PROC_FREE)
+    if (!registered(p) || p->state != PROC_FREE)
         return PROC_EINVAL;
     for (int i = 0; i < PROC_STACK_PAGES; i++)
         if ((err = add_page(p, USER_STACK_START + i * PAGE_SIZE, VMM_WRITE | VMM_USER, &pa)) != PROC_OK)
@@ -235,8 +266,6 @@ int proc_create(struct process *p, const char *name, const void *code, size_t le
     uint64_t pa;
     int err;
 
-    if (live)
-        return PROC_EBUSY;
     if (!p || !code || len == 0 || len > PAGE_SIZE)
         return PROC_EINVAL;
     if ((err = proc_begin(p, name)) != PROC_OK)
@@ -257,11 +286,11 @@ void proc_destroy(struct process *p)
 {
     uint64_t pa;
 
-    if (!p || p != live)
+    if (!registered(p))
         panic("process: destroying an unknown process");
-    if (p->state == PROC_RUNNING)
-        panic("process: destroying a running process");
-    if ((read_cr3() & PTE_ADDR) != vmm_kernel_root())
+    if (p->state == PROC_RUNNING || (p->tid && thread_state(p->tid) != THREAD_FREE))
+        panic("process: destroying a process whose thread still exists");
+    if ((read_cr3() & PTE_ADDR) == p->root || (read_cr3() & PTE_ADDR) != vmm_kernel_root())
         panic("process: teardown while not on the kernel address space");
 
     for (unsigned i = 0; i < p->npages; i++) {
@@ -281,76 +310,131 @@ void proc_destroy(struct process *p)
             panic("process: root not empty at teardown");
     must_free(p->root, "process: root release failed");
 
+    for (unsigned i = 0; i < PROC_TABLE; i++)
+        if (table[i] == p)
+            table[i] = NULL;
     memset(p, 0, sizeof(*p));
-    live = NULL;
+}
+
+/*
+ * End the running process for good, from its own thread: keep the final
+ * state, leave its address space for the kernel root (so it is no longer
+ * active anywhere), wake the waiters and end the thread. The thread's stack
+ * and the address space are released later, after the switch away.
+ */
+__attribute__((noreturn)) static void terminate(struct process *p)
+{
+    if (p->state != PROC_EXITED && p->state != PROC_KILLED)
+        panic("process: terminating without a final state");
+    thread_leave_user_space();
+    thread_wake_all(&p->waiters);
+    thread_exit();
+}
+
+static void kill_now(struct process *p, const char *reason)
+{
+    p->state = PROC_KILLED;
+    p->reason = reason;
+    serial_puts("proc[");
+    serial_puts(p->name);
+    serial_puts("]: killed: ");
+    serial_puts(reason);
+    serial_puts("\r\n");
+    terminate(p);
+}
+
+/* First code of a process's thread: the last checks, then ring 3. */
+static void user_main(void *arg)
+{
+    struct process *p = arg;
+    struct thread *t = thread_current();
+
+    if (!registered(p) || p->state != PROC_RUNNING || t->proc != p || t->id != p->tid)
+        panic("process: thread started for a process it does not own");
+    if (p->kill_reason)
+        kill_now(p, p->kill_reason);
+    if ((read_cr3() & PTE_ADDR) != p->root || gdt_tss_rsp0() != p->kstack_top ||
+        p->kstack_top != t->stack_hi || p->kstack_top % 16 || (read_rflags() & RFLAGS_IF))
+        panic("process: thread entry with the wrong address space, RSP0 or IF");
+    if (!verify_space(p))
+        panic("process: address space failed verification before entry");
+    p->tick_mark = irq_ticks();
+    user_enter(p->entry, p->user_rsp);
+}
+
+int proc_start(struct process *p)
+{
+    if (!registered(p) || p->state != PROC_READY)
+        return PROC_ESTATE;
+    if (read_rflags() & RFLAGS_IF)
+        panic("process: interrupts enabled at process start");
+#ifdef VOS_TEST
+    p->tick_budget = tick_budget;
+#endif
+    p->state = PROC_RUNNING;
+    int64_t id = thread_create_user(p->name, user_main, p, p->root, p);
+    if (id <= 0) {
+        p->state = PROC_READY;
+        return id == THREAD_ENOMEM ? PROC_ENOMEM : PROC_ESTATE;
+    }
+    p->tid = (uint64_t)id;
+    p->kstack_top = thread_stack_top((uint64_t)id);
+    return PROC_OK;
+}
+
+int proc_wait(struct process *p)
+{
+    if (!registered(p) || !p->tid || running() == p)
+        return PROC_ESTATE;
+    while (p->state == PROC_RUNNING)
+        thread_block(&p->waiters);
+    /* The thread was reaped by whichever thread ran right after it ended. */
+    if (thread_state(p->tid) != THREAD_FREE)
+        panic("process: ended thread not reaped");
+    return p->state;
 }
 
 int proc_run(struct process *p)
 {
-    uint64_t rflags;
+    int err = proc_start(p);
 
-    if (!p || p != live || p->state != PROC_READY || current)
-        return PROC_ESTATE;
-    if (!thread_is_boot())
-        panic("process: user programs run only on the boot thread (N2.2)");
-    __asm__ volatile ("pushfq\n\tpopq %0" : "=r"(rflags));
-    if (rflags & RFLAGS_IF)
-        panic("process: interrupts enabled at user entry");
-    if ((read_cr3() & PTE_ADDR) != vmm_kernel_root())
-        panic("process: entry while not on the kernel address space");
-    if (gdt_tss_rsp0() < KERNEL_VMA || gdt_tss_rsp0() % 16 || !gdt_stack_canaries_intact())
-        panic("process: kernel-entry stack not ready");
-    if (!verify_space(p))
-        panic("process: address space failed verification before entry");
-
-    p->state = PROC_RUNNING;
-    p->tick_start = irq_ticks();
-    current = p;
-    int result = enter_user(p->entry, p->user_rsp, p->root, &p->kernel_rsp);
-    current = NULL;
-
-    if ((read_cr3() & PTE_ADDR) != vmm_kernel_root() || p->kernel_rsp != 0 ||
-        (p->state != PROC_EXITED && p->state != PROC_KILLED) || result != p->state)
-        panic("process: kernel resumed in an inconsistent state");
-    if (!gdt_stack_canaries_intact())
-        panic("process: kernel-entry stack canary overwritten");
-    return result;
+    return err != PROC_OK ? err : proc_wait(p);
 }
 
-/* Leave ring 3 for good: back to the kernel root, then to proc_run's caller. */
-__attribute__((noreturn)) static void finish(struct process *p)
+void proc_kill(struct process *p, const char *reason)
 {
-    write_cr3(vmm_kernel_root());
-    user_return(&p->kernel_rsp, p->state);
-}
-
-int proc_running(void)
-{
-    return current != NULL;
+    if (registered(p) && p->state == PROC_RUNNING && !p->kill_reason)
+        p->kill_reason = reason ? reason : "killed by the kernel";
 }
 
 uint64_t proc_user_trap(struct exc_frame *f)
 {
-    struct process *p = current;
+    struct process *p = running();
 
-    if (!p || p->state != PROC_RUNNING || p->kernel_rsp == 0)
+    if (!p || !registered(p) || p->state != PROC_RUNNING || thread_current()->id != p->tid)
         panic("process: user trap with no running process");
     if (f->cs != GDT_USER_CS || f->ss != GDT_USER_DS)
         panic("process: user trap with unexpected selectors");
     if ((read_cr3() & PTE_ADDR) != p->root)
         panic("process: user trap on a foreign address space");
+    if ((uint64_t)f + sizeof(*f) != p->kstack_top || gdt_tss_rsp0() != p->kstack_top)
+        panic("process: user trap frame not on the process's own kernel stack");
+    p->traps++;
 
     if (irq_is_vector(f->vector)) {
         irq_handle(f);                  /* acknowledged before anything else happens */
+        uint64_t now = irq_ticks();
         p->irqs++;
-        p->ticks = irq_ticks() - p->tick_start;
+        p->ticks += now - p->tick_mark; /* timer ticks while this process ran */
+        p->tick_mark = now;
         record(&p->last_irq, f);
 #ifdef VOS_TEST
         /* Normally irqs == ticks (only IRQ0 is unmasked); the second bound catches a stuck counter. */
-        if (tick_budget && (p->ticks >= tick_budget || p->irqs >= 2 * tick_budget + 16)) {
+        uint64_t b = p->tick_budget;
+        if (b && (p->ticks >= b || p->irqs >= 2 * b + 16)) {
             record(&p->trap, f);
             p->state = PROC_KILLED;
-            p->reason = p->ticks >= tick_budget ? PROC_REASON_BUDGET : PROC_REASON_IRQ_BUDGET;
+            p->reason = p->ticks >= b ? PROC_REASON_BUDGET : PROC_REASON_IRQ_BUDGET;
             serial_puts(p->reason == PROC_REASON_BUDGET ? "proc: killed by the test tick budget after " :
                         "proc: killed by the test interrupt budget (ticks not advancing) after ");
             serial_dec(p->ticks);
@@ -363,10 +447,18 @@ uint64_t proc_user_trap(struct exc_frame *f)
             serial_puts(" rflags=");
             serial_hex(f->rflags);
             serial_puts(")\r\n");
-            finish(p);
+            terminate(p);
         }
 #endif
+        if (p->kill_reason) {
+            record(&p->trap, f);
+            kill_now(p, p->kill_reason);
+        }
         return resume(p, f);
+    }
+    if (p->kill_reason) {
+        record(&p->trap, f);
+        kill_now(p, p->kill_reason);
     }
     if (f->vector == IDT_SYSCALL && f->rax != SYS_EXIT) {
         int64_t res = syscall_dispatch(p, f);
@@ -395,7 +487,7 @@ uint64_t proc_user_trap(struct exc_frame *f)
         serial_puts(" rip=");
         serial_hex(f->rip);
         serial_puts(")\r\n");
-        finish(p);
+        terminate(p);
     }
     /* A user exception ends the process only; the kernel continues. */
     p->state = PROC_KILLED;
@@ -413,5 +505,5 @@ uint64_t proc_user_trap(struct exc_frame *f)
         serial_hex(p->trap.cr2);
     }
     serial_puts(")\r\n");
-    finish(p);
+    terminate(p);
 }

@@ -1,5 +1,18 @@
 /*
- * Minimal process: one synchronous user program at a time (N1.5).
+ * User processes (N1.5; concurrent and preemptive since N2.3).
+ *
+ * Every process has one thread of its own (thread.h), created by proc_start
+ * and owned by the process. The thread runs on its own guarded kernel stack,
+ * which is TSS.RSP0 while it runs, in the process's address space (CR3 =
+ * root, switched by the scheduler). It enters ring 3 once (user_enter);
+ * every later kernel entry is an interrupt on top of that stack. A system
+ * call or an interrupt returns to the same process after frame validation;
+ * a timer interrupt may first switch to another thread (preemption, only on
+ * this return path to ring 3, after the IRQ was acknowledged). Exit, a user
+ * exception or a kill ends the thread; the process keeps its final state.
+ * proc_wait blocks until the thread is gone, and only then may proc_destroy
+ * free the address space (never the active one). Up to PROC_TABLE processes
+ * exist at once; process IDs are never reused.
  *
  * Address space: a fresh PML4 whose only upper-half entry is PML4[511],
  * copied by value from the kernel PML4 (supervisor-only alias; its tables
@@ -24,6 +37,9 @@
 #include <stdint.h>
 
 #include "memlayout.h"
+#include "thread.h"
+
+#define PROC_TABLE          8       /* processes that may exist at once */
 
 #define PROC_CODE_VA        USER_IMAGE_START
 #define PROC_STACK_PAGES    4
@@ -34,14 +50,14 @@
 /* States. */
 #define PROC_FREE       0
 #define PROC_READY      1       /* address space built and audited */
-#define PROC_RUNNING    2
+#define PROC_RUNNING    2       /* its thread exists (running, runnable or preempted) */
 #define PROC_EXITED     3       /* exit system call */
 #define PROC_KILLED     4       /* user exception or unsupported request */
 
 /* Results of proc_create / proc_run (negative, so they never equal a state). */
 #define PROC_OK         0
 #define PROC_EINVAL     (-1)
-#define PROC_EBUSY      (-2)    /* another process exists */
+#define PROC_EBUSY      (-2)    /* the process table is full */
 #define PROC_ENOMEM     (-3)
 #define PROC_ESTATE     (-4)
 
@@ -49,17 +65,21 @@
 struct proc_trap {
     uint64_t vector, error, rip, cs, rflags, rsp, ss, cr2;
     uint64_t rax, rdi;
-    uint64_t kframe;                    /* kernel address of the saved frame (on the RSP0 stack) */
+    uint64_t kframe;                    /* kernel address of the saved frame (top of its kernel stack) */
 };
 
 #define PROC_NAME_MAX   15
 
 struct process {
     int state;
+    uint64_t pid;                       /* never reused */
     char name[PROC_NAME_MAX + 1];       /* kernel-assigned; [a-z0-9_-] only */
     uint64_t root;                      /* PML4 frame */
     uint64_t entry, user_rsp;
-    uint64_t kernel_rsp;                /* saved by enter_user, consumed by user_return */
+    uint64_t tid;                       /* its thread (0 before proc_start) */
+    uint64_t kstack_top;                /* that thread's kernel stack top = TSS.RSP0 while it runs */
+    struct wait_queue waiters;          /* threads in proc_wait */
+    const char *kill_reason;            /* proc_kill: end at the next kernel entry */
     int exit_status;
     const char *reason;                 /* why it was killed */
     struct proc_trap trap;
@@ -67,8 +87,10 @@ struct process {
     /* How those calls ended, counted by the kernel (a trusted record for tests). */
     uint64_t sys_ok, sys_enosys, sys_einval, sys_efault;
     /* Hardware interrupts taken while it ran in ring 3 (N2.1), and the last one's frame. */
-    uint64_t irqs, ticks, tick_start;
+    uint64_t irqs, ticks, tick_mark, tick_budget;
     struct proc_trap last_irq;
+    uint64_t preemptions;               /* timer interrupts that switched to another thread */
+    uint64_t traps;                     /* kernel entries from ring 3, each validated */
     unsigned npages;
     uint64_t page_va[PROC_MAX_PAGES], page_pa[PROC_MAX_PAGES];
     uint8_t page_flags[PROC_MAX_PAGES]; /* VMM_* the page was mapped with */
@@ -97,13 +119,28 @@ int proc_finish(struct process *p, uint64_t entry);
  */
 int proc_create(struct process *p, const char *name, const void *code, size_t len);
 /*
- * Run a READY process in ring 3 until it exits or is killed; returns the
- * final state (PROC_EXITED or PROC_KILLED), or PROC_ESTATE if it is not
- * READY. A process runs at most once.
+ * Start a READY process: create its thread (PROC_ENOMEM if the thread pool
+ * is full; the process stays READY). A process starts at most once.
+ */
+int proc_start(struct process *p);
+/* Block until a started process has ended and its thread is gone; returns PROC_EXITED or PROC_KILLED. */
+int proc_wait(struct process *p);
+/*
+ * The N1 interface: proc_start, then proc_wait. Returns the final state
+ * (PROC_EXITED or PROC_KILLED), or PROC_ESTATE if it is not READY, or
+ * PROC_ENOMEM.
  */
 int proc_run(struct process *p);
 /*
- * Called by the exception dispatcher for traps whose saved CS has RPL 3.
+ * End a started process with the given reason at its next kernel entry (at
+ * the latest the next timer interrupt), or before it first enters ring 3.
+ */
+void proc_kill(struct process *p, const char *reason);
+/* Processes that exist (begun and not destroyed). */
+unsigned proc_count(void);
+/*
+ * Called by the exception dispatcher for traps whose saved CS has RPL 3, on
+ * the current process's thread.
  * A hardware interrupt is handled and acknowledged (irq_handle), counted,
  * the frame validated, and TRAP_RESUME returned; the program continues
  * exactly where it was interrupted. A non-terminating system call is
@@ -113,9 +150,10 @@ int proc_run(struct process *p);
  * proc_run's caller instead; the process never runs again.
  */
 uint64_t proc_user_trap(struct exc_frame *f);
-/* Nonzero while a user program runs (between ring-3 entry and its exit or fault). */
-int proc_running(void);
-/* Release everything the process owns; the kernel root must be active. */
+/*
+ * Release everything the process owns. Allowed before it started, or after
+ * proc_wait; never while its thread exists or its address space is active.
+ */
 void proc_destroy(struct process *p);
 
 #ifdef VOS_TEST

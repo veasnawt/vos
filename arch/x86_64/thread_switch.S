@@ -5,7 +5,8 @@
  *   Called like any function, with IF = 0. Pushes the callee-saved registers
  *   (rbp, rbx, r12-r15) on the current stack, stores RSP in *save_rsp, loads
  *   load_rsp and pops the same registers from the other stack, then returns
- *   on it. Caller-saved registers, flags (IF stays 0, DF is 0 by the ABI) and
+ *   on it; SS becomes the kernel data selector (an interrupt from ring 3
+ *   leaves it null). Caller-saved registers, flags (IF stays 0, DF is 0 by the ABI) and
  *   CR3 are not part of the context: the compiler already treats the call as
  *   clobbering them, every thread shares the kernel address space, and the
  *   kernel has no FPU/SIMD state.
@@ -38,6 +39,13 @@ context_switch:
     pushq %r15
     mov %rsp, (%rdi)
     mov %rsi, %rsp
+    /*
+     * An interrupt from ring 3 leaves SS null in ring 0, and segment registers
+     * are not part of a thread's context: give every thread a defined kernel
+     * SS (the ring-0 IRQ check of the idle thread relies on it).
+     */
+    mov $0x10, %eax
+    mov %eax, %ss
     popq %r15
     popq %r14
     popq %r13

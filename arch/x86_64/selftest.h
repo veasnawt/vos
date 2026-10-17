@@ -29,7 +29,7 @@ void selftest_kmap_case(int self_tests_failed);
 int selftest_irq(void);
 /* Kernel threads: guarded stacks, context switch, scheduler, idle thread (N2.2). */
 int selftest_sched(void);
-/* Isolated scheduler cases (thread stack overflow, deadlock, user program on a worker thread). */
+/* Isolated scheduler cases (thread stack overflow, deadlock). */
 void selftest_sched_case(const struct boot_info *bi, int self_tests_failed);
 /* Page-table manager, identity-map removal and kernel survival (restores all state). */
 int selftest_vmm(void);

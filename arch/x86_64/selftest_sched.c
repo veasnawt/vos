@@ -4,7 +4,6 @@
  * what they observed in kernel memory, and the boot thread checks it.
  */
 #include "selftest.h"
-#include "app.h"
 #include "bootinfo.h"
 #include "console.h"
 #include "cpu.h"
@@ -497,8 +496,7 @@ int selftest_sched(void)
 
 /* ---- isolated cases: each ends in a panic or a CPU exception (exit status 35) ---- */
 
-#if defined(VOS_TEST_CASE_thread_overflow) || defined(VOS_TEST_CASE_sched_deadlock) || \
-    defined(VOS_TEST_CASE_proc_on_worker)
+#if defined(VOS_TEST_CASE_thread_overflow) || defined(VOS_TEST_CASE_sched_deadlock)
 #define SCHED_CASE 1
 #endif
 
@@ -524,17 +522,6 @@ static void overflow_worker(void *arg)
 }
 #endif
 
-#ifdef VOS_TEST_CASE_proc_on_worker
-static const struct boot_info *case_bi;
-
-static void proc_worker(void *arg)
-{
-    (void)arg;
-    serial_puts("sched-test: a worker thread tries to run the boot application\r\n");
-    app_run_boot_module(case_bi);
-}
-#endif
-
 void selftest_sched_case(const struct boot_info *bi, int self_tests_failed)
 {
     (void)bi;
@@ -553,11 +540,6 @@ void selftest_sched_case(const struct boot_info *bi, int self_tests_failed)
     static struct wait_queue never;
     serial_puts("sched-test: the boot thread blocks on a queue nobody wakes\r\n");
     thread_block(&never);
-#endif
-#ifdef VOS_TEST_CASE_proc_on_worker
-    case_bi = bi;
-    thread_create("proc", proc_worker, 0);
-    thread_yield();
 #endif
 #ifdef SCHED_CASE
     serial_puts("sched-test: the case returned\r\n");

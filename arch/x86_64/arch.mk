@@ -36,8 +36,8 @@ MULTIBOOT_CHECK := --is-x86-multiboot2
 #    killed by the test tick budget, register preservation, IF/IOPL lock,
 #    kernel IF = 0, sti) under qemu64, 2 GiB and -cpu max.
 #    N2.2: thread-overflow (#DF on IST1, CR2 in the thread's guard page),
-#    sched-deadlock (lost-wakeup panic) and proc-on-worker (user programs run
-#    only on the boot thread) must end in the expected panic (status 35).
+#    and sched-deadlock (lost-wakeup panic) must end in the expected failure
+#    (status 35).
 # 5. Isolation suite (N1.9): 41 separately built fixtures, each with its
 #    expected outcome in the trusted GRUB configuration, run under qemu64,
 #    2 GiB and -cpu max (SMEP/UMIP/SMAP on); SMEP and SMAP cases with -cpu
@@ -156,10 +156,6 @@ arch-test: iso
 	scripts/exit-test.sh sched-deadlock build/$(ARCH)-test-sched-deadlock/vos.iso 35 'selftest: sched ' \
 	    'sched-test: the boot thread blocks on a queue nobody wakes' \
 	    'panic: sched: every thread is blocked and none sleeps (lost wakeup?)' 'VOS-TEST: FAIL' --
-	$(MAKE) --no-print-directory ARCH=$(ARCH) VOS_TEST=1 VOS_TEST_CASE=proc-on-worker iso
-	scripts/exit-test.sh proc-on-worker build/$(ARCH)-test-proc-on-worker/vos.iso 35 'selftest: sched ' \
-	    'sched-test: a worker thread tries to run the boot application' \
-	    'panic: process: user programs run only on the boot thread (N2.2)' 'VOS-TEST: FAIL' --
 	$(MAKE) --no-print-directory ARCH=$(ARCH) VOS_TEST=1 VOS_TEST_CASE=irq iso
 	scripts/exit-test.sh irq build/$(ARCH)-test-irq/vos.iso 33 'irq: 8259 master 0x20-0x27' \
 	    'suite: t-spin expect=budget ticks=50 ok=0 => PASS' 'suite: t-irqregs expect=budget ticks=50 ok=0 => PASS' \
