@@ -91,6 +91,12 @@ const char *mb2_parse(const void *info, uint64_t info_phys, struct boot_info *bi
             if (tag->size < sizeof(*m) || m->entry_size < sizeof(struct mb2_mmap_entry) ||
                 m->entry_size % 8 != 0)
                 return "memory map tag invalid";
+            if (m->entry_version != 0)
+                return "memory map version unsupported";
+            if (tag->size == sizeof(*m))
+                return "memory map empty";
+            if ((tag->size - sizeof(*m)) % m->entry_size != 0)
+                return "memory map has a partial entry";
             bi->mmap = m;
             bi->mmap_entries = (tag->size - sizeof(*m)) / m->entry_size;
             break;
@@ -101,7 +107,7 @@ const char *mb2_parse(const void *info, uint64_t info_phys, struct boot_info *bi
     return "no end tag";
 }
 
-static const struct mb2_mmap_entry *mmap_entry(const struct boot_info *bi, uint32_t i)
+const struct mb2_mmap_entry *boot_mmap_entry(const struct boot_info *bi, uint32_t i)
 {
     return (const void *)((const uint8_t *)bi->mmap + sizeof(*bi->mmap) +
                           (size_t)i * bi->mmap->entry_size);
@@ -111,7 +117,7 @@ static const struct mb2_mmap_entry *mmap_entry(const struct boot_info *bi, uint3
 static int in_usable_ram(const struct boot_info *bi, uint64_t start, uint64_t end)
 {
     for (uint32_t i = 0; i < bi->mmap_entries; i++) {
-        const struct mb2_mmap_entry *e = mmap_entry(bi, i);
+        const struct mb2_mmap_entry *e = boot_mmap_entry(bi, i);
 
         if (e->type == MB2_MMAP_AVAILABLE && e->length != 0 &&
             e->base + e->length >= e->base &&
@@ -128,7 +134,7 @@ static int in_usable_ram(const struct boot_info *bi, uint64_t start, uint64_t en
 static int hits_unavailable(const struct boot_info *bi, uint64_t start, uint64_t end)
 {
     for (uint32_t i = 0; i < bi->mmap_entries; i++) {
-        const struct mb2_mmap_entry *e = mmap_entry(bi, i);
+        const struct mb2_mmap_entry *e = boot_mmap_entry(bi, i);
         uint64_t e_end = e->base + e->length;
 
         if (e->type == MB2_MMAP_AVAILABLE || e->length == 0)

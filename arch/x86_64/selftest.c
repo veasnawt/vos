@@ -82,18 +82,24 @@ static void blk_module(uint32_t start, uint32_t end, const char *cmd)
 
 struct me { uint64_t base, len; uint32_t type; };
 
-static void blk_mmap(const struct me *e, int n)
+/* Memory-map tag with the given entry version and `extra` trailing bytes. */
+static void blk_mmap_raw(const struct me *e, int n, uint32_t version, uint32_t extra)
 {
-    uint32_t *t = blk_tag(6, 16 + 24 * n);
+    uint32_t *t = blk_tag(6, 16 + 24 * n + extra);
 
     t[2] = 24;
-    t[3] = 0;
+    t[3] = version;
     for (int i = 0; i < n; i++) {
         uint64_t *p = (uint64_t *)&t[4 + 6 * i];
         p[0] = e[i].base;
         p[1] = e[i].len;
         ((uint32_t *)p)[4] = e[i].type;
     }
+}
+
+static void blk_mmap(const struct me *e, int n)
+{
+    blk_mmap_raw(e, n, 0, 0);
 }
 
 static void blk_end(void)
@@ -233,6 +239,26 @@ static void test_parse(void)
     blk_len -= 8;                        /* drop the end tag from the walk */
     ((uint32_t *)blk)[0] = blk_len;
     expect(parse() != NULL, "block without end tag rejected");
+
+    /* Memory-map tag validation. */
+    blk_begin();
+    blk_mmap_raw(std_map, N_STD, 1, 0);
+    blk_end();
+    expect(parse() != NULL, "memory map entry_version 1 rejected");
+    blk_begin();
+    blk_mmap_raw(std_map, N_STD, 0, 8);
+    blk_end();
+    expect(parse() != NULL, "memory map with a trailing partial entry rejected");
+    blk_begin();
+    blk_mmap_raw(std_map, 0, 0, 0);
+    blk_end();
+    expect(parse() != NULL, "empty memory map rejected");
+    blk_begin();
+    blk_mmap_raw(std_map, N_STD, 0, 0);
+    blk_end();
+    expect(parse() == NULL && bi.mmap_entries == N_STD, "well-formed memory map accepted");
+    expect(boot_mmap_entry(&bi, 2)->base == 0x100000 && boot_mmap_entry(&bi, 2)->type == 1,
+           "memory map entries read back");
 
     expect(mb2_parse(blk, FAKE_INFO + 4, &bi) != NULL, "misaligned info address rejected");
     expect(mb2_parse(blk, 0, &bi) != NULL, "null info address rejected");

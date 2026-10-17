@@ -33,9 +33,14 @@ struct boot_info {
  * Parse the info block read through `info` (a virtual pointer) that lives at
  * physical address `info_phys`. Rejects malformed tags, unterminated strings,
  * empty/reversed modules, modules at or above 1 GiB, more than
- * BOOT_MAX_MODULES modules, and duplicate command-line/memory-map tags.
+ * BOOT_MAX_MODULES modules, and duplicate command-line/memory-map tags. The
+ * memory map must have entry_version 0, entry_size >= 24 and a multiple of 8,
+ * at least one entry, and no trailing partial entry.
  */
 const char *mb2_parse(const void *info, uint64_t info_phys, struct boot_info *bi);
+
+/* Entry i (< bi->mmap_entries) of the validated memory map. */
+const struct mb2_mmap_entry *boot_mmap_entry(const struct boot_info *bi, uint32_t i);
 
 /*
  * Add the boot reservations to `t`: physical 0-1 MiB, the kernel image

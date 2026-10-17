@@ -86,8 +86,8 @@ void kernel_main(uint32_t mb2_magic, uint32_t mb2_info)
     uint64_t usable = 0;
 
     for (uint32_t i = 0; i < bi.mmap_entries; i++) {
-        const struct mb2_mmap_entry *e = (const void *)((const uint8_t *)bi.mmap +
-                                         sizeof(*bi.mmap) + (size_t)i * bi.mmap->entry_size);
+        const struct mb2_mmap_entry *e = boot_mmap_entry(&bi, i);
+
         if (e->type == MB2_MMAP_AVAILABLE)
             usable += e->length;
     }
