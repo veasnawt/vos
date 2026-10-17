@@ -1,5 +1,5 @@
 /*
- * MyOS x86_64 kernel entry. Runs in 64-bit long mode in the higher half;
+ * VOS x86_64 kernel entry. Runs in 64-bit long mode in the higher half;
  * boot.S passes the Multiboot2 magic and the physical address of the boot
  * information. All memory is accessed through the higher-half mapping, so
  * nothing here depends on the boot identity map.
@@ -20,7 +20,7 @@
 #define EFER_LMA        (1ULL << 10)
 #define BOOT_CS         0x08
 
-#ifdef MYOS_TEST
+#ifdef VOS_TEST
 #define TEST_EXIT_PORT  0xF4
 #define TEST_EXIT_PASS  0x10            /* QEMU exit status (0x10 << 1) | 1 = 33 */
 #define TEST_EXIT_FAIL  0x11            /* QEMU exit status 35 */
@@ -54,7 +54,7 @@ static inline void outb(uint16_t port, uint8_t val)
     __asm__ volatile ("outb %0, %1" : : "a"(val), "Nd"(port));
 }
 
-#ifdef MYOS_TEST
+#ifdef VOS_TEST
 static inline void outl(uint16_t port, uint32_t val)
 {
     __asm__ volatile ("outl %0, %1" : : "a"(val), "Nd"(port));
@@ -243,8 +243,8 @@ void kernel_main(uint32_t mb2_magic, uint32_t mb2_info)
     __asm__ volatile ("mov %%rsp, %0" : "=r"(rsp));
 
     serial_init();
-    vga_puts("Hello from MyOS!");
-    serial_puts("Hello from MyOS!\r\n");
+    vga_puts("Hello from VOS!");
+    serial_puts("Hello from VOS!\r\n");
 
     check(efer & EFER_LMA, "long mode active (EFER.LMA)");
     check(cs == BOOT_CS, "64-bit code segment");
@@ -299,8 +299,8 @@ void kernel_main(uint32_t mb2_magic, uint32_t mb2_info)
     }
 
     serial_puts(first_failure ? "boot: FAILED\r\n" : "boot: checks passed\r\n");
-#ifdef MYOS_TEST
-    serial_puts(first_failure ? "MYOS-TEST: FAIL\r\n" : "MYOS-TEST: PASS\r\n");
+#ifdef VOS_TEST
+    serial_puts(first_failure ? "VOS-TEST: FAIL\r\n" : "VOS-TEST: PASS\r\n");
     outl(TEST_EXIT_PORT, first_failure ? TEST_EXIT_FAIL : TEST_EXIT_PASS);
 #endif
 }

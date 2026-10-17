@@ -47,8 +47,8 @@ void kernel_main(uint32_t magic, uint32_t mbi)
 {
     (void)mbi;
     serial_init();
-    vga_puts("Hello from MyOS!");
-    serial_puts("Hello from MyOS!\r\n");
+    vga_puts("Hello from VOS!");
+    serial_puts("Hello from VOS!\r\n");
     serial_puts(magic == 0x2BADB002 ? "Multiboot magic OK\r\n"
                                     : "Multiboot magic BAD\r\n");
 }

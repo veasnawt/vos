@@ -1,6 +1,6 @@
-/* Multiboot2 boot information structures (subset used by MyOS). */
-#ifndef MYOS_MULTIBOOT2_H
-#define MYOS_MULTIBOOT2_H
+/* Multiboot2 boot information structures (subset used by VOS). */
+#ifndef VOS_MULTIBOOT2_H
+#define VOS_MULTIBOOT2_H
 
 #include <stdint.h>
 

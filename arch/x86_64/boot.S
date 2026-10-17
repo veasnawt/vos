@@ -1,5 +1,5 @@
 /*
- * MyOS x86_64 boot path.
+ * VOS x86_64 boot path.
  *
  * GRUB loads this ELF64 image via Multiboot2 and enters _start in 32-bit
  * protected mode with paging off, EAX = Multiboot2 magic and EBX = physical
@@ -169,7 +169,7 @@ boot_fatal:
     out %al, %dx
     jmp 2b
 5:
-#ifdef MYOS_TEST
+#ifdef VOS_TEST
     mov $TEST_EXIT_PORT, %dx
     mov $TEST_EXIT_FAIL, %eax
     out %eax, %dx
@@ -201,9 +201,9 @@ serial_init_table:                  /* (COM1 register offset, value) */
     .byte 4, 0x03                   /* MCR: DTR, RTS */
 serial_init_table_end:
 msg_bad_magic:
-    .asciz "MyOS: boot error: not started by a Multiboot2 loader\r\n"
+    .asciz "VOS: boot error: not started by a Multiboot2 loader\r\n"
 msg_no_long_mode:
-    .asciz "MyOS: boot error: CPU lacks long mode (x86-64), halting\r\n"
+    .asciz "VOS: boot error: CPU lacks long mode (x86-64), halting\r\n"
 
 .section .boot.data, "aw"
 .align 8

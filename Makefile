@@ -1,4 +1,4 @@
-# MyOS top-level build. Select the target with ARCH=<name> (default: i386).
+# VOS top-level build. Select the target with ARCH=<name> (default: i386).
 # Each architecture lives in arch/<name>/ and provides an arch.mk fragment.
 
 ARCH  ?= i386
@@ -12,16 +12,21 @@ endif
 
 ARCH_DIR := arch/$(ARCH)
 BUILD    := build/$(ARCH)
-TEST_ISO := build/$(ARCH)-test/myos.iso
+TEST_ISO := build/$(ARCH)-test/vos.iso
 
-# MYOS_TEST=1 builds the self-checking test image into build/<ARCH>-test/.
-ifeq ($(MYOS_TEST),1)
+# VOS_TEST=1 builds the self-checking test image into build/<ARCH>-test/.
+# MYOS_TEST is the pre-rename name; reject it rather than silently
+# building the production image.
+ifdef MYOS_TEST
+$(error MYOS_TEST was renamed to VOS_TEST)
+endif
+ifeq ($(VOS_TEST),1)
 BUILD     := build/$(ARCH)-test
-TEST_DEFS := -DMYOS_TEST
+TEST_DEFS := -DVOS_TEST
 endif
 
-KERNEL   := $(BUILD)/myos.bin
-ISO      := $(BUILD)/myos.iso
+KERNEL   := $(BUILD)/vos.bin
+ISO      := $(BUILD)/vos.iso
 
 CC     := gcc
 LD     := ld
@@ -57,7 +62,7 @@ verify: $(KERNEL)
 iso: verify
 	rm -rf $(BUILD)/isodir
 	mkdir -p $(BUILD)/isodir/boot/grub
-	cp $(KERNEL) $(BUILD)/isodir/boot/myos.bin
+	cp $(KERNEL) $(BUILD)/isodir/boot/vos.bin
 	cp $(ARCH_DIR)/grub.cfg $(BUILD)/isodir/boot/grub/grub.cfg
 	grub-mkrescue -o $(ISO) $(BUILD)/isodir
 

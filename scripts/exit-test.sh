@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Run a self-checking test image (built with MYOS_TEST=1) that reports its
+# Run a self-checking test image (built with VOS_TEST=1) that reports its
 # result through QEMU's isa-debug-exit device: the guest writes V to port
 # 0xf4 and QEMU exits with status (V << 1) | 1.
 # usage: exit-test.sh NAME ISO EXPECTED_STATUS MARKER [extra QEMU args...]

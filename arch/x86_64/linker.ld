@@ -1,5 +1,5 @@
 /*
- * MyOS x86_64 kernel layout.
+ * VOS x86_64 kernel layout.
  *
  * The boot area (.boot.*) runs at its physical address (VMA == LMA) before
  * paging is enabled. The rest of the kernel is linked in the higher half at

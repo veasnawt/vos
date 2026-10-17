@@ -1,7 +1,7 @@
-# MyOS
+# VOS
 
 Minimal freestanding x86 kernel booted by GRUB.
-On boot it prints `Hello from MyOS!` to the VGA text buffer and COM1 serial.
+On boot it prints `Hello from VOS!` to the VGA text buffer and COM1 serial.
 
 ## Requirements
 gcc (with `gcc-multilib`), binutils, make, grub-mkrescue (+ grub-pc-bin), xorriso,
@@ -19,10 +19,10 @@ Build output goes to `build/<ARCH>/`; the x86_64 self-checking test image goes t
 `build/x86_64-test/`.
 
 ## Build and test
-    make                     # build/i386/myos.bin (same as ARCH=i386)
-    make ARCH=x86_64         # build/x86_64/myos.bin
+    make                     # build/i386/vos.bin (same as ARCH=i386)
+    make ARCH=x86_64         # build/x86_64/vos.bin
     make ARCH=x86_64 verify  # grub-file Multiboot2 header check
-    make ARCH=x86_64 iso     # build/x86_64/myos.iso
+    make ARCH=x86_64 iso     # build/x86_64/vos.iso
     make ARCH=x86_64 run     # QEMU with a window
     make test                # headless QEMU tests for the selected ARCH
     make ARCH=x86_64 test    # x86_64 tests (see below)
@@ -35,7 +35,7 @@ Build output goes to `build/<ARCH>/`; the x86_64 self-checking test image goes t
 - `x86_64`:
   1. boots the production image (which halts) and requires `boot: checks passed`
      on serial with QEMU still running afterwards (`scripts/test.sh`);
-  2. builds a test image with `MYOS_TEST=1`, which reports its result through
+  2. builds a test image with `VOS_TEST=1`, which reports its result through
      QEMU's `isa-debug-exit` device, and runs it with 128 MiB and 2 GiB;
   3. runs the test image with `-cpu qemu32` (no long mode), which must stop
      with `CPU lacks long mode`.
@@ -56,7 +56,13 @@ Build output goes to `build/<ARCH>/`; the x86_64 self-checking test image goes t
 - `arch/x86_64/linker.ld` – low boot area at 1 MiB, higher-half kernel, no RWX segments
 - `arch/x86_64/grub.cfg`, `arch/x86_64/arch.mk`
 - `scripts/test.sh` – headless smoke test for images that halt
-- `scripts/exit-test.sh` – strict test for `MYOS_TEST=1` images (exit status + marker)
+- `scripts/exit-test.sh` – strict test for `VOS_TEST=1` images (exit status + marker)
 
 The kernel is freestanding (no libc, no host OS dependency at runtime).
 The `m1-32bit` tag marks the original known-good 32-bit baseline.
+
+## History
+VOS was developed under the working name MyOS until 2026-10-17. Commits up
+to `5fd25cc` (including the `m1-32bit` tag) use the old name, for example in
+boot messages, artifact names (`myos.bin`, `myos.iso`) and the `MYOS_TEST`
+build variable, which is now `VOS_TEST`.
