@@ -15,6 +15,7 @@
 #include "memlayout.h"
 #include "multiboot2.h"
 #include "panic.h"
+#include "pmm.h"
 #include "resv.h"
 #ifdef VOS_TEST
 #include "selftest.h"
@@ -140,6 +141,23 @@ void kernel_main(uint32_t mb2_magic, uint32_t mb2_info)
     }
     if (err)
         panic(err);
+
+    int perr = pmm_init(&bi, &boot_resv);
+    if (perr != PMM_OK) {
+        serial_puts("pmm: initialization failed: ");
+        serial_puts(pmm_strerror(perr));
+        serial_puts("\r\n");
+        panic("pmm: initialization failed");
+    }
+    serial_puts("pmm: ");
+    serial_dec(pmm_kernel()->frames);
+    serial_puts(" frames tracked below 1 GiB, ");
+    serial_dec(pmm_kernel()->usable);
+    serial_puts(" usable (");
+    serial_dec(pmm_kernel()->usable * (PAGE_SIZE / 1024));
+    serial_puts(" KiB), ");
+    serial_dec(pmm_kernel()->ignored_bytes);
+    serial_puts(" bytes of RAM above 1 GiB ignored\r\n");
 
     serial_puts(first_failure ? "boot: FAILED\r\n" : "boot: checks passed\r\n");
 #ifdef VOS_TEST

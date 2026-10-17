@@ -67,6 +67,13 @@ static inline uint64_t read_cr2(void)
     return v;
 }
 
+static inline uint64_t read_cr3(void)
+{
+    uint64_t v;
+    __asm__ volatile ("mov %%cr3, %0" : "=r"(v));
+    return v;
+}
+
 static inline uint64_t read_cr4(void)
 {
     uint64_t v;
