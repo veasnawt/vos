@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| Status | **Experimental and unstable.** Implemented in N1 (commits up to `74501a7`). Any part may change without notice; there is no compatibility promise of any kind. |
+| Status | **Experimental and unstable.** Implemented in N1 (commits up to `74501a7`); amended in N2.1 (entry `rflags` `0x202`: hardware interrupts reach ring 3). Any part may change without notice; there is no compatibility promise of any kind. |
 | Scope | The contract between a VOS user program and the kernel on `ARCH=x86_64`: entry state, system calls, memory layout, executable format. |
 | Version marker | The VOS ABI note in every executable carries ABI version `0`. A later, incompatible ABI will use a new version number, and the loader will reject versions it does not implement. |
 | Sources of truth | `arch/x86_64/syscall.{h,c}`, `usercopy.c`, `usermode.S`, `process.c`, `elf.c`, `loader.c`; `user/include/vos/syscall.h`, `user/lib/{crt0.S,syscall.S,abi_note.S,user.ld}` |
@@ -30,12 +30,12 @@ The kernel enters a new process exactly once, with `iretq`:
 | `rip` | `e_entry` of the executable |
 | `rsp` | `0x00007FFFFFFFEFF0` — 16-byte aligned; the 16 bytes at `rsp` are zero |
 | General-purpose registers | `rax, rbx, rcx, rdx, rsi, rdi, rbp, r8–r15` all zero |
-| `rflags` | `0x2`: IF = 0, IOPL = 0, DF = 0, AC = 0, TF = 0 |
+| `rflags` | `0x202`: IF = 1, IOPL = 0, DF = 0, AC = 0, TF = 0 (before N2.1: `0x2`, IF = 0) |
 | `cs` / `ss` | `0x23` / `0x1B` (ring 3, 64-bit code; user data) |
 | `ds, es, fs, gs` | null selectors (`0`); FS and GS bases are 0 |
 | Floating point | not available (section 7) |
 | Arguments | none: no `argc`, `argv`, environment or auxiliary vector |
-| Interrupts | disabled for the whole life of the process (there is no timer and no preemption) |
+| Interrupts | enabled (IF = 1) for the whole life of the process; the program cannot change IF or IOPL (section 3.1) |
 
 The runtime's `crt0.S` records the entry `rsp` in `__vos_entry_rsp`, clears `rbp`, keeps `rsp`
 16-byte aligned, calls `int main(void)` and passes its return value to `vos_exit`. A test
@@ -54,9 +54,27 @@ program checks this state directly with its own `_start` (`user/suite/regs.S`).
   instruction after `int $0x80` in the same process, with the CPU-pushed frame restored by
   `iretq`; only `rax` differs. This is verified by tests that load every register, set CF and DF
   and place red-zone canaries before calling.
-- **Validation before returning:** CS `0x23`, SS `0x1B`, IF = 0, IOPL = 0, canonical lower-half
-  `rip`/`rsp`, the process's page tables still active. A violation is a kernel error (panic).
+- **Validation before returning:** CS `0x23`, SS `0x1B`, IF = 1, IOPL = 0, VM = 0, canonical
+  lower-half `rip`/`rsp`, the process's page tables still active, the frame at the top of the
+  TSS.RSP0 stack. A violation is a kernel error (panic).
 - `int $0x80` from ring 0 is a kernel error (panic).
+- The kernel itself always runs with IF = 0: the system-call gate is an interrupt gate, so the
+  CPU clears IF on entry, and the `iretq` back restores the program's IF = 1.
+
+### 3.1 Hardware interrupts (since N2.1)
+
+- The PIT interrupts the running program about 100 times per second (IRQ0, vector `0x20`). The
+  kernel takes the interrupt on the TSS.RSP0 stack, acknowledges it and returns to the
+  interrupted instruction with every register, `rflags` and the user stack unchanged. A program
+  cannot observe interrupts except as time passing; there is no time or tick system call in v0.
+- There is no scheduler: an interrupt never switches to another program, and a program that
+  never exits keeps the CPU (test builds have a kernel-side tick budget that kills it; it is not
+  part of the ABI).
+- At CPL 3 with IOPL 0, `cli` and `sti` raise `#GP(0)`, and `popfq` silently keeps IF and IOPL
+  unchanged. Vectors `0x20`–`0x2F` have DPL 0, so `int $0x20`...`int $0x2f` from ring 3 raise
+  `#GP`; a program cannot fake a hardware interrupt.
+- ABI v0 is still experimental. Programs that relied on IF = 0 (none are known) must not.
+  Future ABI v1 system calls will return `-VOS_ENOSYS` to programs marked ABI v0.
 
 ## 4. Results and errors
 

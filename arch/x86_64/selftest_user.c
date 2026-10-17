@@ -11,6 +11,7 @@
 #include "cpu.h"
 #include "exception.h"
 #include "gdt.h"
+#include "irq.h"
 #include "kmap.h"
 #include "lib.h"
 #include "memlayout.h"
@@ -57,6 +58,11 @@ DECLARE_PROG(sgdt);
 DECLARE_PROG(kwrite);
 DECLARE_PROG(kread);
 DECLARE_PROG(nullread);
+DECLARE_PROG(spin);
+DECLARE_PROG(kernelif);
+DECLARE_PROG(sti);
+DECLARE_PROG(iflock);
+DECLARE_PROG(irqregs);
 DECLARE_PROG(codewrite);
 DECLARE_PROG(execstack);
 DECLARE_PROG(guard);
@@ -338,12 +344,12 @@ static void test_ring3_exit(void)
     expect(ended_by_int80(&last, PROG(exit42)),
            "saved RIP follows the int $0x80 inside the user code page");
     expect(last.trap.rsp == PROC_ENTRY_RSP, "saved RSP is the user stack pointer");
-    expect((last.trap.rflags & (RFLAGS_IF | RFLAGS_IOPL)) == 0 && (last.trap.rflags & 2),
-           "saved RFLAGS: IF 0, IOPL 0");
+    expect((last.trap.rflags & (RFLAGS_IF | RFLAGS_IOPL)) == RFLAGS_IF && (last.trap.rflags & 2),
+           "saved RFLAGS: IF 1, IOPL 0");
 
     int r = run_prog("regcheck", PROG(regcheck), 0, 0);
     expect(r == PROC_EXITED && last.exit_status == 0x5A,
-           "entry state: GPRs zero, RFLAGS 0x2, RSP 0x7FFFFFFFEFF0, aligned, 16 zero bytes");
+           "entry state: GPRs zero, RFLAGS 0x202, RSP 0x7FFFFFFFEFF0, aligned, 16 zero bytes");
     if (last.exit_status != 0x5A) {
         serial_puts("selftest:   regcheck status ");
         serial_dec((uint32_t)last.exit_status);
@@ -524,6 +530,74 @@ static void test_user_faults(void)
            "no leak and intact canaries after every user fault");
 }
 
+static int budget_kill(uint64_t ticks)
+{
+    return last.state == PROC_KILLED && last.reason == PROC_REASON_BUDGET && last.ticks == ticks &&
+           last.irqs >= ticks && last.trap.vector == IRQ_VECTOR_BASE + IRQ_TIMER &&
+           last.trap.cs == GDT_USER_CS && last.trap.ss == GDT_USER_DS &&
+           (last.trap.rflags & (RFLAGS_IF | RFLAGS_IOPL)) == RFLAGS_IF;
+}
+
+/*
+ * N2.1: hardware interrupts delivered by the CPU while ring 3 runs (IF = 1).
+ * The tick budget is a test-only kill switch; nothing else ends these programs.
+ */
+static void test_irq_ring3(void)
+{
+    const struct irq_stats *st = irq_stats();
+    uint64_t f0 = pmm_free_count(), t0 = irq_ticks(), unexpected0 = st->unexpected;
+    size_t spin_len = (size_t)(up_spin_end - up_spin), regs_len = (size_t)(up_irqregs_end - up_irqregs);
+
+    expect(!(read_rflags() & RFLAGS_IF), "kernel runs with IF=0 before entering ring 3");
+    proc_test_tick_budget(5);
+    expect(run_prog("spin", PROG(spin), 0, 0) == PROC_KILLED && budget_kill(5) && irq_ticks() - t0 >= 5,
+           "endless ring-3 loop: 5 timer IRQs delivered from CPL 3, killed by the test tick budget");
+    expect(last.trap.rip >= PROC_CODE_VA && last.trap.rip < PROC_CODE_VA + spin_len &&
+           last.trap.rsp == PROC_ENTRY_RSP && last.trap.error == 0,
+           "interrupted frame: RIP inside the loop, the user RSP, no error code, IF 1, IOPL 0");
+    expect(!(read_rflags() & RFLAGS_IF), "kernel back with IF=0 after the budget kill");
+
+    proc_test_tick_budget(20);
+    int r = run_prog("irqregs", PROG(irqregs), 0, 0);
+    expect(r == PROC_KILLED && budget_kill(20) && last.trap.rip >= PROC_CODE_VA &&
+           last.trap.rip < PROC_CODE_VA + regs_len,
+           "15 registers and DF intact across 20 timer interrupts (the program checks continuously)");
+    if (r == PROC_EXITED) {
+        serial_puts("selftest:   irqregs status ");
+        serial_dec((uint32_t)last.exit_status);
+        serial_puts("\r\n");
+    }
+    r = run_prog("iflock", PROG(iflock), 0, 0);
+    expect(r == PROC_KILLED && budget_kill(20),
+           "popfq cannot clear IF or raise IOPL in ring 3: interrupts still arrive");
+    if (r == PROC_EXITED) {
+        serial_puts("selftest:   iflock status ");
+        serial_dec((uint32_t)last.exit_status);
+        serial_puts("\r\n");
+    }
+    proc_test_tick_budget(PROC_TEST_TICK_BUDGET);
+
+    expect(run_prog("kernelif", PROG(kernelif), 0, 0) == PROC_EXITED && last.exit_status == 0 &&
+           last.sys_ok == 1, "kernel IF=0 inside a system call made by an IF=1 program");
+    expect(run_prog("sti", PROG(sti), 0, 0) == PROC_KILLED && killed_by(13, 0) &&
+           last.trap.rip == PROC_CODE_VA, "user sti: #GP(0)");
+    expect(run_prog("exit42", PROG(exit42), 0, 0) == PROC_EXITED && last.exit_status == 42,
+           "normal program after timer activity");
+    expect(st->unexpected == unexpected0 && irq_chip()->masks() == 0xFFFE && irq_chip()->in_service() == 0,
+           "no IRQ on a masked line; masks unchanged; nothing left in service at the controller");
+    expect(pmm_free_count() == f0 && pmm_check_in(pmm_kernel()) == PMM_OK && gdt_stack_canaries_intact(),
+           "no leak and intact canaries after the interrupt tests");
+    serial_puts("selftest: ring-3 timer interrupts ");
+    serial_dec(irq_ticks() - t0);
+    serial_puts(" ticks, ");
+    serial_dec(st->delivered[IRQ_TIMER]);
+    serial_puts(" IRQ0 delivered since boot, spurious IRQ7/15 ");
+    serial_dec(st->spurious[7]);
+    serial_puts("/");
+    serial_dec(st->spurious[15]);
+    serial_puts("\r\n");
+}
+
 int selftest_user(void)
 {
     failures = cases = 0;
@@ -532,6 +606,7 @@ int selftest_user(void)
     test_ring3_exit();
     test_debug_write();
     test_user_faults();
+    test_irq_ring3();
     serial_puts("selftest: user ");
     serial_dec(cases);
     serial_puts(" cases, ");

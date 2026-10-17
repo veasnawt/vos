@@ -31,6 +31,7 @@
 /* Test builds only, never part of the ABI. */
 #define SYS_TEST_KERNEL_AC  0x7E5A  /* returns 1 if RFLAGS.AC is set inside the kernel */
 #define SYS_TEST_TOUCH_USER 0x7E57  /* the kernel reads the byte at rdi directly: a simulated bug */
+#define SYS_TEST_KERNEL_IF  0x7E1F  /* returns 1 if RFLAGS.IF is set inside the kernel (must be 0) */
 #endif
 
 struct process;

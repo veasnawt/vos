@@ -22,9 +22,10 @@
  *     read exactly once; nothing beyond len is read.
  *
  * Callers enforce their own length limits (-VOS_EINVAL) before calling.
- * Assumption (N1): one process, one CPU, interrupts disabled, no demand
- * paging or shared mappings, so nothing can change the page tables between
- * the checks and the copy.
+ * Assumption (N1, still true in N2.1): one process, one CPU, the kernel runs
+ * with interrupts disabled (IRQs only interrupt ring 3), no demand paging
+ * or shared mappings, so nothing can change the page tables between the
+ * checks and the copy.
  */
 int copy_from_user(uint64_t root, void *dst, uint64_t uptr, size_t len);
 

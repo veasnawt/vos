@@ -1,8 +1,8 @@
 /*
  * Own entry point (no crt0): check the ABI v0 entry state directly. Exit 0
- * if every general-purpose register is zero, RFLAGS is 0x2, RSP is
- * 0x7FFFFFFFEFF0 with 16 zero bytes above it and DS/ES/FS/GS are null; else
- * the number of the first failed check.
+ * if every general-purpose register is zero, RFLAGS is 0x202 (IF = 1 since
+ * N2.1), RSP is 0x7FFFFFFFEFF0 with 16 zero bytes above it and DS/ES/FS/GS
+ * are null; else the number of the first failed check.
  */
 #include <vos/syscall.h>
 
@@ -29,7 +29,7 @@ _start:
     jnz 9f
     popq %rcx
     mov $2, %edi
-    cmp $2, %rcx
+    cmp $0x202, %rcx
     jne 9f
     mov $3, %edi
     movabs $0x7FFFFFFFEFF0, %rdx

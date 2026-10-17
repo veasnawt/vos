@@ -4,6 +4,7 @@
 #include "exception.h"
 #include "gdt.h"
 #include "idt.h"
+#include "irq.h"
 #include "syscall.h"
 #include "lib.h"
 #include "panic.h"
@@ -17,24 +18,51 @@ static struct process *live, *current;
 int enter_user(uint64_t rip, uint64_t rsp, uint64_t cr3, uint64_t *kernel_rsp);
 __attribute__((noreturn)) void user_return(uint64_t *kernel_rsp, int result);
 
-#define RFLAGS_IF       (1ULL << 9)
-#define RFLAGS_IOPL     (3ULL << 12)
 #define RFLAGS_FIXED    (1ULL << 1)
+#define RFLAGS_VM       (1ULL << 17)
 
-/* Last checks before IRETQ returns a system call to the same process. */
+/*
+ * Last checks before IRETQ returns to the same process after a system call
+ * or a hardware interrupt: user selectors, IF = 1 and IOPL = 0 (ring 3 can
+ * change neither), no virtual-8086 flag, lower-half RIP/RSP, its own address
+ * space, the frame exactly at the top of the TSS.RSP0 stack (the CPU used
+ * the right kernel stack) and intact stack canaries.
+ */
 static uint64_t resume(struct process *p, struct exc_frame *f)
 {
-    if (f->cs != GDT_USER_CS || f->ss != GDT_USER_DS || (f->rflags & (RFLAGS_IF | RFLAGS_IOPL)) ||
-        !(f->rflags & RFLAGS_FIXED) || f->rip >= LOWER_HALF_END || f->rsp >= LOWER_HALF_END ||
+    if (f->cs != GDT_USER_CS || f->ss != GDT_USER_DS || !(f->rflags & RFLAGS_IF) ||
+        (f->rflags & (RFLAGS_IOPL | RFLAGS_VM)) || !(f->rflags & RFLAGS_FIXED) ||
+        f->rip >= LOWER_HALF_END || f->rsp >= LOWER_HALF_END ||
         (read_cr3() & PTE_ADDR) != p->root || (uint64_t)f + sizeof(*f) != gdt_tss_rsp0() ||
-        !gdt_stack_canaries_intact())
+        !gdt_stack_canaries_intact() || (read_rflags() & RFLAGS_IF))
         panic("process: refusing to resume an invalid user frame");
-    p->syscalls++;
     return TRAP_RESUME;
+}
+
+static void record(struct proc_trap *t, const struct exc_frame *f)
+{
+    t->vector = f->vector;
+    t->error = f->error;
+    t->rip = f->rip;
+    t->cs = f->cs;
+    t->rflags = f->rflags;
+    t->rsp = f->rsp;
+    t->ss = f->ss;
+    t->cr2 = f->vector == 14 ? read_cr2() : 0;
+    t->rax = f->rax;
+    t->rdi = f->rdi;
+    t->kframe = (uint64_t)f;
 }
 
 #ifdef VOS_TEST
 static int frame_budget = -1;
+static uint64_t tick_budget = PROC_TEST_TICK_BUDGET;
+const char PROC_REASON_BUDGET[] = "test tick budget";
+
+void proc_test_tick_budget(uint64_t n)
+{
+    tick_budget = n;
+}
 
 void proc_test_frame_budget(int n)
 {
@@ -246,6 +274,7 @@ int proc_run(struct process *p)
         panic("process: address space failed verification before entry");
 
     p->state = PROC_RUNNING;
+    p->tick_start = irq_ticks();
     current = p;
     int result = enter_user(p->entry, p->user_rsp, p->root, &p->kernel_rsp);
     current = NULL;
@@ -276,6 +305,30 @@ uint64_t proc_user_trap(struct exc_frame *f)
     if ((read_cr3() & PTE_ADDR) != p->root)
         panic("process: user trap on a foreign address space");
 
+    if (irq_is_vector(f->vector)) {
+        irq_handle(f);                  /* acknowledged before anything else happens */
+        p->irqs++;
+        p->ticks = irq_ticks() - p->tick_start;
+        record(&p->last_irq, f);
+#ifdef VOS_TEST
+        if (tick_budget && p->ticks >= tick_budget) {
+            record(&p->trap, f);
+            p->state = PROC_KILLED;
+            p->reason = PROC_REASON_BUDGET;
+            serial_puts("proc: killed by the test tick budget after ");
+            serial_dec(p->ticks);
+            serial_puts(" timer ticks (cs=");
+            serial_hex(f->cs);
+            serial_puts(" rip=");
+            serial_hex(f->rip);
+            serial_puts(" rflags=");
+            serial_hex(f->rflags);
+            serial_puts(")\r\n");
+            finish(p);
+        }
+#endif
+        return resume(p, f);
+    }
     if (f->vector == IDT_SYSCALL && f->rax != SYS_EXIT) {
         int64_t res = syscall_dispatch(p, f);
         f->rax = (uint64_t)res;
@@ -287,20 +340,11 @@ uint64_t proc_user_trap(struct exc_frame *f)
             p->sys_einval++;
         else if (res == -VOS_EFAULT)
             p->sys_efault++;
+        p->syscalls++;
         return resume(p, f);
     }
 
-    p->trap.vector = f->vector;
-    p->trap.error = f->error;
-    p->trap.rip = f->rip;
-    p->trap.cs = f->cs;
-    p->trap.rflags = f->rflags;
-    p->trap.rsp = f->rsp;
-    p->trap.ss = f->ss;
-    p->trap.cr2 = f->vector == 14 ? read_cr2() : 0;
-    p->trap.rax = f->rax;
-    p->trap.rdi = f->rdi;
-    p->trap.kframe = (uint64_t)f;
+    record(&p->trap, f);
 
     if (f->vector == IDT_SYSCALL) {             /* exit */
         p->exit_status = (int32_t)f->rdi;

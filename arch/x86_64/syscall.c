@@ -1,5 +1,6 @@
 #include "syscall.h"
 #include "console.h"
+#include "cpu.h"
 #include "exception.h"
 #include "process.h"
 #include "usercopy.h"
@@ -59,6 +60,8 @@ int64_t syscall_dispatch(struct process *p, struct exc_frame *f)
         __asm__ volatile ("pushfq\n\tpopq %0" : "=r"(flags));
         return (flags >> 18) & 1;
     }
+    case SYS_TEST_KERNEL_IF:
+        return (read_rflags() & RFLAGS_IF) != 0;
     case SYS_TEST_TOUCH_USER:
         return *(volatile uint8_t *)f->rdi;     /* SMAP must stop this */
 #endif

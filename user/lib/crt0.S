@@ -3,7 +3,9 @@
  *
  * The kernel enters _start in ring 3 with RSP = 0x7FFFFFFFEFF0 (16-byte
  * aligned, the 16 bytes above it zero), every general-purpose register zero,
- * RFLAGS = 0x2 (DF clear) and no floating point (x87 #NM, MMX/SSE #UD).
+ * RFLAGS = 0x202 (IF = 1, IOPL = 0, DF clear; hardware interrupts may
+ * arrive and are invisible to the program) and no floating point (x87 #NM,
+ * MMX/SSE #UD).
  *
  * VOS ABI v0 provides no argc/argv/envp, no auxiliary vector, no TLS, no
  * atexit handlers, no stdio and no heap: main takes no arguments, and its

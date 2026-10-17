@@ -4,8 +4,10 @@
  * int enter_user(uint64_t rip, uint64_t rsp, uint64_t cr3, uint64_t *kernel_rsp)
  *   Saves the callee-saved registers on the current (kernel) stack, stores
  *   that RSP in *kernel_rsp, switches to the user address space and IRETQs
- *   to CS 0x23 / SS 0x1B with RFLAGS 0x2 (IF = 0, IOPL = 0, DF = 0) and every
- *   general-purpose register zero. It "returns" only through user_return.
+ *   to CS 0x23 / SS 0x1B with RFLAGS 0x202 (IF = 1, IOPL = 0, DF = 0; since
+ *   N2.1 hardware interrupts reach ring 3) and every general-purpose register
+ *   zero. It "returns" only through user_return. The kernel itself keeps
+ *   IF = 0 up to the IRETQ, which loads IF = 1 atomically with the switch.
  *
  * void user_return(uint64_t *kernel_rsp, int result)   (does not return)
  *   Called on the TSS.RSP0 stack by the trap handler, after it has switched
@@ -16,7 +18,7 @@
 .set USER_CS,       0x23
 .set USER_DS,       0x1B
 .set KERNEL_DS,     0x10
-.set USER_RFLAGS,   0x2
+.set USER_RFLAGS,   0x202
 
 .section .text
 .code64

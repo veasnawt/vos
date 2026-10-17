@@ -63,7 +63,9 @@ arch-test: iso
 	    'selftest: kmap ' 'kmap: phys 0-2 MiB as 4 KiB pages: ' \
 	    'kmap: after the TLB flush the CPU refused a text write' 'vmm: audit passed: ' \
 	    'irq: 8259 master 0x20-0x27, slave 0x28-0x2f (cascade IRQ2); masks 0xfffe (IRQ0 only)' \
-	    'pit: channel 0 mode 2, divisor 11932 (99.998 Hz)' 'selftest: irq ' 'VOS-TEST: PASS' --
+	    'pit: channel 0 mode 2, divisor 11932 (99.998 Hz)' 'selftest: irq ' \
+	    'selftest: ring-3 timer interrupts 45 ticks, ' 'proc: killed by the test tick budget after 20 timer ticks' \
+	    'VOS-TEST: PASS' --
 	MEM=2G scripts/exit-test.sh boot-2G $(TEST_ISO) 33 'selftest: pmm-synthetic ' \
 	    'selftest: pmm-kernel ' 'selftest: 1000 frames from ' 'selftest: vmm ' 'selftest: user ' \
 	    'selftest: kmap ' 'VOS-TEST: PASS' --

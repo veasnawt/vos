@@ -66,6 +66,9 @@ struct process {
     uint64_t syscalls;                  /* system calls that returned to the process */
     /* How those calls ended, counted by the kernel (a trusted record for tests). */
     uint64_t sys_ok, sys_enosys, sys_einval, sys_efault;
+    /* Hardware interrupts taken while it ran in ring 3 (N2.1), and the last one's frame. */
+    uint64_t irqs, ticks, tick_start;
+    struct proc_trap last_irq;
     unsigned npages;
     uint64_t page_va[PROC_MAX_PAGES], page_pa[PROC_MAX_PAGES];
     uint8_t page_flags[PROC_MAX_PAGES]; /* VMM_* the page was mapped with */
@@ -101,9 +104,11 @@ int proc_create(struct process *p, const char *name, const void *code, size_t le
 int proc_run(struct process *p);
 /*
  * Called by the exception dispatcher for traps whose saved CS has RPL 3.
- * A non-terminating system call is dispatched, its result stored in the
- * frame's rax, the frame validated, and TRAP_RESUME returned (the stub
- * IRETQs to the same process). Exit and every exception record the
+ * A hardware interrupt is handled and acknowledged (irq_handle), counted,
+ * the frame validated, and TRAP_RESUME returned; the program continues
+ * exactly where it was interrupted. A non-terminating system call is
+ * dispatched, its result stored in the frame's rax, the frame validated, and
+ * TRAP_RESUME returned (the stub IRETQs to the same process). Exit and every exception record the
  * CPU-pushed frame, end the process, switch to the kernel CR3 and resume
  * proc_run's caller instead; the process never runs again.
  */
@@ -114,6 +119,15 @@ void proc_destroy(struct process *p);
 #ifdef VOS_TEST
 /* Test hook: allow n more data-frame allocations in proc_create (-1 = unlimited). */
 void proc_test_frame_budget(int n);
+/*
+ * Test hook: kill every later process after n timer ticks in ring 3 (0 =
+ * none). Test builds start with PROC_TEST_TICK_BUDGET, so a program that
+ * never ends cannot hang a test run; it is killed with reason
+ * PROC_REASON_BUDGET. Production builds have no budget (and no scheduler).
+ */
+#define PROC_TEST_TICK_BUDGET   1000
+void proc_test_tick_budget(uint64_t n);
+extern const char PROC_REASON_BUDGET[];
 #endif
 
 #endif
