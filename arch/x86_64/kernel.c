@@ -17,6 +17,7 @@
 #include "panic.h"
 #include "pmm.h"
 #include "resv.h"
+#include "vmm.h"
 #ifdef VOS_TEST
 #include "selftest.h"
 #endif
@@ -158,6 +159,14 @@ void kernel_main(uint32_t mb2_magic, uint32_t mb2_info)
     serial_puts(" KiB), ");
     serial_dec(pmm_kernel()->ignored_bytes);
     serial_puts(" bytes of RAM above 1 GiB ignored\r\n");
+
+    int verr = vmm_init();
+    if (verr != VMM_OK) {
+        serial_puts("vmm: initialization failed: ");
+        serial_puts(vmm_diagnostic());
+        serial_puts("\r\n");
+        panic("vmm: initialization failed");
+    }
 
     serial_puts(first_failure ? "boot: FAILED\r\n" : "boot: checks passed\r\n");
 #ifdef VOS_TEST
