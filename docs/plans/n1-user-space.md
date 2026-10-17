@@ -198,11 +198,42 @@ stage is implemented.
     no protection against a caller that keeps using a freed frame; free-count accounting is
     O(frames) to verify, allocation is O(words) worst case.
 
-### N1.4 — Page tables, layout, identity-map removal [Planned]
+### N1.4 — Page tables, layout, identity-map removal [Implemented and verified]
 - Map/unmap/translate with intermediate-table allocation; `invlpg` on unmap; audit function.
 - Move to the kernel GDT (N1.1) first, then clear PML4 entry 0 and reload CR3.
 - **Tests:** case `kernel-lowaccess` (low address after removal → #PF panic, exit 35); mapper
   self-tests; audit passes.
+- **Status (verified 2026-10-17):** `vmm.{c,h}`, tests in `selftest_vmm.c`; `make test-all`
+  passes (18 QEMU runs, including the four new #PF images).
+  - API: `vmm_map(root, va, pa, flags)`, `vmm_unmap(root, va, &pa)`, `vmm_lookup`
+    (effective W/X/U, page size), `vmm_audit_space`, `vmm_init`, `vmm_remove_identity`. A space
+    is named by its PML4 frame. Rules are in `vmm.h`: lower-half, canonical, aligned, outside
+    `[0, 4 MiB)` and the top lower-half page; frames in `[1 MiB, 1 GiB)`; no W+X; no overwrite;
+    no descent into large pages; the upper half is never modified. Intermediate entries are
+    P+W(+U in the lower half), so the leaf decides. Unmap returns the data frame and frees only
+    emptied, PMM-owned, lower-half tables, after INVLPG. Tables are dereferenced only when
+    aligned, below 1 GiB, and inside the kernel image or PMM-allocated.
+  - Removal: after `pmm_init`/`vmm_init`, RIP, RSP, GDT, IDT, TSS (+RSP0/IST1) and the boot
+    information pointers are checked to be higher-half and PML4[1..255] empty; then PML4[0] is
+    cleared and CR3 reloaded. The boot tables (including the page directory shared with the
+    alias) stay; the kernel then audits its hierarchy and panics on any error.
+  - Evidence: before removal a test build reads `0xe85250d6` at `0x100000`; `kernel-lowaccess`
+    (the plan's K3; called "K2" in the N1.4 request) reads it again immediately after removal
+    and gets `#PF err=0x0 cr2=0x100000`. `vmm-stale-tlb` (`err=0x0`), `vmm-nx` (`err=0x11`, RIP
+    = CR2 = the NX page, after an executable control page returned) and `vmm-readonly`
+    (`err=0x3`, CR0.WP) are real CPU faults. 76 self-test cases cover mapping, permissions,
+    refusals, unmapping, rollback, large pages, malformed tables, audit detection and kernel
+    survival; the PMM free count returns to its baseline.
+  - Mutation check (15 mutations of `vmm.c`, all detected): missing INVLPG on unmap (only by
+    `vmm-stale-tlb`), missing CR3 reload (only by `kernel-lowaccess`, once it ran before any
+    later INVLPG: QEMU flushes its whole TLB on INVLPG inside a tracked large-page region), NX,
+    write permission, rollback, ownership check, large-page check, table validation, EEXIST,
+    intermediate U, W+X, upper-half refusal, table release, frame range, audit U check.
+  - Limits: the 2 MiB kernel alias stays writable **and** executable for all of physical
+    0–1 GiB (kernel W^X deferred), so every frame — including future user code and page tables —
+    is also writable and executable by the kernel. U/S enforcement, SMEP/SMAP behaviour and
+    user-page faults are not exercised (no ring 3 yet). No locking (single CPU, interrupts
+    off). Frames above 1 GiB cannot be mapped or used as tables.
 
 ### N1.5 — Process object and first ring-3 entry [Planned]
 - Address space = new PML4 with only entry 511 copied from the kernel PML4.
@@ -248,7 +279,7 @@ Permission decisions never live in user-space code.
 
 ## 6. Memory layout and segments
 
-### 6.1 Virtual memory layout [Planned]
+### 6.1 Virtual memory layout [Rules enforced by `vmm_map` since N1.4; user regions unused]
 
 | Range | Use | Permissions |
 |---|---|---|
