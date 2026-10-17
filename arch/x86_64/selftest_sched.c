@@ -7,6 +7,7 @@
 #include "console.h"
 #include "cpu.h"
 #include "gdt.h"
+#include "irq.h"
 #include "kmap.h"
 #include "lib.h"
 #include "memlayout.h"
@@ -241,6 +242,159 @@ static void test_exhaustion(void)
            "slots return after reaping; IDs keep increasing (never reused)");
 }
 
+/* ---- idle thread, ring-0 timer interrupts, blocking, sleeping ---- */
+
+extern char idle_after_hlt[];
+
+/* Sleep (one tick at a time) until every listed thread is gone, at most max ticks. */
+static int wait_gone_ticks(const int64_t *ids, unsigned n, unsigned max)
+{
+    for (unsigned k = 0; k < max; k++) {
+        unsigned alive = 0;
+
+        for (unsigned i = 0; i < n; i++)
+            alive += ids[i] > 0 && thread_state((uint64_t)ids[i]) != THREAD_FREE;
+        if (!alive)
+            return 1;
+        thread_sleep(1);
+    }
+    return 0;
+}
+
+static void test_idle(void)
+{
+    const struct sched_stats *s = sched_stats();
+    uint64_t t0 = irq_ticks(), irqs0 = s->idle_irqs, halts0 = s->idle_halts;
+    uint64_t rip, rflags, rsp, lo, hi;
+
+    thread_sleep(5);                    /* nothing else can run: only the idle thread */
+    sched_test_last_idle_irq(&rip, &rflags, &rsp, &lo, &hi);
+    expect(irq_ticks() - t0 >= 5 && s->idle_irqs - irqs0 >= 5 && s->idle_halts - halts0 >= 5,
+           "boot thread asleep 5 ticks: the idle thread halted and took the timer IRQs in ring 0");
+    expect(rip == (uint64_t)idle_after_hlt && (rflags & (RFLAGS_IF | RFLAGS_IOPL)) == RFLAGS_IF &&
+           rsp > lo && rsp <= hi, "idle IRQ frame: RIP after hlt, IF 1, IOPL 0, on the idle thread's own stack");
+    expect(!(read_rflags() & RFLAGS_IF) && thread_is_boot() && irq_chip()->in_service() == 0,
+           "back on the boot thread with IF=0; nothing left in service at the controller");
+}
+
+static struct wait_queue wq;
+static uint64_t wake_log[4];
+static unsigned wake_n;
+
+static void waiter(void *arg)
+{
+    thread_block(&wq);
+    if (wake_n < 4)
+        wake_log[wake_n++] = (uint64_t)(uintptr_t)arg;
+}
+
+static int all_blocked(const int64_t *ids, unsigned n)
+{
+    for (unsigned i = 0; i < n; i++)
+        if (thread_state((uint64_t)ids[i]) != THREAD_BLOCKED)
+            return 0;
+    return 1;
+}
+
+static void test_block_wake(void)
+{
+    int64_t id[3];
+    uint64_t q[THREAD_MAX];
+
+    memset(&wq, 0, sizeof(wq));
+    wake_n = 0;
+    for (uintptr_t i = 0; i < 3; i++)
+        id[i] = thread_create("waiter", waiter, (void *)(i + 1));
+    for (int k = 0; k < 10 && !all_blocked(id, 3); k++)
+        thread_yield();
+    expect(all_blocked(id, 3) && sched_test_runq(q, THREAD_MAX) == 0 && wake_n == 0,
+           "blocked threads are off the run queue and do not run");
+    for (int k = 0; k < 5; k++)
+        thread_yield();
+    expect(wake_n == 0, "yielding never schedules a blocked thread");
+    expect(thread_wake_one(&wq) == 1 && thread_state((uint64_t)id[0]) == THREAD_RUNNABLE &&
+           thread_state((uint64_t)id[1]) == THREAD_BLOCKED, "wake_one makes exactly the first waiter runnable");
+    thread_yield();
+    expect(wake_n == 1 && wake_log[0] == 1, "the woken thread runs at its turn");
+    expect(thread_wake_all(&wq) == 2 && wait_gone(id, 3, 20) && wake_n == 3 && wake_log[1] == 2 &&
+           wake_log[2] == 3, "wake_all wakes the rest in FIFO order");
+    expect(thread_wake_one(&wq) == 0 && thread_wake_all(&wq) == 0, "waking an empty queue does nothing");
+}
+
+static struct wait_queue items_q;
+static unsigned items, consumed;
+static int consumer_saw_all;
+
+static void consumer(void *arg)
+{
+    (void)arg;
+    while (consumed < 5) {
+        while (items == 0)              /* check, then block: no switch can come in between */
+            thread_block(&items_q);
+        items--;
+        consumed++;
+    }
+    consumer_saw_all = 1;
+}
+
+static void producer(void *arg)
+{
+    (void)arg;
+    for (int i = 0; i < 5; i++) {
+        items++;
+        thread_wake_one(&items_q);
+        thread_yield();
+    }
+}
+
+static void test_producer_consumer(void)
+{
+    int64_t id[2];
+
+    memset(&items_q, 0, sizeof(items_q));
+    items = consumed = 0;
+    consumer_saw_all = 0;
+    items = 1;                          /* an item before anyone waits: the consumer must not block on it */
+    id[0] = thread_create("consumer", consumer, 0);
+    id[1] = thread_create("producer", producer, 0);
+    expect(wait_gone(id, 2, 50) && consumer_saw_all && consumed == 5 && items == 1 &&
+           items_q.head == NULL, "producer/consumer over a wait queue: no lost or extra wakeup");
+}
+
+static uint64_t slept_from, slept_to;
+static int64_t last_worker_id;
+
+static void sleeper(void *arg)
+{
+    (void)arg;
+    slept_from = irq_ticks();
+    thread_sleep(3);
+    slept_to = irq_ticks();
+}
+
+static void last_worker(void *arg)
+{
+    (void)arg;
+    for (int k = 0; k < 3; k++)
+        thread_yield();
+}
+
+static void test_sleep_and_last_exit(void)
+{
+    const struct sched_stats *s = sched_stats();
+    int64_t id = thread_create("sleeper", sleeper, 0);
+
+    slept_from = slept_to = 0;
+    expect(wait_gone_ticks(&id, 1, 20) && slept_to - slept_from >= 3,
+           "a sleeping thread wakes after at least its ticks");
+
+    uint64_t reaped0 = s->reaped, irqs0 = s->idle_irqs;
+    last_worker_id = thread_create("last", last_worker, 0);
+    thread_sleep(3);                    /* the worker is the last runnable thread; then only idle */
+    expect(thread_state((uint64_t)last_worker_id) == THREAD_FREE && s->reaped == reaped0 + 1 &&
+           s->idle_irqs > irqs0, "the last runnable thread exits: idle reaps it and runs until the sleeper wakes");
+}
+
 int selftest_sched(void)
 {
     failures = cases = 0;
@@ -250,8 +404,24 @@ int selftest_sched(void)
     test_isolation();
     test_exit_and_reap();
     test_exhaustion();
+    test_idle();
+    test_block_wake();
+    test_producer_consumer();
+    test_sleep_and_last_exit();
     expect(thread_is_boot() && thread_canaries_intact() && !(read_rflags() & RFLAGS_IF),
            "back on the boot thread with IF=0 and every canary intact");
+    const struct sched_stats *s = sched_stats();
+    serial_puts("selftest: scheduler: ");
+    serial_dec(s->created);
+    serial_puts(" threads created, ");
+    serial_dec(s->switches);
+    serial_puts(" switches, ");
+    serial_dec(s->reaped);
+    serial_puts(" reaped, idle halted ");
+    serial_dec(s->idle_halts);
+    serial_puts(" times and took ");
+    serial_dec(s->idle_irqs);
+    serial_puts(" timer IRQs in ring 0\r\n");
     serial_puts("selftest: sched ");
     serial_dec(cases);
     serial_puts(" cases, ");

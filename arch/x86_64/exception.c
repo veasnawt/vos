@@ -7,6 +7,7 @@
 #include "idt.h"
 #include "irq.h"
 #include "kmap.h"
+#include "thread.h"
 
 static const struct { const char *name, *msg; } exc_info[32] = {
     [0]  = { "#DE", "#DE divide error" },
@@ -69,7 +70,12 @@ uint64_t exception_handler(struct exc_frame *f)
     if (kmap_probe_fault(f))
         return TRAP_RESUME;             /* an armed kmap_init probe: expected, recorded */
     if (irq_is_vector(f->vector)) {
-        /* The kernel runs with IF = 0: a hardware IRQ (or int 0x20-0x2f) here is a kernel error. */
+        /* The idle thread's "sti; hlt" is the only place the kernel takes hardware interrupts. */
+        if (sched_idle_irq(f)) {
+            irq_handle(f);              /* acknowledged before returning to the idle loop */
+            return TRAP_RESUME;
+        }
+        /* Anywhere else the kernel runs with IF = 0: an IRQ vector here is a kernel error. */
         serial_puts("exc: IRQ vector ");
         serial_hex(f->vector);
         serial_puts(" in ring 0, rip=");

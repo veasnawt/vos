@@ -10,6 +10,13 @@
  *   clobbering them, every thread shares the kernel address space, and the
  *   kernel has no FPU/SIMD state.
  *
+ * idle_halt
+ *   The idle thread's wait: "sti; hlt", then cli. STI delays interrupt
+ *   recognition by one instruction, so an interrupt pending at the sti, or
+ *   arriving while halted, is taken with the return address idle_after_hlt;
+ *   the only kernel code that ever runs with IF = 1 is this hlt and the cli
+ *   at idle_after_hlt (sched_idle_irq accepts a ring-0 IRQ only there).
+ *
  * thread_start
  *   The return address of a new thread's initial frame (thread.c). Entered by
  *   context_switch's ret with RSP 16-byte aligned; it calls thread_first_run,
@@ -37,6 +44,16 @@ context_switch:
     popq %rbp
     ret
 .size context_switch, . - context_switch
+
+.global idle_halt, idle_after_hlt
+.type idle_halt, @function
+idle_halt:
+    sti
+    hlt
+idle_after_hlt:
+    cli
+    ret
+.size idle_halt, . - idle_halt
 
 .global thread_start
 .type thread_start, @function

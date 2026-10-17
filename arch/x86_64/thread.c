@@ -1,7 +1,9 @@
 #include "thread.h"
 #include "console.h"
 #include "cpu.h"
+#include "exception.h"
 #include "gdt.h"
+#include "irq.h"
 #include "lib.h"
 #include "memlayout.h"
 #include "panic.h"
@@ -264,9 +266,27 @@ static void switch_to(struct thread *next)
     finish_switch();                    /* back in prev, after some other thread switched to it */
 }
 
+/* Make every sleeper whose tick has come runnable (thread context, IF = 0; never in an IRQ). */
+static void wake_sleepers(void)
+{
+    uint64_t now = irq_ticks();
+
+    for (unsigned i = 0; i < THREAD_MAX; i++) {
+        struct thread *t = &pool[i];
+
+        if (t->state == THREAD_BLOCKED && t->wake_tick && !t->waiting_on && now >= t->wake_tick) {
+            t->wake_tick = 0;
+            t->state = THREAD_RUNNABLE;
+            runq_push(t);
+            stats.wakeups++;
+        }
+    }
+}
+
 /* Pick the next thread: the run-queue head, else the idle thread (if any), else keep running. */
 static void schedule(void)
 {
+    wake_sleepers();
     struct thread *next = runq_pop();
 
     if (!next && idle && current != idle)
@@ -292,7 +312,7 @@ __attribute__((noreturn)) void thread_first_run(void)
     thread_exit();
 }
 
-int64_t thread_create(const char *name, thread_fn entry, void *arg)
+static int64_t create(const char *name, thread_fn entry, void *arg, int enqueue)
 {
     struct thread *t;
 
@@ -322,9 +342,17 @@ int64_t thread_create(const char *name, thread_fn entry, void *arg)
     t->entry = entry;
     t->arg = arg;
     t->state = THREAD_RUNNABLE;
-    runq_push(t);
+    if (enqueue)
+        runq_push(t);
+    else
+        idle = t;                       /* the idle thread is never on the run queue */
     stats.created++;
     return (int64_t)t->id;
+}
+
+int64_t thread_create(const char *name, thread_fn entry, void *arg)
+{
+    return create(name, entry, arg, 1);
 }
 
 static void check_entry(void)
@@ -333,7 +361,127 @@ static void check_entry(void)
         panic("sched: not initialized");
     if (read_rflags() & RFLAGS_IF)
         panic("sched: called with interrupts enabled");
+    if (irq_in_handler())
+        panic("sched: called from an interrupt handler");
 }
+
+void thread_block(struct wait_queue *q)
+{
+    check_entry();
+    if (current == idle || !q)
+        panic("sched: the idle thread never blocks");
+    current->state = THREAD_BLOCKED;
+    current->waiting_on = q;
+    current->next = NULL;
+    if (q->tail)
+        q->tail->next = current;
+    else
+        q->head = current;
+    q->tail = current;
+    stats.blocks++;
+    schedule();
+}
+
+int thread_wake_one(struct wait_queue *q)
+{
+    struct thread *t = q->head;
+
+    check_entry();
+    if (!t)
+        return 0;
+    q->head = t->next;
+    if (!q->head)
+        q->tail = NULL;
+    t->next = NULL;
+    if (t->state != THREAD_BLOCKED || t->waiting_on != q)
+        panic("sched: wait queue holds a thread that is not blocked on it");
+    t->waiting_on = NULL;
+    t->state = THREAD_RUNNABLE;
+    runq_push(t);
+    stats.wakeups++;
+    return 1;
+}
+
+int thread_wake_all(struct wait_queue *q)
+{
+    int n = 0;
+
+    while (thread_wake_one(q))
+        n++;
+    return n;
+}
+
+void thread_sleep(uint64_t ticks)
+{
+    check_entry();
+    if (current == idle)
+        panic("sched: the idle thread never sleeps");
+    current->wake_tick = irq_ticks() + (ticks ? ticks : 1);
+    current->state = THREAD_BLOCKED;
+    stats.sleeps++;
+    schedule();
+}
+
+/* ---- the idle thread ---- */
+
+void idle_halt(void);                   /* thread_switch.S */
+extern char idle_after_hlt[];
+static uint64_t last_idle_rip, last_idle_rflags, last_idle_rsp;
+
+static int any_sleeper(void)
+{
+    for (unsigned i = 0; i < THREAD_MAX; i++)
+        if (pool[i].state == THREAD_BLOCKED && pool[i].wake_tick)
+            return 1;
+    return 0;
+}
+
+static void idle_main(void *arg)
+{
+    (void)arg;
+    for (;;) {
+        wake_sleepers();
+        if (runq_head) {
+            thread_yield();
+            continue;
+        }
+        /* Nothing can run and no timer will wake anyone: no IRQ-driven wakeup exists. */
+        if (!any_sleeper())
+            panic("sched: every thread is blocked and none sleeps (lost wakeup?)");
+        stats.idle_halts++;
+        idle_halt();                    /* IF = 1 only inside; back with IF = 0 */
+        if (read_rflags() & RFLAGS_IF)
+            panic("sched: idle resumed with interrupts enabled");
+    }
+}
+
+int sched_idle_irq(const struct exc_frame *f)
+{
+    uint64_t lo = idle ? idle->stack_lo : 0, hi = idle ? idle->stack_hi : 0;
+
+    if (!idle || current != idle || f->cs != GDT_KERNEL_CS || f->ss != GDT_KERNEL_DS ||
+        f->rip != (uint64_t)idle_after_hlt ||
+        (f->rflags & (RFLAGS_IF | RFLAGS_IOPL | (1ULL << 17))) != RFLAGS_IF ||
+        f->rsp <= lo || f->rsp > hi || (uint64_t)f <= lo || (uint64_t)f >= hi)
+        return 0;
+    stats.idle_irqs++;
+    last_idle_rip = f->rip;
+    last_idle_rflags = f->rflags;
+    last_idle_rsp = f->rsp;
+    return 1;
+}
+
+#ifdef VOS_TEST
+void sched_test_last_idle_irq(uint64_t *rip, uint64_t *rflags, uint64_t *rsp, uint64_t *idle_lo,
+                              uint64_t *idle_hi)
+{
+    *rip = last_idle_rip;
+    *rflags = last_idle_rflags;
+    *rsp = last_idle_rsp;
+    *idle_lo = idle ? idle->stack_lo : 0;
+    *idle_hi = idle ? idle->stack_hi : 0;
+}
+#endif
 
 void thread_yield(void)
 {
@@ -371,6 +519,8 @@ void sched_init(void)
     boot->stack_lo = (uint64_t)kernel_stack;
     boot->stack_hi = (uint64_t)kernel_stack_top;
     current = boot;
+    if (create("idle", idle_main, 0, 0) <= 0 || !idle)
+        panic("sched: cannot create the idle thread");
 
     serial_puts("sched: ");
     serial_dec(THREAD_MAX);
@@ -382,5 +532,7 @@ void sched_init(void)
     serial_hex((uint64_t)stacks);
     serial_puts("; boot thread id ");
     serial_dec(boot->id);
+    serial_puts(", idle thread id ");
+    serial_dec(idle->id);
     serial_puts("\r\n");
 }

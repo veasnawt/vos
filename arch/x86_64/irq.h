@@ -13,11 +13,12 @@
  * cannot raise an IRQ vector with "int n" (#GP), and the CPU clears IF on
  * every entry.
  *
- * IF policy: the kernel always runs with IF = 0 and never executes sti; only
- * ring 3 runs with IF = 1 (entry RFLAGS 0x202). A hardware interrupt can
- * therefore only interrupt ring 3; it is handled on the TSS.RSP0 stack,
- * acknowledged, and the program resumes. An IRQ vector seen from ring 0 is a
- * kernel error (panic). Only IRQ0 is unmasked; the cascade line stays masked
+ * IF policy: the kernel runs with IF = 0; ring 3 runs with IF = 1 (entry
+ * RFLAGS 0x202). The one exception is the idle thread's "sti; hlt" (N2.2):
+ * a hardware interrupt taken there is acknowledged and returns to the idle
+ * loop, which immediately executes cli. A hardware interrupt from ring 3 is
+ * handled on the TSS.RSP0 stack, acknowledged, and the program resumes. Any
+ * other IRQ vector seen from ring 0 is a kernel error (panic). Only IRQ0 is unmasked; the cascade line stays masked
  * because no slave line is used.
  */
 #ifndef VOS_X86_64_IRQ_H
@@ -63,7 +64,8 @@ struct irq_stats {
  */
 void irq_init(void);
 /*
- * Handle one hardware interrupt taken from ring 3 (frame vector 0x20-0x2F):
+ * Handle one hardware interrupt taken from ring 3, or by the idle thread in
+ * its "sti; hlt" (N2.2, see thread.h) (frame vector 0x20-0x2F):
  * classify it at the controller, count it, acknowledge it before returning
  * and check that it left service. Panics for a vector that is not in service
  * at the controller, for one still in service after EOI, for nesting and if
@@ -72,6 +74,7 @@ void irq_init(void);
 struct exc_frame;
 void irq_handle(struct exc_frame *f);
 uint64_t irq_ticks(void);                   /* timer interrupts handled since irq_init */
+int irq_in_handler(void);                   /* nonzero inside irq_handle */
 const struct irq_stats *irq_stats(void);
 const struct irq_chip *irq_chip(void);
 

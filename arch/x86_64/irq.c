@@ -110,6 +110,11 @@ void irq_handle(struct exc_frame *f)
     handling = 0;
 }
 
+int irq_in_handler(void)
+{
+    return handling;
+}
+
 uint64_t irq_ticks(void)
 {
     return ticks;

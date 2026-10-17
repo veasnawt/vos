@@ -120,6 +120,9 @@ int sched_idle_irq(const struct exc_frame *f);
 /* Test hooks: the record for an ID (or NULL), and the run-queue order (returns the length). */
 struct thread *thread_test_get(uint64_t id);
 unsigned sched_test_runq(uint64_t *ids, unsigned max);
+/* The last ring-0 IRQ frame taken by the idle thread, and the idle thread's stack. */
+void sched_test_last_idle_irq(uint64_t *rip, uint64_t *rflags, uint64_t *rsp, uint64_t *idle_lo,
+                              uint64_t *idle_hi);
 #endif
 
 #endif
