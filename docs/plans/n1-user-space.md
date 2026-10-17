@@ -316,10 +316,44 @@ stage is implemented.
   - **Not done / not tested:** SMAP (still disabled; section 9.4 prerequisites 2–6 remain for any
     future direct user access), `copy_to_user`, real hardware.
 
-### N1.7 — User runtime and `hello` (build only) [Planned]
+### N1.7 — User runtime and `hello` (build only) [Implemented and verified]
 - `user/` tree: `crt0.S` (section 8.3), system-call stubs (the only place `int $0x80` appears),
   ABI note, linker script with explicit page alignment, `hello.c`, build-time ELF checks
   (`readelf`, already installed).
+- **Status (verified 2026-10-17; static validation only, nothing is loaded or run):**
+  `user/` (`include/vos/syscall.h`, `lib/{crt0.S,syscall.S,abi_note.S,user.ld}`, `hello/hello.c`,
+  `tests/` fixtures, `user.mk`), `scripts/check-user-elf.sh`, `scripts/test-user-elf.sh`.
+  `make ARCH=x86_64 user` builds `build/x86_64/user/hello.elf`; `user-test` runs as part of the
+  x86_64 `arch-test`, so `make test-all` covers it (108 checks).
+  - **Runtime:** `vos_exit` and `vos_debug_write` are out-of-line System V functions in
+    `syscall.S`, the only `int $0x80` in user space (checked by disassembly); numbers and error
+    values come from `vos/syscall.h`, checked equal to the kernel's by the tests. `crt0` records
+    the entry RSP (`__vos_entry_rsp`, the runtime's only writable state), clears RBP, keeps RSP
+    16-byte aligned, calls `main(void)` and passes its result to `vos_exit` (then `ud2`). Not
+    provided: argc/argv/envp, auxiliary vector, TLS, atexit, stdio, heap, FPU.
+  - **Build:** `-ffreestanding -nostdinc` (only GCC's own headers), non-PIC, `-mgeneral-regs-only`,
+    no stack protector, `-fcf-protection=none`, no unwind tables; `ld -nostdlib -static
+    -z noexecstack -z max-page-size=0x1000 -z norelro --build-id=none -T user/lib/user.ld`. Two
+    clean builds give the same SHA-256 (`c6c64161…cd06`).
+  - **Layout of `hello.elf` (13,128 bytes; the commit message of `99c43f8` says 13,240, which was
+    an earlier build):** `PT_LOAD` R-X `0x400000` (0x52 bytes, file offset 0x1000), R `0x401000`
+    (0x28), RW `0x402000` (0x8); `PT_NOTE` at `0x401014` (20 bytes, align 4); `PT_GNU_STACK` RW;
+    entry `0x400000`. Every executable has exactly these three loads: crt0 guarantees the RW
+    segment is non-empty (ld would otherwise emit an empty `PT_LOAD`), the note keeps R non-empty.
+  - **Linker refusals:** `user.ld` fails the link for TLS (`.tdata`/`.tbss`) and unless there is
+    exactly one 20-byte VOS note. Observed: `ld -pie` together with `-static` and this script
+    yields `ET_EXEC`, not a PIE; the PIE negative test uses ld's default script.
+  - **Validator additions to section 8.4** (N1.8's loader should enforce the same): `EI_PAD`
+    zero; `e_phoff >= 64` and 8-aligned; `PT_NULL` rejected like any other unlisted type; every
+    64-bit field below 2^40. Build-time only (section headers, disassembly): no relocation,
+    dynamic or TLS sections, no `%fs`/`%gs` operands, no x87/MMX/SSE instructions.
+  - **Tests:** hello accepted with the expected profile; no kernel image (production and all test
+    images) contains the runtime symbols or hello's code bytes; 58 single-field and 3 file-size
+    corruptions each rejected for their own reason; toolchain-built negatives (missing/duplicate
+    note refused at link time and rejected when linked without the assertions, W+X, executable
+    stack, `--emit-relocs`, a real PIE, x87 code, TLS). Disabling any of 18 validator rules makes
+    at least one test fail. Two gaps found by the tests were fixed (TLS was accepted; a missing
+    note gave an empty `PT_NOTE`).
 
 ### N1.8 — Static ELF64 loader, `hello` runs [Planned]
 - Validation of section 8.4 before any allocation; copy segments; map with section 6.1
@@ -503,7 +537,7 @@ _start:
 - **Test:** `t_stack_align` declares a 16-byte-aligned local array in `main` and in a nested
   call and checks its address; GCC relies on the incoming alignment, so a misaligned entry fails.
 
-### 8.4 ELF64 requirements (concern E) [Planned]
+### 8.4 ELF64 requirements (concern E) [Build-time validator in N1.7; loader planned for N1.8]
 All arithmetic is overflow-checked, and validation finishes before any allocation. Section
 headers are ignored entirely; nothing is read through `e_shoff`.
 
