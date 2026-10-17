@@ -84,7 +84,7 @@ Each stage ends with `make test-all` green and the i386 kernel binary byte-ident
 pre-stage build (all N1 work is x86_64-only). File names for new files are proposals until the
 stage is implemented.
 
-### N1.0 — Kernel infrastructure preparation [Planned]
+### N1.0 — Kernel infrastructure preparation [Implemented and verified]
 - Move port I/O and MSR helpers into `arch/x86_64/cpu.h`; address-layout constants into
   `arch/x86_64/memlayout.h`; serial/VGA code into `arch/x86_64/console.{c,h}`.
 - Add freestanding `memset`, `memcpy`, `memcmp`, `strlen` (`arch/x86_64/lib.{c,h}`).
@@ -94,6 +94,12 @@ stage is implemented.
 - Compile-time test cases (`VOS_TEST_CASE`), first case `panic`.
 - `scripts/exit-test.sh`: several markers (`MARKER... --` form), optional `DIAG=1` diagnostics,
   unchanged behaviour for existing calls.
+- **Status:** implemented as described, verified 2026-10-17 with `make test-all` (all passing,
+  including P0). `VOS_TEST_CASE=<name>` requires `VOS_TEST=1` and builds into
+  `build/x86_64-test-<name>/`; `exit-test.sh` takes `MARKER... --` (the single-marker form is
+  unchanged). Production serial output differs from `828e5a1` only in `rip` and the
+  Multiboot2 info address. i386 `vos.bin` SHA-256 `0760e7eb…9dd` is identical to a clean build of
+  `828e5a1`. Not covered: the VGA panic text was not inspected.
 - **Acceptance:** existing serial output unchanged apart from layout-dependent addresses; the
   `panic` case exits 35 with `panic: test case: deliberate panic` and `VOS-TEST: FAIL`; i386
   binary byte-identical.
