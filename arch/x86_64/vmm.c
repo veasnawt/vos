@@ -79,6 +79,12 @@ static int check_va(uint64_t va)
 
 #ifdef VOS_TEST
 static int table_budget = -1;
+static uint64_t removed_identity_pdpt;
+
+uint64_t vmm_test_identity_pdpt(void)
+{
+    return removed_identity_pdpt;
+}
 
 void vmm_test_table_budget(int n)
 {
@@ -468,6 +474,9 @@ int vmm_remove_identity(void)
         return VMM_ESTATE;
     }
 
+#ifdef VOS_TEST
+    removed_identity_pdpt = l4[0] & PTE_ADDR;
+#endif
     l4[0] = 0;
     uint64_t cr4 = read_cr4();
     if (cr4 & CR4_PGE) {                /* global entries survive a CR3 reload */

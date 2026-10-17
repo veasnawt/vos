@@ -13,6 +13,7 @@
 #include "lib.h"
 #include "memlayout.h"
 #include "pmm.h"
+#include "vmm.h"
 
 extern char __kernel_phys_start[], __kernel_phys_end[];
 
@@ -410,7 +411,7 @@ int selftest_pmm_kernel(const struct boot_info *bi, const struct resv_table *t)
     uint64_t cr3 = read_cr3() & ~(PAGE_SIZE - 1);
     const uint64_t *pml4 = phys_to_virt(cr3);
     uint64_t pdpt_hi = pml4[511] & 0x000FFFFFFFFFF000ULL;
-    uint64_t pdpt_lo = pml4[0] & 0x000FFFFFFFFFF000ULL;
+    uint64_t pdpt_lo = vmm_test_identity_pdpt();        /* PML4[0] is cleared by now */
     uint64_t pd = ((const uint64_t *)phys_to_virt(pdpt_hi))[510] & 0x000FFFFFFFFFF000ULL;
     uint64_t rsp;
     struct dtr gdtr, idtr;
@@ -424,6 +425,7 @@ int selftest_pmm_kernel(const struct boot_info *bi, const struct resv_table *t)
     expect_protected(k, (uint64_t)__kernel_phys_end - 1, "last kernel frame protected");
     expect_protected(k, cr3, "boot PML4 (CR3) protected");
     expect_protected(k, pdpt_hi, "boot higher-half PDPT protected");
+    expect(pdpt_lo != 0, "boot identity PDPT known");
     expect_protected(k, pdpt_lo, "boot identity PDPT protected");
     expect_protected(k, pd, "boot page directory protected");
     expect_protected(k, rsp - KERNEL_VMA, "current kernel stack protected");

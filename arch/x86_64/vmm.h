@@ -109,6 +109,8 @@ const char *vmm_diagnostic(void);       /* detail for the last VMM_ESTATE */
 #ifdef VOS_TEST
 /* Test hook: allow n more page-table allocations, then fail (-1 = unlimited). */
 void vmm_test_table_budget(int n);
+/* Test hook: the boot identity PDPT that PML4[0] pointed to before removal. */
+uint64_t vmm_test_identity_pdpt(void);
 #endif
 
 #endif

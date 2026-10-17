@@ -202,12 +202,17 @@ void kernel_main(uint32_t mb2_magic, uint32_t mb2_info)
     serial_puts(" x 2 MiB supervisor pages, ");
     serial_dec(audit.tables_lower);
     serial_puts(" lower-half tables\r\n");
+#ifdef VOS_TEST_CASE_kernel_lowaccess
+    /* Immediately, before anything else can flush the TLB: proves the CR3 reload too. */
+    selftest_vmm_fault_lowaccess();
+#endif
 
     serial_puts(first_failure ? "boot: FAILED\r\n" : "boot: checks passed\r\n");
 #ifdef VOS_TEST
     check(selftest_bootinfo() == 0, "bootinfo/reservation self-test");
     check(selftest_pmm_synthetic() == 0, "pmm synthetic self-test");
     check(selftest_pmm_kernel(&bi, &boot_resv) == 0, "pmm kernel self-test");
+    check(selftest_vmm() == 0, "vmm self-test");
 #ifdef VOS_TEST_CASE_modules
     check(selftest_modules(&bi, &boot_resv) == 0, "GRUB module delivery");
 #endif
@@ -220,6 +225,15 @@ void kernel_main(uint32_t mb2_magic, uint32_t mb2_info)
 #endif
 #ifdef VOS_TEST_CASE_kernel_ud
     __asm__ volatile ("ud2");
+#endif
+#ifdef VOS_TEST_CASE_vmm_stale_tlb
+    selftest_vmm_fault_stale_tlb();
+#endif
+#ifdef VOS_TEST_CASE_vmm_nx
+    selftest_vmm_fault_nx();
+#endif
+#ifdef VOS_TEST_CASE_vmm_readonly
+    selftest_vmm_fault_readonly();
 #endif
 #ifdef VOS_TEST_CASE_kernel_df
     /*
