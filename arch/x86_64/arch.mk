@@ -51,7 +51,8 @@ arch-test: iso
 	QEMU=$(QEMU) FAIL_PATTERN='FAILED|check failed|boot error|rejected|killed' \
 	    scripts/test.sh $(ISO) $(BUILD)/serial.log 'Hello from VOS!' 'boot: checks passed' \
 	    'elf: hello: ET_EXEC entry 0x400000' 'user[hello]: Hello from VOS!' \
-	    'proc[hello]: exited status 0, all frames reclaimed'
+	    'proc[hello]: exited status 0, all frames reclaimed' 'kmap: after the TLB flush the CPU refused' \
+	    'vmm: audit passed: '
 	$(MAKE) --no-print-directory ARCH=$(ARCH) VOS_TEST=1 iso
 	scripts/exit-test.sh boot-128M $(TEST_ISO) 33 'user[hello-asm]: Hello from VOS!' \
 	    'user[hello-asm]: second call resumed' 'user[badptr]: ABCD' 'user[forge]: VOS-FORGED-MARKER' \
@@ -59,7 +60,8 @@ arch-test: iso
 	    'proc[hello]: exited status 0, all frames reclaimed' 'selftest: elf ' \
 	    ' corrupted executables rejected for the intended reason' 'selftest: pmm-synthetic ' \
 	    'selftest: pmm-kernel ' 'selftest: 1000 frames from ' 'selftest: vmm ' 'selftest: user ' \
-	    'selftest: kmap ' 'kmap: phys 0-2 MiB as 4 KiB pages: ' 'VOS-TEST: PASS' --
+	    'selftest: kmap ' 'kmap: phys 0-2 MiB as 4 KiB pages: ' \
+	    'kmap: after the TLB flush the CPU refused a text write' 'vmm: audit passed: ' 'VOS-TEST: PASS' --
 	MEM=2G scripts/exit-test.sh boot-2G $(TEST_ISO) 33 'selftest: pmm-synthetic ' \
 	    'selftest: pmm-kernel ' 'selftest: 1000 frames from ' 'selftest: vmm ' 'selftest: user ' \
 	    'selftest: kmap ' 'VOS-TEST: PASS' --

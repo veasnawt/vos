@@ -1,6 +1,7 @@
 #include "kmap.h"
 #include "console.h"
 #include "cpu.h"
+#include "exception.h"
 #include "gdt.h"
 #include "idt.h"
 #include "lib.h"
@@ -20,6 +21,34 @@ extern char boot_kstack_guard[], kernel_stack[], kernel_stack_top[];
 #define PTE_RO          (PTE_P | PTE_NX)                        /* R-- */
 #define PTE_RW          (PTE_P | PTE_W | PTE_NX)                /* RW- */
 #define PDE_RW_2M       (PTE_P | PTE_W | PTE_PS | PTE_NX)       /* RW- */
+
+/*
+ * Fault-tolerant single accesses for kmap_init (see kmap_probe_fault): a
+ * byte load, or a load and a store of the same byte. They return 0, or 1 if
+ * the marked instruction raised a #PF while a probe was armed.
+ */
+int kmap_probe_read(uint64_t va);
+int kmap_probe_write(uint64_t va);
+extern char kmap_probe_load[], kmap_probe_store[], kmap_probe_fixup[];
+__asm__ (
+    ".pushsection .text\n"
+    "kmap_probe_read:\n"
+    "kmap_probe_load:\n"
+    "    movb (%rdi), %al\n"
+    "    xor %eax, %eax\n"
+    "    ret\n"
+    "kmap_probe_write:\n"
+    "    movb (%rdi), %cl\n"
+    "kmap_probe_store:\n"
+    "    movb %cl, (%rdi)\n"
+    "    xor %eax, %eax\n"
+    "    ret\n"
+    "kmap_probe_fixup:\n"
+    "    ret\n"
+    ".popsection\n");
+
+static volatile int probe_armed;
+static volatile uint64_t probe_err;
 
 static uint64_t kpd[512] __attribute__((aligned(4096)));
 static uint64_t kpt[512] __attribute__((aligned(4096)));
@@ -329,6 +358,30 @@ int kmap_check_running(const uint64_t *pd, const uint64_t *pt, uint64_t pt_pa, i
 
 /* ---- the transition ---- */
 
+int kmap_probe_fault(struct exc_frame *f)
+{
+    if (!probe_armed || f->vector != 14 || f->cs != GDT_KERNEL_CS ||
+        (f->rip != kva(kmap_probe_load) && f->rip != kva(kmap_probe_store)))
+        return 0;
+    probe_armed = 0;
+    probe_err = f->error;
+    f->rax = 1;
+    f->rip = kva(kmap_probe_fixup);     /* returns to the probe's caller */
+    return 1;
+}
+
+/* 1 if the access faulted with error code err. */
+static int probe_faults(uint64_t va, int write, uint64_t err)
+{
+    int r;
+
+    probe_err = ~0ULL;
+    probe_armed = 1;
+    r = write ? kmap_probe_write(va) : kmap_probe_read(va);
+    probe_armed = 0;
+    return r == 1 && probe_err == err;
+}
+
 static void flush_all(void)
 {
     uint64_t cr4 = read_cr4();
@@ -385,9 +438,20 @@ int kmap_init(const struct boot_info *bi)
     if (kmap_check(kpd, kpt, kphys(kpt), 0, bi))
         return -1;
 
-    /* 3. Switch: one entry, then drop every cached translation and paging-structure entry. */
+    /*
+     * 3. Switch: one entry, then drop every cached translation and paging-
+     * structure entry. Just before, the text page and a guard page are
+     * accessed through the old (writable, executable) map, so the TLB holds
+     * their old translations; right after, the CPU must refuse a write to the
+     * text and a read of the guard. This proves the flush, not only the tables.
+     */
+    uint64_t text_probe = kva(kmap_probe_fixup), guard_probe;
+    kmap_guard_pages(&guard_probe, 1);
+    if (probe_faults(text_probe, 1, 0) || probe_faults(guard_probe, 0, 0))
+        return failed("old map", "text or guard page not accessible before the switch", text_probe);
     pdpt[510] = kphys(kpd) | PDE_TABLE;
     flush_all();
+    int text_ro = probe_faults(text_probe, 1, 0x3), guard_absent = probe_faults(guard_probe, 0, 0x0);
 
     /*
      * 4. Check the live tables through the walker (this code, its stack and the
@@ -396,10 +460,15 @@ int kmap_init(const struct boot_info *bi)
     const uint64_t *lpd = phys_to_virt(pdpt[510] & PTE_ADDR);
     const uint64_t *lpt = phys_to_virt(lpd[0] & PTE_ADDR);
     probe = 0x6B6D6170;                 /* "kmap": a write through the new map */
-    if (kmap_check(lpd, lpt, lpd[0] & PTE_ADDR, 1, bi) || probe != 0x6B6D6170) {
+    if (!text_ro || !guard_absent || kmap_check(lpd, lpt, lpd[0] & PTE_ADDR, 1, bi) ||
+        probe != 0x6B6D6170) {
         pdpt[510] = old;
         flush_all();
-        if (!fail.problem)
+        if (!text_ro)
+            failed("kernel text", "still writable by the CPU after the switch (stale TLB?)", text_probe);
+        else if (!guard_absent)
+            failed("stack guard page", "still readable by the CPU after the switch (stale TLB?)", guard_probe);
+        else if (!fail.problem)
             failed("post-switch probe", "failed", (uint64_t)&probe);
         return -1;
     }
@@ -435,6 +504,8 @@ int kmap_init(const struct boot_info *bi)
     serial_puts(" -> ");
     serial_hex(kphys(kpd));
     serial_puts(", checked before and after the switch; boot directory retired\r\n");
+    serial_puts("kmap: after the TLB flush the CPU refused a text write (#PF err=0x3) and a guard read "
+                "(#PF err=0x0)\r\n");
     return 0;
 }
 

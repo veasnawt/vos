@@ -13,9 +13,9 @@ struct exc_frame {
 };
 
 /*
- * Returns TRAP_RESUME only to resume a validated user system-call frame (the
- * entry stub then restores the registers and IRETQs); otherwise it does not
- * return. The value is repeated in entry.S.
+ * Returns TRAP_RESUME only to resume a validated user system-call frame or
+ * an armed kmap_init probe (kmap_probe_fault); the entry stub then restores
+ * the registers and IRETQs. Otherwise it does not return. The value is repeated in entry.S.
  */
 #define TRAP_RESUME 0x52455355u
 uint64_t exception_handler(struct exc_frame *f);

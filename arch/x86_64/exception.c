@@ -5,6 +5,7 @@
 #include "panic.h"
 #include "process.h"
 #include "idt.h"
+#include "kmap.h"
 
 static const struct { const char *name, *msg; } exc_info[32] = {
     [0]  = { "#DE", "#DE divide error" },
@@ -62,6 +63,8 @@ uint64_t exception_handler(struct exc_frame *f)
         return proc_user_trap(f);
     if (f->cs != GDT_KERNEL_CS)
         panic("trap with an unexpected code segment");
+    if (kmap_probe_fault(f))
+        return TRAP_RESUME;             /* an armed kmap_init probe: expected, recorded */
     if (f->vector == IDT_SYSCALL) {
         serial_puts("exc: int $0x80 from ring 0, rip=");
         serial_hex(f->rip);

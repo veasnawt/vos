@@ -23,7 +23,10 @@
  * IDT, TSS, page tables, allocator bitmaps, boot information, modules)
  * before PDPT[510] is switched and every non-global translation is flushed;
  * the same checks then run on the live tables through the page-table walker.
- * If the post-switch check fails, the old directory is restored. Rollback
+ * Right before the switch the text and a guard page are accessed through the
+ * old map; right after it, a write to the text and a read of the guard must
+ * fault (probes recovered by kmap_probe_fault), which shows the TLB flush
+ * took effect. If any post-switch check fails, the old directory is restored. Rollback
  * cannot help when the switch itself makes the running code, its stack or
  * the exception path unreachable: the CPU then faults (or triple-faults and
  * resets) before any check can run. That is why the pre-switch check exists.
@@ -78,6 +81,15 @@ int kmap_check(const uint64_t *pd, const uint64_t *pt, uint64_t pt_pa, int live,
 /* Only the second half of kmap_check: the addresses the running kernel needs. */
 int kmap_check_running(const uint64_t *pd, const uint64_t *pt, uint64_t pt_pa, int live,
                        const struct boot_info *bi);
+
+struct exc_frame;
+/*
+ * Called by the exception handler for every ring-0 trap: if it is a #PF of
+ * one of kmap_init's armed probe instructions (exactly those two addresses,
+ * only while armed), record it, redirect the frame to the probe's return
+ * and return 1; otherwise 0, and the fault is handled as a kernel error.
+ */
+int kmap_probe_fault(struct exc_frame *f);
 
 #ifdef VOS_TEST
 /* Test hook: the live directory and table, and the physical address of the table. */

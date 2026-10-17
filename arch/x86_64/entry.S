@@ -5,10 +5,11 @@
  * exception_handler(frame) on a 16-byte-aligned stack. In 64-bit mode the
  * CPU pushes SS:RSP for every interrupt, with or without a privilege change,
  * so the layout is the same for traps from ring 0 and ring 3 (from ring 3 it
- * is on the TSS.RSP0 stack). Kernel traps panic; user exits and faults resume
- * the kernel through user_return. Only a validated, non-terminating user
- * system call returns TRAP_RESUME: the stub then restores every register from
- * the frame (rax holds the result) and IRETQs to the same process.
+ * is on the TSS.RSP0 stack). Kernel traps panic, except a #PF of one of
+ * kmap_init's armed probe instructions; user exits and faults resume the
+ * kernel through user_return. Only a validated, non-terminating user system
+ * call or such a probe returns TRAP_RESUME: the stub then restores every
+ * register from the frame (rax holds the result) and IRETQs.
  */
 .set TRAP_RESUME, 0x52455355
 .macro EXC_STUB n, has_err
