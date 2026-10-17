@@ -6,8 +6,9 @@ at run time; GRUB loads it directly.
 
 Today VOS can boot, protect itself from the programs it runs, and run one separately built
 native program (`hello`) in user mode, with a hardware timer interrupting it about 100 times a
-second. It has **no** graphical desktop, interactive shell, keyboard input, file system,
-networking, scheduler or multitasking: one program runs at a time, until it exits. It has only been
+second. Inside the kernel, cooperative kernel threads take turns. It has **no** graphical
+desktop, interactive shell, keyboard input, file system, networking or multitasking of user
+programs: one program runs at a time, until it exits. It has only been
 tested in the QEMU emulator.
 
 ## What happens when x86_64 VOS boots
@@ -64,7 +65,7 @@ end, so `timeout` stops QEMU after a few seconds):
 
 The last lines should be:
 
-    app: module "hello" at 0x165000-0x168348, 13128 bytes
+    app: module "hello" at 0x190000-0x193348, 13128 bytes
     elf: hello: ET_EXEC entry 0x400000, 3 PT_LOAD, 3 pages, VOS ABI 0
     user[hello]: Hello from VOS!
     proc: exit status 0 (cs=0x23 rip=0x40002a)
@@ -85,6 +86,8 @@ is expected, because the kernel halts instead of powering off. How to read the l
 
 `make ARCH=x86_64 run` boots the same image in a QEMU window, which shows the VGA screen
 (`Hello from VOS!` from the kernel); the program's output is only on the serial port.
+`make ARCH=x86_64 debug` starts the same image halted, waiting for a debugger on TCP port 1234
+(GDB is not part of the requirements; see `docs/plans/n2-foundation.md`, section 8).
 
 ## Tests
 
@@ -102,6 +105,9 @@ Every QEMU run is headless, sequential and has a timeout. The x86_64 tests inclu
 - kernel self-tests (boot information, memory managers, page tables, the W^X kernel map and its
   checker, user mode, ELF loading);
 - deliberate kernel faults, which must panic with the expected diagnostics;
+- kernel-thread tests (since N2.2): threads alternating, registers and stacks surviving switches,
+  blocking and waking, thread exit and stack reclamation, the idle thread taking timer interrupts,
+  and failure cases (thread stack overflow, deadlock);
 - timer-interrupt tests (since N2.1): separately built programs that loop forever, check their
   registers or try to switch interrupts off, run while the timer interrupts them; a test-only
   tick budget in the kernel ends them;
@@ -120,7 +126,8 @@ Every QEMU run is headless, sequential and has a timeout. The x86_64 tests inclu
 - `Makefile` – shared build; includes `arch/<ARCH>/arch.mk` and, for x86_64, `user/user.mk`
 - `arch/i386/` – the 32-bit kernel
 - `arch/x86_64/` – the 64-bit kernel: boot (`boot.S`), CPU and interrupts (`cpu.c`, `gdt.c`,
-  `idt.c`, `entry.S`, `exception.c`, `irq.c`, `pic.c`, `pit.c`), memory (`pmm.c`, `vmm.c`, `kmap.c`, `resv.c`, `bootinfo.c`),
+  `idt.c`, `entry.S`, `exception.c`, `irq.c`, `pic.c`, `pit.c`), kernel threads (`thread.c`,
+  `thread_switch.S`), memory (`pmm.c`, `vmm.c`, `kmap.c`, `resv.c`, `bootinfo.c`),
   processes and system calls (`process.c`, `usermode.S`, `syscall.c`, `usercopy.c`), executables
   (`elf.c`, `loader.c`, `app.c`), and `selftest*.c` for test builds
 - `user/` – user space: `include/vos/syscall.h`, `lib/` (runtime, ABI note, linker script),
@@ -137,8 +144,9 @@ The `m1-32bit` tag marks the original known-good 32-bit baseline.
 - `docs/plans/n1-user-space.md` – the completed N1 milestone: design, stages and verified results
 - `docs/architecture/native-software-platform.md` – the long-term native software architecture
   (proposal), with the current state and security boundaries in its section 3
-- `docs/plans/n2-foundation.md` – the N2 roadmap; N2.0 (kernel W^X, protected stacks) and N2.1
-  (interrupt controller, timer) are done, later stages need approval
+- `docs/plans/n2-foundation.md` – the N2 roadmap; N2.0 (kernel W^X, protected stacks), N2.1
+  (interrupt controller, timer) and N2.2 (kernel threads, scheduler) are done, later stages need
+  approval
 - `docs/vision/product-direction.md` – provisional long-term product direction (not a specification)
 
 ## History

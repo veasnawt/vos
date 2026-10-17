@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| Status | **Approved as the current development plan (2026-10-18), revised after the N2 architecture review.** **N2.0 and N2.1 are complete (2026-10-18, sections 3.1 and 3.2).** N2.2 and every later stage need explicit approval. Sections marked [Proposal] or [Option] are still design, not implementation. |
+| Status | **Approved as the current development plan (2026-10-18), revised after the N2 architecture review.** **N2.0, N2.1 and N2.2 are complete (2026-10-18, sections 3.1–3.3).** N2.3 and every later stage need explicit approval. Sections marked [Proposal] or [Option] are still design, not implementation. |
 | Date | 2026-10-17, revised 2026-10-18 |
 | Starting point | N1 complete (see `docs/plans/n1-user-space.md`, `docs/abi/syscall-v0.md`) |
 | Target | `ARCH=x86_64`; the i386 kernel stays as it is |
@@ -228,6 +228,96 @@ only: no timekeeping, no timers, no sleeping. The tick budget is test-only and m
 the production policy. Spurious IRQ7/15 handling is tested only synthetically (QEMU produced
 none). APIC, IOAPIC, ACPI and SMP stay out.
 
+### 3.3 N2.2 result: kernel threads and the first scheduler (complete)
+
+**What exists.** `thread.c`/`thread.h`, `thread_switch.S`. A fixed pool of 8 thread records
+(64-bit IDs from 1, never reused) and 7 static 16 KiB kernel stacks in `.bss`, each directly
+above its own 4 KiB guard page; the guards are part of the kernel map's guard list, so the W^X
+map leaves them unmapped (12 guard pages in all). Record 0 is the boot thread (`kernel_main`, on
+the boot stack); one record is the idle thread; 6 are left for kernel threads. No heap: a full
+pool returns `THREAD_ENOMEM`. States: free, runnable, running, blocked, dead.
+
+**Context switch.** `context_switch` is a function call that saves `rbx, rbp, r12–r15` and RSP
+and loads another thread's; caller-saved registers are the compiler's business, flags are not
+switched (IF is always 0 at a switch), CR3 never changes (all threads share the kernel address
+space), and the kernel has no FPU/SIMD state. A new thread starts from an initial frame whose
+return address is `thread_start`, with RSP 16-byte aligned for its first call. Every switch
+checks: IF = 0, the kernel CR3, no user program running, the target runnable, its saved RSP
+inside its own stack (and `% 16 == 8`), the stack owned by it, canaries intact, TSS.RSP0 not
+inside a thread stack.
+
+**Scheduler.** Cooperative round robin over a FIFO run queue: `thread_yield`, `thread_block` /
+`thread_wake_one` / `thread_wake_all` on FIFO wait queues (the mechanism later IPC will use),
+`thread_sleep(ticks)`, `thread_exit`. A dead thread is reaped by the next thread to run (after
+the switch away): canary check, stack poisoned in test builds, record and slot freed. Sleepers
+are woken by the scheduler in thread context, never by the interrupt handler. If every thread is
+blocked and none sleeps, the idle thread panics ("lost wakeup?") instead of halting forever.
+
+**Interrupt-state policy.** All scheduler entry points run with IF = 0, in thread context (never
+inside `irq_handle`), with no user program running. The kernel is non-preemptive: a thread runs
+until it yields, blocks, sleeps or exits; the timer never switches threads. The idle thread runs
+only when nothing else can; it waits with `sti; hlt` followed by `cli`. That `hlt` (and the
+`cli` after it) is the only kernel code that ever runs with IF = 1. A hardware interrupt in ring
+0 is accepted only if its frame is exactly that state (kernel CS/SS, RIP right after `hlt`,
+IF 1, IOPL 0, VM 0, saved RSP and frame on the idle stack, the idle thread current); it is
+acknowledged and returns to the idle loop, which disables interrupts at once and checks that
+nothing is left in service. The IRETQ back restores IF = 1, so an interrupt that became pending
+meanwhile can be taken just before the `cli`, with the same return address (observed once under
+TCG: two ticks in one halt). Every other ring-0 IRQ still panics. Interrupt frames from ring 0
+have the same layout as from ring 3 (64-bit mode always pushes SS:RSP) but stay on the current
+stack; there is no IST for IRQs.
+
+**User programs (unchanged boundary).** `proc_run` stays synchronous and is allowed only on the
+boot thread (a worker thread trying it panics); TSS.RSP0 stays the single dedicated entry stack;
+an interrupt from ring 3 never switches threads. ABI v0, entry RFLAGS `0x202`, system calls and
+fault isolation are unchanged. Per-thread RSP0, user processes on their own threads and CR3
+switching are N2.3 work.
+
+**Evidence (QEMU TCG).** `selftest: sched 37 cases, 0 failed` in every test image, all kernel-side
+verdicts: guard pages unmapped and listed, stacks RW NX and disjoint; run-queue order and
+`A B C A B C A B C` alternation; callee-saved registers of three threads intact over 20+
+switches each; stack isolation; deferred reaping seen by the next thread (record free, stack
+poisoned); pool exhaustion and slot reuse with increasing IDs; the idle thread taking every timer
+IRQ of a 5-tick sleep in ring 0 with the frame checked; blocked threads never on the run queue or
+scheduled; FIFO wakeups; producer/consumer without lost or extra wakeups; sleep duration; the last
+runnable thread exiting while the boot thread sleeps; ten crafted frames for the ring-0 IRQ
+check. Typical run: 25 threads created, 156 switches, 24 reaped, idle halted 12 times and took 12
+timer IRQs. Isolated cases: a kernel thread's stack overflow ends in #DF on IST1 with CR2 in that
+thread's guard page (`check-fault.sh`), a deadlock ends in the lost-wakeup panic, a user program
+on a worker thread is refused. `hello`, the 41-case suite and the 9-case interrupt suite run
+after the scheduler tests.
+
+**Mutations.** All 19 were caught with a specific diagnostic: wrong saved RSP, r13 not
+restored, block without the blocked state, reuse of a live stack (also with the ownership check
+removed: CPU #UD), freeing the running thread's stack (also without the in-use check: RIP
+`0xdddd…` from the poisoned stack), wrong TSS.RSP0, run-queue tail corruption, sleep wakeup of
+blocked threads, dead threads never reaped, a lost wakeup, idle without `cli`, an idle IRQ not
+acknowledged, a thread guard page mapped, user programs on worker threads, and the ring-0 IRQ
+check without its thread, RIP or IF condition. Two needed new checks first: a missing
+acknowledgement on the idle path only hung until the idle loop checked the in-service registers,
+and the RIP condition went unnoticed until the ring-0 IRQ check got its own crafted-frame tests.
+
+**Regression at the end of N2.2:** `make test` and `make ARCH=x86_64 test` (42 QEMU runs each)
+and `make test-all` (43) pass; ten `check-fault.sh` comparisons (nine N2.0 cases and the thread
+stack overflow) and the genuine NMI case (IST2); 264 user/ELF checks; the 41-case isolation suite
+and the 9-case interrupt suite under qemu64, 2 GiB and `-cpu max` with free frames equal before
+and after; `selftest: kmap 49`, `irq 22`, `sched 37`, `user 151` cases with 0 failures. Two
+clean builds of the x86_64 kernel are byte-identical. `make ARCH=i386 test` passes and the i386
+`vos.bin` SHA-256 is still `0760e7eb8ecfcb8545f4126f5a369b0fadfc5163ad9e95c5fba2a81d45afb9dd`;
+`hello.elf` is unchanged (`c6c64161…cd06`).
+
+**Limits.** Cooperative only: a kernel thread that never yields keeps the CPU. One CPU, no
+locks (none are needed while the kernel is non-preemptive with IF = 0). Wakeups come only from
+threads and timed sleeps; there are no IRQ-driven wakeups yet. Stacks are static (7, 16 KiB, 4 KiB
+guards, no stack probing). No priorities, no timeouts on wait queues, no thread join beyond
+polling the state.
+
+**Constraints for N2.3.** Running user programs on their own threads needs a kernel stack and a
+TSS.RSP0 per thread (updated at every switch, never pointing at a freed stack), CR3 switching on
+the switch path, an ownership rule for the RSP0 frame check, preemption only when an interrupt
+comes from ring 3 (switching on the IRQ return path after EOI), and teardown of a process whose
+thread is not running.
+
 **Deferred beyond N2:** a general kernel heap, `SYSCALL`/`SYSRET`, a `spawn` system call and a
 user-visible `wait`, LAPIC/IOAPIC/ACPI, SMP, more than one thread per process, FPU/SIMD state,
 RAM above 1 GiB, device interrupts, storage, file systems, networking, graphics, a shell.
@@ -336,9 +426,12 @@ N2.0 limits in section 3.1).
 
 ## 8. Tooling (recorded, not installed)
 
-GDB is not installed. When approved: `sudo apt install gdb`, then debug with
-`qemu-system-x86_64 -cdrom build/x86_64/vos.iso -s -S ...` and
-`gdb build/x86_64/vos.bin -ex 'target remote :1234'`. The x86_64 kernel is built with `-g`
+GDB is not installed (approved in principle; installing it is a separate step). After
+`sudo apt install gdb`: `make debug` (N2.2) builds the image and starts QEMU halted, waiting for
+a debugger on TCP port 1234 (`-s -S`), with the serial port on the terminal; in another terminal
+`gdb build/x86_64/vos.bin -ex 'target remote :1234' -ex 'break kernel_main' -ex continue`.
+Useful scheduler breakpoints: `context_switch`, `thread_first_run`, `sched_idle_irq`, `panic`.
+Test images are debugged the same way with `build/x86_64-test*/vos.bin` and their ISO. The x86_64 kernel is built with `-g`
 from N2.0 so the debugger and `addr2line` can show source lines; the i386 flags are unchanged.
 A cross toolchain is not needed yet.
 

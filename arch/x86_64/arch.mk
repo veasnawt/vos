@@ -35,6 +35,9 @@ MULTIBOOT_CHECK := --is-x86-multiboot2
 #    runs separately built programs with IF = 1 under the PIT (endless loop
 #    killed by the test tick budget, register preservation, IF/IOPL lock,
 #    kernel IF = 0, sti) under qemu64, 2 GiB and -cpu max.
+#    N2.2: thread-overflow (#DF on IST1, CR2 in the thread's guard page),
+#    sched-deadlock (lost-wakeup panic) and proc-on-worker (user programs run
+#    only on the boot thread) must end in the expected panic (status 35).
 # 5. Isolation suite (N1.9): 41 separately built fixtures, each with its
 #    expected outcome in the trusted GRUB configuration, run under qemu64,
 #    2 GiB and -cpu max (SMEP/UMIP/SMAP on); SMEP and SMAP cases with -cpu
@@ -58,7 +61,7 @@ arch-test: iso
 	    scripts/test.sh $(ISO) $(BUILD)/serial.log 'Hello from VOS!' 'boot: checks passed' \
 	    'elf: hello: ET_EXEC entry 0x400000' 'user[hello]: Hello from VOS!' \
 	    'proc[hello]: exited status 0, all frames reclaimed' 'kmap: after the TLB flush the CPU refused' \
-	    'vmm: audit passed: '
+	    'vmm: audit passed: ' 'sched: 8 thread records, 7 guarded stacks of 16 KiB'
 	$(MAKE) --no-print-directory ARCH=$(ARCH) VOS_TEST=1 iso
 	scripts/exit-test.sh boot-128M $(TEST_ISO) 33 'user[hello-asm]: Hello from VOS!' \
 	    'user[hello-asm]: second call resumed' 'user[badptr]: ABCD' 'user[forge]: VOS-FORGED-MARKER' \
@@ -71,7 +74,7 @@ arch-test: iso
 	    'irq: 8259 master 0x20-0x27, slave 0x28-0x2f (cascade IRQ2); masks 0xfffe (IRQ0 only)' \
 	    'pit: channel 0 mode 2, divisor 11932 (99.998 Hz)' 'selftest: irq ' \
 	    'selftest: ring-3 timer interrupts ' 'proc: killed by the test tick budget after 20 timer ticks' \
-	    'VOS-TEST: PASS' --
+	    'selftest: sched ' 'selftest: scheduler: ' 'VOS-TEST: PASS' --
 	MEM=2G scripts/exit-test.sh boot-2G $(TEST_ISO) 33 'selftest: pmm-synthetic ' \
 	    'selftest: pmm-kernel ' 'selftest: 1000 frames from ' 'selftest: vmm ' 'selftest: user ' \
 	    'selftest: kmap ' 'VOS-TEST: PASS' --

@@ -3,7 +3,7 @@
 | | |
 |---|---|
 | Status | **Proposal.** Section 3 describes what milestone N1 implemented (tagged *Current*); everything else remains a proposal unless marked *Current*. |
-| Date | 2026-10-17 (written at `7c06bc6`; section 3 and the status notes updated after N1 at `74501a7`, after N2.0 and after N2.1 on 2026-10-18) |
+| Date | 2026-10-17 (written at `7c06bc6`; section 3 and the status notes updated after N1 at `74501a7`, after N2.0, N2.1 and N2.2 on 2026-10-18) |
 | Code baseline | after N1: the x86_64 kernel runs a separately built native application in ring 3 |
 | Scope | Native application model and public software interfaces of VOS, plus the separate compatibility architecture |
 | Out of scope | Implementing any of it; kernel Stage 2/3 work; UEFI |
@@ -86,7 +86,7 @@ recommendations:
 
 ---
 
-## 3. Current state after N1, N2.0 and N2.1 [Current]
+## 3. Current state after N1 and N2.0–N2.2 [Current]
 
 Milestone N1 (`docs/plans/n1-user-space.md`, stages N1.0–N1.10) took the x86_64 kernel from
 "boots and prints" to "loads and runs a separately built native program in ring 3, isolated
@@ -101,16 +101,17 @@ from section 4 onward is still a proposal or future work unless tagged *Current*
 | Exceptions | Every exception is classified by the CPU-pushed CS: ring 0 → diagnostic and panic; ring 3 → the process is killed with the vector, error code and fault address recorded. |
 | Physical memory | Bitmap allocator over frames in [1 MiB, 1 GiB); the Multiboot2 map is validated and "unusable wins"; kernel, boot structures, modules and low memory are reserved; frames are zeroed on allocation. RAM above 1 GiB is unused. |
 | Virtual memory | 4-level page tables, 4 KiB user mappings with validated permissions, an audit of whole hierarchies; the boot identity map is removed. Since N2.0 the supervisor-only alias of physical 0–1 GiB is W^X: the kernel image in 4 KiB pages (text R-X, read-only data R, everything else RW NX, stack guard pages unmapped), the rest in 2 MiB RW NX pages (`kmap.c`; `docs/plans/n2-foundation.md` section 3.1). |
-| Processes | One synchronous process at a time: a fresh PML4 sharing only the kernel entry; code/data/stack from fresh frames; entry via `iretq` with all registers zeroed; full teardown that returns every frame. No scheduler, threads or concurrency. |
+| Processes | One synchronous process at a time: a fresh PML4 sharing only the kernel entry; code/data/stack from fresh frames; entry via `iretq` with all registers zeroed; full teardown that returns every frame; user programs run synchronously on the boot thread. |
+| Kernel threads (N2.2) | 8 static thread records, 7 guarded 16 KiB stacks; cooperative round robin with yield, FIFO wait queues, tick sleeps and exit with deferred reaping; an idle thread that waits with `sti; hlt` (the only kernel code with IF = 1). No preemption, no user processes on threads yet. |
 | System calls | ABI v0 over `int $0x80`: `exit`, `debug_write`; unknown numbers return `-VOS_ENOSYS`; all registers but `rax` preserved. |
 | User memory | `copy_from_user` validates every page (user bit at all levels) and copies through the kernel alias, never through the user address. |
 | Executables | Static ELF64 `ET_EXEC` with a mandatory VOS ABI note; validated in the kernel before any allocation (and at build time by `scripts/check-user-elf.sh`). |
 | User space | `user/`: a minimal runtime (`crt0.S`, system-call stubs, ABI note, linker script) and `hello`, built separately from the kernel; 41 isolation-test programs in `user/suite`. |
 | Applications | GRUB delivers `hello.elf` as a module; the kernel validates, loads and runs it in ring 3 at boot: `user[hello]: Hello from VOS!`, then `proc[hello]: exited status 0, all frames reclaimed`. |
 | Tests | `make test-all` (sequential QEMU runs with timeouts): smoke tests, strict `VOS_TEST=1` images reporting through `isa-debug-exit` (33 = pass, 35 = expected failure), kernel self-tests, deliberate kernel faults, the 41-case isolation suite under qemu64, 2 GiB and `-cpu max`, SMEP/SMAP cases with controls, and static ELF tests. |
-| Not present | Scheduler, threads, more than one process, IPC, kernel heap, APIC/IOAPIC/ACPI, device interrupts other than the timer, file systems, drivers beyond COM1/VGA, input, graphics, networking, packages, a shell. |
+| Not present | Preemptive scheduling, more than one process, IPC, kernel heap, APIC/IOAPIC/ACPI, device interrupts other than the timer, file systems, drivers beyond COM1/VGA, input, graphics, networking, packages, a shell. |
 
-### 3.1 Security boundaries after N1, N2.0 and N2.1 [Current]
+### 3.1 Security boundaries after N1 and N2.0–N2.2 [Current]
 
 **Implemented and tested (in QEMU):**
 - Ring-3 privilege separation: CS 0x23/SS 0x1B in every user frame; privileged instructions,
@@ -140,8 +141,9 @@ from section 4 onward is still a proposal or future work unless tagged *Current*
 **Not provided or not verified:**
 - Real hardware (everything ran under QEMU TCG).
 - Isolation between concurrent processes (only one process exists at a time).
-- Timer-driven preemption: the timer interrupts programs (N2.1) but there is no scheduler, so a
-  program that never exits keeps the CPU (only test builds have a kill budget).
+- Timer-driven preemption: the timer interrupts programs (N2.1) and kernel threads exist (N2.2),
+  but nothing preempts: a program that never exits keeps the CPU (only test builds have a kill
+  budget), and so does a kernel thread that never yields.
 - FPU/SIMD context management (FP/SIMD is disabled instead).
 - DMA/IOMMU protection.
 - Side-channel mitigations (the kernel is mapped, supervisor-only, in every address space).
