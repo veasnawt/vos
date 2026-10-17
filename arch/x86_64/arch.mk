@@ -74,7 +74,7 @@ arch-test: iso
 	    'irq: 8259 master 0x20-0x27, slave 0x28-0x2f (cascade IRQ2); masks 0xfffe (IRQ0 only)' \
 	    'pit: channel 0 mode 2, divisor 11932 (99.998 Hz)' 'selftest: irq ' \
 	    'selftest: ring-3 timer interrupts ' 'proc: killed by the test tick budget after 20 timer ticks' \
-	    'selftest: sched ' 'selftest: scheduler: ' 'VOS-TEST: PASS' --
+	    'selftest: sched ' 'selftest: scheduler: ' 'selftest: round robin over ' 'VOS-TEST: PASS' --
 	MEM=2G scripts/exit-test.sh boot-2G $(TEST_ISO) 33 'selftest: pmm-synthetic ' \
 	    'selftest: pmm-kernel ' 'selftest: 1000 frames from ' 'selftest: vmm ' 'selftest: user ' \
 	    'selftest: kmap ' 'VOS-TEST: PASS' --

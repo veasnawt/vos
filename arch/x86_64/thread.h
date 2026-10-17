@@ -20,7 +20,9 @@
  * Interrupt state. Every scheduler entry point runs with IF = 0, from thread
  * context, never from an interrupt handler, while no user process runs. The
  * kernel stays non-preemptive: a thread runs until it yields, blocks, sleeps
- * or exits. The only kernel code that runs with IF = 1 is the idle thread's
+ * or exits. The one exception (N2.3) is a user thread interrupted in ring 3
+ * by the timer: after the IRQ was acknowledged, its trap path may yield
+ * (sched_preempt_due), with the complete user state saved in the trap frame. The only kernel code that runs with IF = 1 is the idle thread's
  * "sti; hlt" (and the cli right after it); a hardware interrupt taken there
  * is acknowledged and returns to the idle loop (sched_idle_irq). Tick
  * sleepers are woken by the idle thread in thread context, not by the IRQ.

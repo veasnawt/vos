@@ -454,6 +454,23 @@ uint64_t proc_user_trap(struct exc_frame *f)
             record(&p->trap, f);
             kill_now(p, p->kill_reason);
         }
+        /*
+         * Preemption (N2.3), only here: an acknowledged timer interrupt from
+         * ring 3 whose slice is over while another thread waits. The complete
+         * user state is the frame at the top of this thread's kernel stack;
+         * nothing else of the kernel is in progress. When the thread runs again
+         * the scheduler has restored its CR3 and RSP0; the frame is checked
+         * again before the IRETQ.
+         */
+        if (sched_preempt_due()) {
+            p->preemptions++;
+            thread_yield();
+            p->tick_mark = irq_ticks();     /* ticks while others ran are not this process's */
+            if (p->kill_reason) {
+                record(&p->trap, f);
+                kill_now(p, p->kill_reason);
+            }
+        }
         return resume(p, f);
     }
     if (p->kill_reason) {

@@ -37,6 +37,8 @@ static void expect(int ok, const char *what)
 }
 
 static struct process proc;
+/* Process records shared by the multi-process tests (static: the kernel has no heap). */
+static struct process procs[PROC_TABLE];
 
 /* user_progs.S */
 #define DECLARE_PROG(n) extern const uint8_t up_##n[], up_##n##_end[]
@@ -64,6 +66,7 @@ DECLARE_PROG(kernelif);
 DECLARE_PROG(sti);
 DECLARE_PROG(iflock);
 DECLARE_PROG(irqregs);
+DECLARE_PROG(memtag);
 DECLARE_PROG(codewrite);
 DECLARE_PROG(execstack);
 DECLARE_PROG(guard);
@@ -139,7 +142,8 @@ static void test_address_space(void)
            "entry RIP and 16-byte aligned RSP with 16 bytes above it");
 
     /* N2.3: several processes may exist; each has its own root, frames and ID; the table is bounded. */
-    static struct process other, extra[PROC_TABLE];
+    static struct process other;
+    struct process *extra = procs;
     uint64_t f1 = pmm_free_count();
     expect(proc_create(&other, "other", code, sizeof(code)) == PROC_OK && other.root != proc.root &&
            other.pid > proc.pid && other.page_pa[0] != proc.page_pa[0] && proc_count() == 2,
@@ -705,6 +709,159 @@ static void test_process_threads(void)
            "on a kernel thread: TSS.RSP0 is the entry stack and CR3 the kernel root");
 }
 
+/* ---- N2.3: several processes at once, timer preemption ---- */
+
+static int streq(const char *x, const char *y)
+{
+    return x && y && strlen(x) == strlen(y) && memcmp(x, y, strlen(x)) == 0;
+}
+
+static int start(struct process *p, const char *name, const uint8_t *code, size_t len, int has_arg, uint64_t arg)
+{
+    if (proc_create(p, name, code, len) != PROC_OK)
+        return 0;
+    if (has_arg)
+        *(uint64_t *)((uint8_t *)phys_to_virt(p->page_pa[0]) + len - 8) = arg;
+    return proc_start(p) == PROC_OK;
+}
+
+/* Wait for p, keep a copy of its record in *out, destroy it. */
+static int finish(struct process *p, struct process *out)
+{
+    int st = proc_wait(p);
+
+    *out = *p;
+    proc_destroy(p);
+    return st;
+}
+
+static struct process r[3];
+
+static void test_preemption(void)
+{
+    uint64_t f0 = pmm_free_count();
+    struct process *a = &procs[0], *b = &procs[1], *c = &procs[2];
+
+    proc_test_tick_budget(300);         /* bound every case; the kills below end them much earlier */
+
+    /* An endless loop next to a normal program: the normal one still finishes. */
+    int ok = start(a, "spin", PROG(spin), 0, 0) && start(b, "exit42", PROG(exit42), 0, 0);
+    int sb = finish(b, &r[1]);
+    proc_kill(a, "test kill");
+    int sa = finish(a, &r[0]);
+    expect(ok && sb == PROC_EXITED && r[1].exit_status == 42 && sa == PROC_KILLED &&
+           streq(r[0].reason, "test kill") && r[0].preemptions > 0,
+           "an endless loop is preempted: a normal program next to it finishes; the loop is killed on demand");
+
+    /* Three endless loops for 30 ticks: each gets a fair share. */
+    ok = start(a, "spin-a", PROG(spin), 0, 0) && start(b, "spin-b", PROG(spin), 0, 0) &&
+         start(c, "spin-c", PROG(spin), 0, 0);
+    uint64_t t0 = irq_ticks();
+    thread_sleep(30);
+    uint64_t span = irq_ticks() - t0;
+    proc_kill(a, "test kill");
+    proc_kill(b, "test kill");
+    proc_kill(c, "test kill");
+    finish(a, &r[0]);
+    finish(b, &r[1]);
+    finish(c, &r[2]);
+    uint64_t lo = ~0ULL, hi = 0, sum = 0;
+    for (int i = 0; i < 3; i++) {
+        lo = r[i].ticks < lo ? r[i].ticks : lo;
+        hi = r[i].ticks > hi ? r[i].ticks : hi;
+        sum += r[i].ticks;
+    }
+    serial_puts("selftest: round robin over ");
+    serial_dec(span);
+    serial_puts(" ticks: ");
+    for (int i = 0; i < 3; i++) {
+        serial_dec(r[i].ticks);
+        serial_puts(i < 2 ? "/" : " ticks, preemptions ");
+    }
+    for (int i = 0; i < 3; i++) {
+        serial_dec(r[i].preemptions);
+        serial_puts(i < 2 ? "/" : "\r\n");
+    }
+    expect(ok && span >= 30 && lo >= 5 && hi - lo <= 2 * SCHED_SLICE_TICKS + 2 && sum + 6 >= span,
+           "three endless loops share the CPU round robin (every one runs, shares within two slices)");
+
+    /* Registers survive preemption between processes; memory stays private. */
+    ok = start(a, "irqregs", PROG(irqregs), 0, 0) && start(b, "tag-1", PROG(memtag), 1, 0x1111111111111111ULL) &&
+         start(c, "tag-2", PROG(memtag), 1, 0x2222222222222222ULL);
+    thread_sleep(30);
+    proc_kill(a, "test kill");
+    proc_kill(b, "test kill");
+    proc_kill(c, "test kill");
+    finish(a, &r[0]);
+    finish(b, &r[1]);
+    finish(c, &r[2]);
+    expect(ok && streq(r[0].reason, "test kill") && r[0].preemptions > 0,
+           "15 registers and DF survive preemption by other processes (irqregs never exited)");
+    expect(streq(r[1].reason, "test kill") && streq(r[2].reason, "test kill") && r[1].preemptions > 0 &&
+           r[2].preemptions > 0, "two processes write the same user address: each only ever sees its own data");
+    expect(r[0].kstack_top != r[1].kstack_top && r[1].kstack_top != r[2].kstack_top &&
+           r[0].kstack_top != r[2].kstack_top && r[1].root != r[2].root && r[1].traps > 0 &&
+           r[1].last_irq.kframe + sizeof(struct exc_frame) == r[1].kstack_top &&
+           r[2].last_irq.kframe + sizeof(struct exc_frame) == r[2].kstack_top,
+           "each process trapped on its own kernel stack (TSS.RSP0) in its own address space");
+
+    /* One process faults, one exits, one keeps running. */
+    ok = start(a, "spin", PROG(spin), 0, 0) && start(b, "null", PROG(nullread), 0, 0) &&
+         start(c, "exit42", PROG(exit42), 0, 0);
+    int s1 = finish(b, &r[1]), s2 = finish(c, &r[2]);
+    int alive = a->state == PROC_RUNNING;
+    proc_kill(a, "test kill");
+    finish(a, &r[0]);
+    expect(ok && s1 == PROC_KILLED && r[1].trap.vector == 14 && s2 == PROC_EXITED && r[2].exit_status == 42 &&
+           alive && streq(r[0].reason, "test kill"),
+           "a faulting process dies alone; one exits normally; the third keeps running until killed");
+
+    /* Killing a process that has not run yet, and repeated creation and destruction. */
+    ok = start(a, "spin", PROG(spin), 0, 0);
+    proc_kill(a, "killed before entry");
+    expect(ok && finish(a, &r[0]) == PROC_KILLED && r[0].traps == 0, "a process killed before it ran never enters ring 3");
+    int cycles = 1;
+    for (int i = 0; i < 15; i++) {
+        cycles &= start(a, "exit42", PROG(exit42), 0, 0) && start(b, "exit42", PROG(exit42), 0, 0);
+        cycles &= finish(a, &r[0]) == PROC_EXITED && finish(b, &r[1]) == PROC_EXITED;
+    }
+    proc_test_tick_budget(PROC_TEST_TICK_BUDGET);
+    expect(cycles && pmm_free_count() == f0 && pmm_check_in(pmm_kernel()) == PMM_OK && proc_count() == 0 &&
+           thread_count() == 2, "15 rounds of two concurrent processes: every frame, record and thread returns");
+}
+
+static struct wait_queue hold;
+
+static void holder(void *arg)
+{
+    (void)arg;
+    thread_block(&hold);
+}
+
+/* proc_start needs a thread: a full thread pool is a clean error, and the process can start later. */
+static void test_thread_exhaustion(void)
+{
+    int64_t id[THREAD_MAX];
+    unsigned n = 0;
+    uint64_t f0 = pmm_free_count();
+
+    memset(&hold, 0, sizeof(hold));
+    while (n < THREAD_MAX && (id[n] = thread_create("holder", holder, 0)) > 0)
+        n++;
+    thread_yield();                     /* let them all block */
+    int ok = proc_create(&procs[0], "exit42", PROG(exit42)) == PROC_OK;
+    int err = proc_start(&procs[0]);
+    int ready = procs[0].state == PROC_READY;
+    thread_wake_all(&hold);
+    for (int k = 0; k < 50 && thread_count() > 2; k++)
+        thread_yield();
+    int run = proc_run(&procs[0]);
+    int status = procs[0].exit_status;
+    proc_destroy(&procs[0]);
+    expect(ok && n == THREAD_MAX - 2 && err == PROC_ENOMEM && ready && run == PROC_EXITED && status == 42 &&
+           pmm_free_count() == f0, "a full thread pool makes proc_start fail with PROC_ENOMEM; it starts later");
+}
+
 int selftest_user(void)
 {
     failures = cases = 0;
@@ -716,6 +873,8 @@ int selftest_user(void)
     test_resume_validation();
     test_irq_ring3();
     test_process_threads();
+    test_preemption();
+    test_thread_exhaustion();
     serial_puts("selftest: user ");
     serial_dec(cases);
     serial_puts(" cases, ");

@@ -457,6 +457,32 @@ up_smaptouch:
     ud2
 up_smaptouch_end:
 
+/*
+ * N2.3: store this program's tag (the argument slot) in a stack page, spin a
+ * little, check it is still there; forever. Exit 1 if the page ever holds
+ * anything else: another process's writes reached it (shared frames or a
+ * stale address space after a switch).
+ */
+PROG memtag
+up_memtag:
+    mov memtag_arg(%rip), %rbx
+    movabs $0x7FFFFFFFC000, %rdi
+1:  mov %rbx, (%rdi)
+    mov $20000, %ecx
+2:  dec %ecx
+    jnz 2b
+    cmp (%rdi), %rbx
+    jne 9f
+    jmp 1b
+9:  mov $1, %edi
+    mov $SYS_EXIT, %eax
+    int $0x80
+    ud2
+.balign 8
+memtag_arg:
+    .quad 0
+up_memtag_end:
+
 /* N2.1: spin forever; only the kernel's test tick budget ends it. */
 PROG spin
 up_spin:
