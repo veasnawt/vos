@@ -73,7 +73,12 @@ int proc_create(struct process *p, const void *code, size_t len);
  * READY. A process runs at most once.
  */
 int proc_run(struct process *p);
-/* Called by the exception dispatcher for traps whose saved CS has RPL 3. */
+/*
+ * Called by the exception dispatcher for traps whose saved CS has RPL 3:
+ * records the CPU-pushed frame, ends the process (exit, or killed for an
+ * exception or unsupported request), switches to the kernel CR3 and resumes
+ * proc_run's caller. The process never runs again.
+ */
 __attribute__((noreturn)) void proc_user_trap(struct exc_frame *f);
 /* Release everything the process owns; the kernel root must be active. */
 void proc_destroy(struct process *p);

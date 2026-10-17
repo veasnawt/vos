@@ -13,5 +13,7 @@ struct exc_frame {
 };
 
 void exception_handler(struct exc_frame *f);
+/* Human-readable name of an exception vector, e.g. "#GP general protection fault". */
+const char *exception_name(uint64_t vector);
 
 #endif

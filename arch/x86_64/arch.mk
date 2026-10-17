@@ -44,7 +44,8 @@ arch-test: iso
 	    'tss: rsp0=' 'idt: 32 exception vectors loaded, df ist=1' 'idt: vector 0x80 present, DPL 3' \
 	    'cpu: wp=on nx=on' 'VOS-TEST: PASS' --
 	scripts/exit-test.sh no-nx $(TEST_ISO) 35 'panic: CPU lacks NX' 'VOS-TEST: FAIL' -- -cpu qemu64,-nx
-	scripts/exit-test.sh cpu-max $(TEST_ISO) 33 'smep=on umip=on' 'VOS-TEST: PASS' -- -cpu max
+	scripts/exit-test.sh cpu-max $(TEST_ISO) 33 'smep=on umip=on' 'selftest: user ' 'VOS-TEST: PASS' \
+	    -- -cpu max
 	$(MAKE) --no-print-directory ARCH=$(ARCH) VOS_TEST=1 VOS_TEST_CASE=kernel-ud iso
 	scripts/exit-test.sh kernel-ud build/$(ARCH)-test-kernel-ud/vos.iso 35 \
 	    'exc: #UD vec=6 err=- cs=0x8 rip=' 'panic: #UD invalid opcode' 'VOS-TEST: FAIL' --

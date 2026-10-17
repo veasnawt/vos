@@ -239,12 +239,21 @@ void proc_user_trap(struct exc_frame *f)
         serial_puts(")\r\n");
         finish(p);
     }
-    serial_puts("proc: user exception vector ");
-    serial_dec(f->vector);
+    /* A user exception ends the process only; the kernel continues. */
+    p->state = PROC_KILLED;
+    p->reason = exception_name(f->vector);
+    serial_puts("proc: killed by ");
+    serial_puts(p->reason);
+    serial_puts(" err=");
+    serial_hex(f->error);
     serial_puts(" (cs=");
     serial_hex(f->cs);
     serial_puts(" rip=");
     serial_hex(f->rip);
+    if (f->vector == 14) {
+        serial_puts(" cr2=");
+        serial_hex(p->trap.cr2);
+    }
     serial_puts(")\r\n");
-    panic("process: user exception (fault isolation not implemented yet)");
+    finish(p);
 }

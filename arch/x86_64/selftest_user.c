@@ -38,6 +38,20 @@ DECLARE_PROG(exit42);
 DECLARE_PROG(regcheck);
 DECLARE_PROG(badsys);
 DECLARE_PROG(std_exit);
+DECLARE_PROG(ud2);
+DECLARE_PROG(cli);
+DECLARE_PROG(hlt);
+DECLARE_PROG(movcr3);
+DECLARE_PROG(outb);
+DECLARE_PROG(int14);
+DECLARE_PROG(int81);
+DECLARE_PROG(sgdt);
+DECLARE_PROG(kwrite);
+DECLARE_PROG(kread);
+DECLARE_PROG(nullread);
+DECLARE_PROG(codewrite);
+DECLARE_PROG(execstack);
+DECLARE_PROG(guard);
 #define PROG(n) up_##n, (size_t)(up_##n##_end - up_##n)
 uint64_t call_check_callee_saved(int (*fn)(void *), void *arg, int *result);
 
@@ -229,11 +243,93 @@ static void test_ring3_exit(void)
            "20 ring-3 runs leak nothing");
 }
 
+/* ---- user faults end the process, never the kernel ---- */
+
+#define PF_P    0x1
+#define PF_W    0x2
+#define PF_U    0x4
+#define PF_ID   0x10
+
+/* A present, supervisor-only kernel page the user programs aim at. */
+static volatile uint64_t kernel_target = 0x5EC0DE5EC0DE5EC0ULL;
+
+static int killed_by(uint64_t vector, uint64_t error)
+{
+    return last.state == PROC_KILLED && last.trap.vector == vector && last.trap.error == error &&
+           last.trap.cs == GDT_USER_CS && last.trap.ss == GDT_USER_DS && last.reason;
+}
+
+static int rip_in_code(void)
+{
+    return last.trap.rip >= PROC_CODE_VA && last.trap.rip < PROC_CODE_VA + PAGE_SIZE;
+}
+
+static void test_user_faults(void)
+{
+    uint64_t f0 = pmm_free_count();
+    uint64_t target = (uint64_t)&kernel_target;
+
+    run_prog("ud2", PROG(ud2), 0, 0);
+    expect(killed_by(6, 0) && last.trap.rip == PROC_CODE_VA, "user ud2: #UD at the program's first byte");
+
+    /* Privileged instructions: #GP only because CPL is 3 (they succeed at CPL 0). */
+    run_prog("cli", PROG(cli), 0, 0);
+    expect(killed_by(13, 0) && last.trap.rip == PROC_CODE_VA, "user cli: #GP(0), CS 0x23");
+    run_prog("hlt", PROG(hlt), 0, 0);
+    expect(killed_by(13, 0) && rip_in_code(), "user hlt: #GP(0)");
+    run_prog("movcr3", PROG(movcr3), 0, 0);
+    expect(killed_by(13, 0) && rip_in_code(), "user mov %cr3: #GP(0)");
+    run_prog("outb", PROG(outb), 0, 0);
+    expect(killed_by(13, 0) && rip_in_code(), "user out to COM1: #GP(0) (IOPL 0, no I/O bitmap)");
+
+    /* Software interrupts: only vector 0x80 is reachable from ring 3. */
+    run_prog("int14", PROG(int14), 0, 0);
+    expect(killed_by(13, 14 * 8 + 2) && rip_in_code(), "user int $14: #GP(0x72), no forged #PF");
+    run_prog("int81", PROG(int81), 0, 0);
+    expect(killed_by(13, 0x81 * 8 + 2) && rip_in_code(), "user int $0x81: #GP(0x40a)");
+
+    /* Memory protection. */
+    run_prog("kwrite", PROG(kwrite), 1, target);
+    expect(killed_by(14, PF_P | PF_W | PF_U) && last.trap.cr2 == target && rip_in_code(),
+           "user write to a kernel page: #PF P=1 W=1 U=1, CR2 = target");
+    expect(kernel_target == 0x5EC0DE5EC0DE5EC0ULL, "kernel page unchanged by the user write");
+    run_prog("kread", PROG(kread), 1, target);
+    expect(killed_by(14, PF_P | PF_U) && last.trap.cr2 == target, "user read of a kernel page: #PF P=1 U=1");
+    run_prog("kread-image", PROG(kread), 1, KERNEL_VMA + PMM_LOW_LIMIT);
+    expect(killed_by(14, PF_P | PF_U) && last.trap.cr2 == KERNEL_VMA + PMM_LOW_LIMIT,
+           "user read of the kernel image start (2 MiB alias page): #PF P=1 U=1");
+    run_prog("nullread", PROG(nullread), 0, 0);
+    expect(killed_by(14, PF_U) && last.trap.cr2 == 0, "user null read: #PF P=0 U=1, CR2 0");
+    run_prog("codewrite", PROG(codewrite), 0, 0);
+    expect(killed_by(14, PF_P | PF_W | PF_U) && last.trap.cr2 == PROC_CODE_VA,
+           "user write to its own code: #PF P=1 W=1 U=1");
+    run_prog("execstack", PROG(execstack), 0, 0);
+    expect(killed_by(14, PF_P | PF_U | PF_ID) && last.trap.cr2 == PROC_ENTRY_RSP &&
+           last.trap.rip == PROC_ENTRY_RSP, "user jump to the stack: #PF P=1 U=1 I/D=1 (NX)");
+    run_prog("guard", PROG(guard), 0, 0);
+    expect(killed_by(14, PF_W | PF_U) && last.trap.cr2 == USER_STACK_START - 8,
+           "user push below the stack: #PF in the guard page");
+
+    /* UMIP: with it, sgdt from ring 3 is #GP; without it, sgdt works (and the program exits 1). */
+    run_prog("sgdt", PROG(sgdt), 0, 0);
+    if (read_cr4() & CR4_UMIP)
+        expect(killed_by(13, 0), "UMIP on: user sgdt raises #GP(0)");
+    else
+        expect(last.state == PROC_EXITED && last.exit_status == 1, "UMIP off: user sgdt executes");
+
+    /* The kernel launches a normal program after all of these. */
+    expect(run_prog("exit42", PROG(exit42), 0, 0) == PROC_EXITED && last.exit_status == 42,
+           "normal program runs after user faults");
+    expect(pmm_free_count() == f0 && pmm_check_in(pmm_kernel()) == PMM_OK && gdt_stack_canaries_intact(),
+           "no leak and intact canaries after every user fault");
+}
+
 int selftest_user(void)
 {
     failures = cases = 0;
     test_address_space();
     test_ring3_exit();
+    test_user_faults();
     serial_puts("selftest: user ");
     serial_dec(cases);
     serial_puts(" cases, ");

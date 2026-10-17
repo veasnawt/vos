@@ -41,6 +41,11 @@ static const struct { const char *name, *msg; } exc_info[32] = {
     [31] = { "#31", "reserved vector 31" },
 };
 
+const char *exception_name(uint64_t vector)
+{
+    return vector < 32 ? exc_info[vector].msg : vector == IDT_SYSCALL ? "system call" : "?";
+}
+
 static int has_error_code(uint64_t v)
 {
     return v == 8 || (v >= 10 && v <= 14) || v == 17 || v == 21 || v == 29 || v == 30;

@@ -91,6 +91,105 @@ up_std_exit:
     ud2
 up_std_exit_end:
 
+/* ---- faulting programs: each exits with 1 if the expected fault does not happen ---- */
+.macro NOFAULT
+    mov $SYS_EXIT, %eax
+    mov $1, %edi
+    int $0x80
+    ud2
+.endm
+
+PROG ud2
+up_ud2:
+    ud2
+up_ud2_end:
+
+PROG cli                            /* privileged at CPL 3 with IOPL 0: #GP(0) */
+up_cli:
+    cli
+    NOFAULT
+up_cli_end:
+
+PROG hlt
+up_hlt:
+    hlt
+    NOFAULT
+up_hlt_end:
+
+PROG movcr3
+up_movcr3:
+    mov %cr3, %rax
+    NOFAULT
+up_movcr3_end:
+
+PROG outb                           /* port I/O: IOPL 0 and no I/O bitmap */
+up_outb:
+    mov $0x3F8, %dx
+    mov $0x58, %al
+    out %al, %dx
+    NOFAULT
+up_outb_end:
+
+PROG int14                          /* DPL 0 exception gate: #GP(14 * 8 + 2) */
+up_int14:
+    int $14
+    NOFAULT
+up_int14_end:
+
+PROG int81                          /* absent gate: #GP(0x81 * 8 + 2) */
+up_int81:
+    int $0x81
+    NOFAULT
+up_int81_end:
+
+PROG sgdt                           /* #GP(0) only when CR4.UMIP is set */
+up_sgdt:
+    sgdt -16(%rsp)
+    NOFAULT
+up_sgdt_end:
+
+PROG kwrite                         /* write to the kernel address in the slot */
+up_kwrite:
+    mov 1f(%rip), %rax
+    movq $0, (%rax)
+    NOFAULT
+1:  .quad 0
+up_kwrite_end:
+
+PROG kread                          /* read the kernel address in the slot */
+up_kread:
+    mov 1f(%rip), %rax
+    mov (%rax), %rbx
+    NOFAULT
+1:  .quad 0
+up_kread_end:
+
+PROG nullread
+up_nullread:
+    xor %eax, %eax
+    mov (%rax), %rbx
+    NOFAULT
+up_nullread_end:
+
+PROG codewrite                      /* the code page is read + execute */
+up_codewrite:
+    lea up_codewrite(%rip), %rax
+    movb $0x90, (%rax)
+    NOFAULT
+up_codewrite_end:
+
+PROG execstack                      /* the stack is NX */
+up_execstack:
+    jmp *%rsp
+up_execstack_end:
+
+PROG guard                          /* push below the stack: into the guard page */
+up_guard:
+    movabs $0x00007FFFFFFFB000, %rsp
+    pushq %rax
+    NOFAULT
+up_guard_end:
+
 /*
  * uint64_t call_check_callee_saved(int (*fn)(void *), void *arg, int *result)
  * Loads known values into rbx, rbp, r12-r15, calls fn(arg), stores its result
