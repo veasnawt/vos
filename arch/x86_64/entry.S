@@ -74,6 +74,27 @@ exc_common:
     pushq %r13
     pushq %r14
     pushq %r15
+#ifdef VOS_TEST
+    /*
+     * The frame holds every register now. Poison the live ones so a register
+     * the resume path forgot to restore is visible to the user program
+     * instead of surviving by chance in an untouched register.
+     */
+    movabs $0xBAD0BAD0BAD0BAD0, %rax
+    mov %rax, %rbx
+    mov %rax, %rcx
+    mov %rax, %rdx
+    mov %rax, %rsi
+    mov %rax, %rbp
+    mov %rax, %r8
+    mov %rax, %r9
+    mov %rax, %r10
+    mov %rax, %r11
+    mov %rax, %r12
+    mov %rax, %r13
+    mov %rax, %r14
+    mov %rax, %r15
+#endif
     cld
     mov %rsp, %rdi                  /* struct exc_frame * */
     mov %rsp, %rbp
