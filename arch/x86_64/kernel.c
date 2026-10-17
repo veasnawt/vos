@@ -9,13 +9,15 @@
 
 #include "console.h"
 #include "cpu.h"
+#include "gdt.h"
+#include "idt.h"
 #include "memlayout.h"
 #include "multiboot2.h"
 #include "panic.h"
 
 #define MB2_INFO_MAX    0x10000u        /* sanity bound for the info block */
 
-#define BOOT_CS         0x08
+#define BOOT_CS         GDT_KERNEL_CS
 
 #ifdef VOS_TEST
 #define TEST_EXIT_PORT  0xF4
@@ -165,6 +167,10 @@ void kernel_main(uint32_t mb2_magic, uint32_t mb2_info)
     serial_hex(rip);
     serial_puts("\r\n");
 
+    gdt_init();
+    idt_init();
+    cpu_init_protections();
+
     check(mb2_magic == MB2_BOOTLOADER_MAGIC, "Multiboot2 magic");
     int have_info = mb2_magic == MB2_BOOTLOADER_MAGIC && parse_multiboot2(mb2_info, &bi);
     check(have_info, "Multiboot2 information and memory map");
@@ -208,6 +214,17 @@ void kernel_main(uint32_t mb2_magic, uint32_t mb2_info)
     serial_puts(first_failure ? "boot: FAILED\r\n" : "boot: checks passed\r\n");
 #ifdef VOS_TEST_CASE_panic
     panic("test case: deliberate panic");
+#endif
+#ifdef VOS_TEST_CASE_kernel_ud
+    __asm__ volatile ("ud2");
+#endif
+#ifdef VOS_TEST_CASE_kernel_df
+    /*
+     * Make #GP undeliverable (its gate is not present), then raise one: the
+     * failed delivery is a second contributory fault, which becomes #DF on IST1.
+     */
+    idt_clear_gate(13);
+    __asm__ volatile ("mov %0, %%ds" : : "r"((uint16_t)0x99));
 #endif
 #ifdef VOS_TEST
     serial_puts(first_failure ? "VOS-TEST: FAIL\r\n" : "VOS-TEST: PASS\r\n");

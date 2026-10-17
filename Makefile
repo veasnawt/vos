@@ -27,7 +27,7 @@ TEST_DEFS := -DVOS_TEST
 # and builds into its own directory so it never replaces the main test image.
 ifneq ($(VOS_TEST_CASE),)
 BUILD     := build/$(ARCH)-test-$(VOS_TEST_CASE)
-TEST_DEFS += -DVOS_TEST_CASE_$(VOS_TEST_CASE)
+TEST_DEFS += -DVOS_TEST_CASE_$(subst -,_,$(VOS_TEST_CASE))
 endif
 else ifneq ($(VOS_TEST_CASE),)
 $(error VOS_TEST_CASE requires VOS_TEST=1)
