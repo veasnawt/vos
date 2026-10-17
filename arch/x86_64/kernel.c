@@ -16,6 +16,9 @@
 #include "multiboot2.h"
 #include "panic.h"
 #include "resv.h"
+#ifdef VOS_TEST
+#include "selftest.h"
+#endif
 
 #define BOOT_CS         GDT_KERNEL_CS
 
@@ -139,6 +142,12 @@ void kernel_main(uint32_t mb2_magic, uint32_t mb2_info)
         panic(err);
 
     serial_puts(first_failure ? "boot: FAILED\r\n" : "boot: checks passed\r\n");
+#ifdef VOS_TEST
+    check(selftest_bootinfo() == 0, "bootinfo/reservation self-test");
+#ifdef VOS_TEST_CASE_modules
+    check(selftest_modules(&bi, &boot_resv) == 0, "GRUB module delivery");
+#endif
+#endif
 #ifdef VOS_TEST_CASE_panic
     panic("test case: deliberate panic");
 #endif

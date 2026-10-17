@@ -9,6 +9,9 @@ ARCH_ASFLAGS    := -m64
 ARCH_LDFLAGS    := -m elf_x86_64 -z max-page-size=0x1000
 ARCH_OBJS       := boot.o entry.o kernel.o bootinfo.o console.o cpu.o exception.o gdt.o idt.o \
                    lib.o panic.o resv.o
+ifeq ($(VOS_TEST),1)
+ARCH_OBJS       += selftest.o
+endif
 QEMU            := qemu-system-x86_64
 MULTIBOOT_CHECK := --is-x86-multiboot2
 
@@ -40,3 +43,7 @@ arch-test: iso
 	scripts/exit-test.sh kernel-df build/$(ARCH)-test-kernel-df/vos.iso 35 \
 	    'exc: #DF vec=8 err=0x0 cs=0x8 rip=' 'stack=ist1' 'panic: #DF double fault' \
 	    'VOS-TEST: FAIL' --
+	$(MAKE) --no-print-directory ARCH=$(ARCH) VOS_TEST=1 VOS_TEST_CASE=modules iso
+	scripts/exit-test.sh modules build/$(ARCH)-test-modules/vos.iso 33 \
+	    'boot: kernel command line "' 'vos.test=1' 'boot: modules 2' 'boot: module 0 ' \
+	    'boot: module 1 ' 'selftest: modules ' ' 0 failed' 'VOS-TEST: PASS' --

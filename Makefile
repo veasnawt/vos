@@ -33,6 +33,14 @@ else ifneq ($(VOS_TEST_CASE),)
 $(error VOS_TEST_CASE requires VOS_TEST=1)
 endif
 
+# Per-image GRUB configuration and extra ISO files ("source:path-in-iso").
+# Test cases may override them in tests/<ARCH>/<case>.mk.
+GRUB_CFG  := $(ARCH_DIR)/grub.cfg
+ISO_FILES :=
+ifneq ($(VOS_TEST_CASE),)
+-include tests/$(ARCH)/$(VOS_TEST_CASE).mk
+endif
+
 KERNEL   := $(BUILD)/vos.bin
 ISO      := $(BUILD)/vos.iso
 
@@ -71,7 +79,10 @@ iso: verify
 	rm -rf $(BUILD)/isodir
 	mkdir -p $(BUILD)/isodir/boot/grub
 	cp $(KERNEL) $(BUILD)/isodir/boot/vos.bin
-	cp $(ARCH_DIR)/grub.cfg $(BUILD)/isodir/boot/grub/grub.cfg
+	cp $(GRUB_CFG) $(BUILD)/isodir/boot/grub/grub.cfg
+	for f in $(ISO_FILES); do \
+	    mkdir -p $(BUILD)/isodir/$$(dirname $${f#*:}); cp $${f%%:*} $(BUILD)/isodir/$${f#*:}; \
+	done
 	grub-mkrescue -o $(ISO) $(BUILD)/isodir
 
 run: iso
