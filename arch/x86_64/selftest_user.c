@@ -16,6 +16,8 @@
 #include "panic.h"
 #include "pmm.h"
 #include "process.h"
+#include "syscall.h"
+#include "usercopy.h"
 #include "vmm.h"
 
 static int failures, cases;
@@ -159,6 +161,113 @@ static void test_address_space(void)
     }
     expect(cycles_ok && pmm_check_in(pmm_kernel()) == PMM_OK, "50 create/destroy cycles leak nothing");
     expect(gdt_stack_canaries_intact(), "RSP0 and IST1 stack canaries intact");
+}
+
+/* ---- copy_from_user on a process address space (not running) ---- */
+
+static uint8_t cbuf[300];
+
+/* Copy into cbuf (pre-filled with 0xEE); returns the result. */
+static int cfu(uint64_t uptr, size_t len)
+{
+    memset(cbuf, 0xEE, sizeof(cbuf));
+    return copy_from_user(proc.root, cbuf, uptr, len);
+}
+
+static int cbuf_untouched_from(size_t from)
+{
+    for (size_t i = from; i < sizeof(cbuf); i++)
+        if (cbuf[i] != 0xEE)
+            return 0;
+    return 1;
+}
+
+static void test_copy_from_user(void)
+{
+    static const uint8_t code[] = "copy-from-user code bytes";
+    uint64_t f0 = pmm_free_count(), pa;
+    struct vmm_mapping m;
+
+    if (proc_create(&proc, code, sizeof(code)) != PROC_OK) {
+        expect(0, "process for copy_from_user tests");
+        return;
+    }
+    /* Distinct bytes around the boundary between the first two stack pages. */
+    uint8_t *s0 = phys_to_virt(proc.page_pa[1]), *s1 = phys_to_virt(proc.page_pa[2]);
+    s0[PAGE_SIZE - 3] = 'a';
+    s0[PAGE_SIZE - 2] = 'b';
+    s0[PAGE_SIZE - 1] = 'c';
+    s1[0] = 'd';
+    s1[1] = 'e';
+    s1[2] = 'f';
+    uint8_t *top = phys_to_virt(proc.page_pa[PROC_MAX_PAGES - 1]);
+    top[PAGE_SIZE - 1] = 'z';
+
+    expect(cfu(0, 0) == 0 && cbuf_untouched_from(0), "len 0: success, pointer not examined");
+    expect(cfu(PROC_CODE_VA, sizeof(code)) == 0 && memcmp(cbuf, code, sizeof(code)) == 0 &&
+           cbuf_untouched_from(sizeof(code)), "valid buffer copied exactly, nothing beyond len");
+    expect(cfu(USER_STACK_START + PAGE_SIZE - 3, 6) == 0 && memcmp(cbuf, "abcdef", 6) == 0 &&
+           cbuf_untouched_from(6), "range crossing two mapped pages copied");
+    expect(cfu(USER_STACK_END - 1, 1) == 0 && cbuf[0] == 'z', "last mapped user byte copied");
+
+    static const struct { uint64_t p; size_t n; const char *what; } bad[] = {
+        { 0, 5, "null pointer" },
+        { NULL_GUARD_END - 4, 2, "null guard" },
+        { NULL_GUARD_END - 2, 4, "range starting in the null guard" },
+        { 0x500000, 5, "unmapped page" },
+        { PROC_CODE_VA + PAGE_SIZE - 2, 5, "range running into an unmapped page" },
+        { USER_STACK_END - 1, 2, "range running into the unmapped top page" },
+        { USER_STACK_GUARD + PAGE_SIZE - 1, 2, "range starting in the stack guard page" },
+        { KERNEL_VMA + 0x100000, 5, "kernel-half address (mapped, supervisor)" },
+        { 0xFFFFFFFFFFFFFF80ULL, 0x100, "range wrapping past 2^64" },
+        { 0x0000800000000000ULL, 5, "first non-canonical address" },
+        { 0x8000000000000000ULL, 5, "non-canonical address" },
+        { 0x00007FFFFFFFFFF0ULL, 0x20, "range crossing into the non-canonical hole" },
+        { PROC_CODE_VA, (size_t)-1, "length near 2^64" },
+    };
+    int bad_ok = 1;
+    for (unsigned i = 0; i < sizeof(bad) / sizeof(bad[0]); i++) {
+        int ok = cfu(bad[i].p, bad[i].n) == -VOS_EFAULT && cbuf_untouched_from(0);
+        if (!ok) {
+            serial_puts("selftest:   copy_from_user accepted: ");
+            serial_puts(bad[i].what);
+            serial_puts("\r\n");
+        }
+        bad_ok &= ok;
+    }
+    expect(bad_ok, "every invalid range refused with -VOS_EFAULT, nothing copied");
+
+    /* A supervisor-only page inside the user range is refused. */
+    uint64_t sup = 0, extra = 0;
+    int setup_sup = pmm_alloc_frame(&sup) == PMM_OK && vmm_map(proc.root, 0x600000, sup, 0) == VMM_OK;
+    expect(setup_sup, "setup: supervisor page in the process lower half");
+    if (setup_sup) {
+        ((uint8_t *)phys_to_virt(sup))[0] = 'S';
+        expect(cfu(0x600000, 1) == -VOS_EFAULT && cbuf_untouched_from(0),
+               "supervisor-only page in the lower half refused");
+        vmm_unmap(proc.root, 0x600000, &pa);
+    }
+    /* A user leaf under an intermediate entry without U is refused (effective U is the AND). */
+    int setup_extra = pmm_alloc_frame(&extra) == PMM_OK &&
+                      vmm_map(proc.root, 0x800000, extra, VMM_USER) == VMM_OK;
+    expect(setup_extra, "setup: extra user page under its own page table");
+    if (setup_extra) {
+        uint64_t *l4 = phys_to_virt(proc.root);
+        uint64_t *pdpt = phys_to_virt(l4[0] & PTE_ADDR);
+        uint64_t *pd = phys_to_virt(pdpt[0] & PTE_ADDR);
+        expect(cfu(0x800000, 1) == 0, "user page readable while every level has U");
+        pd[4] &= ~PTE_U;
+        expect(cfu(0x800000, 1) == -VOS_EFAULT && vmm_lookup(proc.root, 0x800000, &m) == VMM_OK &&
+               !(m.flags & VMM_USER), "user leaf under a supervisor PD entry refused");
+        pd[4] |= PTE_U;
+        vmm_unmap(proc.root, 0x800000, &pa);
+    }
+    if (sup)
+        pmm_free_frame(sup);
+    if (extra)
+        pmm_free_frame(extra);
+    proc_destroy(&proc);
+    expect(pmm_free_count() == f0, "copy_from_user tests leave no frame behind");
 }
 
 /* ---- ring 3 ---- */
@@ -344,6 +453,7 @@ int selftest_user(void)
 {
     failures = cases = 0;
     test_address_space();
+    test_copy_from_user();
     test_ring3_exit();
     test_user_faults();
     serial_puts("selftest: user ");
