@@ -235,7 +235,7 @@ stage is implemented.
     user-page faults are not exercised (no ring 3 yet). No locking (single CPU, interrupts
     off). Frames above 1 GiB cannot be mapped or used as tables.
 
-### N1.5 — Process object and first ring-3 entry [Planned]
+### N1.5 — Process object and first ring-3 entry [Implemented and verified]
 - Address space = new PML4 with only entry 511 copied from the kernel PML4.
 - `enter_user()`: save callee-saved registers and RSP, set TSS.RSP0, load CR3, zero all GPRs,
   `iretq` with SS 0x1B, RSP per section 8.3, RFLAGS 0x2, CS 0x23, RIP = entry.
@@ -243,6 +243,44 @@ stage is implemented.
   kill process, load kernel CR3, free user memory, return to `enter_user()`'s caller; RPL 0 →
   panic.
 - First user code: a few bytes copied from a kernel template into a fresh user page (no ELF yet).
+- **Status (verified 2026-10-17):** `process.{c,h}`, `usermode.S`, 256-entry IDT, trap
+  classification in `exception.c`; tests in `selftest_user.c` with programs in `user_progs.S`.
+  `make test-all` passes (19 QEMU runs); 88 user cases run in boot-128M, boot-2G, modules and
+  cpu-max.
+  - **Address space:** fresh PML4 with only PML4[511] copied; code page `0x400000` user R+X;
+    stack `0x7FFFFFFFB000–0x7FFFFFFFEFFF` user RW NX; guard page, null guard and top page
+    unmapped; audited before every entry. Holds root + 5 pages + 6 tables (12 frames).
+  - **Entry:** `enter_user` saves rbx, rbp, r12–r15 and RSP, loads the process CR3, nulls
+    DS/ES/FS/GS, zeroes all GPRs, IRETQs with SS 0x1B, RSP `0x7FFFFFFFEFF0`, RFLAGS 0x2, CS 0x23.
+    A user program verifies this entry state itself.
+  - **Return:** traps from ring 3 arrive on TSS.RSP0 (the saved frame ends exactly at RSP0 for
+    every exit and fault); the kernel records the frame, reloads its CR3 and `user_return`
+    restores the saved context (and SS/DS/ES = 0x10: SS is null after a CPL 3→0 transition). No
+    IRETQ ever returns to an ended process; `proc_run` refuses to run a process twice.
+  - **Deviation:** an unsupported system-call number kills the process (ABI v0's `-VOS_ENOSYS`
+    return needs the resume path planned for N1.6).
+  - **Evidence of CPL 3** (CPU-generated): CS 0x23/SS 0x1B in every saved frame; RIP right after
+    the `int $0x80` bytes in the user page; `cli`, `hlt`, `mov %cr3`, `out` → #GP(0); `int $14` →
+    #GP(0x72), `int $0x81` → #GP(0x40a); user write/read of a present kernel page → #PF 0x7/0x5
+    (U bit set by the CPU), CR2 = target, target unchanged; null read #PF 0x4; write to own code
+    #PF 0x7; jump to stack #PF 0x15 (NX); push into the guard page #PF 0x6; under `-cpu max`
+    `sgdt` → #GP(0) (UMIP). Supplemental only: QEMU `-d int` logs `cpl=3` with `0023:`/`001b:` for
+    all 42 user traps of a test boot.
+  - **Isolation of faults:** every user fault kills only the process; a normal program runs
+    afterwards; kernel-mode traps still panic (`kernel-ud`, `kernel-df`, `kernel-int80`).
+  - **Teardown:** only on the kernel CR3; frees pages, emptied tables and the root, never the
+    PML4[511] subtree; free count equals the baseline after 50 create/destroy cycles, 20+ runs
+    and every fault; callee-saved registers preserved across `proc_run`; RSP0/IST1 canaries
+    intact (and their check proven to detect corruption).
+  - **Mutation check:** 15 mutations (gate DPL, user IF, IOPL, register clearing, callee-saved
+    restore, `cld`, dispatch, CR3 switch-back, frame release, U bit on PML4[511], code/stack
+    permissions, fault state, re-run guard) were each detected. With user IF=1, an IRQ from the
+    unprogrammed PIC arrives on vector 8 and is caught only by the selector check.
+  - **Open:** plan 8.2 says FPU/SSE are unavailable. SSE is (#UD, CR4.OSFXSR = 0) but x87 is
+    usable from ring 3 (CR0.EM = 0) and its state is not cleared between processes. Needs a
+    decision (CR0.EM = 1 or FNINIT on entry) before more than one program exists.
+  - **Not tested:** SMEP (kernel execution of a user page), SMAP (disabled), NMI/#MC during user
+    mode, real hardware.
 
 ### N1.6 — System-call ABI v0 and user-memory access [Planned]
 - `exit`, `debug_write` (section 8.1). `copy_from_user` per section 9.3, written so that SMAP
@@ -473,7 +511,7 @@ leave the rest zero, map user-accessible with W only for `PF_W` and NX unless `P
 
 ## 9. Security boundaries
 
-### 9.1 Properties N1 is designed to establish [Planned — none verified yet]
+### 9.1 Properties N1 is designed to establish [partly verified in N1.5, see N1.5 status]
 
 | Property | Mechanism |
 |---|---|
