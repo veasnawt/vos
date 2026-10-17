@@ -94,7 +94,10 @@ uint64_t exception_handler(struct exc_frame *f)
     serial_hex(f->ss);
     serial_puts(" rsp=");
     serial_hex(f->rsp);
-    serial_puts(gdt_in_ist1_stack((uint64_t)f) ? " stack=ist1\r\n" : " stack=kernel\r\n");
+    const char *stack = gdt_stack_name((uint64_t)f);
+    serial_puts(" stack=");
+    serial_puts(stack ? stack : "kernel");
+    serial_puts("\r\n");
 
     panic(exc_info[v].msg);
 }

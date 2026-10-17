@@ -10,7 +10,9 @@
 #define GDT_USER_CS     0x23
 #define GDT_TSS         0x28
 
-#define IST_DOUBLE_FAULT 1
+#define IST_DOUBLE_FAULT    1
+#define IST_NMI             2
+#define IST_MACHINE_CHECK   3
 
 /* Load the GDT, reload the segment registers and load the task register. */
 void gdt_init(void);
@@ -18,7 +20,13 @@ void gdt_init(void);
 uint64_t gdt_tss_base(void);
 uint64_t gdt_tss_rsp0(void);
 uint64_t gdt_tss_ist1(void);
-/* Nonzero if the canaries at the bottom of the RSP0 and IST1 stacks are intact. */
+/* Top of IST stack n (1..3), or 0. */
+uint64_t gdt_tss_ist(unsigned n);
+/* Virtual addresses of the guard pages below the RSP0 and IST stacks; returns their number. */
+unsigned gdt_guard_pages(uint64_t *va, unsigned max);
+/* "entry", "ist1", "ist2" or "ist3" if addr lies in that stack, else NULL. */
+const char *gdt_stack_name(uint64_t addr);
+/* Nonzero if the canaries at the bottom of the RSP0 and all IST stacks are intact. */
 int gdt_stack_canaries_intact(void);
 #ifdef VOS_TEST
 /* Test hook: overwrite (1) or restore (0) one RSP0 stack canary word. */

@@ -10,6 +10,8 @@
 
 /* Build and load the IDT. External interrupts stay disabled. */
 void idt_init(void);
+/* The IST index of a gate (0 = none). */
+unsigned idt_gate_ist(unsigned vector);
 #ifdef VOS_TEST
 /* Test support: mark a gate not-present. */
 void idt_clear_gate(unsigned vector);

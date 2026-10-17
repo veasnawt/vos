@@ -253,9 +253,16 @@ higher_half_entry:
     hlt
     jmp 1b
 
-.section .bss
-.align 16
-kernel_stack:   .skip 16384
+/*
+ * The stack kernel_main runs on, with an unmapped guard page below it once
+ * kmap.c has switched to the W^X kernel map (N2.0): an overflow faults
+ * instead of overwriting .bss.
+ */
+.section .bss.kstack, "aw", @nobits
+.balign 4096
+.global boot_kstack_guard, kernel_stack, kernel_stack_top
+boot_kstack_guard:  .skip 4096
+kernel_stack:       .skip 16384
 kernel_stack_top:
 
 .section .note.GNU-stack, "", @progbits

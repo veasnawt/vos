@@ -44,7 +44,9 @@ static void set_gate(unsigned v, uint64_t h, uint8_t ist, uint8_t type_attr)
 void idt_init(void)
 {
     for (unsigned i = 0; i < IDT_VECTORS; i++)
-        set_gate(i, exc_stub_table[i], i == 8 ? IST_DOUBLE_FAULT : 0, IDT_INTERRUPT_GATE_DPL0);
+        set_gate(i, exc_stub_table[i],
+                 i == 8 ? IST_DOUBLE_FAULT : i == 2 ? IST_NMI : i == 18 ? IST_MACHINE_CHECK : 0,
+                 IDT_INTERRUPT_GATE_DPL0);
     /* Interrupt gate (IF stays 0); the stub runs on TSS.RSP0 when entered from ring 3. */
     set_gate(IDT_SYSCALL, (uint64_t)exc_stub_128, 0, IDT_INTERRUPT_GATE_DPL3);
 
@@ -54,7 +56,16 @@ void idt_init(void)
     serial_dec(IDT_VECTORS);
     serial_puts(" exception vectors loaded, df ist=");
     serial_dec(idt[8].ist);
+    serial_puts(", nmi ist=");
+    serial_dec(idt[2].ist);
+    serial_puts(", mc ist=");
+    serial_dec(idt[18].ist);
     serial_puts("\r\nidt: vector 0x80 present, DPL 3 (provisional exit only)\r\n");
+}
+
+unsigned idt_gate_ist(unsigned vector)
+{
+    return vector < IDT_ENTRIES ? idt[vector].ist : 0xFF;
 }
 
 #ifdef VOS_TEST
