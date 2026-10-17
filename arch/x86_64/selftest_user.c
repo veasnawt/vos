@@ -783,8 +783,9 @@ static void test_preemption(void)
         serial_dec(r[i].preemptions);
         serial_puts(i < 2 ? "/" : "\r\n");
     }
-    expect(ok && span >= 30 && lo >= 5 && hi - lo <= 2 * SCHED_SLICE_TICKS + 2 && sum + 6 >= span,
-           "three endless loops share the CPU round robin (every one runs, shares within two slices)");
+    expect(ok && span >= 30 && lo >= 5 && hi - lo <= 2 * SCHED_SLICE_TICKS + 2 && sum + 6 >= span &&
+           sum <= span + 2, "three endless loops share the CPU round robin (every one runs, shares within "
+           "two slices, together no more ticks than elapsed)");
 
     /* Registers survive preemption between processes; memory stays private. */
     ok = start(a, "irqregs", PROG(irqregs), 0, 0) && start(b, "tag-1", PROG(memtag), 1, 0x1111111111111111ULL) &&

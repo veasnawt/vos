@@ -181,13 +181,15 @@ int selftest_mp(const struct boot_info *bi)
     ok = launch(&P[0], "m-spin") && launch(&P[1], "m-spin") && launch(&P[2], "m-spin");
     uint64_t t0 = irq_ticks();
     run_for(3, 60);
-    uint64_t span = irq_ticks() - t0, lo = ~0ULL, hi = 0;
+    uint64_t span = irq_ticks() - t0, lo = ~0ULL, hi = 0, sum = 0;
     for (int i = 0; i < 3; i++) {
         lo = R[i].ticks < lo ? R[i].ticks : lo;
         hi = R[i].ticks > hi ? R[i].ticks : hi;
+        sum += R[i].ticks;
     }
     expect(ok && killed_by_test(&R[0]) && killed_by_test(&R[1]) && killed_by_test(&R[2]) && lo >= 15 &&
-           hi - lo <= 2 * SCHED_SLICE_TICKS + 2 && span >= 60, "three endless loops share the CPU round robin");
+           hi - lo <= 2 * SCHED_SLICE_TICKS + 2 && span >= 60 && sum <= span + 2,
+           "three endless loops share the CPU round robin (and only count the ticks they ran)");
     report("3 x spin (fairness)", 3);
 
     /* An endless loop beside normal programs: they finish; their system calls work. */
