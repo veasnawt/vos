@@ -400,10 +400,61 @@ stage is implemented.
   - **Not tested:** real hardware; more than one application; images larger than the 32 KiB
     buffer used by the mutation tests (the 1 MiB limit itself is tested).
 
-### N1.9 — Isolation and fault suite, cleanup, SMAP enablement [Planned]
+### N1.9 — Isolation and fault suite, cleanup, SMAP enablement [Implemented and verified]
 - Test ISO with one module per scenario, expectations in module command lines, kernel-side
   evaluation, final `hello` rerun and leak check (section 11).
 - SMAP enablement only after section 9.4 prerequisites are met; exercised with `-cpu max`.
+- **Status (verified 2026-10-17):** `selftest_suite.c`, `selftest_cpu.c`, fixtures in `user/suite`
+  (41 cases incl. 8 malformed copies of hello from `scripts/mkbadelf.sh`), SMAP in `cpu.c`/`entry.S`.
+  `make test-all` passes from a clean tree (27 QEMU runs, 2 negative forge checks, the serial
+  0x01 check, 231 user/ELF checks).
+  - **Suite (VOS_TEST_CASE=suite):** one GRUB module per case; its command line (trusted
+    configuration in `tests/x86_64/suite.grub.cfg`) states the expected outcome; the kernel
+    evaluates the CPU-pushed frame and kernel-counted system-call results and prints the verdict
+    as a kernel line. Results, identical in qemu64/128 MiB, qemu64/2 GiB and `-cpu max`:
+    41/41 pass, hello rerun after every case but `dirty` plus once at the end, free frames equal
+    before and after (32209 / 261617). After each case the kernel also checks allocator
+    invariants, stack canaries, the kernel address space, reserved module frames and the kernel
+    image bytes. Boot-module limit raised to 64 (reservations 80) for this.
+  - **CPU evidence (actual):** kernel write/read #PF 0x7/0x5 at `0xffffffff80100000`, own code
+    #PF 0x7 at `0x400000`, execute stack/.data/.rodata #PF 0x15 with RIP = CR2, stack overflow
+    #PF 0x6 in the guard page, null #PF 0x4, VGA #PF 0x6 at `0xb8000`; cli/hlt/mov cr3/wrmsr/
+    outb/inb #GP(0); int $14/$0x81/int3 #GP 0x72/0x40a/0x1a; ud2 #UD, fld1 #NM, xorps #UD;
+    sgdt/sidt/smsw/str #GP(0) with UMIP, normal exit without. Every frame CS 0x23/SS 0x1B. No
+    successful system call after any fault (a `not_reached()` write would count). The 0x01
+    byte from `outb` never reaches the serial log.
+  - **Clean exits:** invalid pointers/lengths/numbers (kernel counts ok 2, ENOSYS 2, EINVAL 1,
+    EFAULT 6), DF set across `debug_write` (exact text, DF restored), psABI alignment through
+    crt0, raw entry state via an own `_start`, `dirty` then `clean` (no byte of the previous
+    process survives), forged markers (all appear only in `user[t-forge]:` lines), AC across
+    system calls.
+  - **SMAP: enabled when available.** Prerequisites of section 9.4 were met differently from the
+    plan: the kernel never accesses a user page through a user address (`copy_from_user` reads
+    through the supervisor-only alias; entry and exit paths touch only kernel stacks; test pages
+    in the kernel space are supervisor pages), so no `stac`/`clac` bracketing or fixups exist.
+    The entry stub executes `clac` on every exception and system call when SMAP is enabled,
+    because ring 3 controls RFLAGS.AC. Tests: `smap-touch` (program sets AC, kernel reads its
+    page: `-cpu max` #PF err 0x1 with AC clear in the saved RFLAGS, panic; qemu64 control: read
+    succeeds), `t-acflag` (AC clear inside the kernel exactly when SMAP is on), the whole suite
+    under `-cpu max`.
+  - **SMEP:** `smep-exec` (kernel calls a user page: `-cpu max` #PF err 0x11, RIP = CR2 =
+    0x400000, panic; qemu64 control: the call executes).
+  - **Fixed:** the build-time validator missed SSE instructions with `%xmm` operands
+    (`8694dfb`), found by the `sse` fixture.
+  - **Mutation check (each restored afterwards):** caught directly by the ELF suite: no NX
+    (exec fixtures ran on), guard page mapped (wrong fault address), IOPL 3 (cli/outb/inb ran
+    on), no range check in `copy_from_user` (kernel-counted results differ), tables not released
+    (free count), user frames not zeroed (`clean`, `regs`), r12 not cleared (`regs`), AC not
+    cleared (`smap-touch`, `t-acflag`), SMEP/SMAP/UMIP not enabled (`smep-max`, `smap-max`, the
+    required `smep=on umip=on smap=on` marker), harness without the user-line filter
+    (`suite-forge`). Caught first by redundant checks (and directly once those were disabled
+    too): the pre-entry permission and region checks, the teardown emptiness checks, the IOPL
+    check before IRETQ, the CPU feature read-back. Caught only by unit tests: no U check in
+    `copy_from_user` (ELF processes have no lower-half supervisor pages), freeing a protected
+    frame, running a process twice, kernel-mode `int $0x80` (kernel-int80).
+  - **Not verified:** real hardware (all QEMU TCG; e.g. QEMU does not trap EMMS under CR0.EM);
+    NMI/#MC during user mode; more than one process at a time (not supported); timing or cache
+    side channels; DMA; the kernel's own W^X (2 MiB alias, writable and executable).
 
 ### N1.10 — Documentation [Planned]
 - ABI v0 reference, architecture document roadmap/status update, README.
@@ -618,7 +669,7 @@ leave the rest zero, map user-accessible with W only for `PF_W` and NX unless `P
 
 ## 9. Security boundaries
 
-### 9.1 Properties N1 is designed to establish [partly verified in N1.5, see N1.5 status]
+### 9.1 Properties N1 is designed to establish [verified in QEMU through N1.9, see the N1.5–N1.9 status]
 
 | Property | Mechanism |
 |---|---|
@@ -656,7 +707,7 @@ leave the rest zero, map user-accessible with W only for `PF_W` and NX unless `P
 5. Written as a single routine so SMAP bracketing and an exception fixup can be added without
    touching callers.
 
-### 9.4 SMAP prerequisites and tests (concern D)
+### 9.4 SMAP prerequisites and tests (concern D) [SMAP enabled in N1.9, see its status]
 SMAP stays **disabled** until all of these exist:
 1. All user-memory access goes through `copy_from_user`/`copy_to_user`; a grep-based check
    rejects direct dereferences of user addresses in kernel code.
@@ -717,18 +768,18 @@ parallel.
 | U1 | N1.8 | `hello` | `user[hello]: Hello from VOS!` (user line) and the kernel line `proc[hello]: exited status 0` |
 | U2 | N1.5/N1.8 | Ring-3 frame | Saved CS 0x23, SS 0x1B, RIP inside the program's executable segment |
 | U3 | N1.6 | Invalid arguments | NULL, kernel address, unmapped, partly mapped, overflowing, non-canonical, oversize → expected errors, logged by the kernel; unknown number → `-VOS_ENOSYS` |
-| U4 | N1.9 | Kernel write / read | #PF P=1,W=1,U=1 / P=1,U=1; target bytes unchanged; process killed |
-| U5 | N1.9 | Privileged instructions | #GP, saved CS 0x23 |
-| U6 | N1.9 | `outb` to COM1 | #GP; no byte reaches the serial log |
-| U7 | N1.9 | Execute stack/data; write VGA | #PF P=1,I/D=1; #PF P=0 |
-| U8 | N1.9 | Write own text | #PF P=1,W=1,U=1 |
-| U9 | N1.9 | Stack overflow | #PF inside the guard page |
-| U10 | N1.9 | `int $14` | #GP error code 0x72 |
-| U11 | N1.9 | DF set before `debug_write` | Correct output (proves `cld` on entry) |
-| U12 | N1.9 | Stack alignment | `t_stack_align` exits 0 |
-| U13 | N1.9 | Malformed ELF (header, segments, overlap, W+X, kernel-half address, missing/duplicate/malformed VOS note, wrong ABI version, `PT_INTERP`) | Each rejected with its reason; no frames leaked |
-| U14 | N1.9 | Cleanup | Final `hello` rerun passes; free count equals baseline; canaries intact |
-| U15 | N1.9 (optional) | `-cpu max` | SMEP/UMIP on; SMAP on only if section 9.4 is complete; suite passes; user `sgdt` raises #GP |
+| U4 | N1.9 ✓ | Kernel write / read | #PF P=1,W=1,U=1 / P=1,U=1; target bytes unchanged; process killed |
+| U5 | N1.9 ✓ | Privileged instructions | #GP, saved CS 0x23 |
+| U6 | N1.9 ✓ | `outb` to COM1 | #GP; no byte reaches the serial log |
+| U7 | N1.9 ✓ | Execute stack/data; write VGA | #PF P=1,I/D=1; #PF P=0 |
+| U8 | N1.9 ✓ | Write own text | #PF P=1,W=1,U=1 |
+| U9 | N1.9 ✓ | Stack overflow | #PF inside the guard page |
+| U10 | N1.9 ✓ | `int $14` | #GP error code 0x72 |
+| U11 | N1.9 ✓ | DF set before `debug_write` | Correct output (proves `cld` on entry) |
+| U12 | N1.9 ✓ | Stack alignment | `t-align` exits 0 |
+| U13 | N1.8/N1.9 ✓ | Malformed ELF (header, segments, overlap, W+X, kernel-half address, missing/duplicate/malformed VOS note, wrong ABI version, `PT_INTERP`) | Each rejected with its reason; no frames leaked |
+| U14 | N1.9 ✓ | Cleanup | Final `hello` rerun passes; free count equals baseline; canaries intact |
+| U15 | N1.9 ✓ | `-cpu max` | SMEP/UMIP/SMAP on (SMAP: see N1.9 status); suite passes; user `sgdt` raises #GP |
 
 **N1 is complete when:** `make test-all` runs R1–R5, P0, K1–K3, M1 and U1–U14 (and U15 if
 approved) sequentially in TCG and all pass; `make ARCH=x86_64 run` shows the separately built
