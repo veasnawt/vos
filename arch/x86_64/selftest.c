@@ -33,7 +33,7 @@ static int contains(const char *hay, const char *needle)
 
 /* ---- synthetic Multiboot2 info blocks ---- */
 
-static uint8_t blk[1024] __attribute__((aligned(8)));
+static uint8_t blk[4096] __attribute__((aligned(8)));
 static uint32_t blk_len;
 
 static void blk_begin(void)
@@ -211,7 +211,7 @@ static void test_parse(void)
 
     blk_begin();
     blk_mmap(std_map, N_STD);
-    blk_tag(3, 4000);                    /* tag larger than the whole block */
+    blk_tag(3, 8000);                    /* tag larger than the whole block */
     blk_end();
     expect(parse() != NULL, "tag size beyond the info block rejected");
 

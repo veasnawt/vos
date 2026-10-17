@@ -11,7 +11,7 @@
 #include "multiboot2.h"
 #include "resv.h"
 
-#define BOOT_MAX_MODULES    4
+#define BOOT_MAX_MODULES    64      /* the N1.9 isolation suite delivers ~42 */
 #define MB2_INFO_MAX        0x10000u    /* sanity bound for the info block */
 
 struct boot_module {

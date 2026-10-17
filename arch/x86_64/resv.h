@@ -13,7 +13,7 @@
 #include <stddef.h>
 #include <stdint.h>
 
-#define RESV_MAX        16
+#define RESV_MAX        80      /* low 1 MiB, kernel, info and up to 64 modules */
 
 struct phys_range {
     uint64_t start, end;                /* [start, end), page-aligned */
