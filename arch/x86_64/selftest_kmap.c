@@ -27,6 +27,7 @@
 #include "memlayout.h"
 #include "panic.h"
 #include "pmm.h"
+#include "thread.h"
 #include "vmm.h"
 
 extern char __text_start[], __text_end[], __rodata_start[], __rodata_end[];
@@ -121,7 +122,8 @@ static void test_live(const struct boot_info *bi)
     }
     expect(wrong == 0, "the whole alias of phys [0, 1 GiB) translates to its own frames with W^X permissions");
     expect(exec == text_pages() && wx == 0, "ring-0 executable pages are exactly the kernel text, none writable");
-    expect(absent == ng && ng == 5, "the 5 guard pages are the only untranslated pages");
+    expect(absent == ng && ng == 5 + THREAD_STACKS,
+           "the guard pages (boot, entry, 3 IST, 7 thread stacks) are the only untranslated pages");
     expect(vmm_audit_space(K, 1, &a) == VMM_OK && a.exec_supervisor == text_pages() &&
            a.large_upper == KMAP_LARGE_PAGES && a.leaves_upper == 512 - ng,
            "audit: kernel half matches the W^X layout");

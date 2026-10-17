@@ -20,6 +20,7 @@
 #include "panic.h"
 #include "pmm.h"
 #include "resv.h"
+#include "thread.h"
 #include "vmm.h"
 #ifdef VOS_TEST
 #include "selftest.h"
@@ -231,6 +232,8 @@ void kernel_main(uint32_t mb2_magic, uint32_t mb2_info)
 
     /* 8259 + PIT, IRQ0 unmasked. IF stays 0 in the kernel; ring 3 runs with IF = 1. */
     irq_init();
+    /* This code becomes the boot thread (N2.2); user programs keep running synchronously on it. */
+    sched_init();
 
     /* The first native application: GRUB module "hello", run in ring 3. */
     check(app_run_boot_module(&bi), "boot application ran and exited with status 0");
@@ -243,6 +246,7 @@ void kernel_main(uint32_t mb2_magic, uint32_t mb2_info)
     check(selftest_vmm() == 0, "vmm self-test");
     check(selftest_kmap(&bi) == 0, "kmap self-test");
     check(selftest_irq() == 0, "irq self-test");
+    check(selftest_sched() == 0, "scheduler self-test");
     check(selftest_user() == 0, "user self-test");
     check(selftest_elf(&bi) == 0, "elf self-test");
 #if defined(VOS_TEST_CASE_suite) || defined(VOS_TEST_CASE_irq)

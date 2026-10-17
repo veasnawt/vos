@@ -27,6 +27,8 @@ int selftest_kmap(const struct boot_info *bi);
 void selftest_kmap_case(int self_tests_failed);
 /* 8259 driver (synthetic), real PIC/PIT/IDT state, ring-3 interrupt delivery (N2.1). */
 int selftest_irq(void);
+/* Kernel threads: guarded stacks, context switch, scheduler, idle thread (N2.2). */
+int selftest_sched(void);
 /* Page-table manager, identity-map removal and kernel survival (restores all state). */
 int selftest_vmm(void);
 /* User address spaces and ring 3 (restores all state). */

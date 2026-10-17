@@ -40,7 +40,7 @@
 
 #define KMAP_LARGE_PAGES    511     /* 2 MiB pages: PD[1..511] */
 #define KMAP_SMALL_SPAN     0x200000ULL     /* PD[0] covers phys [0, 2 MiB) with 4 KiB pages */
-#define KMAP_MAX_GUARDS     8
+#define KMAP_MAX_GUARDS     16
 
 /* Result of a check: the first failure found. */
 struct kmap_fail {

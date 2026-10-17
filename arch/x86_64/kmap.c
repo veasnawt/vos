@@ -7,6 +7,7 @@
 #include "lib.h"
 #include "memlayout.h"
 #include "pmm.h"
+#include "thread.h"
 #include "vmm.h"
 
 /* Linker symbols: boot symbols are physical, the others higher-half virtual. */
@@ -72,7 +73,8 @@ unsigned kmap_guard_pages(uint64_t *va, unsigned max)
 
     if (n < max)
         va[n++] = kva(boot_kstack_guard);
-    return n + gdt_guard_pages(va + n, max - n);
+    n += gdt_guard_pages(va + n, max - n);
+    return n + thread_guard_pages(va + n, max - n);     /* N2.2 kernel-thread stacks */
 }
 
 int kmap_is_guard(uint64_t pa)
