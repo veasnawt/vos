@@ -17,6 +17,14 @@ int selftest_pmm_kernel(const struct boot_info *bi, const struct resv_table *t);
 /* Drain and restore the kernel allocator (VOS_TEST_CASE=pmm-exhaust only). */
 int selftest_pmm_exhaust(const struct boot_info *bi);
 
+/* Kernel W^X map, its verifier, alias rules, IST and stack guards (restores all state). */
+int selftest_kmap(const struct boot_info *bi);
+/*
+ * The isolated W^X, guard, stack-overflow and NMI/#MC cases (VOS_TEST_CASE=...):
+ * never returns if one is compiled in. Refuses to run after a failed
+ * self-test, whose failure the case's exit status 35 would otherwise hide.
+ */
+void selftest_kmap_case(int self_tests_failed);
 /* Page-table manager, identity-map removal and kernel survival (restores all state). */
 int selftest_vmm(void);
 /* User address spaces and ring 3 (restores all state). */

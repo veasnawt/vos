@@ -86,7 +86,7 @@ uint64_t exception_handler(struct exc_frame *f)
     serial_hex(f->rip);
     serial_puts(" rflags=");
     serial_hex(f->rflags);
-    if (v == 14) {
+    if (v == 14 || v == 8) {           /* #DF: CR2 still holds the address of a #PF that escalated */
         serial_puts(" cr2=");
         serial_hex(read_cr2());
     }

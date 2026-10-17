@@ -237,6 +237,7 @@ void kernel_main(uint32_t mb2_magic, uint32_t mb2_info)
     check(selftest_pmm_synthetic() == 0, "pmm synthetic self-test");
     check(selftest_pmm_kernel(&bi, &boot_resv) == 0, "pmm kernel self-test");
     check(selftest_vmm() == 0, "vmm self-test");
+    check(selftest_kmap(&bi) == 0, "kmap self-test");
     check(selftest_user() == 0, "user self-test");
     check(selftest_elf(&bi) == 0, "elf self-test");
 #ifdef VOS_TEST_CASE_suite
@@ -254,6 +255,9 @@ void kernel_main(uint32_t mb2_magic, uint32_t mb2_info)
 #ifdef VOS_TEST_CASE_pmm_exhaust
     check(selftest_pmm_exhaust(&bi) == 0, "pmm exhaustion");
 #endif
+#endif
+#ifdef VOS_TEST
+    selftest_kmap_case(first_failure != 0);
 #endif
 #ifdef VOS_TEST_CASE_panic
     panic("test case: deliberate panic");

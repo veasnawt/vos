@@ -67,12 +67,17 @@ int kmap_is_guard(uint64_t pa);
 
 /*
  * Check a candidate page directory and page table (pd[0] must point to
- * pt_pa). With live set, translations go through vmm_lookup on the active
- * root instead of the given arrays. Returns 0 if every check passed, else -1
- * and records the first failure.
+ * pt_pa): first the layout itself (every entry against kmap_expected_*),
+ * then, independently of that layout, the addresses the running kernel
+ * needs (see kmap_init). With live set, translations go through vmm_lookup
+ * on the active root instead of the given arrays. Returns 0 if every check
+ * passed, else -1 and records the first failure.
  */
 int kmap_check(const uint64_t *pd, const uint64_t *pt, uint64_t pt_pa, int live,
                const struct boot_info *bi);
+/* Only the second half of kmap_check: the addresses the running kernel needs. */
+int kmap_check_running(const uint64_t *pd, const uint64_t *pt, uint64_t pt_pa, int live,
+                       const struct boot_info *bi);
 
 #ifdef VOS_TEST
 /* Test hook: the live directory and table, and the physical address of the table. */

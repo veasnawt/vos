@@ -234,6 +234,18 @@ static int check_structure(const uint64_t *pd, const uint64_t *pt, uint64_t pt_p
 int kmap_check(const uint64_t *pd, const uint64_t *pt, uint64_t pt_pa, int live,
                const struct boot_info *bi)
 {
+    fail.what = fail.problem = 0;
+    fail.va = 0;
+    if (check_structure(pd, pt, pt_pa))
+        return -1;
+    return kmap_check_running(pd, pt, pt_pa, live, bi);
+}
+
+/* Not inlined: "caller" below must be kmap_check or a test, not a frame further up. */
+__attribute__((noinline))
+int kmap_check_running(const uint64_t *pd, const uint64_t *pt, uint64_t pt_pa, int live,
+                       const struct boot_info *bi)
+{
     struct xlate x = { pd, pt, pt_pa, live };
     const struct pmm *k = pmm_kernel();
     struct dtr gdtr, idtr;
@@ -242,8 +254,6 @@ int kmap_check(const uint64_t *pd, const uint64_t *pt, uint64_t pt_pa, int live,
 
     fail.what = fail.problem = 0;
     fail.va = 0;
-    if (check_structure(pd, pt, pt_pa))
-        return -1;
 
     /* Guards: no translation at all (the 2 MiB pages cannot cover them: checked above). */
     ng = kmap_guard_pages(guards, KMAP_MAX_GUARDS);

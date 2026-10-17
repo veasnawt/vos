@@ -11,8 +11,8 @@ ARCH_LDFLAGS    := -m elf_x86_64 -z max-page-size=0x1000
 ARCH_OBJS       := boot.o entry.o usermode.o kernel.o bootinfo.o console.o cpu.o exception.o gdt.o idt.o \
                    lib.o loader.o panic.o pmm.o process.o resv.o syscall.o usercopy.o vmm.o kmap.o elf.o app.o
 ifeq ($(VOS_TEST),1)
-ARCH_OBJS       += selftest.o selftest_cpu.o selftest_elf.o selftest_pmm.o selftest_suite.o selftest_user.o \
-                   selftest_vmm.o user_progs.o
+ARCH_OBJS       += selftest.o selftest_cpu.o selftest_elf.o selftest_kmap.o selftest_pmm.o selftest_suite.o \
+                   selftest_user.o selftest_vmm.o user_progs.o
 endif
 QEMU            := qemu-system-x86_64
 # The boot application, delivered by GRUB as a Multiboot2 module (grub.cfg).
@@ -38,6 +38,15 @@ MULTIBOOT_CHECK := --is-x86-multiboot2
 # VOS-TEST: PASS (33) into VOS-TEST: FAIL (35).
 # 4. User space (no QEMU): hello.elf is built and validated, the negative ELF
 #    tests run, and no kernel image may contain the application (user-test).
+# N2.0 isolated fault case: build VOS_TEST_CASE=$(1), require exit status 35,
+# the kmap self-test line and the markers $(2), then compare the CPU-reported
+# exc: line with the case's own "fault-test: expect" line (scripts/check-fault.sh).
+define fault-case
+	$(MAKE) --no-print-directory ARCH=$(ARCH) VOS_TEST=1 VOS_TEST_CASE=$(1) iso
+	scripts/exit-test.sh $(1) build/$(ARCH)-test-$(1)/vos.iso 35 'selftest: kmap ' $(2) 'VOS-TEST: FAIL' --
+	scripts/check-fault.sh build/$(ARCH)-test-$(1)/$(1).serial.log
+endef
+
 arch-test: iso
 	QEMU=$(QEMU) FAIL_PATTERN='FAILED|check failed|boot error|rejected|killed' \
 	    scripts/test.sh $(ISO) $(BUILD)/serial.log 'Hello from VOS!' 'boot: checks passed' \
@@ -50,10 +59,10 @@ arch-test: iso
 	    'proc[hello]: exited status 0, all frames reclaimed' 'selftest: elf ' \
 	    ' corrupted executables rejected for the intended reason' 'selftest: pmm-synthetic ' \
 	    'selftest: pmm-kernel ' 'selftest: 1000 frames from ' 'selftest: vmm ' 'selftest: user ' \
-	    'VOS-TEST: PASS' --
+	    'selftest: kmap ' 'kmap: phys 0-2 MiB as 4 KiB pages: ' 'VOS-TEST: PASS' --
 	MEM=2G scripts/exit-test.sh boot-2G $(TEST_ISO) 33 'selftest: pmm-synthetic ' \
 	    'selftest: pmm-kernel ' 'selftest: 1000 frames from ' 'selftest: vmm ' 'selftest: user ' \
-	    'VOS-TEST: PASS' --
+	    'selftest: kmap ' 'VOS-TEST: PASS' --
 	@echo "forge-check: a kernel marker printed only by a user program must NOT be found"
 	! scripts/exit-test.sh forge-check $(TEST_ISO) 33 'VOS-FORGED-MARKER' 'VOS-TEST: PASS' -- >/dev/null 2>&1
 	scripts/exit-test.sh no-long-mode $(TEST_ISO) 35 'CPU lacks long mode' -cpu qemu32
@@ -64,7 +73,8 @@ arch-test: iso
 	    'tss: rsp0=' 'idt: 32 exception vectors loaded, df ist=1' 'idt: vector 0x80 present, DPL 3' \
 	    'cpu: wp=on nx=on' 'VOS-TEST: PASS' --
 	scripts/exit-test.sh no-nx $(TEST_ISO) 35 'panic: CPU lacks NX' 'VOS-TEST: FAIL' -- -cpu qemu64,-nx
-	scripts/exit-test.sh cpu-max $(TEST_ISO) 33 'smep=on umip=on smap=on' 'selftest: user ' 'VOS-TEST: PASS' \
+	scripts/exit-test.sh cpu-max $(TEST_ISO) 33 'smep=on umip=on smap=on' 'selftest: user ' 'selftest: kmap ' \
+	    'VOS-TEST: PASS' \
 	    -- -cpu max
 	$(MAKE) --no-print-directory ARCH=$(ARCH) VOS_TEST=1 VOS_TEST_CASE=kernel-ud iso
 	scripts/exit-test.sh kernel-ud build/$(ARCH)-test-kernel-ud/vos.iso 35 \
@@ -73,6 +83,21 @@ arch-test: iso
 	scripts/exit-test.sh kernel-df build/$(ARCH)-test-kernel-df/vos.iso 35 \
 	    'exc: #DF vec=8 err=0x0 cs=0x8 rip=' 'stack=ist1' 'panic: #DF double fault' \
 	    'VOS-TEST: FAIL' --
+	$(call fault-case,wx-text-write,'exc: #PF vec=14 err=0x3 cs=0x8' 'panic: #PF page fault')
+	$(call fault-case,wx-rodata-write,'exc: #PF vec=14 err=0x3 cs=0x8' 'panic: #PF page fault')
+	$(call fault-case,wx-data-exec,'exc: #PF vec=14 err=0x11 cs=0x8' 'panic: #PF page fault')
+	$(call fault-case,wx-alias-exec,'exc: #PF vec=14 err=0x11 cs=0x8' 'panic: #PF page fault')
+	$(call fault-case,wx-guard-read,'exc: #PF vec=14 err=0x0 cs=0x8' 'panic: #PF page fault')
+	$(call fault-case,kstack-overflow,'exc: #DF vec=8 err=0x0 cs=0x8' 'stack=ist1' 'panic: #DF double fault')
+	$(call fault-case,nmi-gate,'not a hardware NMI' 'exc: NMI vec=2 err=- cs=0x8' 'stack=ist2' \
+	    'panic: NMI non-maskable interrupt')
+	$(call fault-case,mc-gate,'not a machine check' 'exc: #MC vec=18 err=- cs=0x8' 'stack=ist3' \
+	    'panic: #MC machine check')
+	$(MAKE) --no-print-directory ARCH=$(ARCH) VOS_TEST=1 VOS_TEST_CASE=nmi-real iso
+	scripts/nmi-test.sh nmi-real build/$(ARCH)-test-nmi-real/vos.iso 35 'waiting for an NMI' \
+	    'selftest: kmap ' 'exc: NMI vec=2 err=- cs=0x8' 'stack=ist2' 'panic: NMI non-maskable interrupt' \
+	    'VOS-TEST: FAIL' --
+	scripts/check-fault.sh build/$(ARCH)-test-nmi-real/nmi-real.serial.log
 	$(MAKE) --no-print-directory ARCH=$(ARCH) VOS_TEST=1 VOS_TEST_CASE=modules iso
 	scripts/exit-test.sh modules build/$(ARCH)-test-modules/vos.iso 33 \
 	    'boot: kernel command line "' 'vos.test=1' 'boot: modules 2' 'boot: module 0 ' \
