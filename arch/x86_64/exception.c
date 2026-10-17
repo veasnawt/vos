@@ -3,6 +3,8 @@
 #include "cpu.h"
 #include "gdt.h"
 #include "panic.h"
+#include "process.h"
+#include "idt.h"
 
 static const struct { const char *name, *msg; } exc_info[32] = {
     [0]  = { "#DE", "#DE divide error" },
@@ -44,9 +46,24 @@ static int has_error_code(uint64_t v)
     return v == 8 || (v >= 10 && v <= 14) || v == 17 || v == 21 || v == 29 || v == 30;
 }
 
-/* Every exception is fatal in N1.1: report, then panic. */
+/*
+ * Classification by the CPU-pushed CS: RPL 3 means the trap interrupted ring 3
+ * and belongs to the current process (proc_user_trap does not return). Any
+ * trap from ring 0 is a kernel error: report, then panic.
+ */
 void exception_handler(struct exc_frame *f)
 {
+    if ((f->cs & 3) != 0)
+        proc_user_trap(f);
+    if (f->cs != GDT_KERNEL_CS)
+        panic("trap with an unexpected code segment");
+    if (f->vector == IDT_SYSCALL) {
+        serial_puts("exc: int $0x80 from ring 0, rip=");
+        serial_hex(f->rip);
+        serial_puts("\r\n");
+        panic("int $0x80 from kernel mode");
+    }
+
     uint64_t v = f->vector < 32 ? f->vector : 31;
 
     serial_puts("exc: ");

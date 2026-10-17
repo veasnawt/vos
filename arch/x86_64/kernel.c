@@ -227,6 +227,9 @@ void kernel_main(uint32_t mb2_magic, uint32_t mb2_info)
 #ifdef VOS_TEST_CASE_kernel_ud
     __asm__ volatile ("ud2");
 #endif
+#ifdef VOS_TEST_CASE_kernel_int80
+    __asm__ volatile ("int $0x80");     /* ring 0 must never use the user gate */
+#endif
 #ifdef VOS_TEST_CASE_vmm_stale_tlb
     selftest_vmm_fault_stale_tlb();
 #endif

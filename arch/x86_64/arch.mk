@@ -7,10 +7,10 @@ ARCH_CFLAGS     := -m64 -mcmodel=kernel -mno-red-zone -mgeneral-regs-only \
                    -fcf-protection=none -fno-stack-clash-protection
 ARCH_ASFLAGS    := -m64
 ARCH_LDFLAGS    := -m elf_x86_64 -z max-page-size=0x1000
-ARCH_OBJS       := boot.o entry.o kernel.o bootinfo.o console.o cpu.o exception.o gdt.o idt.o \
+ARCH_OBJS       := boot.o entry.o usermode.o kernel.o bootinfo.o console.o cpu.o exception.o gdt.o idt.o \
                    lib.o panic.o pmm.o process.o resv.o vmm.o
 ifeq ($(VOS_TEST),1)
-ARCH_OBJS       += selftest.o selftest_pmm.o selftest_user.o selftest_vmm.o
+ARCH_OBJS       += selftest.o selftest_pmm.o selftest_user.o selftest_vmm.o user_progs.o
 endif
 QEMU            := qemu-system-x86_64
 MULTIBOOT_CHECK := --is-x86-multiboot2
@@ -41,7 +41,7 @@ arch-test: iso
 	scripts/exit-test.sh panic build/$(ARCH)-test-panic/vos.iso 35 \
 	    'panic: test case: deliberate panic' 'VOS-TEST: FAIL' --
 	scripts/exit-test.sh gdt-tss $(TEST_ISO) 33 'gdt: loaded cs=0x8 ss=0x10 tr=0x28 tss=busy' \
-	    'tss: rsp0=' 'idt: 32 exception vectors loaded, df ist=1' \
+	    'tss: rsp0=' 'idt: 32 exception vectors loaded, df ist=1' 'idt: vector 0x80 present, DPL 3' \
 	    'cpu: wp=on nx=on' 'VOS-TEST: PASS' --
 	scripts/exit-test.sh no-nx $(TEST_ISO) 35 'panic: CPU lacks NX' 'VOS-TEST: FAIL' -- -cpu qemu64,-nx
 	scripts/exit-test.sh cpu-max $(TEST_ISO) 33 'smep=on umip=on' 'VOS-TEST: PASS' -- -cpu max
@@ -78,3 +78,7 @@ arch-test: iso
 	scripts/exit-test.sh vmm-readonly build/$(ARCH)-test-vmm-readonly/vos.iso 35 \
 	    'vmm-test: read-only page readable' 'exc: #PF vec=14 err=0x3 cs=0x8 rip=' \
 	    'cr2=0x200000000000 ' 'panic: #PF page fault' 'VOS-TEST: FAIL' --
+	$(MAKE) --no-print-directory ARCH=$(ARCH) VOS_TEST=1 VOS_TEST_CASE=kernel-int80 iso
+	scripts/exit-test.sh kernel-int80 build/$(ARCH)-test-kernel-int80/vos.iso 35 \
+	    'selftest: user ' 'exc: int $$0x80 from ring 0' 'panic: int $$0x80 from kernel mode' \
+	    'VOS-TEST: FAIL' --

@@ -1,8 +1,12 @@
 /*
- * Exception entry stubs for vectors 0-31. Each stub normalizes the stack to
- * the layout of struct exc_frame (error code, vector, then 15 GPRs), clears
- * DF and calls exception_handler(frame) on a 16-byte-aligned stack. N1.1
- * exceptions are fatal, so the handler never returns.
+ * Entry stubs for exception vectors 0-31 and the provisional system-call
+ * vector 0x80. Each stub normalizes the stack to the layout of struct
+ * exc_frame (error code, vector, then 15 GPRs), clears DF and calls
+ * exception_handler(frame) on a 16-byte-aligned stack. In 64-bit mode the
+ * CPU pushes SS:RSP for every interrupt, with or without a privilege change,
+ * so the layout is the same for traps from ring 0 and ring 3 (from ring 3 it
+ * is on the TSS.RSP0 stack). The handler never returns: kernel traps panic,
+ * user traps resume the kernel through user_return.
  */
 .macro EXC_STUB n, has_err
 exc_stub_\n:
@@ -48,6 +52,8 @@ EXC_STUB 28, 0
 EXC_STUB 29, 1
 EXC_STUB 30, 1
 EXC_STUB 31, 0
+EXC_STUB 128, 0                     /* int $0x80 from ring 3 (DPL 3 gate) */
+.global exc_stub_128
 
 exc_common:
     pushq %rax

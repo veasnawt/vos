@@ -4,7 +4,9 @@
 
 #include <stdint.h>
 
-#define IDT_VECTORS 32
+#define IDT_VECTORS     32              /* CPU exception vectors */
+#define IDT_ENTRIES     256             /* the IDT covers every vector; unused gates are absent */
+#define IDT_SYSCALL     0x80            /* provisional system-call gate, DPL 3 */
 
 /* Build and load the IDT. External interrupts stay disabled. */
 void idt_init(void);

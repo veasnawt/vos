@@ -1,12 +1,22 @@
 #include "process.h"
+#include "console.h"
 #include "cpu.h"
+#include "exception.h"
+#include "gdt.h"
+#include "idt.h"
 #include "lib.h"
 #include "panic.h"
 #include "pmm.h"
 #include "vmm.h"
 
-/* The one process that may exist (created and not yet destroyed). */
-static struct process *live;
+/* The one process that may exist (created and not yet destroyed), and the one running. */
+static struct process *live, *current;
+
+/* usermode.S */
+int enter_user(uint64_t rip, uint64_t rsp, uint64_t cr3, uint64_t *kernel_rsp);
+__attribute__((noreturn)) void user_return(uint64_t *kernel_rsp, int result);
+
+#define RFLAGS_IF       (1ULL << 9)
 
 #ifdef VOS_TEST
 static int frame_budget = -1;
@@ -150,4 +160,91 @@ void proc_destroy(struct process *p)
 
     memset(p, 0, sizeof(*p));
     live = NULL;
+}
+
+int proc_run(struct process *p)
+{
+    uint64_t rflags;
+
+    if (!p || p != live || p->state != PROC_READY || current)
+        return PROC_ESTATE;
+    __asm__ volatile ("pushfq\n\tpopq %0" : "=r"(rflags));
+    if (rflags & RFLAGS_IF)
+        panic("process: interrupts enabled at user entry");
+    if ((read_cr3() & PTE_ADDR) != vmm_kernel_root())
+        panic("process: entry while not on the kernel address space");
+    if (gdt_tss_rsp0() < KERNEL_VMA || gdt_tss_rsp0() % 16 || !gdt_stack_canaries_intact())
+        panic("process: kernel-entry stack not ready");
+    if (!verify_space(p))
+        panic("process: address space failed verification before entry");
+
+    p->state = PROC_RUNNING;
+    current = p;
+    int result = enter_user(p->entry, p->user_rsp, p->root, &p->kernel_rsp);
+    current = NULL;
+
+    if ((read_cr3() & PTE_ADDR) != vmm_kernel_root() || p->kernel_rsp != 0 ||
+        (p->state != PROC_EXITED && p->state != PROC_KILLED) || result != p->state)
+        panic("process: kernel resumed in an inconsistent state");
+    if (!gdt_stack_canaries_intact())
+        panic("process: kernel-entry stack canary overwritten");
+    return result;
+}
+
+/* Leave ring 3 for good: back to the kernel root, then to proc_run's caller. */
+__attribute__((noreturn)) static void finish(struct process *p)
+{
+    write_cr3(vmm_kernel_root());
+    user_return(&p->kernel_rsp, p->state);
+}
+
+void proc_user_trap(struct exc_frame *f)
+{
+    struct process *p = current;
+
+    if (!p || p->state != PROC_RUNNING || p->kernel_rsp == 0)
+        panic("process: user trap with no running process");
+    if (f->cs != GDT_USER_CS || f->ss != GDT_USER_DS)
+        panic("process: user trap with unexpected selectors");
+    if ((read_cr3() & PTE_ADDR) != p->root)
+        panic("process: user trap on a foreign address space");
+
+    p->trap.vector = f->vector;
+    p->trap.error = f->error;
+    p->trap.rip = f->rip;
+    p->trap.cs = f->cs;
+    p->trap.rflags = f->rflags;
+    p->trap.rsp = f->rsp;
+    p->trap.ss = f->ss;
+    p->trap.cr2 = f->vector == 14 ? read_cr2() : 0;
+    p->trap.rax = f->rax;
+    p->trap.rdi = f->rdi;
+
+    if (f->vector == IDT_SYSCALL) {
+        if (f->rax == SYS_EXIT) {
+            p->exit_status = (int32_t)f->rdi;
+            p->state = PROC_EXITED;
+            serial_puts("proc: exit status ");
+            serial_dec((uint32_t)p->exit_status);
+        } else {
+            p->state = PROC_KILLED;
+            p->reason = "unsupported system call";
+            serial_puts("proc: killed: unsupported system call ");
+            serial_dec(f->rax);
+        }
+        serial_puts(" (cs=");
+        serial_hex(f->cs);
+        serial_puts(" rip=");
+        serial_hex(f->rip);
+        serial_puts(")\r\n");
+        finish(p);
+    }
+    serial_puts("proc: user exception vector ");
+    serial_dec(f->vector);
+    serial_puts(" (cs=");
+    serial_hex(f->cs);
+    serial_puts(" rip=");
+    serial_hex(f->rip);
+    serial_puts(")\r\n");
+    panic("process: user exception (fault isolation not implemented yet)");
 }

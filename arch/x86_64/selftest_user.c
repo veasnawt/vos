@@ -32,6 +32,19 @@ static void expect(int ok, const char *what)
 
 static struct process proc;
 
+/* user_progs.S */
+#define DECLARE_PROG(n) extern const uint8_t up_##n[], up_##n##_end[]
+DECLARE_PROG(exit42);
+DECLARE_PROG(regcheck);
+DECLARE_PROG(badsys);
+DECLARE_PROG(std_exit);
+#define PROG(n) up_##n, (size_t)(up_##n##_end - up_##n)
+uint64_t call_check_callee_saved(int (*fn)(void *), void *arg, int *result);
+
+#define RFLAGS_IF       (1ULL << 9)
+#define RFLAGS_DF       (1ULL << 10)
+#define RFLAGS_IOPL     (3ULL << 12)
+
 /* Frames one process holds: root + 5 pages + 6 tables (3 for code, 3 for stack). */
 #define PROC_FRAMES (1 + PROC_MAX_PAGES + 6)
 
@@ -133,10 +146,94 @@ static void test_address_space(void)
     expect(gdt_stack_canaries_intact(), "RSP0 and IST1 stack canaries intact");
 }
 
+/* ---- ring 3 ---- */
+
+static struct process last;             /* copy of the process taken before teardown */
+
+static int run_proc_fn(void *arg)
+{
+    return proc_run(arg);
+}
+
+/*
+ * Create, (optionally) patch the argument slot, run, and destroy. Checks the
+ * post-conditions every run must meet; returns the final state.
+ */
+static int run_prog(const char *name, const uint8_t *code, size_t len, int has_arg, uint64_t arg)
+{
+    uint64_t f0 = pmm_free_count();
+    int result = -100;
+
+    if (proc_create(&proc, code, len) != PROC_OK) {
+        expect(0, name);
+        return -100;
+    }
+    if (has_arg)
+        *(uint64_t *)((uint8_t *)phys_to_virt(proc.page_pa[0]) + len - 8) = arg;
+    uint64_t mismatch = call_check_callee_saved(run_proc_fn, &proc, &result);
+    last = proc;
+    int rerun = proc_run(&proc);
+    proc_destroy(&proc);
+
+    int ok = result == last.state && (result == PROC_EXITED || result == PROC_KILLED) &&
+             rerun == PROC_ESTATE && mismatch == 0 && pmm_free_count() == f0 &&
+             gdt_stack_canaries_intact() && (read_cr3() & PTE_ADDR) == vmm_kernel_root() &&
+             last.trap.cs == GDT_USER_CS && last.trap.ss == GDT_USER_DS;
+    if (!ok) {
+        serial_puts("selftest: run post-conditions failed for ");
+        serial_puts(name);
+        serial_puts("\r\n");
+    }
+    expect(ok, "run: ended with CS 0x23/SS 0x1B, kernel resumed intact, no rerun, no leak");
+    return result;
+}
+
+static int ended_by_int80(const struct process *p, const uint8_t *code, size_t len)
+{
+    uint64_t off = p->trap.rip - PROC_CODE_VA;
+
+    return p->trap.vector == 0x80 && p->trap.rip >= PROC_CODE_VA + 2 && off <= len &&
+           code[off - 2] == 0xCD && code[off - 1] == 0x80;
+}
+
+static void test_ring3_exit(void)
+{
+    uint64_t f0 = pmm_free_count();
+
+    expect(run_prog("exit42", PROG(exit42), 0, 0) == PROC_EXITED && last.exit_status == 42,
+           "ring 3 program exits with status 42");
+    expect(ended_by_int80(&last, PROG(exit42)),
+           "saved RIP follows the int $0x80 inside the user code page");
+    expect(last.trap.rsp == PROC_ENTRY_RSP, "saved RSP is the user stack pointer");
+    expect((last.trap.rflags & (RFLAGS_IF | RFLAGS_IOPL)) == 0 && (last.trap.rflags & 2),
+           "saved RFLAGS: IF 0, IOPL 0");
+
+    int r = run_prog("regcheck", PROG(regcheck), 0, 0);
+    expect(r == PROC_EXITED && last.exit_status == 0x5A,
+           "entry state: GPRs zero, RFLAGS 0x2, RSP 0x7FFFFFFFEFF0, aligned, 16 zero bytes");
+    if (last.exit_status != 0x5A) {
+        serial_puts("selftest:   regcheck status ");
+        serial_dec((uint32_t)last.exit_status);
+        serial_puts("\r\n");
+    }
+
+    expect(run_prog("badsys", PROG(badsys), 0, 0) == PROC_KILLED && last.trap.rax == 99 &&
+           last.reason && last.trap.vector == 0x80, "unsupported system call kills the process");
+    expect(run_prog("std_exit", PROG(std_exit), 0, 0) == PROC_EXITED && last.exit_status == 7 &&
+           (last.trap.rflags & RFLAGS_DF), "user DF=1 at entry: kernel still correct");
+
+    int cycles_ok = 1;
+    for (int i = 0; i < 20; i++)
+        cycles_ok &= run_prog("exit42", PROG(exit42), 0, 0) == PROC_EXITED && last.exit_status == 42;
+    expect(cycles_ok && pmm_free_count() == f0 && pmm_check_in(pmm_kernel()) == PMM_OK,
+           "20 ring-3 runs leak nothing");
+}
+
 int selftest_user(void)
 {
     failures = cases = 0;
     test_address_space();
+    test_ring3_exit();
     serial_puts("selftest: user ");
     serial_dec(cases);
     serial_puts(" cases, ");

@@ -35,12 +35,12 @@
 #define PROC_EXITED     3       /* exit system call */
 #define PROC_KILLED     4       /* user exception or unsupported request */
 
-/* Results of proc_create / proc_run. */
+/* Results of proc_create / proc_run (negative, so they never equal a state). */
 #define PROC_OK         0
-#define PROC_EINVAL     1
-#define PROC_EBUSY      2       /* another process exists */
-#define PROC_ENOMEM     3
-#define PROC_ESTATE     4
+#define PROC_EINVAL     (-1)
+#define PROC_EBUSY      (-2)    /* another process exists */
+#define PROC_ENOMEM     (-3)
+#define PROC_ESTATE     (-4)
 
 /* The CPU-pushed frame (and syscall registers) of the event that ended the process. */
 struct proc_trap {
@@ -60,8 +60,21 @@ struct process {
     uint64_t page_va[PROC_MAX_PAGES], page_pa[PROC_MAX_PAGES];
 };
 
+/* Provisional system-call numbers (int $0x80, number in rax; plan section 8.1). */
+#define SYS_EXIT        0       /* rdi: status (low 32 bits); does not return */
+
+struct exc_frame;
+
 /* Build an address space holding `len` bytes of code (1..4096). */
 int proc_create(struct process *p, const void *code, size_t len);
+/*
+ * Run a READY process in ring 3 until it exits or is killed; returns the
+ * final state (PROC_EXITED or PROC_KILLED), or PROC_ESTATE if it is not
+ * READY. A process runs at most once.
+ */
+int proc_run(struct process *p);
+/* Called by the exception dispatcher for traps whose saved CS has RPL 3. */
+__attribute__((noreturn)) void proc_user_trap(struct exc_frame *f);
 /* Release everything the process owns; the kernel root must be active. */
 void proc_destroy(struct process *p);
 
