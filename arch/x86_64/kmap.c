@@ -520,6 +520,11 @@ int kmap_active(void)
 }
 
 #ifdef VOS_TEST
+uint64_t kmap_test_probe_insn(void)
+{
+    return kva(kmap_probe_load);
+}
+
 void kmap_test_tables(const uint64_t **pd, const uint64_t **pt, uint64_t *pt_pa)
 {
     *pd = kpd;

@@ -5,6 +5,7 @@
 #include "panic.h"
 #include "process.h"
 #include "idt.h"
+#include "irq.h"
 #include "kmap.h"
 
 static const struct { const char *name, *msg; } exc_info[32] = {
@@ -59,12 +60,25 @@ static int has_error_code(uint64_t v)
  */
 uint64_t exception_handler(struct exc_frame *f)
 {
+    if (read_rflags() & RFLAGS_IF)      /* every gate is an interrupt gate */
+        panic("trap handler entered with IF=1");
     if ((f->cs & 3) != 0)
         return proc_user_trap(f);
     if (f->cs != GDT_KERNEL_CS)
         panic("trap with an unexpected code segment");
     if (kmap_probe_fault(f))
         return TRAP_RESUME;             /* an armed kmap_init probe: expected, recorded */
+    if (irq_is_vector(f->vector)) {
+        /* The kernel runs with IF = 0: a hardware IRQ (or int 0x20-0x2f) here is a kernel error. */
+        serial_puts("exc: IRQ vector ");
+        serial_hex(f->vector);
+        serial_puts(" in ring 0, rip=");
+        serial_hex(f->rip);
+        serial_puts(" rflags=");
+        serial_hex(f->rflags);
+        serial_puts("\r\n");
+        panic("hardware interrupt vector in ring 0 (the kernel runs with IF=0)");
+    }
     if (f->vector == IDT_SYSCALL) {
         serial_puts("exc: int $0x80 from ring 0, rip=");
         serial_hex(f->rip);
@@ -101,6 +115,8 @@ uint64_t exception_handler(struct exc_frame *f)
     serial_puts(" stack=");
     serial_puts(stack ? stack : "kernel");
     serial_puts("\r\n");
+    if (f->rflags & RFLAGS_IF)
+        serial_puts("exc: the kernel was running with IF=1 (policy violation)\r\n");
 
     panic(exc_info[v].msg);
 }

@@ -13,6 +13,7 @@
 #include "cpu.h"
 #include "gdt.h"
 #include "idt.h"
+#include "irq.h"
 #include "kmap.h"
 #include "memlayout.h"
 #include "multiboot2.h"
@@ -228,6 +229,9 @@ void kernel_main(uint32_t mb2_magic, uint32_t mb2_info)
     serial_dec(audit.tables_lower);
     serial_puts(" lower-half tables\r\n");
 
+    /* 8259 + PIT, IRQ0 unmasked. IF stays 0 in the kernel; ring 3 runs with IF = 1. */
+    irq_init();
+
     /* The first native application: GRUB module "hello", run in ring 3. */
     check(app_run_boot_module(&bi), "boot application ran and exited with status 0");
 
@@ -238,6 +242,7 @@ void kernel_main(uint32_t mb2_magic, uint32_t mb2_info)
     check(selftest_pmm_kernel(&bi, &boot_resv) == 0, "pmm kernel self-test");
     check(selftest_vmm() == 0, "vmm self-test");
     check(selftest_kmap(&bi) == 0, "kmap self-test");
+    check(selftest_irq() == 0, "irq self-test");
     check(selftest_user() == 0, "user self-test");
     check(selftest_elf(&bi) == 0, "elf self-test");
 #ifdef VOS_TEST_CASE_suite

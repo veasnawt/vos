@@ -9,9 +9,9 @@ ARCH_CFLAGS     := -g -m64 -mcmodel=kernel -mno-red-zone -mgeneral-regs-only \
 ARCH_ASFLAGS    := -g -m64
 ARCH_LDFLAGS    := -m elf_x86_64 -z max-page-size=0x1000
 ARCH_OBJS       := boot.o entry.o usermode.o kernel.o bootinfo.o console.o cpu.o exception.o gdt.o idt.o \
-                   lib.o loader.o panic.o pmm.o process.o resv.o syscall.o usercopy.o vmm.o kmap.o elf.o app.o
+                   lib.o loader.o panic.o pmm.o process.o resv.o syscall.o usercopy.o vmm.o kmap.o irq.o pic.o pit.o elf.o app.o
 ifeq ($(VOS_TEST),1)
-ARCH_OBJS       += selftest.o selftest_cpu.o selftest_elf.o selftest_kmap.o selftest_pmm.o selftest_suite.o \
+ARCH_OBJS       += selftest.o selftest_cpu.o selftest_elf.o selftest_irq.o selftest_kmap.o selftest_pmm.o selftest_suite.o \
                    selftest_user.o selftest_vmm.o user_progs.o
 endif
 QEMU            := qemu-system-x86_64
@@ -61,7 +61,9 @@ arch-test: iso
 	    ' corrupted executables rejected for the intended reason' 'selftest: pmm-synthetic ' \
 	    'selftest: pmm-kernel ' 'selftest: 1000 frames from ' 'selftest: vmm ' 'selftest: user ' \
 	    'selftest: kmap ' 'kmap: phys 0-2 MiB as 4 KiB pages: ' \
-	    'kmap: after the TLB flush the CPU refused a text write' 'vmm: audit passed: ' 'VOS-TEST: PASS' --
+	    'kmap: after the TLB flush the CPU refused a text write' 'vmm: audit passed: ' \
+	    'irq: 8259 master 0x20-0x27, slave 0x28-0x2f (cascade IRQ2); masks 0xfffe (IRQ0 only)' \
+	    'pit: channel 0 mode 2, divisor 11932 (99.998 Hz)' 'selftest: irq ' 'VOS-TEST: PASS' --
 	MEM=2G scripts/exit-test.sh boot-2G $(TEST_ISO) 33 'selftest: pmm-synthetic ' \
 	    'selftest: pmm-kernel ' 'selftest: 1000 frames from ' 'selftest: vmm ' 'selftest: user ' \
 	    'selftest: kmap ' 'VOS-TEST: PASS' --
@@ -72,7 +74,8 @@ arch-test: iso
 	scripts/exit-test.sh panic build/$(ARCH)-test-panic/vos.iso 35 \
 	    'panic: test case: deliberate panic' 'VOS-TEST: FAIL' --
 	scripts/exit-test.sh gdt-tss $(TEST_ISO) 33 'gdt: loaded cs=0x8 ss=0x10 tr=0x28 tss=busy' \
-	    'tss: rsp0=' 'idt: 32 exception vectors loaded, df ist=1' 'idt: vector 0x80 present, DPL 3' \
+	    'tss: rsp0=' 'idt: 32 exception vectors loaded, df ist=1' 'idt: vector 0x80 present, DPL 3 (system calls' \
+	    'idt: IRQ vectors 0x20-0x2f present, DPL 0, interrupt gates' \
 	    'cpu: wp=on nx=on' 'VOS-TEST: PASS' --
 	scripts/exit-test.sh no-nx $(TEST_ISO) 35 'panic: CPU lacks NX' 'VOS-TEST: FAIL' -- -cpu qemu64,-nx
 	scripts/exit-test.sh cpu-max $(TEST_ISO) 33 'smep=on umip=on smap=on' 'selftest: user ' 'selftest: kmap ' \

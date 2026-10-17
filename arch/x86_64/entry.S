@@ -1,15 +1,17 @@
 /*
- * Entry stubs for exception vectors 0-31 and the provisional system-call
- * vector 0x80. Each stub normalizes the stack to the layout of struct
- * exc_frame (error code, vector, then 15 GPRs), clears DF and calls
- * exception_handler(frame) on a 16-byte-aligned stack. In 64-bit mode the
- * CPU pushes SS:RSP for every interrupt, with or without a privilege change,
- * so the layout is the same for traps from ring 0 and ring 3 (from ring 3 it
- * is on the TSS.RSP0 stack). Kernel traps panic, except a #PF of one of
- * kmap_init's armed probe instructions; user exits and faults resume the
- * kernel through user_return. Only a validated, non-terminating user system
- * call or such a probe returns TRAP_RESUME: the stub then restores every
- * register from the frame (rax holds the result) and IRETQs.
+ * Entry stubs for exception vectors 0-31, the hardware-interrupt vectors
+ * 0x20-0x2F (8259 IRQ0-15) and the system-call vector 0x80. Each stub
+ * normalizes the stack to the layout of struct exc_frame (error code, vector,
+ * then 15 GPRs), clears DF and calls exception_handler(frame) on a
+ * 16-byte-aligned stack. In 64-bit mode the CPU pushes SS:RSP for every
+ * interrupt, with or without a privilege change, so the layout is the same
+ * for traps from ring 0 and ring 3 (from ring 3 it is on the TSS.RSP0 stack).
+ * Every gate is an interrupt gate, so the CPU clears IF on entry. Kernel
+ * traps panic, except a #PF of one of kmap_init's armed probe instructions;
+ * user exits and faults resume the kernel through user_return. Only a
+ * validated, non-terminating user system call, a validated hardware
+ * interrupt from ring 3, or such a probe returns TRAP_RESUME: the stub then
+ * restores every register from the frame (rax holds the result) and IRETQs.
  */
 .set TRAP_RESUME, 0x52455355
 .macro EXC_STUB n, has_err
@@ -56,6 +58,10 @@ EXC_STUB 28, 0
 EXC_STUB 29, 1
 EXC_STUB 30, 1
 EXC_STUB 31, 0
+/* Hardware interrupts from the 8259 pair (IRQ0-15 at 0x20-0x2F): the CPU pushes no error code. */
+.irp n,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47
+EXC_STUB \n, 0
+.endr
 EXC_STUB 128, 0                     /* int $0x80 from ring 3 (DPL 3 gate) */
 .global exc_stub_128
 
@@ -133,6 +139,11 @@ exc_common:
 .global exc_stub_table
 exc_stub_table:
 .irp n,0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31
+    .quad exc_stub_\n
+.endr
+.global irq_stub_table
+irq_stub_table:
+.irp n,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47
     .quad exc_stub_\n
 .endr
 

@@ -103,6 +103,16 @@ static inline void write_cr4(uint64_t v)
     __asm__ volatile ("mov %0, %%cr4" : : "r"(v) : "memory");
 }
 
+#define RFLAGS_IF       (1ULL << 9)
+#define RFLAGS_IOPL     (3ULL << 12)
+
+static inline uint64_t read_rflags(void)
+{
+    uint64_t v;
+    __asm__ volatile ("pushfq\n\tpopq %0" : "=r"(v));
+    return v;
+}
+
 static inline void cpu_disable_interrupts(void)
 {
     __asm__ volatile ("cli" : : : "memory");

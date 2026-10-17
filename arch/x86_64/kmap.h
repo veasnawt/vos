@@ -92,6 +92,8 @@ struct exc_frame;
 int kmap_probe_fault(struct exc_frame *f);
 
 #ifdef VOS_TEST
+/* Test hook: the address of the armed-probe load instruction (to show it is inert later). */
+uint64_t kmap_test_probe_insn(void);
 /* Test hook: the live directory and table, and the physical address of the table. */
 void kmap_test_tables(const uint64_t **pd, const uint64_t **pt, uint64_t *pt_pa);
 #endif
