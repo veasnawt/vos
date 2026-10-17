@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-# Validate a VOS ABI v0 user executable (static ELF64 x86_64, plan section 8.4).
+# Validate a VOS ABI v0 or v1 user executable (static ELF64 x86_64, plan section 8.4;
+# ABI v1 since N2.4 adds system calls only, so the profile is the same).
 # usage: check-user-elf.sh FILE
 # Exit 0: accepted. Exit 1: rejected (first reason on stderr). Exit 2: usage.
 #
@@ -65,7 +66,7 @@ rd 56 2 e_phnum; PHNUM=$R
 (( PHOFF >= 64 && PHOFF % 8 == 0 )) || reject "program headers overlap the ELF header or are misaligned"
 (( PHOFF + PHNUM * 56 <= SIZE )) || reject "program-header table outside the file"
 
-loads=0 exec_loads=0 notes_ok=0 vos_notes=0 total_pages=0 prev_end=0
+loads=0 exec_loads=0 notes_ok=0 vos_notes=0 abi=0 total_pages=0 prev_end=0
 entry_ok=0
 for (( i = 0; i < PHNUM; i++ )); do
     ph=$((PHOFF + i * 56))
@@ -111,7 +112,8 @@ for (( i = 0; i < PHNUM; i++ )); do
             if (( namesz == 4 )) && [[ $(bytes $((n + 12)) 4) == 564f5300 ]] && (( ntype == 1 )); then
                 (( descsz == 4 )) || reject "VOS ABI note: descsz $descsz, expected 4"
                 rd $((n + 16)) 4 "VOS ABI version"
-                (( R == 0 )) || reject "VOS ABI note: version $R, expected 0"
+                (( R <= 1 )) || reject "VOS ABI note: version $R, expected 0 or 1"
+                abi=$R
                 vos_notes=$((vos_notes + 1))
                 (( vos_notes == 1 )) || reject "more than one VOS ABI note"
             fi
@@ -155,5 +157,5 @@ fp=$(LC_ALL=C objdump -d --no-show-raw-insn -- "$F" 2>/dev/null | awk -F'\t' 'NF
      grep -cE '^(f[a-rt-z][a-z0-9]*|fs[a-z0-9]+|wait|emms|ldmxcsr|stmxcsr|fxsave|fxrstor|xsave[a-z0-9]*|xrstor[a-z0-9]*)\b|%([xyz]mm[0-9]+|mm[0-7]|st)\b')
 (( fp == 0 )) || reject "$fp x87/MMX/SSE instructions in executable code (no FPU in ABI v0)"
 
-printf 'check-user-elf: %s: OK (%d PT_LOAD, entry 0x%x, %d pages, VOS ABI 0)\n' \
-    "$F" "$loads" "$ENTRY" "$total_pages"
+printf 'check-user-elf: %s: OK (%d PT_LOAD, entry 0x%x, %d pages, VOS ABI %d)\n' \
+    "$F" "$loads" "$ENTRY" "$total_pages" "$abi"

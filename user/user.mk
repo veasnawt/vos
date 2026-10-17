@@ -12,6 +12,8 @@ USER_BUILD := build/$(ARCH)/user
 USER_APPS  := hello
 USER_LDS   := $(USER_DIR)/lib/user.ld
 USER_RT    := $(addprefix $(USER_BUILD)/lib/,crt0.o syscall.o abi_note.o)
+# ABI v1 executables (N2.4): the v1 note and the v1 stubs instead of the v0 note.
+USER_RT_V1 := $(addprefix $(USER_BUILD)/lib/,crt0.o syscall.o syscall_v1.o abi_note_v1.o)
 
 # Freestanding, static, non-PIC, general registers only (no x87/MMX/SSE),
 # no stack protector (it needs TLS), no CET notes, no unwind tables. Only the
@@ -63,6 +65,10 @@ SUITE_ELFS   := $(addprefix $(SUITE_DIR)/,$(addsuffix .elf,$(SUITE_C) $(SUITE_S)
 $(SUITE_DIR)/%.elf: $(USER_BUILD)/suite/%.o $(USER_RT) $(USER_LDS)
 	$(LD) $(USER_LDFLAGS) -o $@ $(USER_RT) $<
 
+# ipc_*.c / ipc_*.S are ABI v1 programs (N2.4).
+$(SUITE_DIR)/ipc_%.elf: $(USER_BUILD)/suite/ipc_%.o $(USER_RT_V1) $(USER_LDS)
+	$(LD) $(USER_LDFLAGS) -o $@ $(USER_RT_V1) $<
+
 $(SUITE_DIR)/regs.elf: $(USER_BUILD)/suite/regs.o $(USER_BUILD)/lib/abi_note.o $(USER_LDS)
 	$(LD) $(USER_LDFLAGS) -o $@ $(USER_BUILD)/lib/abi_note.o $<
 
@@ -86,7 +92,7 @@ $(ELFCHECK): scripts/elfcheck.c arch/x86_64/elf.c arch/x86_64/elf.h
 # Validation, profile and separation checks, and negative tests. Static only:
 # nothing is loaded or run. The kernel images are checked not to contain the
 # application.
-user-test: user-check $(USER_RT) $(KERNEL) $(ELFCHECK) $(SUITE_ELFS)
+user-test: user-check $(USER_RT) $(USER_RT_V1) $(KERNEL) $(ELFCHECK) $(SUITE_ELFS)
 	SUITE_DIR=$(SUITE_DIR) ELFCHECK=$(ELFCHECK) USER_CC="$(CC)" USER_CFLAGS="$(USER_CFLAGS)" USER_LD="$(LD)" \
 	USER_LDFLAGS="$(USER_LDFLAGS_BASE)" USER_LDS=$(USER_LDS) \
 	KERNEL_SYSCALL_H=arch/x86_64/syscall.h USER_SYSCALL_H=$(USER_DIR)/include/vos/syscall.h \

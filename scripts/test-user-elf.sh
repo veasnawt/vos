@@ -168,7 +168,7 @@ mutate note-outside   "PT_NOTE"                  $((NOTE + 8)) 8 "$SIZE"
 mutate note-trailing  "trailing bytes"           $((NOTE + 32)) 8 24
 mutate note-name      "no VOS ABI note"          $((NOTE_OFF + 12)) 1 $((0x58))
 mutate note-type      "no VOS ABI note"          $((NOTE_OFF + 8)) 4 2
-mutate note-version   "version 1"                $((NOTE_OFF + 16)) 4 1
+mutate note-version   "version 2"                $((NOTE_OFF + 16)) 4 2
 mutate note-descsz    "note larger than the segment"  $((NOTE_OFF + 4)) 4 8
 mutate note-namesz    "note larger than the segment"  "$NOTE_OFF" 4 $((0xFFFFFFFF))
 cp "$HELLO" "$T/truncated.elf"; truncate -s 200 "$T/truncated.elf"

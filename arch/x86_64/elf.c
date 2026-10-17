@@ -123,8 +123,9 @@ int elf_validate(const uint8_t *img, uint64_t size, struct elf_image *out)
                     return ELF_ENOTE;
                 if (namesz == 4 && img[n + 12] == 'V' && img[n + 13] == 'O' &&
                     img[n + 14] == 'S' && img[n + 15] == 0 && ntype == VOS_NOTE_ABI) {
-                    if (descsz != 4 || le(img, n + 16, 4) != 0)
+                    if (descsz != 4 || le(img, n + 16, 4) > ELF_ABI_MAX)
                         return ELF_EABI;
+                    r.abi = (uint32_t)le(img, n + 16, 4);
                     if (++vos_notes > 1)
                         return ELF_ENOTEDUP;
                 }
@@ -183,7 +184,7 @@ const char *elf_strerror(int err)
         [ELF_ENOTE] = "malformed PT_NOTE",
         [ELF_ENOTEMISSING] = "no VOS ABI note",
         [ELF_ENOTEDUP] = "more than one VOS ABI note",
-        [ELF_EABI] = "VOS ABI note: bad descriptor or version not 0",
+        [ELF_EABI] = "VOS ABI note: bad descriptor or unsupported version",
         [ELF_ESTACK] = "executable stack requested",
         [ELF_EPTYPE] = "unsupported program-header type",
     };

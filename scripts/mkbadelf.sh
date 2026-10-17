@@ -22,7 +22,7 @@ case $KIND in
     dyn)     put 16 2 3 ;;
     wx)      put $((TEXT + 4)) 4 7 ;;
     entry)   put 24 8 $((0x401000)) ;;
-    abi)     put $(( $(get $((NOTE + 8)) 8) + 16 )) 4 1 ;;
+    abi)     put $(( $(get $((NOTE + 8)) 8) + 16 )) 4 2 ;;     # versions 0 and 1 exist (N2.4)
     interp)  put "$STACK" 4 3 ;;
     trunc)   truncate -s 200 "$OUT" ;;
     overlap) put $((RO + 16)) 8 $((0x400000)) ;;

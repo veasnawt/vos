@@ -76,7 +76,9 @@ int app_run_boot_module(const struct boot_info *bi)
     serial_dec(im.nload);
     serial_puts(" PT_LOAD, ");
     serial_dec(im.pages);
-    serial_puts(" pages, VOS ABI 0\r\n");
+    serial_puts(" pages, VOS ABI ");
+    serial_dec(im.abi);
+    serial_puts("\r\n");
 
     result.ran = 1;
     result.entry = app.entry;

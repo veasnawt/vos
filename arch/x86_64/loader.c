@@ -32,6 +32,7 @@ int load_elf(struct process *p, const char *name, const uint8_t *img, uint64_t s
             }
         }
     }
+    p->abi = im->abi;
     if ((err = proc_finish(p, im->entry)) != PROC_OK)
         goto fail;
     return PROC_OK;

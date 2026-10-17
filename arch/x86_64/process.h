@@ -76,6 +76,7 @@ struct process {
     char name[PROC_NAME_MAX + 1];       /* kernel-assigned; [a-z0-9_-] only */
     uint64_t root;                      /* PML4 frame */
     uint64_t entry, user_rsp;
+    uint32_t abi;                       /* VOS ABI version of its executable (0 or 1) */
     uint64_t tid;                       /* its thread (0 before proc_start) */
     uint64_t kstack_top;                /* that thread's kernel stack top = TSS.RSP0 while it runs */
     struct wait_queue waiters;          /* threads in proc_wait */
