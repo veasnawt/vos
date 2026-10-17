@@ -7,17 +7,14 @@
 #include <stddef.h>
 #include <stdint.h>
 
+#include "console.h"
+#include "cpu.h"
+#include "memlayout.h"
 #include "multiboot2.h"
+#include "panic.h"
 
-#define KERNEL_VMA      0xFFFFFFFF80000000ULL
-#define BOOT_MAP_LIMIT  0x40000000ULL   /* boot page tables map phys [0, 1 GiB) */
-#define PAGE_SIZE       0x1000ULL
 #define MB2_INFO_MAX    0x10000u        /* sanity bound for the info block */
 
-#define COM1            0x3F8
-#define VGA_TEXT_PHYS   0xB8000ULL
-#define MSR_EFER        0xC0000080
-#define EFER_LMA        (1ULL << 10)
 #define BOOT_CS         0x08
 
 #ifdef VOS_TEST
@@ -48,96 +45,6 @@ static struct phys_range boot_reserved[2];
 static size_t boot_reserved_count;
 static const char *first_failure;
 static volatile uint64_t bss_probe;     /* boot.S zeroes .bss, so this must read 0 */
-
-static inline void outb(uint16_t port, uint8_t val)
-{
-    __asm__ volatile ("outb %0, %1" : : "a"(val), "Nd"(port));
-}
-
-#ifdef VOS_TEST
-static inline void outl(uint16_t port, uint32_t val)
-{
-    __asm__ volatile ("outl %0, %1" : : "a"(val), "Nd"(port));
-}
-#endif
-
-static inline uint8_t inb(uint16_t port)
-{
-    uint8_t v;
-    __asm__ volatile ("inb %1, %0" : "=a"(v) : "Nd"(port));
-    return v;
-}
-
-static inline uint64_t rdmsr(uint32_t msr)
-{
-    uint32_t lo, hi;
-    __asm__ volatile ("rdmsr" : "=a"(lo), "=d"(hi) : "c"(msr));
-    return ((uint64_t)hi << 32) | lo;
-}
-
-/* Valid only for phys < BOOT_MAP_LIMIT. */
-static inline void *phys_to_virt(uint64_t phys)
-{
-    return (void *)(uintptr_t)(phys + KERNEL_VMA);
-}
-
-static void serial_init(void)
-{
-    outb(COM1 + 1, 0x00);   /* disable interrupts */
-    outb(COM1 + 3, 0x80);   /* DLAB on */
-    outb(COM1 + 0, 0x03);   /* 38400 baud */
-    outb(COM1 + 1, 0x00);
-    outb(COM1 + 3, 0x03);   /* 8N1 */
-    outb(COM1 + 2, 0xC7);   /* FIFO */
-    outb(COM1 + 4, 0x03);
-}
-
-static void serial_puts(const char *s)
-{
-    for (; *s; s++) {
-        while (!(inb(COM1 + 5) & 0x20))
-            ;
-        outb(COM1, (uint8_t)*s);
-    }
-}
-
-static void serial_hex(uint64_t v)
-{
-    char buf[19];
-    int i = sizeof(buf) - 1;
-
-    buf[i] = '\0';
-    do {
-        buf[--i] = "0123456789abcdef"[v & 0xF];
-        v >>= 4;
-    } while (v);
-    buf[--i] = 'x';
-    buf[--i] = '0';
-    serial_puts(&buf[i]);
-}
-
-static void serial_dec(uint64_t v)
-{
-    char buf[21];
-    int i = sizeof(buf) - 1;
-
-    buf[i] = '\0';
-    do {
-        buf[--i] = (char)('0' + v % 10);
-        v /= 10;
-    } while (v);
-    serial_puts(&buf[i]);
-}
-
-static void vga_puts(const char *s)
-{
-    volatile uint16_t *vga = phys_to_virt(VGA_TEXT_PHYS);
-
-    for (int i = 0; i < 80 * 25; i++)
-        vga[i] = 0x0720;
-    for (int i = 0; s[i]; i++)
-        vga[i] = 0x0700 | (uint8_t)s[i];
-}
 
 static void check(int ok, const char *what)
 {
@@ -299,6 +206,9 @@ void kernel_main(uint32_t mb2_magic, uint32_t mb2_info)
     }
 
     serial_puts(first_failure ? "boot: FAILED\r\n" : "boot: checks passed\r\n");
+#ifdef VOS_TEST_CASE_panic
+    panic("test case: deliberate panic");
+#endif
 #ifdef VOS_TEST
     serial_puts(first_failure ? "VOS-TEST: FAIL\r\n" : "VOS-TEST: PASS\r\n");
     outl(TEST_EXIT_PORT, first_failure ? TEST_EXIT_FAIL : TEST_EXIT_PASS);

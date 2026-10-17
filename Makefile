@@ -23,6 +23,14 @@ endif
 ifeq ($(VOS_TEST),1)
 BUILD     := build/$(ARCH)-test
 TEST_DEFS := -DVOS_TEST
+# VOS_TEST_CASE=<name> compiles in the test case "name" (-DVOS_TEST_CASE_<name>)
+# and builds into its own directory so it never replaces the main test image.
+ifneq ($(VOS_TEST_CASE),)
+BUILD     := build/$(ARCH)-test-$(VOS_TEST_CASE)
+TEST_DEFS += -DVOS_TEST_CASE_$(VOS_TEST_CASE)
+endif
+else ifneq ($(VOS_TEST_CASE),)
+$(error VOS_TEST_CASE requires VOS_TEST=1)
 endif
 
 KERNEL   := $(BUILD)/vos.bin

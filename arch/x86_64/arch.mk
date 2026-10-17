@@ -7,7 +7,7 @@ ARCH_CFLAGS     := -m64 -mcmodel=kernel -mno-red-zone -mgeneral-regs-only \
                    -fcf-protection=none -fno-stack-clash-protection
 ARCH_ASFLAGS    := -m64
 ARCH_LDFLAGS    := -m elf_x86_64 -z max-page-size=0x1000
-ARCH_OBJS       := boot.o kernel.o
+ARCH_OBJS       := boot.o kernel.o console.o lib.o panic.o
 QEMU            := qemu-system-x86_64
 MULTIBOOT_CHECK := --is-x86-multiboot2
 
@@ -15,6 +15,8 @@ MULTIBOOT_CHECK := --is-x86-multiboot2
 # 2. Test image (VOS_TEST=1, reports via isa-debug-exit): exit status AND
 #    serial marker must both match; also run with 2 GiB and on a CPU
 #    without long mode, which must fail cleanly with status 35.
+# 3. Test case images (VOS_TEST_CASE=<name>), each in its own build directory:
+#    panic must exit with status 35 and report the panic.
 arch-test: iso
 	QEMU=$(QEMU) FAIL_PATTERN='FAILED|check failed|boot error' \
 	    scripts/test.sh $(ISO) $(BUILD)/serial.log 'Hello from VOS!' 'boot: checks passed'
@@ -22,3 +24,6 @@ arch-test: iso
 	scripts/exit-test.sh boot-128M $(TEST_ISO) 33 'VOS-TEST: PASS'
 	MEM=2G scripts/exit-test.sh boot-2G $(TEST_ISO) 33 'VOS-TEST: PASS'
 	scripts/exit-test.sh no-long-mode $(TEST_ISO) 35 'CPU lacks long mode' -cpu qemu32
+	$(MAKE) --no-print-directory ARCH=$(ARCH) VOS_TEST=1 VOS_TEST_CASE=panic iso
+	scripts/exit-test.sh panic build/$(ARCH)-test-panic/vos.iso 35 \
+	    'panic: test case: deliberate panic' 'VOS-TEST: FAIL' --
