@@ -3,9 +3,10 @@
 
 # -fcf-protection=none and -fno-stack-clash-protection override Ubuntu gcc
 # defaults (endbr64 instrumentation, stack probes) that a kernel must not inherit.
-ARCH_CFLAGS     := -m64 -mcmodel=kernel -mno-red-zone -mgeneral-regs-only \
+# -g adds debug sections only (never loaded): for GDB and addr2line.
+ARCH_CFLAGS     := -g -m64 -mcmodel=kernel -mno-red-zone -mgeneral-regs-only \
                    -fcf-protection=none -fno-stack-clash-protection
-ARCH_ASFLAGS    := -m64
+ARCH_ASFLAGS    := -g -m64
 ARCH_LDFLAGS    := -m elf_x86_64 -z max-page-size=0x1000
 ARCH_OBJS       := boot.o entry.o usermode.o kernel.o bootinfo.o console.o cpu.o exception.o gdt.o idt.o \
                    lib.o loader.o panic.o pmm.o process.o resv.o syscall.o usercopy.o vmm.o elf.o app.o
