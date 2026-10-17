@@ -27,17 +27,18 @@ programs, with flags that keep them freestanding.
 
 ## Architectures
 
-Select the target with `ARCH=<name>`; the default is `i386`.
+Select the target with `ARCH=<name>`; the default is `x86_64` (since N2). The 32-bit `i386`
+kernel is kept, still built and tested with `ARCH=i386`.
 
 | ARCH | Boot protocol | Status |
 |---|---|---|
-| `i386` | Multiboot 1 | 32-bit protected mode; prints a greeting and halts (default build) |
-| `x86_64` | Multiboot2 | 64-bit higher-half kernel with memory management, ring-3 programs and system calls |
+| `i386` | Multiboot 1 | 32-bit protected mode; prints a greeting and halts (legacy, `ARCH=i386`) |
+| `x86_64` | Multiboot2 | 64-bit higher-half kernel with memory management, ring-3 programs and system calls (default) |
 
 ## Build
 
-    make                          # i386 kernel: build/i386/vos.bin
-    make ARCH=x86_64              # x86_64 kernel: build/x86_64/vos.bin
+    make                          # x86_64 kernel: build/x86_64/vos.bin (same as ARCH=x86_64)
+    make ARCH=i386                # legacy i386 kernel: build/i386/vos.bin
     make ARCH=x86_64 user         # the native program: build/x86_64/user/hello.elf
     make ARCH=x86_64 user-check   # validate hello.elf against the VOS executable profile
     make ARCH=x86_64 iso          # bootable image with kernel and hello: build/x86_64/vos.iso
@@ -83,8 +84,8 @@ is expected, because the kernel halts instead of powering off. How to read the l
 
 ## Tests
 
-    make test                  # the default architecture (i386)
-    make ARCH=x86_64 test      # all x86_64 tests (about a minute)
+    make test                  # the default architecture (x86_64, a few minutes)
+    make ARCH=i386 test        # the legacy i386 kernel
     make test-all              # every architecture
     make ARCH=x86_64 user-test # only the static ELF tests (no QEMU)
 

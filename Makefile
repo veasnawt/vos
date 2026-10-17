@@ -1,7 +1,7 @@
-# VOS top-level build. Select the target with ARCH=<name> (default: i386).
+# VOS top-level build. Select the target with ARCH=<name> (default: x86_64).
 # Each architecture lives in arch/<name>/ and provides an arch.mk fragment.
 
-ARCH  ?= i386
+ARCH  ?= x86_64
 ARCHS := i386 x86_64
 
 .DEFAULT_GOAL := all

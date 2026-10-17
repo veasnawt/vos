@@ -772,7 +772,7 @@ own numbering.
 | ID | Decision | Recommendation |
 |---|---|---|
 | D1 | Project licence (needed before importing any third-party code) | Choose before N7; permissive licences keep most components in section 15 usable. **Still open after N1** (no licence file). |
-| D2 | x86_64 as the only target for user space; when (if ever) to switch the default from i386 | x86_64 only; keep i386 default until N8 passes, then revisit. **N8 has passed: due for a decision.** |
+| D2 | x86_64 as the only target for user space; when (if ever) to switch the default from i386 | x86_64 only; keep i386 default until N8 passes, then revisit. **Decided in N2 preparation (2026-10-18): `x86_64` is the default; `ARCH=i386` stays buildable and tested.** |
 | D3 | Kernel structure | Hybrid, moving drivers outward (section 5) |
 | D4 | Public ABI boundary | `libvos` (static first); syscalls private |
 | D5 | Executable format | ELF64 + `.note.vos.abi`, `ELFOSABI_NONE`; static `ET_EXEC` first. *Implemented provisionally in N1 (note section `.note.vos`, ABI version only).* |
