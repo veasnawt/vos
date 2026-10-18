@@ -3,7 +3,7 @@
 | | |
 |---|---|
 | Status | **Proposal.** Section 3 describes what milestone N1 implemented (tagged *Current*); everything else remains a proposal unless marked *Current*. |
-| Date | 2026-10-17 (written at `7c06bc6`; section 3 and the status notes updated after N1 at `74501a7`, after N2.0–N2.3 on 2026-10-18) |
+| Date | 2026-10-17 (written at `7c06bc6`; section 3 and the status notes updated after N1 at `74501a7`, after N2.0–N2.4 on 2026-10-18) |
 | Code baseline | after N1: the x86_64 kernel runs a separately built native application in ring 3 |
 | Scope | Native application model and public software interfaces of VOS, plus the separate compatibility architecture |
 | Out of scope | Implementing any of it; kernel Stage 2/3 work; UEFI |
@@ -86,7 +86,7 @@ recommendations:
 
 ---
 
-## 3. Current state after N1 and N2.0–N2.3 [Current]
+## 3. Current state after N1 and N2.0–N2.4 [Current]
 
 Milestone N1 (`docs/plans/n1-user-space.md`, stages N1.0–N1.10) took the x86_64 kernel from
 "boots and prints" to "loads and runs a separately built native program in ring 3, isolated
@@ -103,15 +103,16 @@ from section 4 onward is still a proposal or future work unless tagged *Current*
 | Virtual memory | 4-level page tables, 4 KiB user mappings with validated permissions, an audit of whole hierarchies; the boot identity map is removed. Since N2.0 the supervisor-only alias of physical 0–1 GiB is W^X: the kernel image in 4 KiB pages (text R-X, read-only data R, everything else RW NX, stack guard pages unmapped), the rest in 2 MiB RW NX pages (`kmap.c`; `docs/plans/n2-foundation.md` section 3.1). |
 | Processes | Up to 8 at once (N2.3), each with a fresh PML4 sharing only the kernel entry, code/data/stack from fresh frames, and one thread of its own on a guarded kernel stack (TSS.RSP0 and CR3 switched per thread); entry via `iretq` with all registers zeroed; preempted by the timer only on the return to ring 3 (2-tick round robin); exit, fault or kill end only that process; full teardown after its thread is gone. Created by the kernel from GRUB modules only. |
 | Kernel threads (N2.2) | 16 static thread records, 15 guarded 16 KiB stacks; round robin with yield, FIFO wait queues, tick sleeps and exit with deferred reaping; an idle thread that waits with `sti; hlt` (the only kernel code with IF = 1). Kernel code is never preempted. |
-| System calls | ABI v0 over `int $0x80`: `exit`, `debug_write`; unknown numbers return `-VOS_ENOSYS`; all registers but `rax` preserved. |
+| System calls | ABI v0 over `int $0x80`: `exit`, `debug_write`; ABI v1 (N2.4, `docs/abi/syscall-v1.md`) adds `yield`, `channel_send`, `channel_recv`, `handle_close` for executables marked v1 (v0 executables get `-VOS_ENOSYS`); unknown numbers return `-VOS_ENOSYS`; all registers but `rax` preserved. |
+| IPC (N2.4) | Channels between two processes, created only by trusted kernel code: 16 static channels, 16 × 256-byte message queues per direction in allocated frames, 8 handles per process with rights and generations; non-blocking send, blocking receive, drain then `EPIPE` after the peer closes; handles closed at process end. |
 | User memory | `copy_from_user` validates every page (user bit at all levels) and copies through the kernel alias, never through the user address. |
 | Executables | Static ELF64 `ET_EXEC` with a mandatory VOS ABI note; validated in the kernel before any allocation (and at build time by `scripts/check-user-elf.sh`). |
 | User space | `user/`: a minimal runtime (`crt0.S`, system-call stubs, ABI note, linker script) and `hello`, built separately from the kernel; 41 isolation-test programs in `user/suite`. |
 | Applications | GRUB delivers `hello.elf` as a module; the kernel validates, loads and runs it in ring 3 at boot: `user[hello]: Hello from VOS!`, then `proc[hello]: exited status 0, all frames reclaimed`. |
 | Tests | `make test-all` (sequential QEMU runs with timeouts): smoke tests, strict `VOS_TEST=1` images reporting through `isa-debug-exit` (33 = pass, 35 = expected failure), kernel self-tests, deliberate kernel faults, the 41-case isolation suite under qemu64, 2 GiB and `-cpu max`, SMEP/SMAP cases with controls, and static ELF tests. |
-| Not present | Preemption of kernel code, more than one thread per process, IPC, process spawning by programs, kernel heap, APIC/IOAPIC/ACPI, device interrupts other than the timer, file systems, drivers beyond COM1/VGA, input, graphics, networking, packages, a shell. |
+| Not present | Preemption of kernel code, more than one thread per process, channel creation or handle transfer by programs, process spawning by programs, kernel heap, APIC/IOAPIC/ACPI, device interrupts other than the timer, file systems, drivers beyond COM1/VGA, input, graphics, networking, packages, a shell. |
 
-### 3.1 Security boundaries after N1 and N2.0–N2.3 [Current]
+### 3.1 Security boundaries after N1 and N2.0–N2.4 [Current]
 
 **Implemented and tested (in QEMU):**
 - Ring-3 privilege separation: CS 0x23/SS 0x1B in every user frame; privileged instructions,
@@ -126,6 +127,10 @@ from section 4 onward is still a proposal or future work unless tagged *Current*
 - Interrupts (N2.1): ring 3 cannot change IF or IOPL or raise IRQ vectors; every IRQ is checked
   against the controller's in-service register and acknowledged; the interrupted program resumes
   with every register intact; the kernel never runs with IF = 1.
+- IPC (N2.4): a handle works only in the process that holds it and only with its rights; stale
+  handles cannot reach a new channel; messages are copied through validated kernel aliases (no
+  shared memory, no kernel pointers to user space, no partial writes on a bad buffer); a blocked
+  receiver can be killed; a dead process's handles close and its peers see `EPIPE`.
 - Concurrent processes (N2.3): separate address spaces with no shared user frame; a program that
   never yields is preempted; a fault or kill ends only its own process; every trap is validated
   on that process's own kernel stack and address space; all resources return at teardown.

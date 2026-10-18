@@ -2,9 +2,9 @@
 
 | | |
 |---|---|
-| Status | **Experimental and unstable.** Implemented in N1 (commits up to `74501a7`); amended in N2.1 (entry `rflags` `0x202`: hardware interrupts reach ring 3); N2.3 runs several programs at once with timer preemption (no interface change). Any part may change without notice; there is no compatibility promise of any kind. |
+| Status | **Experimental and unstable.** Implemented in N1 (commits up to `74501a7`); amended in N2.1 (entry `rflags` `0x202`: hardware interrupts reach ring 3); N2.3 runs several programs at once with timer preemption (no interface change). N2.4 adds ABI v1 (`docs/abi/syscall-v1.md`) for executables whose note says 1; ABI v0 is unchanged. Any part may change without notice; there is no compatibility promise of any kind. |
 | Scope | The contract between a VOS user program and the kernel on `ARCH=x86_64`: entry state, system calls, memory layout, executable format. |
-| Version marker | The VOS ABI note in every executable carries ABI version `0`. A later, incompatible ABI will use a new version number, and the loader will reject versions it does not implement. |
+| Version marker | The VOS ABI note in every executable carries the ABI version: `0` for this ABI. Since N2.4 the loader also accepts `1` (ABI v1, `docs/abi/syscall-v1.md`) and rejects every other version. |
 | Sources of truth | `arch/x86_64/syscall.{h,c}`, `usercopy.c`, `usermode.S`, `process.c`, `elf.c`, `loader.c`; `user/include/vos/syscall.h`, `user/lib/{crt0.S,syscall.S,abi_note.S,user.ld}` |
 
 Applications should call the runtime functions `vos_exit` and `vos_debug_write`
@@ -76,7 +76,7 @@ program checks this state directly with its own `_start` (`user/suite/regs.S`).
   unchanged. Vectors `0x20`–`0x2F` have DPL 0, so `int $0x20`...`int $0x2f` from ring 3 raise
   `#GP`; a program cannot fake a hardware interrupt.
 - ABI v0 is still experimental. Programs that relied on IF = 0 (none are known) must not.
-  Future ABI v1 system calls will return `-VOS_ENOSYS` to programs marked ABI v0.
+  The ABI v1 system calls (2–5, N2.4) return `-VOS_ENOSYS` to programs marked ABI v0.
 
 ## 4. Results and errors
 
@@ -209,7 +209,7 @@ In the GNU toolchain's form (three 32-bit words, then name and descriptor padded
 | `n_descsz` (u32) | 4 |
 | `n_type` (u32) | 1 (`VOS_NOTE_ABI`; types are scoped by the owner name) |
 | name | `"VOS\0"` |
-| descriptor | u32 ABI version: `0` |
+| descriptor | u32 ABI version: `0` (ABI v1 executables: `1`) |
 
 The loader finds it by walking `PT_NOTE` segments, never through section headers. A file
 without exactly one valid VOS ABI note is rejected. The runtime provides it (`abi_note.S`), and

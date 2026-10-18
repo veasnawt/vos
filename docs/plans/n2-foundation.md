@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| Status | **Approved as the current development plan (2026-10-18), revised after the N2 architecture review.** **N2.0–N2.3 are complete (2026-10-18, sections 3.1–3.4).** N2.4 and every later stage need explicit approval. Sections marked [Proposal] or [Option] are still design, not implementation. |
+| Status | **Approved as the current development plan (2026-10-18), revised after the N2 architecture review.** **N2.0–N2.4 are complete (2026-10-18, sections 3.1–3.5).** N2.5 and every later stage need explicit approval. Sections marked [Proposal] or [Option] are still design, not implementation. |
 | Date | 2026-10-17, revised 2026-10-18 |
 | Starting point | N1 complete (see `docs/plans/n1-user-space.md`, `docs/abi/syscall-v0.md`) |
 | Target | `ARCH=x86_64`; the i386 kernel stays as it is |
@@ -409,6 +409,104 @@ inside its trap path — the same mechanism as preemption, so its frame stays at
 kernel stack; wakeups come from other threads (`thread_wake_*`) in thread context. Killing a
 blocked process needs `proc_kill` to wake it from its wait queue. Handles and channels need
 per-process tables in the process record and teardown in `proc_destroy`.
+
+### 3.5 N2.4 result: channels and native ABI v1 (complete)
+
+**What exists.** `channel.{h,c}`, `copy_to_user` in `usercopy.c`, ABI v1 in `syscall.c`; the
+contract is `docs/abi/syscall-v1.md`. A static pool of 16 channel records with two endpoints
+each; every endpoint's receive queue (16 messages of up to 256 bytes) is one 4 KiB frame from
+the physical allocator, owned by the channel and freed with it (no heap; the image only grows
+by the records). 8 handle slots per process, in the process record. Kernel image: production
+ends at `0x18d000`, the largest test image at `0x1ed000` (about 76 KiB below the 2 MiB
+covered by the kernel map's 4 KiB table); no mapping change was needed.
+
+**Ownership and handles.** An endpoint belongs to the process whose handle names it; a handle
+value is `(generation << 8) | (slot + 1)` and is looked up only in the caller's own table, so
+foreign, unissued and closed values are `-VOS_EBADHANDLE`; a 16-bit generation per slot makes
+a recycled slot's new handle differ from the old one (generation counters were judged cheap
+enough to do now; they wrap after 65 536 reuses of one slot, which is documented as a limit).
+Rights (send/receive) are set by the trusted creator and checked on every operation
+(`-VOS_EACCES`). Channels are created only by kernel code (`channel_create`); programs get
+their handles numbered from 1 in installation order. No raw pointer crosses address spaces
+and nothing is shared: messages are copied in and out through validated kernel aliases.
+
+**ABI v1.** `yield` (2), `channel_send` (3), `channel_recv` (4), `handle_close` (5); new errors
+`EAGAIN` 4, `EPIPE` 5, `EBADHANDLE` 6, `ENOMEM` 7, and two beyond the proposal: `EMSGSIZE` 8
+(the receive buffer is smaller than the message; it stays queued, never truncated) and
+`EACCES` 9 (a missing right, distinct from an invalid handle). The loader accepts ABI note
+versions 0 and 1 and records the version; an ABI v0 process gets `-VOS_ENOSYS` for 2–5.
+ABI v1 programs link `abi_note_v1.o` and `syscall_v1.o`; `hello.elf` is unchanged.
+
+**copy_to_user.** Same rules as `copy_from_user` plus effective W at every level; the whole
+range is validated before the first byte is written, through the kernel alias, never the user
+address (no fault, no SMAP dependence); length 0 does not examine the pointer. The mappings
+cannot change during a copy: one CPU, the kernel runs with IF = 0 and is not preempted inside
+it, and a process's page tables change only while it is built or after its thread is gone.
+
+**Blocking and wakeups.** `channel_recv` on an empty queue with an open peer blocks the
+process's thread inside its system-call path (the same mechanism as preemption: the complete
+user state stays in the trap frame at the top of its kernel stack). A send or the peer's close
+wakes it in thread context; it re-checks and the call returns normally. Because the kernel is
+non-preemptive with IF = 0, "empty, so block" cannot lose a wakeup. No blocking ever happens in
+an IRQ handler. Ticks spent blocked or yielding are not counted as the process's own.
+
+**Process death.** Every termination closes the process's handles first (peers see
+`-VOS_EPIPE` at once; messages queued to it are discarded; messages it had sent stay in the
+peer's queue and are still delivered). `proc_kill` wakes a thread blocked on a wait queue
+(`thread_interrupt` removes it from the queue); `channel_recv` notices the kill and the trap
+path ends the process before anything returns to user mode. Closing an endpoint its owner is
+blocked on, and reaping a thread still linked on a queue, are kernel errors (panics).
+`proc_destroy` closes what a never-started process holds.
+
+**Bug found and fixed (`64a5fef`).** Tick sleepers were only woken when something entered the
+scheduler; a lone CPU-bound process is never preempted, so a kernel thread sleeping beside it
+waited until the process ended (an IPC test slept 3 ticks and woke 400 later). The ring-3 timer
+path now wakes due sleepers before the preemption check; a test pins it.
+
+**Evidence (QEMU TCG).** `selftest: ipc 25 cases` (kernel interface on processes that do not run:
+lengths 0/256/257, `EMSGSIZE` and `EFAULT` without loss, FIFO over a full queue with equal
+in/out hashes, `EAGAIN`, invalid/foreign/stale handles, rights, drain-then-`EPIPE`, double close,
+slot reuse, teardown by `proc_destroy`, handle-table and pool exhaustion, frames back).
+`selftest: user` adds `copy_to_user` (every invalid destination refused with not one byte
+written) and running processes: an ABI v0 program gets four `ENOSYS`; a receiver blocked before
+the sender runs wakes with all registers intact; a receiver killed while blocked; a message from
+a sender that already exited; the sleeper fix. The `ipc` image runs 11 trusted scenarios of
+separately built programs (`user/suite/ipc_*`), judged by the kernel's records (state, exit
+status or fault, kill reason, messages in/out with order-sensitive hashes): ping/echo with the
+receiver blocked first (×3), registers across send/yield/blocking receive, flood to `EAGAIN`
+and drain to `EPIPE`, ping/echo started together, a blocked receiver killed, a peer that already
+faulted, rights and double close, yield, ABI v0 compatibility, hello, and a program printing a
+forged verdict that the harness must not accept. Under qemu64, 2 GiB and `-cpu max`.
+
+**Mutations.** All 18 caught with specific evidence: no generation check; wrong endpoint owner
+(also with the integrity check removed); no send-right check (also caught by the ELF scenario);
+`copy_to_user` without the W or U check, or writing before validating the whole range; queue
+overflow; LIFO instead of FIFO; no wakeup on send, a yield between "empty" and "block", close not
+waking the receiver (these three only in the `ipc` image: in the in-kernel test the sender exits
+at once, and its close wakes the receiver anyway); channel never released; message frames
+leaked; a killed thread left on its wait queue; a kill not waking a blocked thread; ABI v0
+allowed v1 calls; the harness accepting a verdict printed by a program. Spot checks of N2.3
+mutations (acknowledging after preemption, wrong CR3) still catch.
+
+**Regression at the end of N2.4:** `make test` and `make ARCH=x86_64 test` (47 QEMU runs each)
+and `make test-all` (48) pass; ten `check-fault.sh` comparisons and the genuine NMI case; 278
+user/ELF checks; the 41-case isolation suite, the 9-case interrupt suite, the 12-case `mp` image
+and the 11-scenario `ipc` image under qemu64, 2 GiB and `-cpu max`, frames equal before and
+after; `selftest: kmap 49`, `irq 22`, `sched 37`, `ipc 25`, `user 179`, `elf 34` with 0
+failures; the forged-verdict check holds. Two clean builds of the x86_64 kernel are
+byte-identical. `make ARCH=i386 test` passes and the i386 `vos.bin` SHA-256 is still
+`0760e7eb8ecfcb8545f4126f5a369b0fadfc5163ad9e95c5fba2a81d45afb9dd`; `hello.elf` is unchanged
+(`c6c64161…cd06`).
+
+**Limits.** Channels only between processes wired by the kernel; no handle transfer, no
+multi-handle wait, no timeouts or non-blocking receive; 16 channels, 8 handles per process,
+16 × 256-byte queues; generation wrap after 65 536 reuses of a slot; one CPU, one thread per
+process; about 76 KiB left under the 2 MiB image limit.
+
+**Constraints for N2.5.** A concurrency and isolation suite v2 can build on the `ipc` scenario
+runner (trusted configuration, kernel-side verdicts). Exhaustion and kill tests at scale are
+bounded by 8 processes, 14 free threads and 16 channels; more needs the image-limit decision
+(stacks from allocated frames, or a second 4 KiB table).
 
 **Deferred beyond N2:** a general kernel heap, `SYSCALL`/`SYSRET`, a `spawn` system call and a
 user-visible `wait`, LAPIC/IOAPIC/ACPI, SMP, more than one thread per process, FPU/SIMD state,
