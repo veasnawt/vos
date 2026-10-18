@@ -21,6 +21,7 @@
 #include "panic.h"
 #include "pmm.h"
 #include "resv.h"
+#include "screen.h"
 #include "thread.h"
 #include "virtio_blk.h"
 #include "vmm.h"
@@ -65,7 +66,7 @@ void kernel_main(uint32_t mb2_magic, uint32_t mb2_info)
     __asm__ volatile ("mov %%rsp, %0" : "=r"(rsp));
 
     serial_init();
-    vga_puts("Hello from VOS!");
+    /* U1: nothing is written to any screen before screen_init decides what the display is. */
     serial_puts("Hello from VOS!\r\n");
 
     check(efer & EFER_LMA, "long mode active (EFER.LMA)");
@@ -228,6 +229,8 @@ void kernel_main(uint32_t mb2_magic, uint32_t mb2_info)
         serial_puts(devmap_strerror(derr));
     }
     serial_puts("\r\n");
+    /* U1: the screen console (framebuffer, VGA text when positively known, or none). */
+    screen_init(&bi);
 
     struct vmm_audit audit;
     if (vmm_audit_space(vmm_kernel_root(), 1, &audit) != VMM_OK) {
@@ -259,6 +262,7 @@ void kernel_main(uint32_t mb2_magic, uint32_t mb2_info)
     check(app_run_boot_module(&bi), "boot application ran and exited with status 0");
 
     serial_puts(first_failure ? "boot: FAILED\r\n" : "boot: checks passed\r\n");
+    screen_status(first_failure ? SCREEN_FAIL : SCREEN_PASS, first_failure ? "boot: FAILED" : "boot: checks passed");
 #ifdef VOS_TEST
     check(selftest_bootinfo() == 0, "bootinfo/reservation self-test");
     check(selftest_pmm_synthetic() == 0, "pmm synthetic self-test");
@@ -273,6 +277,7 @@ void kernel_main(uint32_t mb2_magic, uint32_t mb2_info)
     check(selftest_vblk(&bi) == 0, "vblk self-test");
     check(selftest_blk(&bi) == 0, "block layer self-test");
     check(selftest_ext2(&bi) == 0, "ext2 reader self-test");
+    check(selftest_screen(&bi) == 0, "screen console self-test");
 #if defined(VOS_TEST_CASE_suite) || defined(VOS_TEST_CASE_irq)
     check(selftest_suite(&bi) == 0, "isolation suite");
 #endif
@@ -333,6 +338,7 @@ void kernel_main(uint32_t mb2_magic, uint32_t mb2_info)
 #endif
 #ifdef VOS_TEST
     serial_puts(first_failure ? "VOS-TEST: FAIL\r\n" : "VOS-TEST: PASS\r\n");
+    screen_status(first_failure ? SCREEN_FAIL : SCREEN_PASS, first_failure ? "VOS-TEST: FAIL" : "VOS-TEST: PASS");
     outl(TEST_EXIT_PORT, first_failure ? TEST_EXIT_FAIL : TEST_EXIT_PASS);
 #endif
 }

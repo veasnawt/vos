@@ -10,10 +10,10 @@ ARCH_ASFLAGS    := -g -m64
 ARCH_LDFLAGS    := -m elf_x86_64 -z max-page-size=0x1000
 ARCH_OBJS       := boot.o entry.o usermode.o kernel.o bootinfo.o console.o cpu.o exception.o gdt.o idt.o \
                    lib.o loader.o panic.o pmm.o process.o resv.o syscall.o usercopy.o vmm.o kmap.o irq.o pic.o pit.o thread.o thread_switch.o channel.o elf.o app.o \
-                   pci.o blockdev.o virtio_blk.o ext2.o devmap.o
+                   pci.o blockdev.o virtio_blk.o ext2.o devmap.o screen.o font8x16.o
 ifeq ($(VOS_TEST),1)
 ARCH_OBJS       += selftest.o selftest_cpu.o selftest_elf.o selftest_ipc.o selftest_irq.o selftest_kmap.o selftest_mp.o selftest_sched.o selftest_stress.o selftest_pmm.o selftest_suite.o \
-                   selftest_user.o selftest_vblk.o selftest_blk.o selftest_ext2.o selftest_vmm.o user_progs.o
+                   selftest_user.o selftest_vblk.o selftest_blk.o selftest_ext2.o selftest_vmm.o selftest_screen.o user_progs.o
 endif
 QEMU            := qemu-system-x86_64
 # The boot application, delivered by GRUB as a Multiboot2 module (grub.cfg).
@@ -342,4 +342,12 @@ arch-test: iso
 	cd $(EXT2_DIR) && sha256sum -c --quiet SHA256SUMS
 	@echo "vblk: the test disk is unchanged after every run"
 	echo "$(VBLK_SHA256)  $(VBLK_DISK)" | sha256sum -c
+	@echo "U1: the early-boot font table is exactly the output of its generator"
+	python3 -I scripts/font8x16.py | cmp - $(ARCH_DIR)/font8x16.c
+	@echo "U1: the BIOS screen console (GRUB hands over a VBE framebuffer): PASS badge, then a panic banner"
+	COLOR=2ea043 scripts/halt-test.sh bios-screen $(ISO) $(KERNEL) 25 main 'screen: framebuffer ' \
+	    'boot: checks passed' 'user[hello]: Hello from VOS!' --
+	$(MAKE) --no-print-directory ARCH=$(ARCH) VOS_TEST=1 VOS_TEST_CASE=panic iso
+	COLOR=b62324 scripts/halt-test.sh bios-panic-screen build/$(ARCH)-test-panic/vos.iso \
+	    build/$(ARCH)-test-panic/vos.bin 25 panic 'panic: test case: deliberate panic' --
 	$(MAKE) --no-print-directory ARCH=$(ARCH) user-test

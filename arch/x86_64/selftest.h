@@ -63,6 +63,8 @@ int selftest_blk(const struct boot_info *bi);
 int selftest_ext2(const struct boot_info *bi);
 /* Page-table manager, identity-map removal and kernel survival (restores all state). */
 int selftest_vmm(void);
+/* U1: the screen console: selection rule, renderer, font, and the console this boot chose. */
+int selftest_screen(const struct boot_info *bi);
 /* User address spaces and ring 3 (restores all state). */
 int selftest_user(void);
 /* ELF validation, loading and execution of the GRUB module "hello" (N1.8). */

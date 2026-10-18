@@ -1,4 +1,4 @@
-/* Serial (COM1) and VGA text output. */
+/* Serial (COM1) output; every character is also mirrored on the screen console (screen.h). */
 #ifndef VOS_X86_64_CONSOLE_H
 #define VOS_X86_64_CONSOLE_H
 
@@ -11,7 +11,5 @@ void serial_puts(const char *s);
 void serial_puts_safe(const char *s);
 void serial_hex(uint64_t v);
 void serial_dec(uint64_t v);
-/* Clears the screen, then writes s from the top-left corner. */
-void vga_puts(const char *s);
 
 #endif

@@ -1,6 +1,6 @@
 #include "console.h"
 #include "cpu.h"
-#include "memlayout.h"
+#include "screen.h"
 
 #define COM1            0x3F8
 
@@ -20,6 +20,7 @@ void serial_putc(char c)
     while (!(inb(COM1 + 5) & 0x20))
         ;
     outb(COM1, (uint8_t)c);
+    screen_putc(c);                     /* U1: mirrored on the screen console, if any (screen.h) */
 }
 
 void serial_puts(const char *s)
@@ -69,14 +70,4 @@ void serial_dec(uint64_t v)
         v /= 10;
     } while (v);
     serial_puts(&buf[i]);
-}
-
-void vga_puts(const char *s)
-{
-    volatile uint16_t *vga = phys_to_virt(VGA_TEXT_PHYS);
-
-    for (int i = 0; i < 80 * 25; i++)
-        vga[i] = 0x0720;
-    for (int i = 0; s[i] && i < 80 * 25; i++)
-        vga[i] = 0x0700 | (uint8_t)s[i];
 }

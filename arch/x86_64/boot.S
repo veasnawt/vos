@@ -51,6 +51,19 @@ mb2_header:
     .short 6                        /* module alignment tag: type */
     .short 0                        /*                       flags */
     .long 8                         /*                       size */
+    /*
+     * U1: framebuffer request, optional (flags bit 0): any size, 32 bits per
+     * pixel. GRUB then hands over the GOP framebuffer under UEFI and a VBE
+     * linear framebuffer under BIOS (it leaves text mode); without one the
+     * boot goes on and the screen console decides (screen.h).
+     */
+    .short 5                        /* framebuffer tag: type */
+    .short 1                        /*                  flags: optional */
+    .long 20                        /*                  size */
+    .long 0                         /*                  width: any */
+    .long 0                         /*                  height: any */
+    .long 32                        /*                  depth */
+    .long 0                         /* padding to the next 8-byte boundary */
     .short 0                        /* end tag: type */
     .short 0                        /*          flags */
     .long 8                         /*          size */

@@ -137,11 +137,15 @@ static void test_layout_and_survival(void)
            gdt_tss_rsp0() >= KERNEL_VMA && gdt_tss_ist1() >= KERNEL_VMA &&
            gdt_in_ist1_stack(gdt_tss_ist1() - 8), "GDT, IDT, TR and TSS stacks are higher-half");
     expect((read_cr0() & CR0_WP) && (rdmsr(MSR_EFER) & EFER_NXE), "CR0.WP and EFER.NXE still set");
-    volatile uint16_t *vga = phys_to_virt(VGA_TEXT_PHYS);
-    uint16_t old = vga[80 * 25 - 1];
-    vga[80 * 25 - 1] = 0x0756;
-    expect(vga[80 * 25 - 1] == 0x0756, "VGA text memory writable through the alias");
-    vga[80 * 25 - 1] = old;
+    /*
+     * U1: the alias maps the VGA text page writable and non-executable, as
+     * kmap requires. Whether text memory exists there (it does not under
+     * UEFI, nor in a VBE graphics mode) is checked only where the screen
+     * console positively uses it (selftest_screen.c); nothing is written here.
+     */
+    struct vmm_mapping vm;
+    expect(vmm_lookup(vmm_kernel_root(), KERNEL_VMA + VGA_TEXT_PHYS, &vm) == VMM_OK && vm.pa == VGA_TEXT_PHYS &&
+           vm.flags == VMM_WRITE, "the VGA text page is mapped in the alias: writable, NX, supervisor");
 }
 
 static void test_map_unmap(void)
