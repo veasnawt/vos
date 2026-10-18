@@ -345,6 +345,18 @@ static void schedule(void)
         if (current->state != THREAD_RUNNABLE && current->state != THREAD_RUNNING)
             panic("sched: nothing to run");
         current->state = THREAD_RUNNING;
+        /*
+         * N2.5 livelock detector: the kernel is not preemptible and runs with
+         * IF = 0, so a thread that keeps yielding to itself without time
+         * passing (no tick can arrive) would hang the machine silently.
+         */
+        static uint64_t idle_yields, at_tick;
+        if (irq_ticks() != at_tick) {
+            at_tick = irq_ticks();
+            idle_yields = 0;
+        } else if (++idle_yields > 1000000) {
+            panic("sched: a thread spins in the kernel with nothing else runnable (busy wait?)");
+        }
         return;
     }
     if (next == idle)
