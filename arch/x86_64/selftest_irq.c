@@ -323,6 +323,20 @@ static void test_handlers(void)
            irq_register((unsigned)edge, IRQ_TRIGGER_EDGE, "t2", test_top, 0, 0, &hh) == IRQ_EDISABLED,
            "after a storm every handler of the line runs its bottom half once; new registrations are refused");
 
+    /* An unclaimed storm spread over two ticks: 1001 in a row that nobody claims also masks the line. */
+    irq_test_clear_storm((unsigned)edge);
+    s0 = st->storms;
+    for (unsigned i = 0; i < IRQ_STORM_LIMIT / 2; i++)
+        irq_test_dispatch((unsigned)edge);
+    uint64_t t1 = irq_ticks();
+    thread_sleep(1);                    /* a tick passes: the per-tick count starts again */
+    for (unsigned i = IRQ_STORM_LIMIT / 2; i <= IRQ_STORM_LIMIT; i++)
+        irq_test_dispatch((unsigned)edge);
+    irq_run_deferred();
+    expect(irq_ticks() > t1 && st->storms == s0 + 1 && irq_line_disabled((unsigned)edge),
+           "1001 unclaimed interrupts in a row, across a tick, also mask the line");
+    t0 = irq_ticks();
+
     /* A claimed storm: the device acknowledges, yet interrupts 1001 times within one tick. */
     irq_test_clear_storm((unsigned)edge);
     top_says[1] = IRQ_HANDLED;
