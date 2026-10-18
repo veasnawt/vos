@@ -459,7 +459,7 @@ uint64_t proc_user_trap(struct exc_frame *f)
         p->tick_mark = now;
         record(&p->last_irq, f);
 #ifdef VOS_TEST
-        /* Normally irqs == ticks (only IRQ0 is unmasked); the second bound catches a stuck counter. */
+        /* irqs == ticks plus device interrupts (N3.4); the second bound catches a stuck counter. */
         uint64_t b = p->tick_budget;
         if (b && (p->ticks >= b || p->irqs >= 2 * b + 16)) {
             record(&p->trap, f);
@@ -492,7 +492,7 @@ uint64_t proc_user_trap(struct exc_frame *f)
          * the scheduler has restored its CR3 and RSP0; the frame is checked
          * again before the IRETQ.
          */
-        sched_tick();                   /* due sleepers become runnable: they can preempt */
+        sched_tick();                   /* device bottom halves, due sleepers: they can preempt */
         if (sched_preempt_due()) {
             p->preemptions++;
             thread_yield();

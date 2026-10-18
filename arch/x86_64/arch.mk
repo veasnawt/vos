@@ -208,6 +208,10 @@ arch-test: iso
 	scripts/exit-test.sh sched-deadlock build/$(ARCH)-test-sched-deadlock/vos.iso 35 'selftest: sched ' \
 	    'sched-test: the boot thread blocks on a queue nobody wakes' \
 	    'panic: sched: every thread is blocked and none sleeps (lost wakeup?)' 'VOS-TEST: FAIL' --
+	$(MAKE) --no-print-directory ARCH=$(ARCH) VOS_TEST=1 VOS_TEST_CASE=irq-top-sched iso
+	scripts/exit-test.sh irq-top-sched build/$(ARCH)-test-irq-top-sched/vos.iso 35 'selftest: sched ' \
+	    'sched-test: a top half calls thread_yield' 'panic: sched: called from an interrupt handler' \
+	    'VOS-TEST: FAIL' --
 	$(MAKE) --no-print-directory ARCH=$(ARCH) VOS_TEST=1 VOS_TEST_CASE=mp iso
 	scripts/exit-test.sh mp build/$(ARCH)-test-mp/vos.iso 33 'mp: memtag1 + memtag2 + irqregs:' \
 	    'mp: 3 x spin (fairness):' 'user[hello]: Hello from VOS!' 'selftest: mp ' ' cases, 0 failed' \

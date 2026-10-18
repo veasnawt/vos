@@ -620,8 +620,20 @@ int selftest_sched(void)
 
 /* ---- isolated cases: each ends in a panic or a CPU exception (exit status 35) ---- */
 
-#if defined(VOS_TEST_CASE_thread_overflow) || defined(VOS_TEST_CASE_sched_deadlock)
+#if defined(VOS_TEST_CASE_thread_overflow) || defined(VOS_TEST_CASE_sched_deadlock) || \
+    defined(VOS_TEST_CASE_irq_top_sched)
 #define SCHED_CASE 1
+#endif
+
+#ifdef VOS_TEST_CASE_irq_top_sched
+/* N3.4: a top half must never enter the scheduler; the scheduler refuses it. */
+static int bad_top(void *ctx)
+{
+    (void)ctx;
+    serial_puts("sched-test: a top half calls thread_yield\r\n");
+    thread_yield();
+    return IRQ_HANDLED;
+}
 #endif
 
 #ifdef VOS_TEST_CASE_thread_overflow
@@ -659,6 +671,11 @@ void selftest_sched_case(const struct boot_info *bi, int self_tests_failed)
 #ifdef VOS_TEST_CASE_thread_overflow
     thread_create("overflow", overflow_worker, 0);
     thread_yield();
+#endif
+#ifdef VOS_TEST_CASE_irq_top_sched
+    int h;
+    if (irq_register(15, IRQ_TRIGGER_EDGE, "bad-top", bad_top, 0, 0, &h) == IRQ_OK)
+        irq_test_dispatch(15);          /* as an interrupt on line 15 would run it (IF stays 0) */
 #endif
 #ifdef VOS_TEST_CASE_sched_deadlock
     static struct wait_queue never;

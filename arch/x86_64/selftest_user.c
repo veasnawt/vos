@@ -790,7 +790,8 @@ static void test_irq_ring3(void)
            last.trap.rip == PROC_CODE_VA, "user sti: #GP(0)");
     expect(run_prog("exit42", PROG(exit42), 0, 0) == PROC_EXITED && last.exit_status == 42,
            "normal program after timer activity");
-    expect(st->unexpected == unexpected0 && irq_chip()->masks() == 0xFFFE && irq_chip()->in_service() == 0,
+    expect(st->unexpected == unexpected0 && irq_chip()->masks() == irq_expected_masks() &&
+           irq_chip()->in_service() == 0,
            "no IRQ on a masked line; masks unchanged; nothing left in service at the controller");
     expect(pmm_free_count() == f0 && pmm_check_in(pmm_kernel()) == PMM_OK && gdt_stack_canaries_intact(),
            "no leak and intact canaries after the interrupt tests");

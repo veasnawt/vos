@@ -60,6 +60,11 @@ uint16_t pic_irr(const struct pic_io *io)
     return read_reg(io, PIC_OCW3_READ_IRR);
 }
 
+uint16_t pic_elcr(const struct pic_io *io)
+{
+    return (uint16_t)(io->in(PIC_ELCR_SLAVE) << 8 | io->in(PIC_ELCR_MASTER));
+}
+
 int pic_begin(const struct pic_io *io, unsigned irq)
 {
     uint16_t isr = pic_isr(io);

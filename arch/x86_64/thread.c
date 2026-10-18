@@ -29,6 +29,7 @@ static struct thread pool[THREAD_MAX];
 static uint64_t next_id = 1;
 static struct thread *current, *idle;
 static struct sched_stats stats;
+static int device_woke;                 /* N3.4: a bottom half made a thread runnable since the last switch */
 
 unsigned thread_guard_pages(uint64_t *va, unsigned max)
 {
@@ -303,6 +304,7 @@ static void switch_to(struct thread *next)
     next->state = THREAD_RUNNING;
     next->switches_in++;
     next->slice_start = irq_ticks();
+    device_woke = 0;
     current = next;
     switched_from = prev;
     stats.switches++;
@@ -450,7 +452,8 @@ void thread_leave_user_space(void)
 
 int sched_preempt_due(void)
 {
-    return current && current->proc && runq_head && irq_ticks() - current->slice_start >= SCHED_SLICE_TICKS;
+    return current && current->proc && runq_head &&
+           (device_woke || irq_ticks() - current->slice_start >= SCHED_SLICE_TICKS);
 }
 
 static void check_entry(void)
@@ -465,7 +468,14 @@ static void check_entry(void)
 
 void sched_tick(void)
 {
+    uint64_t w0 = stats.wakeups;
+
     check_entry();
+    irq_run_deferred();                 /* device bottom halves (N3.4) */
+    if (stats.wakeups != w0) {
+        device_woke = 1;                /* a waiter of a device need not wait for the slice to end */
+        stats.device_wakeups += stats.wakeups - w0;
+    }
     wake_sleepers();
 }
 
@@ -598,6 +608,7 @@ static void idle_main(void *arg)
 {
     (void)arg;
     for (;;) {
+        irq_run_deferred();             /* device bottom halves (N3.4) */
         wake_sleepers();
         if (runq_head) {
             thread_yield();

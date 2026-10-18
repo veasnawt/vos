@@ -173,7 +173,8 @@ static void test_hardware_state(void)
     uint16_t count, prev;
     unsigned gates = 1;
 
-    expect(c && c->masks() == 0xFFFE, "8259 IMRs read back: only IRQ0 unmasked (master 0xfe, slave 0xff)");
+    expect(c && (irq_expected_masks() & 1) == 0 && c->masks() == irq_expected_masks(),
+           "8259 IMRs read back: IRQ0 and the registered device lines unmasked, nothing else");
     expect(c && c->in_service() == 0, "8259 nothing in service while the kernel runs");
     pit_readback(&status, &count);
     expect((status & PIT_STATUS_CFG_MASK) == 0x34, "PIT read-back status: channel 0, lobyte/hibyte, mode 2, binary");
@@ -209,11 +210,144 @@ static void test_hardware_state(void)
            "kmap probes inert after boot: kmap_init refuses to rerun, a #PF at the probe is not recovered");
 }
 
+/* ---- N3.4: device-line handlers, on lines nothing uses (IF stays 0: nothing is delivered) ---- */
+
+static unsigned top_calls[3], bottom_calls[3], call_seq[3], seq;
+static int top_says[3];
+
+static int test_top(void *ctx)
+{
+    unsigned i = (unsigned)(uintptr_t)ctx;
+
+    top_calls[i]++;
+    call_seq[i] = ++seq;
+    return top_says[i];
+}
+
+static void test_bottom(void *ctx)
+{
+    bottom_calls[(unsigned)(uintptr_t)ctx]++;
+}
+
+static void reset_calls(void)
+{
+    memset(top_calls, 0, sizeof(top_calls));
+    memset(bottom_calls, 0, sizeof(bottom_calls));
+    memset(call_seq, 0, sizeof(call_seq));
+    seq = 0;
+}
+
+/* A line other than 0 and 2, masked now (no handler), with the wanted trigger mode, preferring the slave. */
+static int free_line(int level)
+{
+    uint16_t trig = irq_chip()->triggers(), masks = irq_expected_masks();
+
+    for (int l = IRQ_LINES - 1; l > 0; l--)
+        if (l != PIC_CASCADE_IRQ && (masks & (1u << l)) && !!(trig & (1u << l)) == level && !irq_line_disabled(l))
+            return l;
+    return -1;
+}
+
+static void test_handlers(void)
+{
+    const struct irq_stats *st = irq_stats();
+    const struct irq_chip *c = irq_chip();
+    uint16_t trig = c->triggers(), m0 = c->masks();
+    int edge = free_line(0), level = free_line(1), h[IRQ_MAX_HANDLERS + 1], hh, n;
+
+    serial_puts("selftest: irq: ELCR ");
+    serial_hex(trig);
+    serial_puts(", test lines: edge ");
+    serial_dec((uint64_t)edge);
+    serial_puts(", level ");
+    serial_dec((uint64_t)level);
+    serial_puts("\r\n");
+    expect(!(trig & ((1u << IRQ_TIMER) | (1u << 1) | (1u << PIC_CASCADE_IRQ))),
+           "ELCR: the timer, keyboard and cascade lines are edge triggered");
+    expect(edge >= 8 && level > 0, "a free slave edge line and a free level line exist for the tests");
+    if (edge < 8 || level <= 0)
+        return;
+
+    expect(irq_register(IRQ_TIMER, IRQ_TRIGGER_EDGE, "t", test_top, 0, 0, &hh) == IRQ_EINVAL &&
+           irq_register(PIC_CASCADE_IRQ, IRQ_TRIGGER_EDGE, "t", test_top, 0, 0, &hh) == IRQ_EINVAL &&
+           irq_register(IRQ_LINES, IRQ_TRIGGER_EDGE, "t", test_top, 0, 0, &hh) == IRQ_EINVAL &&
+           irq_register((unsigned)edge, IRQ_TRIGGER_EDGE, "t", 0, 0, 0, &hh) == IRQ_EINVAL &&
+           irq_register((unsigned)edge, 7, "t", test_top, 0, 0, &hh) == IRQ_EINVAL,
+           "registration refuses the timer, the cascade, line 16, a missing top half and a bad trigger mode");
+    expect(irq_register((unsigned)edge, IRQ_TRIGGER_LEVEL, "t", test_top, 0, 0, &hh) == IRQ_ETRIGGER &&
+           irq_register((unsigned)level, IRQ_TRIGGER_EDGE, "t", test_top, 0, 0, &hh) == IRQ_ETRIGGER &&
+           c->masks() == m0, "registration refuses a trigger mode the ELCR does not have; masks unchanged");
+
+    /* Two handlers sharing a slave line. */
+    reset_calls();
+    int ok = irq_register((unsigned)edge, IRQ_TRIGGER_EDGE, "t0", test_top, test_bottom, (void *)0, &h[0]) == IRQ_OK &&
+             irq_register((unsigned)edge, IRQ_TRIGGER_EDGE, "t1", test_top, test_bottom, (void *)1, &h[1]) == IRQ_OK;
+    uint16_t m1 = c->masks();
+    expect(ok && h[0] != h[1] && !(m1 & (1u << edge)) && !(m1 & (1u << PIC_CASCADE_IRQ)) &&
+           (m1 | (1u << edge) | (1u << PIC_CASCADE_IRQ)) == (m0 | (1u << PIC_CASCADE_IRQ)) &&
+           m1 == irq_expected_masks() && irq_audit() == NULL,
+           "registering a slave line unmasks exactly it and the cascade; audit clean");
+
+    uint64_t cl0 = st->claimed[edge], un0 = st->unclaimed[edge], br0 = st->bottom_runs;
+    top_says[0] = IRQ_NONE;
+    top_says[1] = IRQ_HANDLED;
+    n = (int)irq_test_dispatch((unsigned)edge);
+    expect(n == 1 && top_calls[0] == 1 && top_calls[1] == 1 && call_seq[0] == 1 && call_seq[1] == 2 &&
+           bottom_calls[0] == 0 && bottom_calls[1] == 0 && st->claimed[edge] == cl0 + 1,
+           "shared line: every top half is asked, in registration order; nothing deferred runs inside the handler");
+    irq_run_deferred();
+    irq_run_deferred();
+    expect(bottom_calls[0] == 0 && bottom_calls[1] == 1 && st->bottom_runs == br0 + 1,
+           "only the claiming handler's bottom half runs, once, in thread context");
+    top_says[1] = IRQ_NONE;
+    n = (int)irq_test_dispatch((unsigned)edge);
+    irq_run_deferred();
+    expect(n == 0 && st->unclaimed[edge] == un0 + 1 && bottom_calls[0] == 0 && bottom_calls[1] == 1,
+           "an interrupt no handler claims is counted unclaimed and runs no bottom half");
+
+    /* A storm: more than IRQ_STORM_LIMIT interrupts within one tick (no tick can pass: IF = 0). */
+    uint64_t s0 = st->storms, t0 = irq_ticks();
+    for (unsigned i = 0; i <= IRQ_STORM_LIMIT; i++)
+        irq_test_dispatch((unsigned)edge);
+    uint16_t m2 = c->masks();
+    expect(irq_ticks() == t0 && st->storms == s0 + 1 && irq_line_disabled((unsigned)edge) && (m2 & (1u << edge)) &&
+           m2 == irq_expected_masks() && irq_audit() == NULL,
+           "a storm (1001 interrupts in one tick) masks the line for good; masks match the table");
+    irq_run_deferred();
+    expect(bottom_calls[0] == 1 && bottom_calls[1] == 2 &&
+           irq_register((unsigned)edge, IRQ_TRIGGER_EDGE, "t2", test_top, 0, 0, &hh) == IRQ_EDISABLED,
+           "after a storm every handler of the line runs its bottom half once; new registrations are refused");
+
+    expect(irq_unregister(h[0]) == IRQ_OK && irq_unregister(h[1]) == IRQ_OK && irq_unregister(h[1]) == IRQ_EINVAL &&
+           irq_unregister(0) == IRQ_EINVAL && irq_unregister(IRQ_MAX_HANDLERS + 1) == IRQ_EINVAL,
+           "unregistration; a stale, zero or out-of-range handle is refused");
+    irq_test_clear_storm((unsigned)edge);
+    expect(c->masks() == m0 && irq_audit() == NULL, "masks back to their state before the tests");
+
+    /* The table is bounded; a level line takes a level handler. */
+    unsigned made = 0;
+    int full = 0;
+    for (unsigned i = 0; i <= IRQ_MAX_HANDLERS; i++) {
+        int r = irq_register((unsigned)level, IRQ_TRIGGER_LEVEL, "t", test_top, 0, (void *)2, &h[made]);
+
+        if (r == IRQ_OK)
+            made++;
+        else
+            full = r == IRQ_EFULL;
+    }
+    uint16_t m3 = c->masks();
+    for (unsigned i = 0; i < made; i++)
+        irq_unregister(h[i]);
+    expect(made >= 1 && full && !(m3 & (1u << level)) && c->masks() == m0 && irq_audit() == NULL,
+           "a level line accepts a level handler; the table refuses one beyond IRQ_MAX_HANDLERS");
+}
+
 int selftest_irq(void)
 {
     failures = cases = 0;
     test_synthetic();
     test_hardware_state();
+    test_handlers();
     serial_puts("selftest: irq ");
     serial_dec(cases);
     serial_puts(" cases, ");

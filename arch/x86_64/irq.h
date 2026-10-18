@@ -18,8 +18,34 @@
  * a hardware interrupt taken there is acknowledged and returns to the idle
  * loop, which immediately executes cli. A hardware interrupt from ring 3 is
  * handled on the TSS.RSP0 stack, acknowledged, and the program resumes. Any
- * other IRQ vector seen from ring 0 is a kernel error (panic). Only IRQ0 is unmasked; the cascade line stays masked
- * because no slave line is used.
+ * other IRQ vector seen from ring 0 is a kernel error (panic). irq_init
+ * unmasks only IRQ0.
+ *
+ * Device lines (N3.4). A driver registers a handler for its line
+ * (irq_register): the line must not be the timer or the cascade, and its
+ * trigger mode in the chipset's ELCR must be the one the device needs
+ * (PCI INTx: level). Registration unmasks the line, and the cascade (IRQ2)
+ * for a slave line; the last unregistration masks them again. Up to
+ * IRQ_MAX_HANDLERS handlers exist in total, and lines may be shared: every
+ * handler of the line is asked, in registration order.
+ *
+ * A handler has two halves. The top half runs inside irq_handle (IF = 0,
+ * nothing nested, before the EOI): it must be short, never block, sleep,
+ * yield, allocate or wake threads (the scheduler panics if called), and
+ * must acknowledge its device so a level-triggered line drops before the
+ * EOI; it returns IRQ_HANDLED or IRQ_NONE (not my device). The bottom half
+ * of every handler that said IRQ_HANDLED runs later in thread context,
+ * from irq_run_deferred, which the scheduler calls after each timer tick
+ * from ring 3 (sched_tick) and in the idle loop after each halt; it may
+ * wake threads. Top halves only ever interrupt ring 3 or the idle thread's
+ * halt, never kernel code, so they never interleave with a driver's own
+ * register accesses (PCI configuration cycles included).
+ *
+ * Storms. A device line that interrupts more than IRQ_STORM_LIMIT times
+ * within one timer tick (claimed or not: a device that never lets go of a
+ * level line, or a foreign device nobody acknowledges) is masked for good;
+ * its handlers' bottom halves run once more so their drivers notice
+ * (irq_line_disabled) and fall back to polling.
  */
 #ifndef VOS_X86_64_IRQ_H
 #define VOS_X86_64_IRQ_H
@@ -29,6 +55,26 @@
 #define IRQ_VECTOR_BASE     0x20
 #define IRQ_LINES           16
 #define IRQ_TIMER           0
+#define IRQ_MAX_HANDLERS    4
+#define IRQ_STORM_LIMIT     1000        /* device-line interrupts within one timer tick before the line is masked */
+
+/* Trigger modes (irq_register). */
+#define IRQ_TRIGGER_EDGE    0
+#define IRQ_TRIGGER_LEVEL   1
+
+/* Results of a top half. */
+#define IRQ_NONE            0   /* not from this device */
+#define IRQ_HANDLED         1   /* from this device, acknowledged at the device: run the bottom half */
+
+/* Results of irq_register / irq_unregister. */
+#define IRQ_OK              0
+#define IRQ_EINVAL          1   /* the timer or cascade line, no such line, no top half, bad handle */
+#define IRQ_EFULL           2   /* no free handler record */
+#define IRQ_ETRIGGER        3   /* the line's trigger mode (ELCR) is not the one the device needs */
+#define IRQ_EDISABLED       4   /* the line was masked after a storm */
+
+typedef int (*irq_top_fn)(void *ctx);
+typedef void (*irq_bottom_fn)(void *ctx);
 
 static inline int irq_is_vector(uint64_t v)
 {
@@ -50,12 +96,18 @@ struct irq_chip {
     uint16_t (*in_service)(void);
     int (*begin)(unsigned irq);             /* IRQ_GENUINE / IRQ_SPURIOUS / IRQ_NOT_IN_SERVICE */
     void (*eoi)(unsigned irq);              /* acknowledge a genuine IRQ */
+    uint16_t (*triggers)(void);             /* bit n set = line n level triggered */
 };
 
 struct irq_stats {
     uint64_t delivered[IRQ_LINES];          /* genuine, acknowledged */
     uint64_t spurious[IRQ_LINES];
     uint64_t unexpected;                    /* genuine on a line that should be masked */
+    /* N3.4: device lines. */
+    uint64_t claimed[IRQ_LINES];            /* at least one top half said IRQ_HANDLED */
+    uint64_t unclaimed[IRQ_LINES];          /* every top half of the line said IRQ_NONE */
+    uint64_t storms;                        /* lines masked after a storm */
+    uint64_t bottom_runs;                   /* bottom halves run by irq_run_deferred */
 };
 
 /*
@@ -77,5 +129,29 @@ uint64_t irq_ticks(void);                   /* timer interrupts handled since ir
 int irq_in_handler(void);                   /* nonzero inside irq_handle */
 const struct irq_stats *irq_stats(void);
 const struct irq_chip *irq_chip(void);
+
+/*
+ * Register a handler for device line `line` (thread context, IF = 0).
+ * *handle receives its handle (> 0). IRQ_OK or IRQ_E*. bottom may be NULL.
+ */
+int irq_register(unsigned line, int trigger, const char *name, irq_top_fn top, irq_bottom_fn bottom, void *ctx,
+                 int *handle);
+/* Remove a handler; a pending bottom half is dropped. The line is masked when its last handler goes. */
+int irq_unregister(int handle);
+/* Run the bottom halves whose top half claimed an interrupt (thread context, IF = 0; never in a handler). */
+void irq_run_deferred(void);
+/* The masks the controller must hold: IRQ0, the registered lines not disabled, and the cascade if needed. */
+uint16_t irq_expected_masks(void);
+/* Nonzero if the line was masked after a storm. */
+int irq_line_disabled(unsigned line);
+/* Consistency of the handler table and the controller state; NULL if consistent. */
+const char *irq_audit(void);
+
+#ifdef VOS_TEST
+/* Run line `line`'s top halves (and the storm guard) as an interrupt would; returns how many claimed it. */
+unsigned irq_test_dispatch(unsigned line);
+/* Forget that line `line` was disabled by a storm (it stays masked until a handler registers). */
+void irq_test_clear_storm(unsigned line);
+#endif
 
 #endif

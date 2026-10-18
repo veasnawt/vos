@@ -30,6 +30,13 @@
 #define PIC_OCW3_READ_IRR   0x0A
 #define PIC_OCW3_READ_ISR   0x0B
 #define PIC_CASCADE_IRQ     2
+/*
+ * Edge/Level Control Registers (N3.4) of the PIIX/ICH-style chipset QEMU's
+ * pc machine emulates: bit n set = line n is level triggered. The firmware
+ * programs them for the PCI interrupt lines; the 8259 init does not change them.
+ */
+#define PIC_ELCR_MASTER     0x4D0
+#define PIC_ELCR_SLAVE      0x4D1
 
 struct pic_io {
     uint8_t (*in)(uint16_t port);
@@ -53,6 +60,7 @@ void pic_set_mask(const struct pic_io *io, unsigned irq, int masked);
 uint16_t pic_masks(const struct pic_io *io);    /* slave IMR << 8 | master IMR */
 uint16_t pic_isr(const struct pic_io *io);      /* in-service registers, same layout */
 uint16_t pic_irr(const struct pic_io *io);      /* request registers, same layout */
+uint16_t pic_elcr(const struct pic_io *io);     /* trigger modes (bit set = level), same layout */
 /*
  * Classify a delivered IRQ line (0..15) by the in-service registers: a line
  * from the slave also needs the master's cascade bit. See above for 7 and 15.

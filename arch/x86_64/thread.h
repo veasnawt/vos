@@ -104,6 +104,7 @@ struct sched_stats {
     uint64_t created, create_failed;
     uint64_t max_wake_late;             /* N2.5: largest (tick made runnable - deadline) of a sleeper */
     uint64_t timeouts;                  /* N3.4: queue waits ended by their deadline */
+    uint64_t device_wakeups;            /* N3.4: threads made runnable by device bottom halves from ring 3 */
 };
 
 /* Turn the running boot code into thread 0 and create the idle thread. Once, IF = 0. */
@@ -118,13 +119,18 @@ int64_t thread_create_user(const char *name, thread_fn entry, void *arg, uint64_
 /* The calling thread leaves its process's address space for the kernel root for good. */
 void thread_leave_user_space(void);
 /*
- * Wake the sleepers whose tick has come (thread context, after the timer IRQ
- * was acknowledged). Called on every timer interrupt from ring 3 (N2.4):
- * otherwise a sleeper would wait as long as a lone CPU-bound process runs,
- * because nothing else enters the scheduler.
+ * Run the device bottom halves (N3.4), then wake the sleepers whose tick
+ * has come (thread context, after the IRQ was acknowledged). Called on
+ * every interrupt from ring 3 (N2.4): otherwise a sleeper would wait as
+ * long as a lone CPU-bound process runs, because nothing else enters the
+ * scheduler.
  */
 void sched_tick(void);
-/* Nonzero if a timer slice is over and another thread is waiting (the preemption test). */
+/*
+ * Nonzero if another thread is waiting and either the timer slice is over
+ * or (N3.4) a device bottom half woke a thread since the last switch: the
+ * preemption test for a user thread interrupted in ring 3.
+ */
 int sched_preempt_due(void);
 struct thread *thread_current(void);
 /* Give up the CPU; the caller goes to the end of the run queue. */
