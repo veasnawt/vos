@@ -5,16 +5,56 @@
 #include <stdint.h>
 
 #define MSR_EFER        0xC0000080
+#define EFER_SCE        (1ULL << 0)
+#define EFER_LME        (1ULL << 8)
 #define EFER_LMA        (1ULL << 10)
 #define EFER_NXE        (1ULL << 11)
 
+#define CR0_PE          (1ULL << 0)
 #define CR0_MP          (1ULL << 1)
 #define CR0_EM          (1ULL << 2)
 #define CR0_TS          (1ULL << 3)
+#define CR0_NE          (1ULL << 5)
 #define CR0_WP          (1ULL << 16)
+#define CR0_AM          (1ULL << 18)
+#define CR0_NW          (1ULL << 29)
+#define CR0_CD          (1ULL << 30)
+#define CR0_PG          (1ULL << 31)
+
+#define CR4_VME         (1ULL << 0)
+#define CR4_PVI         (1ULL << 1)
+#define CR4_TSD         (1ULL << 2)
+#define CR4_DE          (1ULL << 3)
+#define CR4_PSE         (1ULL << 4)
+#define CR4_PAE         (1ULL << 5)
+#define CR4_MCE         (1ULL << 6)
+#define CR4_PGE         (1ULL << 7)
+#define CR4_PCE         (1ULL << 8)
+#define CR4_OSFXSR      (1ULL << 9)
+#define CR4_OSXMMEXCPT  (1ULL << 10)
 #define CR4_UMIP        (1ULL << 11)
+#define CR4_FSGSBASE    (1ULL << 16)
+#define CR4_PCIDE       (1ULL << 17)
+#define CR4_OSXSAVE     (1ULL << 18)
 #define CR4_SMEP        (1ULL << 20)
 #define CR4_SMAP        (1ULL << 21)
+#define CR4_PKE         (1ULL << 22)
+#define CR4_CET         (1ULL << 23)
+#define CR4_PKS         (1ULL << 24)
+
+/*
+ * U1: the CR4 bits the kernel decides (set or clear) whatever the loader
+ * left; every other bit (LA57, VMXE, SMXE, reserved) is preserved as found.
+ */
+#define CR4_MANAGED     (CR4_VME | CR4_PVI | CR4_TSD | CR4_DE | CR4_PSE | CR4_MCE | CR4_PGE | CR4_PCE | \
+                         CR4_OSFXSR | CR4_OSXMMEXCPT | CR4_UMIP | CR4_FSGSBASE | CR4_PCIDE | CR4_OSXSAVE | \
+                         CR4_SMEP | CR4_SMAP | CR4_PKE | CR4_CET | CR4_PKS)
+
+/* The control registers as the loader left them (after boot.S set PAE, LME and PG). */
+struct cpu_inherited {
+    uint64_t cr0, cr4, efer;
+};
+extern struct cpu_inherited cpu_inherited;
 
 /* 1 once CR4.SMAP is set; the entry stub then executes clac (entry.S). */
 extern uint8_t cpu_smap_enabled;
@@ -131,9 +171,13 @@ static inline void cpu_halt(void)
 }
 
 /*
- * Enable CR0.WP, EFER.NXE (required) and SMEP/UMIP (when present), and set
- * CR0.EM so x87 instructions raise #NM and MMX/SSE raise #UD (ABI v0: no FPU).
+ * Put CR0, CR4 and EFER into the kernel's defined state, whatever the loader
+ * left (BIOS GRUB and UEFI GRUB differ, U0), and enable the protections:
+ * CR0.WP and EFER.NXE (required), SMEP/UMIP/SMAP (when present), CR0.EM so
+ * x87 raises #NM and MMX/SSE raise #UD (ABI v0: no FPU). See cpu.c for each bit.
  */
 void cpu_init_protections(void);
+/* NULL if CR0, CR4 and EFER are in the state cpu_init_protections set, else the first difference. */
+const char *cpu_control_audit(void);
 
 #endif

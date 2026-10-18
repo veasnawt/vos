@@ -78,6 +78,10 @@ DECLARE_PROG(guard);
 DECLARE_PROG(x87);
 DECLARE_PROG(mmx);
 DECLARE_PROG(sse);
+DECLARE_PROG(syscallinsn);
+DECLARE_PROG(rdpmc);
+DECLARE_PROG(wrfsbase);
+DECLARE_PROG(xgetbv);
 #define PROG(n) up_##n, (size_t)(up_##n##_end - up_##n)
 uint64_t call_check_callee_saved(int (*fn)(void *), void *arg, int *result);
 
@@ -680,6 +684,21 @@ static void test_user_faults(void)
     expect(killed_by(6, 0) && last.trap.rip == PROC_CODE_VA, "user MMX pxor: #UD");
     run_prog("sse", PROG(sse), 0, 0);
     expect(killed_by(6, 0) && last.trap.rip == PROC_CODE_VA, "user xorps: #UD");
+
+    /* U1: the defined control state, identical under BIOS and UEFI (cpu.c). */
+    const char *ca = cpu_control_audit();
+    expect(ca == NULL, ca ? ca : "CR0/CR4/EFER in the defined state");
+    expect(!(read_cr4() & (CR4_OSFXSR | CR4_OSXMMEXCPT | CR4_OSXSAVE | CR4_PCE | CR4_FSGSBASE | CR4_PGE)) &&
+           !(rdmsr(MSR_EFER) & EFER_SCE) && (read_cr0() & CR0_NE),
+           "CR4 OSFXSR, OSXMMEXCPT, OSXSAVE, PCE, FSGSBASE, PGE clear; EFER.SCE clear; CR0.NE set");
+    run_prog("syscall", PROG(syscallinsn), 0, 0);
+    expect(killed_by(6, 0) && last.trap.rip == PROC_CODE_VA, "user syscall: #UD (EFER.SCE = 0)");
+    run_prog("rdpmc", PROG(rdpmc), 0, 0);
+    expect(killed_by(13, 0) && last.trap.rip == PROC_CODE_VA + 2, "user rdpmc: #GP(0) (CR4.PCE = 0)");
+    run_prog("wrfsbase", PROG(wrfsbase), 0, 0);
+    expect(killed_by(6, 0) && last.trap.rip == PROC_CODE_VA + 2, "user wrfsbase: #UD (CR4.FSGSBASE = 0)");
+    run_prog("xgetbv", PROG(xgetbv), 0, 0);
+    expect(killed_by(6, 0) && last.trap.rip == PROC_CODE_VA + 2, "user xgetbv: #UD (CR4.OSXSAVE = 0)");
 
     /* The kernel launches a normal program after all of these. */
     expect(run_prog("exit42", PROG(exit42), 0, 0) == PROC_EXITED && last.exit_status == 42,

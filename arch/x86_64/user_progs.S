@@ -442,6 +442,34 @@ up_sse:
     NOFAULT
 up_sse_end:
 
+/* U1: instructions the defined control state forbids in ring 3. */
+PROG syscallinsn                    /* EFER.SCE = 0: #UD (SYSCALL is not configured) */
+up_syscallinsn:
+    syscall
+    NOFAULT
+up_syscallinsn_end:
+
+PROG rdpmc                          /* CR4.PCE = 0: #GP(0) */
+up_rdpmc:
+    xor %ecx, %ecx
+    rdpmc
+    NOFAULT
+up_rdpmc_end:
+
+PROG wrfsbase                       /* CR4.FSGSBASE = 0: #UD */
+up_wrfsbase:
+    xor %eax, %eax
+    wrfsbase %rax
+    NOFAULT
+up_wrfsbase_end:
+
+PROG xgetbv                         /* CR4.OSXSAVE = 0: #UD */
+up_xgetbv:
+    xor %ecx, %ecx
+    xgetbv
+    NOFAULT
+up_xgetbv_end:
+
 /* Set AC, then make the kernel read this program's own code page directly. */
 PROG smaptouch
 up_smaptouch:
