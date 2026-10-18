@@ -19,11 +19,14 @@
 #define PCI_HEADER_TYPE     0x0E
 #define PCI_SUBSYSTEM_ID    0x2E
 #define PCI_CAP_PTR         0x34
+#define PCI_INTERRUPT_LINE  0x3C        /* the 8259 line the firmware routed INTx to (0xFF: none) */
+#define PCI_INTERRUPT_PIN   0x3D        /* 1-4 = INTA-INTD, 0 = no INTx */
 
 #define PCI_COMMAND_IO          (1u << 0)
 #define PCI_COMMAND_MEMORY      (1u << 1)
 #define PCI_COMMAND_MASTER      (1u << 2)
 #define PCI_COMMAND_INTX_OFF    (1u << 10)
+#define PCI_STATUS_INTX         (1u << 3)   /* the function asserts INTx now */
 #define PCI_STATUS_CAP_LIST     (1u << 4)
 
 /* Bus 0 only: 32 devices x 8 functions. */

@@ -318,6 +318,17 @@ static void test_handlers(void)
            irq_register((unsigned)edge, IRQ_TRIGGER_EDGE, "t2", test_top, 0, 0, &hh) == IRQ_EDISABLED,
            "after a storm every handler of the line runs its bottom half once; new registrations are refused");
 
+    /* A claimed storm: the device acknowledges, yet interrupts 1001 times within one tick. */
+    irq_test_clear_storm((unsigned)edge);
+    top_says[1] = IRQ_HANDLED;
+    s0 = st->storms;
+    for (unsigned i = 0; i <= IRQ_STORM_LIMIT; i++)
+        irq_test_dispatch((unsigned)edge);
+    irq_run_deferred();
+    expect(irq_ticks() == t0 && st->storms == s0 + 1 && irq_line_disabled((unsigned)edge) && irq_audit() == NULL,
+           "a storm of claimed interrupts (1001 in one tick) also masks the line");
+    top_says[1] = IRQ_NONE;
+
     expect(irq_unregister(h[0]) == IRQ_OK && irq_unregister(h[1]) == IRQ_OK && irq_unregister(h[1]) == IRQ_EINVAL &&
            irq_unregister(0) == IRQ_EINVAL && irq_unregister(IRQ_MAX_HANDLERS + 1) == IRQ_EINVAL,
            "unregistration; a stale, zero or out-of-range handle is refused");

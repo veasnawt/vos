@@ -30,7 +30,10 @@
  * Concurrency. The kernel is not preemptible and runs with IF = 0, so the
  * layer's state changes are atomic between explicit waits. A thread that
  * needs a line another thread is loading blocks on a wait queue until the
- * load ends. The driver may yield while it waits for its device.
+ * load ends. The driver may block or yield while it waits for its device.
+ * N3.4: a thread interrupted while it waits (thread_interrupt) gets
+ * BLK_EINTR; a line it was loading is left FREE and the threads waiting for
+ * it are woken, as after any failed load.
  */
 #ifndef VOS_X86_64_BLOCKDEV_H
 #define VOS_X86_64_BLOCKDEV_H
@@ -53,6 +56,7 @@
 #define BLK_EIO         6   /* the device failed the transfer or misbehaved */
 #define BLK_ETIMEDOUT   7   /* the device did not complete in time (it was reset) */
 #define BLK_EUNSUPP     8   /* the operation is not supported (every write) */
+#define BLK_EINTR       9   /* N3.4: the waiting thread was interrupted; its request was abandoned */
 
 /* Device state as the driver reports it. */
 #define BLK_DEV_READY       1

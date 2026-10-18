@@ -17,6 +17,7 @@
 #define PCI_CAP_VNDR            0x09
 #define CAP_COMMON              1
 #define CAP_NOTIFY              2
+#define CAP_ISR                 3
 #define CAP_DEVICE              4
 #define CAP_PCI_CFG             5
 #define CAP_MAX_VISITS          48          /* (256 - 64) / 4: more means a loop */
@@ -52,6 +53,10 @@
 #define DESC_F_NEXT         1
 #define DESC_F_WRITE        2
 #define AVAIL_F_NO_INTERRUPT 1
+
+/* ISR status (4.1.4.5): reading it returns and clears these bits and deasserts INTx. */
+#define ISR_QUEUE       1
+#define ISR_CONFIG      2
 
 /* virtio-blk (5.2). */
 #define T_IN            0
@@ -110,9 +115,14 @@ static uint16_t next_avail, last_used;
 static int inflight[VBLK_SLOTS], done[VBLK_SLOTS];
 static uint32_t slot_count[VBLK_SLOTS], slot_len[VBLK_SLOTS];
 static struct thread *slot_owner[VBLK_SLOTS];
+/* N3.4: waiters block on their slot's queue; an abandoned slot has no owner and waits for the device. */
+static struct wait_queue slot_wq[VBLK_SLOTS];
+static int abandoned[VBLK_SLOTS];
+static uint64_t abandoned_at[VBLK_SLOTS];
 static uint64_t poll_limit = VBLK_POLL_LIMIT, last_spins;
-static uint64_t yield_polls = VBLK_YIELD_POLLS, wait_ticks = VBLK_WAIT_TICKS;
+static uint64_t yield_polls = VBLK_YIELD_POLLS, wait_ticks = VBLK_WAIT_TICKS, recheck_ticks = VBLK_RECHECK_TICKS;
 static unsigned skip_notify;
+static int prefer_poll;
 
 static void barrier(void)
 {
@@ -137,7 +147,7 @@ int vblk_window_ok(const struct vpci_caps *c, unsigned bar, uint32_t off, unsign
     if ((len != 1 && len != 2 && len != 4) || off % len)
         return 0;
     return region_has(&c->common, bar, off, len) || region_has(&c->notify, bar, off, len) ||
-           region_has(&c->device, bar, off, len);
+           region_has(&c->device, bar, off, len) || region_has(&c->isr, bar, off, len);
 }
 
 const char *vpci_parse_caps(uint8_t (*rd8)(void *ctx, unsigned off), uint32_t (*rd32)(void *ctx, unsigned off),
@@ -161,7 +171,7 @@ const char *vpci_parse_caps(uint8_t (*rd8)(void *ctx, unsigned off), uint32_t (*
         if (rd8(ctx, ptr) == PCI_CAP_VNDR) {
             unsigned len = rd8(ctx, ptr + 2), type = rd8(ctx, ptr + 3), bar = rd8(ctx, ptr + 4);
             struct vpci_region *r = type == CAP_COMMON ? &c->common : type == CAP_NOTIFY ? &c->notify :
-                                    type == CAP_DEVICE ? &c->device : NULL;
+                                    type == CAP_DEVICE ? &c->device : type == CAP_ISR ? &c->isr : NULL;
 
             /* Reserved BAR values and unknown types are ignored (4.1.4); the first of each type wins. */
             if (bar <= 5 && type == CAP_PCI_CFG && !c->cfg_cap) {
@@ -177,14 +187,16 @@ const char *vpci_parse_caps(uint8_t (*rd8)(void *ctx, unsigned off), uint32_t (*
                 length = rd32(ctx, ptr + 12);
                 if ((uint64_t)off + length > 0xFFFFFFFFULL)
                     return "virtio structure beyond 4 GiB of its BAR";
-                if ((type == CAP_NOTIFY && off % 2) || (type != CAP_NOTIFY && off % 4))
-                    return "virtio structure misaligned";
+                if ((type == CAP_NOTIFY && off % 2) || ((type == CAP_COMMON || type == CAP_DEVICE) && off % 4))
+                    return "virtio structure misaligned";   /* the ISR status is a single byte */
                 if (type == CAP_COMMON && length < COMMON_MIN_LEN)
                     return "common configuration too short";
                 if (type == CAP_NOTIFY && length < 2)
                     return "notification structure too short";
                 if (type == CAP_DEVICE && length < 8)
                     return "device configuration too short";
+                if (type == CAP_ISR && length < 1)
+                    return "ISR status structure empty";
                 r->present = 1;
                 r->bar = (uint8_t)bar;
                 r->offset = off;
@@ -354,12 +366,19 @@ static int fail(int state, const char *why)
     return state;
 }
 
-static void bus_master(int on)
+/* PCI command: bus mastering on or off; legacy INTx enabled only if intx (N3.4: interrupt mode). */
+static void pci_cmd(int master, int intx)
 {
     uint16_t cmd = pci_read16(info.pci, PCI_COMMAND);
 
-    cmd = on ? (uint16_t)(cmd | PCI_COMMAND_MASTER) : (uint16_t)(cmd & ~PCI_COMMAND_MASTER);
-    pci_write16(info.pci, PCI_COMMAND, (uint16_t)(cmd | PCI_COMMAND_INTX_OFF));
+    cmd = master ? (uint16_t)(cmd | PCI_COMMAND_MASTER) : (uint16_t)(cmd & ~PCI_COMMAND_MASTER);
+    cmd = intx ? (uint16_t)(cmd & ~PCI_COMMAND_INTX_OFF) : (uint16_t)(cmd | PCI_COMMAND_INTX_OFF);
+    pci_write16(info.pci, PCI_COMMAND, cmd);
+}
+
+static void bus_master(int on)
+{
+    pci_cmd(on, 0);
 }
 
 /*
@@ -392,11 +411,15 @@ static void reset_and_release(void)
         info.quarantined = 1;
 }
 
+static void drop_irq(const char *why);
+static int collect(void);
+
 /* Give up on the device: FAILED status bit (2.1.2), then reset and release the pool. */
 static int give_up(const char *why)
 {
     status_set(status_get() | S_FAILED);
     reset_and_release();
+    drop_irq("device refused");
     return fail(VBLK_FAILED, why);
 }
 
@@ -419,6 +442,66 @@ static int alloc_pool(void)
     return 0;
 }
 
+/* ---- interrupt line (N3.4) ---- */
+
+static int vblk_top(void *ctx);
+static void vblk_bottom(void *ctx);
+
+/* Unregister the interrupt handler (if any) and disable INTx; polling mode from now on. */
+static void drop_irq(const char *why)
+{
+    if (info.irq_handle) {
+        irq_unregister(info.irq_handle);
+        info.irq_handle = 0;
+    }
+    if (info.mode == VBLK_MODE_IRQ)
+        info.mode_switches++;
+    info.mode = VBLK_MODE_POLL;
+    info.poll_why = why;
+    if (info.state != VBLK_ABSENT)
+        pci_cmd(pool_ready && !info.quarantined, 0);
+}
+
+/*
+ * Interrupt mode if everything it needs is there: the ISR status
+ * capability, an INTx pin, a line the firmware routed it to (never
+ * assumed), level triggered in the chipset, a handler record. Otherwise
+ * polling mode, with the reason. A handler registered earlier is kept.
+ */
+static void choose_mode(void)
+{
+    const char *why = NULL;
+    uint8_t pin = pci_read8(info.pci, PCI_INTERRUPT_PIN), line = pci_read8(info.pci, PCI_INTERRUPT_LINE);
+    int r;
+
+    info.irq_pin = pin;
+    info.irq_line = line;
+    if (prefer_poll)
+        why = "polling requested (test)";
+    else if (info.irq_handle)
+        return;                         /* still registered, line still usable */
+    else if (!caps.isr.present)
+        why = "no ISR status capability";
+    else if (pin < 1 || pin > 4)
+        why = "no INTx pin";
+    else if (line == 0 || line >= IRQ_LINES || line == IRQ_TIMER || line == 2)
+        why = "no usable interrupt line";
+    else if (irq_line_disabled(line))
+        why = "interrupt line disabled after a storm";
+    else if ((r = irq_register(line, IRQ_TRIGGER_LEVEL, "virtio-blk", vblk_top, vblk_bottom, 0, &info.irq_handle)))
+        why = r == IRQ_ETRIGGER ? "interrupt line not level triggered (ELCR)" :
+              r == IRQ_EFULL ? "no free interrupt handler" : "interrupt registration refused";
+    if (why) {
+        info.irq_handle = 0;
+        drop_irq(why);
+        return;
+    }
+    if (info.mode != VBLK_MODE_IRQ)
+        info.mode_switches += info.inits > 0;
+    info.mode = VBLK_MODE_IRQ;
+    info.poll_why = NULL;
+}
+
 /* Steps 1-8 of 3.1.1 on a located device with parsed capabilities and a pool. */
 static int bring_up(void)
 {
@@ -429,12 +512,17 @@ static int bring_up(void)
     win_error = 0;
     memset(inflight, 0, sizeof(inflight));
     memset(done, 0, sizeof(done));
+    memset(abandoned, 0, sizeof(abandoned));
+    memset(slot_owner, 0, sizeof(slot_owner));
     if (!device_reset()) {
         if (pool_ready)
             info.quarantined = 1;       /* the device may still be using an earlier queue */
+        drop_irq("reset did not complete");
         return fail(VBLK_FAILED, "reset did not complete");
     }
     info.resets++;
+    pci_cmd(1, 0);                      /* reset confirmed: DMA allowed again (it may have been off), INTx not yet */
+    choose_mode();
     status_set(S_ACKNOWLEDGE);
     status_set(S_ACKNOWLEDGE | S_DRIVER);
 
@@ -480,7 +568,7 @@ static int bring_up(void)
     avail = (volatile uint16_t *)(ring + RING_AVAIL_OFF);
     used_hdr = (volatile uint16_t *)(ring + RING_USED_OFF);
     used_ring = (volatile struct vq_used_elem *)(ring + RING_USED_OFF + 4);
-    avail[0] = AVAIL_F_NO_INTERRUPT;
+    avail[0] = info.mode == VBLK_MODE_IRQ ? 0 : AVAIL_F_NO_INTERRUPT;
     next_avail = last_used = 0;
 
     uint64_t d = info.pool[POOL_RING] + RING_DESC_OFF, a = info.pool[POOL_RING] + RING_AVAIL_OFF,
@@ -526,6 +614,7 @@ static int bring_up(void)
     info.why = NULL;
     info.inits++;
     info.state = VBLK_READY;
+    pci_cmd(1, info.mode == VBLK_MODE_IRQ);
     return VBLK_READY;
 }
 
@@ -556,7 +645,19 @@ static void log_device(void)
     serial_puts((info.accepted >> VIRTIO_BLK_F_RO) & 1 ? " RO" : "");
     serial_puts(" (offered ");
     serial_hex(info.offered);
-    serial_puts("), polled, DMA pool ");
+    serial_puts(")");
+    if (info.mode == VBLK_MODE_IRQ) {
+        serial_puts(", interrupts on IRQ ");
+        serial_dec(info.irq_line);
+        serial_puts(" (INT");
+        serial_putc((char)('A' + info.irq_pin - 1));
+        serial_puts(", level)");
+    } else {
+        serial_puts(", polled (");
+        serial_puts(info.poll_why ? info.poll_why : "?");
+        serial_puts(")");
+    }
+    serial_puts(", DMA pool ");
     serial_dec(VBLK_POOL_FRAMES);
     serial_puts(" frames, no IOMMU\r\n");
 }
@@ -576,6 +677,7 @@ int vblk_to_blk(int e)
     case VBLK_ENODEV:
     case VBLK_EBROKEN:      return BLK_EUNAVAIL;
     case VBLK_EPROTO:       return BLK_EIO;         /* the device misbehaved; it is now unavailable */
+    case VBLK_EINTR:        return BLK_EINTR;
     default:                return BLK_EIO;
     }
 }
@@ -628,6 +730,7 @@ int vblk_init(void)
     const char *why;
 
     memset(&info, 0, sizeof(info));
+    info.poll_why = "not initialized";
     if (!pci_scan_bus0(is_vblk, 0, &a)) {
         fail(VBLK_ABSENT, "no virtio-blk device");
         serial_puts("vblk: no virtio-blk device on PCI bus 0; block storage unavailable\r\n");
@@ -696,10 +799,12 @@ int vblk_shutdown(void)
         if (pool_ready)
             info.quarantined = 1;
         fail(VBLK_BROKEN, "reset not confirmed at shutdown; DMA pool quarantined");
+        drop_irq("shut down");          /* bus mastering off with the pool quarantined */
         return VBLK_EBROKEN;
     }
     release_pool();
     fail(VBLK_STOPPED, "shut down");
+    drop_irq("shut down");
     serial_puts("vblk: device shut down, DMA pool released\r\n");
     return VBLK_OK;
 }
@@ -716,18 +821,34 @@ static int usable(void)
     return info.state == VBLK_READY ? VBLK_OK : info.state == VBLK_BROKEN ? VBLK_EBROKEN : VBLK_ENODEV;
 }
 
-/* Reset after a timeout or protocol error: the queue is dead, every slot is abandoned. */
+/*
+ * Reset after a timeout or protocol error (N3.4 order): the device is
+ * BROKEN first, so nothing woken below uses it; then it is reset. With the
+ * reset unconfirmed, bus mastering goes off and the pool is quarantined.
+ * Then every slot (abandoned ones included) is released, since the device
+ * no longer owns any buffer, and every waiter is woken: it finds the device
+ * broken and returns VBLK_EBROKEN.
+ */
 static int broken(const char *why, int err)
 {
-    device_reset();
-    memset(inflight, 0, sizeof(inflight));
-    memset(done, 0, sizeof(done));
+    fail(VBLK_BROKEN, why);
+    if (!device_reset()) {
+        info.resets_unconfirmed++;
+        if (pool_ready)
+            info.quarantined = 1;
+        pci_cmd(0, 0);
+    }
+    for (unsigned s = 0; s < VBLK_SLOTS; s++) {
+        info.abandoned_reset += abandoned[s];
+        inflight[s] = done[s] = abandoned[s] = 0;
+        slot_owner[s] = 0;
+        thread_wake_all(&slot_wq[s]);
+    }
     if (err == VBLK_EPROTO)
         info.protocol_errors++;
-    fail(VBLK_BROKEN, why);
     serial_puts("vblk: device reset: ");
     serial_puts(why);
-    serial_puts("\r\n");
+    serial_puts(info.quarantined ? " (reset not confirmed: bus mastering off, DMA pool quarantined)\r\n" : "\r\n");
     return err;
 }
 
@@ -744,8 +865,14 @@ static int submit_type(uint32_t type, uint64_t lba, uint32_t count, unsigned *sl
         return VBLK_ERANGE;
     for (s = 0; s < VBLK_SLOTS && inflight[s]; s++)
         ;
-    if (s == VBLK_SLOTS)
-        return VBLK_EBUSY;
+    if (s == VBLK_SLOTS) {
+        if ((err = collect()))          /* completed abandoned requests free their slots here */
+            return err;
+        for (s = 0; s < VBLK_SLOTS && inflight[s]; s++)
+            ;
+        if (s == VBLK_SLOTS)
+            return VBLK_EBUSY;
+    }
 
     uint64_t hdr_pa = info.pool[POOL_HDR] + HDR_OFF(s), st_pa = info.pool[POOL_HDR] + STATUS_OFF(s);
     uint64_t data_pa = info.pool[POOL_DATA + s];
@@ -775,7 +902,7 @@ static int submit_type(uint32_t type, uint64_t lba, uint32_t count, unsigned *sl
     desc[d0 + 2].next = 0;
 
     inflight[s] = 1;
-    done[s] = 0;
+    done[s] = abandoned[s] = 0;
     slot_count[s] = count;
     slot_owner[s] = thread_current();
     avail[2 + next_avail % VBLK_QUEUE_SIZE] = (uint16_t)d0;
@@ -787,6 +914,8 @@ static int submit_type(uint32_t type, uint64_t lba, uint32_t count, unsigned *sl
     else
         notify();
     info.submitted++;
+    if (vblk_inflight() > info.max_inflight)
+        info.max_inflight = vblk_inflight();
     *slot = s;
     return VBLK_OK;
 }
@@ -823,18 +952,116 @@ static int reap(void)
     return VBLK_OK;
 }
 
-int vblk_wait(unsigned slot, void *buf, uint64_t cap)
+/* An abandoned slot the device completed: its data is discarded and the slot is free again. */
+static void retire(unsigned s)
 {
-    struct thread *me = thread_current();
+    inflight[s] = done[s] = abandoned[s] = 0;
+    info.completed++;
+    info.abandoned_completed++;
+}
+
+/*
+ * Reap the used ring, retire completed abandoned slots, wake the owners of
+ * completed slots (N3.4). A slot abandoned for VBLK_WAIT_TICKS without
+ * completing resets the device. VBLK_OK, VBLK_EPROTO (protocol error) or
+ * VBLK_EBROKEN (not usable, or reset here); *woken counts the wakeups.
+ */
+static int collect_woken(unsigned *woken)
+{
+    int err;
+
+    if (info.state != VBLK_READY)
+        return VBLK_EBROKEN;
+    if ((err = reap()))
+        return err;
+    for (unsigned s = 0; s < VBLK_SLOTS; s++) {
+        if (!inflight[s])
+            continue;
+        if (done[s] && abandoned[s]) {
+            retire(s);
+        } else if (done[s] && slot_wq[s].head) {
+            *woken += (unsigned)thread_wake_all(&slot_wq[s]);
+        } else if (abandoned[s] && irq_ticks() - abandoned_at[s] >= wait_ticks) {
+            info.timeouts++;
+            broken("an abandoned request never completed", VBLK_ETIMEDOUT);
+            return VBLK_EBROKEN;
+        }
+    }
+    return VBLK_OK;
+}
+
+static int collect(void)
+{
+    unsigned w = 0;
+
+    return collect_woken(&w);
+}
+
+/* The owner gives up its request; the device keeps the slot until it completes or is reset. */
+static void abandon(unsigned s)
+{
+    slot_owner[s] = 0;
+    abandoned[s] = 1;
+    abandoned_at[s] = irq_ticks();
+    info.cancelled++;
+    if (done[s])
+        retire(s);
+}
+
+/*
+ * Top half: inside the interrupt handler, before the EOI. Reading the ISR
+ * status acknowledges the device (it deasserts INTx); 0 means another
+ * device on the shared line interrupted.
+ */
+static int vblk_top(void *ctx)
+{
+    uint8_t isr;
+
+    (void)ctx;
+    if (!caps.isr.present || info.state == VBLK_ABSENT || info.state == VBLK_STOPPED)
+        return IRQ_NONE;
+    isr = (uint8_t)rd(&caps.isr, 0, 1);
+    if (!(isr & (ISR_QUEUE | ISR_CONFIG))) {
+        info.irq_none++;
+        return IRQ_NONE;
+    }
+    info.irqs++;
+    if (info.state != VBLK_READY)
+        info.irq_late++;
+    return IRQ_HANDLED;
+}
+
+/* Bottom half: thread context. Falls back to polling if the line was disabled by a storm. */
+static void vblk_bottom(void *ctx)
+{
+    unsigned w = 0;
+
+    (void)ctx;
+    if (info.mode == VBLK_MODE_IRQ && irq_line_disabled(info.irq_line)) {
+        drop_irq("interrupt line disabled after a storm");
+        if (info.state == VBLK_READY) {
+            pci_cmd(1, 0);
+            avail[0] = AVAIL_F_NO_INTERRUPT;
+        }
+        serial_puts("vblk: interrupt line disabled after a storm; polling from now on\r\n");
+        for (unsigned s = 0; s < VBLK_SLOTS; s++)
+            thread_wake_all(&slot_wq[s]);   /* blocked waiters continue by polling */
+        return;
+    }
+    if (info.state != VBLK_READY)
+        return;                         /* a late interrupt after a reset: nothing of the new queue is affected */
+    collect_woken(&w);
+    info.irq_wakeups += w;
+}
+
+/* Polling mode (the N3.2 wait): poll, yielding every yield_polls polls, within the poll and tick bounds. */
+static int wait_poll(unsigned slot, struct thread *me)
+{
     uint64_t spins, epoch = info.inits, t0 = irq_ticks();
     int err, ticks_over = 0;
 
-    if ((err = usable()))
-        return err;
-    if (slot >= VBLK_SLOTS || !inflight[slot] || slot_owner[slot] != me)
-        return VBLK_EINVAL;
     for (spins = 0; spins < poll_limit; spins++) {
-        if ((err = reap()))
+        if ((err = collect()))
             return err;
         if (done[slot])
             break;
@@ -863,13 +1090,67 @@ int vblk_wait(unsigned slot, void *buf, uint64_t cap)
         info.tick_timeouts += ticks_over;
         return broken(ticks_over ? "request timed out (tick bound)" : "request timed out", VBLK_ETIMEDOUT);
     }
+    if (spins > info.max_spins)
+        info.max_spins = spins;
+    return VBLK_OK;
+}
+
+/*
+ * Interrupt mode: block on the slot's queue until the bottom half wakes us,
+ * re-checking every recheck_ticks, until the deadline. Nothing can run
+ * between the check of done[slot] and the block (IF = 0, no preemption),
+ * and bottom halves only run in other threads' scheduler entries, so a
+ * completion is never missed: it either is seen by the check or wakes the
+ * blocked waiter.
+ */
+static int wait_irq(unsigned slot, struct thread *me)
+{
+    uint64_t epoch = info.inits, deadline = irq_ticks() + wait_ticks;
+    int err, r = THREAD_WOKEN;
+
+    for (;;) {
+        if ((err = collect()))
+            return err;
+        if (done[slot]) {
+            info.recheck_completions += r == THREAD_TIMEDOUT;
+            return VBLK_OK;
+        }
+        if (info.mode != VBLK_MODE_IRQ)
+            return wait_poll(slot, me);     /* the line was disabled meanwhile */
+        uint64_t now = irq_ticks();
+        if (now >= deadline) {
+            info.timeouts++;
+            info.tick_timeouts++;
+            return broken("request timed out (deadline)", VBLK_ETIMEDOUT);
+        }
+        info.blocked_waits++;
+        r = thread_block_until(&slot_wq[slot], deadline - now > recheck_ticks ? now + recheck_ticks : deadline);
+        if (info.state != VBLK_READY || info.inits != epoch || !inflight[slot] || slot_owner[slot] != me)
+            return VBLK_EBROKEN;
+        if (r == THREAD_INTERRUPTED) {
+            abandon(slot);
+            return VBLK_EINTR;
+        }
+    }
+}
+
+int vblk_wait(unsigned slot, void *buf, uint64_t cap)
+{
+    struct thread *me = thread_current();
+    int err;
+
+    if ((err = usable()))
+        return err;
+    if (slot >= VBLK_SLOTS || !inflight[slot] || slot_owner[slot] != me)
+        return VBLK_EINVAL;
+    if ((err = info.mode == VBLK_MODE_IRQ ? wait_irq(slot, me) : wait_poll(slot, me)))
+        return err;
 
     uint8_t st = *(volatile uint8_t *)phys_to_virt(info.pool[POOL_HDR] + STATUS_OFF(slot));
     uint32_t count = slot_count[slot], len = slot_len[slot];
     inflight[slot] = done[slot] = 0;
+    slot_owner[slot] = 0;
     info.completed++;
-    if (spins > info.max_spins)
-        info.max_spins = spins;
     if (st == ST_IOERR) {
         info.ioerr++;
         return VBLK_EIO;
@@ -906,10 +1187,66 @@ int vblk_read(uint64_t lba, uint32_t count, void *buf, uint64_t cap)
     return vblk_wait(slot, buf, cap);
 }
 
+unsigned vblk_inflight(void)
+{
+    unsigned n = 0;
+
+    for (unsigned s = 0; s < VBLK_SLOTS; s++)
+        n += inflight[s] != 0;
+    return n;
+}
+
+unsigned vblk_abandoned(void)
+{
+    unsigned n = 0;
+
+    for (unsigned s = 0; s < VBLK_SLOTS; s++)
+        n += abandoned[s] != 0;
+    return n;
+}
+
 /* ---- audit ---- */
+
+/* N3.4: slot ownership, waiters and the interrupt configuration. */
+static const char *audit_slots(void)
+{
+    for (unsigned s = 0; s < VBLK_SLOTS; s++) {
+        if (abandoned[s] && (!inflight[s] || slot_owner[s]))
+            return "an abandoned slot is not in flight or still has an owner";
+        if (slot_owner[s] && !inflight[s])
+            return "a free slot has an owner";
+        if (inflight[s] && !abandoned[s] && !slot_owner[s])
+            return "a slot in flight has neither an owner nor was it abandoned";
+        if (slot_wq[s].head && (!inflight[s] || abandoned[s] || slot_wq[s].head != slot_owner[s] ||
+                                slot_wq[s].head->next))
+            return "a slot's wait queue holds something other than its owner";
+        if (done[s] && !inflight[s])
+            return "a free slot is marked complete";
+    }
+    if (info.state != VBLK_READY && vblk_inflight())
+        return "requests in flight on a device that is not ready";
+    if (info.mode == VBLK_MODE_IRQ && (!info.irq_handle || info.poll_why))
+        return "interrupt mode without a registered handler";
+    if (info.mode == VBLK_MODE_POLL && (info.irq_handle || !info.poll_why))
+        return "polling mode with a handler, or without a reason";
+    if (info.state == VBLK_READY) {
+        uint16_t cmd = pci_read16(info.pci, PCI_COMMAND);
+        int intx = !(cmd & PCI_COMMAND_INTX_OFF), quiet = avail[0] & AVAIL_F_NO_INTERRUPT;
+
+        if (!(cmd & PCI_COMMAND_MASTER))
+            return "ready device without bus mastering";
+        if (info.mode == VBLK_MODE_IRQ ? (!intx || quiet) : (intx || !quiet))
+            return "INTx or interrupt suppression does not match the completion mode";
+    }
+    return NULL;
+}
 
 const char *vblk_audit(void)
 {
+    const char *a;
+
+    if ((a = audit_slots()))
+        return a;
     if (info.pool_held != pool_ready)
         return "pool bookkeeping inconsistent";
     if (info.state == VBLK_ABSENT)
@@ -987,6 +1324,33 @@ void vblk_test_inject_used(uint32_t id, uint32_t len)
     used_ring[used_hdr[1] % VBLK_QUEUE_SIZE].len = len;
     barrier();
     used_hdr[1] = (uint16_t)(used_hdr[1] + 1);
+}
+
+void vblk_test_prefer_poll(int on)
+{
+    prefer_poll = on;
+}
+
+void vblk_test_break(void)
+{
+    if (info.state == VBLK_READY)
+        broken("test reset", VBLK_EBROKEN);
+}
+
+void vblk_test_recheck_ticks(uint64_t ticks)
+{
+    recheck_ticks = ticks ? ticks : VBLK_RECHECK_TICKS;
+}
+
+uint16_t vblk_test_used_idx(void)
+{
+    return info.state == VBLK_READY ? used_hdr[1] : 0;
+}
+
+void vblk_test_notify(void)
+{
+    if (info.state == VBLK_READY)
+        notify();
 }
 
 uint8_t vblk_test_device_status(void)

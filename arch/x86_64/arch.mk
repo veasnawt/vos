@@ -284,7 +284,20 @@ arch-test: iso
 	    ' id 0x1042 (modern), ready, 2051 sectors, queue 16 of ' 'features VERSION_1 RO (offered ' \
 	    'selftest: vblk ' 'selftest: blk ' 'vblk: device shut down, DMA pool released' \
 	    'vblk: hung request beside a CPU-bound program: without yielding the program ran 0 of 0 ticks' \
+	    ', interrupts on IRQ ' 'vblk: 64 reads in interrupt mode: 64 interrupts' \
+	    'vblk: IRQ 11 is shared with the e1000 at 00:' \
+	    'vblk: 300 reads of 8 sectors beside a CPU-bound program, interrupt mode: ' \
+	    'vblk: 300 reads of 8 sectors beside a CPU-bound program, polling mode: ' \
 	    'VOS-TEST: PASS' -- $(VBLK_RO)
+	@echo "vblk-nonic: without QEMU's default NIC the interrupt line is not shared"
+	TIMEOUT=90 scripts/exit-test.sh vblk-nonic build/$(ARCH)-test-vblk/vos.iso 33 \
+	    ', interrupts on IRQ ' 'is not shared with another known device' 'selftest: vblk ' 'selftest: blk ' \
+	    'VOS-TEST: PASS' -- -nic none $(VBLK_RO)
+	@echo "vblk-slot5: the line comes from the device's PCI configuration (slot 5 routes to IRQ 10)"
+	TIMEOUT=90 scripts/exit-test.sh vblk-slot5 build/$(ARCH)-test-vblk/vos.iso 33 \
+	    'vblk: virtio-blk at 00:0x5.0 ' ', interrupts on IRQ 10 (INTA, level)' 'selftest: vblk ' 'selftest: blk ' \
+	    'VOS-TEST: PASS' -- -drive file=$(VBLK_DISK),if=none,id=vd0,format=raw,readonly=on \
+	    -device virtio-blk-pci,drive=vd0,disable-legacy=on,addr=0x5
 	MEM=2G TIMEOUT=90 scripts/exit-test.sh vblk-2G build/$(ARCH)-test-vblk/vos.iso 33 \
 	    ' (modern), ready, 2051 sectors' 'selftest: vblk ' 'selftest: blk ' 'VOS-TEST: PASS' -- $(VBLK_RO)
 	TIMEOUT=90 scripts/exit-test.sh vblk-max build/$(ARCH)-test-vblk/vos.iso 33 \

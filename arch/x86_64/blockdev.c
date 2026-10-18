@@ -49,10 +49,10 @@ const char *blk_strerror(int err)
 {
     static const char *const s[] = {
         "ok", "invalid request", "sectors outside the device", "no such device", "device unavailable",
-        "resources exhausted", "device I/O error", "timed out", "operation not supported",
+        "resources exhausted", "device I/O error", "timed out", "operation not supported", "interrupted",
     };
 
-    return err >= 0 && err <= BLK_EUNSUPP ? s[err] : "unknown error";
+    return err >= 0 && err <= BLK_EINTR ? s[err] : "unknown error";
 }
 
 const struct blk_stats *blk_stats(void)
@@ -304,7 +304,8 @@ static int line_read(struct dev *d, unsigned slot, struct blk_info *in, uint64_t
             uint32_t gen = d->gen;
 
             st.load_waits++;
-            thread_block(&load_wq);
+            if (thread_block_until(&load_wq, 0) == THREAD_INTERRUPTED)
+                return BLK_EINTR;           /* N3.4: the loader goes on; this caller gives up */
             if (!d->used || d->gen != gen)
                 return BLK_ENODEV;          /* unregistered while this thread waited */
             d->ops->info(d->ctx, in);

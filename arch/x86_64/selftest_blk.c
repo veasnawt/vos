@@ -549,10 +549,12 @@ static void test_live_cache(void)
 
     /* A timeout makes the device unavailable: even cached data is refused until it recovers. */
     expect(disk_ok(id, 0, 1), "sector 0 cached");
-    vblk_test_poll_limit(20000);
+    vblk_test_poll_limit(20000);       /* polling mode: the poll bound; interrupt mode (N3.4): the deadline */
+    vblk_test_wait_ticks(30);
     vblk_test_skip_notify(1);
     int r = blk_read(id, 1500, 1, big, sizeof(big));
     vblk_test_poll_limit(0);
+    vblk_test_wait_ticks(0);
     expect(r == BLK_ETIMEDOUT && blk_read(id, 0, 1, big, sizeof(big)) == BLK_EUNAVAIL,
            "a timeout on a miss is BLK_ETIMEDOUT; afterwards even cached sectors are BLK_EUNAVAIL");
     mark();

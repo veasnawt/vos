@@ -1,7 +1,7 @@
 /*
  * Read-only virtio-blk driver (N3.1; block-layer attachment, lifecycle and
- * cooperative waiting since N3.2), modern virtio 1.x PCI transport, polled,
- * one split virtqueue.
+ * cooperative waiting since N3.2; interrupt-driven completion, cancellation
+ * since N3.4), modern virtio 1.x PCI transport, one split virtqueue.
  *
  * Transport. The device is found on PCI bus 0 (vendor 0x1AF4, device 0x1042,
  * or the transitional 0x1001 with subsystem ID 2, always driven through its
@@ -16,9 +16,31 @@
  * VIRTIO_F_ACCESS_PLATFORM is refused (VOS has no IOMMU support).
  *
  * Queue. Queue 0, VBLK_QUEUE_SIZE descriptors, VBLK_SLOTS request slots of
- * three fixed descriptors each (header, data, status). Interrupts are
- * suppressed (VRING_AVAIL_F_NO_INTERRUPT, PCI INTx disabled); completions
- * are found by polling the used ring for at most VBLK_POLL_LIMIT iterations.
+ * three fixed descriptors each (header, data, status).
+ *
+ * Completion modes (N3.4). Interrupt mode when the device has an ISR status
+ * capability and an INTx pin, the firmware routed it to a usable 8259 line
+ * (PCI_INTERRUPT_LINE; never assumed), the chipset has that line level
+ * triggered, and irq_register accepts it; otherwise, or after the line was
+ * disabled by a storm, polling mode (the N3.2 behaviour), with the reason
+ * in vblk_info.poll_why. In interrupt mode a waiter blocks on its slot's
+ * wait queue with a deadline: the top half reads the ISR status (which
+ * acknowledges the device and drops its level line, before the EOI) and
+ * claims the interrupt only if a bit was set (the line may be shared); the
+ * bottom half (thread context) reaps the used ring and wakes the owners of
+ * completed slots. A blocked waiter also re-checks the used ring every
+ * VBLK_RECHECK_TICKS (counted in recheck_completions when that, not its
+ * interrupt, finds the completion), and the request times out at
+ * VBLK_WAIT_TICKS. Polling mode suppresses interrupts
+ * (VRING_AVAIL_F_NO_INTERRUPT, PCI INTx disabled) and polls the used ring
+ * for at most VBLK_POLL_LIMIT iterations.
+ *
+ * Cancellation (N3.4). A waiter woken by thread_interrupt returns
+ * VBLK_EINTR and abandons its slot: the slot and its DMA buffers stay
+ * owned by the device until the device completes the request (its data is
+ * then discarded and the slot freed) or the device is reset. An abandoned
+ * request still outstanding after VBLK_WAIT_TICKS resets the device. A
+ * polling-mode wait cannot be interrupted (it ends at its bounds).
  *
  * DMA. The device writes only into frames of a dedicated pool allocated
  * from the PMM at initialization (ring, headers/status, one data frame per
@@ -29,7 +51,13 @@
  *
  * Errors. An I/O error or unsupported-request status fails that request
  * only. A timeout or a protocol violation (an impossible used-ring entry)
- * resets the device: it is then BROKEN until vblk_reinit. The driver's own
+ * resets the device: it is then BROKEN until vblk_reinit. Reset order: the
+ * state becomes BROKEN first, then the device is reset; if the reset is
+ * not confirmed, bus mastering is switched off and the pool quarantined;
+ * then every slot is released and every waiter woken (it returns
+ * VBLK_EBROKEN). A completion or interrupt arriving after the reset finds
+ * no slot of the new queue (the bottom half does nothing unless READY,
+ * and a reinitialized queue starts with fresh ring indexes). The driver's own
  * codes (VBLK_E*) never leave it: the block layer sees BLK_E* (vblk_to_blk).
  *
  * Block layer (N3.2). A device that reaches READY is registered as "vblk0"
@@ -67,6 +95,7 @@
 #define VBLK_POLL_LIMIT     50000000ULL                 /* used-ring polls per request */
 #define VBLK_YIELD_POLLS    4096                        /* polls between yields while waiting */
 #define VBLK_WAIT_TICKS     200                         /* timer ticks (about 2 s) per request */
+#define VBLK_RECHECK_TICKS  10                          /* interrupt mode: a blocked waiter re-checks this often */
 
 /* Driver result codes (never seen outside the driver; vblk_to_blk maps them). */
 #define VBLK_OK         0
@@ -79,6 +108,10 @@
 #define VBLK_EBUSY      7   /* every request slot is in use, or requests are outstanding */
 #define VBLK_EBROKEN    8   /* the device was reset; it needs reinitialization */
 #define VBLK_EPROTO     9   /* the device broke the queue protocol; it was reset */
+#define VBLK_EINTR      10  /* the waiter was interrupted; its request was abandoned to the device */
+
+#define VBLK_MODE_POLL  0
+#define VBLK_MODE_IRQ   1
 
 #define VBLK_ABSENT     0       /* no supported device found */
 #define VBLK_FAILED     1       /* a device was found but could not be initialized */
@@ -94,7 +127,7 @@ struct vpci_region {
 };
 
 struct vpci_caps {
-    struct vpci_region common, notify, device;
+    struct vpci_region common, notify, device, isr;  /* isr is optional (interrupt mode only) */
     uint32_t notify_mult;
     unsigned cfg_cap;           /* config-space offset of the VIRTIO_PCI_CAP_PCI_CFG capability (0 = none) */
     unsigned seen;              /* capabilities visited */
@@ -111,10 +144,25 @@ struct vblk_info {
     int pool_held;              /* the pool frames are allocated */
     int quarantined;            /* the pool is kept because a reset was not confirmed */
     blk_id_t blk_id;            /* block-layer ID while registered, else 0 */
+    /* N3.4: completion mode and interrupt line. */
+    int mode;                   /* VBLK_MODE_* */
+    const char *poll_why;       /* why polling mode (NULL in interrupt mode) */
+    uint8_t irq_pin, irq_line;  /* from PCI configuration space */
+    int irq_handle;             /* irq_register handle while registered, else 0 */
     /* Counters since boot. */
     uint64_t submitted, completed, ok, ioerr, unsupp, timeouts, protocol_errors, resets, inits;
     uint64_t pool_allocs, pool_frees, yields, tick_timeouts;
     uint64_t max_spins;         /* longest successful wait, in polls */
+    /* N3.4 counters. */
+    uint64_t irqs;              /* interrupts the top half claimed (ISR bit set) */
+    uint64_t irq_none;          /* top half: ISR 0, not ours (shared line) */
+    uint64_t irq_late;          /* claimed while the device was not READY (after a reset) */
+    uint64_t irq_wakeups;       /* waiters woken by the bottom half */
+    uint64_t blocked_waits;     /* times a waiter blocked */
+    uint64_t recheck_completions;   /* completions found by a periodic re-check, not by their interrupt */
+    uint64_t cancelled, abandoned_completed, abandoned_reset;
+    uint64_t resets_unconfirmed, mode_switches;
+    unsigned max_inflight;      /* most slots in flight at once */
 };
 
 /* Probe bus 0, initialize the first supported device and register it with the block layer. Returns VBLK_* state. */
@@ -148,6 +196,9 @@ int vblk_read(uint64_t lba, uint32_t count, void *buf, uint64_t cap);
  */
 int vblk_submit(uint64_t lba, uint32_t count, unsigned *slot);
 int vblk_wait(unsigned slot, void *buf, uint64_t cap);
+/* Slots in flight (abandoned ones included), and abandoned ones. */
+unsigned vblk_inflight(void);
+unsigned vblk_abandoned(void);
 
 /* Consistency of the driver state; NULL if consistent, else the first problem. */
 const char *vblk_audit(void);
@@ -185,6 +236,16 @@ void vblk_test_inject_used(uint32_t id, uint32_t len);
 uint8_t vblk_test_device_status(void);
 /* Submit a request of a non-writing type other than IN (allow-list; never a write). */
 int vblk_test_submit_type(uint32_t type, uint64_t lba, uint32_t count, unsigned *slot);
+/* Polling mode at the next vblk_reinit even if interrupts are usable (on = 1), or back to the default (0). */
+void vblk_test_prefer_poll(int on);
+/* Reset the device now, as after a timeout (the request slots are released, waiters woken). */
+void vblk_test_break(void);
+/* The interval at which blocked waiters re-check (0 restores VBLK_RECHECK_TICKS). */
+void vblk_test_recheck_ticks(uint64_t ticks);
+/* The used-ring index the device wrote last. */
+uint16_t vblk_test_used_idx(void);
+/* Notify the device now (it then processes every published request, also ones whose notification was skipped). */
+void vblk_test_notify(void);
 #define VBLK_TEST_T_UNKNOWN 0xFEu   /* even (no OUT bit), not defined by the specification */
 #endif
 

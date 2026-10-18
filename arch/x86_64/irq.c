@@ -71,7 +71,7 @@ struct irq_handler {
 static struct irq_handler handlers[IRQ_MAX_HANDLERS];
 static uint16_t disabled;               /* lines masked after a storm */
 static uint64_t burst_tick[IRQ_LINES];
-static unsigned burst[IRQ_LINES];
+static unsigned burst[IRQ_LINES], unclaimed_run[IRQ_LINES];
 
 uint16_t irq_expected_masks(void)
 {
@@ -170,9 +170,11 @@ int irq_line_disabled(unsigned line)
 
 /*
  * The top halves of device line irq (inside irq_handle, before the EOI).
- * Returns how many claimed it. A line interrupting more than
- * IRQ_STORM_LIMIT times within one tick is masked, and its handlers'
- * bottom halves are scheduled so their drivers notice.
+ * Returns how many claimed it. A storm masks the line, and its handlers'
+ * bottom halves are scheduled so their drivers notice: more than
+ * IRQ_STORM_LIMIT interrupts within one tick, or more than IRQ_STORM_LIMIT
+ * in a row that nobody claimed (a level line nobody acknowledges fires
+ * again right after each EOI, however long each round takes).
  */
 static unsigned dispatch(unsigned irq)
 {
@@ -195,11 +197,12 @@ static unsigned dispatch(unsigned irq)
         stats.claimed[irq]++;
     else
         stats.unclaimed[irq]++;
+    unclaimed_run[irq] = mine ? 0 : unclaimed_run[irq] + 1;
     if (burst_tick[irq] != ticks) {
         burst_tick[irq] = ticks;
         burst[irq] = 0;
     }
-    if (++burst[irq] > IRQ_STORM_LIMIT && !(disabled & (1u << irq))) {
+    if ((++burst[irq] > IRQ_STORM_LIMIT || unclaimed_run[irq] > IRQ_STORM_LIMIT) && !(disabled & (1u << irq))) {
         disabled |= (uint16_t)(1u << irq);
         apply_masks();                  /* the line, and the cascade if no other slave line remains */
         stats.storms++;
@@ -333,7 +336,7 @@ void irq_test_clear_storm(unsigned line)
 {
     if (line < IRQ_LINES) {
         disabled &= (uint16_t)~(1u << line);
-        burst[line] = 0;
+        burst[line] = unclaimed_run[line] = 0;
         apply_masks();
     }
 }

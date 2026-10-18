@@ -16,12 +16,25 @@
  * timeout with reset and recovery, forged used-ring entries, repeated reads
  * without leaks, and reads interleaved with running user processes.
  *
+ * N3.4: the same image then checks interrupt mode (the line read from PCI
+ * configuration, ELCR, masks, one interrupt per request, blocked waiters
+ * woken by the bottom half), a completion that arrives before its waiter
+ * blocks, a deadline timeout beside a CPU-bound program, cancellation
+ * (interrupted waiters, completion after cancellation into the kept DMA
+ * frame, an abandoned request that never completes), interrupted block-
+ * layer waiters, concurrent requests, resets with completions and
+ * interrupts pending, the shared line (a second handler, an interrupt
+ * virtio-blk did not raise, a storm and the fallback to polling), and the
+ * CPU left to a program while reads wait; then it runs the N3.1/N3.2
+ * tests again in polling mode, the fallback.
+ *
  * VOS_TEST_CASE=vblk-ioerr attaches the disk through QEMU's blkdebug driver
  * with an injected read error at sector VBLK_IOERR_SECTOR: the device must
  * report VIRTIO_BLK_S_IOERR for exactly the requests covering it.
  */
 #include "selftest.h"
 #include "console.h"
+#include "cpu.h"
 #include "irq.h"
 #include "kmap.h"
 #include "lib.h"
@@ -154,8 +167,20 @@ static void test_parser(void)
     cfg[0x54 + 3] = 3;
     expect(parse_says("no notification capability"), "parser: notification structure required");
     good_cfg();
-    cfg[0x7C + 3] = 3;
+    cfg[0x7C + 3] = 7;
     expect(parse_says("no PCI configuration access capability"), "parser: PCI configuration access required");
+    /* N3.4: the ISR status capability (optional; interrupt mode needs it). */
+    good_cfg();
+    expect(vpci_parse_caps(syn_rd8, syn_rd32, 0, &c) == NULL && !c.isr.present,
+           "parser: no ISR status capability is accepted (polling mode only)");
+    vcap(0xA0, 0, 16, 3, 4, 0x1001, 1);    /* one byte, at an odd offset */
+    cfg[0x91] = 0xA0;
+    expect(vpci_parse_caps(syn_rd8, syn_rd32, 0, &c) == NULL && c.isr.present && c.isr.bar == 4 &&
+           c.isr.offset == 0x1001 && c.isr.length == 1 && vblk_window_ok(&c, 4, 0x1001, 1) &&
+           !vblk_window_ok(&c, 4, 0x1002, 1) && !vblk_window_ok(&c, 4, 0x1000, 2),
+           "parser: ISR status capability located; the window allows exactly its byte");
+    put32(0xA0 + 12, 0);
+    expect(parse_says("ISR status structure empty"), "parser: refuses an empty ISR status structure");
     good_cfg();
     put32(0x40 + 12, 0x37);
     expect(parse_says("common configuration too short"), "parser: refuses a short common configuration");
@@ -776,6 +801,560 @@ static void test_responsive(void)
     expect(read_ok(64, 8) && pmm_free_count() == f0 && thread_count() == threads0 && proc_count() == 0 &&
            vblk_audit() == NULL, "afterwards: device recovered, no frame, thread or process left over");
 }
+
+/* ---- N3.4: interrupt-driven completion, cancellation, resets, shared lines ---- */
+
+/* Reinitialize into interrupt (irq = 1) or polling mode. */
+static int set_mode(int irq)
+{
+    vblk_test_prefer_poll(!irq);
+    return vblk_reinit() == VBLK_READY && vblk_info()->mode == (irq ? VBLK_MODE_IRQ : VBLK_MODE_POLL) &&
+           vblk_audit() == NULL;
+}
+
+static int intx_asserted(struct pci_addr a)
+{
+    return (pci_read16(a, PCI_STATUS) & PCI_STATUS_INTX) != 0;
+}
+
+static int wait_blocked(int64_t id)
+{
+    for (unsigned k = 0; k < 20 && id > 0 && thread_state((uint64_t)id) != THREAD_BLOCKED; k++)
+        thread_yield();
+    return id > 0 && thread_state((uint64_t)id) == THREAD_BLOCKED;
+}
+
+static int wait_free(int64_t id, unsigned ticks)
+{
+    for (unsigned k = 0; k < ticks && thread_state((uint64_t)id) != THREAD_FREE; k++)
+        thread_sleep(1);
+    return thread_state((uint64_t)id) == THREAD_FREE;
+}
+
+static void test_irq_mode(void)
+{
+    const struct vblk_info *in = vblk_info();
+    const struct irq_stats *is = irq_stats();
+    const struct sched_stats *ss = sched_stats();
+    uint8_t line = pci_read8(in->pci, PCI_INTERRUPT_LINE), pin = pci_read8(in->pci, PCI_INTERRUPT_PIN);
+    uint16_t masks = irq_chip()->masks(), cmd = pci_read16(in->pci, PCI_COMMAND);
+
+    expect(in->mode == VBLK_MODE_IRQ && in->irq_handle && !in->poll_why && in->irq_line == line &&
+           in->irq_pin == pin && pin >= 1 && pin <= 4 && line < IRQ_LINES,
+           "interrupt mode, on the line the firmware routed INTx to (PCI interrupt line register)");
+    expect(line < IRQ_LINES && ((irq_chip()->triggers() >> line) & 1), "that line is level triggered in the ELCR");
+    expect(line < IRQ_LINES && !(masks & (1u << line)) && (line < 8 || !(masks & (1u << 2))) &&
+           masks == irq_expected_masks() && irq_audit() == NULL,
+           "its 8259 line, and the cascade for a slave line, unmasked; masks match the handler table");
+    expect(!(cmd & PCI_COMMAND_INTX_OFF) && (cmd & PCI_COMMAND_MASTER) && vblk_audit() == NULL,
+           "PCI INTx enabled and bus mastering on; driver audit clean");
+
+    /* 64 reads with nothing else runnable: the waiter blocks, the idle thread halts, the interrupt wakes it. */
+    uint64_t i0 = in->irqs, w0 = in->irq_wakeups, b0 = in->blocked_waits, r0 = in->recheck_completions;
+    uint64_t h0 = ss->idle_halts, t0 = irq_ticks(), c0 = line < IRQ_LINES ? is->claimed[line] : 0, to0 = in->timeouts;
+    unsigned bad = 0;
+    for (unsigned i = 0; i < 64; i++)
+        bad += !read_ok((i * 97) % (VBLK_DISK_SECTORS - 8), 8);
+    thread_sleep(1);                    /* the last interrupt may still be pending */
+    uint64_t irqs = in->irqs - i0, woke = in->irq_wakeups - w0, rech = in->recheck_completions - r0;
+    serial_puts("vblk: 64 reads in interrupt mode: ");
+    serial_dec(irqs);
+    serial_puts(" interrupts, ");
+    serial_dec(woke);
+    serial_puts(" waiters woken by the bottom half, ");
+    serial_dec(in->blocked_waits - b0);
+    serial_puts(" blocks, ");
+    serial_dec(rech);
+    serial_puts(" completions found by re-check, idle halted ");
+    serial_dec(ss->idle_halts - h0);
+    serial_puts(" times, ");
+    serial_dec(irq_ticks() - t0);
+    serial_puts(" ticks\r\n");
+    expect(bad == 0 && in->timeouts == to0, "64 reads in interrupt mode, all exact, no timeout");
+    expect(irqs == 64 && line < IRQ_LINES && is->claimed[line] - c0 == 64,
+           "one interrupt per request, each claimed by the virtio-blk top half");
+    expect(rech <= 3 && woke + 3 >= in->blocked_waits - b0 && ss->idle_halts - h0 >= 1,
+           "the waiters blocked and were woken by the bottom half (at most 3 of 64 by re-check); the CPU halted meanwhile");
+}
+
+/* A completion before its waiter blocks: it must be found by the check, never waited for. */
+static void test_early_completion(void)
+{
+    const struct vblk_info *in = vblk_info();
+    uint64_t b0 = in->blocked_waits, i0 = in->irqs, t0;
+    uint16_t u0 = vblk_test_used_idx();
+    unsigned slot, spins = 0;
+    int ok = vblk_submit(77, 4, &slot) == VBLK_OK, r, asserted;
+
+    while (ok && vblk_test_used_idx() == u0 && ++spins < 100000000)
+        __asm__ volatile ("pause");     /* IF = 0: the interrupt cannot be delivered meanwhile */
+    asserted = intx_asserted(in->pci);
+    t0 = irq_ticks();
+    r = vblk_wait(slot, buf, sizeof(buf));
+    expect(ok && vblk_test_used_idx() != u0 && asserted && r == VBLK_OK && !memcmp(buf, fix(77), 4 * BLK_SECTOR_SIZE) &&
+           in->blocked_waits == b0 && irq_ticks() == t0 && in->irqs == i0,
+           "completed before its waiter blocked (INTx asserted, not delivered): found by the check, no block");
+    thread_sleep(2);
+    expect(in->irqs == i0 + 1 && !intx_asserted(in->pci) && vblk_audit() == NULL && irq_audit() == NULL,
+           "its interrupt is delivered later, claimed and acknowledged (INTx drops); nothing to wake, nothing broken");
+}
+
+static void test_irq_timeout(void)
+{
+    const struct vblk_info *in = vblk_info();
+    uint64_t f0 = pmm_free_count(), pt, t0, b0 = in->blocked_waits, tt0 = in->tick_timeouts, prog, el;
+    int ok, r;
+
+    proc_test_tick_budget(5000);
+    ok = launch(&P[0], "m-memtag1");
+    vblk_test_wait_ticks(30);
+    vblk_test_skip_notify(1);
+    pt = P[0].ticks;
+    t0 = irq_ticks();
+    r = vblk_read(11, 1, buf, sizeof(buf));
+    prog = P[0].ticks - pt;
+    el = irq_ticks() - t0;
+    vblk_test_wait_ticks(0);
+    proc_kill(&P[0], "test kill");
+    ok &= proc_wait(&P[0]) == PROC_KILLED;
+    proc_destroy(&P[0]);
+    proc_test_tick_budget(PROC_TEST_TICK_BUDGET);
+    serial_puts("vblk: hung request in interrupt mode beside a CPU-bound program: the program ran ");
+    serial_dec(prog);
+    serial_puts(" of ");
+    serial_dec(el);
+    serial_puts(" ticks; the waiter blocked ");
+    serial_dec(in->blocked_waits - b0);
+    serial_puts(" times\r\n");
+    expect(ok && r == VBLK_ETIMEDOUT && el >= 30 && el <= 40 && in->tick_timeouts == tt0 + 1 &&
+           in->state == VBLK_BROKEN && vblk_test_device_status() == 0,
+           "a request the device never sees times out at its 30-tick deadline; the device is reset");
+    expect(prog + 5 >= el && in->blocked_waits - b0 >= 3 && in->blocked_waits - b0 <= 5,
+           "meanwhile the program kept the CPU: the waiter blocked, re-checking every 10 ticks, instead of polling");
+    expect(set_mode(1) && read_ok(64, 8) && pmm_free_count() == f0, "recovered in interrupt mode, no frame used");
+}
+
+/* ---- cancellation ---- */
+
+static volatile int cw_result, cw_done;
+static volatile unsigned cw_slot;
+static uint8_t cbuf[VBLK_MAX_SECTORS * BLK_SECTOR_SIZE];
+
+static void cancel_waiter(void *arg)
+{
+    unsigned s = VBLK_SLOTS;
+
+    cw_result = vblk_submit((uint64_t)(uintptr_t)arg, 8, &s);
+    cw_slot = s;
+    if (cw_result == VBLK_OK)
+        cw_result = vblk_wait(s, cbuf, sizeof(cbuf));
+    cw_done = 1;
+}
+
+/* Start a waiter whose request the device does not see yet; then interrupt it and let it exit. */
+static int64_t start_and_cancel(uint64_t lba)
+{
+    int64_t id;
+
+    cw_done = 0;
+    cw_result = -1;
+    vblk_test_skip_notify(1);
+    id = thread_create("vblk-cancel", cancel_waiter, (void *)(uintptr_t)lba);
+    if (!wait_blocked(id) || thread_interrupt((uint64_t)id) != 1)
+        return -1;
+    return wait_free(id, 10) ? id : -1;
+}
+
+static int frame_is(uint64_t pa, const void *want)
+{
+    return memcmp(phys_to_virt(pa), want, PAGE_SIZE) == 0;
+}
+
+static uint8_t zeros[PAGE_SIZE];
+
+static void test_cancel(void)
+{
+    const struct vblk_info *in = vblk_info();
+    uint64_t f0 = pmm_free_count(), c0 = in->cancelled, a0 = in->abandoned_completed, ar0 = in->abandoned_reset;
+    unsigned threads0 = thread_count();
+
+    /* Interrupted while the device has not seen the request: the slot is abandoned, the frames kept. */
+    int64_t id = start_and_cancel(300);
+    unsigned s = cw_slot;
+    uint64_t data_pa = s < VBLK_SLOTS ? in->pool[2 + s] : 0;
+    int untouched = data_pa && frame_is(data_pa, zeros);
+    expect(id > 0 && cw_done && cw_result == VBLK_EINTR && vblk_abandoned() == 1 && vblk_inflight() == 1 &&
+           in->cancelled == c0 + 1 && pmm_frame_state_in(pmm_kernel(), data_pa) == PMM_FRAME_ALLOCATED &&
+           vblk_audit() == NULL, "an interrupted waiter returns VBLK_EINTR and exits; its slot stays in flight, abandoned");
+
+    /* The device completes it after the cancellation, into the kept frame. */
+    vblk_test_notify();
+    thread_sleep(3);
+    expect(untouched && frame_is(data_pa, fix(300)) && vblk_abandoned() == 0 && vblk_inflight() == 0 &&
+           in->abandoned_completed == a0 + 1,
+           "the device wrote the data into the kept DMA frame after the cancellation; the bottom half retired the slot");
+    expect(read_ok(300, 8) && read_ok(1, 1) && vblk_audit() == NULL && pmm_free_count() == f0 &&
+           thread_count() == threads0, "the slot is reused correctly; no frame or thread left over");
+
+    /* An abandoned request that never completes resets the device once it is older than the bound. */
+    vblk_test_wait_ticks(20);
+    id = start_and_cancel(400);
+    int abandoned_ok = id > 0 && cw_result == VBLK_EINTR && vblk_abandoned() == 1;
+    thread_sleep(25);
+    vblk_test_skip_notify(1);           /* the next request is not notified either: the device never sees them */
+    int r = vblk_read(5, 1, buf, sizeof(buf));
+    vblk_test_wait_ticks(0);
+    expect(abandoned_ok && r == VBLK_EBROKEN && in->state == VBLK_BROKEN &&
+           streq(in->why, "an abandoned request never completed") && in->abandoned_reset == ar0 + 1 &&
+           vblk_inflight() == 0 && vblk_test_device_status() == 0,
+           "an abandoned request still outstanding after the bound resets the device, which releases its slot");
+    expect(set_mode(1) && read_ok(400, 8) && pmm_free_count() == f0 && vblk_audit() == NULL,
+           "recovered; the same DMA pool, no frame leaked");
+}
+
+/* Interrupted threads in the block layer: one loading a cache line, one waiting for that load. */
+static volatile int bl_result[2], bl_done[2];
+static uint8_t bbuf[2][BLK_SECTOR_SIZE];
+
+static void blk_waiter(void *arg)
+{
+    unsigned i = (unsigned)(uintptr_t)arg;
+
+    bl_result[i] = blk_read(vblk_info()->blk_id, 1600 + i, 1, bbuf[i], sizeof(bbuf[i]));
+    bl_done[i] = 1;
+}
+
+static void test_blk_cancel(void)
+{
+    const struct vblk_info *in = vblk_info();
+    blk_id_t id = in->blk_id;
+    uint64_t f0 = pmm_free_count(), lw0 = blk_stats()->load_waits;
+    int64_t t[2];
+
+    blk_invalidate(id);
+    bl_done[0] = bl_done[1] = 0;
+    vblk_test_skip_notify(1);
+    t[0] = thread_create("blk-loader", blk_waiter, (void *)0);
+    int a = wait_blocked(t[0]) && blk_test_line_state(id, 200) == BLK_LINE_LOADING;
+    t[1] = thread_create("blk-follower", blk_waiter, (void *)1);
+    int b = wait_blocked(t[1]) && blk_stats()->load_waits == lw0 + 1;
+    thread_interrupt((uint64_t)t[1]);
+    int fb = wait_free(t[1], 10) && bl_result[1] == BLK_EINTR && blk_test_line_state(id, 200) == BLK_LINE_LOADING;
+    thread_interrupt((uint64_t)t[0]);
+    int fa = wait_free(t[0], 10) && bl_result[0] == BLK_EINTR && blk_test_line_state(id, 200) == BLK_LINE_FREE;
+    expect(a && b && fb && fa && vblk_abandoned() == 1 && blk_audit() == NULL,
+           "block layer: a thread waiting for another's line load and the loader itself are interrupted: BLK_EINTR, line left FREE");
+    vblk_test_notify();
+    thread_sleep(3);
+    uint8_t two[2 * BLK_SECTOR_SIZE];
+    expect(vblk_abandoned() == 0 && blk_read(id, 1600, 2, two, sizeof(two)) == BLK_OK && !memcmp(two, fix(1600), sizeof(two)) &&
+           blk_test_line_state(id, 200) == BLK_LINE_VALID && blk_audit() == NULL && vblk_audit() == NULL &&
+           pmm_free_count() == f0, "the abandoned load completes and is retired; the line then loads and is exact");
+    blk_invalidate(id);                 /* the block-layer tests start from an empty cache */
+}
+
+/* ---- concurrent requests ---- */
+
+static volatile unsigned cc_bad, cc_done;
+
+static void cc_reader(void *arg)
+{
+    unsigned k = (unsigned)(uintptr_t)arg;
+
+    for (unsigned i = 0; i < 100; i++) {
+        uint64_t lba = (k * 500 + i * 13) % (VBLK_DISK_SECTORS - 8);
+        uint8_t mine[VBLK_MAX_SECTORS * BLK_SECTOR_SIZE];
+
+        if (vblk_read(lba, 8, mine, sizeof(mine)) != VBLK_OK || memcmp(mine, fix(lba), sizeof(mine)))
+            cc_bad++;
+    }
+    cc_done++;
+}
+
+static volatile unsigned q_done;
+static volatile int q_res[VBLK_SLOTS];
+
+static void q_reader(void *arg)
+{
+    unsigned k = (unsigned)(uintptr_t)arg;
+    uint8_t mine[VBLK_MAX_SECTORS * BLK_SECTOR_SIZE];
+
+    q_res[k] = vblk_read(800 + 8 * k, 8, mine, sizeof(mine));
+    if (q_res[k] == VBLK_OK && memcmp(mine, fix(800 + 8 * k), sizeof(mine)))
+        q_res[k] = -1;
+    q_done++;
+}
+
+static void test_concurrent(void)
+{
+    const struct vblk_info *in = vblk_info();
+    uint64_t f0 = pmm_free_count(), to0 = in->timeouts, i0, w0;
+    unsigned threads0 = thread_count(), blocked = 0;
+    int64_t id[VBLK_SLOTS];
+
+    /* Four waiters blocked at once; one notification; the completions may share interrupts. */
+    q_done = 0;
+    vblk_test_skip_notify(VBLK_SLOTS);
+    for (unsigned k = 0; k < VBLK_SLOTS; k++)
+        id[k] = thread_create("vblk-q", q_reader, (void *)(uintptr_t)k);
+    for (unsigned k = 0; k < VBLK_SLOTS; k++)
+        blocked += wait_blocked(id[k]);
+    unsigned busy = 0;
+    expect(blocked == VBLK_SLOTS && vblk_inflight() == VBLK_SLOTS && vblk_submit(0, 1, &busy) == VBLK_EBUSY,
+           "four waiters blocked with four requests in flight; a fifth request is refused (VBLK_EBUSY)");
+    i0 = in->irqs;
+    w0 = in->irq_wakeups;
+    vblk_test_notify();
+    for (unsigned k = 0; k < 20 && q_done < VBLK_SLOTS; k++)
+        thread_sleep(1);
+    unsigned good = 0;
+    for (unsigned k = 0; k < VBLK_SLOTS; k++)
+        good += q_res[k] == VBLK_OK;
+    serial_puts("vblk: 4 requests completed together: ");
+    serial_dec(in->irqs - i0);
+    serial_puts(" interrupts, ");
+    serial_dec(in->irq_wakeups - w0);
+    serial_puts(" waiters woken\r\n");
+    expect(q_done == VBLK_SLOTS && good == VBLK_SLOTS && in->irqs - i0 >= 1 && in->irqs - i0 <= VBLK_SLOTS &&
+           in->irq_wakeups - w0 == VBLK_SLOTS, "all four completed exactly; each owner woken once, by 1-4 interrupts");
+
+    /* Four threads reading 100 times each, overlapping freely. */
+    cc_bad = cc_done = 0;
+    for (unsigned k = 0; k < 4; k++)
+        thread_create("vblk-cc", cc_reader, (void *)(uintptr_t)k);
+    for (unsigned k = 0; k < 500 && cc_done < 4; k++)
+        thread_sleep(1);
+    serial_puts("vblk: 4 threads x 100 reads: at most ");
+    serial_dec(in->max_inflight);
+    serial_puts(" requests in flight at once\r\n");
+    expect(cc_done == 4 && cc_bad == 0 && in->timeouts == to0 && in->max_inflight == VBLK_SLOTS,
+           "four threads x 100 reads, all exact, no timeout, up to four requests in flight");
+    thread_sleep(1);
+    expect(pmm_free_count() == f0 && thread_count() == threads0 && vblk_inflight() == 0 && vblk_audit() == NULL &&
+           sched_audit() == NULL, "afterwards nothing in flight, no frame or thread left over");
+}
+
+/* ---- resets with completions and interrupts in flight ---- */
+
+static void test_late_irq(void)
+{
+    const struct vblk_info *in = vblk_info();
+    uint64_t f0 = pmm_free_count(), p0 = in->protocol_errors, i0;
+    uint16_t u0 = vblk_test_used_idx();
+    unsigned slot, spins = 0;
+    int ok, asserted;
+
+    /* A completed request whose interrupt is pending when the device is reset. */
+    ok = vblk_submit(50, 8, &slot) == VBLK_OK;
+    while (ok && vblk_test_used_idx() == u0 && ++spins < 100000000)
+        __asm__ volatile ("pause");
+    asserted = intx_asserted(in->pci);
+    vblk_test_break();
+    expect(ok && asserted && !intx_asserted(in->pci) && in->state == VBLK_BROKEN && vblk_inflight() == 0,
+           "reset with a completion's interrupt pending: the slot is released and the device drops INTx");
+    i0 = in->irqs;
+    thread_sleep(2);
+    expect(in->irqs == i0 && set_mode(1) && read_ok(50, 8) && in->protocol_errors == p0,
+           "no late interrupt reaches the driver; the reinitialized queue never sees the old completion");
+
+    /* An interrupt claimed before a reset whose bottom half runs after the reinitialization. */
+    u0 = vblk_test_used_idx();
+    ok = vblk_submit(60, 8, &slot) == VBLK_OK;
+    spins = 0;
+    while (ok && vblk_test_used_idx() == u0 && ++spins < 100000000)
+        __asm__ volatile ("pause");
+    unsigned claimed = irq_test_dispatch(in->irq_line);  /* as if delivered now: the top half reads the ISR */
+    vblk_test_break();
+    ok &= set_mode(1);
+    uint64_t late0 = in->irq_late;
+    irq_run_deferred();                 /* the stale bottom half runs against the new queue */
+    expect(ok && claimed == 1 && in->irq_late == late0 && vblk_inflight() == 0 && in->protocol_errors == p0 &&
+           read_ok(60, 8) && vblk_audit() == NULL, "a bottom half left over from before a reset does nothing to the new queue");
+
+    /* A blocked waiter is woken by the reset at once, not at its deadline. */
+    waiter_done = 0;
+    waiter_result = -1;
+    vblk_test_skip_notify(1);
+    int64_t id = thread_create("vblk-waiter", waiter, 0);
+    int b = wait_blocked(id);
+    uint64_t t0 = irq_ticks();
+    vblk_test_break();
+    for (unsigned k = 0; k < 10 && !waiter_done; k++)
+        thread_yield();
+    expect(b && waiter_done && waiter_result == VBLK_EBROKEN && irq_ticks() - t0 <= 1 && wait_free(id, 5),
+           "a waiter blocked when the device is reset returns VBLK_EBROKEN at once");
+    expect(set_mode(1) && read_ok(21, 1) && pmm_free_count() == f0 && vblk_audit() == NULL,
+           "recovered after the resets; no frame leaked");
+}
+
+/* ---- shared interrupt line ---- */
+
+static unsigned foreign_calls;
+
+static int foreign_top(void *ctx)
+{
+    (void)ctx;
+    foreign_calls++;
+    return IRQ_NONE;
+}
+
+/* QEMU's default e1000 NIC, if present: only located (VOS has no network driver and maps no device memory). */
+static struct pci_addr nic;
+
+static int is_e1000(struct pci_addr a, void *ctx)
+{
+    (void)ctx;
+    return pci_read16(a, PCI_VENDOR_ID) == 0x8086 && pci_read16(a, PCI_DEVICE_ID) == 0x100E;
+}
+
+static unsigned foreign_claims;
+
+static int foreign_claim_top(void *ctx)
+{
+    (void)ctx;
+    foreign_claims++;
+    return IRQ_HANDLED;
+}
+
+static void test_shared_irq(void)
+{
+    const struct vblk_info *in = vblk_info();
+    const struct irq_stats *is = irq_stats();
+    unsigned line = in->irq_line, bad = 0;
+    uint64_t f0 = pmm_free_count(), i0, n0, s0;
+    int h;
+
+    /* Another handler on the virtio-blk line: every interrupt asks both. */
+    foreign_calls = 0;
+    int reg = irq_register(line, IRQ_TRIGGER_LEVEL, "test-foreign", foreign_top, 0, 0, &h) == IRQ_OK;
+    i0 = in->irqs + in->irq_none;
+    for (unsigned i = 0; i < 32; i++)
+        bad += !read_ok(i * 50, 8);
+    thread_sleep(1);
+    uint64_t asked = in->irqs + in->irq_none - i0;
+    reg &= irq_unregister(h) == IRQ_OK;
+    expect(reg && bad == 0 && asked >= 32 && foreign_calls == asked && !irq_line_disabled(line) &&
+           irq_chip()->masks() == irq_expected_masks(),
+           "a second handler on the line: both are asked on every interrupt; virtio-blk claims its own; reads exact");
+
+    /*
+     * Who else is on the line. QEMU's default e1000 shares it in the default
+     * configuration (not with -nic none); it stays idle (its interrupts are
+     * masked from reset), so every interrupt on the line so far was claimed.
+     */
+    int nic_found = pci_scan_bus0(is_e1000, 0, &nic), shared = nic_found && pci_read8(nic, PCI_INTERRUPT_LINE) == line;
+    serial_puts("vblk: IRQ ");
+    serial_dec(line);
+    serial_puts(shared ? " is shared with the e1000 at 00:" : " is not shared with another known device");
+    if (shared)
+        serial_hex(nic.dev);
+    serial_puts("; unclaimed interrupts on it so far: ");
+    serial_dec(is->unclaimed[line]);
+    serial_puts("\r\n");
+    expect(is->unclaimed[line] == 0 && (!shared || !intx_asserted(nic)),
+           "no interrupt on the line went unclaimed; a sharing e1000 never asserted INTx");
+
+    /* An interrupt on the line that virtio-blk did not raise (synthesized): its ISR reads 0, the other handler claims. */
+    foreign_claims = 0;
+    reg = irq_register(line, IRQ_TRIGGER_LEVEL, "test-foreign", foreign_claim_top, 0, 0, &h) == IRQ_OK;
+    n0 = in->irq_none;
+    i0 = in->irqs;
+    unsigned claimed = irq_test_dispatch(line);
+    irq_run_deferred();
+    reg &= irq_unregister(h) == IRQ_OK;
+    expect(reg && claimed == 1 && foreign_claims == 1 && in->irq_none == n0 + 1 && in->irqs == i0 && read_ok(9, 8),
+           "an interrupt virtio-blk did not raise: its top half reads ISR 0 and says not mine; the other handler claims it");
+
+    /* A storm on the line, synthesized (also without another device): fallback to polling, recovery. */
+    s0 = is->storms;
+    for (unsigned i = 0; i <= IRQ_STORM_LIMIT; i++)
+        irq_test_dispatch(line);
+    irq_run_deferred();
+    expect(irq_line_disabled(line) && is->storms == s0 + 1 && in->mode == VBLK_MODE_POLL && in->irq_handle == 0 &&
+           read_ok(33, 8) && vblk_audit() == NULL && irq_audit() == NULL,
+           "a synthesized storm on the line: masked, virtio-blk polls and keeps reading exactly");
+    irq_test_clear_storm(line);
+    expect(set_mode(1) && read_ok(34, 8) && pmm_free_count() == f0 && irq_audit() == NULL,
+           "recovered into interrupt mode; no frame used");
+}
+
+/* ---- CPU progress while requests wait ---- */
+
+static volatile unsigned pr_done, pr_bad;
+
+static void progress_reader(void *arg)
+{
+    uint64_t x = (uint64_t)(uintptr_t)arg;
+    uint8_t mine[VBLK_MAX_SECTORS * BLK_SECTOR_SIZE];
+
+    for (unsigned i = 0; i < 300; i++) {
+        x = x * 6364136223846793005ULL + 1442695040888963407ULL;
+        uint64_t lba = (x >> 20) % (VBLK_DISK_SECTORS - 8);
+
+        if (vblk_read(lba, 8, mine, sizeof(mine)) != VBLK_OK || memcmp(mine, fix(lba), sizeof(mine)))
+            pr_bad++;
+    }
+    pr_done = 1;
+}
+
+static uint64_t rdtsc(void)
+{
+    uint32_t lo, hi;
+
+    __asm__ volatile ("rdtsc" : "=a"(lo), "=d"(hi));
+    return (uint64_t)hi << 32 | lo;
+}
+
+/* TSC cycles per timer tick, measured over 10 ticks with only the idle thread running. */
+static uint64_t tsc_per_tick(void)
+{
+    uint64_t c0;
+
+    thread_sleep(1);                    /* start right after a tick */
+    c0 = rdtsc();
+    thread_sleep(10);
+    return (rdtsc() - c0) / 10;
+}
+
+/*
+ * 300 reads by a kernel thread beside a CPU-bound program. Timer ticks are
+ * only counted while interrupts are enabled (ring 3 or the idle halt), so
+ * the wall time comes from the TSC: ticks the kernel never saw were lost
+ * while it ran with IF = 0 (polling).
+ */
+static int measure_progress(const char *mode, uint64_t *prog, uint64_t *el)
+{
+    uint64_t pt, t0, c0, per = tsc_per_tick(), expected;
+    int ok;
+
+    proc_test_tick_budget(5000);
+    ok = launch(&P[0], "m-memtag1");
+    pr_done = pr_bad = 0;
+    pt = P[0].ticks;
+    t0 = irq_ticks();
+    c0 = rdtsc();
+    ok &= thread_create("vblk-progress", progress_reader, (void *)12345) > 0;
+    for (unsigned w = 0; ok && !pr_done && w < 3000; w++)
+        thread_sleep(1);
+    expected = per ? (rdtsc() - c0 + per / 2) / per : 0;
+    *prog = P[0].ticks - pt;
+    *el = irq_ticks() - t0;
+    proc_kill(&P[0], "test kill");
+    ok &= proc_wait(&P[0]) == PROC_KILLED;
+    proc_destroy(&P[0]);
+    proc_test_tick_budget(PROC_TEST_TICK_BUDGET);
+    serial_puts("vblk: 300 reads of 8 sectors beside a CPU-bound program, ");
+    serial_puts(mode);
+    serial_puts(": wall time ");
+    serial_dec(expected);
+    serial_puts(" tick periods (TSC), ");
+    serial_dec(*el);
+    serial_puts(" timer ticks counted, the program ran ");
+    serial_dec(*prog);
+    serial_puts(" of them\r\n");
+    *el = expected > *el ? expected : *el;     /* the share is measured against the wall time */
+    return ok && pr_done && pr_bad == 0 && per > 0;
+}
 #endif /* !VOS_TEST_CASE_vblk_ioerr */
 #endif /* VBLK_LIVE */
 
@@ -825,12 +1404,32 @@ int selftest_vblk(const struct boot_info *bi)
         test_validation();
         test_queue();
         test_unsupported();
-        test_timeout();
         test_protocol();
         test_repeat();
         test_processes();
+        /* N3.4: interrupt mode (the default when the device and its line allow it). */
+        test_irq_mode();
+        test_early_completion();
+        test_irq_timeout();
+        test_cancel();
+        test_blk_cancel();
+        test_concurrent();
+        test_late_irq();
+        test_shared_irq();
+        uint64_t iprog, iel, pprog, pel;
+        expect(measure_progress("interrupt mode", &iprog, &iel) && iprog * 10 >= iel * 7,
+               "interrupt mode: 300 exact reads while the program kept at least 70% of the wall time (in ticks)");
+        /* The polling fallback, on its own: the N3.1/N3.2 tests in polling mode. */
+        expect(set_mode(0) && streq(vblk_info()->poll_why, "polling requested (test)"),
+               "polling mode on request (the fallback), device reinitialized");
+        test_contents();
+        test_queue();
+        test_timeout();
+        test_repeat();
         test_reset_while_waiting();
         test_responsive();
+        expect(measure_progress("polling mode", &pprog, &pel), "polling mode: 300 exact reads beside the program");
+        expect(set_mode(1), "back to interrupt mode");
 #endif
         expect(vblk_audit() == NULL && vblk_info()->state == VBLK_READY, "final vblk audit clean, device ready");
     } else {

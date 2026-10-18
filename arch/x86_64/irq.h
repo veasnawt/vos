@@ -42,8 +42,10 @@
  * register accesses (PCI configuration cycles included).
  *
  * Storms. A device line that interrupts more than IRQ_STORM_LIMIT times
- * within one timer tick (claimed or not: a device that never lets go of a
- * level line, or a foreign device nobody acknowledges) is masked for good;
+ * within one timer tick (a device that never lets go of its level line
+ * although acknowledged), or more than IRQ_STORM_LIMIT times in a row
+ * without any handler claiming it (a foreign device nobody acknowledges),
+ * is masked for good;
  * its handlers' bottom halves run once more so their drivers notice
  * (irq_line_disabled) and fall back to polling.
  */
@@ -56,7 +58,7 @@
 #define IRQ_LINES           16
 #define IRQ_TIMER           0
 #define IRQ_MAX_HANDLERS    4
-#define IRQ_STORM_LIMIT     1000        /* device-line interrupts within one timer tick before the line is masked */
+#define IRQ_STORM_LIMIT     1000        /* device-line interrupts within one tick, or unclaimed in a row: a storm */
 
 /* Trigger modes (irq_register). */
 #define IRQ_TRIGGER_EDGE    0

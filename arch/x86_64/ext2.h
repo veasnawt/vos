@@ -69,6 +69,7 @@
 #define EXT2_ESTALE         14  /* the device was reset, reinitialized or removed since open: close the reader */
 #define EXT2_EBUSY          15  /* no free reader slot, or the reader is in use */
 #define EXT2_EOD            16  /* ext2_readdir: no more entries (not an error) */
+#define EXT2_EINTR          17  /* N3.4: the calling thread was interrupted while it waited */
 
 /* File types: the directory-entry codes. */
 #define EXT2_T_UNKNOWN  0

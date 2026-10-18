@@ -135,10 +135,10 @@ const char *ext2_strerror(int err)
         "ok", "invalid argument", "not an ext2 file system", "outside the supported ext2 profile",
         "corrupt file system", "no such entry", "not a directory", "is a directory", "not a regular file",
         "name too long", "symbolic link in path", "path too deep", "device I/O error", "device unavailable",
-        "device changed since open", "busy", "end of directory",
+        "device changed since open", "busy", "end of directory", "interrupted",
     };
 
-    return err >= 0 && err <= EXT2_EOD ? s[err] : "unknown error";
+    return err >= 0 && err <= EXT2_EINTR ? s[err] : "unknown error";
 }
 
 /* ---- device access ---- */
@@ -156,6 +156,7 @@ static int dev_read(struct ext2_fs *fs, uint64_t sector, uint32_t count, void *b
     case BLK_OK:        return EXT2_OK;
     case BLK_EUNAVAIL:  return fail(EXT2_EUNAVAIL, "device unavailable");
     case BLK_EBUSY:     return fail(EXT2_EBUSY, "block layer busy");
+    case BLK_EINTR:     return fail(EXT2_EINTR, "interrupted while waiting for the device");
     default:            return fail(EXT2_EIO, "device read failed");
     }
 }
@@ -460,7 +461,8 @@ static int enter(struct ext2_fs *fs)
     while (fs->busy) {
         if (++waits > FS_WAIT_LIMIT)
             return fail(EXT2_EBUSY, "reader busy");
-        thread_block(&fs->wq);
+        if (thread_block_until(&fs->wq, 0) == THREAD_INTERRUPTED)
+            return fail(EXT2_EINTR, "interrupted while waiting for the reader");
         if (!fs->used)
             return fail(EXT2_EINVAL, "reader closed meanwhile");
     }
