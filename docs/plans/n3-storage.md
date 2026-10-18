@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| Status | **N3.0 complete (2026-10-18): storage architecture designed, kernel map extended to 4 MiB of 4 KiB pages. N3.1 complete (2026-10-18): read-only, polled virtio-blk driver (section 5). N3.2 complete (2026-10-18): block layer, read-only cache, DMA-frame lifecycle, cooperative waiting (section 6). N3.3 and later are [Proposal] and need explicit approval.** |
+| Status | **N3.0 complete (2026-10-18): storage architecture designed, kernel map extended to 4 MiB of 4 KiB pages. N3.1 complete (2026-10-18): read-only, polled virtio-blk driver (section 5). N3.2 complete (2026-10-18): block layer, read-only cache, DMA-frame lifecycle, cooperative waiting (section 6). N3.3 complete (2026-10-19): read-only ext2 reader (section 7). N3.4 and later are [Proposal] and need explicit approval.** |
 | Date | 2026-10-18 |
 | Starting point | N2 complete at `8e30f9b` (`docs/plans/n2-foundation.md`, section 3.7) |
 | Target | `ARCH=x86_64`; the i386 kernel stays as it is |
@@ -34,7 +34,7 @@ from the disk is treated as untrusted input.
 | **N3.0** Storage architecture and memory preparation *(done)* | Design document. Second 4 KiB page table in the W^X kernel map (phys 0–4 MiB), with tests. | Section 3 |
 | **N3.1** PCI and virtio-blk, read-only, polled *(done)* | Config-space scan (mechanism #1), modern virtio capability walk, feature negotiation, one split virtqueue in PMM frames, `IN` requests with a bounded poll, `VIRTIO_BLK_F_RO` honoured. The test disk is a generated raw image, not an ext2 image (no ext2 code exists yet). | Section 5 |
 | **N3.2** Block layer *(done)* | Block-device registry and interface, validated block I/O, fixed-size read-only cache in PMM frames, device-independent errors, audits; DMA-frame release for refused and stopped devices; cooperative waiting in the driver | Section 6 |
-| N3.3 ext2 reader | Restricted profile (`storage.md` section 5.3), every field validated, bounded walks | Valid images read exactly; a set of host-corrupted images (superblock, group descriptors, inode, block pointers, directory records, loops) rejected for the intended reason, without a panic |
+| **N3.3** ext2 reader *(done)* | Restricted profile (stricter than `storage.md` section 5.3), every field validated, bounded walks | Section 7 |
 | N3.4 Interrupt completion | INTx through the PIC, waiters on wait queues instead of polling | Other processes keep running during disk waits; a killed waiter leaves no stale request |
 | N3.5 File ABI v2 (read-only) | Handle-relative open, read, stat, enumerate and close; the namespace from trusted configuration; the ABI note version 2 | v0/v1 programs unchanged (`hello.elf` byte-identical); rights and `..` escapes refused; concurrent readers |
 | N3.6 Closure | Stress with concurrent readers, kills during I/O, exhaustion; documentation | Full regression; audits after every suite |
@@ -1061,24 +1061,473 @@ is the 32 cache frames plus the 128 KiB of image growth.
    behaviour for a process killed during I/O (N3.5).
 4. A per-process limit on outstanding requests and cache use.
 
-## 7. Recommended N3.3 scope [Proposal]
+## 7. N3.3 result: read-only ext2 reader (complete)
 
-A read-only ext2 reader in the kernel on top of `blk_read_block`, restricted to the profile of
-`storage.md` section 5.3:
-- superblock and group descriptors validated;
-- inodes;
-- direct, single, double and triple indirect blocks with bounded walks;
-- linear directories;
-- every field checked before use.
+### 7.1 Baseline and sources
+
+At `041797e` on `main` (clean tree), from a clean build, the N3.2 baseline reproduced exactly:
+- `make test-all` exited 0 with 60 runs passing and none failing;
+- 11 fault comparisons matched;
+- `test-user-elf`: 288 passed, 0 failed;
+- the i386, `hello.elf`, production x86_64 (`83fdfc54…f9bbd0`) and test-disk hashes were as at
+  the end of N3.2.
+
+**Field-level sources:**
+- The Linux kernel's on-disk layout documentation (docs.kernel.org, `filesystems/ext4`) was
+  fetched on 2026-10-18 and covers ext2 as well:
+  - superblock fields at offsets 0x00–0x78, feature-flag values and `s_state` values;
+  - inode fields at 0x00–0x74, `i_mode` types and `i_flags` values;
+  - the 32-byte group descriptor;
+  - the linear directory record and the htree layout as a linear reader sees it;
+  - the direct/indirect/double/triple block map;
+  - the superblock at byte 1024 (block 1 with 1 KiB blocks);
+  - special inodes (2 = root, 11 = traditional first non-reserved).
+- Facts these pages did not state were checked on host-built reference images with e2fsprogs
+  1.47.2 (`dumpe2fs`, `debugfs`, `e2fsck`):
+  - backup superblocks in groups 0, 1 and powers of 3, 5 and 7 (`dumpe2fs` of the 8-group
+    1 KiB image: backups at 1025, 3073, 5121, 7169);
+  - `s_reserved_gdt_blocks` at superblock offset 0xCE (255 in the 1 KiB image, 0 without
+    `resize_inode`);
+  - holes as zero pointers (an 80 MiB sparse file used 7 blocks: 4 data blocks plus the single,
+    double and triple indirect blocks);
+  - fast symbolic links with their target in `i_block` and a block count of 0, slow ones with
+    one data block;
+  - `mke2fs -d` not creating htree indexes, and `e2fsck -D` creating them (flag 0x1000).
+
+### 7.2 Supported profile
+
+Anything outside this profile is refused with `EXT2_EUNSUPP`; nothing is guessed. The profile
+is stricter than `storage.md` section 5.3 proposed. Unknown read-only-compatible features are
+refused as well, not mounted read-only, because some (`huge_file`, `bigalloc`) change how
+fields are read.
+
+| Item | Accepted |
+|---|---|
+| Revision | 1 (dynamic) only; magic 0xEF53 |
+| State | exactly 1 (cleanly unmounted, no errors, no orphans) |
+| Block size | 1024, 2048, 4096 bytes; fragment (cluster) size equal to the block size |
+| Inode size | 128 or 256 bytes |
+| compat features | `ext_attr`, `resize_inode`, `dir_index`; anything else, the journal included, is refused |
+| incompat features | `filetype` only |
+| ro_compat features | `sparse_super`, `large_file` only |
+| Groups | at most 256; bitmaps and inode table inside their own group (no `flex_bg`) |
+| Inode flags | refused: compression (0x4, 0x100, 0x200, 0x400), encryption (0x800), huge file (0x40000), extents (0x80000), EA inode (0x200000), inline data (0x10000000) |
+| File types | regular files, directories, symbolic links (target readable, never followed), FIFO/socket/device inodes (described, not readable) |
+| Data | classic block map: 12 direct blocks, single, double and triple indirect; zero pointers are holes and read as zeros (sparse files) |
+| Directories | linear records; htree-indexed directories (`INDEX_FL`) read linearly (the index hides behind "..", interior nodes are empty records); no holes; at most 4096 blocks |
+| Names | 1–255 bytes, without `/` or NUL |
+
+**Limits:**
+
+| Limit | Value |
+|---|---|
+| Path length | 1024 bytes |
+| Path depth | 64 components, `.` and `..` included |
+| Readers open at once | 4 |
+| Largest file | what the block map addresses: (12 + p + p² + p³) × block size, with p = block size / 4 |
+
+### 7.3 Interface (`ext2.h`)
+
+| Operation | Purpose |
+|---|---|
+| `ext2_open(dev, &fs)` | validate the superblock, every group descriptor and the root directory's first block; bind the reader to the block device's ID and epoch |
+| `ext2_close(fs)` | release the reader (`EXT2_EBUSY` while it is in use) |
+| `ext2_info` | geometry, features, label |
+| `ext2_stat(fs, ino)` | mode, type, links, owner, size, block count |
+| `ext2_lookup(fs, dir, name, len)` | one component (`.` and `..` included) |
+| `ext2_resolve(fs, base, path)` | absolute or relative path; single slashes only (empty components refused); `..` of the root is the root; symbolic links never followed (`EXT2_ELOOP` inside a path, the link itself as last component) |
+| `ext2_readdir(fs, dir, &cookie, &ent)` | used entries in on-disk order; the cookie is a record offset, validated as a record boundary; `EXT2_EOD` at the end |
+| `ext2_read(fs, ino, off, buf, len, &done)` | regular files; at most to the end of the file; 0 bytes at or past the end |
+| `ext2_readlink(fs, ino, buf, cap, &len)` | the target of a fast or slow symbolic link |
+| `ext2_problem()` | the diagnostic of the last refusal |
+| `ext2_audit()` | consistency of the reader slots |
+| `ext2_open_count()` | readers open |
+
+**Errors:**
+
+| Error | Meaning |
+|---|---|
+| `EXT2_EINVAL` | arguments |
+| `EXT2_ENOTEXT2` | bad magic |
+| `EXT2_EUNSUPP` | outside the profile |
+| `EXT2_ECORRUPT` | inconsistent metadata, with a diagnostic |
+| `EXT2_ENOENT`, `EXT2_ENOTDIR`, `EXT2_EISDIR`, `EXT2_ENOTREG` | no such entry; wrong type for the operation |
+| `EXT2_ENAMETOOLONG` | name, path or link target too long |
+| `EXT2_ELOOP` | a symbolic link inside a path |
+| `EXT2_ETOODEEP` | too many path components |
+| `EXT2_EIO` | device error |
+| `EXT2_EUNAVAIL` | device temporarily unavailable |
+| `EXT2_ESTALE` | the device was reset, reinitialized or removed since open |
+| `EXT2_EBUSY` | no free slot, or the reader is in use |
+
+No file system call exposes any of this, and the reader has no write operation.
+
+### 7.4 Defensive parsing
+
+- **No struct casts.** Disk bytes are read with explicit little-endian loads into local
+  variables, never cast into structures.
+- **Superblock:** magic, revision, block-size exponent (checked before the shift), features,
+  state, inode size, fragment size, first data block for the block size, blocks and inodes
+  per group (non-zero, at most a bitmap's worth), group count (≤ 256, computed in 64 bits),
+  inode count = groups × inodes per group, first non-reserved inode, group metadata fitting a
+  group, and the **file system not larger than the device** (truncated images).
+- **Group descriptors:** block bitmap, inode bitmap and inode table inside their own group,
+  after its superblock copy, descriptors and reserved GDT blocks; not overlapping each other.
+- **Inodes:**
+  - the number is checked against the count and the reserved range;
+  - the inode **must be marked in use in its inode bitmap**;
+  - the file type must be valid;
+  - links must be > 0;
+  - no data-interpretation flags;
+  - the block count must be whole blocks;
+  - size above 4 GiB only with `large_file`;
+  - the size must not exceed what the block map can address;
+  - directory sizes must be whole blocks, non-zero and ≤ 4096 blocks;
+  - symbolic links must be shorter than one block.
+- **Block pointers** (direct and indirect, at every level) must name a data block: inside the
+  file system and not superblock or descriptor copies, reserved GDT blocks, bitmaps or inode
+  tables. The map has at most three levels, so no pointer chain can loop. Zero pointers are
+  holes: zeros in files, refused in directories.
+- **Directory blocks** are validated whole before any record is used:
+  - records ≥ 8 bytes, a multiple of 4, inside the block;
+  - at most block size / 8 records;
+  - name inside its record, non-empty, without `/` or NUL;
+  - inode ≤ the count and not reserved (root excepted);
+  - known file type;
+  - `.` then `..` first in block 0.
+
+  A record cannot fail to advance, and an entry's type must match its inode.
+- **Paths:** at most 1024 bytes and 64 components, so a directory cycle (an entry naming an
+  ancestor) ends with `EXT2_ETOODEEP`.
+- **Device errors** are returned as `EXT2_EIO`. The reader stays usable.
+
+### 7.5 Ownership, lifetime and isolation
+
+- **Slots:** a reader is a static slot that owns no frames. Its one block buffer and one sector
+  buffer are part of the slot, filled only by `blk_read`; callers receive copies. A failed open
+  clears the slot (nothing else is owned).
+- **No virtio types:** the reader uses only `blockdev.h` (IDs, `blk_read`, `blk_describe`,
+  `blk_cache_frames`).
+- **Caller buffers:** `ext2_read` accepts only writable supervisor memory that is not a cache
+  frame.
+- **Device changes:**
+  - Each operation checks the device: an epoch change (reset or reinitialization) or an
+    unregistered device gives `EXT2_ESTALE`, and the reader stays stale until it is closed,
+    even if the device looks unchanged again.
+  - An unavailable device gives `EXT2_EUNAVAIL` and the reader recovers with the device.
+- **Concurrency:** operations on one reader are serialized. A thread that finds the reader busy
+  waits on its wait queue, at most 1024 times. Readers on different devices, or several readers
+  on one device, are independent.
+- **Read-only:** the reader never calls `blk_write`, and the block layer has no write path.
+
+### 7.6 Fixtures (`scripts/mkext2fixtures.sh`, built into `build/ext2/`)
+
+Images are built with:
+- `mke2fs -d` with a fixed UUID, hash seed and label;
+- root owner 0:0, `E2FSPROGS_FAKE_TIME`, and source times set with `touch -d`;
+- each image built twice and compared, checked by `e2fsck -fn`, made read-only, and recorded in
+  `SHA256SUMS` (checked again after every run).
+
+File contents come from `scripts/fixgen.c`, a seeded generator that folds the offset into
+every word, so a misplaced block is visible. The manifests are written from the **source
+trees**: sizes, link counts, modes, SHA-256 (hashed ranges for files above 16 MiB), symbolic
+link targets and directory child counts, plus the geometry from `dumpe2fs`.
+
+| Image | Geometry | Notable contents |
+|---|---|---|
+| `ext2-1k` | 1 KiB blocks, 8 groups of 1024 blocks (backups in 1, 3, 5, 7), 256-byte inodes, 255 reserved GDT blocks | common tree; boundary files 1, 1023, 1024, 1025, 12288, 12289 (first indirect), 274432, 274433 (first double indirect); 64 MiB sparse file with data in the triple-indirect range |
+| `ext2-htree` | as `ext2-1k`, after `e2fsck -fyD` | the same tree with htree-indexed directories |
+| `ext2-2k` | 2 KiB blocks, 2 groups, 128-byte inodes | common tree; boundaries up to 1,073,153 bytes (first double indirect); 513 MiB sparse file |
+| `ext2-4k` | 4 KiB blocks, 4 groups, 256-byte inodes | common tree; boundaries 49152/49153 and 4,243,456/4,243,457; 4 GiB sparse file (`large_file`, triple indirect) |
+| `ext2-nofeat` | 1 KiB blocks, 2 groups, `-O none` (no `filetype`: entry type unknown, backups in every group) | small tree |
+| `ext2-empty` | 1 KiB blocks, 1 group | root and lost+found only |
+
+**The common tree contains:**
+- a small text file, an empty file and an empty directory;
+- a 9-level nested path;
+- the same name in three directories;
+- a 255-byte file name;
+- a hard link;
+- a FIFO;
+- a fast and a slow symbolic link, and a link to a directory;
+- a 100,000-byte file;
+- a 200-entry directory spanning several blocks.
+
+Image hashes (identical across separate builds on this host):
+
+| Image | SHA-256 |
+|---|---|
+| `ext2-1k` | `b73a379294278454842d2dce7de93176ba6c32e730b6ea6dd47ab59c9e48e11b` |
+| `ext2-2k` | `4bb42068b8bbcffa1256d6518d86b9c20b88fe3c0ec03dc4bfa389442251937b` |
+| `ext2-4k` | `b7f228ccb58077e5893cdf618c0f97a941eebda100124f903cf0070e4bf0bcff` |
+| `ext2-htree` | `58c03b34ea62af1e6877e8f99bc9211ad940ee5f74d37a54d2f34d742df08432` |
+| `ext2-nofeat` | `db85e68d9b32ad31633f4c54d9872007151a0c60a4f0b0571472077ca97c2fbe` |
+| `ext2-empty` | `c916a7d9958e9c0f18390d095f7234829e8fe572d00406e98ac704c9470da46b` |
+
+`e2fsck -D` stamps `s_wtime` and `s_lastcheck` with the wall clock unless `E2FSCK_TIME` is
+set. One regression run caught this: the htree image differed between its two builds, and
+the script stopped. The script now sets `E2FSCK_TIME` and builds each image twice at least a
+second apart.
+
+### 7.7 Tests (`selftest_ext2.c`)
+
+**Every image:** SHA-256 vectors (empty, "abc", the two-block FIPS vector), refusal of invalid
+devices, a clean audit.
+
+**`VOS_TEST_CASE=ext2`** (94 cases; QEMU with 128 MiB, 2 GiB and `-cpu max`; the 1 KiB
+image also attached through virtio-blk):
+- **Manifests:** each of the six images, served by a test-only block device backed by its GRUB
+  module, matches every line of its manifest:
+  - 250 lines for 1k, 2k, 4k and htree, 15 for nofeat, 10 for empty;
+  - geometry;
+  - each directory's entries, types and `.`/`..`;
+  - each file's size, links, mode and SHA-256, read in chunks of 7, 512, 1000, 4096 or 65536
+    bytes;
+  - sparse ranges with holes;
+  - link targets;
+  - FIFOs.
+- **Path and argument errors:**
+  - `/`, `..` of the root, relative paths with `..`;
+  - hard links, and repeated names in different directories;
+  - 255 vs 256-byte names;
+  - `ENOENT`, `ENOTDIR`, `ELOOP` (link not followed), and the link itself;
+  - empty components;
+  - 65 components;
+  - paths above 1024 bytes;
+  - `EISDIR`, `ENOTREG`;
+  - read-only, user and wrapping buffers;
+  - reads past the end;
+  - reserved, zero, out-of-range and unused inodes;
+  - a cookie inside a record;
+  - a short link buffer;
+  - two independent readers;
+  - a closed reader.
+- **46 corrupted or failing images,** each refused with its own error and diagnostic, with no
+  reader, device or frame left over. The full list is in section 7.8.
+- **Lifecycle:** device unavailable then available; epoch change gives `ESTALE`, which stays
+  stale; device removed while open; open of a removed device; 100 open/read/close cycles; a full
+  slot table (`EXT2_EBUSY`). No leak.
+- **Concurrency:** two threads read two files through one reader while every device read
+  yields. Both SHA-256 values are exact.
+- **virtio-blk:**
+  - a kernel thread walks the 1 KiB image's whole manifest through the real driver while three
+    user programs run (and are preempted);
+  - `vblk_reinit` makes the reader stale;
+  - `vblk_shutdown` while it is open makes it stale;
+  - a new reader after reinitialization works;
+  - all audits are clean.
+
+### 7.8 Corruption results
+
+All 46 cases, each with its exact expected error and diagnostic (`ext2_problem()`), and with
+no reader, device or frame left over afterwards (open count 0, `ext2_audit`, `blk_audit`):
+
+| Corruption (on the 1 KiB image unless noted) | Detected at | Result |
+|---|---|---|
+| magic 0x1234 | open | `ENOTEXT2` "no ext2 magic number" |
+| revision 0 | open | `EUNSUPP` revision |
+| block-size exponent 3 (8 KiB) and 2³²−1 (no shift overflow) | open | `EUNSUPP` "block size above 4 KiB" |
+| incompat `extents`, an unknown incompat bit | open | `EUNSUPP` incompatible feature |
+| ro_compat `metadata_csum` | open | `EUNSUPP` read-only-compatible feature |
+| compat `has_journal` | open | `EUNSUPP` compatible feature (journal) |
+| state "errors" | open | `EUNSUPP` not cleanly unmounted |
+| inode size 100 | open | `EUNSUPP` inode size |
+| blocks per group 0, inodes per group 0 | open | `ECORRUPT` |
+| inode count ≠ groups × inodes per group | open | `ECORRUPT` |
+| block count needing millions of groups | open | `EUNSUPP` more groups than supported |
+| first data block 0 with 1 KiB blocks | open | `ECORRUPT` |
+| device half the size of the file system (truncated image) | open | `ECORRUPT` truncated |
+| group 0 inode table past the file system | open | `ECORRUPT` outside its group |
+| group 1 block bitmap pointing into group 0 | open | `ECORRUPT` outside its group |
+| root inode as a regular file | open | `ECORRUPT` root not a directory |
+| root inode cleared in the inode bitmap | open | `ECORRUPT` not marked in use |
+| root directory: record length 0 (would never advance), 13, past the block end | open | `ECORRUPT` invalid length |
+| root directory: name longer than its record | open | `ECORRUPT` |
+| root directory: first entry not "." | open | `ECORRUPT` |
+| root entry naming an inode beyond the count; name containing '/' | open (the whole root block is validated) | `ECORRUPT` |
+| entry type "directory" for a regular file | lookup | `ECORRUPT` type differs |
+| entry naming reserved inode 7 | lookup | `ECORRUPT` reserved inode |
+| inode with the extents flag | stat | `EUNSUPP` |
+| inode with 0 links | stat | `ECORRUPT` |
+| inode block count of 1 sector (1 KiB blocks) | stat | `ECORRUPT` |
+| file size beyond the block map (`i_size_high` 0xFFFF) | stat | `ECORRUPT` |
+| directory size 1000 (not whole blocks) | resolve | `ECORRUPT` |
+| data pointer past the file system / into the inode table / into the reserved GDT blocks / into group 3's backup superblock | read | `ECORRUPT` outside the data blocks |
+| indirect block in the inode table | read | `ECORRUPT` indirect block |
+| indirect block entry past the file system | read | `ECORRUPT` |
+| hole in a directory | resolve | `ECORRUPT` |
+| directory cycle (`/deep/a/b` → `/deep`), path of 81 components around it | resolve | the cycle resolves (it is a valid link); the long path ends with `ETOODEEP` |
+| slow symbolic link as long as a block | readlink | `ECORRUPT` |
+| zero data pointer in a file | read | **not an error**: a hole, read as zeros |
+| device error on the root inode's sector | open | `EIO` |
+| device error in a file's data block | read | `EIO`; the reader stays usable |
+
+The corruptions are overlays on a valid image, applied by the test block device, which also
+truncates the device or fails a sector. The image files themselves stay unchanged (checked by
+`SHA256SUMS`).
+
+### 7.9 Mutations
+
+Thirty-five mutations of `ext2.c`. Each was applied to the clean tree, built successfully,
+run in the `ext2` configuration (exit status and marker checked, 240 s limit) and restored.
+- A build failure or a timeout is never counted as a detection; none occurred.
+- **33 were caught** by concrete failing assertions. One of them (E25) was missed by the first
+  batch, and caught after a test was added.
+- **2 are equivalent** and were not detected.
+
+| # | Mutation | Result |
+|---|---|---|
+| E1 | magic not checked | caught |
+| E2 | incompatible features not checked | caught |
+| E3 | read-only-compatible features not checked | caught |
+| E4 | journal (`has_journal`) accepted | caught |
+| E5 | unclean state accepted | caught |
+| E6 | truncation (file system larger than the device) not checked | caught |
+| E7 | inode count not checked against the groups | caught |
+| E8 | group-descriptor ranges not checked | caught |
+| E9 | record-length floor (≥ 8) removed | caught: the record bound reports "more records than fit" instead of the expected diagnostic (without that bound this mutation would loop forever) |
+| E10 | name length within the record not checked | caught |
+| E11 | "." first not checked | caught |
+| E12 | entry inode range not checked | caught |
+| E13 | reserved inodes reachable through entries | caught |
+| E14 | entry type not compared with the inode | caught |
+| E15 | inode bitmap (allocation) not checked | caught |
+| E16 | data-interpretation inode flags not checked | caught |
+| E17 | metadata blocks accepted as data blocks | caught |
+| E18 | reserved GDT blocks not treated as metadata | caught |
+| E19 | sparse_super backups ignored (only groups 0 and 1) | caught (the group 3 backup case) |
+| E20 | indirect blocks not checked | caught |
+| E21 | file size against the block map not checked | caught |
+| E22 | directory holes accepted | caught |
+| E23 | path depth unlimited | caught |
+| E24 | symbolic link inside a path not refused | caught |
+| E25 | epoch not checked when an operation starts | **missed at first**: every device read re-checks the epoch. After adding "even `ext2_info`, which reads nothing, is `EXT2_ESTALE`" (commit `da621d5`), **caught** |
+| E26 | a stale reader forgotten (dead flag ignored) | caught |
+| E27 | caller buffer not checked | caught |
+| E28 | path length not checked | caught |
+| E29 | no per-reader serialization | **not detected, equivalent under the current design**: a thread can only be switched inside a device read, and every shared buffer of the reader is filled at the end of a read and consumed before the next one. The lock is kept for future yield points; this is documented, not tested. |
+| E30 | a failed open keeps its slot | caught |
+| E31 | first data block not checked | caught |
+| E32 | group limit not checked | caught (the descriptor table would overflow; the test sees the wrong result) |
+| E33 | symbolic-link length not checked | caught |
+| E34 | record-count bound removed | **not detected, equivalent**: the record-length checks already bound the loop. The bound exists so that E9 fails detectably instead of hanging. |
+| E35 | holes not zeroed | caught |
+
+### 7.10 Regression
+
+Two full regressions were run from clean builds:
+- **Run 1:** at `4e7ffcd`, before the test added in `da621d5`.
+- **Run 2:** at the final code (`da621d5`; the documentation commit changes no code).
+
+| Run | Result |
+|---|---|
+| Reproducibility (both runs) | two clean builds of the production x86_64 `vos.bin`: identical (`50a5d831…b81a80`) |
+| `make test` | run 1: exit 0, 62 runs passed (59 + 3 ext2 runs), 0 failed, 11 fault comparisons, `test-user-elf` 290/0. Run 2: **exit 2, `stress-max` failed once** (see below; 35 runs before it passed). Rerun of `make test` on the final code: exit 0, 62 passed, 0 failed, 11 fault comparisons, 290/0 |
+| `make ARCH=x86_64 test` | runs 1 and 2: exit 0, 62 passed, 0 failed, 11 fault comparisons, 290/0 |
+| `make ARCH=i386 test` | runs 1 and 2: exit 0 |
+| `make test-all` | runs 1 and 2: exit 0, 63 passed, 0 failed, 11 fault comparisons, 290/0 |
+| `git diff --check` | clean |
+| i386 `vos.bin` | `0760e7eb8ecfcb8545f4126f5a369b0fadfc5163ad9e95c5fba2a81d45afb9dd` (unchanged) |
+| `hello.elf` | `c6c6416195a0f18d680d7f8f19be52ce02ff02912ef3bac45324fbe88006cd06` (unchanged) |
+| Fixtures | `build/vblk/disk.img` and all six ext2 images unchanged after every run (`SHA256SUMS`) |
+
+**The intermittent `stress-max` failure.** In run 2's `make test`, the N2.5 stress check "a
+receiver blocked for 30 ticks used at most 1 tick while two endless loops shared the CPU"
+failed once under `-cpu max`. Its other self-tests passed, including the four ext2 sanity
+cases, which are the only N3.3 code in that image. The same image passed in the next two
+suites of the same run.
+
+Afterwards, `stress-max` was run 15 times on the final build and 15 times on the N3.2 baseline
+(`041797e`) built in a separate worktree. There were no failures on either. The check combines
+timing-dependent conditions (each spinner ≥ 10 ticks, the receiver ≤ 1 tick and ≤ 2 traps
+within 30 ticks under TCG). It is recorded as a rare intermittent failure, not attributed to
+N3.3, and its expectation was not changed.
+
+The reader commit alone (`8ab7e54`) passed `make ARCH=x86_64 test` in a separate worktree:
+59 runs, 11 fault comparisons, 288 checks.
+
+Also covered unchanged:
+- **N2:** isolation, IPC, stress and scheduling;
+- **N3.0:** mapping;
+- **N3.1/N3.2:** driver and block-layer suites (the vblk images ran unchanged, plus the ext2
+  sanity cases);
+- fault comparisons;
+- static user/ELF checks.
+
+ABI v0 and v1 are unchanged: no file under `user/` or `docs/abi/` changed, and `hello.elf` is
+byte-identical.
+
+### 7.11 Memory and headroom
+
+`__kernel_phys_end` (limit `0x400000`):
+
+| Image | N3.2 | N3.3 | Room left |
+|---|---|---|---|
+| production `build/x86_64` | `0x193000` | `0x19f000` (+48 KiB) | 2436 KiB |
+| main test image | `0x21b000` | `0x226000` | 1896 KiB |
+| `vblk` test image | `0x229000` | `0x234000` | 1840 KiB |
+| `ext2` test image (largest) | — | `0x240000` | 1792 KiB |
+
+The 48 KiB production growth is the reader's code and its four static slots: each slot holds a
+4 KiB block buffer, a 512-byte sector buffer and 256 group records. The reader allocates no PMM
+frames; it reads through the block layer, whose cache (32 frames) and the virtio-blk DMA pool
+(6 frames) are unchanged from N3.2.
+
+In the `ext2` test image the PMM self-test found 22,221 free frames at 128 MiB, about 38 MiB
+fewer than other images because of the six images and manifests GRUB loads as modules. Frame
+accounting matched the oracle exactly in every image.
+
+### 7.12 Known limitations
+
+- **Profile:**
+  - no extents, `flex_bg`, `64bit`, `meta_bg`, journal (ext3), checksums, inline data,
+    encryption or casefolding;
+  - no rev-0 file systems;
+  - at most 256 groups;
+  - htree indexes are ignored (linear lookups, O(n) per directory).
+- **Symbolic links** are never followed. Their targets are readable for a future VFS to
+  interpret.
+- **No caching** of inodes or directories beyond the block cache. Every lookup re-reads and
+  re-validates the blocks it needs, which is safe but slow for deep paths.
+- **One operation at a time per reader.** A reader waiting for the device holds it; others
+  wait.
+- **Waits:** a thread blocked on a busy reader is bounded by count (1024), not by time.
+- **Diagnostics:** `ext2_problem()` is shared by all threads and is diagnostic only.
+- **Metadata not cross-checked:** block bitmaps, free counts and `i_blocks` against the mapped
+  blocks are not compared. A file may share blocks with another file without detection, and
+  reading is still safe.
+- **Fixture reproducibility depends on e2fsprogs 1.47.2.** The script detects
+  non-reproducible output; another version may produce other (valid) images.
+- **QEMU TCG only.**
+
+### 7.13 Requirements for VFS integration (later milestones)
+
+1. **Namespace and mounting:** which reader serves which directory handle (D-S7 layout; no
+   global root for applications).
+2. **Handle-based file objects** on top of inode numbers, with rights and per-handle offsets
+   (D-S8, ABI v2), and copy-out to user memory through the existing validated user-copy
+   routines.
+3. **A rule for a process killed while its thread waits** for a busy reader or a device.
+4. **Interrupt-driven block I/O (N3.4)** before user programs can trigger disk reads.
+5. **Symbolic-link resolution policy** (whether links are followed, bounds), and the name
+   decisions D-S5 and D-S6.
+6. **Caching of inodes and directory lookups** if lookups are too slow, with the same epoch
+   invalidation as the block cache.
+
+## 8. Recommended N3.4 scope [Proposal]
+
+Interrupt-driven virtio-blk completion, as designed in section 6.7:
+- route the device's INTx line (or MSI-X) to a handler that acknowledges the ISR and wakes the
+  waiting threads;
+- waiters block instead of polling;
+- a per-request timeout from timer ticks;
+- a defined behaviour for a waiter whose process is killed.
 
 Tests:
-- `mke2fs -d` images built reproducibly on the host (to be verified), with a host-side listing
-  as the fixture;
-- a set of deliberately corrupted images (superblock, group descriptors, inode, block
-  pointers, directory records, loops), each refused for its intended reason without a panic.
+- disk reads that leave the CPU entirely to other programs;
+- interrupt acknowledgement and spurious-interrupt handling;
+- timeouts;
+- kills during I/O;
+- the existing block-layer and ext2 suites unchanged.
 
-Still not in N3.3:
-- mounting into any namespace;
-- file system calls (N3.5);
-- interrupts (N3.4);
-- any write.
+Still not in N3.4: file system calls, mounting, writes.

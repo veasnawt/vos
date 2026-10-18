@@ -140,7 +140,13 @@ Every QEMU run is headless, sequential and has a timeout. The x86_64 tests inclu
   disk in the disk images. They cover the device registry, request validation, the read-only
   cache (counted hits, misses and evictions, LRU, exhaustion, failed loads, invalidation after
   resets, corruption detection), concurrent readers, and shutdown and reinitialization with
-  frame accounting.
+  frame accounting;
+- ext2 tests (since N3.3): six deterministic ext2 images built with `mke2fs -d`
+  (`scripts/mkext2fixtures.sh`; 1, 2 and 4 KiB blocks, htree directories, no features, empty).
+  Every file, directory and link is compared with a manifest written on the host from the
+  source tree (SHA-256 per file). The tests also cover path errors, 46 corrupted or failing
+  images refused for the intended reason, device reset and removal, concurrent readers, and
+  the 1 KiB image read through virtio-blk beside running programs.
 
 ## Layout
 
@@ -171,8 +177,8 @@ The `m1-32bit` tag marks the original known-good 32-bit baseline.
   timer preemption), N2.4 (channels, ABI v1) and N2.5 (stress, audits, closure) are done: N2
   is complete; its closure (section 3.7) lists guarantees, limits and risks
 - `docs/plans/n3-storage.md` – the N3 roadmap (storage, proposal); N3.0 (storage design, kernel
-  map extended to 4 MiB of 4 KiB pages), N3.1 (read-only, polled virtio-blk driver) and N3.2
-  (block layer and read-only cache) are done
+  map extended to 4 MiB of 4 KiB pages), N3.1 (read-only, polled virtio-blk driver), N3.2
+  (block layer and read-only cache) and N3.3 (read-only ext2 reader) are done
 - `docs/architecture/storage.md` – the storage architecture proposal: layers, virtio-blk, ext2
   (read-only first), layout, naming, permissions, crash behaviour, open decisions
 - `docs/vision/product-direction.md` – provisional long-term product direction (not a specification)

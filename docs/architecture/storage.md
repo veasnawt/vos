@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| Status | **Proposal (N3.0), partly implemented.** N3.1 implemented layer 1: a read-only, polled virtio-blk driver (`docs/plans/n3-storage.md` section 5). N3.2 implemented layers 2 and 3: a block-device registry, device-independent errors, validated read-only requests and a bounded read-only cache (section 6 there). There is still no file system, no file system call and no writable persistent state. Decisions D-S1, D-S2, D-S3, D-S7 and D-S8 were approved on 2026-10-18 (section 12). |
+| Status | **Proposal (N3.0), partly implemented.** N3.1 implemented layer 1: a read-only, polled virtio-blk driver (`docs/plans/n3-storage.md` section 5). N3.2 implemented layers 2 and 3: a block-device registry, device-independent errors, validated read-only requests and a bounded read-only cache (section 6 there). N3.3 implemented layer 4 as a kernel-internal, read-only ext2 reader (section 7 there). There is still no VFS or mounting, no file system call and no writable persistent state. Decisions D-S1, D-S2, D-S3, D-S7 and D-S8 were approved on 2026-10-18 (section 12). |
 | Date | 2026-10-18 (written at `8e30f9b`, the end of N2) |
 | Scope | The layered storage stack from the device driver to the file API; the first device and file-system format; the file-system layout, naming, ownership and permission model; crash and power-loss behaviour |
 | Out of scope | Implementation (N3.1 and later); networking and remote file systems; encryption; graphics; package installation (only its storage needs) |
@@ -92,6 +92,13 @@ No performance numbers appear here because none have been measured.
   - DMA frames of refused or stopped devices released after a confirmed reset;
   - a driver that yields while it waits.
   - Details: `docs/plans/n3-storage.md` section 6.
+- **Since N3.3** (`arch/x86_64/ext2.{h,c}`):
+  - a read-only ext2 reader on the block layer, with the exact profile of
+    `docs/plans/n3-storage.md` section 7.2;
+  - operations: open/close, info, stat, lookup, path resolution (links not followed),
+    readdir, read, readlink;
+  - every on-disk field is validated before use;
+  - not exposed to programs.
   - Details, tests and limits: `docs/plans/n3-storage.md` section 5.
 
 ---
@@ -251,6 +258,11 @@ R7. No licence or legal obstacle to an independent implementation.
 | Custom VOS format | Full control (capability metadata, copy-on-write, checksums) | Own mkfs, fsck and inspection tools; no external checker for tests; all format and recovery bugs are ours | **Not now.** Only with a concrete technical requirement that existing formats fail, never for branding |
 
 ### 5.3 Recommended ext2 profile [Proposal]
+
+*N3.3 implemented a stricter version of this profile. Read-only-compatible features other
+than `sparse_super` and `large_file`, and compatible features other than `ext_attr`,
+`resize_inode` and `dir_index`, are refused rather than mounted read-only. The exact profile is
+in `docs/plans/n3-storage.md` section 7.2.*
 
 **Accept:**
 - revision 1 (dynamic);
