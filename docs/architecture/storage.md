@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| Status | **Proposal (N3.0).** Nothing in this document is implemented. VOS has no storage driver, no file system, no file system calls and no writable persistent state. |
+| Status | **Proposal (N3.0), partly implemented.** N3.1 implemented layer 1 and a minimal layer 2: a read-only, polled virtio-blk driver behind a block-device interface without a write operation (`docs/plans/n3-storage.md` section 5). There is still no file system, no file system call and no writable persistent state. Decisions D-S1, D-S2, D-S3, D-S7 and D-S8 were approved on 2026-10-18 (section 12). |
 | Date | 2026-10-18 (written at `8e30f9b`, the end of N2) |
 | Scope | The layered storage stack from the device driver to the file API; the first device and file-system format; the file-system layout, naming, ownership and permission model; crash and power-loss behaviour |
 | Out of scope | Implementation (N3.1 and later); networking and remote file systems; encryption; graphics; package installation (only its storage needs) |
@@ -77,6 +77,13 @@ No performance numbers appear here because none have been measured.
   - channels and handles with rights and generations (ABI v1).
 - There is no general kernel heap, no PCI enumeration and no DMA mapping layer.
 - The kernel is not preemptible and runs system calls with interrupts disabled.
+- **Since N3.1** (`arch/x86_64/pci.c`, `virtio_blk.c`, `blockdev.h`):
+  - Bus 0 is scanned for a virtio-blk device, which is driven read-only through the modern
+    transport. Its registers are reached through the PCI configuration access capability, so
+    no MMIO is mapped.
+  - One polled split virtqueue, with a 6-frame DMA pool.
+  - `struct blockdev` with a single `read` operation.
+  - Details, tests and limits: `docs/plans/n3-storage.md` section 5.
 
 ---
 
@@ -465,15 +472,15 @@ that limit to 4 MiB (`docs/plans/n3-storage.md`).
 
 | ID | Decision | Recommendation |
 |---|---|---|
-| D-S1 | First storage device | virtio-blk, modern PCI, polled first, interrupts next |
-| D-S2 | First on-disk format | ext2 revision 1, restricted profile (section 5.3), read-only |
-| D-S3 | Placement | In the kernel first, behind the layer interfaces; move to user space only after IOMMU or DMA confinement exists |
+| D-S1 | First storage device | virtio-blk, modern PCI, polled first, interrupts next. **Approved 2026-10-18; implemented in N3.1.** |
+| D-S2 | First on-disk format | ext2 revision 1, restricted profile (section 5.3), read-only. **Approved 2026-10-18 as the target; no ext2 code yet.** |
+| D-S3 | Placement | In the kernel first, behind the layer interfaces; move to user space only after IOMMU or DMA confinement exists. **Approved 2026-10-18.** |
 | D-S4 | Write strategy for data volumes | Decide before any write code: ext2 ordered writes + fsck, journal, or copy-on-write (section 5.3) |
 | D-S5 | Case sensitivity | Case-sensitive exact bytes; collisions by case prevented by user-space policy if wanted |
 | D-S6 | Unicode normalisation of names | Open: NFC on creation, or none |
-| D-S7 | Layout | `/system`, `/applications`, `/users`, `/configuration`, `/temporary` (section 9.3) |
-| D-S8 | File ABI | New ABI version (v2), handle-relative calls only, negotiated through the ELF ABI note |
-| D-S9 | Cache size and per-process limits | Fixed numbers chosen in N3.1 from the measured kernel budget |
+| D-S7 | Layout | `/system`, `/applications`, `/users`, `/configuration`, `/temporary` (section 9.3). **Provisionally approved 2026-10-18; not built into the block layer.** |
+| D-S8 | File ABI | New ABI version (v2), handle-relative calls only, negotiated through the ELF ABI note. **v2 reserved for file calls (2026-10-18); not defined yet.** |
+| D-S9 | Cache size and per-process limits | Fixed numbers chosen in N3.2 from the measured kernel budget |
 
 ## 13. Risks
 
