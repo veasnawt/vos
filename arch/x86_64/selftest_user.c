@@ -309,6 +309,111 @@ static void test_copy_from_user(void)
     expect(pmm_free_count() == f0, "copy_from_user tests leave no frame behind");
 }
 
+/* ---- copy_to_user on a process address space (not running) ---- */
+
+static uint8_t tbuf[300];
+
+/* The bytes of user address va in proc (through the kernel alias), or -1 if unmapped. */
+static int ubyte(uint64_t va)
+{
+    struct vmm_mapping m;
+
+    if (vmm_lookup(proc.root, va, &m) != VMM_OK)
+        return -1;
+    return *(volatile uint8_t *)phys_to_virt(m.pa);
+}
+
+static int stack_all(uint8_t v)
+{
+    for (int i = 0; i < PROC_STACK_PAGES; i++) {
+        const uint8_t *s = phys_to_virt(proc.page_pa[proc.npages - PROC_STACK_PAGES + i]);
+        for (unsigned k = 0; k < PAGE_SIZE; k++)
+            if (s[k] != v)
+                return 0;
+    }
+    return 1;
+}
+
+static void stack_fill(uint8_t v)
+{
+    for (int i = 0; i < PROC_STACK_PAGES; i++)
+        memset(phys_to_virt(proc.page_pa[proc.npages - PROC_STACK_PAGES + i]), v, PAGE_SIZE);
+}
+
+static void test_copy_to_user(void)
+{
+    static const uint8_t code[] = "copy-to-user code bytes";
+    uint64_t f0 = pmm_free_count(), pa;
+
+    if (proc_create(&proc, "test", code, sizeof(code)) != PROC_OK) {
+        expect(0, "process for copy_to_user tests");
+        return;
+    }
+    for (unsigned i = 0; i < sizeof(tbuf); i++)
+        tbuf[i] = (uint8_t)(i * 7 + 1);
+    stack_fill(0xEE);
+
+    expect(copy_to_user(proc.root, 0, tbuf, 0) == 0 && stack_all(0xEE), "len 0: success, pointer not examined");
+    expect(copy_to_user(proc.root, USER_STACK_START + 100, tbuf, 50) == 0 && ubyte(USER_STACK_START + 99) == 0xEE &&
+           ubyte(USER_STACK_START + 100) == tbuf[0] && ubyte(USER_STACK_START + 149) == tbuf[49] &&
+           ubyte(USER_STACK_START + 150) == 0xEE, "valid destination written exactly, nothing around it");
+    int cross = copy_to_user(proc.root, USER_STACK_START + PAGE_SIZE - 3, tbuf, 6) == 0;
+    for (int i = 0; i < 6; i++)
+        cross &= ubyte(USER_STACK_START + PAGE_SIZE - 3 + i) == tbuf[i];
+    expect(cross, "destination crossing two writable pages written");
+    expect(copy_to_user(proc.root, USER_STACK_END - 1, tbuf, 1) == 0 && ubyte(USER_STACK_END - 1) == tbuf[0],
+           "last writable user byte written");
+
+    stack_fill(0xEE);
+    uint8_t code0 = (uint8_t)ubyte(PROC_CODE_VA);
+    static const struct { uint64_t p; size_t n; const char *what; } bad[] = {
+        { 0, 5, "null pointer" },
+        { NULL_GUARD_END - 2, 4, "range starting in the null guard" },
+        { PROC_CODE_VA, 4, "read-only, executable code page" },
+        { PROC_CODE_VA + PAGE_SIZE - 2, 5, "range running from code into an unmapped page" },
+        { 0x500000, 5, "unmapped page" },
+        { USER_STACK_END - 2, 4, "range running from the stack into the unmapped top page" },
+        { USER_STACK_GUARD + PAGE_SIZE - 2, 4, "range from the stack guard page into the stack" },
+        { KERNEL_VMA + 0x100000, 5, "kernel-half address (mapped, supervisor)" },
+        { 0xFFFFFFFFFFFFFF80ULL, 0x100, "range wrapping past 2^64" },
+        { 0x0000800000000000ULL, 5, "first non-canonical address" },
+        { 0x00007FFFFFFFFFF0ULL, 0x20, "range crossing into the non-canonical hole" },
+        { USER_STACK_START, (size_t)-1, "length near 2^64" },
+    };
+    int bad_ok = 1;
+    for (unsigned i = 0; i < sizeof(bad) / sizeof(bad[0]); i++) {
+        int ok = copy_to_user(proc.root, bad[i].p, tbuf, bad[i].n) == -VOS_EFAULT && stack_all(0xEE) &&
+                 ubyte(PROC_CODE_VA) == code0;
+        if (!ok) {
+            serial_puts("selftest:   copy_to_user accepted: ");
+            serial_puts(bad[i].what);
+            serial_puts("\r\n");
+        }
+        bad_ok &= ok;
+    }
+    expect(bad_ok, "every invalid destination refused with -VOS_EFAULT; not one byte written anywhere");
+
+    /* Supervisor-only and read-only user pages in the lower half. */
+    uint64_t sup = 0, ro = 0;
+    int setup = pmm_alloc_frame(&sup) == PMM_OK && vmm_map(proc.root, 0x600000, sup, VMM_WRITE) == VMM_OK &&
+                pmm_alloc_frame(&ro) == PMM_OK && vmm_map(proc.root, 0x601000, ro, VMM_USER) == VMM_OK;
+    expect(setup, "setup: supervisor-writable and user-read-only pages");
+    if (setup) {
+        expect(copy_to_user(proc.root, 0x600000, tbuf, 1) == -VOS_EFAULT && ubyte(0x600000) == 0,
+               "supervisor-only page refused, untouched");
+        expect(copy_to_user(proc.root, 0x601000, tbuf, 1) == -VOS_EFAULT && ubyte(0x601000) == 0,
+               "user read-only page refused, untouched");
+        vmm_unmap(proc.root, 0x600000, &pa);
+        vmm_unmap(proc.root, 0x601000, &pa);
+    }
+    if (sup)
+        pmm_free_frame(sup);
+    if (ro)
+        pmm_free_frame(ro);
+    proc_destroy(&proc);
+    expect(pmm_free_count() == f0, "copy_to_user tests leave no frame behind");
+}
+
 /* ---- ring 3 ---- */
 
 static struct process last;             /* copy of the process taken before teardown */
@@ -869,6 +974,7 @@ int selftest_user(void)
     failures = cases = 0;
     test_address_space();
     test_copy_from_user();
+    test_copy_to_user();
     test_ring3_exit();
     test_debug_write();
     test_user_faults();

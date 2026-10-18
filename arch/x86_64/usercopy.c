@@ -12,13 +12,53 @@ static int user_page(uint64_t root, uint64_t va, struct vmm_mapping *m)
            (m->flags & VMM_USER) && m->pa < BOOT_MAP_LIMIT;
 }
 
+/* The same, and writable by the user (effective W over every level). */
+static int user_page_writable(uint64_t root, uint64_t va, struct vmm_mapping *m)
+{
+    return user_page(root, va, m) && (m->flags & VMM_WRITE);
+}
+
+/* [uptr, uptr + len) inside the user range, without overflow. */
+static int user_range(uint64_t uptr, size_t len)
+{
+    return uptr >= USER_IMAGE_START && uptr < LOWER_HALF_END && len <= LOWER_HALF_END - uptr;
+}
+
+int copy_to_user(uint64_t root, uint64_t uptr, const void *src, size_t len)
+{
+    struct vmm_mapping m;
+
+    if (len == 0)
+        return 0;
+    if (!user_range(uptr, len))
+        return -VOS_EFAULT;
+
+    /* Every destination page is checked before the first byte is written. */
+    uint64_t end = uptr + len;
+    for (uint64_t page = uptr & ~(PAGE_SIZE - 1); page < end; page += PAGE_SIZE)
+        if (!user_page_writable(root, page, &m))
+            return -VOS_EFAULT;
+
+    for (uint64_t va = uptr; va < end;) {
+        uint64_t chunk = PAGE_SIZE - (va & (PAGE_SIZE - 1));
+
+        if (chunk > end - va)
+            chunk = end - va;
+        if (!user_page_writable(root, va, &m))
+            panic("copy_to_user: mapping changed during the copy");
+        memcpy(phys_to_virt(m.pa), (const uint8_t *)src + (va - uptr), chunk);
+        va += chunk;
+    }
+    return 0;
+}
+
 int copy_from_user(uint64_t root, void *dst, uint64_t uptr, size_t len)
 {
     struct vmm_mapping m;
 
     if (len == 0)
         return 0;
-    if (uptr < USER_IMAGE_START || uptr >= LOWER_HALF_END || len > LOWER_HALF_END - uptr)
+    if (!user_range(uptr, len))
         return -VOS_EFAULT;
 
     uint64_t end = uptr + len;          /* <= LOWER_HALF_END: no overflow */

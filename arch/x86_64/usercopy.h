@@ -1,4 +1,4 @@
-/* Copying from user memory (plan section 9.3). */
+/* Copying from and to user memory (plan section 9.3; copy_to_user since N2.4). */
 #ifndef VOS_X86_64_USERCOPY_H
 #define VOS_X86_64_USERCOPY_H
 
@@ -28,5 +28,21 @@
  * checks and the copy.
  */
 int copy_from_user(uint64_t root, void *dst, uint64_t uptr, size_t len);
+
+/*
+ * Copy `len` bytes from the kernel buffer `src` to user address `uptr` in the
+ * address space `root` (N2.4). Returns 0, or -VOS_EFAULT with nothing
+ * written. Same rules as copy_from_user, and every page must also be
+ * writable by the user (effective W at every level): code and read-only data
+ * pages are refused like unmapped or supervisor pages. The whole range is
+ * validated before the first byte is written, and the bytes go through the
+ * kernel alias of the validated frames, never through the user address (so
+ * the write cannot fault and does not depend on SMAP). len == 0 returns 0
+ * without examining uptr. The same single-CPU, IF = 0 argument as above
+ * keeps the mappings stable between the check and the copy: the kernel is
+ * not preempted inside it, and only the process's own (blocked) thread or
+ * its teardown, after the thread is gone, changes its page tables.
+ */
+int copy_to_user(uint64_t root, uint64_t uptr, const void *src, size_t len);
 
 #endif
