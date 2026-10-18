@@ -99,6 +99,16 @@ unsigned channel_count(void);
 /* The endpoint behind p's handle h, or NULL (tests and diagnostics). */
 const struct endpoint *handle_endpoint(const struct process *p, int64_t h);
 
+/*
+ * N2.5 consistency audits: every used channel has an open end, queues within
+ * bounds in allocated frames, open ends in their owner's handle table, at
+ * most one waiter, which is the owner's blocked thread; closed ends and free
+ * records hold nothing. handles_audit checks one process's table. NULL if
+ * all hold, else the first broken invariant.
+ */
+const char *channel_audit(void);
+const char *handles_audit(const struct process *p);
+
 /* Returned by channel_recv when the caller was killed while blocked (never reaches user space). */
 #define CHANNEL_KILLED      (-1000)
 

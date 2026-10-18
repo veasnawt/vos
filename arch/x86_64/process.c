@@ -27,6 +27,32 @@ static int registered(const struct process *p)
     return 0;
 }
 
+const char *proc_audit(void)
+{
+    for (unsigned i = 0; i < PROC_TABLE; i++) {
+        const struct process *p = table[i];
+
+        if (!p)
+            continue;
+        for (unsigned j = i + 1; j < PROC_TABLE; j++)
+            if (table[j] == p)
+                return "a process is in the table twice";
+        if (p->state == PROC_RUNNING &&
+            (!p->tid || thread_state(p->tid) == THREAD_FREE || thread_stack_top(p->tid) != p->kstack_top))
+            return "a running process has no thread or not on its own kernel stack";
+        if ((p->state == PROC_EXITED || p->state == PROC_KILLED) && p->tid && thread_state(p->tid) != THREAD_FREE &&
+            thread_state(p->tid) != THREAD_RUNNING)
+            return "an ended process still has a live thread";
+        const char *why = handles_audit(p);
+        if (why)
+            return why;
+        for (unsigned h = 0; h < HANDLE_MAX; h++)
+            if ((p->state == PROC_EXITED || p->state == PROC_KILLED) && p->handles[h].ep)
+                return "an ended process still holds handles";
+    }
+    return NULL;
+}
+
 unsigned proc_count(void)
 {
     unsigned n = 0;

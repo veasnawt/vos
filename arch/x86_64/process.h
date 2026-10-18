@@ -141,6 +141,12 @@ int proc_run(struct process *p);
  * the latest the next timer interrupt), or before it first enters ring 3.
  */
 void proc_kill(struct process *p, const char *reason);
+/*
+ * N2.5: check the process table: no duplicates, every running process has
+ * its thread on its own kernel stack, ended processes hold no thread and no
+ * handles, every handle names an endpoint the process owns.
+ */
+const char *proc_audit(void);
 /* Processes that exist (begun and not destroyed). */
 unsigned proc_count(void);
 /*

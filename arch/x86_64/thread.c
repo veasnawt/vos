@@ -323,6 +323,8 @@ static void wake_sleepers(void)
         struct thread *t = &pool[i];
 
         if (t->state == THREAD_BLOCKED && t->wake_tick && !t->waiting_on && now >= t->wake_tick) {
+            if (now - t->wake_tick > stats.max_wake_late)
+                stats.max_wake_late = now - t->wake_tick;
             t->wake_tick = 0;
             t->state = THREAD_RUNNABLE;
             runq_push(t);
@@ -669,4 +671,74 @@ void sched_init(void)
     serial_puts(", idle thread id ");
     serial_dec(idle->id);
     serial_puts("\r\n");
+}
+
+/* ---- consistency audit (N2.5) ---- */
+
+static int on_queue(const struct thread *t, const struct wait_queue *q)
+{
+    unsigned n = 0;
+
+    for (const struct thread *w = q->head; w && n <= THREAD_MAX; w = w->next, n++)
+        if (w == t)
+            return 1;
+    return 0;
+}
+
+const char *sched_audit(void)
+{
+    unsigned in_runq = 0;
+
+    if (read_rflags() & RFLAGS_IF)
+        return "audit called with interrupts enabled";
+    for (const struct thread *t = runq_head; t; t = t->next) {
+        if (++in_runq > THREAD_MAX)
+            return "run queue is cyclic";
+        if (t->state != THREAD_RUNNABLE || t == idle || t == current)
+            return "run queue holds a thread that is not runnable";
+        if (!t->next && t != runq_tail)
+            return "run queue tail is wrong";
+    }
+    if (in_runq != runq_len)
+        return "run-queue length differs from its contents";
+    for (unsigned i = 0; i < THREAD_MAX; i++) {
+        const struct thread *t = &pool[i];
+        int queued = 0;
+
+        for (const struct thread *r = runq_head; r; r = r->next)
+            queued |= r == t;
+        switch (t->state) {
+        case THREAD_FREE:
+            if (t->next || t->waiting_on || t->proc || t->id)
+                return "a free thread record is not clean";
+            break;
+        case THREAD_RUNNING:
+            if (t != current)
+                return "a thread other than the current one is running";
+            break;
+        case THREAD_RUNNABLE:
+            if (t != idle && !queued)
+                return "a runnable thread is not on the run queue";
+            break;
+        case THREAD_BLOCKED:
+            if (queued)
+                return "a blocked thread is on the run queue";
+            if (t->waiting_on ? !on_queue(t, t->waiting_on) : !t->wake_tick)
+                return "a blocked thread is neither on its wait queue nor sleeping";
+            break;
+        case THREAD_DEAD:
+            return "a dead thread was not reaped";   /* reaped by the next thread that ran */
+        default:
+            return "a thread record has an invalid state";
+        }
+        if (t->state != THREAD_FREE && t->stack >= 0 &&
+            (stack_owner[t->stack] != t || !canaries_ok(t)))
+            return "a thread's stack ownership or canaries are wrong";
+        if (t->state != THREAD_FREE && t->proc && t->root == vmm_kernel_root())
+            return "a user thread runs on the kernel address space";
+    }
+    for (unsigned i = 0; i < THREAD_STACKS; i++)
+        if (stack_owner[i] && (stack_owner[i]->state == THREAD_FREE || stack_owner[i]->stack != (int)i))
+            return "a stack slot is owned by a thread that does not use it";
+    return NULL;
 }

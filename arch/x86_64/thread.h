@@ -87,6 +87,7 @@ struct sched_stats {
     uint64_t switches, yields, blocks, wakeups, sleeps, exits, reaped;
     uint64_t idle_halts, idle_irqs;     /* hlt executions, IRQs taken in ring 0 by the idle thread */
     uint64_t created, create_failed;
+    uint64_t max_wake_late;             /* N2.5: largest (tick made runnable - deadline) of a sleeper */
 };
 
 /* Turn the running boot code into thread 0 and create the idle thread. Once, IF = 0. */
@@ -141,6 +142,13 @@ unsigned thread_guard_pages(uint64_t *va, unsigned max);
 int thread_canaries_intact(void);
 /* Number of records not FREE (live, plus dead ones not yet reaped). */
 unsigned thread_count(void);
+
+/*
+ * N2.5: check every scheduler invariant (run queue, states, wait-queue
+ * membership, nothing dead left unreaped, stack ownership and canaries,
+ * user threads off the kernel root). NULL if all hold, else the first broken one.
+ */
+const char *sched_audit(void);
 
 struct exc_frame;
 /*

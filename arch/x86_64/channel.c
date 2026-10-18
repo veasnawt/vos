@@ -244,3 +244,68 @@ int64_t channel_recv(struct process *p, int64_t h, uint64_t ubuf, uint64_t cap, 
             return CHANNEL_KILLED;
     }
 }
+
+/* ---- consistency audit (N2.5) ---- */
+
+static const char *endpoint_audit(const struct endpoint *ep)
+{
+    unsigned n = 0;
+
+    if (ep->count > CHANNEL_QUEUE || ep->head >= CHANNEL_QUEUE)
+        return "endpoint queue indices out of range";
+    if (pmm_frame_state_in(pmm_kernel(), ep->queue_pa) != PMM_FRAME_ALLOCATED)
+        return "endpoint queue frame is not allocated";
+    if (!ep->open) {
+        if (ep->owner || ep->count || ep->waiters.head)
+            return "a closed endpoint has an owner, messages or waiters";
+        return NULL;
+    }
+    int held = 0;
+    for (unsigned i = 0; ep->owner && i < HANDLE_MAX; i++)
+        held |= ep->owner->handles[i].ep == ep;
+    if (!held)
+        return "an open endpoint is not in its owner's handle table";
+    for (const struct thread *w = ep->waiters.head; w; w = w->next) {
+        if (++n > 1)
+            return "more than one thread waits on an endpoint";
+        if (w->state != THREAD_BLOCKED || w->waiting_on != &ep->waiters || w->proc != ep->owner)
+            return "an endpoint waiter is not its owner's blocked thread";
+    }
+    return NULL;
+}
+
+const char *channel_audit(void)
+{
+    for (unsigned i = 0; i < CHANNEL_MAX; i++) {
+        const struct channel *c = &channels[i];
+
+        if (!c->used) {
+            if (c->ep[0].waiters.head || c->ep[1].waiters.head || c->ep[0].open || c->ep[1].open)
+                return "a free channel record has endpoints or waiters";
+            continue;
+        }
+        if (!c->ep[0].open && !c->ep[1].open)
+            return "a channel with both ends closed was not released";
+        for (int k = 0; k < 2; k++) {
+            if (c->ep[k].ch != c)
+                return "an endpoint points to the wrong channel";
+            const char *why = endpoint_audit(&c->ep[k]);
+            if (why)
+                return why;
+        }
+    }
+    return NULL;
+}
+
+const char *handles_audit(const struct process *p)
+{
+    for (unsigned i = 0; i < HANDLE_MAX; i++) {
+        const struct endpoint *ep = p->handles[i].ep;
+
+        if (!ep)
+            continue;
+        if (!ep->ch || !ep->ch->used || !ep->open || ep->owner != p || (p->handles[i].rights & ~HANDLE_RIGHTS))
+            return "a handle names an endpoint its process does not own";
+    }
+    return NULL;
+}
