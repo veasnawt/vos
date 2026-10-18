@@ -110,6 +110,13 @@ void thread_block(struct wait_queue *q);
 /* Wake the first (all) thread(s) blocked on q; returns how many were woken. */
 int thread_wake_one(struct wait_queue *q);
 int thread_wake_all(struct wait_queue *q);
+/*
+ * Wake the thread with this ID if it is blocked (on a wait queue, which it
+ * leaves, or sleeping): it becomes runnable and its blocking call returns
+ * as after a normal wakeup; the caller of that call must re-check why it
+ * waited (N2.4: proc_kill). Returns 1 if it was blocked.
+ */
+int thread_interrupt(uint64_t id);
 /* Block the caller for at least n timer ticks (woken by the idle thread). */
 void thread_sleep(uint64_t ticks);
 /* End the calling thread; its stack is reclaimed after the switch away. Not for the boot or idle thread. */

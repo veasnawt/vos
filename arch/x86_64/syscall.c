@@ -3,6 +3,7 @@
 #include "cpu.h"
 #include "exception.h"
 #include "process.h"
+#include "thread.h"
 #include "usercopy.h"
 
 void debug_emit(const char *name, const char *data, uint64_t len, void (*put)(char))
@@ -54,6 +55,24 @@ int64_t syscall_dispatch(struct process *p, struct exc_frame *f)
     switch (f->rax) {
     case SYS_DEBUG_WRITE:
         return sys_debug_write(p, f->rdi, f->rsi);
+    /* ABI v1 (N2.4): only for executables whose VOS ABI note says 1. */
+    case SYS_YIELD:
+    case SYS_CHANNEL_SEND:
+    case SYS_CHANNEL_RECV:
+    case SYS_HANDLE_CLOSE:
+        if (p->abi < 1)
+            return -VOS_ENOSYS;
+        switch (f->rax) {
+        case SYS_YIELD:
+            thread_yield();
+            return 0;
+        case SYS_CHANNEL_SEND:
+            return channel_send(p, (int64_t)f->rdi, f->rsi, f->rdx);
+        case SYS_CHANNEL_RECV:
+            return channel_recv(p, (int64_t)f->rdi, f->rsi, f->rdx, 1);
+        default:
+            return handle_close(p, (int64_t)f->rdi);
+        }
 #ifdef VOS_TEST
     case SYS_TEST_KERNEL_AC: {
         uint64_t flags;

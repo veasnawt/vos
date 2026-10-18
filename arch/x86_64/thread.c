@@ -277,6 +277,8 @@ static void reap(struct thread *t)
 {
     if (t->state != THREAD_DEAD || t == current || t == idle || t == &pool[0])
         panic("sched: reaping a thread that is not dead");
+    if (t->waiting_on || t->next)
+        panic("sched: a dead thread is still linked on a queue");
     stack_release(t);
     memset(t, 0, sizeof(*t));           /* THREAD_FREE; the ID is never reused */
     stats.reaped++;
@@ -479,6 +481,47 @@ int thread_wake_all(struct wait_queue *q)
     while (thread_wake_one(q))
         n++;
     return n;
+}
+
+/* Remove t from the wait queue it is blocked on. */
+static void unlink_waiter(struct wait_queue *q, struct thread *t)
+{
+    struct thread *prev = NULL;
+
+    for (struct thread *w = q->head; w; prev = w, w = w->next) {
+        if (w != t)
+            continue;
+        if (prev)
+            prev->next = w->next;
+        else
+            q->head = w->next;
+        if (q->tail == w)
+            q->tail = prev;
+        w->next = NULL;
+        return;
+    }
+    panic("sched: a blocked thread is missing from its wait queue");
+}
+
+int thread_interrupt(uint64_t id)
+{
+    struct thread *t = NULL;
+
+    check_entry();
+    for (unsigned i = 0; i < THREAD_MAX && !t; i++)
+        if (pool[i].state != THREAD_FREE && pool[i].id == id)
+            t = &pool[i];
+    if (!t || t->state != THREAD_BLOCKED || t == idle)
+        return 0;
+    if (t->waiting_on) {
+        unlink_waiter(t->waiting_on, t);
+        t->waiting_on = NULL;
+    }
+    t->wake_tick = 0;
+    t->state = THREAD_RUNNABLE;
+    runq_push(t);
+    stats.wakeups++;
+    return 1;
 }
 
 void thread_sleep(uint64_t ticks)

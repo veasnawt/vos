@@ -12,6 +12,7 @@
 #include "exception.h"
 #include "gdt.h"
 #include "irq.h"
+#include "channel.h"
 #include "kmap.h"
 #include "lib.h"
 #include "memlayout.h"
@@ -68,6 +69,9 @@ DECLARE_PROG(sti);
 DECLARE_PROG(iflock);
 DECLARE_PROG(irqregs);
 DECLARE_PROG(memtag);
+DECLARE_PROG(v1calls);
+DECLARE_PROG(ipcrecv);
+DECLARE_PROG(ipcsend);
 DECLARE_PROG(codewrite);
 DECLARE_PROG(execstack);
 DECLARE_PROG(guard);
@@ -937,6 +941,76 @@ static void test_preemption(void)
            thread_count() == 2, "15 rounds of two concurrent processes: every frame, record and thread returns");
 }
 
+/* ---- N2.4: ABI v1 system calls with running processes ---- */
+
+static int start_abi(struct process *p, const char *name, const uint8_t *code, size_t len, uint32_t abi,
+                     struct process *peer, uint32_t rights, uint32_t peer_rights)
+{
+    int64_t h1, h2;
+
+    if (proc_create(p, name, code, len) != PROC_OK)
+        return 0;
+    p->abi = abi;
+    if (peer && channel_create(p, rights, peer, peer_rights, &h1, &h2) != 0)
+        return 0;
+    return 1;
+}
+
+static void test_ipc_syscalls(void)
+{
+    struct process *r_ = &procs[0], *s_ = &procs[1], *b_ = &procs[2];
+    uint64_t f0 = pmm_free_count();
+    int64_t ignore;
+
+    /* ABI v0 programs cannot use ABI v1 calls. */
+    int ok = start_abi(r_, "v1calls", PROG(v1calls), 0, NULL, 0, 0) && proc_start(r_) == PROC_OK;
+    int st = finish(r_, &r[0]);
+    expect(ok && st == PROC_EXITED && r[0].exit_status == 0 && r[0].sys_enosys == 4,
+           "an ABI v0 program gets -VOS_ENOSYS for each ABI v1 call (counted by the kernel)");
+
+    /* A receiver blocks before the sender runs; the message wakes it; every register survives. */
+    ok = start_abi(r_, "ipcrecv", PROG(ipcrecv), 1, NULL, 0, 0) &&
+         start_abi(s_, "ipcsend", PROG(ipcsend), 1, NULL, 0, 0) &&
+         channel_create(r_, HANDLE_RECV, s_, HANDLE_SEND, &ignore, &ignore) == 0 && proc_start(r_) == PROC_OK;
+    thread_sleep(3);
+    int blocked = r_->state == PROC_RUNNING && thread_state(r_->tid) == THREAD_BLOCKED;
+    ok &= proc_start(s_) == PROC_OK;
+    int ss = proc_wait(s_), rs = proc_wait(r_);
+    struct vmm_mapping m;
+    int got = vmm_lookup(r_->root, 0x7FFFFFFFD000, &m) == VMM_OK &&
+              memcmp(phys_to_virt(m.pa), "hello", 5) == 0;
+    int status = r_->exit_status, sstatus = s_->exit_status;
+    proc_destroy(s_);
+    proc_destroy(r_);
+    expect(ok && blocked && ss == PROC_EXITED && sstatus == 0 && rs == PROC_EXITED && status == 5 && got,
+           "a receiver blocked in channel_recv wakes on the message: 5 bytes delivered, all registers intact");
+
+    /* Killing a blocked receiver: it leaves the wait queue, dies, and its end closes. */
+    ok = start_abi(r_, "ipcrecv", PROG(ipcrecv), 1, NULL, 0, 0) && start_abi(b_, "peer", PROG(exit42), 1, NULL, 0, 0);
+    int64_t hr, hb;
+    ok &= channel_create(r_, HANDLE_RIGHTS, b_, HANDLE_RIGHTS, &hr, &hb) == 0 && proc_start(r_) == PROC_OK;
+    thread_sleep(3);
+    blocked = thread_state(r_->tid) == THREAD_BLOCKED;
+    proc_kill(r_, "test kill");
+    st = finish(r_, &r[0]);
+    expect(ok && blocked && st == PROC_KILLED && streq(r[0].reason, "test kill") &&
+           channel_recv(b_, hb, USER_STACK_START, 256, 0) == -VOS_EPIPE,
+           "a receiver killed while blocked dies; its peer then sees -VOS_EPIPE");
+    proc_destroy(b_);
+
+    /* The sender exits before the receiver ever runs: the queued message is still delivered. */
+    ok = start_abi(r_, "ipcrecv", PROG(ipcrecv), 1, NULL, 0, 0) &&
+         start_abi(s_, "ipcsend", PROG(ipcsend), 1, NULL, 0, 0) &&
+         channel_create(r_, HANDLE_RECV, s_, HANDLE_SEND, &ignore, &ignore) == 0 && proc_start(s_) == PROC_OK;
+    ss = finish(s_, &r[1]);
+    ok &= proc_start(r_) == PROC_OK;
+    rs = finish(r_, &r[0]);
+    expect(ok && ss == PROC_EXITED && r[1].exit_status == 0 && rs == PROC_EXITED && r[0].exit_status == 5,
+           "a message sent by a process that has since exited is still received");
+    expect(pmm_free_count() == f0 && channel_count() == 0 && proc_count() == 0 && thread_count() == 2,
+           "ABI v1 tests: frames, channels, processes and threads back to baseline");
+}
+
 static struct wait_queue hold;
 
 static void holder(void *arg)
@@ -983,6 +1057,7 @@ int selftest_user(void)
     test_process_threads();
     test_preemption();
     test_thread_exhaustion();
+    test_ipc_syscalls();
     serial_puts("selftest: user ");
     serial_dec(cases);
     serial_puts(" cases, ");

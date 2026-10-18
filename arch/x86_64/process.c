@@ -327,6 +327,7 @@ __attribute__((noreturn)) static void terminate(struct process *p)
 {
     if (p->state != PROC_EXITED && p->state != PROC_KILLED)
         panic("process: terminating without a final state");
+    handles_close_all(p);               /* N2.4: peers see -VOS_EPIPE from now on */
     thread_leave_user_space();
     thread_wake_all(&p->waiters);
     thread_exit();
@@ -404,8 +405,10 @@ int proc_run(struct process *p)
 
 void proc_kill(struct process *p, const char *reason)
 {
-    if (registered(p) && p->state == PROC_RUNNING && !p->kill_reason)
+    if (registered(p) && p->state == PROC_RUNNING && !p->kill_reason) {
         p->kill_reason = reason ? reason : "killed by the kernel";
+        thread_interrupt(p->tid);       /* blocked in channel_recv: wake it so it can die */
+    }
 }
 
 uint64_t proc_user_trap(struct exc_frame *f)
@@ -480,6 +483,11 @@ uint64_t proc_user_trap(struct exc_frame *f)
     }
     if (f->vector == IDT_SYSCALL && f->rax != SYS_EXIT) {
         int64_t res = syscall_dispatch(p, f);
+        p->tick_mark = irq_ticks();     /* yield or a blocking receive: time others ran is not ours */
+        if (p->kill_reason) {           /* killed while blocked (or during the call) */
+            record(&p->trap, f);
+            kill_now(p, p->kill_reason);
+        }
         f->rax = (uint64_t)res;
         if (res >= 0)
             p->sys_ok++;

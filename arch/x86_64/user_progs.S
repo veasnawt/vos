@@ -483,6 +483,92 @@ memtag_arg:
     .quad 0
 up_memtag_end:
 
+/*
+ * N2.4: as an ABI v0 program, call the four ABI v1 system calls (2-5); each
+ * must return -VOS_ENOSYS (-1). Exit 0, or the first number that did not.
+ */
+PROG v1calls
+up_v1calls:
+    .irp n,2,3,4,5
+    mov $\n, %eax
+    mov $1, %edi
+    xor %esi, %esi
+    xor %edx, %edx
+    int $0x80
+    cmp $-1, %rax
+    mov $\n, %edi
+    jne 9f
+    .endr
+    xor %edi, %edi
+9:  mov $SYS_EXIT, %eax
+    int $0x80
+    ud2
+up_v1calls_end:
+
+/*
+ * N2.4 (ABI v1): channel_recv(1, 0x7FFFFFFFD000, 256) with every other
+ * register holding a pattern; it blocks until a message arrives. Exit with
+ * the result if every register (rdi, rsi, rdx included) survived, else 0xEE.
+ */
+PROG ipcrecv
+up_ipcrecv:
+    movabs $0x1111111111111111, %rbx
+    movabs $0x2222222222222222, %rcx
+    movabs $0x6666666666666666, %rbp
+    movabs $0x7777777777777777, %r8
+    movabs $0x8888888888888888, %r9
+    movabs $0x9999999999999999, %r10
+    movabs $0xAAAAAAAAAAAAAAAA, %r11
+    movabs $0xBBBBBBBBBBBBBBBB, %r12
+    movabs $0xCCCCCCCCCCCCCCCC, %r13
+    movabs $0xDDDDDDDDDDDDDDDD, %r14
+    movabs $0xEEEEEEEEEEEEEEEE, %r15
+    mov $1, %edi
+    movabs $0x7FFFFFFFD000, %rsi
+    mov $256, %edx
+    mov $4, %eax
+    int $0x80
+    mov %rax, -8(%rsp)
+    CHECKREG %rbx, 0x1111111111111111
+    CHECKREG %rcx, 0x2222222222222222
+    CHECKREG %rbp, 0x6666666666666666
+    CHECKREG %r8, 0x7777777777777777
+    CHECKREG %r9, 0x8888888888888888
+    CHECKREG %r10, 0x9999999999999999
+    CHECKREG %r11, 0xAAAAAAAAAAAAAAAA
+    CHECKREG %r12, 0xBBBBBBBBBBBBBBBB
+    CHECKREG %r13, 0xCCCCCCCCCCCCCCCC
+    CHECKREG %r14, 0xDDDDDDDDDDDDDDDD
+    CHECKREG %r15, 0xEEEEEEEEEEEEEEEE
+    CHECKREG %rdi, 1
+    CHECKREG %rsi, 0x7FFFFFFFD000
+    CHECKREG %rdx, 256
+    mov -8(%rsp), %rdi
+    mov $SYS_EXIT, %eax
+    int $0x80
+    ud2
+8:  mov $0xEE, %edi
+    mov $SYS_EXIT, %eax
+    int $0x80
+    ud2
+up_ipcrecv_end:
+
+/* N2.4 (ABI v1): channel_send(1, "hello", 5); exit with the result. */
+PROG ipcsend
+up_ipcsend:
+    mov $1, %edi
+    lea ipcsend_msg(%rip), %rsi
+    mov $5, %edx
+    mov $3, %eax
+    int $0x80
+    mov %eax, %edi
+    mov $SYS_EXIT, %eax
+    int $0x80
+    ud2
+ipcsend_msg:
+    .ascii "hello"
+up_ipcsend_end:
+
 /* N2.1: spin forever; only the kernel's test tick budget ends it. */
 PROG spin
 up_spin:
