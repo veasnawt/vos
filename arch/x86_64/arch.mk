@@ -11,7 +11,7 @@ ARCH_LDFLAGS    := -m elf_x86_64 -z max-page-size=0x1000
 ARCH_OBJS       := boot.o entry.o usermode.o kernel.o bootinfo.o console.o cpu.o exception.o gdt.o idt.o \
                    lib.o loader.o panic.o pmm.o process.o resv.o syscall.o usercopy.o vmm.o kmap.o irq.o pic.o pit.o thread.o thread_switch.o channel.o elf.o app.o
 ifeq ($(VOS_TEST),1)
-ARCH_OBJS       += selftest.o selftest_cpu.o selftest_elf.o selftest_ipc.o selftest_irq.o selftest_kmap.o selftest_mp.o selftest_sched.o selftest_pmm.o selftest_suite.o \
+ARCH_OBJS       += selftest.o selftest_cpu.o selftest_elf.o selftest_ipc.o selftest_irq.o selftest_kmap.o selftest_mp.o selftest_sched.o selftest_stress.o selftest_pmm.o selftest_suite.o \
                    selftest_user.o selftest_vmm.o user_progs.o
 endif
 QEMU            := qemu-system-x86_64
@@ -38,6 +38,9 @@ MULTIBOOT_CHECK := --is-x86-multiboot2
 #    N2.2: thread-overflow (#DF on IST1, CR2 in the thread's guard page),
 #    and sched-deadlock (lost-wakeup panic) must end in the expected failure
 #    (status 35).
+#    N2.5: the stress image runs mixed concurrent workloads (selftest_stress.c)
+#    with scheduler, process and channel audits, exhaustion and recovery,
+#    under qemu64, 2 GiB and -cpu max.
 #    N2.4: the ipc image runs trusted scenarios of separately built ABI v1
 #    programs talking over channels (selftest_ipc.c) under qemu64, 2 GiB and
 #    -cpu max; a verdict printed by a program must never be accepted.
@@ -169,6 +172,12 @@ arch-test: iso
 	MEM=2G scripts/exit-test.sh mp-2G build/$(ARCH)-test-mp/vos.iso 33 'selftest: mp ' 'VOS-TEST: PASS' --
 	scripts/exit-test.sh mp-max build/$(ARCH)-test-mp/vos.iso 33 'smep=on umip=on smap=on' 'selftest: mp ' \
 	    'VOS-TEST: PASS' -- -cpu max
+	$(MAKE) --no-print-directory ARCH=$(ARCH) VOS_TEST=1 VOS_TEST_CASE=stress iso
+	scripts/exit-test.sh stress build/$(ARCH)-test-stress/vos.iso 33 'stress: mixed load: ' \
+	    'stress: fairness over ' 'selftest: stress ' ' cases, 0 failed' 'VOS-TEST: PASS' --
+	MEM=2G scripts/exit-test.sh stress-2G build/$(ARCH)-test-stress/vos.iso 33 'selftest: stress ' 'VOS-TEST: PASS' --
+	scripts/exit-test.sh stress-max build/$(ARCH)-test-stress/vos.iso 33 'smep=on umip=on smap=on' \
+	    'selftest: stress ' 'VOS-TEST: PASS' -- -cpu max
 	$(MAKE) --no-print-directory ARCH=$(ARCH) VOS_TEST=1 VOS_TEST_CASE=ipc iso
 	scripts/exit-test.sh ipc build/$(ARCH)-test-ipc/vos.iso 33 'selftest: ipc ' \
 	    'ipc: s-pingpong a=ipc_ping b=ipc_echo order=b-blocked ea=exit:0 eb=exit:10 ia=10 ib=10 repeat=3 => PASS' \

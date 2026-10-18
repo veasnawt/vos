@@ -41,6 +41,8 @@ int selftest_mp(const struct boot_info *bi);
 int selftest_ipc(void);
 /* N2.4: separately built programs talking over channels, from trusted GRUB scenarios (VOS_TEST_CASE=ipc). */
 int selftest_ipc_scenarios(const struct boot_info *bi);
+/* N2.5: concurrent mixed workloads with audits, exhaustion and recovery (VOS_TEST_CASE=stress). */
+int selftest_stress(const struct boot_info *bi);
 /* Page-table manager, identity-map removal and kernel survival (restores all state). */
 int selftest_vmm(void);
 /* User address spaces and ring 3 (restores all state). */

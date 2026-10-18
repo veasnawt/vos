@@ -256,6 +256,9 @@ void kernel_main(uint32_t mb2_magic, uint32_t mb2_info)
 #ifdef VOS_TEST_CASE_ipc
     check(selftest_ipc_scenarios(&bi) == 0, "IPC scenarios");
 #endif
+#ifdef VOS_TEST_CASE_stress
+    check(selftest_stress(&bi) == 0, "N2.5 stress tests");
+#endif
 #ifdef VOS_TEST_CASE_mp
     check(selftest_mp(&bi) == 0, "multi-process tests");
 #endif
