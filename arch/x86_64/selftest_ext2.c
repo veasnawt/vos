@@ -924,6 +924,8 @@ static void test_lifecycle(void)
     md.state = BLK_DEV_READY;
     expect(ext2_stat(fs, ino, &st) == EXT2_OK, "available again: the reader works");
     md.epoch++;
+    struct ext2_info info;
+    expect(ext2_info(fs, &info) == EXT2_ESTALE, "device reset: even ext2_info, which reads nothing, is EXT2_ESTALE");
     expect(ext2_stat(fs, ino, &st) == EXT2_ESTALE, "device reset (epoch changed): EXT2_ESTALE");
     md.epoch--;
     expect(ext2_stat(fs, ino, &st) == EXT2_ESTALE && ext2_close(fs) == EXT2_OK,
