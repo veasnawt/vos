@@ -112,6 +112,7 @@ arch-test: iso
 	$(call fault-case,wx-rodata-write,'exc: #PF vec=14 err=0x3 cs=0x8' 'panic: #PF page fault')
 	$(call fault-case,wx-data-exec,'exc: #PF vec=14 err=0x11 cs=0x8' 'panic: #PF page fault')
 	$(call fault-case,wx-alias-exec,'exc: #PF vec=14 err=0x11 cs=0x8' 'panic: #PF page fault')
+	$(call fault-case,wx-small-alias-exec,'exc: #PF vec=14 err=0x11 cs=0x8' 'panic: #PF page fault')
 	$(call fault-case,wx-guard-read,'exc: #PF vec=14 err=0x0 cs=0x8' 'panic: #PF page fault')
 	$(call fault-case,kstack-overflow,'exc: #DF vec=8 err=0x0 cs=0x8' 'stack=ist1' 'panic: #DF double fault')
 	$(call fault-case,nmi-gate,'not a hardware NMI' 'exc: NMI vec=2 err=- cs=0x8' 'stack=ist2' \

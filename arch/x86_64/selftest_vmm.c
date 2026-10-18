@@ -114,6 +114,9 @@ static void test_layout_and_survival(void)
     expect(vmm_lookup(K, KERNEL_VMA + PMM_LOW_LIMIT + 0x123, &m) == VMM_OK &&
            m.pa == PMM_LOW_LIMIT + 0x123 && m.page_size == PAGE_SIZE && m.flags == 0,
            "alias of the boot code page: 4 KiB, supervisor, read-only, NX");
+    expect(vmm_lookup(K, KERNEL_VMA + KMAP_SMALL_SPAN - PAGE_SIZE + 0x123, &m) == VMM_OK &&
+           m.pa == KMAP_SMALL_SPAN - PAGE_SIZE + 0x123 && m.page_size == PAGE_SIZE && m.flags == VMM_WRITE,
+           "alias just below 4 MiB: 4 KiB page, supervisor, writable, NX");
     expect(vmm_lookup(K, KERNEL_VMA + KMAP_SMALL_SPAN + 0x123, &m) == VMM_OK && m.pa == KMAP_SMALL_SPAN + 0x123 &&
            m.page_size == 0x200000 && m.flags == VMM_WRITE &&
            vmm_lookup(K, KERNEL_ALIAS_END - 1, &m) == VMM_OK && m.pa == BOOT_MAP_LIMIT - 1 &&

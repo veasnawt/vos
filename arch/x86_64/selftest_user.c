@@ -142,6 +142,25 @@ static void test_address_space(void)
            "kernel alias visible to the process root only as supervisor");
     expect(vmm_lookup(proc.root, (uint64_t)phys_to_virt(VGA_TEXT_PHYS), &m) == VMM_OK &&
            !(m.flags & VMM_USER), "no user-accessible VGA or low-memory mapping");
+
+    /* N3.0: the 4 KiB-mapped kernel span (phys [0, 4 MiB)) through the process root and its CR3. */
+    unsigned same = 0;
+    for (uint64_t pa = 0; pa < KMAP_SMALL_SPAN; pa += PAGE_SIZE) {
+        struct vmm_mapping km, pm;
+        int kr = vmm_lookup(K, KERNEL_VMA + pa, &km), pr = vmm_lookup(proc.root, KERNEL_VMA + pa, &pm);
+
+        same += kr == pr && (kr == VMM_ENOTMAPPED || (kr == VMM_OK && km.pa == pm.pa && km.flags == pm.flags &&
+                                                      pm.page_size == PAGE_SIZE && !(pm.flags & VMM_USER)));
+    }
+    expect(same == KMAP_SMALL_SPAN / PAGE_SIZE,
+           "process root: every 4 KiB kernel page of phys [0, 4 MiB) as in the kernel root, none user");
+    volatile const uint64_t *hi = phys_to_virt(KMAP_SMALL_SPAN - PAGE_SIZE);
+    uint64_t before = *hi, during;
+    write_cr3(proc.root);
+    during = *hi;
+    write_cr3(K);
+    expect(during == before && (read_cr3() & PTE_ADDR) == K,
+           "with the process CR3 loaded the kernel reads phys 4 MiB - 4 KiB through the same alias");
     expect(proc.entry == PROC_CODE_VA && proc.user_rsp == PROC_ENTRY_RSP &&
            proc.user_rsp % 16 == 0 && proc.user_rsp + 16 <= USER_STACK_END,
            "entry RIP and 16-byte aligned RSP with 16 bytes above it");
@@ -631,6 +650,9 @@ static void test_user_faults(void)
     run_prog("kread-image", PROG(kread), 1, KERNEL_VMA + PMM_LOW_LIMIT);
     expect(killed_by(14, PF_P | PF_U) && last.trap.cr2 == KERNEL_VMA + PMM_LOW_LIMIT,
            "user read of the kernel image start (2 MiB alias page): #PF P=1 U=1");
+    run_prog("kread-small", PROG(kread), 1, KERNEL_VMA + KMAP_SMALL_SPAN - PAGE_SIZE);
+    expect(killed_by(14, PF_P | PF_U) && last.trap.cr2 == KERNEL_VMA + KMAP_SMALL_SPAN - PAGE_SIZE,
+           "user read of the second kernel page table's span (4 KiB alias page): #PF P=1 U=1");
     run_prog("nullread", PROG(nullread), 0, 0);
     expect(killed_by(14, PF_U) && last.trap.cr2 == 0, "user null read: #PF P=0 U=1, CR2 0");
     run_prog("codewrite", PROG(codewrite), 0, 0);

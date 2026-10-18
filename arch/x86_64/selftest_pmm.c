@@ -430,6 +430,8 @@ int selftest_pmm_kernel(const struct boot_info *bi, const struct resv_table *t)
     expect_protected(k, pd, "kernel page directory protected");
     expect_protected(k, ((const uint64_t *)phys_to_virt(pd))[0] & 0x000FFFFFFFFFF000ULL,
                      "kernel page table (phys 0-2 MiB) protected");
+    expect_protected(k, ((const uint64_t *)phys_to_virt(pd))[1] & 0x000FFFFFFFFFF000ULL,
+                     "kernel page table (phys 2-4 MiB) protected");
     expect_protected(k, rsp - KERNEL_VMA, "current kernel stack protected");
     expect_protected(k, gdtr.base - KERNEL_VMA, "GDT protected");
     expect_protected(k, idtr.base - KERNEL_VMA, "IDT protected");
