@@ -292,6 +292,7 @@ void proc_destroy(struct process *p)
         panic("process: destroying a process whose thread still exists");
     if ((read_cr3() & PTE_ADDR) == p->root || (read_cr3() & PTE_ADDR) != vmm_kernel_root())
         panic("process: teardown while not on the kernel address space");
+    handles_close_all(p);               /* N2.4: a process that never ran may still hold handles */
 
     for (unsigned i = 0; i < p->npages; i++) {
         if (vmm_unmap(p->root, p->page_va[i], &pa) != VMM_OK || pa != p->page_pa[i])

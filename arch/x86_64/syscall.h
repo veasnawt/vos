@@ -20,12 +20,23 @@
 
 #define SYS_EXIT            0
 #define SYS_DEBUG_WRITE     1
+#define SYS_YIELD           2   /* ABI v1 (N2.4), docs/abi/syscall-v1.md */
+#define SYS_CHANNEL_SEND    3   /* ABI v1 */
+#define SYS_CHANNEL_RECV    4   /* ABI v1 */
+#define SYS_HANDLE_CLOSE    5   /* ABI v1 */
 
 #define VOS_ENOSYS          1
 #define VOS_EINVAL          2
 #define VOS_EFAULT          3
+#define VOS_EAGAIN          4   /* ABI v1 */
+#define VOS_EPIPE           5
+#define VOS_EBADHANDLE      6
+#define VOS_ENOMEM          7
+#define VOS_EMSGSIZE        8
+#define VOS_EACCES          9
 
 #define DEBUG_WRITE_MAX     256
+#define MSG_MAX             256 /* ABI v1: largest channel message */
 
 #ifdef VOS_TEST
 /* Test builds only, never part of the ABI. */

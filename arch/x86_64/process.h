@@ -37,6 +37,7 @@
 #include <stdint.h>
 
 #include "memlayout.h"
+#include "channel.h"
 #include "thread.h"
 
 #define PROC_TABLE          8       /* processes that may exist at once */
@@ -81,6 +82,7 @@ struct process {
     uint64_t kstack_top;                /* that thread's kernel stack top = TSS.RSP0 while it runs */
     struct wait_queue waiters;          /* threads in proc_wait */
     const char *kill_reason;            /* proc_kill: end at the next kernel entry */
+    struct handle handles[HANDLE_MAX];  /* N2.4: channel endpoints it owns (channel.h) */
     int exit_status;
     const char *reason;                 /* why it was killed */
     struct proc_trap trap;

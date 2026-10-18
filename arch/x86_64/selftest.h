@@ -37,6 +37,8 @@ int selftest_sched(void);
 void selftest_sched_case(const struct boot_info *bi, int self_tests_failed);
 /* N2.3: separately built programs from GRUB modules running at the same time (VOS_TEST_CASE=mp). */
 int selftest_mp(const struct boot_info *bi);
+/* Channels and handles (N2.4): the kernel interface on processes that do not run. */
+int selftest_ipc(void);
 /* Page-table manager, identity-map removal and kernel survival (restores all state). */
 int selftest_vmm(void);
 /* User address spaces and ring 3 (restores all state). */
