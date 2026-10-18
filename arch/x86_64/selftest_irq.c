@@ -237,15 +237,29 @@ static void reset_calls(void)
     seq = 0;
 }
 
-/* A line other than 0 and 2, masked now (no handler), with the wanted trigger mode, preferring the slave. */
-static int free_line(int level)
+/* A line other than 0, 2 and `except`, masked now (no handler), with the wanted trigger mode, preferring the slave. */
+static int free_line(int level, int except)
 {
     uint16_t trig = irq_chip()->triggers(), masks = irq_expected_masks();
 
     for (int l = IRQ_LINES - 1; l > 0; l--)
-        if (l != PIC_CASCADE_IRQ && (masks & (1u << l)) && !!(trig & (1u << l)) == level && !irq_line_disabled(l))
+        if (l != PIC_CASCADE_IRQ && l != except && (masks & (1u << l)) && !!(trig & (1u << l)) == level &&
+            !irq_line_disabled(l))
             return l;
     return -1;
+}
+
+static int not_applicable;
+
+/* U1: a check this machine cannot exercise (no level-triggered line): reported, never counted as passed. */
+static void not_applicable_here(const char *what, const char *reason)
+{
+    not_applicable++;
+    serial_puts("selftest: NOT APPLICABLE: ");
+    serial_puts(what);
+    serial_puts(" (");
+    serial_puts(reason);
+    serial_puts(")\r\n");
 }
 
 static void test_handlers(void)
@@ -253,7 +267,14 @@ static void test_handlers(void)
     const struct irq_stats *st = irq_stats();
     const struct irq_chip *c = irq_chip();
     uint16_t trig = c->triggers(), m0 = c->masks();
-    int edge = free_line(0), level = free_line(1), h[IRQ_MAX_HANDLERS + 1], hh, n;
+    int edge = free_line(0, -1), level = free_line(1, -1), h[IRQ_MAX_HANDLERS + 1], hh, n;
+    /*
+     * U1: OVMF leaves every line edge triggered (ELCR 0). The tests that need
+     * a second line then use another free edge line; only the checks that
+     * need a level-triggered line are reported as not applicable.
+     */
+    int second = level > 0 ? level : free_line(0, edge);
+    int second_trig = level > 0 ? IRQ_TRIGGER_LEVEL : IRQ_TRIGGER_EDGE;
 
     serial_puts("selftest: irq: ELCR ");
     serial_hex(trig);
@@ -264,9 +285,12 @@ static void test_handlers(void)
     serial_puts("\r\n");
     expect(!(trig & ((1u << IRQ_TIMER) | (1u << 1) | (1u << PIC_CASCADE_IRQ))),
            "ELCR: the timer, keyboard and cascade lines are edge triggered");
-    expect(edge >= 8 && level > 0, "a free slave edge line and a free level line exist for the tests");
-    if (edge < 8 || level <= 0)
+    expect(edge >= 8 && second > 0, "a free slave edge line and a second free line exist for the tests");
+    if (edge < 8 || second <= 0)
         return;
+    if (level <= 0)
+        not_applicable_here("level-triggered registration and its trigger-mode refusal",
+                            "no line is level triggered in the ELCR");
 
     expect(irq_register(IRQ_TIMER, IRQ_TRIGGER_EDGE, "t", test_top, 0, 0, &hh) == IRQ_EINVAL &&
            irq_register(PIC_CASCADE_IRQ, IRQ_TRIGGER_EDGE, "t", test_top, 0, 0, &hh) == IRQ_EINVAL &&
@@ -275,8 +299,10 @@ static void test_handlers(void)
            irq_register((unsigned)edge, 7, "t", test_top, 0, 0, &hh) == IRQ_EINVAL,
            "registration refuses the timer, the cascade, line 16, a missing top half and a bad trigger mode");
     expect(irq_register((unsigned)edge, IRQ_TRIGGER_LEVEL, "t", test_top, 0, 0, &hh) == IRQ_ETRIGGER &&
-           irq_register((unsigned)level, IRQ_TRIGGER_EDGE, "t", test_top, 0, 0, &hh) == IRQ_ETRIGGER &&
-           c->masks() == m0, "registration refuses a trigger mode the ELCR does not have; masks unchanged");
+           c->masks() == m0, "registration refuses a level handler on an edge-triggered line; masks unchanged");
+    if (level > 0)
+        expect(irq_register((unsigned)level, IRQ_TRIGGER_EDGE, "t", test_top, 0, 0, &hh) == IRQ_ETRIGGER &&
+               c->masks() == m0, "registration refuses an edge handler on a level-triggered line; masks unchanged");
 
     /* Two handlers sharing a slave line. */
     reset_calls();
@@ -289,7 +315,7 @@ static void test_handlers(void)
            "registering a slave line unmasks exactly it and the cascade; audit clean");
 
     uint64_t cl0 = st->claimed[edge], un0 = st->unclaimed[edge], br0 = st->bottom_runs;
-    int other = irq_register((unsigned)level, IRQ_TRIGGER_LEVEL, "t2", test_top, test_bottom, (void *)2, &hh) == IRQ_OK;
+    int other = irq_register((unsigned)second, second_trig, "t2", test_top, test_bottom, (void *)2, &hh) == IRQ_OK;
     top_says[0] = IRQ_NONE;
     top_says[1] = IRQ_HANDLED;
     top_says[2] = IRQ_HANDLED;
@@ -354,11 +380,11 @@ static void test_handlers(void)
     irq_test_clear_storm((unsigned)edge);
     expect(c->masks() == m0 && irq_audit() == NULL, "masks back to their state before the tests");
 
-    /* The table is bounded; a level line takes a level handler. */
+    /* The table is bounded; a level line (where one exists) takes a level handler. */
     unsigned made = 0;
     int full = 0;
     for (unsigned i = 0; i <= IRQ_MAX_HANDLERS; i++) {
-        int r = irq_register((unsigned)level, IRQ_TRIGGER_LEVEL, "t", test_top, 0, (void *)2, &h[made]);
+        int r = irq_register((unsigned)second, second_trig, "t", test_top, 0, (void *)2, &h[made]);
 
         if (r == IRQ_OK)
             made++;
@@ -368,13 +394,14 @@ static void test_handlers(void)
     uint16_t m3 = c->masks();
     for (unsigned i = 0; i < made; i++)
         irq_unregister(h[i]);
-    expect(made >= 1 && full && !(m3 & (1u << level)) && c->masks() == m0 && irq_audit() == NULL,
-           "a level line accepts a level handler; the table refuses one beyond IRQ_MAX_HANDLERS");
+    expect(made >= 1 && full && !(m3 & (1u << second)) && c->masks() == m0 && irq_audit() == NULL,
+           level > 0 ? "a level line accepts a level handler; the table refuses one beyond IRQ_MAX_HANDLERS"
+                     : "a second edge line accepts handlers; the table refuses one beyond IRQ_MAX_HANDLERS");
 }
 
 int selftest_irq(void)
 {
-    failures = cases = 0;
+    failures = cases = not_applicable = 0;
     test_synthetic();
     test_hardware_state();
     test_handlers();
@@ -382,6 +409,8 @@ int selftest_irq(void)
     serial_dec(cases);
     serial_puts(" cases, ");
     serial_dec(failures);
-    serial_puts(" failed\r\n");
+    serial_puts(" failed, ");
+    serial_dec(not_applicable);
+    serial_puts(" not applicable\r\n");
     return failures;
 }

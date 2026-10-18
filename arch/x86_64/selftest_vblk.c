@@ -54,7 +54,7 @@
 #define VBLK_DISK_SECTORS   2051        /* tests/x86_64/vblk.mk */
 #define VBLK_IOERR_SECTOR   1000        /* tests/x86_64/vblk-ioerr.blkdebug */
 
-static int failures, cases;
+static int failures, cases, not_applicable;
 static const struct boot_info *mbi;
 
 static void expect(int ok, const char *what)
@@ -1388,7 +1388,7 @@ static void test_ioerr(void)
 
 int selftest_vblk(const struct boot_info *bi)
 {
-    failures = cases = 0;
+    failures = cases = not_applicable = 0;
     mbi = bi;
     test_parser();
     test_choices();
@@ -1411,6 +1411,34 @@ int selftest_vblk(const struct boot_info *bi)
          * interrupts (without them each read waits for its re-check), so a
          * failure here ends the live tests at once.
          */
+        /*
+         * U1: interrupt mode needs a level-triggered INTx line. Where the
+         * firmware routes none (OVMF leaves the ELCR at 0) the driver must
+         * have chosen polling for that reason; the polling battery then runs
+         * and only the interrupt-mode tests are not applicable.
+         */
+        uint8_t line = pci_read8(vblk_info()->pci, PCI_INTERRUPT_LINE);
+        if (line == 0 || line >= IRQ_LINES || !((irq_chip()->triggers() >> line) & 1)) {
+            expect(vblk_info()->mode == VBLK_MODE_POLL &&
+                   streq(vblk_info()->poll_why, "interrupt line not level triggered (ELCR)"),
+                   "no level-triggered INTx line: the driver polls, for that reason");
+            not_applicable++;
+            serial_puts("selftest: NOT APPLICABLE: virtio-blk interrupt-mode tests (the device's line is not level "
+                        "triggered in the ELCR)\r\n");
+            test_contents();
+            test_validation();
+            test_queue();
+            test_unsupported();
+            test_protocol();
+            test_repeat();
+            test_processes();
+            test_timeout();
+            test_reset_while_waiting();
+            test_responsive();
+            uint64_t pp, pe;
+            expect(measure_progress("polling mode", &pp, &pe), "polling mode: 300 exact reads beside the program");
+            goto summary;
+        }
         int before = failures;
         test_irq_mode();
         if (failures != before) {
@@ -1478,6 +1506,8 @@ int selftest_vblk(const struct boot_info *bi)
     serial_dec(cases);
     serial_puts(" cases, ");
     serial_dec(failures);
-    serial_puts(" failed\r\n");
+    serial_puts(" failed, ");
+    serial_dec(not_applicable);
+    serial_puts(" not applicable\r\n");
     return failures;
 }

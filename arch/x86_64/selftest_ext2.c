@@ -37,7 +37,7 @@
 #include "thread.h"
 #include "virtio_blk.h"
 
-static int failures, cases;
+static int failures, cases, not_applicable;
 static const struct boot_info *mbi;
 
 static void expect(int ok, const char *what)
@@ -1087,6 +1087,19 @@ static void test_interrupted(struct ext2_fs *fs)
     struct ext2_stat st;
     int64_t t[2];
 
+    /*
+     * U1: only interrupt-mode device waits can be interrupted (N3.4); a
+     * polling-mode wait ends at its bounds. Under OVMF no INTx line is level
+     * triggered, so the driver polls and this check cannot apply.
+     */
+    if (vi->mode != VBLK_MODE_IRQ) {
+        not_applicable++;
+        serial_puts("selftest: NOT APPLICABLE: ext2 readers interrupted while waiting for the device (virtio-blk "
+                    "polls: ");
+        serial_puts(vi->poll_why ? vi->poll_why : "?");
+        serial_puts(")\r\n");
+        return;
+    }
     intr_fs = fs;
     intr_res[0] = intr_res[1] = -1;
     if (ext2_resolve(fs, 0, "/hello.txt", &intr_ino) != EXT2_OK || blk_invalidate(vi->blk_id) != BLK_OK) {
@@ -1176,7 +1189,7 @@ int selftest_ext2(const struct boot_info *bi)
 {
     struct ext2_fs *fs = (struct ext2_fs *)1;
 
-    failures = cases = 0;
+    failures = cases = not_applicable = 0;
     mbi = bi;
     test_sha();
     expect(ext2_open(0, &fs) == EXT2_EINVAL && fs == NULL && ext2_open(0xFFFFFFF0u, &fs) == EXT2_EINVAL &&
@@ -1207,6 +1220,8 @@ int selftest_ext2(const struct boot_info *bi)
     serial_dec(cases);
     serial_puts(" cases, ");
     serial_dec(failures);
-    serial_puts(" failed\r\n");
+    serial_puts(" failed, ");
+    serial_dec(not_applicable);
+    serial_puts(" not applicable\r\n");
     return failures;
 }
