@@ -100,6 +100,13 @@ int64_t thread_create(const char *name, thread_fn entry, void *arg);
 int64_t thread_create_user(const char *name, thread_fn entry, void *arg, uint64_t root, void *proc);
 /* The calling thread leaves its process's address space for the kernel root for good. */
 void thread_leave_user_space(void);
+/*
+ * Wake the sleepers whose tick has come (thread context, after the timer IRQ
+ * was acknowledged). Called on every timer interrupt from ring 3 (N2.4):
+ * otherwise a sleeper would wait as long as a lone CPU-bound process runs,
+ * because nothing else enters the scheduler.
+ */
+void sched_tick(void);
 /* Nonzero if a timer slice is over and another thread is waiting (the preemption test). */
 int sched_preempt_due(void);
 struct thread *thread_current(void);

@@ -466,6 +466,7 @@ uint64_t proc_user_trap(struct exc_frame *f)
          * the scheduler has restored its CR3 and RSP0; the frame is checked
          * again before the IRETQ.
          */
+        sched_tick();                   /* due sleepers become runnable: they can preempt */
         if (sched_preempt_due()) {
             p->preemptions++;
             thread_yield();

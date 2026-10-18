@@ -863,6 +863,16 @@ static void test_preemption(void)
            streq(r[0].reason, "test kill") && r[0].preemptions > 0,
            "an endless loop is preempted: a normal program next to it finishes; the loop is killed on demand");
 
+    /* A sleeping kernel thread wakes on time beside one endless loop (nothing else runnable). */
+    ok = start(a, "spin", PROG(spin), 0, 0);
+    uint64_t w0 = irq_ticks();
+    thread_sleep(5);
+    uint64_t waited = irq_ticks() - w0;
+    proc_kill(a, "test kill");
+    finish(a, &r[0]);
+    expect(ok && waited >= 5 && waited <= 5 + 2 * SCHED_SLICE_TICKS && streq(r[0].reason, "test kill"),
+           "a 5-tick sleep beside a lone endless loop ends on time (sleepers woken on user timer ticks)");
+
     /* Three endless loops for 30 ticks: each gets a fair share. */
     ok = start(a, "spin-a", PROG(spin), 0, 0) && start(b, "spin-b", PROG(spin), 0, 0) &&
          start(c, "spin-c", PROG(spin), 0, 0);

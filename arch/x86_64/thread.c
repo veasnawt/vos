@@ -437,6 +437,12 @@ static void check_entry(void)
         panic("sched: called from an interrupt handler");
 }
 
+void sched_tick(void)
+{
+    check_entry();
+    wake_sleepers();
+}
+
 void thread_block(struct wait_queue *q)
 {
     check_entry();
