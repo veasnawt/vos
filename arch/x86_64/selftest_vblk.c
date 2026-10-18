@@ -4,7 +4,7 @@
  * Every test image runs the synthetic part (capability parser, feature and
  * queue-size choice, transport-window and buffer checks on hand-built
  * inputs) and checks the device state it was booted with: images without a
- * disk must find none and refuse every request with BLK_ENODEV.
+ * disk must find none and refuse every request with VBLK_ENODEV.
  *
  * VOS_TEST_CASE=vblk boots with the disk built by scripts/mkvblkdisk.c
  * attached through virtio-blk-pci, and the same file as the GRUB module
@@ -216,8 +216,6 @@ static void test_choices(void)
            q == VBLK_QUEUE_SIZE && !vblk_choose_queue_size(32768, &q) && q == VBLK_QUEUE_SIZE,
            "queue: uses 16 entries of any larger power-of-two queue");
 
-    expect(streq(blk_strerror(BLK_EIO), "device I/O error") && streq(blk_strerror(99), "unknown error"),
-           "blk_strerror names the codes");
 }
 
 static uint8_t sink[2 * PAGE_SIZE] __attribute__((aligned(PAGE_SIZE)));
@@ -252,11 +250,11 @@ static void test_absent(void)
     int st = in->state;
     unsigned slot;
 
-    expect((st == VBLK_ABSENT || st == VBLK_FAILED) && !vblk_blockdev() && in->submitted == 0,
+    expect((st == VBLK_ABSENT || st == VBLK_FAILED) && in->blk_id == 0 && in->submitted == 0,
            "no usable virtio-blk device (none, or refused at initialization): no block device");
-    expect(vblk_read(0, 1, sink, sizeof(sink)) == BLK_ENODEV && vblk_submit(0, 1, &slot) == BLK_ENODEV &&
-           vblk_wait(0, sink, sizeof(sink)) == BLK_ENODEV && vblk_reinit() == st && in->submitted == 0,
-           "no usable device: every request is refused with BLK_ENODEV; reinitialization does not change that");
+    expect(vblk_read(0, 1, sink, sizeof(sink)) == VBLK_ENODEV && vblk_submit(0, 1, &slot) == VBLK_ENODEV &&
+           vblk_wait(0, sink, sizeof(sink)) == VBLK_ENODEV && vblk_reinit() == st && in->submitted == 0,
+           "no usable device: every request is refused with VBLK_ENODEV; reinitialization does not change that");
     expect((st == VBLK_FAILED || !vblk_dma_ok(0x200000, 1)) && vblk_audit() == NULL,
            "no usable device: no DMA pool without a device, audit clean");
     if (st == VBLK_FAILED) {
@@ -297,7 +295,7 @@ static int header_ok(const uint8_t *s, uint64_t lba)
 /* Read count sectors at lba and compare with the fixture and the headers. */
 static int read_ok(uint64_t lba, uint32_t count)
 {
-    if (vblk_read(lba, count, buf, sizeof(buf)) != BLK_OK)
+    if (vblk_read(lba, count, buf, sizeof(buf)) != VBLK_OK)
         return 0;
     for (uint32_t i = 0; i < count; i++)
         if (!header_ok(buf + i * BLK_SECTOR_SIZE, lba + i) ||
@@ -320,19 +318,21 @@ static int find_fixture(void)
 static void test_device(void)
 {
     const struct vblk_info *in = vblk_info();
-    const struct blockdev *bd = vblk_blockdev();
     const uint64_t V1 = 1ULL << VIRTIO_F_VERSION_1, RO = 1ULL << VIRTIO_BLK_F_RO;
+    struct blk_desc bd;
 
-    expect(in->state == VBLK_READY && bd && bd->read == vblk_read, "device found, initialized and published");
+    expect(in->state == VBLK_READY && in->blk_id && blk_describe(in->blk_id, &bd) == BLK_OK &&
+           bd.state == BLK_DEV_READY && in->pool_held && !in->quarantined,
+           "device found, initialized and registered with the block layer");
     expect(in->device_id == 0x1042 || in->device_id == 0x1001, "PCI device ID is modern 0x1042 or transitional 0x1001");
     expect((in->offered & V1) && in->accepted == (V1 | (in->offered & RO)),
            "negotiated exactly VERSION_1 and, if offered, RO");
     expect(in->status == 0x0F, "device status ACKNOWLEDGE | DRIVER | FEATURES_OK | DRIVER_OK");
     expect(in->queue_size == VBLK_QUEUE_SIZE && in->queue_max >= VBLK_QUEUE_SIZE, "queue 0: 16 entries in use");
-    expect(fixture && fixture_sectors == VBLK_DISK_SECTORS && in->capacity == VBLK_DISK_SECTORS && bd &&
-           bd->sectors == VBLK_DISK_SECTORS && bd->max_sectors == VBLK_MAX_SECTORS,
-           "capacity equals the fixture: 2051 sectors");
-    expect(bd && bd->device_read_only == ((in->offered & RO) != 0), "read-only flag reflects the device's offer");
+    expect(fixture && fixture_sectors == VBLK_DISK_SECTORS && in->capacity == VBLK_DISK_SECTORS &&
+           bd.sectors == VBLK_DISK_SECTORS, "capacity equals the fixture: 2051 sectors");
+    expect(((bd.caps & BLK_CAP_DEVICE_RO) != 0) == ((in->offered & RO) != 0),
+           "read-only capability reflects the device's offer");
     unsigned owned = 0;
     for (unsigned i = 0; i < VBLK_POOL_FRAMES; i++)
         owned += pmm_frame_state_in(pmm_kernel(), in->pool[i]) == PMM_FRAME_ALLOCATED;
@@ -363,7 +363,7 @@ static void test_contents(void)
 #ifdef VOS_TEST_CASE_vblk_ioerr
         /* The chunk covering the injected error must fail; its other sectors are read one by one. */
         if (lba <= VBLK_IOERR_SECTOR && VBLK_IOERR_SECTOR < lba + c) {
-            bad += vblk_read(lba, c, buf, sizeof(buf)) != BLK_EIO;
+            bad += vblk_read(lba, c, buf, sizeof(buf)) != VBLK_EIO;
             for (uint64_t s = lba; s < lba + c; s++)
                 bad += s != VBLK_IOERR_SECTOR && !read_ok(s, 1);
             lba += c;
@@ -387,27 +387,27 @@ static void test_validation(void)
 
     kmap_guard_pages(g, KMAP_MAX_GUARDS);
     memset(buf, 0xA5, sizeof(buf));
-    expect(vblk_read(n, 1, buf, sizeof(buf)) == BLK_ERANGE && vblk_read(n - 1, 2, buf, sizeof(buf)) == BLK_ERANGE &&
-           vblk_read(n - 7, 8, buf, sizeof(buf)) == BLK_ERANGE && vblk_read(n + 1000, 1, buf, sizeof(buf)) == BLK_ERANGE,
+    expect(vblk_read(n, 1, buf, sizeof(buf)) == VBLK_ERANGE && vblk_read(n - 1, 2, buf, sizeof(buf)) == VBLK_ERANGE &&
+           vblk_read(n - 7, 8, buf, sizeof(buf)) == VBLK_ERANGE && vblk_read(n + 1000, 1, buf, sizeof(buf)) == VBLK_ERANGE,
            "range: the first sector past the end, and requests running past it, refused");
-    expect(vblk_read(~0ULL, 1, buf, sizeof(buf)) == BLK_ERANGE && vblk_read(~0ULL - 1, 3, buf, sizeof(buf)) == BLK_ERANGE &&
-           vblk_submit(~0ULL - 2, 8, &slot) == BLK_ERANGE, "range: wrapping sector numbers refused");
-    expect(vblk_read(0, 0, buf, sizeof(buf)) == BLK_EINVAL && vblk_read(0, 9, buf, sizeof(buf)) == BLK_EINVAL &&
-           vblk_submit(0, 0, &slot) == BLK_EINVAL && vblk_submit(0, 9, &slot) == BLK_EINVAL,
+    expect(vblk_read(~0ULL, 1, buf, sizeof(buf)) == VBLK_ERANGE && vblk_read(~0ULL - 1, 3, buf, sizeof(buf)) == VBLK_ERANGE &&
+           vblk_submit(~0ULL - 2, 8, &slot) == VBLK_ERANGE, "range: wrapping sector numbers refused");
+    expect(vblk_read(0, 0, buf, sizeof(buf)) == VBLK_EINVAL && vblk_read(0, 9, buf, sizeof(buf)) == VBLK_EINVAL &&
+           vblk_submit(0, 0, &slot) == VBLK_EINVAL && vblk_submit(0, 9, &slot) == VBLK_EINVAL,
            "length: 0 and more than 8 sectors refused");
-    expect(vblk_read(0, 1, buf, 511) == BLK_EINVAL && vblk_read(0, 8, buf, 4095) == BLK_EINVAL &&
-           vblk_read(0, 1, 0, 512) == BLK_EINVAL, "buffer: capacity below the request, or NULL, refused");
-    expect(vblk_read(0, 1, (void *)0x400000, 512) == BLK_EINVAL &&
-           vblk_read(0, 1, (void *)konst, 512) == BLK_EINVAL &&
-           vblk_read(0, 1, (void *)(g[0] - 256), 512) == BLK_EINVAL &&
-           vblk_read(0, 1, phys_to_virt(in->pool[3]), 512) == BLK_EINVAL &&
-           vblk_read(0, 1, (void *)0xFFFFFFFFFFFFFF00ULL, 512) == BLK_EINVAL,
+    expect(vblk_read(0, 1, buf, 511) == VBLK_EINVAL && vblk_read(0, 8, buf, 4095) == VBLK_EINVAL &&
+           vblk_read(0, 1, 0, 512) == VBLK_EINVAL, "buffer: capacity below the request, or NULL, refused");
+    expect(vblk_read(0, 1, (void *)0x400000, 512) == VBLK_EINVAL &&
+           vblk_read(0, 1, (void *)konst, 512) == VBLK_EINVAL &&
+           vblk_read(0, 1, (void *)(g[0] - 256), 512) == VBLK_EINVAL &&
+           vblk_read(0, 1, phys_to_virt(in->pool[3]), 512) == VBLK_EINVAL &&
+           vblk_read(0, 1, (void *)0xFFFFFFFFFFFFFF00ULL, 512) == VBLK_EINVAL,
            "buffer: user address, read-only data, guard page, DMA pool and wrapping range refused");
     unsigned untouched = 1;
     for (unsigned i = 0; i < sizeof(buf); i++)
         untouched &= buf[i] == 0xA5;
     expect(in->submitted == sub0 && untouched, "refused requests never reached the device or the buffer");
-    expect(vblk_wait(VBLK_SLOTS, buf, sizeof(buf)) == BLK_EINVAL && vblk_wait(0, buf, sizeof(buf)) == BLK_EINVAL,
+    expect(vblk_wait(VBLK_SLOTS, buf, sizeof(buf)) == VBLK_EINVAL && vblk_wait(0, buf, sizeof(buf)) == VBLK_EINVAL,
            "wait: a slot that is out of range or not in flight refused");
 }
 
@@ -421,16 +421,16 @@ static void test_queue(void)
     uint64_t f0 = pmm_free_count(), c0 = in->completed;
 
     for (unsigned i = 0; i < VBLK_SLOTS; i++)
-        ok &= vblk_submit(lba[i], cnt[i], &slot[i]) == BLK_OK;
+        ok &= vblk_submit(lba[i], cnt[i], &slot[i]) == VBLK_OK;
     for (unsigned i = 0; i < VBLK_SLOTS; i++)
         for (unsigned j = 0; j < i; j++)
             distinct &= slot[i] != slot[j];
     expect(ok && distinct, "four requests outstanding at once, in four distinct slots");
-    expect(vblk_submit(0, 1, &extra) == BLK_EBUSY && vblk_read(0, 1, buf, sizeof(buf)) == BLK_EBUSY,
-           "queue exhaustion: a fifth request is refused with BLK_EBUSY");
+    expect(vblk_submit(0, 1, &extra) == VBLK_EBUSY && vblk_read(0, 1, buf, sizeof(buf)) == VBLK_EBUSY,
+           "queue exhaustion: a fifth request is refused with VBLK_EBUSY");
     for (unsigned k = 0; k < VBLK_SLOTS; k++) {
         unsigned i = order[k];
-        int good = vblk_wait(slot[i], buf, sizeof(buf)) == BLK_OK;
+        int good = vblk_wait(slot[i], buf, sizeof(buf)) == VBLK_OK;
 
         for (uint32_t s = 0; s < cnt[i] && good; s++)
             good = memcmp(buf + s * BLK_SECTOR_SIZE, fix(lba[i] + s), BLK_SECTOR_SIZE) == 0;
@@ -447,12 +447,12 @@ static void test_unsupported(void)
     uint64_t sub0 = in->submitted, u0 = in->unsupp;
     unsigned slot;
 
-    expect(vblk_test_submit_type(1, 0, 1, &slot) == BLK_EINVAL && vblk_test_submit_type(4, 0, 1, &slot) == BLK_EINVAL &&
-           vblk_test_submit_type(11, 0, 1, &slot) == BLK_EINVAL && vblk_test_submit_type(13, 0, 1, &slot) == BLK_EINVAL &&
+    expect(vblk_test_submit_type(1, 0, 1, &slot) == VBLK_EINVAL && vblk_test_submit_type(4, 0, 1, &slot) == VBLK_EINVAL &&
+           vblk_test_submit_type(11, 0, 1, &slot) == VBLK_EINVAL && vblk_test_submit_type(13, 0, 1, &slot) == VBLK_EINVAL &&
            in->submitted == sub0, "test hook refuses OUT, FLUSH, DISCARD and WRITE_ZEROES (nothing submitted)");
-    expect(vblk_test_submit_type(VBLK_TEST_T_UNKNOWN, 0, 1, &slot) == BLK_OK &&
-           vblk_wait(slot, buf, sizeof(buf)) == BLK_EUNSUPP && in->unsupp == u0 + 1,
-           "an unknown request type completes with VIRTIO_BLK_S_UNSUPP -> BLK_EUNSUPP");
+    expect(vblk_test_submit_type(VBLK_TEST_T_UNKNOWN, 0, 1, &slot) == VBLK_OK &&
+           vblk_wait(slot, buf, sizeof(buf)) == VBLK_EUNSUPP && in->unsupp == u0 + 1,
+           "an unknown request type completes with VIRTIO_BLK_S_UNSUPP -> VBLK_EUNSUPP");
     expect(in->state == VBLK_READY && read_ok(7, 2) && vblk_audit() == NULL,
            "after an unsupported request the device keeps working");
 }
@@ -474,10 +474,12 @@ static void test_timeout(void)
     int r = vblk_read(5, 1, buf, sizeof(buf));
     uint64_t spins = vblk_test_last_spins();
     vblk_test_poll_limit(0);
-    expect(r == BLK_ETIMEDOUT && spins == 20000 && in->timeouts == t0 + 1,
+    expect(r == VBLK_ETIMEDOUT && spins == 20000 && in->timeouts == t0 + 1,
            "a request the device never sees times out after exactly the poll bound");
-    expect(in->state == VBLK_BROKEN && vblk_test_device_status() == 0 && !vblk_blockdev() &&
-           vblk_read(5, 1, buf, sizeof(buf)) == BLK_EBROKEN && vblk_submit(5, 1, &slot) == BLK_EBROKEN,
+    struct blk_desc bd;
+    expect(in->state == VBLK_BROKEN && vblk_test_device_status() == 0 && blk_describe(in->blk_id, &bd) == BLK_OK &&
+           bd.state == BLK_DEV_UNAVAILABLE &&
+           vblk_read(5, 1, buf, sizeof(buf)) == VBLK_EBROKEN && vblk_submit(5, 1, &slot) == VBLK_EBROKEN,
            "after the timeout the device is reset (status 0) and the driver refuses requests");
     expect(recovered(f0) && in->inits == i0 + 1, "reinitialization recovers it with the same DMA pool");
 }
@@ -490,10 +492,10 @@ static void test_protocol(void)
 
     /* Two completions for one outstanding request (the device is never notified, so nothing races). */
     vblk_test_skip_notify(1);
-    expect(vblk_submit(3, 1, &slot) == BLK_OK && slot == 0, "request 0 outstanding (device not notified)");
+    expect(vblk_submit(3, 1, &slot) == VBLK_OK && slot == 0, "request 0 outstanding (device not notified)");
     vblk_test_inject_used(0, 513);
     vblk_test_inject_used(3, 513);
-    expect(vblk_wait(slot, buf, sizeof(buf)) == BLK_EPROTO && in->state == VBLK_BROKEN &&
+    expect(vblk_wait(slot, buf, sizeof(buf)) == VBLK_EPROTO && in->state == VBLK_BROKEN &&
            vblk_test_device_status() == 0 && streq(in->why, "used ring advanced past the outstanding requests"),
            "more completions than outstanding requests: protocol error, device reset (status 0)");
     expect(recovered(f0), "recovered after the surplus completions");
@@ -501,7 +503,7 @@ static void test_protocol(void)
     vblk_test_skip_notify(1);
     vblk_submit(3, 1, &slot);
     vblk_test_inject_used(3, 513);      /* the head of slot 1, which is free */
-    expect(vblk_wait(slot, buf, sizeof(buf)) == BLK_EPROTO &&
+    expect(vblk_wait(slot, buf, sizeof(buf)) == VBLK_EPROTO &&
            streq(in->why, "used ring names a descriptor the driver does not own"),
            "completion naming a free slot: refused (descriptor ownership)");
     expect(recovered(f0), "recovered after the foreign descriptor");
@@ -509,7 +511,7 @@ static void test_protocol(void)
     vblk_test_skip_notify(1);
     vblk_submit(3, 1, &slot);
     vblk_test_inject_used(1, 513);      /* not a chain head */
-    expect(vblk_wait(slot, buf, sizeof(buf)) == BLK_EPROTO &&
+    expect(vblk_wait(slot, buf, sizeof(buf)) == VBLK_EPROTO &&
            streq(in->why, "used ring names a descriptor the driver does not own"),
            "completion naming a non-head descriptor: refused");
     expect(recovered(f0), "recovered after the non-head descriptor");
@@ -517,7 +519,7 @@ static void test_protocol(void)
     vblk_test_skip_notify(1);
     vblk_submit(3, 1, &slot);
     vblk_test_inject_used(0, 5000);
-    expect(vblk_wait(slot, buf, sizeof(buf)) == BLK_EPROTO &&
+    expect(vblk_wait(slot, buf, sizeof(buf)) == VBLK_EPROTO &&
            streq(in->why, "used length larger than the request's buffers"),
            "completion longer than the request's buffers: refused");
     expect(recovered(f0), "recovered after the oversized completion");
@@ -525,14 +527,14 @@ static void test_protocol(void)
     vblk_test_skip_notify(1);
     vblk_submit(3, 1, &slot);
     vblk_test_inject_used(0, 513);      /* right length, but the device never wrote the status */
-    expect(vblk_wait(slot, buf, sizeof(buf)) == BLK_EPROTO && streq(in->why, "invalid request status"),
+    expect(vblk_wait(slot, buf, sizeof(buf)) == VBLK_EPROTO && streq(in->why, "invalid request status"),
            "completion without a written status byte: refused");
     expect(recovered(f0), "recovered after the missing status");
 
     vblk_test_skip_notify(1);
     vblk_submit(3, 1, &slot);
     vblk_test_inject_used(0, 0);        /* nothing written although the status says... nothing */
-    expect(vblk_wait(slot, buf, sizeof(buf)) == BLK_EPROTO, "completion of zero length: refused");
+    expect(vblk_wait(slot, buf, sizeof(buf)) == VBLK_EPROTO, "completion of zero length: refused");
     expect(recovered(f0) && in->protocol_errors == p0 + 6, "recovered; six protocol errors counted");
 }
 
@@ -566,7 +568,7 @@ static void reader(void *arg)
     for (unsigned i = 0; i < 200; i++) {
         uint64_t lba = (i * 37) % (VBLK_DISK_SECTORS - 4);
 
-        if (vblk_read(lba, 4, rbuf, sizeof(rbuf)) != BLK_OK || memcmp(rbuf, fix(lba), 4 * BLK_SECTOR_SIZE))
+        if (vblk_read(lba, 4, rbuf, sizeof(rbuf)) != VBLK_OK || memcmp(rbuf, fix(lba), 4 * BLK_SECTOR_SIZE))
             reader_bad++;
         thread_yield();
     }
@@ -659,14 +661,14 @@ static void test_ioerr(void)
     uint64_t f0 = pmm_free_count(), io0 = in->ioerr;
     unsigned again = 0;
 
-    expect(vblk_read(e, 1, buf, sizeof(buf)) == BLK_EIO && in->ioerr == io0 + 1,
-           "the injected media error at sector 1000 is reported as BLK_EIO");
+    expect(vblk_read(e, 1, buf, sizeof(buf)) == VBLK_EIO && in->ioerr == io0 + 1,
+           "the injected media error at sector 1000 is reported as VBLK_EIO");
     expect(in->state == VBLK_READY && read_ok(e - 1, 1) && read_ok(e + 1, 1) && read_ok(e - 8, 8) &&
            read_ok(e + 1, 8), "the device stays ready; the neighbouring sectors read correctly");
-    expect(vblk_read(e - 3, 8, buf, sizeof(buf)) == BLK_EIO && vblk_read(e - 7, 8, buf, sizeof(buf)) == BLK_EIO,
-           "multi-sector requests covering sector 1000 fail with BLK_EIO");
+    expect(vblk_read(e - 3, 8, buf, sizeof(buf)) == VBLK_EIO && vblk_read(e - 7, 8, buf, sizeof(buf)) == VBLK_EIO,
+           "multi-sector requests covering sector 1000 fail with VBLK_EIO");
     for (unsigned i = 0; i < 50; i++)
-        again += vblk_read(e, 1, buf, sizeof(buf)) == BLK_EIO;
+        again += vblk_read(e, 1, buf, sizeof(buf)) == VBLK_EIO;
     expect(again == 50 && in->ioerr == io0 + 53 && in->state == VBLK_READY,
            "the error is reported every time; the device is never reset for it");
     expect(read_ok(0, 1) && read_ok(VBLK_DISK_SECTORS - 1, 1) && pmm_free_count() == f0 && vblk_audit() == NULL,

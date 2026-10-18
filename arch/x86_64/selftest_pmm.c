@@ -404,10 +404,17 @@ int selftest_pmm_kernel(const struct boot_info *bi, const struct resv_table *t)
         real_map[i].len = e->length;
         real_map[i].type = e->type;
     }
-    /* Frames held since boot by the virtio-blk DMA pool, if a device was initialized (N3.1). */
+    /*
+     * Frames held since boot: the virtio-blk DMA pool while a device holds it
+     * (N3.1) and the block cache while a device is registered (N3.2).
+     */
     const struct vblk_info *vi = vblk_info();
-    unsigned nheld = vi->pool[0] ? VBLK_POOL_FRAMES : 0;
-    uint64_t bad = oracle_compare(k, real_map, real_n, t, &want, vi->pool, nheld);
+    static uint64_t held[VBLK_POOL_FRAMES + BLK_CACHE_LINES];
+    unsigned nheld = 0;
+    for (unsigned i = 0; vi->pool_held && i < VBLK_POOL_FRAMES; i++)
+        held[nheld++] = vi->pool[i];
+    nheld += blk_cache_frames(held + nheld, BLK_CACHE_LINES);
+    uint64_t bad = oracle_compare(k, real_map, real_n, t, &want, held, nheld);
     expect(bad == 0 && want == k->free && k->free == k->usable - nheld,
            "every frame matches the oracle; free count equals the oracle's count");
     uint64_t ignored = 0;

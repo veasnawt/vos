@@ -1,8 +1,10 @@
 #include "virtio_blk.h"
 #include "console.h"
+#include "irq.h"
 #include "lib.h"
 #include "memlayout.h"
 #include "pmm.h"
+#include "thread.h"
 #include "vmm.h"
 
 /* PCI identity (virtio 1.2, 4.1.2). */
@@ -107,9 +109,10 @@ static volatile struct vq_used_elem *used_ring;
 static uint16_t next_avail, last_used;
 static int inflight[VBLK_SLOTS], done[VBLK_SLOTS];
 static uint32_t slot_count[VBLK_SLOTS], slot_len[VBLK_SLOTS];
+static struct thread *slot_owner[VBLK_SLOTS];
 static uint64_t poll_limit = VBLK_POLL_LIMIT, last_spins;
+static uint64_t yield_polls = VBLK_YIELD_POLLS, wait_ticks = VBLK_WAIT_TICKS;
 static unsigned skip_notify;
-static struct blockdev bdev;
 
 static void barrier(void)
 {
@@ -118,8 +121,8 @@ static void barrier(void)
 
 const char *vblk_state_name(int s)
 {
-    static const char *const n[] = { "absent", "failed", "ready", "broken" };
-    return s >= 0 && s <= VBLK_BROKEN ? n[s] : "?";
+    static const char *const n[] = { "absent", "failed", "ready", "broken", "stopped" };
+    return s >= 0 && s <= VBLK_STOPPED ? n[s] : "?";
 }
 
 /* ---- pure checks ---- */
@@ -348,15 +351,52 @@ static int fail(int state, const char *why)
 {
     info.state = state;
     info.why = why;
-    bdev.read = 0;
     return state;
 }
 
-/* Give up on the device: FAILED status bit (2.1.2), then reset so it stops using the queue. */
+static void bus_master(int on)
+{
+    uint16_t cmd = pci_read16(info.pci, PCI_COMMAND);
+
+    cmd = on ? (uint16_t)(cmd | PCI_COMMAND_MASTER) : (uint16_t)(cmd & ~PCI_COMMAND_MASTER);
+    pci_write16(info.pci, PCI_COMMAND, (uint16_t)(cmd | PCI_COMMAND_INTX_OFF));
+}
+
+/*
+ * Free the DMA pool, but only when the device can no longer write it: the
+ * caller confirmed a reset (no virtqueue is live, virtio 1.2 3.3.1), and bus
+ * mastering is switched off first, so the device cannot start any DMA.
+ */
+static void release_pool(void)
+{
+    if (!pool_ready)
+        return;
+    bus_master(0);
+    for (unsigned i = 0; i < VBLK_POOL_FRAMES; i++)
+        pmm_free_frame(info.pool[i]);
+    memset(info.pool, 0, sizeof(info.pool));
+    pool_ready = info.pool_held = 0;
+    info.quarantined = 0;
+    info.pool_frees++;
+    desc = 0;
+    avail = used_hdr = 0;
+    used_ring = 0;
+}
+
+/* Reset; with the reset confirmed the pool is released, otherwise it stays allocated (quarantined). */
+static void reset_and_release(void)
+{
+    if (device_reset())
+        release_pool();
+    else if (pool_ready)
+        info.quarantined = 1;
+}
+
+/* Give up on the device: FAILED status bit (2.1.2), then reset and release the pool. */
 static int give_up(const char *why)
 {
     status_set(status_get() | S_FAILED);
-    device_reset();
+    reset_and_release();
     return fail(VBLK_FAILED, why);
 }
 
@@ -368,7 +408,9 @@ static int alloc_pool(void)
         if (pmm_alloc_frame(&info.pool[n]) != PMM_OK)
             break;
     if (n == VBLK_POOL_FRAMES) {
-        pool_ready = 1;
+        pool_ready = info.pool_held = 1;
+        info.pool_allocs++;
+        bus_master(1);
         return 1;
     }
     while (n)
@@ -387,8 +429,11 @@ static int bring_up(void)
     win_error = 0;
     memset(inflight, 0, sizeof(inflight));
     memset(done, 0, sizeof(done));
-    if (!device_reset())
+    if (!device_reset()) {
+        if (pool_ready)
+            info.quarantined = 1;       /* the device may still be using an earlier queue */
         return fail(VBLK_FAILED, "reset did not complete");
+    }
     info.resets++;
     status_set(S_ACKNOWLEDGE);
     status_set(S_ACKNOWLEDGE | S_DRIVER);
@@ -478,11 +523,6 @@ static int bring_up(void)
     if (info.status != (S_ACKNOWLEDGE | S_DRIVER | S_FEATURES_OK | S_DRIVER_OK))
         return give_up("device did not accept DRIVER_OK");
 
-    bdev.name = "vblk0";
-    bdev.sectors = info.capacity;
-    bdev.max_sectors = VBLK_MAX_SECTORS;
-    bdev.device_read_only = (info.accepted >> VIRTIO_BLK_F_RO) & 1;
-    bdev.read = vblk_read;
     info.why = NULL;
     info.inits++;
     info.state = VBLK_READY;
@@ -513,12 +553,73 @@ static void log_device(void)
     serial_puts(" of ");
     serial_dec(info.queue_max);
     serial_puts(", features VERSION_1");
-    serial_puts(bdev.device_read_only ? " RO" : "");
+    serial_puts((info.accepted >> VIRTIO_BLK_F_RO) & 1 ? " RO" : "");
     serial_puts(" (offered ");
     serial_hex(info.offered);
     serial_puts("), polled, DMA pool ");
     serial_dec(VBLK_POOL_FRAMES);
     serial_puts(" frames, no IOMMU\r\n");
+}
+
+/* ---- block-layer attachment ---- */
+
+int vblk_to_blk(int e)
+{
+    switch (e) {
+    case VBLK_OK:           return BLK_OK;
+    case VBLK_EINVAL:       return BLK_EINVAL;
+    case VBLK_ERANGE:       return BLK_ERANGE;
+    case VBLK_EIO:          return BLK_EIO;
+    case VBLK_EUNSUPP:      return BLK_EUNSUPP;
+    case VBLK_ETIMEDOUT:    return BLK_ETIMEDOUT;
+    case VBLK_EBUSY:        return BLK_EBUSY;
+    case VBLK_ENODEV:
+    case VBLK_EBROKEN:      return BLK_EUNAVAIL;
+    case VBLK_EPROTO:       return BLK_EIO;         /* the device misbehaved; it is now unavailable */
+    default:                return BLK_EIO;
+    }
+}
+
+static void op_info(void *ctx, struct blk_info *o)
+{
+    (void)ctx;
+    o->state = info.state == VBLK_READY ? BLK_DEV_READY : BLK_DEV_UNAVAILABLE;
+    o->sectors = info.capacity;
+    o->max_sectors = VBLK_MAX_SECTORS;
+    o->caps = BLK_CAP_READ | ((info.accepted >> VIRTIO_BLK_F_RO) & 1 ? BLK_CAP_DEVICE_RO : 0);
+    o->epoch = info.inits;
+}
+
+static int op_read(void *ctx, uint64_t lba, uint32_t count, void *buf, uint64_t cap)
+{
+    (void)ctx;
+    return vblk_to_blk(vblk_read(lba, count, buf, cap));
+}
+
+static int op_owns_frame(void *ctx, uint64_t pa)
+{
+    (void)ctx;
+    for (unsigned i = 0; pool_ready && i < VBLK_POOL_FRAMES; i++)
+        if (info.pool[i] == pa)
+            return 1;
+    return 0;
+}
+
+static const struct blk_ops vblk_ops = { "virtio-blk", op_info, op_read, op_owns_frame };
+
+/* Register a ready, unregistered device with the block layer. */
+static void attach(void)
+{
+    int err;
+
+    if (info.state != VBLK_READY || info.blk_id)
+        return;
+    if ((err = blk_register("vblk0", &vblk_ops, 0, &info.blk_id)) != BLK_OK) {
+        info.blk_id = 0;
+        serial_puts("vblk: block-layer registration refused: ");
+        serial_puts(blk_strerror(err));
+        serial_puts("\r\n");
+    }
 }
 
 int vblk_init(void)
@@ -540,8 +641,7 @@ int vblk_init(void)
         log_device();
         return VBLK_FAILED;
     }
-    /* Bus mastering for DMA; legacy INTx off (completions are polled). */
-    pci_write16(a, PCI_COMMAND, (uint16_t)(pci_read16(a, PCI_COMMAND) | PCI_COMMAND_MASTER | PCI_COMMAND_INTX_OFF));
+    /* Bus mastering for DMA (alloc_pool) and legacy INTx off (completions are polled). */
     if (!alloc_pool()) {
         fail(VBLK_FAILED, "no frames for the DMA pool");
         log_device();
@@ -549,16 +649,59 @@ int vblk_init(void)
     }
     bring_up();
     log_device();
+    attach();
     return info.state;
+}
+
+static int outstanding(void)
+{
+    for (unsigned s = 0; s < VBLK_SLOTS; s++)
+        if (inflight[s])
+            return 1;
+    return 0;
 }
 
 int vblk_reinit(void)
 {
-    if (info.state == VBLK_ABSENT || !pool_ready)
+    if (info.state == VBLK_ABSENT || outstanding())
         return info.state;
+    if (info.quarantined) {
+        if (!device_reset())
+            return info.state;          /* still unconfirmed: the pool stays quarantined */
+        info.quarantined = 0;
+    }
+    if (!pool_ready && !alloc_pool()) {
+        fail(VBLK_FAILED, "no frames for the DMA pool");
+        log_device();
+        return info.state;
+    }
     bring_up();
     log_device();
+    attach();
     return info.state;
+}
+
+int vblk_shutdown(void)
+{
+    if (info.state == VBLK_ABSENT)
+        return VBLK_ENODEV;
+    if (outstanding())
+        return VBLK_EBUSY;
+    if (info.blk_id) {
+        if (blk_unregister(info.blk_id) != BLK_OK)
+            return VBLK_EBUSY;
+        info.blk_id = 0;
+    }
+    if (!device_reset()) {
+        if (pool_ready)
+            info.quarantined = 1;
+        fail(VBLK_BROKEN, "reset not confirmed at shutdown; DMA pool quarantined");
+        return VBLK_EBROKEN;
+    }
+    release_pool();
+    fail(VBLK_STOPPED, "shut down");
+    serial_puts("vblk: device shut down, DMA pool released\r\n");
+    return VBLK_OK;
 }
 
 const struct vblk_info *vblk_info(void)
@@ -566,16 +709,11 @@ const struct vblk_info *vblk_info(void)
     return &info;
 }
 
-const struct blockdev *vblk_blockdev(void)
-{
-    return info.state == VBLK_READY ? &bdev : NULL;
-}
-
 /* ---- requests ---- */
 
 static int usable(void)
 {
-    return info.state == VBLK_READY ? BLK_OK : info.state == VBLK_BROKEN ? BLK_EBROKEN : BLK_ENODEV;
+    return info.state == VBLK_READY ? VBLK_OK : info.state == VBLK_BROKEN ? VBLK_EBROKEN : VBLK_ENODEV;
 }
 
 /* Reset after a timeout or protocol error: the queue is dead, every slot is abandoned. */
@@ -584,7 +722,7 @@ static int broken(const char *why, int err)
     device_reset();
     memset(inflight, 0, sizeof(inflight));
     memset(done, 0, sizeof(done));
-    if (err == BLK_EPROTO)
+    if (err == VBLK_EPROTO)
         info.protocol_errors++;
     fail(VBLK_BROKEN, why);
     serial_puts("vblk: device reset: ");
@@ -601,19 +739,19 @@ static int submit_type(uint32_t type, uint64_t lba, uint32_t count, unsigned *sl
     if ((err = usable()))
         return err;
     if (count == 0 || count > VBLK_MAX_SECTORS)
-        return BLK_EINVAL;
+        return VBLK_EINVAL;
     if (lba >= info.capacity || count > info.capacity - lba)
-        return BLK_ERANGE;
+        return VBLK_ERANGE;
     for (s = 0; s < VBLK_SLOTS && inflight[s]; s++)
         ;
     if (s == VBLK_SLOTS)
-        return BLK_EBUSY;
+        return VBLK_EBUSY;
 
     uint64_t hdr_pa = info.pool[POOL_HDR] + HDR_OFF(s), st_pa = info.pool[POOL_HDR] + STATUS_OFF(s);
     uint64_t data_pa = info.pool[POOL_DATA + s];
     uint32_t bytes = count * BLK_SECTOR_SIZE;
     if (!vblk_dma_ok(hdr_pa, sizeof(struct req_header)) || !vblk_dma_ok(data_pa, bytes) || !vblk_dma_ok(st_pa, 1))
-        return broken("request buffer outside the DMA pool", BLK_EPROTO);
+        return broken("request buffer outside the DMA pool", VBLK_EPROTO);
 
     struct req_header *h = phys_to_virt(hdr_pa);
     h->type = type;
@@ -639,6 +777,7 @@ static int submit_type(uint32_t type, uint64_t lba, uint32_t count, unsigned *sl
     inflight[s] = 1;
     done[s] = 0;
     slot_count[s] = count;
+    slot_owner[s] = thread_current();
     avail[2 + next_avail % VBLK_QUEUE_SIZE] = (uint16_t)d0;
     barrier();                              /* ring entry and descriptors before idx (2.7.13) */
     avail[1] = ++next_avail;
@@ -649,7 +788,7 @@ static int submit_type(uint32_t type, uint64_t lba, uint32_t count, unsigned *sl
         notify();
     info.submitted++;
     *slot = s;
-    return BLK_OK;
+    return VBLK_OK;
 }
 
 int vblk_submit(uint64_t lba, uint32_t count, unsigned *slot)
@@ -657,7 +796,7 @@ int vblk_submit(uint64_t lba, uint32_t count, unsigned *slot)
     return submit_type(T_IN, lba, count, slot);
 }
 
-/* Collect new used-ring entries; 0, or BLK_EPROTO after resetting the device. */
+/* Collect new used-ring entries; 0, or VBLK_EPROTO after resetting the device. */
 static int reap(void)
 {
     uint16_t idx = used_hdr[1];
@@ -667,43 +806,62 @@ static int reap(void)
     for (unsigned s = 0; s < VBLK_SLOTS; s++)
         pending += inflight[s] && !done[s];
     if ((uint16_t)(idx - last_used) > pending)
-        return broken("used ring advanced past the outstanding requests", BLK_EPROTO);
+        return broken("used ring advanced past the outstanding requests", VBLK_EPROTO);
     while (last_used != idx) {
         struct vq_used_elem e = { used_ring[last_used % VBLK_QUEUE_SIZE].id,
                                   used_ring[last_used % VBLK_QUEUE_SIZE].len };
         unsigned s = e.id / 3;
 
         if (e.id >= VBLK_QUEUE_SIZE || e.id % 3 || s >= VBLK_SLOTS || !inflight[s] || done[s])
-            return broken("used ring names a descriptor the driver does not own", BLK_EPROTO);
+            return broken("used ring names a descriptor the driver does not own", VBLK_EPROTO);
         if (e.len > slot_count[s] * BLK_SECTOR_SIZE + 1)
-            return broken("used length larger than the request's buffers", BLK_EPROTO);
+            return broken("used length larger than the request's buffers", VBLK_EPROTO);
         done[s] = 1;
         slot_len[s] = e.len;
         last_used++;
     }
-    return BLK_OK;
+    return VBLK_OK;
 }
 
 int vblk_wait(unsigned slot, void *buf, uint64_t cap)
 {
-    uint64_t spins;
-    int err;
+    struct thread *me = thread_current();
+    uint64_t spins, epoch = info.inits, t0 = irq_ticks();
+    int err, ticks_over = 0;
 
     if ((err = usable()))
         return err;
-    if (slot >= VBLK_SLOTS || !inflight[slot])
-        return BLK_EINVAL;
+    if (slot >= VBLK_SLOTS || !inflight[slot] || slot_owner[slot] != me)
+        return VBLK_EINVAL;
     for (spins = 0; spins < poll_limit; spins++) {
         if ((err = reap()))
             return err;
         if (done[slot])
             break;
+        if (yield_polls && spins % yield_polls == yield_polls - 1) {
+            /*
+             * Let other threads (and through them user programs) run. They
+             * may complete this slot in their own reap, or reset the device;
+             * either way the slot is re-checked before it is used.
+             */
+            info.yields++;
+            thread_yield();
+            if (info.state != VBLK_READY || info.inits != epoch || !inflight[slot] || slot_owner[slot] != me)
+                return VBLK_EBROKEN;
+            if (done[slot])
+                break;
+            if (irq_ticks() - t0 >= wait_ticks) {
+                ticks_over = 1;
+                break;
+            }
+        }
         __asm__ volatile ("pause");
     }
     last_spins = spins;
     if (!done[slot]) {
         info.timeouts++;
-        return broken("request timed out", BLK_ETIMEDOUT);
+        info.tick_timeouts += ticks_over;
+        return broken(ticks_over ? "request timed out (tick bound)" : "request timed out", VBLK_ETIMEDOUT);
     }
 
     uint8_t st = *(volatile uint8_t *)phys_to_virt(info.pool[POOL_HDR] + STATUS_OFF(slot));
@@ -714,23 +872,23 @@ int vblk_wait(unsigned slot, void *buf, uint64_t cap)
         info.max_spins = spins;
     if (st == ST_IOERR) {
         info.ioerr++;
-        return BLK_EIO;
+        return VBLK_EIO;
     }
     if (st == ST_UNSUPP) {
         info.unsupp++;
-        return BLK_EUNSUPP;
+        return VBLK_EUNSUPP;
     }
     if (st != ST_OK)
-        return broken("invalid request status", BLK_EPROTO);
+        return broken("invalid request status", VBLK_EPROTO);
     if (len != count * BLK_SECTOR_SIZE + 1)
-        return broken("short completion", BLK_EPROTO);
+        return broken("short completion", VBLK_EPROTO);
     info.ok++;
     if (!buf)                               /* vblk_read validated it; tests may drop data */
-        return BLK_OK;
+        return VBLK_OK;
     if (cap < (uint64_t)count * BLK_SECTOR_SIZE || !vblk_buffer_ok(buf, (uint64_t)count * BLK_SECTOR_SIZE))
-        return BLK_EINVAL;
+        return VBLK_EINVAL;
     memcpy(buf, phys_to_virt(info.pool[POOL_DATA + slot]), count * BLK_SECTOR_SIZE);
-    return BLK_OK;
+    return VBLK_OK;
 }
 
 int vblk_read(uint64_t lba, uint32_t count, void *buf, uint64_t cap)
@@ -742,7 +900,7 @@ int vblk_read(uint64_t lba, uint32_t count, void *buf, uint64_t cap)
         return err;
     if (count == 0 || count > VBLK_MAX_SECTORS || cap < (uint64_t)count * BLK_SECTOR_SIZE ||
         !vblk_buffer_ok(buf, (uint64_t)count * BLK_SECTOR_SIZE))
-        return BLK_EINVAL;
+        return VBLK_EINVAL;
     if ((err = vblk_submit(lba, count, &slot)))
         return err;
     return vblk_wait(slot, buf, cap);
@@ -752,10 +910,25 @@ int vblk_read(uint64_t lba, uint32_t count, void *buf, uint64_t cap)
 
 const char *vblk_audit(void)
 {
+    if (info.pool_held != pool_ready)
+        return "pool bookkeeping inconsistent";
     if (info.state == VBLK_ABSENT)
         return pool_ready ? "pool allocated without a device" : NULL;
-    if (!pool_ready)
-        return info.state == VBLK_FAILED ? NULL : "device usable without a DMA pool";
+    if (info.state == VBLK_READY && !info.blk_id)
+        return "ready device not registered";
+    if ((info.state == VBLK_STOPPED || info.state == VBLK_ABSENT) && info.blk_id)
+        return "released device still registered";
+    if (info.quarantined && !pool_ready)
+        return "quarantine without a pool";
+    if (!pool_ready) {
+        for (unsigned i = 0; i < VBLK_POOL_FRAMES; i++)
+            if (info.pool[i])
+                return "freed pool still listed";
+        return info.state == VBLK_READY ? "device usable without a DMA pool" : NULL;
+    }
+    if (info.state == VBLK_FAILED || info.state == VBLK_STOPPED)
+        if (!info.quarantined)
+            return "pool kept by a released device without quarantine";
     for (unsigned i = 0; i < VBLK_POOL_FRAMES; i++) {
         if (pmm_frame_state_in(pmm_kernel(), info.pool[i]) != PMM_FRAME_ALLOCATED)
             return "DMA pool frame not allocated";
@@ -796,6 +969,16 @@ uint64_t vblk_test_last_spins(void)
     return last_spins;
 }
 
+void vblk_test_yield_polls(uint64_t n)
+{
+    yield_polls = n;
+}
+
+void vblk_test_wait_ticks(uint64_t ticks)
+{
+    wait_ticks = ticks ? ticks : VBLK_WAIT_TICKS;
+}
+
 void vblk_test_inject_used(uint32_t id, uint32_t len)
 {
     if (info.state != VBLK_READY)
@@ -814,7 +997,7 @@ uint8_t vblk_test_device_status(void)
 int vblk_test_submit_type(uint32_t type, uint64_t lba, uint32_t count, unsigned *slot)
 {
     if (type != VBLK_TEST_T_UNKNOWN)        /* allow-list: never OUT, FLUSH, DISCARD, ... */
-        return BLK_EINVAL;
+        return VBLK_EINVAL;
     return submit_type(type, lba, count, slot);
 }
 #endif
