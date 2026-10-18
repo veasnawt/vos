@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| Status | **Proposal (N3.0), partly implemented.** N3.1 implemented layer 1 and a minimal layer 2: a read-only, polled virtio-blk driver behind a block-device interface without a write operation (`docs/plans/n3-storage.md` section 5). There is still no file system, no file system call and no writable persistent state. Decisions D-S1, D-S2, D-S3, D-S7 and D-S8 were approved on 2026-10-18 (section 12). |
+| Status | **Proposal (N3.0), partly implemented.** N3.1 implemented layer 1: a read-only, polled virtio-blk driver (`docs/plans/n3-storage.md` section 5). N3.2 implemented layers 2 and 3: a block-device registry, device-independent errors, validated read-only requests and a bounded read-only cache (section 6 there). There is still no file system, no file system call and no writable persistent state. Decisions D-S1, D-S2, D-S3, D-S7 and D-S8 were approved on 2026-10-18 (section 12). |
 | Date | 2026-10-18 (written at `8e30f9b`, the end of N2) |
 | Scope | The layered storage stack from the device driver to the file API; the first device and file-system format; the file-system layout, naming, ownership and permission model; crash and power-loss behaviour |
 | Out of scope | Implementation (N3.1 and later); networking and remote file systems; encryption; graphics; package installation (only its storage needs) |
@@ -82,7 +82,16 @@ No performance numbers appear here because none have been measured.
     transport. Its registers are reached through the PCI configuration access capability, so
     no MMIO is mapped.
   - One polled split virtqueue, with a 6-frame DMA pool.
-  - `struct blockdev` with a single `read` operation.
+  - `struct blockdev` with a single `read` operation (replaced in N3.2).
+- **Since N3.2** (`arch/x86_64/blockdev.{h,c}`):
+  - a registry of up to 4 devices with generation-checked IDs;
+  - `blk_read`, `blk_read_block` for 512–4096-byte blocks, and `blk_write`, which always
+    refuses;
+  - a 32-line × 4 KiB read-only cache in PMM frames (LRU, checksummed, epoch-invalidated);
+  - device-independent `BLK_E*` errors;
+  - DMA frames of refused or stopped devices released after a confirmed reset;
+  - a driver that yields while it waits.
+  - Details: `docs/plans/n3-storage.md` section 6.
   - Details, tests and limits: `docs/plans/n3-storage.md` section 5.
 
 ---
@@ -480,7 +489,7 @@ that limit to 4 MiB (`docs/plans/n3-storage.md`).
 | D-S6 | Unicode normalisation of names | Open: NFC on creation, or none |
 | D-S7 | Layout | `/system`, `/applications`, `/users`, `/configuration`, `/temporary` (section 9.3). **Provisionally approved 2026-10-18; not built into the block layer.** |
 | D-S8 | File ABI | New ABI version (v2), handle-relative calls only, negotiated through the ELF ABI note. **v2 reserved for file calls (2026-10-18); not defined yet.** |
-| D-S9 | Cache size and per-process limits | Fixed numbers chosen in N3.2 from the measured kernel budget |
+| D-S9 | Cache size and per-process limits | Fixed numbers chosen in N3.2 from the measured kernel budget. **N3.2: 32 lines of 4 KiB (128 KiB of PMM frames); per-process limits deferred to N3.5.** |
 
 ## 13. Risks
 

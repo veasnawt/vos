@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| Status | **N3.0 complete (2026-10-18): storage architecture designed, kernel map extended to 4 MiB of 4 KiB pages. N3.1 complete (2026-10-18): read-only, polled virtio-blk driver (section 5). N3.2 and later are [Proposal] and need explicit approval.** |
+| Status | **N3.0 complete (2026-10-18): storage architecture designed, kernel map extended to 4 MiB of 4 KiB pages. N3.1 complete (2026-10-18): read-only, polled virtio-blk driver (section 5). N3.2 complete (2026-10-18): block layer, read-only cache, DMA-frame lifecycle, cooperative waiting (section 6). N3.3 and later are [Proposal] and need explicit approval.** |
 | Date | 2026-10-18 |
 | Starting point | N2 complete at `8e30f9b` (`docs/plans/n2-foundation.md`, section 3.7) |
 | Target | `ARCH=x86_64`; the i386 kernel stays as it is |
@@ -33,7 +33,7 @@ from the disk is treated as untrusted input.
 |---|---|---|
 | **N3.0** Storage architecture and memory preparation *(done)* | Design document. Second 4 KiB page table in the W^X kernel map (phys 0–4 MiB), with tests. | Section 3 |
 | **N3.1** PCI and virtio-blk, read-only, polled *(done)* | Config-space scan (mechanism #1), modern virtio capability walk, feature negotiation, one split virtqueue in PMM frames, `IN` requests with a bounded poll, `VIRTIO_BLK_F_RO` honoured. The test disk is a generated raw image, not an ext2 image (no ext2 code exists yet). | Section 5 |
-| N3.2 Block layer | Block-device interface, validated block I/O (range, alignment, read-only), fixed-size cache in PMM frames, error mapping, an audit | Out-of-range and overflowing requests refused; cache bounded and frames accounted; device errors surface as errors |
+| **N3.2** Block layer *(done)* | Block-device registry and interface, validated block I/O, fixed-size read-only cache in PMM frames, device-independent errors, audits; DMA-frame release for refused and stopped devices; cooperative waiting in the driver | Section 6 |
 | N3.3 ext2 reader | Restricted profile (`storage.md` section 5.3), every field validated, bounded walks | Valid images read exactly; a set of host-corrupted images (superblock, group descriptors, inode, block pointers, directory records, loops) rejected for the intended reason, without a panic |
 | N3.4 Interrupt completion | INTx through the PIC, waiters on wait queues instead of polling | Other processes keep running during disk waits; a killed waiter leaves no stale request |
 | N3.5 File ABI v2 (read-only) | Handle-relative open, read, stat, enumerate and close; the namespace from trusted configuration; the ABI note version 2 | v0/v1 programs unchanged (`hello.elf` byte-identical); rights and `..` escapes refused; concurrent readers |
@@ -644,23 +644,441 @@ no MMIO mapping.
 - **Read-only boundaries** as in section 5.7.
 - **QEMU only.** All evidence comes from QEMU TCG: no KVM, no real hardware.
 
-## 6. Recommended N3.2 scope [Proposal]
+## 6. N3.2 result: block I/O layer and read-only cache (complete)
 
-The block layer between the driver and a future file system:
-- a block-device registry, which can hold one device at first;
-- requests in file-system blocks (1 KiB or 4 KiB) mapped to sectors, with alignment checks;
-- a fixed-size block cache in PMM frames, with its size chosen from the measured budget
-  (D-S9). It is read-only, has an explicit eviction policy and an audit, and caches no failed
-  read;
-- device errors mapped to file-system-level errors;
-- a per-caller limit on outstanding requests.
+### 6.1 Baseline and starting point
 
-Tests in N3.2:
-- cache hits and misses against the fixture;
-- eviction;
-- exhaustion;
-- I/O errors passing through uncached;
-- an audit after every suite.
+At `ebfb672` on `main` (clean tree), from a clean build, the N3.1 baseline reproduced:
+- `make test-all` exited 0 with 60 runs passing and none failing;
+- 11 fault comparisons matched;
+- `test-user-elf`: 288 passed, 0 failed;
+- the i386 `vos.bin`, `hello.elf`, production x86_64 `vos.bin` (`efb1ddcc…cb57c`) and test
+  disk hashes were as at the end of N3.1.
 
-Still not in N3.2: ext2 parsing (N3.3), interrupts (N3.4), file system calls (N3.5) and any
-write.
+The longest single wait in that run was 9,915 polls, against 6,097 recorded in N3.1. This is
+run-to-run variance under TCG, still four orders of magnitude below the bound.
+
+**Where the layer attaches.** N3.1 had a `struct blockdev` with one `read` pointer, published
+by the driver, and error codes shared between driver and callers. N3.2 replaces it with:
+- a registry and an operations table, so the block layer sees no virtio structure;
+- driver-private result codes, renamed `VBLK_E*`. The names `BLK_EIO`, `BLK_EPROTO`, … in
+  section 5 are now `VBLK_EIO`, `VBLK_EPROTO`, … The block layer maps them to its own codes
+  (section 6.4).
+
+### 6.2 Block-device interface and registry (`blockdev.h`, `blockdev.c`)
+
+- **Registry:** at most `BLK_MAX_DEVICES` = 4 devices.
+  - `blk_register(name, ops, ctx, &id)` checks the operations (`info` and `read` required),
+    and that the device reports a non-zero capacity, the read capability and requests of at
+    least one cache line.
+  - `blk_unregister(id)` is refused (`BLK_EBUSY`) while a line of the device is loading or
+    pinned.
+  - `blk_count`, `blk_nth` and `blk_describe` report name, driver, state, capacity, sector
+    size (512), largest request (64 sectors), capabilities (`BLK_CAP_READ`,
+    `BLK_CAP_DEVICE_RO`) and epoch.
+- **IDs:** registry slot + 1 in the low 4 bits, and a 28-bit generation above it. A slot's
+  generation changes when it is released, so an ID never names a later device. ID 0, unused
+  slots, slots ≥ 5 and wrong generations are all `BLK_ENODEV`.
+- **Driver operations** (`struct blk_ops`):
+  - `info`: state `READY`/`UNAVAILABLE`, sectors, largest request, capabilities, epoch;
+  - `read`;
+  - `owns_frame`: driver-private frames, never accepted as caller buffers.
+
+  The driver reports its state on every request, so failure, reset and shutdown are explicit
+  and never cached by the layer.
+- **Requests:**
+  - `blk_read(id, lba, count, buf, cap)`: 1–64 sectors;
+  - `blk_read_block(id, size, block, buf, cap)`: file-system blocks of 512, 1024, 2048 or
+    4096 bytes, with overflow-checked block-to-sector arithmetic;
+  - `blk_write(…)`: always `BLK_EUNSUPP`, an explicit refusal (`BLK_ENODEV` for an invalid
+    ID).
+- **Validation order:**
+  1. ID;
+  2. device state;
+  3. count and capacity of the buffer;
+  4. range: `lba < sectors` and `count <= sectors - lba`, which is overflow-safe;
+  5. buffer: every page present, writable, supervisor, and neither a cache frame nor a driver
+     frame.
+
+  A refused request reaches neither the device nor the buffer. No alignment is required of
+  buffers, because data is always copied.
+- **Audits:** `blk_audit()` checks registry counts, cache ownership, frame states, line keys,
+  capacities and checksums. `blk_cache_frames()` lists the cache frames for the PMM oracle.
+
+### 6.3 Cache
+
+| Property | Value |
+|---|---|
+| Size | `BLK_CACHE_LINES` = 32 lines of `BLK_LINE_SECTORS` = 8 sectors, one 4 KiB PMM frame per line: **128 KiB**. Allocated when the first device registers, freed when the last unregisters. About 0.4 % of the frames of a 128 MiB guest (31,933 free frames at the time of the PMM test). |
+| Line | Line *n* of a device holds sectors [8*n*, 8*n* + 8) clipped to the capacity. The 2051-sector test disk's last line (256) holds 3 sectors (2048–2050); the RAM test device's (128) holds 3 sectors (1024–1026). A load reads exactly the line's sectors, never past the capacity. |
+| Key | Registry slot, its generation, the driver's epoch and the line number |
+| States | `FREE`, `LOADING` (one thread is filling it: never returned, never evicted), `VALID` |
+| Replacement | A free line first, else the least recently used valid line that is not pinned (a use counter per access; ties to the lowest index). If every line is loading or pinned: `BLK_EBUSY`. |
+| Integrity | A 64-bit FNV-1a checksum over the line's sectors at load, checked on every hit. A mismatch drops the line and reloads it, at most 8 times per request. |
+| Hits | Copy from the line into the caller's buffer. No pointer to cache storage is ever handed out, so eviction can never invalidate a caller's data. |
+| Failed loads | The line goes back to `FREE`, so failed reads never create valid entries. After `BLK_EIO` the requested sectors are read one by one, uncached, into the caller's buffer, and only sectors that really fail return `BLK_EIO`. Other errors (`BLK_ETIMEDOUT`, `BLK_EUNAVAIL`, …) are returned as they are. |
+| Reset during a load | If the epoch changed or the device became unavailable while a line loaded, the data is discarded (`BLK_EUNAVAIL`). |
+| Concurrency | The kernel is not preemptible and runs with IF = 0, so every state change between explicit waits is atomic. A thread that needs a line another thread is loading blocks on a wait queue until that load ends. It waits at most 1024 times per request, then gets `BLK_EBUSY`. A woken thread re-checks that its device is still registered. |
+| Pins | Test hooks only (`blk_test_pin`). They model future holders such as a file system's metadata and are used to test exhaustion. |
+
+**Future 1, 2 and 4 KiB file-system blocks.** `blk_read_block` maps a block to
+`size / 512` sectors at `block * size / 512` (overflow-checked). A 4 KiB block whose number is
+aligned is exactly one cache line. A 1 or 2 KiB block lies within one line. Blocks crossing
+the capacity are refused with `BLK_ERANGE`; on the test disk that is the 4 KiB block 256.
+
+### 6.4 Errors and resource ownership
+
+| Block error | Meaning | From the virtio driver |
+|---|---|---|
+| `BLK_EINVAL` | malformed request (count, block size, buffer, capacity) | `VBLK_EINVAL` |
+| `BLK_ERANGE` | sectors outside the device | `VBLK_ERANGE` |
+| `BLK_ENODEV` | no registered device with this ID | — |
+| `BLK_EUNAVAIL` | the device exists but cannot serve requests | `VBLK_ENODEV`, `VBLK_EBROKEN` |
+| `BLK_EBUSY` | a bounded resource is exhausted (slots, cache lines, registry, waits) | `VBLK_EBUSY` |
+| `BLK_EIO` | the device failed the transfer or misbehaved | `VBLK_EIO`, `VBLK_EPROTO` (the device is then also unavailable) |
+| `BLK_ETIMEDOUT` | no completion in time (the device was reset) | `VBLK_ETIMEDOUT` |
+| `BLK_EUNSUPP` | unsupported operation (every write) | `VBLK_EUNSUPP` |
+
+No virtio meaning crosses the boundary. A protocol violation is simply an I/O error followed
+by an unavailable device.
+
+**Ownership:**
+
+| Resource | Owner | Released |
+|---|---|---|
+| 32 cache frames | the block layer, while ≥ 1 device is registered | when the last device unregisters |
+| 6 DMA frames | the virtio driver, while the device may use them | after a confirmed reset with bus mastering off (refusal, shutdown) |
+| Caller buffers | the caller | always; written only after validation, and only with data whose load succeeded |
+
+### 6.5 DMA-frame lifecycle
+
+**Finding.** In N3.1 a device refused during initialization kept its 6 frames. `give_up()`
+reset the device but never freed the pool, so the frames were retained without need: after a
+confirmed reset no virtqueue is live (virtio 1.2, 3.3.1). This was an unnecessary hold, not a
+safety reservation.
+
+**N3.2 rule.** The pool is freed only when the device can no longer write it:
+1. a reset the device confirms (status reads 0);
+2. **then** PCI bus mastering switched off;
+3. then the frames freed.
+
+If the reset is not confirmed, the frames stay allocated and are marked *quarantined*, because
+the device might still use an earlier queue.
+
+| Event | Device state | DMA pool | Block layer |
+|---|---|---|---|
+| Refused during initialization (feature, queue, transport, configuration) | `FAILED` | freed after the confirmed reset; quarantined otherwise | not registered |
+| Timeout or protocol violation | `BROKEN` (reset) | kept for `vblk_reinit` | registered, `UNAVAILABLE`; every request `BLK_EUNAVAIL`, cached lines included |
+| `vblk_reinit` | `READY` (or `FAILED`) | reallocated if it was freed; bus mastering on again | registered (or re-registered with a new ID); the epoch changes, so every old line is stale |
+| `vblk_shutdown` | `STOPPED` | freed after the confirmed reset | unregistered: the ID dies, and the cache is freed when no device is left |
+| Shutdown with an unconfirmed reset | `BROKEN` | quarantined | unregistered |
+| Requests outstanding | — | — | `vblk_reinit` does nothing and `vblk_shutdown` returns `VBLK_EBUSY`. A frame in use is never released. |
+
+Checks:
+- `vblk_audit` checks the pool bookkeeping (allocated, listed, quarantined) and the
+  registration against the state.
+- The PMM oracle comparison treats exactly the pool (while held) and the cache frames as
+  legitimately allocated. Every other frame must match the memory map, so a leaked frame fails
+  it.
+
+### 6.6 Reset and invalidation
+
+- The virtio device's epoch is its number of successful initializations, so every
+  `vblk_reinit` makes all of its cached lines stale.
+- A stale line is dropped when it is next seen (`stale_drops`). It is never returned.
+- While the device is `BROKEN`, the layer refuses even requests whose lines are cached
+  (`BLK_EUNAVAIL`). Cached data is not served from a device in an unknown state.
+- `blk_invalidate(id)` drops a device's lines explicitly (`id` 0: all devices). It is refused
+  while a line is loading or pinned.
+
+### 6.7 Polling and responsiveness
+
+The five questions asked for N3.2:
+
+1. **Why interrupts must stay disabled.** The kernel is not preemptible. All kernel code runs
+   with IF = 0, except the idle thread's `sti; hlt`. IRQs are taken only in ring 3 or in idle,
+   and preemption happens only on the return to ring 3 (N2.1–N2.3). Enabling interrupts while
+   a driver polls would deliver IRQ0 in ordinary kernel code, which the design excludes.
+   Besides, the device's own interrupt is not connected: INTx is disabled, the PIC line is
+   masked and MSI-X is not set up.
+2. **Can a cache miss monopolize the CPU?** In N3.1, yes. A miss polled with IF = 0 until
+   completion, and a hung device held the CPU for the whole bound (about 10 s under TCG at
+   50,000,000 polls). Measured in N3.2 with the old behaviour (yielding disabled): a CPU-bound
+   program got **0 ticks** during a hung request. Hits never touch the device.
+3. **Can a waiting request yield or sleep?** It can yield. `thread_yield` is the cooperative
+   switch the scheduler already provides, and a thread may block or yield inside kernel code,
+   as `channel_recv` does. Sleeping (`thread_sleep`) would cost at least one tick (10 ms) per
+   request even when the device answers in microseconds, so it is not used.
+4. **What does virtio offer?** Used-buffer notifications by interrupt (INTx or MSI-X), with
+   suppression flags, or polling of the used ring. The safe incremental step, without
+   interrupts, is polling that yields.
+5. **What interrupt-driven I/O needs (N3.4):**
+   - routing the device's INTx line (configuration offset 0x3C) through the 8259, or MSI-X;
+   - an IRQ handler that reads the ISR to acknowledge and wakes the waiters on a wait queue;
+   - waiters that block (`thread_block`) instead of polling.
+
+   This fits the existing model, because IRQs arrive when the CPU is in ring 3 or idle. When
+   no thread is runnable, idle's `sti; hlt` takes the device interrupt. N3.4 also needs a
+   per-request timeout from timer ticks, and a rule for a process killed while its thread
+   waits.
+
+**Implemented (narrow, no architectural change).** `vblk_wait` now yields every
+`VBLK_YIELD_POLLS` = 4096 polls. Interrupts stay disabled in the kernel, and the kernel stays
+non-preemptible.
+- After each yield the waiter re-checks the device state, the epoch, its slot and the slot's
+  owner (the thread that submitted it). Another thread may have completed the slot in its own
+  `reap`, or reset the device. A reset ends the wait with `VBLK_EBROKEN` and the slot is never
+  touched again.
+- A second bound, `VBLK_WAIT_TICKS` = 200 timer ticks, ends a wait once other threads have run
+  (ticks advance only while ring 3 or idle runs). Without it, a hung device would cost a time
+  slice per yield, about 12,000 slices for the poll bound.
+- Requests complete typically within 300–10,000 polls, so most never yield.
+
+**Measured** in the `vblk` run (a request the device never sees, beside the CPU-bound program
+memtag1):
+- without yielding, the program ran 0 of 0 ticks;
+- with yielding every 256 polls and a 30-tick bound, it ran 30 of 30
+  ticks (15 yields), and the wait ended at the tick bound.
+
+**What this does not solve.** Between yields the CPU is still held for up to 4096 polls with
+interrupts off. A finite polling bound alone does not make the system responsive: with nothing
+else runnable the waiter keeps polling, and with a single CPU-bound program each yield costs
+the waiter a full time slice. Interrupt-driven completion (N3.4) is the real fix.
+
+### 6.8 Performance measurements (QEMU TCG; relative only)
+
+| Measurement | Value |
+|---|---|
+| 32 one-sector misses vs. the same 32 as hits (TSC cycles per read) | miss 687,269, hit 22,594: a hit costs about 1/30 of a miss |
+| Full scan of the 2051-sector disk through the cache (requests of 1–64 sectors) | 257 device reads: each line exactly once (256 full + the 3-sector line); 225 evictions; every sector equal to the fixture |
+| Re-reading the cached tail | 0 device requests |
+| Longest single device wait in the final `vblk` run | 4,096 polls |
+| Block-layer counters at the end of the `vblk` run | 605 requests, 211 hits, 1,031 misses, 1,030 device reads (one miss was refused with `BLK_EBUSY` before reading), 811 evictions, 7 load errors, 7 fallback reads, 36 stale drops, 1 corrupt drop, 3 load waits, 1 busy, 47 refused (RAM test device and virtio-blk together) |
+
+### 6.9 Hardware configurations
+
+| Configuration | Status |
+|---|---|
+| QEMU `pc`, virtio-blk-pci modern (0x1042), read-only | supported, tested (128 MiB, 2 GiB, `-cpu max`) |
+| QEMU virtio-blk-pci transitional (0x1001), modern interface | supported, tested |
+| Writable virtio-blk backing | supported read-only, tested; the image hash is unchanged afterwards |
+| Device requiring `VIRTIO_F_ACCESS_PLATFORM`; queue smaller than 16 | refused, tested; the pool is released |
+| Devices on PCI buses other than 0, behind bridges; more than one virtio-blk device; MSI-X; interrupts | not supported |
+| AHCI, NVMe, IDE disks, real hardware, KVM | not supported, not tested |
+
+### 6.10 Tests
+
+**`selftest_blk`, every test image (55 cases)**, with a test-only RAM device of 1027 sectors.
+Its contents are a function of the sector and a per-device salt, and its reads can fail, yield
+or change the epoch on request.
+- **Registry:**
+  - refusal of bad operations, zero capacity and too-small requests;
+  - identity and description;
+  - zero, wrong-generation, out-of-range and unused IDs give `BLK_ENODEV` for every
+    operation;
+  - 4 devices, then `BLK_EBUSY`;
+  - dead IDs after unregistration, and a new generation for a reused slot;
+  - cache frames allocated with the first device and freed with the last.
+- **Validation:** 20 refusals (counts, capacities, NULL, user, read-only, guard-page,
+  cache-frame and wrapping buffers, past-the-end and wrapping ranges, bad block sizes,
+  overflowing block numbers, partial blocks, writes, an unavailable device), none reaching
+  the device or the buffer.
+- **Contents and counters:**
+  - first sector (one miss, one 8-sector load);
+  - hit in the same line;
+  - a request across a line boundary (one hit, one miss);
+  - the final partial line loaded with exactly 3 sectors;
+  - 64-sector requests at an unaligned start and ending at the capacity;
+  - 512/1024/2048/4096-byte blocks;
+  - 20 identical repeated reads;
+  - the device was never asked for an impossible range.
+- **LRU:** 32 misses fill the cache without eviction. A touched line survives. The 33rd line
+  evicts the least recently used one, which reloads from the device.
+- **Exhaustion:** all 32 lines pinned gives `BLK_EBUSY` with no device read. Invalidation and
+  unregistration are refused, hits are still served, and unpinning one line recovers.
+- **Failures:**
+  - an I/O error on a miss gives `BLK_EIO` with the line not cached;
+  - the other sectors of the failing line are served one by one, uncached;
+  - covering requests fail;
+  - a timeout is not retried sector by sector;
+  - an unavailable device is reported;
+  - after recovery the line caches;
+  - after an epoch change the cached line is dropped and reloaded;
+  - a reset during a load discards the data;
+  - a corrupted cache line is detected by its checksum and reloaded.
+- **Concurrency:** two threads need the same line at once. One loads it, the other waits on
+  the wait queue and then hits, and the device reads it once.
+- **Two devices:** the same line numbers stay apart (separate misses, each device's own data).
+  Invalidating or unregistering one leaves the other's lines.
+- **Cycles:** 20 register/read/unregister cycles with no frame leaked.
+
+**`selftest_blk` on the virtio-blk device** (`vblk` image, 73 cases in total):
+- registration and description;
+- a full scan through the cache equal to the fixture, with exact miss, device-read and
+  eviction counts;
+- the cached tail served without the device;
+- 4 KiB and 1 KiB blocks equal to the fixture, with the blocks crossing sector 2051 refused;
+- reinitialization invalidates;
+- a timeout on a miss gives `BLK_ETIMEDOUT`, then `BLK_EUNAVAIL` even for cached sectors,
+  then recovery without trusting old lines;
+- 5 shutdown/reinitialization cycles, each returning and retaking 6 DMA + 32 cache frames
+  with new IDs and exact data;
+- hit/miss timing;
+- two reader threads doing 300 random reads through the cache beside three running programs,
+  with no shared frames and clean audits.
+
+**`selftest_blk` on the `vblk-ioerr` image:** the injected error fails line 125's load. Sectors
+1001–1007 are served uncached, line 124 caches normally, and covering requests and the 4 KiB
+block fail.
+
+**`selftest_vblk` additions** (now 97 cases on `vblk`):
+- driver-to-block error mapping;
+- registration state;
+- **reset while waiting:** a thread that yielded during its request returns `VBLK_EBROKEN`
+  when another thread's protocol error resets the device;
+- **responsiveness:** 0 of 0 ticks without yielding versus most of the 30-tick bound with
+  yielding;
+- **refused devices** (`vblk-iommu-platform`, `vblk-queue8`): the pool is freed after the
+  confirmed reset, also over 10 retries, with status 0 and bus mastering off.
+
+**Harness:** every run that requires the vblk self-test line now also requires
+`selftest: blk`. The `vblk` run also requires the shutdown line and the 0-tick measurement.
+
+**Changed existing test (N3.0 `selftest_kmap`).** The verifier test removed the *last* page of
+the second page table and expected "kernel alias above the image". With N3.2 the test kernel
+grew, so GRUB placed the 1 MiB fixture module across that page in the `vblk` image. The
+verifier then correctly named the module first. The test now picks the highest page of the
+second table above the image that holds no module or boot information. The assertion and its
+expected diagnostic are unchanged.
+
+### 6.11 Mutations
+
+Twenty-three mutations of `blockdev.c` and `virtio_blk.c`. Each was applied to the clean tree
+at `8430280`, built successfully, run in the named configurations (exit status and markers
+checked, 120 s limit) and restored with `git checkout`.
+- A build failure or a timeout is never counted as a detection; none occurred.
+- **22 were caught** by concrete failing assertions.
+- **1 was not detected** (equivalent).
+
+| # | Mutation | Runs | Result |
+|---|---|---|---|
+| B1 | Capacity check removed from `blk_read` | main, vblk | caught by both: "sectors past the end and wrapping ranges refused", "refused requests reach neither the device nor the buffer" |
+| B2 | Range check as `lba + count > sectors` (overflows) | main | caught: the wrapping range is accepted, "the layer never asked the device for an impossible range" |
+| B3 | Block-number overflow check removed | main | caught: "overflowing and partial blocks refused" |
+| B4 | ID generation ignored | main | caught: wrong-generation and stale IDs accepted |
+| B5 | Cache key ignores the device | main, vblk | caught by both: "line 0 of two devices: two misses, each device's own data" |
+| B6 | Cache key ignores the line number | main | caught: hit/miss counts and contents across line boundaries |
+| B7 | Stale line returned after a reset (epoch not compared) | main, vblk | caught by both: "after a device reset the cached line is stale", "after a reinitialization the cached line is dropped" |
+| B8 | Failed load marked valid | main, vblk-ioerr | caught by both: "I/O error on a miss: … the line is not cached" |
+| B9 | Pinned (in-use) line evictable | main | caught: "every line pinned: a miss is refused with BLK_EBUSY" |
+| B10 | A loading line reused as a victim | main, vblk | caught by vblk ("two kernel threads: 300 random reads … all exact"). The main image has no test where another thread needs a victim while a line loads, so main did not detect it. |
+| B11 | Cache frames not freed with the last device | main | caught: "every cache frame returned", "20 … cycles: no frame leaked" |
+| B12 | DMA pool frames not freed | main + `iommu_platform=on`, vblk | caught by both: the PMM oracle ("every frame matches the oracle"), the refused-device and shutdown-cycle checks |
+| B13 | Driver timeout mapped to `BLK_EIO` | main, vblk | caught by both: the mapping table, and "a timeout on a miss is BLK_ETIMEDOUT" |
+| B14 | Fallback swallows per-sector errors | main, vblk-ioerr | caught by both |
+| B15 | Used-ring descriptor ownership unchecked | vblk | caught: "completion naming a free slot: refused" |
+| B16 | Last line not clipped to the capacity | main, vblk | caught by both: "final partial line … exactly its 3 sectors" |
+| B17 | Hit-side boundary check (`off + k > nsect`) removed | main, vblk | **not detected, equivalent**: the request range check at entry already guarantees that a hit never asks for sectors past the line's end. The check is defence in depth. |
+| B18 | No re-check after a yield | vblk | caught: "the yielded waiter notices the reset and returns VBLK_EBROKEN" |
+| B19 | Tick bound removed | vblk | caught: "the wait ends at the 30-tick bound" |
+| B20 | Never yield | vblk | caught: the reset-while-waiting test and the responsiveness test |
+| B21 | Refused device keeps its pool (reset without release) | main + `iommu_platform=on`, main + `queue-size=8` | caught by both: "refused device: its DMA pool is freed …", "bus mastering switched off" |
+| B22 | Checksum not verified on hits | main | caught: "a changed cache line is detected on the next hit and reloaded" |
+| B23 | Cache frames accepted as caller buffers | main | caught: "… cache-frame and wrapping buffers refused" |
+
+### 6.12 Regression
+
+From clean builds of the final code (`8430280`; the documentation commit changes no code):
+
+| Run | Result |
+|---|---|
+| Reproducibility | Two clean builds of the production x86_64 `vos.bin`: identical (`83fdfc54…f9bbd0`) |
+| `make test` | exit 0; 59 QEMU runs passed, 0 failed; 11 fault comparisons; `test-user-elf` 288 passed, 0 failed |
+| `make ARCH=x86_64 test` | identical to `make test` |
+| `make ARCH=i386 test` | exit 0; smoke test passed |
+| `make test-all` | exit 0; 60 runs passed, 0 failed; 11 fault comparisons; 288 passed, 0 failed |
+| `git diff --check` | clean |
+| i386 `vos.bin` | `0760e7eb8ecfcb8545f4126f5a369b0fadfc5163ad9e95c5fba2a81d45afb9dd` (unchanged) |
+| `hello.elf` | `c6c6416195a0f18d680d7f8f19be52ce02ff02912ef3bac45324fbe88006cd06` (unchanged) |
+| Test disk | `075bb733…4d0c77` after every run |
+
+The run counts are those of N3.1. N3.2 added no QEMU configuration; it extends the existing
+runs, and every disk run and the no-disk runs now also require the block-layer self-test. The
+block-layer commit alone (`31eead8`, before the new tests) passed `make ARCH=x86_64 test` in a
+separate worktree: 59 runs, 11 fault comparisons, 288 checks.
+
+Also covered, unchanged:
+- **N2:** isolation, IPC, stress, the scheduler and interrupts (the `mp`, `ipc`, `stress` and
+  `irq` images, the 41-case suite under qemu64, 2 GiB and `-cpu max`);
+- **N3.0:** the 4 MiB kernel map tests;
+- **N3.1:** the driver tests, with the device configurations of section 5.8;
+- the genuine NMI;
+- the static user/ELF checks.
+
+Physical frames are accounted for by the PMM oracle comparison in every image: every frame
+matches the memory map except exactly the DMA pool and the cache frames. ABI v0 and v1 are
+unchanged (no file under `user/` or `docs/abi/` changed).
+
+### 6.13 Memory and headroom
+
+`__kernel_phys_end` (limit of the 4 KiB-mapped area: `0x400000`):
+
+| Image | N3.1 | N3.2 | Room left |
+|---|---|---|---|
+| production `build/x86_64` | `0x192000` | `0x193000` (+4 KiB) | 2484 KiB |
+| main test image | `0x203000` | `0x21b000` | 1940 KiB |
+| `vblk` test image (largest) | `0x209000` | `0x229000` | 1884 KiB |
+| `vblk-ioerr` test image | `0x206000` | `0x21e000` | 1928 KiB |
+
+The test images grew by the block-layer tests' static buffers (64 KiB request buffers, 24 KiB
+for the concurrent readers) and code. The production image grew by 4 KiB.
+
+At run time, with a registered disk the storage stack holds 38 PMM frames (152 KiB): 32 cache
+frames and 6 DMA frames. Without a usable disk it holds none (N3.1: a refused device kept 6).
+In the `vblk` image the PMM self-test found 31,869 free frames (N3.1: 31,933). The difference
+is the 32 cache frames plus the 128 KiB of image growth.
+
+### 6.14 Remaining limitations
+
+- **Responsiveness:** yielding helps, but there are still bursts of up to 4096 polls with
+  interrupts off. Interrupt-driven completion is N3.4 (section 6.7).
+- **No IOMMU.** The DMA pool constrains the driver, not the device.
+- **One virtio-blk device on PCI bus 0, one queue, 4 request slots.**
+- **Fixed cache:** 128 KiB, no read-ahead, no per-caller quota. Pins exist only as test
+  hooks.
+- **Waits on loading lines:** bounded by count (1024), not by time.
+- **No caller is killed in a wait** in N3.2, because there are no file system calls yet. N3.5
+  must define what happens when a process is killed while its thread waits for a line.
+- **FEATURES_OK refusal still untested live** (as in N3.1).
+- **QEMU TCG only.**
+
+### 6.15 Dependencies before native file operations
+
+1. An ext2 reader (N3.3) on `blk_read_block`, which treats the disk as untrusted input.
+2. Interrupt-driven completion (N3.4) before user programs may cause disk I/O, so one
+   program's file read cannot stall the others.
+3. The ABI v2 design (D-S8) with handle-relative calls, D-S5 and D-S6 (names), and a defined
+   behaviour for a process killed during I/O (N3.5).
+4. A per-process limit on outstanding requests and cache use.
+
+## 7. Recommended N3.3 scope [Proposal]
+
+A read-only ext2 reader in the kernel on top of `blk_read_block`, restricted to the profile of
+`storage.md` section 5.3:
+- superblock and group descriptors validated;
+- inodes;
+- direct, single, double and triple indirect blocks with bounded walks;
+- linear directories;
+- every field checked before use.
+
+Tests:
+- `mke2fs -d` images built reproducibly on the host (to be verified), with a host-side listing
+  as the fixture;
+- a set of deliberately corrupted images (superblock, group descriptors, inode, block
+  pointers, directory records, loops), each refused for its intended reason without a panic.
+
+Still not in N3.3:
+- mounting into any namespace;
+- file system calls (N3.5);
+- interrupts (N3.4);
+- any write.

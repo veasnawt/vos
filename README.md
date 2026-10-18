@@ -135,7 +135,12 @@ Every QEMU run is headless, sequential and has a timeout. The x86_64 tests inclu
   range, buffer and queue limits, injected device errors (QEMU `blkdebug`), timeouts with
   reset and recovery, forged completions, modern and transitional devices, devices the driver
   must refuse, and reads beside running programs. The disk's SHA-256 is checked after every
-  run.
+  run;
+- block-layer tests (since N3.2): a test-only RAM device in every image, and the virtio-blk
+  disk in the disk images. They cover the device registry, request validation, the read-only
+  cache (counted hits, misses and evictions, LRU, exhaustion, failed loads, invalidation after
+  resets, corruption detection), concurrent readers, and shutdown and reinitialization with
+  frame accounting.
 
 ## Layout
 
@@ -166,7 +171,8 @@ The `m1-32bit` tag marks the original known-good 32-bit baseline.
   timer preemption), N2.4 (channels, ABI v1) and N2.5 (stress, audits, closure) are done: N2
   is complete; its closure (section 3.7) lists guarantees, limits and risks
 - `docs/plans/n3-storage.md` – the N3 roadmap (storage, proposal); N3.0 (storage design, kernel
-  map extended to 4 MiB of 4 KiB pages) and N3.1 (read-only, polled virtio-blk driver) are done
+  map extended to 4 MiB of 4 KiB pages), N3.1 (read-only, polled virtio-blk driver) and N3.2
+  (block layer and read-only cache) are done
 - `docs/architecture/storage.md` – the storage architecture proposal: layers, virtio-blk, ext2
   (read-only first), layout, naming, permissions, crash behaviour, open decisions
 - `docs/vision/product-direction.md` – provisional long-term product direction (not a specification)
