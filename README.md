@@ -120,7 +120,8 @@ Every QEMU run is headless, sequential and has a timeout. The x86_64 tests inclu
   registers or try to switch interrupts off, run while the timer interrupts them; a test-only
   tick budget in the kernel ends them;
 - kernel memory-protection cases (since N2.0): the kernel writing its own code or constants,
-  executing data or a free page, reading a stack guard page, overflowing its stack, and NMI and
+  executing data or a free page (through a 2 MiB alias page and, since N3.0, through the 4 KiB
+  pages above the image), reading a stack guard page, overflowing its stack, and NMI and
   machine-check entry (one NMI injected through the QEMU monitor); `scripts/check-fault.sh`
   compares the CPU-reported fault with what each case expected;
 - an isolation suite of 41 small programs that try forbidden things (write kernel memory,
@@ -157,6 +158,10 @@ The `m1-32bit` tag marks the original known-good 32-bit baseline.
   (interrupt controller, timer), N2.2 (kernel threads, scheduler), N2.3 (several processes,
   timer preemption), N2.4 (channels, ABI v1) and N2.5 (stress, audits, closure) are done: N2
   is complete; its closure (section 3.7) lists guarantees, limits and risks
+- `docs/plans/n3-storage.md` – the N3 roadmap (storage, proposal); N3.0 (storage design, kernel
+  map extended to 4 MiB of 4 KiB pages) is done
+- `docs/architecture/storage.md` – the storage architecture proposal: layers, virtio-blk, ext2
+  (read-only first), layout, naming, permissions, crash behaviour, open decisions
 - `docs/vision/product-direction.md` – provisional long-term product direction (not a specification)
 
 ## History

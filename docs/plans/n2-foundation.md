@@ -620,7 +620,8 @@ with no side-channel mitigations; without SMEP (`qemu64`) ring 0 could execute u
 per-process quotas beyond the fixed tables; the 16-bit generation wrap; the kernel trusts its
 GRUB modules and configuration completely; all evidence comes from QEMU TCG.
 
-**Future kernel mapping and stack options (for N3, not decided):** (a) a second 4 KiB page table
+**Future kernel mapping and stack options (for N3; decided in N3.0: option (a), see
+`docs/plans/n3-storage.md` section 3.4):** (a) a second 4 KiB page table
 for phys 2–4 MiB in the W^X map (smallest change, keeps static stacks, doubles the image budget);
 (b) kernel stacks mapped from allocated frames into a dedicated guarded kernel region (removes the
 image limit for stacks, needs upper-half mapping support in `vmm`); (c) moving test-only buffers
