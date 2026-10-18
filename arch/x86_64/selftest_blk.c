@@ -734,7 +734,7 @@ int selftest_blk(const struct boot_info *bi)
     S = blk_stats();
     expect(streq(blk_strerror(BLK_EIO), "device I/O error") && streq(blk_strerror(BLK_EUNSUPP), "operation not supported") &&
            streq(blk_strerror(99), "unknown error"), "blk_strerror names the codes");
-#ifndef VBLK_LIVE
+#if !defined(VBLK_LIVE) && !defined(VOS_TEST_CASE_ext2)
     expect(blk_count() == 0 && blk_nth(0) == 0 && blk_cache_frames(0, 0) == 0 && blk_audit() == NULL,
            "no usable disk: no device registered, no cache frames");
 #endif

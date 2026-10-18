@@ -251,7 +251,7 @@ static void test_buffers(void)
  * required, a queue of 8): then the state is FAILED and the log line names
  * the reason, which arch.mk checks.
  */
-#ifndef VBLK_LIVE
+#if !defined(VBLK_LIVE) && !defined(VOS_TEST_CASE_ext2)
 static void test_absent(void)
 {
     const struct vblk_info *in = vblk_info();
@@ -809,7 +809,10 @@ int selftest_vblk(const struct boot_info *bi)
     test_parser();
     test_choices();
     test_buffers();
-#ifndef VBLK_LIVE
+#if defined(VOS_TEST_CASE_ext2)
+    /* A virtio-blk device holds an ext2 image here; selftest_ext2.c drives it. */
+    expect(vblk_info()->state == VBLK_READY && vblk_audit() == NULL, "virtio-blk device ready (ext2 image)");
+#elif !defined(VBLK_LIVE)
     test_absent();
 #else
     expect(find_fixture(), "GRUB delivered the fixture module vblk-fixture");

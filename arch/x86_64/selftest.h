@@ -55,6 +55,12 @@ int selftest_vblk(const struct boot_info *bi);
  * against the GRUB module "vblk-fixture" (selftest_blk.c).
  */
 int selftest_blk(const struct boot_info *bi);
+/*
+ * N3.3 read-only ext2 reader: SHA-256 vectors and refusals in every image;
+ * with VOS_TEST_CASE=ext2 every fixture image against its host-side
+ * manifest, corruption, lifecycle, concurrency and virtio-blk (selftest_ext2.c).
+ */
+int selftest_ext2(const struct boot_info *bi);
 /* Page-table manager, identity-map removal and kernel survival (restores all state). */
 int selftest_vmm(void);
 /* User address spaces and ring 3 (restores all state). */

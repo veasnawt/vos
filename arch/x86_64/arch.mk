@@ -13,7 +13,7 @@ ARCH_OBJS       := boot.o entry.o usermode.o kernel.o bootinfo.o console.o cpu.o
                    pci.o blockdev.o virtio_blk.o ext2.o
 ifeq ($(VOS_TEST),1)
 ARCH_OBJS       += selftest.o selftest_cpu.o selftest_elf.o selftest_ipc.o selftest_irq.o selftest_kmap.o selftest_mp.o selftest_sched.o selftest_stress.o selftest_pmm.o selftest_suite.o \
-                   selftest_user.o selftest_vblk.o selftest_blk.o selftest_vmm.o user_progs.o
+                   selftest_user.o selftest_vblk.o selftest_blk.o selftest_ext2.o selftest_vmm.o user_progs.o
 endif
 QEMU            := qemu-system-x86_64
 # The boot application, delivered by GRUB as a Multiboot2 module (grub.cfg).
@@ -40,6 +40,24 @@ $(VBLK_DISK): $(VBLK_TOOL)
 	echo "$(VBLK_SHA256)  $@.tmp" | sha256sum -c --quiet
 	chmod a-w $@.tmp
 	mv -f $@.tmp $@
+
+# N3.3 ext2 fixtures: images made by mke2fs -d (and e2fsck -D) from generated source trees,
+# each with a manifest written from the source tree (scripts/mkext2fixtures.sh). Every image is
+# built twice and compared, checked by e2fsck, made read-only, and its SHA-256 recorded in
+# SHA256SUMS, which is checked again after the runs.
+EXT2_DIR     := build/ext2
+EXT2_FIXGEN  := build/ext2-tools/fixgen
+EXT2_STAMP   := $(EXT2_DIR)/SHA256SUMS
+EXT2_IMAGES  := 1k 2k 4k htree nofeat empty
+EXT2_DISK    := -drive file=$(EXT2_DIR)/ext2-1k.img,if=none,id=vd0,format=raw,readonly=on \
+                -device virtio-blk-pci,drive=vd0,disable-legacy=on
+$(EXT2_FIXGEN): scripts/fixgen.c
+	mkdir -p $(dir $@)
+	$(CC) -std=gnu11 -O2 -Wall -Wextra -Werror -o $@ $<
+$(EXT2_STAMP): scripts/mkext2fixtures.sh $(EXT2_FIXGEN)
+	scripts/mkext2fixtures.sh $(EXT2_DIR) $(EXT2_FIXGEN)
+$(foreach i,$(EXT2_IMAGES),$(EXT2_DIR)/ext2-$(i).img $(EXT2_DIR)/ext2-$(i).manifest): $(EXT2_STAMP)
+	@test -f $@
 
 # 1. Production image (halts after boot): serial smoke test.
 # 2. Test image (VOS_TEST=1, reports via isa-debug-exit): exit status AND
@@ -102,6 +120,7 @@ arch-test: iso
 	    'selftest: pmm-kernel ' 'selftest: 1000 frames from ' 'selftest: vmm ' 'selftest: user ' \
 	    'selftest: kmap ' 'kmap: phys 0-4 MiB as 4 KiB pages: ' \
 	    'vblk: no virtio-blk device on PCI bus 0; block storage unavailable' 'selftest: vblk ' 'selftest: blk ' \
+	    'selftest: ext2 ' \
 	    'kmap: after the TLB flush the CPU refused a text write' 'vmm: audit passed: ' \
 	    'irq: 8259 master 0x20-0x27, slave 0x28-0x2f (cascade IRQ2); masks 0xfffe (IRQ0 only)' \
 	    'pit: channel 0 mode 2, divisor 11932 (99.998 Hz)' 'selftest: irq ' \
@@ -292,6 +311,18 @@ arch-test: iso
 	    'vblk: refused device: queue too small' 'selftest: vblk ' 'selftest: blk ' 'VOS-TEST: PASS' \
 	    -- -drive file=$(VBLK_DISK),if=none,id=vd0,format=raw,readonly=on \
 	    -device virtio-blk-pci,drive=vd0,disable-legacy=on,queue-size=8
+	$(MAKE) --no-print-directory ARCH=$(ARCH) VOS_TEST=1 VOS_TEST_CASE=ext2 iso
+	TIMEOUT=240 scripts/exit-test.sh ext2 build/$(ARCH)-test-ext2/vos.iso 33 \
+	    'ext2: ext2-1k.img: ' 'ext2: ext2-2k.img: ' 'ext2: ext2-4k.img: ' 'ext2: ext2-htree.img: ' \
+	    'ext2: ext2-nofeat.img: ' 'ext2: ext2-empty.img: ' 'ext2: virtio-blk: ' \
+	    ' corrupted or failing images refused for the intended reason' 'selftest: ext2 ' 'VOS-TEST: PASS' \
+	    -- $(EXT2_DISK)
+	MEM=2G TIMEOUT=240 scripts/exit-test.sh ext2-2G build/$(ARCH)-test-ext2/vos.iso 33 \
+	    'ext2: virtio-blk: ' 'selftest: ext2 ' 'VOS-TEST: PASS' -- $(EXT2_DISK)
+	TIMEOUT=240 scripts/exit-test.sh ext2-max build/$(ARCH)-test-ext2/vos.iso 33 \
+	    'smep=on umip=on smap=on' 'ext2: virtio-blk: ' 'selftest: ext2 ' 'VOS-TEST: PASS' -- $(EXT2_DISK) -cpu max
+	@echo "ext2: the fixture images are unchanged after every run"
+	cd $(EXT2_DIR) && sha256sum -c --quiet SHA256SUMS
 	@echo "vblk: the test disk is unchanged after every run"
 	echo "$(VBLK_SHA256)  $(VBLK_DISK)" | sha256sum -c
 	$(MAKE) --no-print-directory ARCH=$(ARCH) user-test
