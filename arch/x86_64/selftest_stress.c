@@ -254,19 +254,109 @@ static void death_during_ipc(void)
     expect(baseline(), "death during IPC: everything back to baseline");
 }
 
-/* A blocked receiver does not use the CPU while others spin. */
+/*
+ * A blocked receiver does not use the CPU while others spin.
+ *
+ * N3.4: measured only from the moment the receiver is blocked. Before, the
+ * test bounded the receiver's whole life (at most 1 tick and 2 traps), but
+ * every run measured exactly 1 tick and 2 traps - one timer tick left
+ * pending while the kernel loaded the programs with IF = 0, taken at the
+ * receiver's first ring-3 instruction, then its channel_recv call - so a
+ * second tick inside those few instructions (a host stall of one PIT
+ * period at that moment) failed it, as in one N3.3 regression run. Now the
+ * probe waits (bounded) until the receiver is blocked, then requires that
+ * over 30 ticks its ticks, traps and switch-ins do not grow at all, while
+ * two endless loops share the CPU. The cost of entering the blocked state
+ * depends on host timing and is reported, not asserted. Two negative
+ * controls show that the probe flags a receiver that busy-polls and one
+ * that is woken without cause.
+ */
+struct blocked_probe {
+    int blocked_before, blocked_after;
+    uint64_t entry_ticks, entry_traps, d_ticks, d_traps, d_switches, spin1, spin2;
+};
+
+/* Probe receiver rx while s1 and s2 spin; with `spurious`, wake rx without cause three times. */
+static void probe_blocked(struct process *rx, struct process *s1, struct process *s2, int spurious,
+                          struct blocked_probe *r)
+{
+    struct thread *t;
+    uint64_t sw, a, b;
+
+    for (unsigned w = 0; w < 50 && thread_state(rx->tid) != THREAD_BLOCKED; w++)
+        thread_sleep(1);
+    r->blocked_before = thread_state(rx->tid) == THREAD_BLOCKED;
+    r->entry_ticks = rx->ticks;
+    r->entry_traps = rx->traps;
+    t = thread_test_get(rx->tid);
+    sw = t ? t->switches_in : 0;
+    a = s1->ticks;
+    b = s2->ticks;
+    for (unsigned i = 0; i < 3; i++) {
+        thread_sleep(10);
+        if (spurious)
+            thread_interrupt(rx->tid);      /* a wakeup with no message: it must re-check and block again */
+    }
+    if (spurious)
+        thread_sleep(1);                    /* let it run its re-check */
+    r->blocked_after = thread_state(rx->tid) == THREAD_BLOCKED;
+    t = thread_test_get(rx->tid);
+    r->d_switches = (t ? t->switches_in : 0) - sw;
+    r->d_ticks = rx->ticks - r->entry_ticks;
+    r->d_traps = rx->traps - r->entry_traps;
+    r->spin1 = s1->ticks - a;
+    r->spin2 = s2->ticks - b;
+}
+
 static void blocked_idle(void)
 {
-    int ok = load(&P[0], "ipc_wait") && load(&P[1], "spin") && wire(&P[0], &P[1]) &&
-             proc_start(&P[0]) == PROC_OK && proc_start(&P[1]) == PROC_OK && launch(&P[2], "spin");
-    thread_sleep(30);
-    int blocked = thread_state(P[0].tid) == THREAD_BLOCKED && audits();
-    uint64_t wait_ticks = P[0].ticks, wait_traps = P[0].traps;
+    struct blocked_probe r;
+    int ok, aud;
+
+    ok = load(&P[0], "ipc_wait") && load(&P[1], "spin") && wire(&P[0], &P[1]) &&
+         proc_start(&P[0]) == PROC_OK && proc_start(&P[1]) == PROC_OK && launch(&P[2], "spin");
+    probe_blocked(&P[0], &P[1], &P[2], 0, &r);
+    aud = audits();
     for (unsigned i = 0; i < 3; i++)
         kill_collect(i);
-    expect(ok && blocked && wait_ticks <= 1 && wait_traps <= 2 && killed(0) && R[1].ticks >= 10 && R[2].ticks >= 10,
-           "a receiver blocked for 30 ticks used at most 1 tick while two endless loops shared the CPU");
+    serial_puts("stress: blocked receiver: ");
+    serial_dec(r.entry_ticks);
+    serial_puts(" ticks and ");
+    serial_dec(r.entry_traps);
+    serial_puts(" traps before it blocked (host-timing dependent, reported only); over 30 ticks: +");
+    serial_dec(r.d_ticks);
+    serial_puts(" ticks, +");
+    serial_dec(r.d_traps);
+    serial_puts(" traps, +");
+    serial_dec(r.d_switches);
+    serial_puts(" switch-ins; spinners ");
+    serial_dec(r.spin1);
+    serial_puts("/");
+    serial_dec(r.spin2);
+    serial_puts(" ticks\r\n");
+    expect(ok && r.blocked_before && r.blocked_after && r.d_ticks == 0 && r.d_traps == 0 && r.d_switches == 0 &&
+           aud && killed(0), "a blocked receiver gains no tick, trap or switch-in over 30 ticks while others spin");
+    expect(r.spin1 >= 10 && r.spin2 >= 10 && killed(1) && killed(2),
+           "the two endless loops shared those 30 ticks (at least 10 each)");
     expect(baseline(), "blocked receiver: everything back to baseline");
+
+    /* Negative control 1: a "receiver" that busy-polls instead of blocking (an endless loop). */
+    ok = launch(&P[0], "spin") && launch(&P[1], "spin") && launch(&P[2], "spin");
+    probe_blocked(&P[0], &P[1], &P[2], 0, &r);
+    for (unsigned i = 0; i < 3; i++)
+        kill_collect(i);
+    expect(ok && !r.blocked_before && !r.blocked_after && r.d_ticks > 0 && r.d_traps > 0,
+           "negative control: the probe flags a receiver that busy-polls (never blocked, gains ticks and traps)");
+
+    /* Negative control 2: a blocked receiver woken without cause (it re-blocks, but it did resume). */
+    ok = load(&P[0], "ipc_wait") && load(&P[1], "spin") && wire(&P[0], &P[1]) &&
+         proc_start(&P[0]) == PROC_OK && proc_start(&P[1]) == PROC_OK && launch(&P[2], "spin");
+    probe_blocked(&P[0], &P[1], &P[2], 1, &r);
+    for (unsigned i = 0; i < 3; i++)
+        kill_collect(i);
+    expect(ok && r.blocked_before && r.blocked_after && r.d_switches >= 3 && r.d_traps == 0 && killed(0),
+           "negative control: the probe flags a receiver resumed without cause (switch-ins grow), which re-blocks");
+    expect(baseline(), "negative controls: everything back to baseline");
 }
 
 /* The process table full, then recovery. */
