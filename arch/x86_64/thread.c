@@ -314,7 +314,13 @@ static void switch_to(struct thread *next)
     finish_switch();                    /* back in prev, after some other thread switched to it */
 }
 
-/* Make every sleeper whose tick has come runnable (thread context, IF = 0; never in an IRQ). */
+static void unlink_waiter(struct wait_queue *q, struct thread *t);
+
+/*
+ * Make every sleeper whose tick has come runnable, and end every queue wait
+ * whose deadline has come (N3.4: the thread leaves its queue first). Thread
+ * context, IF = 0; never in an IRQ.
+ */
 static void wake_sleepers(void)
 {
     uint64_t now = irq_ticks();
@@ -322,10 +328,16 @@ static void wake_sleepers(void)
     for (unsigned i = 0; i < THREAD_MAX; i++) {
         struct thread *t = &pool[i];
 
-        if (t->state == THREAD_BLOCKED && t->wake_tick && !t->waiting_on && now >= t->wake_tick) {
+        if (t->state == THREAD_BLOCKED && t->wake_tick && now >= t->wake_tick) {
             if (now - t->wake_tick > stats.max_wake_late)
                 stats.max_wake_late = now - t->wake_tick;
+            if (t->waiting_on) {
+                unlink_waiter(t->waiting_on, t);
+                t->waiting_on = NULL;
+                stats.timeouts++;
+            }
             t->wake_tick = 0;
+            t->wake_reason = THREAD_TIMEDOUT;
             t->state = THREAD_RUNNABLE;
             runq_push(t);
             stats.wakeups++;
@@ -457,13 +469,17 @@ void sched_tick(void)
     wake_sleepers();
 }
 
-void thread_block(struct wait_queue *q)
+int thread_block_until(struct wait_queue *q, uint64_t deadline)
 {
     check_entry();
     if (current == idle || !q)
         panic("sched: the idle thread never blocks");
+    if (deadline && irq_ticks() >= deadline)
+        return THREAD_TIMEDOUT;         /* already due: never enqueued */
     current->state = THREAD_BLOCKED;
     current->waiting_on = q;
+    current->wake_tick = deadline;
+    current->wake_reason = THREAD_WOKEN;
     current->next = NULL;
     if (q->tail)
         q->tail->next = current;
@@ -472,6 +488,12 @@ void thread_block(struct wait_queue *q)
     q->tail = current;
     stats.blocks++;
     schedule();
+    return current->wake_reason;
+}
+
+void thread_block(struct wait_queue *q)
+{
+    thread_block_until(q, 0);
 }
 
 int thread_wake_one(struct wait_queue *q)
@@ -488,6 +510,8 @@ int thread_wake_one(struct wait_queue *q)
     if (t->state != THREAD_BLOCKED || t->waiting_on != q)
         panic("sched: wait queue holds a thread that is not blocked on it");
     t->waiting_on = NULL;
+    t->wake_tick = 0;                   /* its deadline (if any) no longer applies */
+    t->wake_reason = THREAD_WOKEN;
     t->state = THREAD_RUNNABLE;
     runq_push(t);
     stats.wakeups++;
@@ -538,6 +562,7 @@ int thread_interrupt(uint64_t id)
         t->waiting_on = NULL;
     }
     t->wake_tick = 0;
+    t->wake_reason = THREAD_INTERRUPTED;
     t->state = THREAD_RUNNABLE;
     runq_push(t);
     stats.wakeups++;
@@ -578,7 +603,11 @@ static void idle_main(void *arg)
             thread_yield();
             continue;
         }
-        /* Nothing can run and no timer will wake anyone: no IRQ-driven wakeup exists. */
+        /*
+         * Nothing can run and no timer will wake anyone. Device waits always
+         * have a deadline (N3.4), so this is a lost wakeup even with
+         * interrupt-driven devices.
+         */
         if (!any_sleeper())
             panic("sched: every thread is blocked and none sleeps (lost wakeup?)");
         stats.idle_halts++;
@@ -743,6 +772,8 @@ const char *sched_audit(void)
         default:
             return "a thread record has an invalid state";
         }
+        if (t->state != THREAD_BLOCKED && t->wake_tick)
+            return "a thread that is not blocked has a wake tick";
         if (t->state != THREAD_FREE && t->stack >= 0 &&
             (stack_owner[t->stack] != t || !canaries_ok(t)))
             return "a thread's stack ownership or canaries are wrong";

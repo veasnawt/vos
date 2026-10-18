@@ -27,6 +27,15 @@
  * is acknowledged and returns to the idle loop (sched_idle_irq). Tick
  * sleepers are woken by the idle thread in thread context, not by the IRQ.
  *
+ * Deadlines (N3.4). A thread may block on a wait queue with a deadline
+ * (thread_block_until): the first of a wakeup, thread_interrupt or the
+ * deadline tick ends the wait, and the call says which. Deadlines are
+ * checked where sleepers are woken (thread context, never in an IRQ
+ * handler), so a wait ends at most a few ticks late. Every wait for a
+ * device has a deadline: a device that never interrupts can delay a thread
+ * but never strand it, and "every thread blocked, none with a deadline"
+ * stays a lost wakeup the idle thread reports.
+ *
  * User programs. proc_run stays synchronous and is allowed only on the boot
  * thread; TSS.RSP0 stays the single dedicated entry stack and never points
  * to a thread stack. Interrupts from ring 3 never switch threads.
@@ -55,6 +64,11 @@
 #define THREAD_ENOMEM       (-1)    /* no free record or stack */
 #define THREAD_EINVAL       (-2)
 
+/* Why a blocking call returned (thread_block_until). */
+#define THREAD_WOKEN        0   /* thread_wake_one/all */
+#define THREAD_TIMEDOUT     1   /* the deadline tick came first; the thread left the queue */
+#define THREAD_INTERRUPTED  2   /* thread_interrupt */
+
 typedef void (*thread_fn)(void *arg);
 
 struct thread;
@@ -75,7 +89,8 @@ struct thread {
     void *arg;
     struct thread *next;                /* run queue or wait queue link */
     struct wait_queue *waiting_on;
-    uint64_t wake_tick;                 /* sleeping: wake at this tick (0 = not sleeping) */
+    uint64_t wake_tick;                 /* sleeping, or the deadline of a queue wait: wake at this tick (0 = none) */
+    int wake_reason;                    /* THREAD_WOKEN / THREAD_TIMEDOUT / THREAD_INTERRUPTED: how it last left BLOCKED */
     uint64_t switches_in;               /* times this thread was switched to */
     /* N2.3: the address space it runs in, and the process it belongs to (NULL: a kernel thread). */
     uint64_t root;                      /* CR3 while it runs: the kernel root or its process's root */
@@ -88,6 +103,7 @@ struct sched_stats {
     uint64_t idle_halts, idle_irqs;     /* hlt executions, IRQs taken in ring 0 by the idle thread */
     uint64_t created, create_failed;
     uint64_t max_wake_late;             /* N2.5: largest (tick made runnable - deadline) of a sleeper */
+    uint64_t timeouts;                  /* N3.4: queue waits ended by their deadline */
 };
 
 /* Turn the running boot code into thread 0 and create the idle thread. Once, IF = 0. */
@@ -115,6 +131,16 @@ struct thread *thread_current(void);
 void thread_yield(void);
 /* Block the caller on q until thread_wake_one/all; the caller must hold no other state. */
 void thread_block(struct wait_queue *q);
+/*
+ * The same with a deadline (N3.4): block on q until a wakeup, an interrupt
+ * or the timer tick `deadline` (absolute, irq_ticks(); 0 = no deadline),
+ * whichever comes first. Returns THREAD_WOKEN, THREAD_INTERRUPTED or
+ * THREAD_TIMEDOUT; on THREAD_TIMEDOUT the caller is no longer on q. A
+ * deadline that has already passed returns THREAD_TIMEDOUT at once,
+ * without blocking. As with thread_block, the caller re-checks its
+ * condition: any return may race with the event it waited for.
+ */
+int thread_block_until(struct wait_queue *q, uint64_t deadline);
 /* Wake the first (all) thread(s) blocked on q; returns how many were woken. */
 int thread_wake_one(struct wait_queue *q);
 int thread_wake_all(struct wait_queue *q);

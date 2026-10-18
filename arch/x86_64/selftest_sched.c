@@ -30,6 +30,13 @@ static void expect(int ok, const char *what)
     serial_puts("\r\n");
 }
 
+static int streq_sched(const char *a, const char *b)
+{
+    while (*a && *a == *b)
+        a++, b++;
+    return *a == *b;
+}
+
 /* ---- records and guarded stacks ---- */
 
 static void test_stacks(void)
@@ -412,6 +419,121 @@ static void test_sleep_and_last_exit(void)
            s->idle_irqs > irqs0, "the last runnable thread exits: idle reaps it and runs until the sleeper wakes");
 }
 
+/* ---- N3.4: queue waits with a deadline ---- */
+
+static struct wait_queue dq;
+static unsigned dl_seq;
+
+struct dl_waiter {
+    uint64_t delay, from, to;
+    int reason;
+    unsigned order;                     /* 1 + how many waits ended before this one */
+};
+static struct dl_waiter dlw[3];
+
+static void dl_worker(void *arg)
+{
+    struct dl_waiter *w = arg;
+
+    w->from = irq_ticks();
+    w->reason = thread_block_until(&dq, w->from + w->delay);
+    w->to = irq_ticks();
+    w->order = ++dl_seq;
+}
+
+static int64_t dl_start(unsigned i, uint64_t delay)
+{
+    int64_t id;
+
+    memset(&dlw[i], 0, sizeof(dlw[i]));
+    dlw[i].delay = delay;
+    dlw[i].reason = -1;
+    id = thread_create("dl-waiter", dl_worker, &dlw[i]);
+    for (int k = 0; k < 10 && id > 0 && thread_state((uint64_t)id) != THREAD_BLOCKED; k++)
+        thread_yield();
+    return id > 0 && thread_state((uint64_t)id) == THREAD_BLOCKED ? id : -1;
+}
+
+static void test_deadlines(void)
+{
+    const struct sched_stats *s = sched_stats();
+    uint64_t t0, el, to0 = s->timeouts, b0, sw0, halts0 = s->idle_halts;
+    int64_t id[3];
+    int r;
+
+    memset(&dq, 0, sizeof(dq));
+    /* Nothing else can run and nothing wakes the boot thread: only its deadline. */
+    t0 = irq_ticks();
+    r = thread_block_until(&dq, t0 + 5);
+    el = irq_ticks() - t0;
+    serial_puts("selftest: deadline wait of 5 ticks ended after ");
+    serial_dec(el);
+    serial_puts(" ticks\r\n");
+    expect(r == THREAD_TIMEDOUT && el >= 5 && el < 50 && s->idle_halts > halts0 && dq.head == NULL &&
+           dq.tail == NULL && s->timeouts == to0 + 1 && thread_current()->wake_tick == 0,
+           "a queue wait nobody ends returns THREAD_TIMEDOUT at its deadline (idle halted meanwhile), off the queue");
+
+    b0 = s->blocks;
+    sw0 = thread_current()->switches_in;
+    expect(thread_block_until(&dq, irq_ticks()) == THREAD_TIMEDOUT && thread_block_until(&dq, 1) == THREAD_TIMEDOUT &&
+           s->blocks == b0 && thread_current()->switches_in == sw0 && dq.head == NULL,
+           "a deadline already due returns THREAD_TIMEDOUT at once, never enqueued, no switch");
+
+    /* Woken before the deadline: the deadline is cleared and never fires later. */
+    to0 = s->timeouts;
+    id[0] = dl_start(0, 20);
+    struct thread *w = id[0] > 0 ? thread_test_get((uint64_t)id[0]) : NULL;
+    int armed = w && w->wake_tick && w->waiting_on == &dq && sched_audit() == NULL;
+    int woke = thread_wake_one(&dq) == 1 && w && w->wake_tick == 0 && w->waiting_on == NULL;
+    thread_sleep(25);                   /* past the old deadline */
+    expect(armed && woke && dlw[0].reason == THREAD_WOKEN && dlw[0].to - dlw[0].from < 20 &&
+           s->timeouts == to0 && thread_state((uint64_t)id[0]) == THREAD_FREE,
+           "a wakeup before the deadline returns THREAD_WOKEN; the old deadline never fires");
+
+    /* Interrupted before the deadline. */
+    id[0] = dl_start(0, 1000);
+    expect(id[0] > 0 && thread_interrupt((uint64_t)id[0]) == 1 && dq.head == NULL && wait_gone(id, 1, 10) &&
+           dlw[0].reason == THREAD_INTERRUPTED && s->timeouts == to0,
+           "thread_interrupt ends a deadline wait with THREAD_INTERRUPTED and takes it off the queue");
+
+    /*
+     * Three waiters queued A, B, C with deadlines 30, 5 and 15 ticks: B times
+     * out from the middle of the queue, then C from its tail, and A, still
+     * waiting, is woken normally. The queue stays well formed throughout.
+     */
+    dl_seq = 0;
+    id[0] = dl_start(0, 30);
+    id[1] = dl_start(1, 5);
+    id[2] = dl_start(2, 15);
+    struct thread *a = thread_test_get((uint64_t)id[0]), *c = thread_test_get((uint64_t)id[2]);
+    int three = id[0] > 0 && id[1] > 0 && id[2] > 0 && sched_audit() == NULL;
+    for (unsigned k = 0; k < 40 && !dlw[1].order; k++)
+        thread_sleep(1);
+    int after_b = dlw[1].order == 1 && dq.head == a && a && a->next == c && dq.tail == c && sched_audit() == NULL;
+    for (unsigned k = 0; k < 40 && !dlw[2].order; k++)
+        thread_sleep(1);
+    int after_c = dlw[2].order == 2 && dq.head == a && dq.tail == a && a && !a->next && sched_audit() == NULL;
+    int a_woken = !dlw[0].order && thread_wake_one(&dq) == 1;
+    wait_gone(id, 3, 20);
+    expect(three && after_b && after_c && a_woken, "waits time out from the middle and the tail of a queue; it stays linked");
+    expect(dlw[1].reason == THREAD_TIMEDOUT && dlw[1].to - dlw[1].from >= 5 && dlw[2].reason == THREAD_TIMEDOUT &&
+           dlw[2].to - dlw[2].from >= 15 && dlw[0].reason == THREAD_WOKEN && dlw[0].order == 3 &&
+           s->timeouts == to0 + 2 && dq.head == NULL && dq.tail == NULL,
+           "each wait ended by its own deadline (5 then 15 ticks), the longest by a wakeup before its own");
+
+    /* The audit rule exists: a runnable thread must not carry a wake tick. */
+    id[0] = thread_create("dl-audit", noop_worker, 0);
+    w = id[0] > 0 ? thread_test_get((uint64_t)id[0]) : NULL;
+    const char *bad = NULL;
+    if (w) {
+        w->wake_tick = irq_ticks() + 100;
+        bad = sched_audit();
+        w->wake_tick = 0;
+    }
+    expect(bad && streq_sched(bad, "a thread that is not blocked has a wake tick") && wait_gone(id, 1, 10) &&
+           sched_audit() == NULL, "the scheduler audit flags a runnable thread with a wake tick");
+}
+
 /*
  * The ring-0 IRQ check on crafted frames placed in the unused low part of
  * the idle thread's stack (the idle thread is switched out). Real frames
@@ -472,6 +594,7 @@ int selftest_sched(void)
     test_block_wake();
     test_producer_consumer();
     test_sleep_and_last_exit();
+    test_deadlines();
     expect(thread_is_boot() && thread_canaries_intact() && !(read_rflags() & RFLAGS_IF),
            "back on the boot thread with IF=0 and every canary intact");
     expect(sched_audit() == NULL, "the scheduler audit holds after the scheduler tests (N2.5)");
