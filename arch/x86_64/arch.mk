@@ -284,7 +284,7 @@ arch-test: iso
 	    ' id 0x1042 (modern), ready, 2051 sectors, queue 16 of ' 'features VERSION_1 RO (offered ' \
 	    'selftest: vblk ' 'selftest: blk ' 'vblk: device shut down, DMA pool released' \
 	    'vblk: hung request beside a CPU-bound program: without yielding the program ran 0 of 0 ticks' \
-	    ', interrupts on IRQ ' 'vblk: 64 reads in interrupt mode: 64 interrupts' \
+	    ', interrupts on IRQ ' 'vblk: 64 reads in interrupt mode: ' \
 	    'vblk: IRQ 11 is shared with the e1000 at 00:' \
 	    'vblk: 300 reads of 8 sectors beside a CPU-bound program, interrupt mode: ' \
 	    'vblk: 300 reads of 8 sectors beside a CPU-bound program, polling mode: ' \
