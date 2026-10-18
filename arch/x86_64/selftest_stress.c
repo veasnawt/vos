@@ -77,10 +77,27 @@ static int wire(struct process *a, struct process *b)
     return channel_create(a, HANDLE_RIGHTS, b, HANDLE_RIGHTS, &ha, &hb) == 0 && ha == 1 && hb == 1;
 }
 
+/*
+ * Wait for a process expected to end on its own, at most END_TICKS: a hang
+ * (a lost wakeup, a spinning receiver) becomes a specific failure here, not
+ * a QEMU timeout. A process that overruns is reported and killed.
+ */
+#define END_TICKS 100
+
 static void collect(unsigned i)
 {
     struct process *p = &P[i];
 
+    for (int k = 0; k < END_TICKS && p->state == PROC_RUNNING && !p->kill_reason; k++)
+        thread_sleep(1);
+    if (p->state == PROC_RUNNING && !p->kill_reason) {
+        failures++;
+        cases++;
+        serial_puts("selftest: FAIL: process ");
+        serial_puts(p->name);
+        serial_puts(" did not end within 100 ticks; killed\r\n");
+        proc_kill(p, "overran");
+    }
     proc_wait(p);
     R[i].state = p->state;
     R[i].status = p->exit_status;
@@ -398,10 +415,10 @@ int selftest_stress(const struct boot_info *bi)
     t0 = thread_count();
     proc_test_tick_budget(600);             /* bounds every program; the kills end them much earlier */
     expect(baseline(), "stress: starting from a consistent state");
+    blocked_idle();
     mixed_load();
     three_channels();
     death_during_ipc();
-    blocked_idle();
     process_pool();
     channel_and_handle_pools();
     fairness();

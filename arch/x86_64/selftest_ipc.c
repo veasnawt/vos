@@ -131,6 +131,21 @@ static void test_basic(void)
            channel_send(a, ha | (5 << 8), UB, 1) == -VOS_EBADHANDLE,
            "0, negative, unissued, huge and wrong-generation handles: -VOS_EBADHANDLE");
 
+    /* N2.5: a closed end discards what was queued to it; the half-open channel stays consistent. */
+    put(b, UB, 0x22, 5);
+    channel_send(b, hb, UB, 5);
+    channel_send(b, hb, UB, 5);
+    int64_t hx, hy;
+    int half = channel_create(a, HANDLE_RIGHTS, b, HANDLE_RIGHTS, &hx, &hy) == 0;
+    put(b, UB, 0x33, 7);
+    half &= channel_send(b, hy, UB, 7) == 0 && channel_send(b, hy, UB, 7) == 0 && handle_close(a, hx) == 0;
+    const struct endpoint *ey = handle_endpoint(b, hy);
+    expect(half && ey && channel_audit() == NULL && channel_send(b, hy, UB, 7) == -VOS_EPIPE &&
+           handle_close(b, hy) == 0 && channel_audit() == NULL,
+           "closing an end with two messages queued to it: they are discarded (audit), the peer gets EPIPE");
+    expect(channel_recv(a, ha, UB, 256, 0) == 5 && channel_recv(a, ha, UB, 256, 0) == 5,
+           "the other channel of the same processes is unaffected");
+
     /* Peer closure: drain, then EPIPE; double close; stale values. */
     put(a, UB, 0x11, 3);
     channel_send(a, ha, UB, 3);
