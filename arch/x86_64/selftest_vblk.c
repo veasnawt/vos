@@ -31,6 +31,7 @@
 #include "process.h"
 #include "thread.h"
 #include "channel.h"
+#include "pci.h"
 #include "virtio_blk.h"
 #include "vmm.h"
 
@@ -216,6 +217,13 @@ static void test_choices(void)
            q == VBLK_QUEUE_SIZE && !vblk_choose_queue_size(32768, &q) && q == VBLK_QUEUE_SIZE,
            "queue: uses 16 entries of any larger power-of-two queue");
 
+    /* Driver codes never reach the block layer unmapped (N3.2). */
+    expect(vblk_to_blk(VBLK_OK) == BLK_OK && vblk_to_blk(VBLK_EINVAL) == BLK_EINVAL &&
+           vblk_to_blk(VBLK_ERANGE) == BLK_ERANGE && vblk_to_blk(VBLK_EIO) == BLK_EIO &&
+           vblk_to_blk(VBLK_EUNSUPP) == BLK_EUNSUPP && vblk_to_blk(VBLK_ETIMEDOUT) == BLK_ETIMEDOUT &&
+           vblk_to_blk(VBLK_EBUSY) == BLK_EBUSY && vblk_to_blk(VBLK_ENODEV) == BLK_EUNAVAIL &&
+           vblk_to_blk(VBLK_EBROKEN) == BLK_EUNAVAIL && vblk_to_blk(VBLK_EPROTO) == BLK_EIO &&
+           vblk_to_blk(99) == BLK_EIO, "driver results map to device-independent block errors");
 }
 
 static uint8_t sink[2 * PAGE_SIZE] __attribute__((aligned(PAGE_SIZE)));
@@ -261,6 +269,16 @@ static void test_absent(void)
         serial_puts("vblk: refused device: ");
         serial_puts(in->why ? in->why : "?");
         serial_puts("\r\n");
+        /* N3.2: a refused device keeps no DMA frames once its reset is confirmed. */
+        uint64_t f = pmm_free_count(), a0 = in->pool_allocs;
+        unsigned same = 1;
+        for (unsigned i = 0; i < 10; i++)
+            same &= vblk_reinit() == VBLK_FAILED && pmm_free_count() == f && !in->pool_held;
+        expect(!in->pool_held && !in->quarantined && in->pool[0] == 0 && in->pool_allocs == in->pool_frees &&
+               in->pool_allocs == a0 + 10 && same,
+               "refused device: its DMA pool is freed after the confirmed reset, also over 10 retries");
+        expect(vblk_test_device_status() == 0 && !(pci_read16(in->pci, PCI_COMMAND) & PCI_COMMAND_MASTER),
+               "refused device: reset (status 0) and bus mastering switched off");
     }
 }
 #endif
@@ -650,6 +668,114 @@ static void test_processes(void)
     const char *sa = sched_audit(), *pa = proc_audit(), *ca = channel_audit(), *va = vblk_audit();
     expect(!sa && !pa && !ca && !va, "scheduler, process, channel and vblk audits clean");
 }
+/*
+ * N3.2: a thread waits (and yields) while another thread breaks the device.
+ * The waiter's slot is abandoned by the reset; when it runs again it must
+ * notice and return VBLK_EBROKEN instead of polling a slot that is no longer
+ * its own.
+ */
+static volatile int waiter_result, waiter_done;
+static uint8_t wbuf[BLK_SECTOR_SIZE];
+
+static void waiter(void *arg)
+{
+    (void)arg;
+    waiter_result = vblk_read(21, 1, wbuf, sizeof(wbuf));
+    waiter_done = 1;
+}
+
+static void test_reset_while_waiting(void)
+{
+    const struct vblk_info *in = vblk_info();
+    uint64_t f0 = pmm_free_count(), sub0 = in->submitted;
+    unsigned slot, threads0 = thread_count();
+
+    vblk_test_yield_polls(64);
+    vblk_test_poll_limit(3000000);
+    waiter_done = 0;
+    waiter_result = -1;
+    vblk_test_skip_notify(2);           /* neither request reaches the device */
+    int ok = thread_create("vblk-waiter", waiter, 0) > 0;
+    thread_yield();                     /* the waiter submits, polls 64 times and yields back */
+    ok &= !waiter_done && in->submitted == sub0 + 1;
+    ok &= vblk_submit(22, 1, &slot) == VBLK_OK && slot != 0;
+    vblk_test_inject_used(3 * 3, 513);  /* the head of slot 3, which nobody owns */
+    int mine = vblk_wait(slot, buf, sizeof(buf));
+    for (unsigned i = 0; !waiter_done && i < 1000; i++)
+        thread_yield();
+    vblk_test_yield_polls(VBLK_YIELD_POLLS);
+    vblk_test_poll_limit(0);
+    expect(ok && mine == VBLK_EPROTO && in->state == VBLK_BROKEN,
+           "this thread's wait detects a forged completion and resets the device");
+    expect(waiter_done && waiter_result == VBLK_EBROKEN,
+           "the yielded waiter notices the reset and returns VBLK_EBROKEN (it does not poll on)");
+    thread_yield();                     /* let the waiter be reaped */
+    expect(vblk_reinit() == VBLK_READY && read_ok(21, 1) && pmm_free_count() == f0 &&
+           thread_count() == threads0 && vblk_audit() == NULL, "recovered; no frame or thread left over");
+}
+
+/*
+ * N3.2 responsiveness: a request the device never completes while a CPU-bound
+ * program is runnable. Without yielding (the N3.1 behaviour) the kernel polls
+ * with IF = 0 and the program gets no CPU at all for the whole wait; with
+ * cooperative waiting it keeps running, and the wait ends at the tick bound.
+ */
+static void test_responsive(void)
+{
+    const struct vblk_info *in = vblk_info();
+    uint64_t f0 = pmm_free_count(), pt, it, y0, tt0;
+    unsigned threads0 = thread_count();
+    int ok, r1, r2;
+
+    proc_test_tick_budget(5000);
+    ok = launch(&P[0], "m-memtag1");
+
+    vblk_test_yield_polls(0);
+    vblk_test_poll_limit(3000000);
+    vblk_test_skip_notify(1);
+    pt = P[0].ticks;
+    it = irq_ticks();
+    r1 = vblk_read(11, 1, buf, sizeof(buf));
+    uint64_t prog1 = P[0].ticks - pt, tick1 = irq_ticks() - it;
+    ok &= vblk_reinit() == VBLK_READY;
+
+    vblk_test_yield_polls(256);
+    vblk_test_poll_limit(40000);        /* about 156 yields: the 30-tick bound must end the wait first */
+    vblk_test_wait_ticks(30);
+    y0 = in->yields;
+    tt0 = in->tick_timeouts;
+    vblk_test_skip_notify(1);
+    pt = P[0].ticks;
+    it = irq_ticks();
+    r2 = vblk_read(11, 1, buf, sizeof(buf));
+    uint64_t prog2 = P[0].ticks - pt, tick2 = irq_ticks() - it;
+    vblk_test_yield_polls(VBLK_YIELD_POLLS);
+    vblk_test_poll_limit(0);
+    vblk_test_wait_ticks(0);
+    ok &= vblk_reinit() == VBLK_READY;
+
+    proc_kill(&P[0], "test kill");
+    ok &= proc_wait(&P[0]) == PROC_KILLED;
+    proc_destroy(&P[0]);
+    proc_test_tick_budget(PROC_TEST_TICK_BUDGET);
+    serial_puts("vblk: hung request beside a CPU-bound program: without yielding the program ran ");
+    serial_dec(prog1);
+    serial_puts(" of ");
+    serial_dec(tick1);
+    serial_puts(" ticks; with yielding ");
+    serial_dec(prog2);
+    serial_puts(" of ");
+    serial_dec(tick2);
+    serial_puts(" ticks (");
+    serial_dec(in->yields - y0);
+    serial_puts(" yields)\r\n");
+    expect(ok && r1 == VBLK_ETIMEDOUT && prog1 == 0 && tick1 == 0,
+           "without yielding, a hung request gives a runnable program no CPU (0 ticks during the wait)");
+    expect(r2 == VBLK_ETIMEDOUT && in->tick_timeouts == tt0 + 1 && tick2 >= 30 && prog2 >= 20 && in->yields > y0,
+           "with cooperative waiting the program keeps running, and the wait ends at the 30-tick bound");
+    expect(read_ok(64, 8) && pmm_free_count() == f0 && thread_count() == threads0 && proc_count() == 0 &&
+           vblk_audit() == NULL, "afterwards: device recovered, no frame, thread or process left over");
+}
 #endif /* !VOS_TEST_CASE_vblk_ioerr */
 #endif /* VBLK_LIVE */
 
@@ -700,6 +826,8 @@ int selftest_vblk(const struct boot_info *bi)
         test_protocol();
         test_repeat();
         test_processes();
+        test_reset_while_waiting();
+        test_responsive();
 #endif
         expect(vblk_audit() == NULL && vblk_info()->state == VBLK_READY, "final vblk audit clean, device ready");
     } else {

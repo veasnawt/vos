@@ -49,6 +49,12 @@ int selftest_stress(const struct boot_info *bi);
  * "vblk-fixture" (selftest_vblk.c).
  */
 int selftest_vblk(const struct boot_info *bi);
+/*
+ * N3.2 block layer and read-only cache: a test-only RAM device in every
+ * image; with VOS_TEST_CASE=vblk or vblk-ioerr also the virtio-blk device
+ * against the GRUB module "vblk-fixture" (selftest_blk.c).
+ */
+int selftest_blk(const struct boot_info *bi);
 /* Page-table manager, identity-map removal and kernel survival (restores all state). */
 int selftest_vmm(void);
 /* User address spaces and ring 3 (restores all state). */

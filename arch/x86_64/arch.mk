@@ -13,7 +13,7 @@ ARCH_OBJS       := boot.o entry.o usermode.o kernel.o bootinfo.o console.o cpu.o
                    pci.o blockdev.o virtio_blk.o
 ifeq ($(VOS_TEST),1)
 ARCH_OBJS       += selftest.o selftest_cpu.o selftest_elf.o selftest_ipc.o selftest_irq.o selftest_kmap.o selftest_mp.o selftest_sched.o selftest_stress.o selftest_pmm.o selftest_suite.o \
-                   selftest_user.o selftest_vblk.o selftest_vmm.o user_progs.o
+                   selftest_user.o selftest_vblk.o selftest_blk.o selftest_vmm.o user_progs.o
 endif
 QEMU            := qemu-system-x86_64
 # The boot application, delivered by GRUB as a Multiboot2 module (grub.cfg).
@@ -101,7 +101,7 @@ arch-test: iso
 	    ' corrupted executables rejected for the intended reason' 'selftest: pmm-synthetic ' \
 	    'selftest: pmm-kernel ' 'selftest: 1000 frames from ' 'selftest: vmm ' 'selftest: user ' \
 	    'selftest: kmap ' 'kmap: phys 0-4 MiB as 4 KiB pages: ' \
-	    'vblk: no virtio-blk device on PCI bus 0; block storage unavailable' 'selftest: vblk ' \
+	    'vblk: no virtio-blk device on PCI bus 0; block storage unavailable' 'selftest: vblk ' 'selftest: blk ' \
 	    'kmap: after the TLB flush the CPU refused a text write' 'vmm: audit passed: ' \
 	    'irq: 8259 master 0x20-0x27, slave 0x28-0x2f (cascade IRQ2); masks 0xfffe (IRQ0 only)' \
 	    'pit: channel 0 mode 2, divisor 11932 (99.998 Hz)' 'selftest: irq ' \
@@ -259,35 +259,37 @@ arch-test: iso
 	$(MAKE) --no-print-directory ARCH=$(ARCH) VOS_TEST=1 VOS_TEST_CASE=vblk iso
 	TIMEOUT=90 scripts/exit-test.sh vblk build/$(ARCH)-test-vblk/vos.iso 33 \
 	    ' id 0x1042 (modern), ready, 2051 sectors, queue 16 of ' 'features VERSION_1 RO (offered ' \
-	    'selftest: vblk ' 'VOS-TEST: PASS' -- $(VBLK_RO)
+	    'selftest: vblk ' 'selftest: blk ' 'vblk: device shut down, DMA pool released' \
+	    'vblk: hung request beside a CPU-bound program: without yielding the program ran 0 of 0 ticks' \
+	    'VOS-TEST: PASS' -- $(VBLK_RO)
 	MEM=2G TIMEOUT=90 scripts/exit-test.sh vblk-2G build/$(ARCH)-test-vblk/vos.iso 33 \
-	    ' (modern), ready, 2051 sectors' 'selftest: vblk ' 'VOS-TEST: PASS' -- $(VBLK_RO)
+	    ' (modern), ready, 2051 sectors' 'selftest: vblk ' 'selftest: blk ' 'VOS-TEST: PASS' -- $(VBLK_RO)
 	TIMEOUT=90 scripts/exit-test.sh vblk-max build/$(ARCH)-test-vblk/vos.iso 33 \
-	    'smep=on umip=on smap=on' ' (modern), ready, 2051 sectors' 'selftest: vblk ' 'VOS-TEST: PASS' \
+	    'smep=on umip=on smap=on' ' (modern), ready, 2051 sectors' 'selftest: vblk ' 'selftest: blk ' 'VOS-TEST: PASS' \
 	    -- $(VBLK_RO) -cpu max
 	TIMEOUT=90 scripts/exit-test.sh vblk-transitional build/$(ARCH)-test-vblk/vos.iso 33 \
 	    ' id 0x1001 (transitional, driven as modern), ready, 2051 sectors' 'features VERSION_1 RO (offered ' \
-	    'selftest: vblk ' 'VOS-TEST: PASS' \
+	    'selftest: vblk ' 'selftest: blk ' 'VOS-TEST: PASS' \
 	    -- -drive file=$(VBLK_DISK),if=none,id=vd0,format=raw,readonly=on -device virtio-blk-pci,drive=vd0
 	@echo "vblk-writable: a writable device (no VIRTIO_BLK_F_RO) is still only read; its image must be unchanged"
 	rm -f $(VBLK_RW_COPY) && cp $(VBLK_DISK) $(VBLK_RW_COPY) && chmod u+w $(VBLK_RW_COPY)
 	TIMEOUT=90 scripts/exit-test.sh vblk-writable build/$(ARCH)-test-vblk/vos.iso 33 \
-	    ' (modern), ready, 2051 sectors' 'features VERSION_1 (offered ' 'selftest: vblk ' 'VOS-TEST: PASS' \
+	    ' (modern), ready, 2051 sectors' 'features VERSION_1 (offered ' 'selftest: vblk ' 'selftest: blk ' 'VOS-TEST: PASS' \
 	    -- -drive file=$(VBLK_RW_COPY),if=none,id=vd0,format=raw -device virtio-blk-pci,drive=vd0,disable-legacy=on
 	echo "$(VBLK_SHA256)  $(VBLK_RW_COPY)" | sha256sum -c
 	$(MAKE) --no-print-directory ARCH=$(ARCH) VOS_TEST=1 VOS_TEST_CASE=vblk-ioerr iso
 	TIMEOUT=90 scripts/exit-test.sh vblk-ioerr build/$(ARCH)-test-vblk-ioerr/vos.iso 33 \
-	    ' (modern), ready, 2051 sectors' 'selftest: vblk ' ' 54 I/O errors, ' 'VOS-TEST: PASS' \
+	    ' (modern), ready, 2051 sectors' 'selftest: vblk ' 'selftest: blk ' ' 54 I/O errors, ' 'VOS-TEST: PASS' \
 	    -- -drive file=blkdebug:tests/x86_64/vblk-ioerr.blkdebug:$(VBLK_DISK),if=none,id=vd0,format=raw,readonly=on \
 	    -device virtio-blk-pci,drive=vd0,disable-legacy=on
 	@echo "vblk: devices the driver must refuse leave the kernel running without block storage"
 	scripts/exit-test.sh vblk-iommu-platform $(TEST_ISO) 33 \
 	    ' (modern), failed: device requires VIRTIO_F_ACCESS_PLATFORM (no IOMMU support)' \
-	    'vblk: refused device: device requires VIRTIO_F_ACCESS_PLATFORM' 'selftest: vblk ' 'VOS-TEST: PASS' \
+	    'vblk: refused device: device requires VIRTIO_F_ACCESS_PLATFORM' 'selftest: vblk ' 'selftest: blk ' 'VOS-TEST: PASS' \
 	    -- -drive file=$(VBLK_DISK),if=none,id=vd0,format=raw,readonly=on \
 	    -device virtio-blk-pci,drive=vd0,disable-legacy=on,iommu_platform=on
 	scripts/exit-test.sh vblk-queue8 $(TEST_ISO) 33 ' (modern), failed: queue too small' \
-	    'vblk: refused device: queue too small' 'selftest: vblk ' 'VOS-TEST: PASS' \
+	    'vblk: refused device: queue too small' 'selftest: vblk ' 'selftest: blk ' 'VOS-TEST: PASS' \
 	    -- -drive file=$(VBLK_DISK),if=none,id=vd0,format=raw,readonly=on \
 	    -device virtio-blk-pci,drive=vd0,disable-legacy=on,queue-size=8
 	@echo "vblk: the test disk is unchanged after every run"
