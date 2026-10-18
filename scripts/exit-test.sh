@@ -21,6 +21,11 @@
 # Env: QEMU (default qemu-system-x86_64), MEM (128M), TIMEOUT (20 seconds),
 #      DIAG=1 also prints the QEMU log, QEMU stderr and exit status (a failure
 #      always prints the serial log).
+#      U1: OVMF=1 boots UEFI firmware on the q35 machine: OVMF_CODE (default
+#      /usr/share/OVMF/OVMF_CODE_4M.fd, read-only, Secure Boot not enabled)
+#      and a fresh copy of OVMF_VARS (default /usr/share/OVMF/OVMF_VARS_4M.fd)
+#      for every run. SPARSE_MEM=1 backs guest RAM with a sparse file in the
+#      ISO's directory (removed afterwards), so large guests need no host RAM.
 set -u
 usage="usage: exit-test.sh NAME ISO EXPECTED_STATUS MARKER [QEMU args...]"
 [ $# -ge 4 ] || { echo "$usage" >&2; exit 2; }
@@ -62,12 +67,29 @@ fail() {
 command -v "$QEMU" >/dev/null || fail "$QEMU not installed"
 rm -f "$LOG" "$QLOG"
 
-cmd=("$QEMU" -cdrom "$ISO" -boot d -m "$MEM" -display none -no-reboot
+FW=()
+if [ "${OVMF:-0}" = 1 ]; then
+    CODE=${OVMF_CODE:-/usr/share/OVMF/OVMF_CODE_4M.fd}
+    VARS=${OVMF_VARS:-/usr/share/OVMF/OVMF_VARS_4M.fd}
+    [ -f "$CODE" ] && [ -f "$VARS" ] || fail "OVMF firmware not found ($CODE, $VARS)"
+    cp "$VARS" "$DIR/$NAME.vars.fd" || fail "cannot copy the OVMF variable store"
+    FW=(-machine q35 -drive "if=pflash,format=raw,readonly=on,file=$CODE"
+        -drive "if=pflash,format=raw,file=$DIR/$NAME.vars.fd")
+fi
+MEMARGS=(-m "$MEM")
+if [ "${SPARSE_MEM:-0}" = 1 ]; then
+    rm -f "$DIR/$NAME.ram"
+    MEMARGS=(-m "$MEM" -object "memory-backend-file,id=ram,size=$MEM,mem-path=$DIR/$NAME.ram,share=on"
+             -machine memory-backend=ram)
+fi
+
+cmd=("$QEMU" "${FW[@]}" -cdrom "$ISO" -boot d "${MEMARGS[@]}" -display none -no-reboot
      -serial "file:$LOG" -device isa-debug-exit,iobase=0xf4,iosize=0x04
      -d cpu_reset,guest_errors -D "$QLOG" "${QARGS[@]}")
 echo "exit-test.sh [$NAME]: ${cmd[*]}"
 timeout --kill-after=5 "$TIMEOUT" "${cmd[@]}" >/dev/null 2>"$DIR/$NAME.qemu.stderr"
 status=$?
+rm -f "$DIR/$NAME.ram"
 
 problems=()
 case $status in

@@ -62,7 +62,7 @@ ifeq ($(ARCH),x86_64)
 include user/user.mk
 endif
 
-.PHONY: all verify iso run debug test test-all arch-test clean
+.PHONY: all verify iso uefi-iso run debug test test-all arch-test test-uefi clean
 all: $(KERNEL)
 
 $(BUILD):
@@ -91,6 +91,25 @@ iso: verify $(foreach f,$(ARCH_ISO_FILES) $(ISO_FILES),$(firstword $(subst :, ,$
 	done
 	grub-mkrescue -o $(ISO) $(BUILD)/isodir
 
+# U1: the same kernel and modules as `iso`, on a UEFI-only GRUB x86_64-efi ISO
+# (EFI System Partition with \EFI\BOOT\BOOTX64.EFI). UEFI_HEAD is prepended to
+# the image's GRUB configuration; UEFI_TAG names variants. Needs GRUB's
+# x86_64-efi files (GRUB_EFI_DIR, grub-efi-amd64-bin) and mtools on PATH; it
+# writes only into $(BUILD) (no disk, partition or firmware variable).
+GRUB_EFI_DIR ?= /usr/lib/grub/x86_64-efi
+UEFI_HEAD    ?= $(ARCH_DIR)/grub-uefi-head.cfg
+UEFI_TAG     ?=
+UEFI_ISO     := $(BUILD)/vos-uefi$(UEFI_TAG).iso
+uefi-iso: iso
+	@test "$(ARCH)" = x86_64 || { echo "uefi-iso: x86_64 only"; exit 1; }
+	@test -f $(GRUB_EFI_DIR)/kernel.img -a -f $(GRUB_EFI_DIR)/multiboot2.mod || \
+	    { echo "uefi-iso: no GRUB x86_64-efi files in $(GRUB_EFI_DIR) (see docs/plans/uefi.md)"; exit 1; }
+	@command -v mformat >/dev/null || { echo "uefi-iso: mtools (mformat) not on PATH"; exit 1; }
+	rm -rf $(BUILD)/isodir-uefi$(UEFI_TAG)
+	cp -r $(BUILD)/isodir $(BUILD)/isodir-uefi$(UEFI_TAG)
+	cat $(UEFI_HEAD) $(GRUB_CFG) > $(BUILD)/isodir-uefi$(UEFI_TAG)/boot/grub/grub.cfg
+	grub-mkrescue -d $(GRUB_EFI_DIR) -o $(UEFI_ISO) $(BUILD)/isodir-uefi$(UEFI_TAG)
+
 run: iso
 	$(QEMU) -cdrom $(ISO)
 
@@ -102,6 +121,9 @@ debug: iso
 
 # Headless QEMU tests for the selected ARCH; see arch/<name>/arch.mk.
 test: arch-test
+
+# U1: the UEFI test matrix under QEMU q35 + OVMF (x86_64; see arch/x86_64/arch.mk).
+test-uefi: arch-test-uefi
 
 test-all:
 	@set -e; for a in $(ARCHS); do $(MAKE) --no-print-directory ARCH=$$a test; done

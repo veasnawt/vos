@@ -351,3 +351,75 @@ arch-test: iso
 	COLOR=b62324 scripts/halt-test.sh bios-panic-screen build/$(ARCH)-test-panic/vos.iso \
 	    build/$(ARCH)-test-panic/vos.bin 25 panic 'panic: test case: deliberate panic' --
 	$(MAKE) --no-print-directory ARCH=$(ARCH) user-test
+
+# ---- U1: UEFI (q35 + OVMF, Secure Boot not enabled, fresh variable store per run) ----
+#
+# Every image is the BIOS image's kernel and modules on a GRUB x86_64-efi ISO
+# (make uefi-iso). Needs GRUB_EFI_DIR (grub-efi-amd64-bin) and mtools; see
+# docs/plans/uefi.md. Images that halt are judged by their final CPU state
+# (scripts/halt-test.sh), the test images by their exit status and markers.
+UEFI_RUN := OVMF=1
+define uefi-image
+	$(MAKE) --no-print-directory ARCH=$(ARCH) VOS_TEST=1 VOS_TEST_CASE=$(1) uefi-iso
+endef
+arch-test-uefi:
+	$(MAKE) --no-print-directory ARCH=$(ARCH) uefi-iso
+	$(MAKE) --no-print-directory ARCH=$(ARCH) UEFI_HEAD=tests/x86_64/uefi-nogop-head.cfg UEFI_TAG=-nogop uefi-iso
+	@echo "uefi: the ISO has an EFI boot path: El Torito UEFI entry, EFI System Partition, BOOTX64.EFI"
+	xorriso -indev build/$(ARCH)/vos-uefi.iso -report_el_torito plain 2>/dev/null | grep -q 'El Torito boot img :   1  UEFI'
+	xorriso -indev build/$(ARCH)/vos-uefi.iso -report_system_area plain 2>/dev/null | \
+	    grep -q 'GPT type GUID .*28732ac11ff8d211ba4b00a0c93ec93b'
+	rm -f build/$(ARCH)/efi-check.img
+	xorriso -osirrox on -indev build/$(ARCH)/vos-uefi.iso -extract /efi.img build/$(ARCH)/efi-check.img >/dev/null 2>&1
+	mdir -i build/$(ARCH)/efi-check.img ::/efi/boot/bootx64.efi >/dev/null
+	$(UEFI_RUN) COLOR=2ea043 scripts/halt-test.sh uefi-boot build/$(ARCH)/vos-uefi.iso $(KERNEL) 35 main \
+	    'user[hello]: Hello from VOS!' 'boot: checks passed' 'screen: framebuffer 1280x800 BGRX at ' \
+	    'cpu: inherited cr0=0x80010033' 'devmap: window at ' --
+	$(UEFI_RUN) MEDIA=usb MEM=8G SPARSE_MEM=1 scripts/halt-test.sh uefi-boot-usb-8G build/$(ARCH)/vos-uefi.iso \
+	    $(KERNEL) 45 main 'user[hello]: Hello from VOS!' 'boot: checks passed' 'bytes of RAM above 1 GiB ignored' --
+	@echo "uefi-boot-noserial: no serial port at all; the screenshot must show the PASS badge"
+	$(UEFI_RUN) SERIAL=0 COLOR=2ea043 scripts/halt-test.sh uefi-boot-noserial build/$(ARCH)/vos-uefi.iso $(KERNEL) 35 main --
+	$(UEFI_RUN) scripts/halt-test.sh uefi-nofb build/$(ARCH)/vos-uefi-nogop.iso $(KERNEL) 35 main \
+	    'screen: none, serial only: UEFI boot without framebuffer information' 'boot: checks passed' \
+	    'user[hello]: Hello from VOS!' --
+	@echo "uefi: other GOP modes (GRUB's Multiboot2 loader keeps the firmware's mode; OVMF takes the EDID-preferred one)"
+	$(UEFI_RUN) COLOR=2ea043 scripts/halt-test.sh uefi-640x480 build/$(ARCH)/vos-uefi.iso $(KERNEL) 35 main \
+	    'screen: framebuffer 640x480 BGRX' 'boot: checks passed' -- -vga none -device VGA,edid=on,xres=640,yres=480
+	$(UEFI_RUN) COLOR=2ea043 scripts/halt-test.sh uefi-1920x1080 build/$(ARCH)/vos-uefi.iso $(KERNEL) 35 main \
+	    'screen: framebuffer 1920x1080 BGRX' 'boot: checks passed' -- -vga none -device VGA,edid=on,xres=1920,yres=1080
+	$(MAKE) --no-print-directory ARCH=$(ARCH) VOS_TEST=1 uefi-iso
+	$(UEFI_RUN) TIMEOUT=240 scripts/exit-test.sh uefi-test $(TEST_ISO:vos.iso=vos-uefi.iso) 33 \
+	    'screen: framebuffer ' 'selftest: bootinfo ' 'selftest: kmap ' 'selftest: user ' 'selftest: sched ' \
+	    'selftest: ipc ' 'selftest: screen ' 'NOT APPLICABLE: level-triggered registration' 'VOS-TEST: PASS' --
+	$(UEFI_RUN) TIMEOUT=240 MEM=8G SPARSE_MEM=1 scripts/exit-test.sh uefi-test-8G $(TEST_ISO:vos.iso=vos-uefi.iso) 33 \
+	    'bytes of RAM above 1 GiB ignored' 'selftest: pmm-kernel ' 'VOS-TEST: PASS' --
+	$(call uefi-image,panic)
+	$(UEFI_RUN) COLOR=b62324 scripts/halt-test.sh uefi-panic-screen build/$(ARCH)-test-panic/vos-uefi.iso \
+	    build/$(ARCH)-test-panic/vos.bin 35 panic 'panic: test case: deliberate panic' --
+	$(call uefi-image,suite)
+	$(UEFI_RUN) TIMEOUT=240 scripts/exit-test.sh uefi-suite build/$(ARCH)-test-suite/vos-uefi.iso 33 \
+	    'suite: final hello exited 0, all frames reclaimed' ' cases, 0 failed, hello rerun ' 'VOS-TEST: PASS' --
+	$(call uefi-image,ipc)
+	$(UEFI_RUN) TIMEOUT=240 scripts/exit-test.sh uefi-ipc build/$(ARCH)-test-ipc/vos-uefi.iso 33 \
+	    'ipc: 12 scenarios, 0 failed' 'VOS-TEST: PASS' --
+	$(call uefi-image,mp)
+	$(UEFI_RUN) TIMEOUT=240 scripts/exit-test.sh uefi-mp build/$(ARCH)-test-mp/vos-uefi.iso 33 \
+	    'mp: 3 x spin (fairness):' 'selftest: mp ' ' cases, 0 failed' 'VOS-TEST: PASS' --
+	$(call uefi-image,stress)
+	$(UEFI_RUN) TIMEOUT=240 scripts/exit-test.sh uefi-stress build/$(ARCH)-test-stress/vos-uefi.iso 33 \
+	    'stress: blocked receiver: ' 'selftest: stress ' ' cases, 0 failed' 'VOS-TEST: PASS' --
+	$(call uefi-image,irq)
+	$(UEFI_RUN) TIMEOUT=240 scripts/exit-test.sh uefi-irq build/$(ARCH)-test-irq/vos-uefi.iso 33 \
+	    'suite: t-spin expect=budget ticks=50 ok=0 => PASS' 'suite: 9 cases, 0 failed, hello rerun 10 times' 'VOS-TEST: PASS' --
+	$(call uefi-image,vblk)
+	$(UEFI_RUN) TIMEOUT=240 scripts/exit-test.sh uefi-vblk build/$(ARCH)-test-vblk/vos-uefi.iso 33 \
+	    'polled (interrupt line not level triggered (ELCR))' 'NOT APPLICABLE: virtio-blk interrupt-mode tests' \
+	    'vblk: 300 reads of 8 sectors beside a CPU-bound program, polling mode: ' 'selftest: vblk ' 'selftest: blk ' \
+	    'VOS-TEST: PASS' -- $(VBLK_RO)
+	$(call uefi-image,ext2)
+	$(UEFI_RUN) TIMEOUT=240 scripts/exit-test.sh uefi-ext2 build/$(ARCH)-test-ext2/vos-uefi.iso 33 \
+	    'ext2: virtio-blk: ' 'NOT APPLICABLE: ext2 readers interrupted while waiting for the device' \
+	    'selftest: ext2 ' 'VOS-TEST: PASS' -- $(EXT2_DISK)
+	@echo "uefi: the fixture images and the test disk are unchanged after every run"
+	cd $(EXT2_DIR) && sha256sum -c --quiet SHA256SUMS
+	echo "$(VBLK_SHA256)  $(VBLK_DISK)" | sha256sum -c
