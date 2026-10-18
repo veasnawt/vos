@@ -1055,6 +1055,61 @@ static void walker(void *arg)
     walk_done = 1;
 }
 
+/* N3.4: threads interrupted while the reader waits for the device, and while waiting for the busy reader. */
+static struct ext2_fs *intr_fs;
+static uint32_t intr_ino;
+static volatile int intr_res[2];
+
+static void intr_reader(void *arg)
+{
+    struct ext2_stat st;
+
+    intr_res[(uintptr_t)arg] = ext2_stat(intr_fs, intr_ino, &st);
+}
+
+static int blocked(int64_t id)
+{
+    for (unsigned k = 0; k < 20 && id > 0 && thread_state((uint64_t)id) != THREAD_BLOCKED; k++)
+        thread_yield();
+    return id > 0 && thread_state((uint64_t)id) == THREAD_BLOCKED;
+}
+
+static int gone(int64_t id)
+{
+    for (unsigned k = 0; k < 10 && thread_state((uint64_t)id) != THREAD_FREE; k++)
+        thread_sleep(1);
+    return thread_state((uint64_t)id) == THREAD_FREE;
+}
+
+static void test_interrupted(struct ext2_fs *fs)
+{
+    const struct vblk_info *vi = vblk_info();
+    struct ext2_stat st;
+    int64_t t[2];
+
+    intr_fs = fs;
+    intr_res[0] = intr_res[1] = -1;
+    if (ext2_resolve(fs, 0, "/hello.txt", &intr_ino) != EXT2_OK || blk_invalidate(vi->blk_id) != BLK_OK) {
+        expect(0, "interrupted readers: setup");
+        return;
+    }
+    vblk_test_skip_notify(1);           /* the first device read is not seen by the device yet */
+    t[0] = thread_create("ext2-intr0", intr_reader, (void *)0);
+    int a = blocked(t[0]);
+    t[1] = thread_create("ext2-intr1", intr_reader, (void *)1);
+    int b = blocked(t[1]);
+    thread_interrupt((uint64_t)t[1]);
+    int fb = gone(t[1]) && intr_res[1] == EXT2_EINTR;
+    thread_interrupt((uint64_t)t[0]);
+    int fa = gone(t[0]) && intr_res[0] == EXT2_EINTR;
+    expect(a && b && fb && fa && ext2_audit() == NULL,
+           "ext2: a thread waiting for the busy reader and the reader's thread waiting for the device are interrupted: EXT2_EINTR");
+    vblk_test_notify();
+    thread_sleep(3);
+    expect(vblk_abandoned() == 0 && ext2_stat(fs, intr_ino, &st) == EXT2_OK && st.size == 32 && ext2_audit() == NULL &&
+           blk_audit() == NULL && vblk_audit() == NULL, "the abandoned read completes; the reader works again");
+}
+
 static void test_virtio(void)
 {
     const struct vblk_info *vi = vblk_info();
@@ -1103,6 +1158,7 @@ static void test_virtio(void)
     expect(bad == 0 && checked > 200, "the 1 KiB image read through virtio-blk matches its manifest");
     expect(ok && walk_done && killed == 3 && ticks0 >= 6,
            "three user programs ran (and were preempted) while a kernel thread walked the file system");
+    test_interrupted(fs);
 
     expect(ext2_resolve(fs, 0, "/hello.txt", &ino) == EXT2_OK && vblk_reinit() == VBLK_READY &&
            ext2_stat(fs, ino, &st) == EXT2_ESTALE && ext2_close(fs) == EXT2_OK,

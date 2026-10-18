@@ -289,8 +289,10 @@ static void test_handlers(void)
            "registering a slave line unmasks exactly it and the cascade; audit clean");
 
     uint64_t cl0 = st->claimed[edge], un0 = st->unclaimed[edge], br0 = st->bottom_runs;
+    int other = irq_register((unsigned)level, IRQ_TRIGGER_LEVEL, "t2", test_top, test_bottom, (void *)2, &hh) == IRQ_OK;
     top_says[0] = IRQ_NONE;
     top_says[1] = IRQ_HANDLED;
+    top_says[2] = IRQ_HANDLED;
     n = (int)irq_test_dispatch((unsigned)edge);
     expect(n == 1 && top_calls[0] == 1 && top_calls[1] == 1 && call_seq[0] == 1 && call_seq[1] == 2 &&
            bottom_calls[0] == 0 && bottom_calls[1] == 0 && st->claimed[edge] == cl0 + 1,
@@ -299,6 +301,9 @@ static void test_handlers(void)
     irq_run_deferred();
     expect(bottom_calls[0] == 0 && bottom_calls[1] == 1 && st->bottom_runs == br0 + 1,
            "only the claiming handler's bottom half runs, once, in thread context");
+    expect(other && top_calls[2] == 0 && bottom_calls[2] == 0 && irq_unregister(hh) == IRQ_OK,
+           "a handler of another line is never asked");
+    top_says[2] = IRQ_NONE;
     top_says[1] = IRQ_NONE;
     n = (int)irq_test_dispatch((unsigned)edge);
     irq_run_deferred();

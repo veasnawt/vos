@@ -1417,8 +1417,8 @@ int selftest_vblk(const struct boot_info *bi)
         test_late_irq();
         test_shared_irq();
         uint64_t iprog, iel, pprog, pel;
-        expect(measure_progress("interrupt mode", &iprog, &iel) && iprog * 10 >= iel * 7,
-               "interrupt mode: 300 exact reads while the program kept at least 70% of the wall time (in ticks)");
+        expect(measure_progress("interrupt mode", &iprog, &iel) && iprog * 10 >= iel * 7 && iel <= 150,
+               "interrupt mode: 300 exact reads within 150 ticks while the program kept at least 70% of the wall time");
         /* The polling fallback, on its own: the N3.1/N3.2 tests in polling mode. */
         expect(set_mode(0) && streq(vblk_info()->poll_why, "polling requested (test)"),
                "polling mode on request (the fallback), device reinitialized");
