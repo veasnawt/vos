@@ -306,9 +306,24 @@ static void test_verifier(const struct boot_info *bi)
     expect(refused(0, bi, "PD[0]", "does not point to the kernel page table as a supervisor table"),
            "verifier refuses a directory that links another table");
 
-    /* N3.0: the second page table, phys [2 MiB, 4 MiB). hi is its last page, above the image. */
-    unsigned hi = SMALL_PAGES - 1;
-    expect(((uint64_t)__kernel_phys_end >> 12) <= hi, "the last 4 KiB-mapped page lies above the image");
+    /*
+     * N3.0: the second page table, phys [2 MiB, 4 MiB). hi is its highest
+     * page above the image that holds no boot information and no module
+     * (N3.2: a large GRUB module may cover the very last page), so the
+     * running check must name "kernel alias above the image" for it.
+     */
+    unsigned hi = 0;
+    for (unsigned p = SMALL_PAGES - 1; !hi && p > ((uint64_t)__kernel_phys_end >> 12); p--) {
+        uint64_t pa = (uint64_t)p << 12;
+        int used = pa < bi->info_end && pa + PAGE_SIZE > bi->info_start;
+
+        for (uint32_t m = 0; m < bi->module_count; m++)
+            used |= pa < bi->modules[m].end && pa + PAGE_SIZE > bi->modules[m].start;
+        if (!used)
+            hi = p;
+    }
+    expect(hi >= 512 && ((uint64_t)__kernel_phys_end >> 12) <= hi,
+           "a page of the second table above the image holds no module or boot information");
     reset();
     cpt[hi] &= ~PTE_NX;
     expect(refused(0, bi, "kernel page", "writable and executable"),
