@@ -13,6 +13,7 @@
 #include "lib.h"
 #include "memlayout.h"
 #include "pmm.h"
+#include "virtio_blk.h"
 #include "vmm.h"
 
 extern char __kernel_phys_start[], __kernel_phys_end[];
@@ -74,8 +75,14 @@ static int oracle_free(const struct pme *m, int n, const struct resv_table *t,
 }
 
 /* Compare every tracked frame with the oracle; returns the mismatch count. */
+/*
+ * Compare every frame with the oracle. The nheld frames in held were
+ * allocated on purpose before the test (N3.1: the virtio-blk DMA pool): they
+ * must be ALLOCATED, and are not counted as free.
+ */
 static uint64_t oracle_compare(const struct pmm *p, const struct pme *m, int n,
-                               const struct resv_table *t, uint64_t *expected_free)
+                               const struct resv_table *t, uint64_t *expected_free,
+                               const uint64_t *held, unsigned nheld)
 {
     uint64_t bad = 0, want = 0, limit = p->frames * PAGE_SIZE;
 
@@ -83,6 +90,11 @@ static uint64_t oracle_compare(const struct pmm *p, const struct pme *m, int n,
         int o = oracle_free(m, n, t, f, limit);
         int is_free = pmm_frame_state_in(p, f) == PMM_FRAME_FREE;
 
+        for (unsigned i = 0; i < nheld; i++)
+            if (held[i] == f) {
+                bad += !o || pmm_frame_state_in(p, f) != PMM_FRAME_ALLOCATED;
+                o = 0;
+            }
         want += o;
         if (o != is_free) {
             if (bad++ == 0) {
@@ -138,7 +150,7 @@ static void map_case(struct pmm *p, const struct pme *m, int n, const struct res
 
     set_map(m, n, 0, sizeof(struct mb2_mmap_entry));
     int err = pmm_init_in(p, t_avail, t_alloc, T_FRAMES, &sbi, t);
-    uint64_t bad = err == PMM_OK ? oracle_compare(p, m, n, t, &oracle_want) : 1;
+    uint64_t bad = err == PMM_OK ? oracle_compare(p, m, n, t, &oracle_want, 0, 0) : 1;
 
     expect(err == PMM_OK && p->free == want && p->usable == want && oracle_want == want &&
            bad == 0 && pmm_check_in(p) == PMM_OK, what);
@@ -392,8 +404,11 @@ int selftest_pmm_kernel(const struct boot_info *bi, const struct resv_table *t)
         real_map[i].len = e->length;
         real_map[i].type = e->type;
     }
-    uint64_t bad = oracle_compare(k, real_map, real_n, t, &want);
-    expect(bad == 0 && want == k->free && k->free == k->usable,
+    /* Frames held since boot by the virtio-blk DMA pool, if a device was initialized (N3.1). */
+    const struct vblk_info *vi = vblk_info();
+    unsigned nheld = vi->pool[0] ? VBLK_POOL_FRAMES : 0;
+    uint64_t bad = oracle_compare(k, real_map, real_n, t, &want, vi->pool, nheld);
+    expect(bad == 0 && want == k->free && k->free == k->usable - nheld,
            "every frame matches the oracle; free count equals the oracle's count");
     uint64_t ignored = 0;
     for (int i = 0; i < real_n; i++) {

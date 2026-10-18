@@ -1,0 +1,10 @@
+# QEMU blkdebug rules for the vblk-ioerr test: every guest read that covers
+# sector 1000 (byte offset 512000) fails with EIO, which virtio-blk reports to
+# the guest as VIRTIO_BLK_S_IOERR (rerror=report, the default). Nothing else
+# is changed; the image is opened read-only.
+[inject-error]
+event = "none"
+iotype = "read"
+errno = "5"
+sector = "1000"
+once = "off"
