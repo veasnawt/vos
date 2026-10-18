@@ -21,6 +21,7 @@
 #include "pmm.h"
 #include "resv.h"
 #include "thread.h"
+#include "virtio_blk.h"
 #include "vmm.h"
 #ifdef VOS_TEST
 #include "selftest.h"
@@ -234,6 +235,8 @@ void kernel_main(uint32_t mb2_magic, uint32_t mb2_info)
     irq_init();
     /* This code becomes the boot thread (N2.2); user programs keep running synchronously on it. */
     sched_init();
+    /* N3.1: the first virtio-blk device on PCI bus 0, read-only and polled; its absence is not an error. */
+    vblk_init();
 
     /* The first native application: GRUB module "hello", run in ring 3. */
     check(app_run_boot_module(&bi), "boot application ran and exited with status 0");
