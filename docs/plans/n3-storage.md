@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| Status | **N3.0 complete (2026-10-18): storage architecture designed, kernel map extended to 4 MiB of 4 KiB pages. N3.1 complete (2026-10-18): read-only, polled virtio-blk driver (section 5). N3.2 complete (2026-10-18): block layer, read-only cache, DMA-frame lifecycle, cooperative waiting (section 6). N3.3 complete (2026-10-19): read-only ext2 reader (section 7). N3.4 and later are [Proposal] and need explicit approval.** |
+| Status | **N3.0 complete (2026-10-18): storage architecture designed, kernel map extended to 4 MiB of 4 KiB pages. N3.1 complete (2026-10-18): read-only, polled virtio-blk driver (section 5). N3.2 complete (2026-10-18): block layer, read-only cache, DMA-frame lifecycle, cooperative waiting (section 6). N3.3 complete (2026-10-19): read-only ext2 reader (section 7). N3.4 complete (2026-10-19): interrupt-driven block I/O, deadlines, cancellation (section 9). N3.5 and later are [Proposal] and need explicit approval.** |
 | Date | 2026-10-18 |
 | Starting point | N2 complete at `8e30f9b` (`docs/plans/n2-foundation.md`, section 3.7) |
 | Target | `ARCH=x86_64`; the i386 kernel stays as it is |
@@ -35,7 +35,7 @@ from the disk is treated as untrusted input.
 | **N3.1** PCI and virtio-blk, read-only, polled *(done)* | Config-space scan (mechanism #1), modern virtio capability walk, feature negotiation, one split virtqueue in PMM frames, `IN` requests with a bounded poll, `VIRTIO_BLK_F_RO` honoured. The test disk is a generated raw image, not an ext2 image (no ext2 code exists yet). | Section 5 |
 | **N3.2** Block layer *(done)* | Block-device registry and interface, validated block I/O, fixed-size read-only cache in PMM frames, device-independent errors, audits; DMA-frame release for refused and stopped devices; cooperative waiting in the driver | Section 6 |
 | **N3.3** ext2 reader *(done)* | Restricted profile (stricter than `storage.md` section 5.3), every field validated, bounded walks | Section 7 |
-| N3.4 Interrupt completion | INTx through the PIC, waiters on wait queues instead of polling | Other processes keep running during disk waits; a killed waiter leaves no stale request |
+| **N3.4** Interrupt completion *(done)* | INTx through the PIC, waiters on wait queues instead of polling; deadlines; cancellation | Section 9 |
 | N3.5 File ABI v2 (read-only) | Handle-relative open, read, stat, enumerate and close; the namespace from trusted configuration; the ABI note version 2 | v0/v1 programs unchanged (`hello.elf` byte-identical); rights and `..` escapes refused; concurrent readers |
 | N3.6 Closure | Stress with concurrent readers, kills during I/O, exhaustion; documentation | Full regression; audits after every suite |
 
@@ -1514,7 +1514,7 @@ accounting matched the oracle exactly in every image.
 6. **Caching of inodes and directory lookups** if lookups are too slow, with the same epoch
    invalidation as the block cache.
 
-## 8. Recommended N3.4 scope [Proposal]
+## 8. Recommended N3.4 scope [Proposal; implemented, see section 9]
 
 Interrupt-driven virtio-blk completion, as designed in section 6.7:
 - route the device's INTx line (or MSI-X) to a handler that acknowledges the ISR and wakes the
@@ -1531,3 +1531,440 @@ Tests:
 - the existing block-layer and ext2 suites unchanged.
 
 Still not in N3.4: file system calls, mounting, writes.
+
+## 9. N3.4 result: interrupt-driven block I/O (complete)
+
+N3.4 replaces the polled wait of N3.2 with interrupt-driven completion. It adds:
+- deadlines to the scheduler;
+- a small device-IRQ layer on the 8259;
+- cancellation and explicit reset ordering.
+
+**What did not change:**
+- The kernel stays non-preemptible and runs with IF = 0. Hardware interrupts are still taken
+  only in ring 3 or in the idle thread's `sti; hlt`.
+- The only new preemption point is a ring-3 program interrupted when a device bottom half woke
+  a thread.
+- No ABI, user program, file system call or write path changed. Everything still runs under
+  QEMU TCG only.
+
+**Commits:**
+
+| Commit | Content |
+|---|---|
+| `aaf6846` | Preliminary: `stress-max` blocked-receiver test measured from the blocked state (9.1) |
+| `01e8259` | Scheduler queue waits with a deadline (9.2) |
+| `609a55b` | Device IRQ lines with top and bottom halves (9.3) |
+| `9737f1b` | Interrupt-driven virtio-blk completion and cancellation (9.4–9.6) |
+| `41233a0`, `993b81e`, `ebafbfb`, `65867e8` | Tests: other lines' handlers, ext2 `EINTR`, throughput bound, fail-fast ordering, cross-tick storm, run marker |
+
+### 9.1 Preliminary correction: `stress-max`
+
+**The failure.** The N2.5 check "a receiver blocked for 30 ticks used at most 1 tick while two
+endless loops shared the CPU" failed once in the N3.3 regression (section 7.10):
+`selftest: stress 26 cases, 1 failed`, `QEMU exit status 35, expected 33`.
+
+**The cause.** Instrumented runs measured exactly 1 tick and 2 traps in every case, at the
+N3.2 baseline as well as at N3.3, idle and under load:
+- one timer tick, left pending while the kernel loaded the programs with IF = 0, is taken at
+  the receiver's first ring-3 instruction;
+- the receiver then makes its `channel_recv` call.
+
+The bound therefore sat exactly on the measured value, and a host stall of one PIT period
+inside those few instructions added a second tick. This is not a kernel defect.
+
+**The correction** (test only, no kernel change):
+- The probe waits, with a bound, until the receiver is `THREAD_BLOCKED`.
+- Over the next 30 ticks it then requires the receiver's ticks, traps and switch-ins to grow
+  by exactly zero, while each spinner still gets at least 10 ticks.
+- The cost of entering the blocked state is reported, not asserted.
+
+Two negative controls show that the probe catches:
+- a receiver that busy-polls (it never blocks, and gains ticks and traps);
+- a receiver resumed without cause (its switch-ins grow).
+
+**Validation:**
+- **30 `stress-max` runs:** 15 idle and 15 with nproc + 2 host CPU hogs, 0 failed. Every run
+  measured +0 ticks, +0 traps and +0 switch-ins, with spinners at 18/18.
+- **Entry cost:** 1 tick and 2 traps in 28 runs; 2 ticks and 3 traps in 2 runs, which is
+  exactly the case that failed the old bound.
+- **`make ARCH=x86_64 test`:** 62 runs passed, 0 failed.
+- **Kernel mutations:**
+  - `channel_recv` sleeping one tick instead of blocking is caught by the new zero-switch-in
+    check;
+  - `channel_recv` yielding is caught by the livelock panic.
+
+### 9.2 Scheduler: queue waits with a deadline
+
+`thread_block_until(q, deadline)` blocks on a wait queue until one of three events, whichever
+comes first:
+
+| Event | Return value |
+|---|---|
+| `thread_wake_one/all` | `THREAD_WOKEN` |
+| `thread_interrupt` | `THREAD_INTERRUPTED` |
+| the absolute timer tick `deadline` | `THREAD_TIMEDOUT` |
+
+**Rules:**
+- A deadline that is already due returns at once, without enqueuing or switching.
+- Deadlines are checked where sleepers are woken (`wake_sleepers`). That happens in thread
+  context, never in an interrupt handler. A timed-out thread is unlinked from its queue (head,
+  middle or tail) first.
+- A wakeup or an interrupt clears the deadline.
+- `thread_block(q)` is `thread_block_until(q, 0)`.
+- New audit rule: a thread that is not blocked carries no wake tick.
+
+**Lost-wakeup guard.** The idle thread still panics when every thread is blocked and none has a
+deadline. Every device wait has a deadline, so that state remains a lost wakeup. The isolated
+case `sched-deadlock` still produces this panic.
+
+### 9.3 Device IRQ lines (`irq.h`, `irq.c`, `pic.c`)
+
+**Registration.** `irq_register(line, trigger, name, top, bottom, ctx, &handle)`:
+- It refuses the timer line (0), the cascade (2), lines ≥ 16 and a missing top half.
+- It refuses a trigger mode that differs from the chipset's ELCR (ports `0x4D0`/`0x4D1`, now
+  logged at boot: `0xc00`, so lines 10 and 11 are level-triggered).
+- It unmasks the line, plus the cascade for a slave line. The last unregistration masks them
+  again.
+- At most four handlers exist in total. Lines may be shared: every handler of the interrupting
+  line is asked, in registration order, and handlers of other lines are not.
+
+**Top half.** It runs inside `irq_handle`, before the EOI, with IF = 0 and no nesting.
+- It must acknowledge its device and return `IRQ_HANDLED` or `IRQ_NONE`.
+- It may not enter the scheduler. The isolated case `irq-top-sched` shows the scheduler panics
+  if it does.
+- Acknowledging before the EOI is what lets a level-triggered line drop before the controller
+  is re-armed.
+
+**Bottom half.** A claim marks the handler pending. `irq_run_deferred` runs pending bottom
+halves in thread context from two places:
+- `sched_tick`, after every interrupt taken from ring 3;
+- the idle loop, after each halt.
+
+A bottom half that makes a thread runnable sets `device_woke`. `sched_preempt_due` then lets
+the interrupted ring-3 program be preempted at once, instead of at the end of its two-tick
+slice.
+
+**Interleaving.** Top halves only ever interrupt ring 3 or the idle halt. They never interleave
+with kernel code, including a driver's PCI configuration cycles through `0xCF8`/`0xCFC`.
+
+**Storms.** A line is masked for good, and its handlers' bottom halves run once so their
+drivers notice (`irq_line_disabled`), when either:
+- it interrupts more than 1000 times within one tick; or
+- it interrupts more than 1000 times in a row with no handler claiming it.
+
+The second rule matters because an unacknowledged level line fires again right after each EOI,
+however long each round takes. `irq_audit` checks the handler table and that the controller's
+masks equal the registered lines.
+
+### 9.4 virtio-blk: interrupt mode, polling fallback
+
+**Mode choice.** At each (re)initialization the driver uses interrupt mode only when all of
+these hold:
+- the device has an ISR status capability (`cfg_type` 3, now parsed);
+- it has an INTx pin;
+- `PCI_INTERRUPT_LINE` names a usable 8259 line. The line is read from the device, never
+  assumed: slot 4 → IRQ 11, slot 5 → IRQ 10, both tested;
+- the ELCR has that line level-triggered;
+- `irq_register` accepts it.
+
+Otherwise the driver polls as in N3.2: `AVAIL_F_NO_INTERRUPT`, INTx disabled, yielding every
+4096 polls. The reason is kept in `poll_why`: no ISR capability, no pin, no usable line, line
+not level, storm, registration refused, or a test request. The mode and line are logged:
+`interrupts on IRQ 11 (INTA, level)`.
+
+**Top half.** It reads the one-byte ISR status through the PCI configuration window. That read
+returns and clears the bits and deasserts INTx. The top half claims the interrupt only if a
+bit was set; ISR 0 means another device on the shared line raised it.
+
+**Bottom half.** It reaps the used ring and wakes the owner of each completed slot.
+
+**Waiter.** It blocks on its slot's wait queue with the request deadline (`VBLK_WAIT_TICKS` =
+200), waking every `VBLK_RECHECK_TICKS` = 10 ticks to re-check the used ring.
+- A completion found by a re-check rather than by its interrupt is counted
+  (`recheck_completions`). This is the observable sign of a lost wakeup, and 0 was measured in
+  every run.
+- At the deadline the device is reset (`VBLK_ETIMEDOUT`).
+
+**Why no completion is lost:**
+- The waiter checks `done[slot]` and then blocks with no possible switch in between (IF = 0,
+  no kernel preemption).
+- Bottom halves run only in other threads' scheduler entries.
+- So a completion either is seen by the check, or wakes a waiter that is already on the queue.
+- A completion that arrives before the waiter blocks raises INTx without delivery, because
+  IF = 0. The check finds it and the waiter never blocks; the interrupt is claimed later, with
+  nothing to wake. This is tested directly.
+- Sequential completions can share one interrupt, because the ISR bit stays set until it is
+  read.
+
+**Mode switches.** A storm on the line makes the bottom half drop the handler, disable INTx,
+suppress interrupts in the ring and wake every blocked waiter. The waiters continue in polling
+mode. After the line is cleared, a reinitialization chooses interrupt mode again.
+
+### 9.5 Cancellation, abandoned requests, resets (state transitions)
+
+**Slot states:**
+
+| From | Event | To |
+|---|---|---|
+| FREE | `vblk_submit` | IN-FLIGHT (owner = submitting thread) |
+| IN-FLIGHT | used-ring entry reaped | COMPLETE |
+| COMPLETE | owner's `vblk_wait` takes the result | FREE |
+| IN-FLIGHT | owner woken by `thread_interrupt` (`VBLK_EINTR`) | ABANDONED (no owner; buffers still the device's) |
+| ABANDONED | the device completes it | FREE (data discarded, `abandoned_completed`) |
+| ABANDONED | still outstanding after `VBLK_WAIT_TICKS` | device reset ("an abandoned request never completed") |
+| any | device reset | FREE (waiters woken, `VBLK_EBROKEN`) |
+
+A polling-mode wait cannot be interrupted; it ends at its bounds. The block layer and ext2
+propagate cancellation:
+- `BLK_EINTR` and `EXT2_EINTR`;
+- a thread waiting for another thread's cache-line load, or for a busy ext2 reader, is
+  interruptible too;
+- a line whose loader was interrupted is left FREE and the threads waiting for it are woken,
+  as after any failed load.
+
+**Reset order** (`broken`):
+1. The state becomes BROKEN, so nothing woken later uses the device.
+2. The device is reset.
+3. If the reset is not confirmed (status does not read back 0), bus mastering is switched off
+   and the pool is quarantined.
+4. Every slot, including abandoned ones, is released, since the device no longer owns any
+   buffer.
+5. Every waiter is woken and returns `VBLK_EBROKEN` at once.
+
+**After a reset:**
+- A late interrupt is not claimed: after reset the ISR reads 0 and the device has dropped
+  INTx. This is tested with a completion's interrupt pending at the reset.
+- A bottom half left over from before the reset runs against the reinitialized queue, whose
+  ring indexes start fresh, and does nothing. This is tested.
+
+### 9.6 DMA ownership and the IOMMU risk
+
+The device can write only frames of its six-frame pool: the ring, headers/status, and one data
+frame per slot.
+- **Cancellation never frees or reuses a slot's buffers.** An abandoned slot keeps them until
+  the device completes the request or is reset. The test shows the device writing the sector
+  data into the kept frame after the cancellation; that data is discarded.
+- **The pool is freed only in two cases:** after a confirmed reset with bus mastering off
+  (refused device, `vblk_shutdown`).
+- **With an unconfirmed reset** the pool stays allocated (quarantined) and bus mastering is
+  off.
+- Cache frames and caller buffers are never DMA targets. Data is copied out of the pool after
+  validation.
+
+**Risk without an IOMMU:** these rules constrain what the driver asks for. A faulty or
+malicious device can still write any physical memory. Only an IOMMU (or a device that honours
+bus-master disable) contains that, and VOS has no IOMMU support: devices requiring
+`VIRTIO_F_ACCESS_PLATFORM` are refused.
+
+An unconfirmed reset cannot be produced under QEMU, so the quarantine path is checked by the
+audit and by code review, not by a live test.
+
+### 9.7 Shared line
+
+In QEMU's default configuration, IRQ 11 is shared by the e1000 NIC (`00:03.0`) and virtio-blk
+(`00:04.0`).
+
+**Default configuration** (`vblk` run):
+- A second handler on the line is asked on every interrupt. In 32 reads it was called exactly
+  as often as virtio-blk's top half, and virtio-blk claimed its own interrupts.
+- No interrupt on the line went unclaimed, and the idle e1000 never asserted INTx.
+- An interrupt virtio-blk did not raise (synthesized on the line): its top half reads ISR 0
+  and says not mine, and the other handler claims it.
+- A synthesized storm masks the line. virtio-blk falls back to polling, keeps reading exactly,
+  and returns to interrupt mode after the line is cleared and the device reinitialized.
+
+**`-nic none`** (`vblk-nonic`): the device moves to `00:03.0`, still on IRQ 11 and unshared.
+All tests pass.
+
+**Slot 5** (`vblk-slot5`): IRQ 10; all tests pass.
+
+**Not tested: a real interrupt raised by another device.** QEMU's e1000 implements its I/O BAR
+as a stub, and raising its interrupt needs its MMIO registers. VOS maps no device memory
+(`vmm_map` accepts only PMM frames), and N3.4 does not add MMIO mapping for a test. This is
+recorded as a gap.
+
+### 9.8 CPU progress while requests wait (QEMU TCG; relative only)
+
+Timer ticks are counted only while interrupts are enabled, so wall time is measured with the
+TSC, calibrated against 10 idle ticks. 300 reads of 8 sectors were made by a kernel thread
+beside a CPU-bound program (memtag1):
+
+| Mode | Wall time (tick periods) | Ticks counted | Program ticks |
+|---|---|---|---|
+| interrupt | 12–14 | 12–15 | all of the counted ticks |
+| polling (fallback) | 8–9 | 2 | 2 |
+
+- **Polling** finishes sooner, but holds the CPU with interrupts off. Ticks are lost and the
+  program gets about a quarter of the wall time.
+- **Interrupt mode:**
+  - leaves the CPU to the program between completions;
+  - wakes the reader at once on each completion (the `device_woke` preemption of the ring-3
+    program);
+  - loses no ticks.
+- **A request the device never sees, beside the program:** the program ran 30 of 30 ticks
+  until the 30-tick deadline, and the waiter blocked 3 times (one re-check every 10 ticks).
+- **64 reads with nothing else runnable:** 63–64 interrupts, every blocked waiter woken by the
+  bottom half, 0 re-check completions, and the idle thread halted about 64 times, so the CPU
+  did not poll.
+
+### 9.9 Tests
+
+| Area | Where | What |
+|---|---|---|
+| Deadlines | `selftest_sched.c` (45 cases, every image) | A wait nobody ends times out at its deadline while idle halts. A due deadline never blocks. A wakeup before the deadline clears it. An interrupt ends a deadline wait. Three waiters time out from the middle and tail of a queue, in deadline order, while it stays linked. Audit rule on a crafted state. |
+| Lost wakeup | `sched-deadlock` (panic case), `selftest_vblk.c` | A wait without a deadline that nobody ends is reported. A completion that arrives before its waiter blocks is found without blocking. 0 re-check completions in every interrupt-mode run. |
+| IRQ layer | `selftest_irq.c` (38 cases, every image), `irq-top-sched` (panic case) | Bad lines, handles and trigger modes refused. A slave line unmasks exactly itself and the cascade. Order of top halves; other lines not asked. Only claiming bottom halves run, once, in thread context. Unclaimed counted. Storm rules (in one tick; unclaimed in a row across ticks; claimed in one tick). Table bound; masks restored. A top half entering the scheduler panics. |
+| Interrupt mode | `selftest_vblk.c` (149 cases in `vblk`) | Routed line, ELCR, masks and INTx. 64 reads: 32–64 interrupts, all claimed, waiters woken by the bottom half, idle halts. |
+| Timeout | same | A request the device never sees ends at its 30-tick deadline while a CPU-bound program keeps 30 of 30 ticks. An abandoned request older than the bound resets the device. |
+| Interrupted and killed waiters | same, `selftest_ext2.c` (96 cases) | A waiter is interrupted and exits; its slot stays abandoned with its frames. Block layer: a load waiter and the loader get `BLK_EINTR`; the line is left FREE, then loads exactly. ext2: a busy-reader waiter and the device waiter get `EXT2_EINTR`. |
+| Completion after cancellation | same | The device writes the data into the kept frame after the cancellation. The bottom half retires the slot, and it is reused exactly. |
+| Concurrent requests | same | Four waiters blocked with four requests in flight; a fifth is refused. One notification wakes all four (1 interrupt measured). Four threads × 100 reads, up to 4 in flight. |
+| Late interrupts after reset | same | Reset with a completion's interrupt pending: INTx drops and nothing reaches the driver. A bottom half from before a reset does nothing to the new queue. A blocked waiter returns `VBLK_EBROKEN` at once. |
+| Shared line | same; runs `vblk`, `vblk-nonic`, `vblk-slot5` | Second handler, foreign interrupt (synthesized), storm and fallback, with and without the e1000, on IRQ 11 and IRQ 10. |
+| Device errors and recovery | `vblk-ioerr`, protocol tests | Injected media errors (54) in interrupt mode. Forged used-ring entries, timeouts and resets followed by reinitialization. |
+| CPU progress | `selftest_vblk.c` | Section 9.8. Interrupt mode must finish 300 reads within 150 ticks while the program keeps ≥ 70% of the wall time. |
+| DMA ownership | same | Pool frames unchanged and allocated throughout. Kept frames of abandoned slots. `pmm_free_count` back to baseline after each scenario. The pool released at `vblk_shutdown` (existing). |
+| Polling fallback | same | Contents, queue, timeout, repeat (3000 reads), reset while waiting, responsiveness and progress, all in polling mode; then back to interrupt mode. |
+| Cache and ext2 | `blk`, `ext2`, `ext2-2G`, `ext2-max` | Unchanged suites pass in interrupt mode. |
+
+### 9.10 Mutations
+
+Every mutation was applied in a separate worktree, built, run (exit status and markers, 240 s
+limit) and restored. A build failure or a timeout is never counted as a detection.
+
+**Totals:** 34 valid mutations, 32 caught by concrete failing assertions, 2 not detected
+(explained below).
+
+| # | Mutation | Result |
+|---|---|---|
+| A1 | `channel_recv` sleeps one tick instead of blocking | caught by the corrected `stress` probe (switch-ins grow) |
+| A2 | `channel_recv` yields instead of blocking | caught (livelock panic) |
+| S1 | timeout does not unlink the waiter from its queue | caught |
+| S2 | a wakeup leaves the deadline armed | caught |
+| S3 | a due deadline blocks anyway | caught |
+| S4 | timeout reports `THREAD_WOKEN` | caught |
+| S5 | interrupt reports `THREAD_WOKEN` | caught |
+| S6 | the deadline is not armed | caught (lost-wakeup panic) |
+| S7 | audit rule for a wake tick outside BLOCKED removed | caught |
+| I1 | a claim does not mark the bottom half pending | caught |
+| I3 | storm guard removed | caught |
+| I4 | cascade not unmasked for a slave line | caught |
+| I5 | ELCR trigger mode not checked | caught |
+| I8 | audit rule "handler on an invalid line" removed | **not detected**: the API refuses such lines, so only memory corruption could produce the state. Kept as a defensive rule. |
+| I9 | handlers of every line asked | **missed at first**; caught after the test "a handler of another line is never asked" (`41233a0`) |
+| V1 | top half never claims | caught |
+| V2 | bottom half wakes nobody | caught |
+| V3 | top half claims without reading (acknowledging) the ISR | caught |
+| V4 | EOI before the top halves | **not detected, equivalent under QEMU**: the top half still acknowledges the device before IF = 1, and QEMU's level-mode 8259 drops the request when the line drops. On real hardware the order avoids a re-triggered or spurious interrupt. |
+| V5 | a waiter ignores bottom-half wakeups (only re-checks complete) | caught (first attempt not counted: a script error made it fail to build) |
+| V6 | cancellation frees the slot at once | caught |
+| V7 | a reset does not wake the waiters | caught |
+| V9 | no watchdog for abandoned requests | caught |
+| V11 | the line assumed (11), not read from PCI configuration | caught in `vblk-slot5` |
+| V12 | INTx left disabled in interrupt mode | caught |
+| V13 | completed abandoned slots never retired | caught |
+| V14 | an interrupted block-layer load waiter waits again | caught |
+| V15 | `BLK_EINTR` mapped to `EXT2_EIO` | caught |
+| V16 | an interrupted ext2 reader waiter waits again | caught |
+| V17 | the idle loop does not run bottom halves | caught |
+| V18 | a device wakeup waits for the end of the program's slice | caught |
+| V19 | the device registered as edge-triggered | caught |
+| V20 | storm does not switch the driver to polling | caught |
+| V25 | the "unclaimed in a row" storm rule removed | caught by the test added in `ebafbfb` |
+
+**Not mutation-tested** (no QEMU configuration produces the state):
+- an unconfirmed reset (bus mastering off and quarantine);
+- reset ordering inside `broken`. Nothing can run between its steps, so the ordering is
+  equivalent in this kernel.
+
+### 9.11 Regression
+
+**First attempt (invalid).** The first full run stopped in `make test`. The `vblk` run's marker
+required the exact line "64 reads in interrupt mode: 64 interrupts", but 63 were measured: one
+read completed before its waiter blocked and shared its interrupt with the next one. The
+self-tests themselves passed (149 and 73 cases, 0 failed). The marker was corrected in
+`65867e8` and the whole regression was run again from clean builds.
+
+**Final run at `65867e8`** (the documentation commit changes no code):
+
+| Check | Result |
+|---|---|
+| Reproducibility | two clean builds of the production x86_64 `vos.bin`: identical (`a480c611…a911b8`) |
+| `make test` | exit 0, 65 runs passed, 0 failed, 11 fault comparisons, `test-user-elf` 292/0 |
+| `make ARCH=x86_64 test` | exit 0, 65 passed, 0 failed, 11 fault comparisons, 292/0 |
+| `make ARCH=i386 test` | exit 0 |
+| `make test-all` | exit 0, 66 passed, 0 failed, 11 fault comparisons, 292/0 |
+| `git diff --check` | clean |
+| i386 `vos.bin` | `0760e7eb8ecfcb8545f4126f5a369b0fadfc5163ad9e95c5fba2a81d45afb9dd` (unchanged) |
+| `hello.elf` | `c6c6416195a0f18d680d7f8f19be52ce02ff02912ef3bac45324fbe88006cd06` (unchanged) |
+| Fixtures | `build/vblk/disk.img` and all six ext2 images unchanged after every run (`SHA256SUMS`) |
+
+- **New runs:** `irq-top-sched`, `vblk-nonic` and `vblk-slot5`; the other runs are unchanged
+  and pass.
+- **ABI v0 and v1 unchanged:** no file under `user/`, `docs/abi/` or `arch/i386/` changed
+  since N3.3, and `hello.elf` is byte-identical.
+
+### 9.12 Memory and headroom
+
+`__kernel_phys_end` (limit `0x400000`):
+
+| Image | N3.3 | N3.4 | Room left |
+|---|---|---|---|
+| production `build/x86_64` | `0x19f000` | `0x1a0000` (+4 KiB) | 2432 KiB |
+| main test image | `0x226000` | `0x22a000` | 1880 KiB |
+| `vblk` test image | `0x234000` | `0x23e000` | 1800 KiB |
+| `ext2` test image (largest) | `0x240000` | `0x244000` | 1776 KiB |
+
+N3.4 allocates no new PMM frames. The handler table, wait queues and slot state are static. The
+DMA pool (6 frames) and the cache (32 frames) are unchanged.
+
+### 9.13 Limitations and risks
+
+- **No IOMMU.**
+  - The DMA rules constrain only the driver; a misbehaving device can write any physical
+    memory.
+  - An unconfirmed reset (bus mastering off, pool quarantined) cannot be produced under QEMU
+    and is not tested live.
+- **8259 and INTx only.** No APIC/IOAPIC, MSI or MSI-X. The firmware's routing
+  (`PCI_INTERRUPT_LINE`) and ELCR are trusted as programmed by SeaBIOS; no ACPI `_PRT`
+  parsing. One CPU.
+- **Shared line: no real foreign interrupt.** A real interrupt raised by another device on the
+  shared line was not produced. The e1000's interrupt registers need MMIO, which VOS does not
+  map. The foreign-interrupt case is synthesized; the real e1000 is shown idle and unclaimed
+  on the line.
+- **Storms.** A line disabled by a storm stays masked until a test clears it. In production,
+  the driver remains in polling mode for good.
+- **Preemption.**
+  - The kernel is still non-preemptible. A device wakeup preempts a ring-3 program only.
+  - A kernel thread that never blocks or yields still holds the CPU, and interrupts are not
+    taken while it runs.
+  - Timer ticks are lost while the kernel runs with IF = 0 for longer than one period, as the
+    polling measurement shows.
+- **Polling-mode waits cannot be interrupted.** They end at their bounds.
+- **Kills during I/O.** No user process can issue disk I/O yet (no file system calls). A
+  process kill reaches a kernel thread through `thread_interrupt`, the same path tested here,
+  but the full rule for a process killed while its thread waits belongs to the ABI v2 work.
+- **Timing.**
+  - Deadlines have tick granularity (10 ms) and may end a few ticks late.
+  - Measured latencies are QEMU TCG values and relative only.
+- **ELCR read through ports `0x4D0`/`0x4D1`.** This is the PIIX/ICH layout of QEMU's `pc`
+  machine. Other chipsets are not covered: no native hardware claim.
+
+### 9.14 Recommended N3.5 scope [Proposal]
+
+The file ABI v2, read-only, as staged in section 2, built on the N3.3 reader and the N3.4 wait
+model:
+- **Handle-relative calls:** open, read, stat, enumerate and close. The namespace comes from
+  trusted configuration (D-S7); rights are checked per handle; `..` escapes are refused.
+- **Copy-out** to user memory through the existing validated user-copy routines, with bounded
+  per-call sizes.
+- **A defined rule for a process killed while its thread waits** on the device, a cache line
+  or a reader. The `thread_interrupt` → `EINTR` → abandoned-request path is in place; N3.5
+  decides what the system call returns and that the process's resources are released only
+  after the wait has ended.
+- **Per-process limits** on open handles and outstanding requests, so that one program cannot
+  occupy all four request slots or the 32 cache lines.
+- **ABI tests:** v0/v1 programs unchanged (`hello.elf` byte-identical), concurrent readers,
+  and kills during reads.
+
+Still not in N3.5: writes, mounting more than one volume, MSI/APIC, and networking.
