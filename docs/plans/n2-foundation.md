@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| Status | **Approved as the current development plan (2026-10-18), revised after the N2 architecture review.** **N2.0–N2.4 are complete (2026-10-18, sections 3.1–3.5).** N2.5 and every later stage need explicit approval. Sections marked [Proposal] or [Option] are still design, not implementation. |
+| Status | **Approved as the current development plan (2026-10-18), revised after the N2 architecture review.** **N2 is complete: N2.0–N2.5 (2026-10-18, sections 3.1–3.7; closure in 3.7).** The next milestone needs explicit approval. Sections marked [Proposal] or [Option] are still design, not implementation. |
 | Date | 2026-10-17, revised 2026-10-18 |
 | Starting point | N1 complete (see `docs/plans/n1-user-space.md`, `docs/abi/syscall-v0.md`) |
 | Target | `ARCH=x86_64`; the i386 kernel stays as it is |
@@ -507,6 +507,130 @@ process; about 76 KiB left under the 2 MiB image limit.
 runner (trusted configuration, kernel-side verdicts). Exhaustion and kill tests at scale are
 bounded by 8 processes, 14 free threads and 16 channels; more needs the image-limit decision
 (stacks from allocated frames, or a second 4 KiB table).
+
+### 3.6 N2.5 result: concurrency, security and milestone closure (complete)
+
+**Scope.** No new features, no new system calls, no change to any resource limit or to the kernel
+mapping. Added: consistency audits, a stress image, more adversarial tests, two robustness checks
+found necessary by mutation testing, and this closure.
+
+**Audits** (`sched_audit`, `proc_audit`, `channel_audit`, `handles_audit`): every thread linked
+exactly where its state says (run queue, its wait queue, sleeping), nothing dead left unreaped,
+stack ownership and canaries, user threads off the kernel root; the process table consistent
+(running processes have their thread on their own kernel stack, ended ones hold no thread and no
+handle); every channel with an open end, queues in bounds in allocated frames, open ends in their
+owner's handle table, at most one waiter and only the owner's blocked thread, closed ends and
+free records empty. They run at the end of the scheduler, IPC and user self-tests in every test
+image, and in the stress scenarios while processes run or are blocked.
+
+**Stress image** (`VOS_TEST_CASE=stress`, `selftest_stress.c`, 26 cases, 128 MiB, 2 GiB and
+`-cpu max`): a receiver blocked for 30 ticks uses at most one tick beside two endless loops; mixed
+load (two loops, `irqregs`, `memtag1`/`memtag2` and a ping/echo pair beside a sleeping kernel
+thread); three channels at once in three start orders; a process killed in the middle of a
+conversation in either direction (`ipc_chat`, new) while another faults; the process table full
+and recovery; a handle table and the channel pool full, recovery with new handle generations,
+half-closed channels and real traffic over a recycled channel; fairness of four loops beside an
+IPC pair over a fixed window; 12 rounds of churn (two conversations, a fault, a kill, a load
+running out of frames) back to baseline each time. Every wait for a process that should end on
+its own is bounded (100 ticks) and reported by name if it overruns. Also new: `s-faultsender` in
+the `ipc` image (12 scenarios: messages queued before a sender faulted are still delivered) and,
+in `selftest_ipc`, 100 channel reuses and a half-closed channel whose closed end held messages.
+
+**Sleep deadlines, precisely.** A sleeper becomes runnable on the tick its deadline passes
+(measured: `max_wake_late` <= 1) and then waits its turn in the round-robin queue: at most one
+round, i.e. (runnable threads) x 2 ticks. In the mixed load (7 busy processes) the kernel thread
+ran at most 8 ticks after its deadline; the bound is documented and tested, not a promise of
+immediate execution.
+
+**Defects found by N2.5 testing and fixed.**
+1. A thread busy-yielding in the kernel with nothing else runnable stops time (IF = 0, no tick)
+   and hangs silently; the scheduler now panics after a million consecutive no-op yields within
+   one tick (`ae1a75d`). Correct code never comes close.
+2. Test-design defects (not kernel defects): the fairness window was read after sequential
+   kills (it looked like double counting; it was ticks run after the window); stress waits were
+   unbounded (a lost wakeup showed up only as a QEMU timeout); no test had audited a closed end
+   that still held messages. All three fixed (`f6aeb9f`, `fe3a889`).
+
+**Mutations (N2.5).** All caught with specific evidence, none by timeout alone: the N2.4 sleeper
+fix removed (the dedicated test and the stress wake-lateness record both fail); run-queue length
+not maintained (scheduler audit); a closed end keeping its messages (channel audit, after the new
+test); a dying process keeping its handles (process audit in the stress image); sleepers woken 3
+ticks late (wake-lateness record); a receiver polling instead of blocking (livelock panic, after
+the detector); handle generation not advancing; `proc_destroy` not closing handles; close not
+waking the receiver (bounded wait reports `ipc_echo` by name). Spot checks of one mutation per
+earlier stage (no TLB flush, no EOI, wrong CR3, no send right, ABI v0 allowed v1 calls) are
+still caught in the stress image.
+
+**Regression at the end of N2.5 (clean build):** `make test` and `make ARCH=x86_64 test` (50 QEMU
+runs each) and `make test-all` (51) pass; ten `check-fault.sh` comparisons and the genuine NMI
+case; 282 user/ELF checks; the 41-case isolation suite, the 9-case interrupt suite, the 12-case
+`mp` image, the 12-scenario `ipc` image and the 26-case `stress` image under qemu64, 2 GiB and
+`-cpu max`, free frames equal before and after; `selftest: pmm-kernel 47`, `vmm 80`, `kmap 49`,
+`irq 22`, `sched 38`, `ipc 30`, `user 180`, `elf 34` with 0 failures; the forged-verdict checks
+hold. Two clean builds of the x86_64 kernel are byte-identical. `make ARCH=i386 test` passes and
+the i386 `vos.bin` SHA-256 is still
+`0760e7eb8ecfcb8545f4126f5a369b0fadfc5163ad9e95c5fba2a81d45afb9dd`; `hello.elf` is unchanged
+(`c6c64161…cd06`).
+
+### 3.7 N2 closure
+
+**N2 is complete.** Its acceptance test (section 2) is the stress image's mixed load: GRUB
+delivers the programs, two exchange messages over a channel while others spin, the timer preempts
+the spinners, both communicating programs finish with every message delivered in order, the
+spinners are ended by the kernel, and every frame, page table, thread, process record and
+channel returns.
+
+**What N2 implements (all tested, QEMU TCG only):** kernel W^X with guarded kernel stacks and
+IST stacks for #DF, NMI and #MC (N2.0); the 8259 PIC and the PIT at ~100 Hz, ring 3 with IF = 1,
+the kernel with IF = 0 except the idle thread's `sti; hlt` (N2.1); kernel threads, a guarded stack
+each, cooperative round robin, wait queues, tick sleeps, deferred reaping (N2.2); up to 8 user
+processes, each with its own address space and thread, CR3 and TSS.RSP0 switched per thread,
+2-tick preemption only on the return to ring 3 after the timer was acknowledged (N2.3); channels
+with per-process handles and rights, ABI v1 (`yield`, `channel_send`, `channel_recv`,
+`handle_close`) with blocking receive and kill-while-blocked (N2.4); audits and stress (N2.5).
+
+**Demonstrated guarantees (tested, not proven):** a process cannot read or write another
+process's memory, through user mappings or IPC; it cannot use another process's handles or a
+closed one (up to the 16-bit generation wrap); a fault, exit or kill ends only that process and
+closes its handles (peers see `EPIPE`, messages it sent are still delivered); one endless process
+cannot starve other processes, kernel threads or sleepers; user registers, flags and stack survive
+interrupts, preemption, blocking and yielding; every trap is validated on the process's own
+kernel stack and address space; no kernel stack or address space is freed while in use; every
+resource returns after every scenario; ABI v0 programs, including the unchanged `hello.elf`, keep
+working and get `ENOSYS` for v1 calls.
+
+**Resource limits:** 8 processes, 16 threads (14 usable), 15 kernel stacks of 16 KiB, 16
+channels, 8 handles per process, 16 messages of at most 256 bytes per endpoint, one CPU, one
+thread per process, RAM below 1 GiB, a 2 MiB kernel image (production ends at `0x18d000`, the
+largest test image at `0x1f2000`: about 56 KiB left).
+
+**Known failure modes (by design):** a kernel thread that never yields keeps the CPU (the kernel
+is not preemptible); a stale handle can name a new channel after 65 536 reuses of its slot; a
+receiver blocked on a peer that never sends and never closes waits forever (no timeouts); kernel
+errors panic (no recovery); a machine check shuts the machine down (CR4.MCE off); exceeding a
+table returns an error, there is no queueing or waiting for capacity.
+
+**Not tested / not implemented:** real hardware, KVM, SMP, the APIC, device interrupts other
+than the timer, spurious IRQ7/15 in real delivery (synthetic only), genuine machine checks,
+memory above 1 GiB, FPU/SIMD state, program-created channels, handle transfer, multi-handle wait,
+`spawn`/`wait`, file systems, storage, networking, graphics, input, a shell, `.vapp`.
+
+**Remaining security risks:** the kernel half is mapped (supervisor-only) in every address space
+with no side-channel mitigations; without SMEP (`qemu64`) ring 0 could execute user pages; no
+per-process quotas beyond the fixed tables; the 16-bit generation wrap; the kernel trusts its
+GRUB modules and configuration completely; all evidence comes from QEMU TCG.
+
+**Future kernel mapping and stack options (for N3, not decided):** (a) a second 4 KiB page table
+for phys 2–4 MiB in the W^X map (smallest change, keeps static stacks, doubles the image budget);
+(b) kernel stacks mapped from allocated frames into a dedicated guarded kernel region (removes the
+image limit for stacks, needs upper-half mapping support in `vmm`); (c) moving test-only buffers
+out of test images (`ebuf`, `muts`, `alloc_snapshot`, `selftest_procs`: about 140 KiB).
+
+**What N3 may build on:** the process, thread and channel model above with its documented
+limits; ABI v0 and v1 as experimental interfaces; the audits as invariants every later change
+must keep; the trusted GRUB-scenario runners (`suite`, `irq`, `mp`, `ipc`, `stress`) as the test
+pattern. N3 should first decide the image/stack option and whether the kernel stays
+non-preemptible.
 
 **Deferred beyond N2:** a general kernel heap, `SYSCALL`/`SYSRET`, a `spawn` system call and a
 user-visible `wait`, LAPIC/IOAPIC/ACPI, SMP, more than one thread per process, FPU/SIMD state,

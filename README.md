@@ -65,7 +65,7 @@ end, so `timeout` stops QEMU after a few seconds):
 
 The last lines should be:
 
-    app: module "hello" at 0x1c3000-0x1c6348, 13128 bytes
+    app: module "hello" at 0x1c5000-0x1c8348, 13128 bytes
     elf: hello: ET_EXEC entry 0x400000, 3 PT_LOAD, 3 pages, VOS ABI 0
     user[hello]: Hello from VOS!
     proc: exit status 0 (cs=0x23 rip=0x40002a)
@@ -105,6 +105,9 @@ Every QEMU run is headless, sequential and has a timeout. The x86_64 tests inclu
 - kernel self-tests (boot information, memory managers, page tables, the W^X kernel map and its
   checker, user mode, ELF loading);
 - deliberate kernel faults, which must panic with the expected diagnostics;
+- stress tests (since N2.5): mixed concurrent workloads of the programs above with kills,
+  faults, full tables and recovery, while the kernel audits its scheduler, process and channel
+  state;
 - IPC tests (since N2.4): separately built programs exchanging messages over channels in
   scenarios set up by the test configuration (ordering, full queues, closing, killed receivers,
   rights, ABI v0 compatibility);
@@ -152,7 +155,8 @@ The `m1-32bit` tag marks the original known-good 32-bit baseline.
   (proposal), with the current state and security boundaries in its section 3
 - `docs/plans/n2-foundation.md` – the N2 roadmap; N2.0 (kernel W^X, protected stacks), N2.1
   (interrupt controller, timer), N2.2 (kernel threads, scheduler), N2.3 (several processes,
-  timer preemption) and N2.4 (channels, ABI v1) are done, later stages need approval
+  timer preemption), N2.4 (channels, ABI v1) and N2.5 (stress, audits, closure) are done: N2
+  is complete; its closure (section 3.7) lists guarantees, limits and risks
 - `docs/vision/product-direction.md` – provisional long-term product direction (not a specification)
 
 ## History

@@ -60,7 +60,10 @@ User wrappers: `vos_yield`, `vos_channel_send`, `vos_channel_recv`, `vos_handle_
 - A **handle** is a small positive number that is only meaningful in the process that holds
   it (another process's equal number names nothing, or its own, different endpoint). After
   `handle_close` the number is dead: a later handle in the same slot gets a different number
-  (a 16-bit generation is part of it), so a stale number cannot reach a new channel.
+  (a 16-bit generation is part of it), so a stale number cannot reach a new channel —
+  **provisionally**: the generation wraps after 65 536 reuses of the same slot, after which an
+  old number could name a new channel. A program must not rely on stale numbers being rejected
+  forever.
 - **Rights** are fixed at creation: send and/or receive. An operation without the right
   returns `-VOS_EACCES`.
 

@@ -3,7 +3,7 @@
 | | |
 |---|---|
 | Status | **Proposal.** Section 3 describes what milestone N1 implemented (tagged *Current*); everything else remains a proposal unless marked *Current*. |
-| Date | 2026-10-17 (written at `7c06bc6`; section 3 and the status notes updated after N1 at `74501a7`, after N2.0–N2.4 on 2026-10-18) |
+| Date | 2026-10-17 (written at `7c06bc6`; section 3 and the status notes updated after N1 at `74501a7`, after N2.0–N2.5, the end of N2, on 2026-10-18) |
 | Code baseline | after N1: the x86_64 kernel runs a separately built native application in ring 3 |
 | Scope | Native application model and public software interfaces of VOS, plus the separate compatibility architecture |
 | Out of scope | Implementing any of it; kernel Stage 2/3 work; UEFI |
@@ -86,7 +86,7 @@ recommendations:
 
 ---
 
-## 3. Current state after N1 and N2.0–N2.4 [Current]
+## 3. Current state after N1 and N2 [Current]
 
 Milestone N1 (`docs/plans/n1-user-space.md`, stages N1.0–N1.10) took the x86_64 kernel from
 "boots and prints" to "loads and runs a separately built native program in ring 3, isolated
@@ -112,7 +112,12 @@ from section 4 onward is still a proposal or future work unless tagged *Current*
 | Tests | `make test-all` (sequential QEMU runs with timeouts): smoke tests, strict `VOS_TEST=1` images reporting through `isa-debug-exit` (33 = pass, 35 = expected failure), kernel self-tests, deliberate kernel faults, the 41-case isolation suite under qemu64, 2 GiB and `-cpu max`, SMEP/SMAP cases with controls, and static ELF tests. |
 | Not present | Preemption of kernel code, more than one thread per process, channel creation or handle transfer by programs, process spawning by programs, kernel heap, APIC/IOAPIC/ACPI, device interrupts other than the timer, file systems, drivers beyond COM1/VGA, input, graphics, networking, packages, a shell. |
 
-### 3.1 Security boundaries after N1 and N2.0–N2.4 [Current]
+### 3.1 Security boundaries after N1 and N2 [Current]
+
+N2's closure (`docs/plans/n2-foundation.md`, section 3.7) lists what was demonstrated, the
+limits, the known failure modes and the remaining risks; the summary below is consistent with it.
+Since N2.5 every test image also runs scheduler, process and channel consistency audits, and a
+stress image runs mixed concurrent workloads with kills, faults, exhaustion and recovery.
 
 **Implemented and tested (in QEMU):**
 - Ring-3 privilege separation: CS 0x23/SS 0x1B in every user frame; privileged instructions,
