@@ -27,6 +27,27 @@ struct boot_info {
     uint32_t mmap_entries;
     struct boot_module modules[BOOT_MAX_MODULES];
     uint32_t module_count;
+    /* U1: display and firmware. */
+    const struct mb2_tag_framebuffer *fb;   /* the first framebuffer tag (validated by boot_framebuffer) */
+    uint32_t fb_tags;                       /* how many framebuffer tags there were */
+    int efi;                                /* an EFI system-table tag was present: UEFI firmware */
+};
+
+/* U1: a validated framebuffer (boot_framebuffer). */
+#define BOOT_FB_NONE        0
+#define BOOT_FB_BGRX32      1   /* RGB, 32 bpp, red 16, green 8, blue 0 (8 bits each): the verified format */
+#define BOOT_FB_EGA_TEXT    2   /* 80x25 EGA text at 0xB8000, as the loader reports it */
+
+#define BOOT_FB_MIN_W       320
+#define BOOT_FB_MIN_H       200
+#define BOOT_FB_MAX_DIM     8192
+#define BOOT_FB_MAX_PITCH   65536
+#define BOOT_FB_MAX_BYTES   (32ULL << 20)   /* 3840 x 2160 x 4 fits */
+
+struct boot_fb {
+    int kind;                   /* BOOT_FB_* */
+    uint64_t addr, size;        /* physical [addr, addr + size) */
+    uint32_t pitch, width, height;
 };
 
 /*
@@ -38,6 +59,14 @@ struct boot_info {
  * at least one entry, and no trailing partial entry.
  */
 const char *mb2_parse(const void *info, uint64_t info_phys, struct boot_info *bi);
+
+/*
+ * U1: validate the framebuffer tag (untrusted, like everything the loader
+ * hands over). NULL with *fb filled if it is the verified RGB format or
+ * 80x25 EGA text; else why not (fb->kind = BOOT_FB_NONE). Whether the
+ * address is device memory is decided when it is mapped (devmap_check).
+ */
+const char *boot_framebuffer(const struct boot_info *bi, struct boot_fb *fb);
 
 /* Entry i (< bi->mmap_entries) of the validated memory map. */
 const struct mb2_mmap_entry *boot_mmap_entry(const struct boot_info *bi, uint32_t i);

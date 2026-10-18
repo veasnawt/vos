@@ -476,6 +476,115 @@ static void test_low_placement(void)
            "a kernel image below 1 MiB is rejected");
 }
 
+/* ---- U1: framebuffer information ---- */
+
+/* A framebuffer tag; color = NULL leaves out the RGB channel bytes; size 0 = natural size. */
+static void blk_fb(uint64_t addr, uint32_t pitch, uint32_t w, uint32_t h, uint8_t bpp, uint8_t type,
+                   const uint8_t *color, uint32_t size)
+{
+    uint32_t n = size ? size : 32 + (color ? 6 : 0);
+    uint32_t *t = blk_tag(8, n);
+    uint8_t *b = (uint8_t *)t;
+
+    if (n < 32)
+        return;
+    *(uint64_t *)(b + 8) = addr;
+    t[4] = pitch;
+    t[5] = w;
+    t[6] = h;
+    b[28] = bpp;
+    b[29] = type;
+    if (color && n >= 38)
+        memcpy(b + 32, color, 6);
+}
+
+static const uint8_t bgrx[6] = { 16, 8, 8, 8, 0, 8 }, rgbx[6] = { 0, 8, 8, 8, 16, 8 };
+
+static const char *fb_case(uint64_t addr, uint32_t pitch, uint32_t w, uint32_t h, uint8_t bpp, uint8_t type,
+                           const uint8_t *color, uint32_t size, struct boot_fb *fb)
+{
+    const char *err;
+
+    blk_begin();
+    blk_mmap(std_map, N_STD);
+    blk_fb(addr, pitch, w, h, bpp, type, color, size);
+    blk_end();
+    if ((err = parse()))
+        return err;
+    return boot_framebuffer(&bi, fb);
+}
+
+static void test_framebuffer(void)
+{
+    struct boot_fb fb;
+
+    expect(fb_case(0x80000000, 5120, 1280, 800, 32, 1, bgrx, 0, &fb) == NULL && fb.kind == BOOT_FB_BGRX32 &&
+           fb.addr == 0x80000000 && fb.size == 5120ULL * 800 && fb.width == 1280 && fb.height == 800,
+           "framebuffer: OVMF GOP 1280x800 BGRX at 0x80000000 (as measured) accepted");
+    expect(fb_case(0xFD000000, 4096, 1024, 768, 32, 1, bgrx, 0, &fb) == NULL && fb.size == 4096ULL * 768,
+           "framebuffer: SeaBIOS VBE 1024x768 at 0xFD000000 accepted");
+    expect(fb_case(0x4000000000ULL, 15360, 3840, 2160, 32, 1, bgrx, 0, &fb) == NULL,
+           "framebuffer: 3840x2160 above 4 GiB fits the 32 MiB limit");
+    expect(fb_case(0xB8000, 160, 80, 25, 16, 2, NULL, 0, &fb) == NULL && fb.kind == BOOT_FB_EGA_TEXT,
+           "framebuffer: 80x25 EGA text at 0xB8000 is recognized as text mode");
+    expect(fb_case(0xA0000, 160, 80, 25, 16, 2, NULL, 0, &fb) != NULL && fb.kind == BOOT_FB_NONE &&
+           fb_case(0xB8000, 264, 132, 25, 16, 2, NULL, 0, &fb) != NULL,
+           "framebuffer: EGA text elsewhere or in another size is refused");
+
+    /* Missing, duplicate and malformed tags. */
+    blk_begin();
+    blk_mmap(std_map, N_STD);
+    blk_end();
+    expect(parse() == NULL && streq(boot_framebuffer(&bi, &fb), "no framebuffer information") &&
+           fb.kind == BOOT_FB_NONE, "framebuffer: none given is reported, not an error of the boot");
+    blk_begin();
+    blk_mmap(std_map, N_STD);
+    blk_fb(0x80000000, 5120, 1280, 800, 32, 1, bgrx, 0);
+    blk_fb(0x90000000, 5120, 1280, 800, 32, 1, bgrx, 0);
+    blk_end();
+    expect(parse() == NULL && streq(boot_framebuffer(&bi, &fb), "more than one framebuffer tag"),
+           "framebuffer: two tags are refused");
+    expect(streq(fb_case(0x80000000, 5120, 1280, 800, 32, 1, bgrx, 30, &fb), "framebuffer tag truncated") &&
+           streq(fb_case(0x80000000, 5120, 1280, 800, 32, 1, NULL, 0, &fb),
+                 "RGB framebuffer tag without its channel layout"),
+           "framebuffer: a truncated tag or an RGB tag without channel bytes is refused");
+    expect(fb_case(0x80000000, 1280, 1280, 800, 8, 0, NULL, 0, &fb) != NULL, "framebuffer: indexed colour is refused");
+    expect(fb_case(0x80000000, 3840, 1280, 800, 24, 1, bgrx, 0, &fb) != NULL &&
+           fb_case(0x80000000, 2560, 1280, 800, 16, 1, bgrx, 0, &fb) != NULL,
+           "framebuffer: 24 and 16 bits per pixel are refused");
+    expect(streq(fb_case(0x80000000, 5120, 1280, 800, 32, 1, rgbx, 0, &fb),
+                 "pixel layout is not BGRX (red 16, green 8, blue 0, 8 bits each)"),
+           "framebuffer: RGBX (an unverified layout) is refused");
+    expect(fb_case(0x80000000, 5120, 0, 800, 32, 1, bgrx, 0, &fb) != NULL &&
+           fb_case(0x80000000, 5120, 1280, 0, 32, 1, bgrx, 0, &fb) != NULL &&
+           fb_case(0x80000000, 36000, 9000, 800, 32, 1, bgrx, 0, &fb) != NULL &&
+           fb_case(0x80000000, 1200, 300, 800, 32, 1, bgrx, 0, &fb) != NULL,
+           "framebuffer: zero, too large or too small dimensions are refused");
+    expect(fb_case(0x80000000, 5116, 1280, 800, 32, 1, bgrx, 0, &fb) != NULL &&
+           fb_case(0x80000000, 5122, 1280, 800, 32, 1, bgrx, 0, &fb) != NULL &&
+           fb_case(0x80000000, 0xFFFFFFFC, 1280, 800, 32, 1, bgrx, 0, &fb) != NULL,
+           "framebuffer: a pitch below width x 4, unaligned or huge is refused");
+    expect(streq(fb_case(0x80000000, 16384, 4096, 4096, 32, 1, bgrx, 0, &fb), "framebuffer larger than 32 MiB") &&
+           fb_case(0x80000000, 65536, 8192, 8192, 32, 1, bgrx, 0, &fb) != NULL,
+           "framebuffer: more than 32 MiB is refused (pitch x height computed in 64 bits)");
+    expect(fb_case(0, 5120, 1280, 800, 32, 1, bgrx, 0, &fb) != NULL &&
+           fb_case(0xFFFFFFFFFFFFF000ULL, 5120, 1280, 800, 32, 1, bgrx, 0, &fb) != NULL &&
+           fb_case(0x80000002, 5120, 1280, 800, 32, 1, bgrx, 0, &fb) != NULL,
+           "framebuffer: a zero, wrapping or unaligned address is refused");
+
+    /* The firmware kind: an EFI system-table tag marks a UEFI boot. */
+    blk_begin();
+    blk_mmap(std_map, N_STD);
+    uint32_t *t = blk_tag(12, 16);
+    *(uint64_t *)&t[2] = 0x3f9ec018;
+    blk_end();
+    int efi = parse() == NULL && bi.efi;
+    blk_begin();
+    blk_mmap(std_map, N_STD);
+    blk_end();
+    expect(efi && parse() == NULL && !bi.efi, "an EFI system-table tag marks a UEFI boot; its absence a BIOS boot");
+}
+
 static void test_table(void)
 {
     struct resv_table t;
@@ -508,6 +617,7 @@ int selftest_bootinfo(void)
     test_parse();
     test_conflicts();
     test_low_placement();
+    test_framebuffer();
     test_table();
     serial_puts("selftest: bootinfo ");
     serial_dec(cases);

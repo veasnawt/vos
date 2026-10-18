@@ -12,6 +12,13 @@
 #define MB2_TAG_LOADER_NAME     2
 #define MB2_TAG_MODULE          3
 #define MB2_TAG_MMAP            6
+#define MB2_TAG_FRAMEBUFFER     8
+#define MB2_TAG_EFI32_SYSTAB    11
+#define MB2_TAG_EFI64_SYSTAB    12
+
+#define MB2_FB_TYPE_INDEXED     0
+#define MB2_FB_TYPE_RGB         1
+#define MB2_FB_TYPE_EGA_TEXT    2
 
 #define MB2_MMAP_AVAILABLE      1
 
@@ -43,6 +50,21 @@ struct mb2_tag_mmap {
     uint32_t entry_size;
     uint32_t entry_version;
     /* entries of entry_size bytes follow */
+};
+
+/* Framebuffer information (type 8); for MB2_FB_TYPE_RGB six colour bytes follow. */
+struct mb2_tag_framebuffer {
+    struct mb2_tag tag;
+    uint64_t addr;              /* physical */
+    uint32_t pitch;             /* bytes per line */
+    uint32_t width, height;     /* pixels (RGB) or characters (EGA text) */
+    uint8_t bpp;
+    uint8_t type;               /* MB2_FB_TYPE_* */
+    uint16_t reserved;
+};
+
+struct mb2_fb_rgb {             /* bit position and size of each channel */
+    uint8_t red_pos, red_size, green_pos, green_size, blue_pos, blue_size;
 };
 
 struct mb2_mmap_entry {
