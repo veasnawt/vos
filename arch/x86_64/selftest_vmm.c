@@ -114,11 +114,11 @@ static void test_layout_and_survival(void)
     expect(vmm_lookup(K, KERNEL_VMA + PMM_LOW_LIMIT + 0x123, &m) == VMM_OK &&
            m.pa == PMM_LOW_LIMIT + 0x123 && m.page_size == PAGE_SIZE && m.flags == 0,
            "alias of the boot code page: 4 KiB, supervisor, read-only, NX");
-    expect(vmm_lookup(K, KERNEL_VMA + 0x200123, &m) == VMM_OK && m.pa == 0x200123 &&
+    expect(vmm_lookup(K, KERNEL_VMA + KMAP_SMALL_SPAN + 0x123, &m) == VMM_OK && m.pa == KMAP_SMALL_SPAN + 0x123 &&
            m.page_size == 0x200000 && m.flags == VMM_WRITE &&
            vmm_lookup(K, KERNEL_ALIAS_END - 1, &m) == VMM_OK && m.pa == BOOT_MAP_LIMIT - 1 &&
            m.page_size == 0x200000 && m.flags == VMM_WRITE,
-           "alias above 2 MiB: 2 MiB pages, supervisor, writable, NX");
+           "alias above 4 MiB: 2 MiB pages, supervisor, writable, NX");
     expect(vmm_lookup(K, KERNEL_ALIAS_END, &m) == VMM_ENOTMAPPED &&
            vmm_lookup(K, UPPER_HALF_START, &m) == VMM_ENOTMAPPED &&
            vmm_lookup(K, 0x0000800000000000ULL, &m) == VMM_ENONCANON,

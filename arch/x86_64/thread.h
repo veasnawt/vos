@@ -2,8 +2,8 @@
  * Kernel threads (N2.2): a fixed pool of thread records and guarded kernel
  * stacks, a cooperative round-robin scheduler and an idle thread.
  *
- * Pool. THREAD_MAX records (16 since N2.3: the stacks still fit the 2 MiB
- * covered by the kernel map's 4 KiB table, which a linker assertion checks);
+ * Pool. THREAD_MAX records (16 since N2.3: the stacks must fit the 4 MiB
+ * covered by the kernel map's 4 KiB tables, which a linker assertion checks);
  * record 0 is the boot thread (kernel_main, on the
  * boot stack from boot.S), the others get one of THREAD_STACKS static 16 KiB
  * stacks in .bss. Each stack sits directly above its own 4 KiB guard page,

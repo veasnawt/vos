@@ -52,7 +52,7 @@ static volatile int probe_armed;
 static volatile uint64_t probe_err;
 
 static uint64_t kpd[512] __attribute__((aligned(4096)));
-static uint64_t kpt[512] __attribute__((aligned(4096)));
+static uint64_t kpt[KMAP_SMALL_TABLES * 512] __attribute__((aligned(4096)));  /* PD[0..1], contiguous */
 static struct kmap_fail fail;
 static int active;
 static volatile uint64_t probe;         /* written through the new map after the switch */
@@ -119,7 +119,7 @@ uint64_t kmap_expected_pte(uint64_t pa)
 
 uint64_t kmap_expected_pde(unsigned i)
 {
-    return i >= 1 && i < 512 ? (uint64_t)i * LARGE_2M | PDE_RW_2M : 0;
+    return i >= KMAP_SMALL_TABLES && i < 512 ? (uint64_t)i * LARGE_2M | PDE_RW_2M : 0;
 }
 
 /* ---- checks ---- */
@@ -164,9 +164,10 @@ static int translate(const struct xlate *x, uint64_t va, uint64_t *pa, unsigned 
     if (e & PTE_PS) {
         *pa = (e & PTE_ADDR & ~(LARGE_2M - 1)) + (off & (LARGE_2M - 1));
     } else {
-        if ((e & PTE_ADDR) != x->pt_pa)
+        /* Only the given tables are followed: PD[t] -> pt_pa + t * 4 KiB. */
+        if ((off >> 21) >= KMAP_SMALL_TABLES || (e & PTE_ADDR) != x->pt_pa + (off >> 21) * PAGE_SIZE)
             return 0;
-        e = x->pt[(off >> 12) & 511];
+        e = x->pt[off >> 12];
         if (!(e & PTE_P))
             return 0;
         w &= (e & PTE_W) != 0;
@@ -227,9 +228,11 @@ static uint64_t gate_handler(const struct dtr *idtr, unsigned v)
 /* Structure of the directory and table themselves, against the intended layout. */
 static int check_structure(const uint64_t *pd, const uint64_t *pt, uint64_t pt_pa)
 {
-    if ((pd[0] & ~PTE_A) != (pt_pa | PDE_TABLE))
-        return failed("PD[0]", "does not point to the kernel page table as a supervisor table", KERNEL_VMA);
-    for (unsigned i = 1; i < 512; i++) {
+    for (unsigned t = 0; t < KMAP_SMALL_TABLES; t++)
+        if ((pd[t] & ~PTE_A) != ((pt_pa + t * PAGE_SIZE) | PDE_TABLE))
+            return failed(t ? "PD[1]" : "PD[0]", "does not point to the kernel page table as a supervisor table",
+                          KERNEL_VMA + t * LARGE_2M);
+    for (unsigned i = KMAP_SMALL_TABLES; i < 512; i++) {
         uint64_t e = pd[i] & ~AD_BITS, va = KERNEL_VMA + i * LARGE_2M;
 
         if (!(e & PTE_P))
@@ -243,7 +246,7 @@ static int check_structure(const uint64_t *pd, const uint64_t *pt, uint64_t pt_p
         if (e != kmap_expected_pde(i))
             return failed("2 MiB alias page", "unexpected flags", va);
     }
-    for (unsigned i = 0; i < 512; i++) {
+    for (unsigned i = 0; i < KMAP_SMALL_TABLES * 512; i++) {
         uint64_t e = pt[i] & ~AD_BITS, pa = (uint64_t)i * PAGE_SIZE, want = kmap_expected_pte(pa);
         uint64_t va = KERNEL_VMA + pa;
 
@@ -333,7 +336,7 @@ int kmap_check_running(const uint64_t *pd, const uint64_t *pt, uint64_t pt_pa, i
                 NEED_RW, "PML4 (CR3)") ||
         require(&x, KERNEL_VMA + pdpt, KERNEL_VMA + pdpt + 1, NEED_RW, "kernel PDPT") ||
         require(&x, kva(kpd), kva(kpd) + PAGE_SIZE, NEED_RW, "kernel page directory") ||
-        require(&x, kva(kpt), kva(kpt) + PAGE_SIZE, NEED_RW, "kernel page table") ||
+        require(&x, kva(kpt), kva(kpt) + sizeof(kpt), NEED_RW, "kernel page table") ||
         require(&x, kva(k), kva(k) + sizeof(*k), NEED_RW, "allocator state") ||
         require(&x, kva(k->avail), kva(k->avail) + PMM_WORDS(k->frames) * 8, NEED_RW, "avail bitmap") ||
         require(&x, kva(k->alloc), kva(k->alloc) + PMM_WORDS(k->frames) * 8, NEED_RW, "alloc bitmap") ||
@@ -356,8 +359,15 @@ int kmap_check_running(const uint64_t *pd, const uint64_t *pt, uint64_t pt_pa, i
                 return -1;
     }
 
-    /* The whole alias keeps translating to phys [0, 1 GiB), one probe per 2 MiB page. */
-    for (unsigned i = 1; i < 512; i++)
+    /*
+     * The whole alias keeps translating to phys [0, 1 GiB): every 4 KiB page
+     * between the image and the end of the small span (free frames the PMM
+     * hands out), then one probe per 2 MiB page.
+     */
+    if (require(&x, KERNEL_VMA + (uint64_t)__kernel_phys_end, KERNEL_VMA + KMAP_SMALL_SPAN, NEED_RW,
+                "kernel alias above the image"))
+        return -1;
+    for (unsigned i = KMAP_SMALL_TABLES; i < 512; i++)
         if (require(&x, KERNEL_VMA + i * LARGE_2M, KERNEL_VMA + i * LARGE_2M + 1, NEED_RW, "kernel alias"))
             return -1;
     return 0;
@@ -403,7 +413,7 @@ static void flush_all(void)
 static void count(unsigned *text, unsigned *ro, unsigned *rw, unsigned *guard)
 {
     *text = *ro = *rw = *guard = 0;
-    for (unsigned i = 0; i < 512; i++) {
+    for (unsigned i = 0; i < KMAP_SMALL_TABLES * 512; i++) {
         uint64_t e = kpt[i];
 
         if (!(e & PTE_P))
@@ -432,13 +442,14 @@ int kmap_init(const struct boot_info *bi)
     if ((old & (PTE_P | PTE_W | PTE_U | PTE_PS | PTE_NX)) != (PTE_P | PTE_W))
         return failed("PDPT[510]", "not a present, writable, supervisor table entry", KERNEL_VMA);
     if ((uint64_t)__kernel_phys_end > KMAP_SMALL_SPAN)     /* also a linker assertion */
-        return failed("kernel image", "extends beyond 2 MiB", 0);
+        return failed("kernel image", "extends beyond the 4 KiB-page span", 0);
 
     /* 1. Build. */
-    for (unsigned i = 0; i < 512; i++)
+    for (unsigned i = 0; i < KMAP_SMALL_TABLES * 512; i++)
         kpt[i] = kmap_expected_pte((uint64_t)i * PAGE_SIZE);
-    kpd[0] = kphys(kpt) | PDE_TABLE;
-    for (unsigned i = 1; i < 512; i++)
+    for (unsigned t = 0; t < KMAP_SMALL_TABLES; t++)
+        kpd[t] = (kphys(kpt) + t * PAGE_SIZE) | PDE_TABLE;
+    for (unsigned i = KMAP_SMALL_TABLES; i < 512; i++)
         kpd[i] = kmap_expected_pde(i);
 
     /* 2. Check the candidate against what the running kernel needs. */
@@ -486,7 +497,7 @@ int kmap_init(const struct boot_info *bi)
 
     unsigned text, ro, rw, guard;
     count(&text, &ro, &rw, &guard);
-    serial_puts("kmap: phys 0-2 MiB as 4 KiB pages: ");
+    serial_puts("kmap: phys 0-4 MiB as 4 KiB pages: ");
     serial_dec(text);
     serial_puts(" text R-X, ");
     serial_dec(ro);

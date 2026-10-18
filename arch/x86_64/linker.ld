@@ -81,8 +81,8 @@ SECTIONS
     . = ALIGN(4K);
     __kernel_phys_end = . - KERNEL_VMA;
 
-    /* kmap.c covers the image with one 4 KiB page table: the first 2 MiB. */
-    ASSERT(__kernel_phys_end <= 0x200000, "kernel image exceeds the 2 MiB covered by kmap.c")
+    /* kmap.c covers the image with two 4 KiB page tables: the first 4 MiB (KMAP_SMALL_SPAN). */
+    ASSERT(__kernel_phys_end <= 0x400000, "kernel image exceeds the 4 MiB covered by kmap.c")
     ASSERT(__boot_bss_end <= __text_start - KERNEL_VMA, "boot area overlaps the kernel text")
 
     /DISCARD/ : { *(.eh_frame) *(.comment) *(.note .note.*) }

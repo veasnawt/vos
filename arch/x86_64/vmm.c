@@ -412,19 +412,20 @@ int vmm_audit_space(uint64_t root, int kernel_half, struct vmm_audit *a)
                     a->large_upper++;
                     continue;
                 }
-                if (kmap_pd && i2 != 0)
+                if (kmap_pd && i2 >= KMAP_SMALL_TABLES)
                     bad(a, "4 KiB table under the 2 MiB kernel alias", va2);
                 if (!(l1 = audit_nonleaf(a, e2, upper, va2)))
                     continue;
                 for (uint64_t i1 = 0; i1 < 512; i1++) {
                     uint64_t e1 = l1[i1], va1 = va2 + (i1 << 12);
                     uint64_t eff = (e4 & e3 & e2 & e1 & (PTE_W | PTE_U)) | ((e4 | e3 | e2 | e1) & PTE_NX);
-                    int kmap_pt = kmap_pd && i2 == 0;
+                    int kmap_pt = kmap_pd && i2 < KMAP_SMALL_TABLES;
+                    uint64_t kmap_pa = (i2 << 21) | (i1 << 12);     /* the frame this kernel page maps */
 
                     if (!(e1 & PTE_P)) {
                         if (e1)
                             bad(a, "non-present entry not cleared", va1);
-                        else if (kmap_pt && kmap_expected_pte(i1 << 12))
+                        else if (kmap_pt && kmap_expected_pte(kmap_pa))
                             bad(a, "kernel page missing from the W^X layout", va1);
                         continue;
                     }
@@ -434,7 +435,7 @@ int vmm_audit_space(uint64_t root, int kernel_half, struct vmm_audit *a)
                     if (upper) {
                         if (e1 & PTE_U)
                             bad(a, "user-accessible upper-half page", va1);
-                        if (kmap_pt && (e1 & ~(PTE_A | PTE_D)) != kmap_expected_pte(i1 << 12))
+                        if (kmap_pt && (e1 & ~(PTE_A | PTE_D)) != kmap_expected_pte(kmap_pa))
                             bad(a, "kernel page differs from the W^X layout", va1);
                         a->leaves_upper++;
                         continue;

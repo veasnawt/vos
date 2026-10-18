@@ -5,14 +5,19 @@
  * 512 2 MiB pages that are all writable and executable. kmap_init replaces
  * the page directory under PDPT[510] with:
  *
- *   PD[0]       -> one page table for phys [0, 2 MiB), 4 KiB pages:
+ *   PD[0..1]    -> two page tables, contiguous in .bss, for phys [0, 4 MiB)
+ *                  in 4 KiB pages (N3.0; one table for [0, 2 MiB) before):
  *                    kernel .text                 R-X  (the only executable pages)
  *                    .rodata, boot code page(s)   R--  NX
  *                    stack guard pages            not present
  *                    everything else              RW-  NX  (low memory, boot page
  *                                                 tables, .data, .bss, info block,
- *                                                 modules)
- *   PD[1..511]  -> 2 MiB pages of phys [2 MiB, 1 GiB), RW- NX
+ *                                                 modules, free frames)
+ *   PD[2..511]  -> 2 MiB pages of phys [4 MiB, 1 GiB), RW- NX
+ *
+ * The kernel image must end below KMAP_SMALL_SPAN (a linker assertion and
+ * kmap_init check it): only 4 KiB pages can give its text, read-only data
+ * and guard pages their own permissions.
  *
  * phys_to_virt() stays valid for every frame below 1 GiB except the guard
  * pages, which have no mapping at all. User address spaces copy PML4[511] by
@@ -38,8 +43,9 @@
 
 #include "bootinfo.h"
 
-#define KMAP_LARGE_PAGES    511     /* 2 MiB pages: PD[1..511] */
-#define KMAP_SMALL_SPAN     0x200000ULL     /* PD[0] covers phys [0, 2 MiB) with 4 KiB pages */
+#define KMAP_SMALL_TABLES   2       /* 4 KiB page tables: PD[0..1] */
+#define KMAP_SMALL_SPAN     (KMAP_SMALL_TABLES * 0x200000ULL)  /* phys [0, 4 MiB) in 4 KiB pages */
+#define KMAP_LARGE_PAGES    (512 - KMAP_SMALL_TABLES)           /* 2 MiB pages: PD[2..511] */
 #define KMAP_MAX_GUARDS     32
 
 /* Result of a check: the first failure found. */
@@ -56,8 +62,9 @@ int kmap_active(void);
 
 /*
  * The intended layout, from the linker symbols and the guard list only:
- * the leaf entry (without A/D) for the 4 KiB page at phys pa < 2 MiB (0 =
- * not present), and the 2 MiB entry for PD index i in 1..511.
+ * the leaf entry (without A/D) for the 4 KiB page at phys pa <
+ * KMAP_SMALL_SPAN (0 = not present), and the 2 MiB entry for PD index i in
+ * KMAP_SMALL_TABLES..511 (0 for the indexes that hold page tables).
  */
 uint64_t kmap_expected_pte(uint64_t pa);
 uint64_t kmap_expected_pde(unsigned i);
@@ -71,10 +78,11 @@ int kmap_text_overlaps(uint64_t pa, uint64_t size);
 int kmap_is_guard(uint64_t pa);
 
 /*
- * Check a candidate page directory and page table (pd[0] must point to
- * pt_pa): first the layout itself (every entry against kmap_expected_*),
- * then, independently of that layout, the addresses the running kernel
- * needs (see kmap_init). With live set, translations go through vmm_lookup
+ * Check a candidate page directory and its KMAP_SMALL_TABLES page tables,
+ * which are contiguous: pt holds KMAP_SMALL_TABLES * 512 entries and pd[t]
+ * must point to pt_pa + t * 4 KiB. First the layout itself (every entry
+ * against kmap_expected_*), then, independently of that layout, the
+ * addresses the running kernel needs (see kmap_init). With live set, translations go through vmm_lookup
  * on the active root instead of the given arrays. Returns 0 if every check
  * passed, else -1 and records the first failure.
  */
@@ -96,7 +104,7 @@ int kmap_probe_fault(struct exc_frame *f);
 #ifdef VOS_TEST
 /* Test hook: the address of the armed-probe load instruction (to show it is inert later). */
 uint64_t kmap_test_probe_insn(void);
-/* Test hook: the live directory and table, and the physical address of the table. */
+/* Test hook: the live directory and tables, and the physical address of the first table. */
 void kmap_test_tables(const uint64_t **pd, const uint64_t **pt, uint64_t *pt_pa);
 #endif
 

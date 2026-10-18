@@ -96,7 +96,7 @@ static void test_live(const struct boot_info *bi)
            "PML4[511] -> PDPT[510] -> kernel directory -> kernel page table");
     expect(kmap_check(pd, pt, pt_pa, 1, bi) == 0, "live tables pass every kmap check through the walker");
 
-    /* Every 4 KiB page of phys [0, 2 MiB) and every 2 MiB page above, through the walker. */
+    /* Every 4 KiB page of phys [0, 4 MiB) and every 2 MiB page above, through the walker. */
     unsigned wrong = 0, exec = 0, absent = 0, wx = 0;
     for (uint64_t pa = 0; pa < KMAP_SMALL_SPAN; pa += PAGE_SIZE) {
         int r = vmm_lookup(K, KERNEL_VMA + pa + 0x7FF, &m);
@@ -113,7 +113,7 @@ static void test_live(const struct boot_info *bi)
         wx += (m.flags & VMM_EXEC) && (m.flags & VMM_WRITE);
         wrong += (m.flags & VMM_EXEC) && !kmap_is_text(pa);
     }
-    for (uint64_t pa = LARGE_2M; pa < BOOT_MAP_LIMIT; pa += LARGE_2M) {
+    for (uint64_t pa = KMAP_SMALL_SPAN; pa < BOOT_MAP_LIMIT; pa += LARGE_2M) {
         for (uint64_t off = 0; off < LARGE_2M; off += LARGE_2M - 8) {
             int r = vmm_lookup(K, KERNEL_VMA + pa + off, &m);
 
@@ -125,7 +125,7 @@ static void test_live(const struct boot_info *bi)
     expect(absent == ng && ng == 5 + THREAD_STACKS,
            "the guard pages (boot, entry, 3 IST, every thread stack) are the only untranslated pages");
     expect(vmm_audit_space(K, 1, &a) == VMM_OK && a.exec_supervisor == text_pages() &&
-           a.large_upper == KMAP_LARGE_PAGES && a.leaves_upper == 512 - ng,
+           a.large_upper == KMAP_LARGE_PAGES && a.leaves_upper == KMAP_SMALL_SPAN / PAGE_SIZE - ng,
            "audit: kernel half matches the W^X layout");
 
     /* The retired boot directory (still linked from the unreachable identity PDPT) is empty. */
@@ -147,14 +147,17 @@ static void test_live(const struct boot_info *bi)
 
 /* ---- the verifier on copies with one defect each ---- */
 
+/* The copied page tables must be contiguous like the live ones: static, in .bss. */
+static uint64_t vpt[KMAP_SMALL_TABLES * 512] __attribute__((aligned(4096)));
 static uint64_t *cpd, *cpt, cpd_pa, cpt_pa;
 static const uint64_t *lpd, *lpt;
 
 static void reset(void)
 {
-    memcpy(cpt, lpt, PAGE_SIZE);
+    memcpy(cpt, lpt, sizeof(vpt));
     memcpy(cpd, lpd, PAGE_SIZE);
-    cpd[0] = cpt_pa | (lpd[0] & ~PTE_ADDR);
+    for (unsigned t = 0; t < KMAP_SMALL_TABLES; t++)
+        cpd[t] = (cpt_pa + t * PAGE_SIZE) | (lpd[t] & ~PTE_ADDR);
 }
 
 static int refused(int running_only, const struct boot_info *bi, const char *what, const char *problem)
@@ -185,9 +188,9 @@ static void test_verifier(const struct boot_info *bi)
     s = idx((void *)rsp);
     kmap_test_tables(&lpd, &lpt, &lpt_pa);
     cpd_pa = alloc();
-    cpt_pa = alloc();
+    cpt_pa = (uint64_t)vpt - KERNEL_VMA;
     cpd = phys_to_virt(cpd_pa);
-    cpt = phys_to_virt(cpt_pa);
+    cpt = vpt;
 
     reset();
     expect(kmap_check(cpd, cpt, cpt_pa, 0, bi) == 0, "verifier accepts an exact copy of the live tables");
@@ -262,7 +265,7 @@ static void test_verifier(const struct boot_info *bi)
     *info = 0;
     expect(refused(1, bi, 0, "not mapped"), "running check: boot information must stay mapped");
 
-    release(cpt_pa);
+    memset(vpt, 0, sizeof(vpt));
     release(cpd_pa);
     expect(pmm_free_count() == f0, "verifier test frames released");
 }
@@ -473,7 +476,7 @@ void selftest_kmap_case(int self_tests_failed)
     not_reached(".data executed");
 #endif
 #ifdef VOS_TEST_CASE_wx_alias_exec
-    /* A frame that is free in the allocator, above 2 MiB: reached through a 2 MiB alias page. */
+    /* A frame that is free in the allocator, above 4 MiB: reached through a 2 MiB alias page. */
     static uint64_t held[1024];
     uint64_t f;
     unsigned n = 0;
