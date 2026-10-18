@@ -1,5 +1,6 @@
 #include "vmm.h"
 #include "cpu.h"
+#include "devmap.h"
 #include "gdt.h"
 #include "kmap.h"
 #include "lib.h"
@@ -375,6 +376,7 @@ int vmm_audit_space(uint64_t root, int kernel_half, struct vmm_audit *a)
         for (uint64_t i3 = 0; i3 < 512; i3++) {
             uint64_t e3 = l3[i3], va3 = va4 + (i3 << 30);
             int kmap_pd = kernel_half && i4 == 511 && i3 == 510;    /* the W^X kernel map */
+            int devwin = i4 == 511 && i3 == DEVMAP_PDPT_INDEX;      /* U1: device window (shared PDPT) */
             uint64_t *l2;
 
             if (!(e3 & PTE_P)) {
@@ -382,7 +384,7 @@ int vmm_audit_space(uint64_t root, int kernel_half, struct vmm_audit *a)
                     bad(a, "non-present entry not cleared", va3);
                 continue;
             }
-            if (kernel_half && upper && i3 != 510)
+            if (kernel_half && upper && i3 != 510 && i3 != DEVMAP_PDPT_INDEX)
                 bad(a, "unexpected kernel PDPT entry", va3);
             if (e3 & PTE_PS) {
                 bad(a, "1 GiB page", va3);
@@ -401,7 +403,9 @@ int vmm_audit_space(uint64_t root, int kernel_half, struct vmm_audit *a)
                 }
                 if (e2 & PTE_PS) {
                     /* Only the kernel alias may use 2 MiB pages, supervisor only. */
-                    if (!upper)
+                    if (devwin)
+                        bad(a, "2 MiB page in the device window", va2);
+                    else if (!upper)
                         bad(a, "2 MiB page in the lower half", va2);
                     else if ((e2 & ~ALIAS_BITS) || (e2 & PTE_ADDR & (LARGE_2M - 1)))
                         bad(a, "kernel alias page with unsupported bits", va2);
@@ -427,6 +431,23 @@ int vmm_audit_space(uint64_t root, int kernel_half, struct vmm_audit *a)
                             bad(a, "non-present entry not cleared", va1);
                         else if (kmap_pt && kmap_expected_pte(kmap_pa))
                             bad(a, "kernel page missing from the W^X layout", va1);
+                        continue;
+                    }
+                    if (devwin) {
+                        /*
+                         * Device memory: only the memory-type bits are extra, and the
+                         * leaf must be exactly what the device registry recorded
+                         * (supervisor, writable, NX, never RAM).
+                         */
+                        uint64_t want = devmap_expected_pte(va1);
+
+                        if (e1 & ~(LEAF_BITS | PTE_PCD | PTE_PWT | PTE_PAT4K))
+                            bad(a, "device leaf with unsupported bits", va1);
+                        else if (!want || (e1 & ~(PTE_A | PTE_D)) != want)
+                            bad(a, "device leaf differs from the device registry", va1);
+                        else if (eff & PTE_U)
+                            bad(a, "user-accessible device page", va1);
+                        a->device_leaves++;
                         continue;
                     }
                     if (e1 & ~LEAF_BITS)

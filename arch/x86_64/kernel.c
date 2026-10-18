@@ -11,6 +11,7 @@
 #include "bootinfo.h"
 #include "console.h"
 #include "cpu.h"
+#include "devmap.h"
 #include "gdt.h"
 #include "idt.h"
 #include "irq.h"
@@ -212,6 +213,22 @@ void kernel_main(uint32_t mb2_magic, uint32_t mb2_info)
         serial_puts("\r\n");
         panic("kmap: kernel W^X map failed");
     }
+    /* U1: the device-memory window (framebuffer) and the PAT write-combining entry. */
+    int derr = devmap_init(&bi);
+    serial_puts("devmap: ");
+    if (derr == DEVMAP_OK) {
+        serial_puts("window at ");
+        serial_hex(DEVMAP_VA_BASE);
+        serial_puts(", ");
+        serial_dec(devmap_maxphys());
+        serial_puts("-bit physical addresses, write-combining ");
+        serial_puts(devmap_wc_available() ? "via PAT entry 4" : "unavailable (no PAT): UC only");
+    } else {
+        serial_puts("not available: ");
+        serial_puts(devmap_strerror(derr));
+    }
+    serial_puts("\r\n");
+
     struct vmm_audit audit;
     if (vmm_audit_space(vmm_kernel_root(), 1, &audit) != VMM_OK) {
         serial_puts("vmm: audit: ");

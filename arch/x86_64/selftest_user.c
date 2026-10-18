@@ -9,6 +9,7 @@
 #include "selftest.h"
 #include "console.h"
 #include "cpu.h"
+#include "devmap.h"
 #include "exception.h"
 #include "gdt.h"
 #include "irq.h"
@@ -657,6 +658,18 @@ static void test_user_faults(void)
     run_prog("kread-small", PROG(kread), 1, KERNEL_VMA + KMAP_SMALL_SPAN - PAGE_SIZE);
     expect(killed_by(14, PF_P | PF_U) && last.trap.cr2 == KERNEL_VMA + KMAP_SMALL_SPAN - PAGE_SIZE,
            "user read of the second kernel page table's span (4 KiB alias page): #PF P=1 U=1");
+    /* U1: the device window (framebuffer) is supervisor-only in every address space. */
+    unsigned dkeep = devmap_count();
+    void *dva = 0;
+    int dmapped = dkeep > 0 || devmap_map(0xFEE00000, 0x1000, DEVMAP_UC, "user-test", &dva, 0) == DEVMAP_OK;
+    uint64_t dwin = dkeep > 0 ? DEVMAP_VA_BASE : (uint64_t)dva;
+    run_prog("kread-device", PROG(kread), 1, dwin);
+    expect(dmapped && devmap_expected_pte(dwin) && killed_by(14, PF_P | PF_U) && last.trap.cr2 == dwin,
+           "user read of a mapped device-window page: #PF P=1 U=1");
+    run_prog("kwrite-device", PROG(kwrite), 1, dwin);
+    expect(killed_by(14, PF_P | PF_W | PF_U) && last.trap.cr2 == dwin,
+           "user write to a mapped device-window page: #PF P=1 W=1 U=1");
+    devmap_test_rollback(dkeep);
     run_prog("nullread", PROG(nullread), 0, 0);
     expect(killed_by(14, PF_U) && last.trap.cr2 == 0, "user null read: #PF P=0 U=1, CR2 0");
     run_prog("codewrite", PROG(codewrite), 0, 0);

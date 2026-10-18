@@ -8,6 +8,7 @@
  * that is compared with the allocator's bitmap frame by frame.
  */
 #include "selftest.h"
+#include "devmap.h"
 #include "console.h"
 #include "cpu.h"
 #include "lib.h"
@@ -406,14 +407,16 @@ int selftest_pmm_kernel(const struct boot_info *bi, const struct resv_table *t)
     }
     /*
      * Frames held since boot: the virtio-blk DMA pool while a device holds it
-     * (N3.1) and the block cache while a device is registered (N3.2).
+     * (N3.1), the block cache while a device is registered (N3.2), and the
+     * device window's page tables (U1).
      */
     const struct vblk_info *vi = vblk_info();
-    static uint64_t held[VBLK_POOL_FRAMES + BLK_CACHE_LINES];
+    static uint64_t held[VBLK_POOL_FRAMES + BLK_CACHE_LINES + DEVMAP_MAX_TABLES];
     unsigned nheld = 0;
     for (unsigned i = 0; vi->pool_held && i < VBLK_POOL_FRAMES; i++)
         held[nheld++] = vi->pool[i];
     nheld += blk_cache_frames(held + nheld, BLK_CACHE_LINES);
+    nheld += devmap_table_frames(held + nheld, DEVMAP_MAX_TABLES);
     uint64_t bad = oracle_compare(k, real_map, real_n, t, &want, held, nheld);
     expect(bad == 0 && want == k->free && k->free == k->usable - nheld,
            "every frame matches the oracle; free count equals the oracle's count");

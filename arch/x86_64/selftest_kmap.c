@@ -20,6 +20,8 @@
 #include "selftest.h"
 #include "console.h"
 #include "cpu.h"
+#include "devmap.h"
+#include "multiboot2.h"
 #include "gdt.h"
 #include "idt.h"
 #include "kmap.h"
@@ -583,6 +585,122 @@ static void test_stacks(void)
     expect(gdt_stack_canaries_intact(), "stack canaries intact");
 }
 
+/* ---- U1: the device-memory window (devmap.h) ---- */
+
+/* A synthetic memory map: one entry of each type the rules distinguish. */
+static struct {
+    struct mb2_tag_mmap h;
+    struct mb2_mmap_entry e[8];
+} syn = {
+    { { 6, sizeof(syn) }, sizeof(struct mb2_mmap_entry), 0 },
+    {
+        { 0x0, 0x9FC00, 1, 0 },             /* RAM */
+        { 0x100000, 0x3FF00000, 1, 0 },     /* RAM to 1 GiB */
+        { 0x50000000, 0x100000, 3, 0 },     /* ACPI reclaimable */
+        { 0x51000000, 0x100000, 4, 0 },     /* ACPI NVS */
+        { 0x52000000, 0x100000, 5, 0 },     /* bad RAM */
+        { 0x53000000, 0x100000, 20, 0 },    /* unknown type (GRUB's firmware-code type) */
+        { 0xE0000000, 0x10000000, 2, 0 },   /* reserved: a device may live here */
+        { 0x100000000ULL, 0x100000000ULL, 1, 0 },   /* RAM above 4 GiB */
+    },
+};
+
+static void test_devmap(void)
+{
+    const unsigned keep = devmap_count();
+    const uint64_t maxp = devmap_maxphys();
+    struct vmm_audit a;
+    struct vmm_mapping m;
+    void *va1 = 0, *va2 = 0, *v = 0;
+    int used1 = -1, used2 = -1;
+    uint32_t ea, eb, ec, ed;
+
+    cpuid(1, 0, &ea, &eb, &ec, &ed);
+    expect(maxp >= 32 && maxp <= 52 && devmap_audit() == NULL, "device window ready; physical width 32-52 bits; audit clean");
+    expect(devmap_wc_available() == !!(ed & (1u << 16)) &&
+           (!devmap_wc_available() || (((rdmsr(0x277) >> 32) & 0xFF) == 0x01 && ((rdmsr(0x277) >> 24) & 0xFF) == 0x00)),
+           "with a PAT: entry 4 is write-combining, entry 3 still uncached");
+
+    /* Validation against the boot map: RAM and the kernel are never device memory. */
+    expect(devmap_check(0x200000, 0x1000) == DEVMAP_ERAM && devmap_check(0x100000, 1) == DEVMAP_ERAM &&
+           devmap_check(0x1000, 0x1000) == DEVMAP_ERAM, "RAM (1 MiB up, the kernel image, low RAM) is refused");
+    expect(devmap_check(0x1000, 0) == DEVMAP_EINVAL, "a zero length is refused");
+    expect(devmap_check(UINT64_MAX - 0x800, 0x1000) == DEVMAP_EOVERFLOW &&
+           devmap_check(0x1000, UINT64_MAX) == DEVMAP_EOVERFLOW &&
+           devmap_check(UINT64_MAX - 0x1800, 0x1000) == DEVMAP_EOVERFLOW,
+           "address overflow and page-rounding overflow are refused");
+    expect(devmap_check(1ULL << maxp, 0x1000) == DEVMAP_ERANGE &&
+           devmap_check((1ULL << maxp) - 0x1000, 0x2000) == DEVMAP_ERANGE,
+           "addresses beyond the CPU's physical width are refused");
+    expect(devmap_check(0xF0000000, DEVMAP_MAX_BYTES + 1) == DEVMAP_EFULL, "a request above the byte budget is refused");
+
+    /* Map types, with the synthetic map. */
+    devmap_test_set_map(&syn.h, 8);
+    expect(devmap_check(0x50000000, 0x1000) == DEVMAP_ERAM && devmap_check(0x51000000, 0x1000) == DEVMAP_ERAM &&
+           devmap_check(0x52000000, 0x1000) == DEVMAP_ERAM && devmap_check(0x53000000, 0x1000) == DEVMAP_ERAM,
+           "ACPI reclaimable, ACPI NVS, bad and unknown-type entries are refused (RAM or firmware memory)");
+    expect(devmap_check(0xE8000000, 0x1000000) == DEVMAP_OK && devmap_check(0xF0000000, 0x1000) == DEVMAP_OK,
+           "a reserved entry and an address no entry lists (MMIO hole) are accepted");
+    expect(devmap_check(0x4FFFF000, 0x2000) == DEVMAP_ERAM && devmap_check(0xDFFFF000, 0x2000) == DEVMAP_OK &&
+           devmap_check(0xFFFFF000, 0x2000) == DEVMAP_ERAM,
+           "a range reaching into an ACPI entry or RAM above 4 GiB by one page is refused");
+    devmap_test_set_map(NULL, 0);
+
+    /* Real mappings in the MMIO hole (never accessed: only their page-table entries are checked). */
+    int r1 = devmap_map(0xFEC00000, 0x1000, DEVMAP_UC, "test-uc", &va1, &used1);
+    int r2 = devmap_map(0xFED00000 + 0x10, 0x1800, DEVMAP_WC, "test-wc", &va2, &used2);
+    uint64_t p1 = devmap_test_pte((uint64_t)va1), p2 = devmap_test_pte((uint64_t)va2 & ~0xFFFULL);
+    expect(r1 == DEVMAP_OK && r2 == DEVMAP_OK && (uint64_t)va1 >= DEVMAP_VA_BASE &&
+           ((uint64_t)va2 & 0xFFF) == 0x10 && (uint64_t)va2 >= (uint64_t)va1 + 0x2000,
+           "two mappings: the offset kept, one unmapped guard page between them");
+    expect((p1 & PTE_ADDR) == 0xFEC00000 && (p1 & (PTE_P | PTE_W | PTE_NX | PTE_PCD | PTE_PWT)) ==
+           (PTE_P | PTE_W | PTE_NX | PTE_PCD | PTE_PWT) && !(p1 & (PTE_U | PTE_G | PTE_PAT4K)) && used1 == DEVMAP_UC,
+           "UC mapping: present, writable, NX, PCD|PWT (PAT entry 3), not user, not global");
+    expect((p2 & PTE_ADDR) == 0xFED00000 && (p2 & (PTE_P | PTE_W | PTE_NX)) == (PTE_P | PTE_W | PTE_NX) &&
+           !(p2 & (PTE_U | PTE_G)) &&
+           (devmap_wc_available() ? (p2 & (PTE_PAT4K | PTE_PCD | PTE_PWT)) == PTE_PAT4K && used2 == DEVMAP_WC
+                                  : (p2 & (PTE_PCD | PTE_PWT)) == (PTE_PCD | PTE_PWT) && used2 == DEVMAP_UC),
+           "WC mapping: the PAT bit alone (entry 4), or UC where there is no PAT");
+    expect(devmap_test_pte((uint64_t)va1 + 0x1000) == 0 &&
+           vmm_lookup(vmm_kernel_root(), (uint64_t)va1 + 0x1000, &m) == VMM_ENOTMAPPED,
+           "the guard page after a mapping is not mapped");
+    expect(vmm_lookup(vmm_kernel_root(), (uint64_t)va1, &m) == VMM_OK && m.pa == 0xFEC00000 &&
+           m.flags == VMM_WRITE, "the VMM sees a supervisor, writable, non-executable page");
+    expect(devmap_map(0xFEC00000, 0x1000, DEVMAP_UC, "again", &v, 0) == DEVMAP_EOVERLAP &&
+           devmap_map(0xFEBFF800, 0x1000, DEVMAP_WC, "partial", &v, 0) == DEVMAP_EOVERLAP,
+           "the same frames cannot be mapped twice (no attribute aliases), not even partly");
+    expect(devmap_map(0xFEE00000, 0x1000, 7, "bad", &v, 0) == DEVMAP_EINVAL &&
+           devmap_map(0xFEE00000, 0x1000, DEVMAP_UC, "null", 0, 0) == DEVMAP_EINVAL &&
+           devmap_map(0x200000, 0x1000, DEVMAP_UC, "ram", &v, 0) == DEVMAP_ERAM,
+           "a bad attribute, a NULL result pointer and RAM are refused by devmap_map too");
+    uint64_t pages = (uint64_t)(devmap_count() - keep);
+    expect(devmap_audit() == NULL && vmm_audit_space(vmm_kernel_root(), 1, &a) == VMM_OK && a.device_leaves >= 3 &&
+           pages == 2, "device registry and page tables agree; the kernel audit accepts the window");
+
+    /* The audit notices a tampered device entry: a user bit, then a cacheable entry. */
+    devmap_test_set_pte((uint64_t)va1, p1 | PTE_U);
+    const char *t1 = devmap_audit();
+    int v1 = vmm_audit_space(vmm_kernel_root(), 1, &a);
+    devmap_test_set_pte((uint64_t)va1, p1 & ~(PTE_PCD | PTE_PWT));
+    const char *t2 = devmap_audit();
+    devmap_test_set_pte((uint64_t)va1, p1);
+    expect(t1 && v1 != VMM_OK && t2 && devmap_audit() == NULL,
+           "the audits refuse a user-accessible or cacheable device entry; clean again once restored");
+
+    /* Exhaustion: DEVMAP_MAX mappings in all. */
+    unsigned made = 0;
+    int last = DEVMAP_OK;
+    for (unsigned i = 0; i < DEVMAP_MAX + 1 && last == DEVMAP_OK; i++) {
+        last = devmap_map(0xFE000000 + i * 0x10000, 0x1000, DEVMAP_UC, "fill", &v, 0);
+        made += last == DEVMAP_OK;
+    }
+    expect(last == DEVMAP_EFULL && devmap_count() == DEVMAP_MAX && devmap_audit() == NULL,
+           "the registry is bounded: the mapping after the last slot is refused");
+    devmap_test_rollback(keep);
+    expect(devmap_count() == keep && devmap_audit() == NULL && devmap_test_pte((uint64_t)va1) == 0 &&
+           vmm_audit_space(vmm_kernel_root(), 1, &a) == VMM_OK, "test mappings removed; audits clean");
+}
+
 int selftest_kmap(const struct boot_info *bi)
 {
     failures = cases = 0;
@@ -591,6 +709,7 @@ int selftest_kmap(const struct boot_info *bi)
     test_verifier(bi);
     test_alias_bypass();
     test_stacks();
+    test_devmap();
     serial_puts("selftest: kmap ");
     serial_dec(cases);
     serial_puts(" cases, ");

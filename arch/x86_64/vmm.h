@@ -45,6 +45,7 @@
 #define PTE_D           (1ULL << 6)
 #define PTE_PS          (1ULL << 7)
 #define PTE_G           (1ULL << 8)
+#define PTE_PAT4K       (1ULL << 7)     /* PAT bit of a 4 KiB leaf (PS position); U1: device window only */
 #define PTE_NX          (1ULL << 63)
 #define PTE_ADDR        0x000FFFFFFFFFF000ULL
 
@@ -78,6 +79,7 @@ struct vmm_audit {
     uint64_t large_upper;       /* 2 MiB kernel alias pages */
     uint64_t leaves_upper;      /* 4 KiB upper-half mappings (the kernel map's page table) */
     uint64_t exec_supervisor;   /* leaves executable in ring 0 that are not user pages */
+    uint64_t device_leaves;     /* U1: 4 KiB leaves in the device window (devmap.h) */
     uint64_t errors;
     const char *first_error;
     uint64_t first_error_va;
