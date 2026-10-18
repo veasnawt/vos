@@ -3,6 +3,8 @@
 #include "memlayout.h"
 
 #define LOW_MEM_END     0x100000ULL     /* physical 0-1 MiB is always reserved */
+#define PAGE0_END       0x1000ULL       /* physical page 0: never a loader object */
+#define LEGACY_HOLE     0xA0000ULL      /* [0xA0000, 1 MiB): video memory and ROMs, never RAM */
 
 static uint64_t page_down(uint64_t x)
 {
@@ -172,6 +174,34 @@ static const char *reserve_ram(const struct boot_info *bi, struct resv_table *t,
     }
 }
 
+/*
+ * U1: placement rules for a loader object (the info block or a module),
+ * wherever the loader put it. GRUB on UEFI places them below 1 MiB (OVMF:
+ * module 0x64000, info 0x68000), on BIOS above the kernel. An object
+ *   - is non-empty and ends at or below 1 GiB (parse checks; repeated here);
+ *   - never touches physical page 0 (the null page; BIOS IVT/BDA);
+ *   - never touches the legacy hole [0xA0000, 1 MiB), even if a map calls it RAM;
+ *   - shares no page with the kernel image (kernel pages carry W^X permissions);
+ *   - then must pass reserve_ram: whole pages inside one available entry,
+ *     touching no non-available entry (EBDA, ACPI, reserved, firmware).
+ * Byte overlaps between loader objects are refused by the caller; two
+ * objects may share a page (the reservation table is a union of pages).
+ */
+static const char *place_object(const struct boot_info *bi, struct resv_table *t, uint64_t kstart,
+                                uint64_t kend, uint64_t start, uint64_t end, const char *what,
+                                const char *page0, const char *hole, const char *kernel, const char *bad)
+{
+    if (start >= end || end > BOOT_MAP_LIMIT)
+        return bad;
+    if (page_down(start) < PAGE0_END)
+        return page0;
+    if (overlap(page_down(start), page_up(end), LEGACY_HOLE, LOW_MEM_END))
+        return hole;
+    if (overlap(page_down(start), page_up(end), page_down(kstart), page_up(kend)))
+        return kernel;
+    return reserve_ram(bi, t, start, end, what, bad);
+}
+
 const char *boot_reserve(const struct boot_info *bi, uint64_t kstart, uint64_t kend,
                          struct resv_table *t)
 {
@@ -181,26 +211,28 @@ const char *boot_reserve(const struct boot_info *bi, uint64_t kstart, uint64_t k
         return "no memory map";
     if (resv_add(t, 0, LOW_MEM_END, "low 1 MiB") != RESV_OK)
         return "reservation table full";
+    if (kstart < LOW_MEM_END)
+        return "kernel image below 1 MiB";
     if ((err = reserve_ram(bi, t, kstart, kend, "kernel image", "kernel image not in usable RAM")))
         return err;
-    if ((err = reserve_ram(bi, t, bi->info_start, bi->info_end, "multiboot2 info",
-                           "multiboot2 info not in usable RAM")))
+    if ((err = place_object(bi, t, kstart, kend, bi->info_start, bi->info_end, "multiboot2 info",
+                            "multiboot2 info in physical page 0",
+                            "multiboot2 info in the legacy hole (0xA0000-1 MiB)",
+                            "multiboot2 info shares a page with the kernel image",
+                            "multiboot2 info not in usable RAM")))
         return err;
 
     for (uint32_t i = 0; i < bi->module_count; i++) {
         const struct boot_module *m = &bi->modules[i];
 
-        if (m->start < LOW_MEM_END)
-            return "module below 1 MiB";
-        if (overlap(m->start, m->end, page_down(kstart), page_up(kend)))
-            return "module overlaps the kernel image";
         if (overlap(m->start, m->end, bi->info_start, bi->info_end))
             return "module overlaps the multiboot2 info";
         for (uint32_t j = 0; j < i; j++)
             if (overlap(m->start, m->end, bi->modules[j].start, bi->modules[j].end))
                 return "modules overlap";
-        if ((err = reserve_ram(bi, t, m->start, m->end, "module",
-                               "module not in usable RAM")))
+        if ((err = place_object(bi, t, kstart, kend, m->start, m->end, "module", "module in physical page 0",
+                                "module in the legacy hole (0xA0000-1 MiB)", "module overlaps the kernel image",
+                                "module not in usable RAM")))
             return err;
     }
     return NULL;

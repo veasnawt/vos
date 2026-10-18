@@ -298,7 +298,9 @@ static void test_conflicts(void)
     struct resv_table t;
 
     expect(module_case(0x400000, 0x401000, &t) == NULL, "baseline module accepted");
-    expect(module_case(0x80000, 0x81000, &t) != NULL, "module below 1 MiB rejected");
+    /* U1: low RAM is a legitimate loader location (GRUB on UEFI); see test_low_placement. */
+    expect(module_case(0x80000, 0x81000, &t) == NULL && resv_overlaps(&t, 0x80000, 0x81000),
+           "module in low RAM below 1 MiB accepted and reserved");
     expect(module_case(0xFF000, 0x101000, &t) != NULL, "module straddling 1 MiB rejected");
     expect(module_case(0x108000, 0x109000, &t) != NULL, "module inside the kernel span rejected");
     expect(module_case(0x10D000, 0x10F000, &t) != NULL, "module overlapping kernel end rejected");
@@ -360,6 +362,120 @@ static void test_conflicts(void)
     expect(parse() == NULL && reserve(&t) != NULL, "kernel image outside usable RAM rejected");
 }
 
+/* ---- U1: loader objects below 1 MiB (GRUB x86_64-efi under OVMF) ---- */
+
+static const char *parse_at(uint64_t phys)
+{
+    return mb2_parse(blk, phys, &bi);
+}
+
+/* An info block at `info` with one module [s, e) over `map`, then reserve with the standard kernel. */
+static const char *low_case(const struct me *map, int n, uint64_t info, uint32_t s, uint32_t e,
+                            struct resv_table *t)
+{
+    const char *err;
+
+    blk_begin();
+    blk_mmap(map, n);
+    if (s < e)
+        blk_module(s, e, "m");
+    blk_end();
+    if ((err = parse_at(info)))
+        return err;
+    return reserve(t);
+}
+
+static int says(const char *got, const char *want)
+{
+    if (got && streq(got, want))
+        return 1;
+    serial_puts("selftest:   boot_reserve said: ");
+    serial_puts(got ? got : "accepted");
+    serial_puts("\r\n");
+    return 0;
+}
+
+static void test_low_placement(void)
+{
+    /* The OVMF map below 16 MiB as GRUB reports it: page 0 to 640 KiB and 1 MiB up are RAM. */
+    static const struct me ovmf[] = { { 0, 0xA0000, 1 }, { 0x100000, 0x7F00000, 1 } };
+    /* A wrong map that calls the whole first MiB RAM. */
+    static const struct me liar[] = { { 0, 0x100000, 1 }, { 0x100000, 0x7F00000, 1 } };
+    struct resv_table t;
+    const char *r;
+
+    r = low_case(ovmf, 2, 0x68000, 0x64000, 0x67348, &t);
+    expect(r == NULL && resv_overlaps(&t, 0x64000, 0x67348) && resv_overlaps(&t, 0x68000, 0x68000 + blk_len) &&
+           bi.module_count == 1 && bi.info_start == 0x68000 && bi.modules[0].start == 0x64000,
+           "OVMF layout (module 0x64000-0x67348, info 0x68000) accepted; both reserved before the PMM");
+    expect(low_case(ovmf, 2, 0x68000, 0x68000 + 0x400, 0x69000, &t) == NULL && blk_len < 0x400,
+           "a module sharing the info block's page without overlapping its bytes is accepted");
+    expect(says(low_case(ovmf, 2, 0x68000, 0x68000, 0x69000, &t), "module overlaps the multiboot2 info"),
+           "a low module overlapping the info block's bytes is rejected");
+    expect(says(low_case(ovmf, 2, 0x68000, 0x800, 0x1000, &t), "module in physical page 0"),
+           "a module inside physical page 0 is rejected");
+    expect(says(low_case(ovmf, 2, 0x68000, 0xF00, 0x2000, &t), "module in physical page 0"),
+           "a module reaching into physical page 0 is rejected");
+    expect(says(low_case(ovmf, 2, 0x800, 0, 0, &t), "multiboot2 info in physical page 0"),
+           "an info block in physical page 0 is rejected");
+    expect(says(low_case(liar, 2, 0x68000, 0xB8000, 0xB9000, &t), "module in the legacy hole (0xA0000-1 MiB)"),
+           "a module in the legacy hole is rejected even when the map calls it RAM");
+    expect(says(low_case(ovmf, 2, 0x68000, 0x9F000, 0xA1000, &t), "module in the legacy hole (0xA0000-1 MiB)"),
+           "a module running into the legacy hole is rejected");
+    expect(says(low_case(liar, 2, 0xC0000, 0, 0, &t), "multiboot2 info in the legacy hole (0xA0000-1 MiB)"),
+           "an info block in the legacy hole is rejected");
+    /* std_map: RAM to 0x9FC00, the EBDA 0x9FC00-0xA0000 reserved. Page rounding reaches it. */
+    expect(says(low_case(std_map, N_STD, 0x68000, 0x9F000, 0x9F400, &t), "module not in usable RAM"),
+           "a module whose page reaches the reserved EBDA is rejected");
+    expect(says(low_case(std_map, N_STD, 0x9FB00, 0, 0, &t), "multiboot2 info not in usable RAM"),
+           "an info block whose page reaches the reserved EBDA is rejected");
+    expect(says(low_case(std_map, N_STD, K_END - 0x100, 0, 0, &t),
+                "multiboot2 info shares a page with the kernel image"),
+           "an info block sharing the kernel's last page is rejected");
+    expect(says(low_case(ovmf, 2, 0x68000, 0x10D000, 0x10D800, &t), "module overlaps the kernel image"),
+           "a module inside the kernel's pages is rejected");
+
+    /* Two modules sharing one low page, byte-disjoint: accepted; overlapping by one byte: rejected. */
+    blk_begin();
+    blk_mmap(ovmf, 2);
+    blk_module(0x50000, 0x50800, "a");
+    blk_module(0x50800, 0x51000, "b");
+    blk_end();
+    expect(parse_at(0x68000) == NULL && reserve(&t) == NULL && resv_overlaps(&t, 0x50000, 0x51000),
+           "two low modules sharing a page without overlapping bytes are accepted");
+    blk_begin();
+    blk_mmap(ovmf, 2);
+    blk_module(0x50000, 0x50801, "a");
+    blk_module(0x50800, 0x51000, "b");
+    blk_end();
+    expect(parse_at(0x68000) == NULL && says(reserve(&t), "modules overlap"), "two modules overlapping by one byte are rejected");
+
+    /* Bounds and overflow: the 1 GiB limit, and an info block whose end would pass it. */
+    static const struct me big[] = { { 0x100000, 0x7FF00000, 1 } };
+    blk_begin();
+    blk_mmap(big, 1);
+    blk_module(0x3FFFF000, 0x40000000, "top");
+    blk_end();
+    expect(parse_at(0x68000) == NULL && reserve(&t) != NULL, "a module ending exactly at 1 GiB but outside RAM is rejected");
+    blk_begin();
+    blk_mmap(big, 1);
+    blk_module(0x3FFFF000, 0x40000001, "past");
+    blk_end();
+    expect(parse_at(0x200000) != NULL, "a module ending past 1 GiB is rejected at parse time");
+    blk_begin();
+    blk_mmap(big, 1);
+    blk_end();
+    expect(parse_at(0x40000000 - 8) != NULL, "an info block running past 1 GiB is rejected at parse time");
+
+    /* The kernel image itself must start at or above 1 MiB. */
+    blk_begin();
+    blk_mmap(ovmf, 2);
+    blk_end();
+    resv_init(&t);
+    expect(parse_at(0x68000) == NULL && says(boot_reserve(&bi, 0x80000, 0x90000, &t), "kernel image below 1 MiB"),
+           "a kernel image below 1 MiB is rejected");
+}
+
 static void test_table(void)
 {
     struct resv_table t;
@@ -391,6 +507,7 @@ int selftest_bootinfo(void)
     failures = cases = 0;
     test_parse();
     test_conflicts();
+    test_low_placement();
     test_table();
     serial_puts("selftest: bootinfo ");
     serial_dec(cases);

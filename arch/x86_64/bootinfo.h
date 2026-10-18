@@ -43,11 +43,15 @@ const char *mb2_parse(const void *info, uint64_t info_phys, struct boot_info *bi
 const struct mb2_mmap_entry *boot_mmap_entry(const struct boot_info *bi, uint32_t i);
 
 /*
- * Add the boot reservations to `t`: physical 0-1 MiB, the kernel image
- * [kstart, kend), the info block and every module. Each non-low range must lie
- * entirely in available RAM and intersect no other memory-map entry type;
- * modules must also not overlap the kernel's page span, the info block or one
- * another. Entries added before an error are kept.
+ * Add the boot reservations to `t`, all before the PMM exists: physical
+ * 0-1 MiB, the kernel image [kstart, kend) (at or above 1 MiB), the info
+ * block and every module. Each range, rounded out to whole pages, must lie
+ * entirely in one available memory-map entry, intersect no other entry type
+ * and end at or below 1 GiB. Loader objects (info block, modules) may lie
+ * below 1 MiB (U1: GRUB on UEFI puts them there) but never touch physical
+ * page 0 or the legacy hole [0xA0000, 1 MiB), never share a page with the
+ * kernel image, and never overlap one another byte-wise (sharing a page is
+ * allowed). Entries added before an error are kept.
  */
 const char *boot_reserve(const struct boot_info *bi, uint64_t kstart, uint64_t kend,
                          struct resv_table *t);
