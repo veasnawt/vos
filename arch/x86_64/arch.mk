@@ -38,6 +38,9 @@ MULTIBOOT_CHECK := --is-x86-multiboot2
 #    N2.2: thread-overflow (#DF on IST1, CR2 in the thread's guard page),
 #    and sched-deadlock (lost-wakeup panic) must end in the expected failure
 #    (status 35).
+#    N2.4: the ipc image runs trusted scenarios of separately built ABI v1
+#    programs talking over channels (selftest_ipc.c) under qemu64, 2 GiB and
+#    -cpu max; a verdict printed by a program must never be accepted.
 #    N2.3: the mp image runs separately built programs at the same time
 #    (isolation, fairness, faults, exhaustion, reclamation) under qemu64,
 #    2 GiB and -cpu max.
@@ -166,6 +169,15 @@ arch-test: iso
 	MEM=2G scripts/exit-test.sh mp-2G build/$(ARCH)-test-mp/vos.iso 33 'selftest: mp ' 'VOS-TEST: PASS' --
 	scripts/exit-test.sh mp-max build/$(ARCH)-test-mp/vos.iso 33 'smep=on umip=on smap=on' 'selftest: mp ' \
 	    'VOS-TEST: PASS' -- -cpu max
+	$(MAKE) --no-print-directory ARCH=$(ARCH) VOS_TEST=1 VOS_TEST_CASE=ipc iso
+	scripts/exit-test.sh ipc build/$(ARCH)-test-ipc/vos.iso 33 'selftest: ipc ' \
+	    'ipc: s-pingpong a=ipc_ping b=ipc_echo order=b-blocked ea=exit:0 eb=exit:10 ia=10 ib=10 repeat=3 => PASS' \
+	    'ipc: s-killwait ' 'ipc: s-v0compat ' 'ipc: 11 scenarios, 0 failed' 'VOS-TEST: PASS' --
+	MEM=2G scripts/exit-test.sh ipc-2G build/$(ARCH)-test-ipc/vos.iso 33 'ipc: 11 scenarios, 0 failed' 'VOS-TEST: PASS' --
+	scripts/exit-test.sh ipc-max build/$(ARCH)-test-ipc/vos.iso 33 'smep=on umip=on smap=on' \
+	    'ipc: 11 scenarios, 0 failed' 'VOS-TEST: PASS' -- -cpu max
+	@echo "ipc-forge: a verdict printed only by a program (ipc_forge) must NOT be found"
+	! scripts/exit-test.sh ipc-forge build/$(ARCH)-test-ipc/vos.iso 33 'ipc: s-forged-verdict => PASS' -- >/dev/null 2>&1
 	$(MAKE) --no-print-directory ARCH=$(ARCH) VOS_TEST=1 VOS_TEST_CASE=irq iso
 	scripts/exit-test.sh irq build/$(ARCH)-test-irq/vos.iso 33 'irq: 8259 master 0x20-0x27' \
 	    'suite: t-spin expect=budget ticks=50 ok=0 => PASS' 'suite: t-irqregs expect=budget ticks=50 ok=0 => PASS' \

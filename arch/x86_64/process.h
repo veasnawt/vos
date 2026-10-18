@@ -83,6 +83,8 @@ struct process {
     struct wait_queue waiters;          /* threads in proc_wait */
     const char *kill_reason;            /* proc_kill: end at the next kernel entry */
     struct handle handles[HANDLE_MAX];  /* N2.4: channel endpoints it owns (channel.h) */
+    /* Kernel record of its closed endpoints: messages that arrived for it and that it took out. */
+    uint64_t ipc_in, ipc_out, ipc_in_hash, ipc_out_hash;
     int exit_status;
     const char *reason;                 /* why it was killed */
     struct proc_trap trap;

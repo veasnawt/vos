@@ -1,0 +1,2 @@
+VOS IPC scenario carrier: the content of this module is ignored; its GRUB command line is a
+trusted IPC test scenario (tests/x86_64/ipc.grub.cfg).

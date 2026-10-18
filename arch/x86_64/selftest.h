@@ -39,6 +39,8 @@ void selftest_sched_case(const struct boot_info *bi, int self_tests_failed);
 int selftest_mp(const struct boot_info *bi);
 /* Channels and handles (N2.4): the kernel interface on processes that do not run. */
 int selftest_ipc(void);
+/* N2.4: separately built programs talking over channels, from trusted GRUB scenarios (VOS_TEST_CASE=ipc). */
+int selftest_ipc_scenarios(const struct boot_info *bi);
 /* Page-table manager, identity-map removal and kernel survival (restores all state). */
 int selftest_vmm(void);
 /* User address spaces and ring 3 (restores all state). */

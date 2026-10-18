@@ -253,6 +253,9 @@ void kernel_main(uint32_t mb2_magic, uint32_t mb2_info)
 #if defined(VOS_TEST_CASE_suite) || defined(VOS_TEST_CASE_irq)
     check(selftest_suite(&bi) == 0, "isolation suite");
 #endif
+#ifdef VOS_TEST_CASE_ipc
+    check(selftest_ipc_scenarios(&bi) == 0, "IPC scenarios");
+#endif
 #ifdef VOS_TEST_CASE_mp
     check(selftest_mp(&bi) == 0, "multi-process tests");
 #endif

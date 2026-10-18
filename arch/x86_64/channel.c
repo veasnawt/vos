@@ -143,6 +143,12 @@ static void endpoint_close(struct endpoint *ep)
 
     if (ep->waiters.head)
         panic("channel: closing an endpoint its owner is blocked on");
+    if (ep->owner) {                    /* the kernel's record of this endpoint's traffic */
+        ep->owner->ipc_in += ep->in_msgs;
+        ep->owner->ipc_out += ep->out_msgs;
+        ep->owner->ipc_in_hash ^= ep->in_hash;
+        ep->owner->ipc_out_hash ^= ep->out_hash;
+    }
     ep->open = 0;
     ep->owner = NULL;
     ep->count = ep->head = 0;           /* queued messages can never be received now */

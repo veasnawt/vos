@@ -57,7 +57,7 @@ $(foreach a,$(USER_APPS),$(eval $(call USER_APP,$(a))))
 SUITE_DIR    := $(USER_BUILD)/suite
 SUITE_C      := $(basename $(notdir $(wildcard $(USER_DIR)/suite/*.c)))
 SUITE_OWN    := regs
-SUITE_S      := irqregs
+SUITE_S      := irqregs ipc_regs
 SUITE_BAD    := magic dyn wx entry abi interp trunc overlap
 SUITE_ELFS   := $(addprefix $(SUITE_DIR)/,$(addsuffix .elf,$(SUITE_C) $(SUITE_S) $(SUITE_OWN))) \
                 $(addprefix $(SUITE_DIR)/bad-,$(addsuffix .elf,$(SUITE_BAD)))
