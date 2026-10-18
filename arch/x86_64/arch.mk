@@ -181,10 +181,10 @@ arch-test: iso
 	$(MAKE) --no-print-directory ARCH=$(ARCH) VOS_TEST=1 VOS_TEST_CASE=ipc iso
 	scripts/exit-test.sh ipc build/$(ARCH)-test-ipc/vos.iso 33 'selftest: ipc ' \
 	    'ipc: s-pingpong a=ipc_ping b=ipc_echo order=b-blocked ea=exit:0 eb=exit:10 ia=10 ib=10 repeat=3 => PASS' \
-	    'ipc: s-killwait ' 'ipc: s-v0compat ' 'ipc: 11 scenarios, 0 failed' 'VOS-TEST: PASS' --
-	MEM=2G scripts/exit-test.sh ipc-2G build/$(ARCH)-test-ipc/vos.iso 33 'ipc: 11 scenarios, 0 failed' 'VOS-TEST: PASS' --
+	    'ipc: s-killwait ' 'ipc: s-v0compat ' 'ipc: 12 scenarios, 0 failed' 'VOS-TEST: PASS' --
+	MEM=2G scripts/exit-test.sh ipc-2G build/$(ARCH)-test-ipc/vos.iso 33 'ipc: 12 scenarios, 0 failed' 'VOS-TEST: PASS' --
 	scripts/exit-test.sh ipc-max build/$(ARCH)-test-ipc/vos.iso 33 'smep=on umip=on smap=on' \
-	    'ipc: 11 scenarios, 0 failed' 'VOS-TEST: PASS' -- -cpu max
+	    'ipc: 12 scenarios, 0 failed' 'VOS-TEST: PASS' -- -cpu max
 	@echo "ipc-forge: a verdict printed only by a program (ipc_forge) must NOT be found"
 	! scripts/exit-test.sh ipc-forge build/$(ARCH)-test-ipc/vos.iso 33 'ipc: s-forged-verdict => PASS' -- >/dev/null 2>&1
 	$(MAKE) --no-print-directory ARCH=$(ARCH) VOS_TEST=1 VOS_TEST_CASE=irq iso

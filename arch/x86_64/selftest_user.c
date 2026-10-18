@@ -1068,6 +1068,8 @@ int selftest_user(void)
     test_preemption();
     test_thread_exhaustion();
     test_ipc_syscalls();
+    expect(sched_audit() == NULL && proc_audit() == NULL && channel_audit() == NULL,
+           "scheduler, process and channel audits hold after the user and IPC tests (N2.5)");
     serial_puts("selftest: user ");
     serial_dec(cases);
     serial_puts(" cases, ");

@@ -474,6 +474,7 @@ int selftest_sched(void)
     test_sleep_and_last_exit();
     expect(thread_is_boot() && thread_canaries_intact() && !(read_rflags() & RFLAGS_IF),
            "back on the boot thread with IF=0 and every canary intact");
+    expect(sched_audit() == NULL, "the scheduler audit holds after the scheduler tests (N2.5)");
     const struct sched_stats *s = sched_stats();
     serial_puts("selftest: scheduler: ");
     serial_dec(s->created);

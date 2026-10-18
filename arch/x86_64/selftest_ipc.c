@@ -207,12 +207,43 @@ static void test_exhaustion(void)
     expect(channel_count() == 0 && pmm_free_count() == f0, "destroying the processes releases all 16 channels");
 }
 
+/* N2.5: channels and handle slots reused many times; every value is new; audits hold throughout. */
+static void test_reuse(void)
+{
+    struct process *a = &P[0], *b = &P[1];
+    uint64_t f0 = pmm_free_count();
+    int64_t ha, hb, prev_a = 0;
+    int ok = mk(a, "ipc-a") && mk(b, "ipc-b"), fresh = 1, audits = 1;
+    uint64_t f1 = pmm_free_count();      /* with both processes */
+
+    for (int i = 0; ok && i < 100; i++) {
+        ok &= channel_create(a, HANDLE_RIGHTS, b, HANDLE_RIGHTS, &ha, &hb) == 0;
+        fresh &= ha != prev_a && channel_send(a, prev_a, UB, 1) == -VOS_EBADHANDLE;
+        put(a, UB, (uint8_t)i, 16);
+        ok &= channel_send(a, ha, UB, 16) == 0 && channel_recv(b, hb, UB2, 256, 0) == 16 && is(b, UB2, (uint8_t)i, 16);
+        if (i % 2)
+            ok &= handle_close(a, ha) == 0 && handle_close(b, hb) == 0;
+        else
+            ok &= handle_close(b, hb) == 0 && handle_close(a, ha) == 0;
+        audits &= channel_audit() == NULL && handles_audit(a) == NULL && handles_audit(b) == NULL;
+        prev_a = ha;
+    }
+    expect(ok && fresh && audits && channel_count() == 0 && pmm_free_count() == f1,
+           "100 channels created, used and closed (both close orders): every handle value new, audits hold");
+    proc_destroy(a);
+    proc_destroy(b);
+    expect(pmm_free_count() == f0 && channel_count() == 0, "100 reuses leave nothing behind");
+}
+
 int selftest_ipc(void)
 {
     failures = cases = 0;
     test_basic();
     test_rights_and_ownership();
     test_exhaustion();
+    test_reuse();
+    expect(channel_audit() == NULL && sched_audit() == NULL && proc_audit() == NULL,
+           "channel, scheduler and process audits hold after the IPC tests");
     serial_puts("selftest: ipc ");
     serial_dec(cases);
     serial_puts(" cases, ");
