@@ -94,11 +94,14 @@ panic halts in `halt_forever` (`0xffffffff80109491`). A timeout alone is never c
 3. Control reaches VOS: yes. The 32-bit entry runs and enters long mode in the higher half
    (`rip=0xffffffff801072a8`).
 4. The kernel initializes: **no** with the module (U0-B1). Yes without it.
-5. CPU state at `_start` (QEMU `-d cpu`), compared with SeaBIOS + GRUB i386-pc:
+5. CPU state at `_start` (QEMU `-d cpu`), compared with SeaBIOS + GRUB i386-pc. Each column
+   comes from the production kernel **with** the `hello` module (UEFI values re-measured in
+   the U1 preparation; see the correction note below):
 
    | | UEFI (GRUB x86_64-efi) | BIOS (GRUB i386-pc) |
    |---|---|---|
-   | EAX / EBX | `0x36d76289` / `0x64000` | `0x36d76289` / `0x1fa290` |
+   | EAX / EBX | `0x36d76289` / `0x68000` | `0x36d76289` / `0x1fa290` |
+   | GDTR base | `0x6c0d0` (GRUB's) | `0x10b0` (GRUB's) |
    | Mode | 32-bit protected, flat CS `0x10` / DS `0x18`, paging off, IF = 0 | the same |
    | CR0 | `0x00010033` (PE, MP, ET, NE, WP) | `0x00000011` |
    | CR4 | `0x00000648` (DE, MCE, OSFXSR, OSXMMEXCPT) | `0` |
@@ -111,10 +114,24 @@ panic halts in `halt_forever` (`0xffffffff80109491`). A timeout alone is never c
    CR0/CR4: under UEFI the kernel runs with NE, MP, DE, MCE, OSFXSR and OSXMMEXCPT set
    (`cr0=0x80010035 cr4=0x100668`, BIOS `cr0=0x80010015 cr4=0x100020`). This was harmless in
    every test: CR0.EM stays set, so no x87/SSE instruction runs.
-6. **Placement.** The kernel is at `0x100000`–`0x1a0000` as linked. The boot information is
-   at `0x64000`–`0x6a140`, and the module at `0x64000`–`0x67348` (with the module present,
-   the information block is at `0x68000`). Both are **below 1 MiB**, inside a region the
-   UEFI map marks available. Under BIOS they were at `0x1fa290` and `0x1fb000`.
+6. **Placement.** The kernel is at `0x100000`–`0x1a0000` as linked. With the module present,
+   the module is at `0x64000`–`0x67348` and the boot information at `0x68000`–`0x6a140`.
+   These ranges are disjoint (the gap is `0x67348`–`0x68000`). Without the module (the
+   diagnostic variant) the boot information is at `0x64000`–`0x66128`. All of them lie
+   **below 1 MiB**, inside a region the UEFI map marks available. Under BIOS the boot
+   information and module were at `0x1fa290` and `0x1fb000`.
+
+   **Correction (U1 preparation).** The first version of this document combined two runs. It
+   gave the boot information as `0x64000`–`0x6a140` (the no-module start with the
+   with-module end), so it seemed to overlap the module. It also showed EBX = `0x64000`,
+   which was measured on the no-module image. The values above were re-established by
+   dumping guest memory `0x60000`–`0x80000` after the panic and decoding the Multiboot2
+   structure at EBX:
+   - tags 21, 1, 2, 3, 6, 9, 4, 12, 14, 15, 17 and the end tag, 8512 bytes in all;
+   - the module bytes have the SHA-256 of `hello.elf`.
+
+   The EFI memory map shows `0x1000`–`0x6c000` as LoaderData (GRUB's allocation, holding both
+   objects) and `0x100000`–`0x1a0000` as LoaderData (the kernel).
 7. **Memory assumptions:**
    - Still valid:
      - everything VOS needs is below 1 GiB;
