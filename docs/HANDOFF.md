@@ -40,7 +40,7 @@ git clone git@github.com:veasnawt/vos.git && cd vos
 git checkout main            # or the checkpoint tag listed in docs/STATUS.md
 ```
 
-The repository is private. `build/` is generated and ignored. An offline Git bundle of the
+The repository was private at the U1 checkpoint; check GitHub for its current visibility. Authorized users can clone via SSH, and public users may clone via HTTPS once the repository is published. `build/` is generated and ignored. An offline Git bundle of the
 checkpoint may exist outside the repository; `docs/STATUS.md` names it.
 
 ## 3. Build
