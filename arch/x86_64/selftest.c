@@ -555,6 +555,17 @@ static void test_framebuffer(void)
     expect(streq(fb_case(0x80000000, 5120, 1280, 800, 32, 1, rgbx, 0, &fb),
                  "pixel layout is not BGRX (red 16, green 8, blue 0, 8 bits each)"),
            "framebuffer: RGBX (an unverified layout) is refused");
+    /* Each of the six channel bytes wrong on its own (a mutation run found this untested). */
+    unsigned refused = 0;
+    for (unsigned i = 0; i < 6; i++) {
+        uint8_t c[6];
+
+        memcpy(c, bgrx, 6);
+        c[i] ^= 0x18;                   /* 16 -> 8, 8 -> 16, 0 -> 24: always a different position or size */
+        refused += streq(fb_case(0x80000000, 5120, 1280, 800, 32, 1, c, 0, &fb),
+                         "pixel layout is not BGRX (red 16, green 8, blue 0, 8 bits each)");
+    }
+    expect(refused == 6, "framebuffer: a layout with any single channel position or size changed is refused");
     expect(fb_case(0x80000000, 5120, 0, 800, 32, 1, bgrx, 0, &fb) != NULL &&
            fb_case(0x80000000, 5120, 1280, 0, 32, 1, bgrx, 0, &fb) != NULL &&
            fb_case(0x80000000, 36000, 9000, 800, 32, 1, bgrx, 0, &fb) != NULL &&
