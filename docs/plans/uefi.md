@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| Status | **U0 complete (2026-10-19). U1 implemented (2026-10-19, section 8): UEFI and BIOS boots of one kernel with a screen console; final full regression pending.** |
+| Status | **U0 complete (2026-10-19). U1 complete (2026-10-19, section 8): UEFI and BIOS boots of one kernel with a screen console; final regression and mutation results in section 8.8 and `docs/STATUS.md`.** |
 | Starting point | `6769157` (N3.4 complete); no kernel, ABI or legacy build change in U0 |
 | Architecture decision | UEFI x86_64 is the primary future boot target; Legacy BIOS remains a supported compatibility path; the Dell OptiPlex 9020 is an early test machine, not the standard |
 
@@ -231,7 +231,7 @@ system GRUB stays i386-pc only (`/usr/lib/grub` unchanged).
 Neither script is called by `make`. No USB media, disk, partition, EFI variable or firmware
 setting was touched; the Dell was not used.
 
-## 8. U1 result: UEFI readiness with BIOS compatibility (implemented; final full regression pending)
+## 8. U1 result: UEFI readiness with BIOS compatibility (complete)
 
 One x86_64 kernel now boots and passes its tests through both GRUB
 x86_64-efi under UEFI firmware and GRUB i386-pc under BIOS firmware. It uses
@@ -393,7 +393,7 @@ put mtools on `PATH`. Nothing writes outside `build/`.
 - ISO images are not: xorriso and GRUB embed timestamps and UUIDs. Compare their payloads
   instead.
 
-### 8.8 Evidence so far and pending work
+### 8.8 Evidence and final verification
 
 **Measured (QEMU 10.2.1, OVMF 2025.11, SeaBIOS; Haswell-noTSX, `max`, default CPUs):**
 
@@ -401,7 +401,7 @@ put mtools on `PATH`. Nothing writes outside `build/`.
 |---|---|
 | BIOS `make ARCH=x86_64 test` after stage 1 | 65 passed, 0 failed, `test-user-elf` 292/0 |
 | BIOS `make ARCH=x86_64 test` after stage 2 | 65 passed, 0 failed, `test-user-elf` 292/0 |
-| `make test-uefi` (final tree) | 17 of 18 runs passed |
+| `make test-uefi` (first full run) | 15 of 16 runs passed (first published as "17 of 18", a miscount) |
 | — the one failure: `uefi-ext2` | a check that needs interrupt mode, while the driver polls under OVMF; reclassified in `b0f7d99`; rerun: PASS (94 cases, 0 failed, 1 not applicable) |
 | UEFI production boot | `user[hello]: Hello from VOS!`, `boot: checks passed`, halted after `kernel_main`, PASS badge in the screenshot; also via USB at 8 GiB, without serial, without framebuffer, at 640×480 and at 1920×1080 |
 | UEFI test kernel | 1 GiB and 8 GiB: `VOS-TEST: PASS` |
@@ -411,17 +411,18 @@ put mtools on `PATH`. Nothing writes outside `build/`.
 | BIOS main test kernel at `ec8c749` | PASS |
 | Every U1 commit | builds on its own |
 
-**Pending before U1 can be called complete and pushed:**
-- the full BIOS regression on the final tree: `make test`, `make ARCH=x86_64 test` (with the
-  new `bios-screen` and `bios-panic-screen` runs), `make ARCH=i386 test`, `make test-all`;
-- reproducible-build and compatibility-hash checks (`hello.elf`, i386 `vos.bin`);
-- `git diff --check`;
-- one complete `make test-uefi` pass;
-- mutation testing of the security-sensitive stages (device window, loader-object rules,
-  control registers).
+**Final verification (at the checkpoint, after `3e9d1c2`):**
+- **Reproducibility:** two clean builds gave identical production and self-test kernels.
+- **`make test-all`:** 68 passed, 0 failed, `test-user-elf` 292/0.
+- **`make test-uefi`:** 16 passed, 0 failed, with the EFI boot path verified.
+- **Compatibility:** `hello.elf` and i386 `vos.bin` hashes unchanged; `git diff --check`
+  clean.
+- **Mutations:** 15, all caught; one only after the test added in `fa37ccd`.
 
-The x86_64 kernel binary changes by design in U1. `hello.elf`, the i386 kernel and the ABI
-must not change: no file under `user/`, `docs/abi/` or `arch/i386/` was modified.
+**Corrections to the table above:**
+- The `make test-uefi` matrix has 16 runs, so the earlier partial result was 15 of 16, not
+  17 of 18.
+- The x86_64 kernel changes by design in U1; `hello.elf`, the i386 kernel and the ABI did not.
 
 ### 8.9 Known limitations and hardware risks
 

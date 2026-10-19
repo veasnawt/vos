@@ -1,5 +1,8 @@
 # VOS
 
+> Current state, roadmap and how to resume: [`docs/STATUS.md`](docs/STATUS.md),
+> [`docs/ROADMAP.md`](docs/ROADMAP.md), [`docs/HANDOFF.md`](docs/HANDOFF.md).
+
 VOS is an experimental, independently written operating-system kernel for x86 PCs. It is
 **not** a Linux distribution and does not use Linux, a C library or any host operating system
 at run time; GRUB loads it directly.
