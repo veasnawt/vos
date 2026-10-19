@@ -1,1 +1,17 @@
 build/
+
+# Local editor, cache, and diagnostic files
+.DS_Store
+.idea/
+.vscode/
+*.log
+
+# Local environment and credential material (never commit real secrets)
+.env
+.env.*
+!.env.example
+!.env.*.example
+*.pem
+*.key
+*.p12
+*.pfx
