@@ -1,18 +1,35 @@
 # VOS
 
-> Current state, roadmap and how to resume: [`docs/STATUS.md`](docs/STATUS.md),
-> [`docs/ROADMAP.md`](docs/ROADMAP.md), [`docs/HANDOFF.md`](docs/HANDOFF.md).
+**An experimental, independently developed operating-system kernel for x86 PCs.**
 
-VOS is an experimental, independently written operating-system kernel for x86 PCs. It is
-**not** a Linux distribution and does not use Linux, a C library or any host operating system
-at run time; GRUB loads it directly.
+[![License: GPL-3.0-only](https://img.shields.io/badge/license-GPL--3.0--only-blue)](LICENSE)
 
-Today VOS can boot, protect itself from the programs it runs, and run separately built native
-programs (`hello` at boot, several at once in the tests) in user mode, each in its own address
-space; a hardware timer switches between them about every 20 ms. It has **no** graphical
-desktop, interactive shell, keyboard input, file system, networking, or way for programs to start
-other programs; programs the kernel connects can exchange small messages over channels. It has only been
-tested in the QEMU emulator.
+VOS is written primarily in freestanding C and x86 assembly. It is **not a Linux distribution**, and it does not rely on Linux, a host operating system, or a hosted C library at runtime. GRUB currently loads the kernel through Multiboot2 on x86-64. A small legacy i386 build remains available.
+
+**Status: pre-alpha kernel research.** VOS is not an installable or everyday-use operating system. The documented checkpoint has been tested in **QEMU with SeaBIOS and OVMF**, not verified as a functioning physical-machine installation. No native graphical desktop, keyboard/mouse input, interactive shell, writable storage, or network stack is available yet.
+
+### What works today
+
+- A 64-bit higher-half kernel with memory isolation, W^X mappings, and protected stacks.
+- Separately built ELF user programs running in ring 3, system calls, kernel threads, timer preemption, and IPC channels.
+- Read-only virtio-blk access, block caching, and a **kernel-internal** ext2 reader (not a userspace file API).
+- A basic framebuffer boot/status/panic console where supported, plus serial diagnostics.
+- BIOS and UEFI boot paths **in QEMU** via GRUB; extensive emulator-based regression tests.
+
+The separate [Veasna OS](https://github.com/veasnawt/veasna-os) React/Electron desktop prototype is **not** a graphical environment running on this kernel.
+
+**Start here:** [Current status](docs/STATUS.md) · [Roadmap](docs/ROADMAP.md) · [Development handoff](docs/HANDOFF.md) · [Contribution guide](CONTRIBUTING.md) · [Security policy](SECURITY.md).
+
+### Quick start (BIOS / QEMU)
+
+On Ubuntu, Debian, or WSL2, install the toolchain and emulator prerequisites listed below and in [docs/HANDOFF.md](docs/HANDOFF.md), then run:
+
+~~~sh
+make iso
+make run
+~~~
+
+For an automated check, run `make test-all`. A UEFI ISO and additional OVMF tests are available using `make uefi-iso` and `make test-uefi` after installing the additional UEFI build/test tools. VOS is intended for **emulation first**; do not flash experimental images onto a disk holding important data.
 
 ## What happens when x86_64 VOS boots
 
@@ -87,8 +104,8 @@ is expected, because the kernel halts instead of powering off. How to read the l
 - `proc[hello]: exited status 0, all frames reclaimed` is the kernel's own report: the program
   exited with status 0 and every page it used was returned.
 
-`make ARCH=x86_64 run` boots the same image in a QEMU window, which shows the VGA screen
-(`Hello from VOS!` from the kernel); the program's output is only on the serial port.
+`make ARCH=x86_64 run` boots the same image in a QEMU window, which can show the
+framebuffer boot diagnostics and status display; the user program's detailed output is on the serial port.
 `make ARCH=x86_64 debug` starts the same image halted, waiting for a debugger on TCP port 1234
 (GDB is not part of the requirements; see `docs/plans/n2-foundation.md`, section 8).
 
@@ -185,6 +202,19 @@ The `m1-32bit` tag marks the original known-good 32-bit baseline.
 - `docs/architecture/storage.md` – the storage architecture proposal: layers, virtio-blk, ext2
   (read-only first), layout, naming, permissions, crash behaviour, open decisions
 - `docs/vision/product-direction.md` – provisional long-term product direction (not a specification)
+
+## Community, license, and support
+
+VOS is licensed under the [GNU General Public License version 3 only](LICENSE)
+(§GPL-3.0-only§). You can study and contribute to the project under that license's terms.
+See [CONTRIBUTING.md](CONTRIBUTING.md) for contribution expectations and attribution,
+[CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) for community guidelines, and
+[SECURITY.md](SECURITY.md) for private security reporting.
+
+This is an experimental research kernel. **No warranty or production security guarantees**
+are provided. The [status report](docs/STATUS.md) is the source of truth for tested
+capabilities and unsupported hardware. Please do not mistake a checkpoint tag for
+an end-user operating-system release.
 
 ## History
 
