@@ -21,6 +21,8 @@
 #define IO_SCOPE_TIMEOUT        3
 #define IO_SCOPE_BUDGET         4
 #define IO_SCOPE_INVALID        5
+#define IO_SCOPE_STALE          6
+#define IO_SCOPE_UNAVAILABLE    7
 
 struct io_scope {
     uint64_t ticket, deadline;
@@ -35,6 +37,10 @@ int io_scope_begin(struct io_scope *scope, uint64_t owner);
 int io_scope_end(struct io_scope *scope);
 struct io_scope *io_scope_current(void);
 int io_scope_check(void);
+/* Optional bounded, nonblocking binding check. No retained context pointer.
+ * Removed at scope end, including abandonment.
+ */
+void io_scope_set_guard(int (*guard)(void));
 int io_scope_logical(void);             /* ext2 device-access step, including cache hits */
 int io_scope_read(void);                /* block backend submission, including fallback */
 void io_scope_stop(int reason);         /* sticky first outcome; interruption wins */

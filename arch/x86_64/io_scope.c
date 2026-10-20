@@ -8,6 +8,7 @@ struct ticket {
     uint64_t id, owner, tid;
     struct io_scope *scope;
     unsigned request, abandoned;
+    int (*guard)(void);
 };
 
 static struct ticket tickets[IO_SCOPE_TICKETS];
@@ -82,6 +83,7 @@ int io_scope_end(struct io_scope *s)
         panic("io_scope: end with wrong owner or live request");
     t->scope = NULL;
     t->tid = 0;
+    t->guard = NULL;
     if (!t->request)
         memset(t, 0, sizeof(*t));
     s->ticket = 0;
@@ -98,11 +100,25 @@ void io_scope_stop(int reason)
 
 int io_scope_check(void)
 {
-    struct io_scope *s = io_scope_current();
+    struct ticket *t = current();
+    struct io_scope *s = t ? t->scope : NULL;
 
     if (s && irq_ticks() >= s->deadline)
         io_scope_stop(IO_SCOPE_TIMEOUT);
+    if (s && !s->result && t->guard) {
+        int reason = t->guard();
+        if (reason)
+            io_scope_stop(reason);
+    }
     return s ? s->result : IO_SCOPE_OK;
+}
+
+void io_scope_set_guard(int (*guard)(void))
+{
+    struct ticket *t = current();
+    if (!t || t->guard || !guard)
+        panic("io_scope: invalid binding guard");
+    t->guard = guard;
 }
 
 static int consume(unsigned *remaining)
@@ -214,7 +230,7 @@ const char *io_scope_audit(void)
     for (unsigned i = 0; i < IO_SCOPE_TICKETS; i++) {
         const struct ticket *t = &tickets[i];
         if (!t->id) {
-            if (t->owner || t->scope || t->tid || t->request || t->abandoned)
+            if (t->owner || t->scope || t->tid || t->request || t->abandoned || t->guard)
                 return "free storage ticket retains state";
             continue;
         }
@@ -227,7 +243,7 @@ const char *io_scope_audit(void)
             if (!t->tid || thread_state(t->tid) == THREAD_FREE || thread_state(t->tid) == THREAD_DEAD ||
                 t->scope->ticket != t->id)
                 return "storage scope outlived its thread";
-        } else if (t->tid || !t->request || !t->abandoned) {
+        } else if (t->tid || t->guard || !t->request || !t->abandoned) {
             return "detached ticket is not an abandoned request";
         }
     }
