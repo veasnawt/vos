@@ -278,6 +278,14 @@ static void failures_and_cookies(void)
     expect(!blk_unregister(device) && file_stat(p,h,&st)==-FILE_ESTALE,"device removal invalidates nodes");
     blk_id_t oldid=device;expect(!blk_register("file-fixture",&ops,NULL,&device) && device!=oldid && file_stat(p,h,&st)==-FILE_ESTALE,"reused registry slot cannot revive node");
     file_close_all(p);expect(!file_volume_detach(),"removed binding teardown");
+    expect(!file_volume_attach(p,device) && !grant(p,"dup",FILE_RIGHTS),"legacy ID rollover setup");h=file_initial(p,0);
+    struct blk_desc before,after;blk_describe(device,&before);oldid=device;
+    expect(!blk_unregister(device) && !blk_test_reuse_id(oldid) &&
+           !blk_register("file-fixture",&ops,NULL,&device) && device==oldid,"simulate same numeric device ID without observing removal");
+    blk_describe(device,&after);uint64_t reads=md.reads;
+    expect(before.incarnation!=after.incarnation && before.epoch==after.epoch && before.reset_seq==after.reset_seq &&
+           file_stat(p,h,&st)==-FILE_ESTALE && reads==md.reads,"never-reused incarnation rejects aliased device ID before any I/O");
+    file_close_all(p);expect(!file_volume_detach(),"aliased registry binding teardown");
     uint8_t magic[2]={0,0};patch(1024+56,magic,2);blk_invalidate(device);
     expect(file_volume_attach(p,device)==-FILE_EIO && !ext2_open_count() && !io_scope_count(),"wrong filesystem refused without reader or ticket leak");
     md.npatch=0;blk_invalidate(device);expect(!file_volume_attach(p,device),"valid attach after refusal");
@@ -430,6 +438,9 @@ int selftest_file(const struct boot_info *bi)
            file_test_issue(&serial)==INT64_MAX && !file_test_issue(&serial) && serial==FILE_TOKEN_DOMAIN,
            "last two serials followed by permanent exhaustion");
     serial=0;expect(!file_test_issue(&serial),"zero serial refused");
+    serial=UINT64_MAX-1;
+    expect(blk_test_issue_incarnation(&serial)==UINT64_MAX-1 && !blk_test_issue_incarnation(&serial) &&
+           serial==UINT64_MAX,"device incarnation issuer saturates without reuse");
     expect(file_volume_attach(NULL,0)==-VOS_EINVAL && file_initial(NULL,0)==-VOS_EBADHANDLE &&
            file_initial((struct process *)1,0)==-VOS_EBADHANDLE &&
            file_close(NULL,1)==-VOS_EBADHANDLE && !file_audit(),"invalid owners and clean baseline");

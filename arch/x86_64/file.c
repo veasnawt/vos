@@ -21,7 +21,7 @@ static struct session sessions[PROC_TABLE];
 static struct {
     struct ext2_fs *fs;
     blk_id_t device;
-    uint64_t epoch, reset_seq, sectors, generation;
+    uint64_t epoch, reset_seq, sectors, generation, incarnation;
     unsigned refs, active, dead;
     struct process *config_owner;
     uint64_t config_pid, config_tid;
@@ -111,7 +111,8 @@ static int binding(void)
     if (volume.dead)
         return -FILE_ESTALE;
     if (blk_describe(volume.device, &d) || d.epoch != volume.epoch ||
-        d.reset_seq != volume.reset_seq || d.sectors != volume.sectors) {
+        d.reset_seq != volume.reset_seq || d.sectors != volume.sectors ||
+        d.incarnation != volume.incarnation) {
         volume.dead = 1;                 /* irrevocable until explicit detach */
         return -FILE_ESTALE;
     }
@@ -303,7 +304,8 @@ int file_volume_attach(struct process *owner, blk_id_t device)
     else if (stop == IO_SCOPE_TIMEOUT)
         r = -FILE_ETIMEDOUT;
     else if (blk_describe(device, &after) || after.epoch != before.epoch ||
-             after.reset_seq != before.reset_seq || after.sectors != before.sectors)
+             after.reset_seq != before.reset_seq || after.sectors != before.sectors ||
+             after.incarnation != before.incarnation)
         r = -FILE_ESTALE;
     else if (stop == IO_SCOPE_BUDGET)
         r = -VOS_EAGAIN;
@@ -322,6 +324,7 @@ int file_volume_attach(struct process *owner, blk_id_t device)
     volume.epoch = before.epoch;
     volume.reset_seq = before.reset_seq;
     volume.sectors = before.sectors;
+    volume.incarnation = before.incarnation;
     volume.generation = next_volume++;
     return 0;
 }
@@ -392,7 +395,8 @@ int file_grants_install(struct process *p, const struct file_grant *grants, unsi
     s->provisioned = 1;
     return 0;
 fail:
-    release(s);                         /* no publication on failed setup */
+    if (s->owner)                      /* finish may already retire a cancelled session */
+        release(s);                    /* no publication on failed setup */
     return r;
 }
 

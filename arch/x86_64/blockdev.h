@@ -8,8 +8,9 @@
  *
  * Devices. A driver registers a device with an ops table (struct blk_ops);
  * the layer never sees driver structures. Each registered device has an ID
- * that encodes its registry slot and a generation: an ID stays invalid
- * after its device is unregistered, also when the slot is reused.
+ * that encodes its registry slot and a finite generation. Numeric IDs can
+ * alias after legacy generation rollover; long-lived file bindings also
+ * compare a never-reused 64-bit registration incarnation.
  * The driver reports state, capacity and an epoch on every request
  * (blk_ops.info); the epoch must change whenever the device was reset or
  * reinitialized, which invalidates everything cached for it.
@@ -92,6 +93,7 @@ struct blk_desc {
     uint32_t sector_size, max_request;
     unsigned caps;
     uint64_t reset_seq;             /* additive reset observation; epoch semantics unchanged */
+    uint64_t incarnation;           /* never reused, even when the legacy ID generation wraps */
 };
 
 struct blk_stats {
@@ -138,6 +140,9 @@ int blk_test_pin(blk_id_t id, uint64_t line, int pin);
 int blk_test_corrupt(blk_id_t id, uint64_t line);
 /* Lines currently VALID. */
 unsigned blk_test_valid_lines(void);
+/* Simulate legacy numeric ID reuse on an empty slot; incarnation still advances. */
+int blk_test_reuse_id(blk_id_t retired);
+uint64_t blk_test_issue_incarnation(uint64_t *serial);
 #endif
 
 #endif

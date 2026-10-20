@@ -27,6 +27,7 @@ struct dev {
     const struct blk_ops *ops;
     void *ctx;
     uint64_t reset_seq;
+    uint64_t incarnation;
 };
 
 struct line {
@@ -41,6 +42,7 @@ struct line {
 
 static struct dev devs[BLK_MAX_DEVICES];
 static uint32_t next_gen[BLK_MAX_DEVICES];
+static uint64_t next_incarnation = 1;
 static unsigned ndev;
 static struct line cache[BLK_CACHE_LINES];
 static int cache_ready;
@@ -103,6 +105,13 @@ static int alloc_cache(void)
     return 1;
 }
 
+static uint64_t issue_incarnation(uint64_t *serial)
+{
+    if (!*serial || *serial == UINT64_MAX)
+        return 0;
+    return (*serial)++;
+}
+
 int blk_register(const char *name, const struct blk_ops *ops, void *ctx, blk_id_t *id)
 {
     struct blk_info in;
@@ -114,6 +123,8 @@ int blk_register(const char *name, const struct blk_ops *ops, void *ctx, blk_id_
     ops->info(ctx, &in);
     if (in.sectors == 0 || in.max_sectors < BLK_LINE_SECTORS || !(in.caps & BLK_CAP_READ))
         return BLK_EINVAL;
+    if (!next_incarnation || next_incarnation == UINT64_MAX)
+        return BLK_EBUSY;               /* fail before allocating any cache frame */
     for (s = 0; s < BLK_MAX_DEVICES && devs[s].used; s++)
         ;
     if (s == BLK_MAX_DEVICES)
@@ -128,6 +139,7 @@ int blk_register(const char *name, const struct blk_ops *ops, void *ctx, blk_id_
     devs[s].ops = ops;
     devs[s].ctx = ctx;
     devs[s].reset_seq = 0;
+    devs[s].incarnation = issue_incarnation(&next_incarnation);
     ndev++;
     *id = devs[s].gen << ID_GEN_SHIFT | (s + 1);
     return BLK_OK;
@@ -202,6 +214,7 @@ int blk_describe(blk_id_t id, struct blk_desc *d)
     d->max_request = BLK_MAX_REQUEST;
     d->caps = in.caps;
     d->reset_seq = v->reset_seq;
+    d->incarnation = v->incarnation;
     return BLK_OK;
 }
 
@@ -484,8 +497,12 @@ const char *blk_audit(void)
     for (unsigned s = 0; s < BLK_MAX_DEVICES; s++)
         if (devs[s].used) {
             used++;
-            if (!devs[s].ops || !devs[s].ops->info || !devs[s].ops->read || !devs[s].gen)
-                return "registered device without operations or generation";
+            if (!devs[s].ops || !devs[s].ops->info || !devs[s].ops->read || !devs[s].gen ||
+                !devs[s].incarnation || devs[s].incarnation >= next_incarnation)
+                return "registered device without operations or valid identity";
+            for (unsigned j = 0; j < s; j++)
+                if (devs[j].used && devs[j].incarnation == devs[s].incarnation)
+                    return "duplicate device incarnation";
         }
     if (used != ndev)
         return "device count differs from the registry";
@@ -572,5 +589,20 @@ unsigned blk_test_valid_lines(void)
     for (unsigned i = 0; i < BLK_CACHE_LINES; i++)
         n += cache[i].state == LINE_VALID;
     return n;
+}
+
+int blk_test_reuse_id(blk_id_t retired)
+{
+    unsigned s = retired & ID_SLOT_MASK;
+    uint32_t gen = retired >> ID_GEN_SHIFT;
+    if (!s || s > BLK_MAX_DEVICES || !gen || devs[s - 1].used)
+        return BLK_EINVAL;
+    next_gen[s - 1] = gen;              /* simulate full legacy rollover without 2^28 cycles */
+    return BLK_OK;
+}
+
+uint64_t blk_test_issue_incarnation(uint64_t *serial)
+{
+    return issue_incarnation(serial);
 }
 #endif
