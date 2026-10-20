@@ -15,6 +15,7 @@
 #include "virtio_blk.h"
 #include "loader.h"
 #include "exception.h"
+#include "usercopy.h"
 
 static unsigned cases, failures;
 static void expect(int ok, const char *why)
@@ -460,19 +461,6 @@ static void virtio(void)
     expect(!file_volume_detach() && vblk_reinit()==VBLK_READY && !vblk_audit(),"real transport teardown/recovery");
 }
 
-static void token_exhaustion(void)
-{
-    struct process *p=&procs[0];
-    expect(!file_volume_attach(p,device) && !grant(p,"dup",FILE_RIGHTS),"serial tail setup");
-    uint64_t base=file_initial(p,0);
-    file_test_last_tokens();             /* never moved backward/reused, even in tests */
-    int64_t a=open_path(p,base,".",0),b=open_path(p,base,".",0);
-    expect(a==(int64_t)(FILE_TOKEN_DOMAIN|(FILE_SERIAL_MAX-1)) && b==INT64_MAX &&
-           open_path(p,base,".",0)==-VOS_ENOMEM && !io_scope_count() && !file_audit(),"actual opens reach last two tokens then roll back cleanly on exhaustion");
-    expect(!file_close(p,a) && open_path(p,base,".",0)==-VOS_ENOMEM && file_close(p,a)==-VOS_EBADHANDLE,"free slot cannot reset exhausted token issuer");
-    file_close_all(p);expect(!file_volume_detach(),"serial exhaustion leaves no live node");
-}
-
 /* I3: separately linked real ring-3 callers; reuse I2 processes/backend.
  * Never accept a userspace log line as a verdict. The kernel checks exit,
  * exact trap/counters, observed blocked states and final ownership audits.
@@ -506,6 +494,112 @@ static void release_program(struct process *controller, int64_t peer)
     expect(!channel_send(controller,peer,0,0) && !handle_close(controller,peer),
            "explicit zero-byte channel barrier releases exactly one prepared reader");
 }
+/* I4: independently built callers. Control data is copied through the same
+ * ordinary channel/usercopy boundary used by applications, never into a
+ * fixture's file table or return frame. Snapshots cover each launch. */
+static int start_adversary(struct process *p, struct process *controller,
+                           uint64_t mode, uint64_t foreign)
+{
+    int64_t handle,peer;
+    uint64_t command[2]={mode,foreign};
+    uint64_t address=USER_STACK_END-sizeof(command);
+    return !channel_create(p,HANDLE_RECV,controller,HANDLE_SEND,&handle,&peer) && handle==1 &&
+           !copy_to_user(controller->root,address,command,sizeof(command)) &&
+           !channel_send(controller,peer,address,sizeof(command)) && !handle_close(controller,peer) &&
+           !proc_start(p);
+}
+static void token_exhaustion(const struct boot_info *bi)
+{
+    struct process *p=&procs[0], *q=&procs[1];
+    proc_destroy(p);
+    expect(load_file_program(bi,0,"file-adversary") &&
+           !proc_create(q,"tail-control",exit_code,sizeof(exit_code)),"I4 ring3 serial-tail owners");
+    expect(!file_volume_attach(q,device) && !grant(p,"dup",FILE_RIGHTS) &&
+           !grant(q,"dup",FILE_RIGHTS),"serial tail grants precede irreversible jump");
+    uint64_t base=file_initial(q,0);
+    file_test_last_tokens(); /* never moved backward/reused, even in tests */
+    expect(start_adversary(p,q,5,0) && exited(p),"I4 actual syscalls consume last two serials then permanently fail without wrap/reuse");
+    expect(open_path(q,base,".",0)==-VOS_ENOMEM && !io_scope_count() && !file_audit(),
+           "exhausted global issuer cannot be revived by another process or freed slot");
+    proc_destroy(q);expect(!file_volume_detach(),"serial exhaustion leaves no live node");
+}
+static void adversarial(const struct boot_info *bi, struct process *controller)
+{
+    struct process *p=&procs[0], *q=&procs[1];
+    uint64_t frames=pmm_free_count();
+    unsigned threads=thread_count(), readers=ext2_open_count();
+    uint32_t dup=child(2,"dup"),x=child(dup,"x"),file=child(x,"name.txt");
+    uint64_t entry=dir_entry(x,"name.txt"),inode=inode_pos(file);
+    expect(!proc_create(q,"foreign-i4",exit_code,sizeof(exit_code)) && !grant(q,"dup/y",FILE_RIGHTS),
+           "I4 independent foreign owner");
+    expect(load_file_program(bi,0,"file-adversary") && !grant(p,"dup",FILE_RIGHTS) &&
+           start_adversary(p,controller,0,file_initial(q,0)),"I4 ring3 adversarial launch");
+    expect(exited(p) && p->syscalls>4000,"I4 full-width rights, all subsets, token confusion, memory and 32 quota/reuse cycles");
+    proc_destroy(p);proc_destroy(q);
+    expect(!file_handle_count() && !file_session_count() && !io_scope_count() && !proc_audit() &&
+           pmm_free_count()==frames && thread_count()==threads,"I4 matrix exact frame/thread/handle/session reclamation");
+    /* Each mutation is private to this RAM backend; original disk bytes and
+     * the real virtio image remain untouched. Include a reserved inode,
+     * not just an out-of-range inode, to exercise parser/API error mapping. */
+    for(unsigned mutation=0;mutation<12;mutation++) {
+        expect(load_file_program(bi,0,"file-adversary") && !grant(p,"dup/x",FILE_RIGHTS),"I4 corrupt-metadata grant before immutable overlay");
+        uint8_t bytes[4]={0};
+        switch(mutation) {
+        case 0: patch(entry+4,bytes,2); break;                 /* zero rec_len */
+        case 1: bytes[0]=10;patch(entry+4,bytes,2);break;      /* unaligned */
+        case 2: bytes[0]=4;bytes[1]=4;patch(entry+4,bytes,2);break; /* overrun */
+        case 3: bytes[0]='/';patch(entry+8,bytes,1);break;
+        case 4: patch(entry+8,bytes,1);break;                  /* embedded NUL */
+        case 5: bytes[0]=8;patch(entry+7,bytes,1);break;       /* unknown kind */
+        case 6: memset(bytes,0xff,4);patch(entry,bytes,4);break;
+        case 7: bytes[0]=3;patch(entry,bytes,4);break;         /* reserved inode */
+        case 8: patch(inode+26,bytes,2);break;                /* no links */
+        case 9: patch(inode,bytes,2);break;                   /* invalid mode */
+        case 10: bytes[0]=1;patch(inode+28,bytes,4);break;    /* invalid blocks512 */
+        case 11: bytes[0]=EXT2_T_DIR;patch(entry+7,bytes,1);break; /* type mismatch */
+        }
+        blk_invalidate(device);
+        int ok=start_adversary(p,controller,1,0) && exited(p);
+        if(!ok) {
+            serial_puts("I4 metadata mutation ");serial_dec(mutation);
+            serial_puts(" exit ");serial_dec(p->exit_status);serial_puts("\r\n");
+        }
+        expect(ok,"I4 corrupt metadata returns EIO with atomic output and reusable reader");
+        proc_destroy(p);md.npatch=0;blk_invalidate(device);
+        expect(!file_handle_count() && !file_session_count() && !io_scope_count() && !file_audit() &&
+               !ext2_audit() && !blk_audit() && pmm_free_count()==frames && thread_count()==threads,
+               "I4 each rejected corruption releases exact resources");
+    }
+    for(unsigned mode=2;mode<=4;mode++) {
+        expect(load_file_program(bi,0,"file-adversary") && !grant(p,mode==2?"dup":"dup/x",FILE_RIGHTS),"I4 bounded walk/exact-byte setup");
+        if(mode==2) alias(dup,"x",dup,EXT2_T_DIR);
+        else if(mode==3) {
+            const uint8_t name[]={0xc3,0xa9,'.','t','x','t'},n=sizeof(name);
+            patch(entry+6,&n,1);patch(entry+8,name,sizeof(name));blk_invalidate(device);
+        } else {
+            const uint8_t name[]={0xff,'a','m','e','.','t','x','t'};
+            patch(entry+8,name,sizeof(name));blk_invalidate(device);
+        }
+        expect(start_adversary(p,controller,mode,0) && exited(p),"I4 finite cyclic walk and no Unicode decoding/normalization in ring3");
+        proc_destroy(p);md.npatch=0;blk_invalidate(device);
+    }
+    for(unsigned round=0;round<3;round++) for(unsigned mode=6;mode<=(round?8u:11u);mode++) {
+        expect(load_file_program(bi,0,"file-adversary") && !grant(p,"dup/x",FILE_RIGHTS),"I4 repeated syscall-kill setup");
+        blk_invalidate(device);md.hold=1;
+        expect(start_adversary(p,controller,mode,0) && blocked(p->tid) && file_process_busy(p),"I4 observe open/stat/enumeration blocked inside disk I/O");
+        if(mode<9) {
+            proc_kill(p,"I4 pending operation kill");
+            unsigned call=mode==6?SYS_FILE_OPEN_AT:mode==7?SYS_FILE_STAT:SYS_DIRECTORY_NEXT;
+            expect(proc_wait(p)==PROC_KILLED && p->trap.rax==call && !file_process_busy(p),"I4 killed operation unwinds without returning or publishing");
+        } else {
+            expect(thread_interrupt(p->tid)==1 && exited(p),"I4 nonfatal open/stat/enumeration interruption is atomic and retry succeeds");
+        }
+        proc_destroy(p);
+        expect(!file_session_count() && !file_handle_count() && !io_scope_count() && !proc_audit() &&
+               !ext2_audit() && !blk_audit() && pmm_free_count()==frames && thread_count()==threads &&
+               ext2_open_count()==readers,"I4 repeated kills release exact owners, reservations, references, pages and stacks");
+    }
+}
 static void file_userspace(const struct boot_info *bi)
 {
     struct process *p=&procs[0],*q=&procs[1],*controller=&procs[7];
@@ -522,6 +616,7 @@ static void file_userspace(const struct boot_info *bi)
     expect(!proc_start(p) && exited(p) && p->syscalls>70 && p->sys_efault>=10,
            "ring3 file contracts, rights, paths, pointers, wire bytes, cookies, close and quota");
     proc_destroy(p);proc_destroy(q);
+    adversarial(bi,controller);
     const char *gates[]={"file-gate0","file-gate1"};
     for(unsigned i=0;i<2;i++) {
         expect(load_file_program(bi,0,gates[i]) && p->abi==i && !proc_start(p) && exited(p) &&
@@ -572,6 +667,9 @@ static void file_userspace(const struct boot_info *bi)
     /* Both callers block at explicit barriers after open, before read. */
     expect(load_file_program(bi,0,"file-reader") && !grant(p,"dup/x",FILE_RIGHTS) &&
            load_file_program(bi,1,"file-reader-y") && !grant(q,"dup/y",FILE_RIGHTS),"real concurrent reader provisioning");
+    struct process *third=&procs[2];int64_t third_peer;
+    expect(load_file_program(bi,2,"file-error") && !grant(third,"dup/x",FILE_RIGHTS) &&
+           pause_program(third,controller,&third_peer,2),"I4 third caller provisioned before ticket exhaustion");
     int64_t second_peer;
     expect(pause_program(p,controller,&peer,2) && pause_program(q,controller,&second_peer,2),
            "both ring3 readers blocked at barriers after open");
@@ -579,6 +677,12 @@ static void file_userspace(const struct boot_info *bi)
     release_program(controller,peer);release_program(controller,second_peer);
     expect(blocked(p->tid) && blocked(q->tid) && file_process_busy(p) && file_process_busy(q) &&
            io_scope_count()==2 && !file_audit(),"real file syscalls blocked concurrently with private scopes");
+    uint64_t reads_before=md.reads;
+    release_program(controller,third_peer);
+    expect(error_result(third,VOS_EAGAIN) && io_scope_count()==2 && md.reads==reads_before &&
+           file_process_busy(p) && file_process_busy(q) && !file_audit(),
+           "I4 third ring3 caller fails admission without I/O/output or stealing either ticket");
+    proc_destroy(third);
     thread_wake_all(&gate);
     expect(exited(p) && exited(q),"both ring3 readers resume, read repeatedly and exit");
     proc_destroy(p);proc_destroy(q);
@@ -684,7 +788,7 @@ static void fixture_tests(const struct boot_info *bi)
     for (unsigned i=0;i<PROC_TABLE;i++)
         expect(!proc_create(&procs[i],"file-test",i==2?fault_code:exit_code,i==2?sizeof(fault_code):sizeof(exit_code)),"registered process owner");
     basic();rights_width();paths();failures_and_cookies();concurrent();cancelled_setup();capacity_and_processes();virtio();
-    file_userspace(bi);token_exhaustion();
+    file_userspace(bi);token_exhaustion(bi);
     proc_destroy(&procs[0]);
     expect(!file_volume_detach() && !blk_unregister(device) && !file_session_count() && !file_handle_count() &&
            !io_scope_count() && !ext2_open_count() && !proc_count() && !file_audit() && !proc_audit() &&

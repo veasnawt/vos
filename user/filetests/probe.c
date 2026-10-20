@@ -14,6 +14,10 @@ static int same(const void *a,const void *b,unsigned n) {
     for(unsigned i=0;i<n;i++) if(x[i]!=y[i]) return 0;
     return 1;
 }
+static void bytes_to(void *to,const void *from,unsigned n) {
+    unsigned char *dst=to;const unsigned char *src=from;
+    for(unsigned i=0;i<n;i++) dst[i]=src[i];
+}
 int main(void)
 {
     long h=vos_file_initial(0), f;
@@ -71,7 +75,9 @@ int main(void)
     check(edge[0]==0xa5 && edge[1]==0xa5 && edge[2]==0xa5 && edge[3]==0xa5);
     check(vos_file_read_at(h,0,0,0)==-VOS_EISDIR);
     check(vos_file_stat(f,buffer+1,64)==0);
-    struct vos_file_stat *st=(void *)(buffer+1); /* intentionally unaligned wire destination */
+    /* Exercise an unaligned wire destination without a misaligned C lvalue. */
+    struct vos_file_stat aligned_stat,*st=&aligned_stat;
+    bytes_to(st,buffer+1,sizeof(*st));
     check(st->size==sizeof(text)-1 && st->kind==1 && st->rights==3);
     int zero=1;for(unsigned i=0;i<24;i++) zero &= st->reserved[i]==0;check(zero);
     fill(buffer,sizeof(buffer));
@@ -97,7 +103,8 @@ int main(void)
     check(edge[0]==0xa5 && edge[1]==0xa5 && edge[2]==0xa5 && edge[3]==0xa5);
     check(vos_directory_next(n,0,(void *)ro,272)==-VOS_EFAULT);
     check(vos_directory_next(n,24,buffer+1,272)==1);
-    struct vos_directory_entry *e=(void *)(buffer+1);
+    struct vos_directory_entry aligned_entry,*e=&aligned_entry;
+    bytes_to(e,buffer+1,sizeof(*e));
     check(e->kind==1 && e->name_length==8 && same(e->name,"name.txt",8));
     zero=1;for(unsigned i=8;i<256;i++) zero &= e->name[i]==0;check(zero);
     uint64_t cookie=e->next_cookie;

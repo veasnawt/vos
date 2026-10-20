@@ -11,7 +11,7 @@ int main(void)
     if(vos_channel_recv(1,0,0)<0) return 7;
     long r=vos_file_read_at(f,buffer,sizeof(buffer),0);
 #ifdef EXPECT_ERROR
-    if(r!=-VOS_EIO && r!=-VOS_ESTALE && r!=-VOS_ETIMEDOUT && r!=-VOS_EINTR && r!=-VOS_EUNAVAIL) return 2;
+    if(r!=-VOS_EIO && r!=-VOS_ESTALE && r!=-VOS_ETIMEDOUT && r!=-VOS_EINTR && r!=-VOS_EUNAVAIL && r!=-VOS_EAGAIN) return 2;
     for(unsigned i=0;i<sizeof(buffer);i++) if(buffer[i]!=0xa5) return 3;
     return (int)-r; /* trusted runner checks the exact error as well as intact bytes */
 #else
