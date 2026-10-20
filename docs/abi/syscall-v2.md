@@ -1,21 +1,21 @@
-# VOS Native Application ABI v2: read-only files (PROPOSED)
+# VOS Native Application ABI v2: read-only files
 
 | | |
 |---|---|
-| Status | **PROPOSED, 2026-10-20. Direction conditionally approved; internal Stage 1/2 foundations implemented. File ABI remains unimplemented.** |
+| Status | **Stage 3 implemented locally, 2026-10-20. N3.5 remains INCOMPLETE; further stages require review. See [Stage 3 evidence](../results/n3.5-stage3.md).** |
 | Base | `main` at `c5f5acb`; U1 and N3.4 complete; x86_64 only |
 | Implementation plan | [N3.5 design, limits, failure model and test matrix](../plans/n3.5-file-api.md) |
 | Existing contracts | [ABI v0](syscall-v0.md), [ABI v1](syscall-v1.md); existing numbers, errors and behavior remain unchanged |
 
-This document specifies proposed behavior, not a claim about the current kernel. At the
-base commit the loader accepts only ABI notes 0 and 1. On 2026-10-20 the overall direction
-was conditionally approved. Later review authorized Stage 2 kernel-only nodes/handles;
-[Stage 2 evidence](../results/n3.5-stage2.md) records actual tests. File syscalls and ABI
-note 2 remain unimplemented and require Stage 3 review. No contract below changed in I2.
+This document specifies the ABI v2 contract implemented on `feat/n3.5-file-api`.
+At the base commit the loader accepted only notes 0 and 1. Stage 3 adds note 2,
+calls 6–10 and typed close without changing the existing contracts. The prerequisite
+[rights-width repair](../results/n3.5-rights-repair.md) validates 64-bit inputs before
+compact storage. Actual verification and firmware limits are in the Stage 3 evidence.
 
 ## 1. Versioning and compatibility
 
-ABI v2 uses the existing ELF64 profile and VOS note with descriptor `2`. The proposed
+ABI v2 uses the existing ELF64 profile and VOS note with descriptor `2`. The
 loader and static checker accept exactly 0, 1 and 2; other descriptors remain rejected.
 No change to entry registers, initial stack, address-space layout, `crt0.S`, floating-point
 policy, `int $0x80`, register preservation, or return-frame validation is proposed.
@@ -31,16 +31,16 @@ calls, including calls that wait.
 
 The v0/v1 specifications contain historical statements that no longer describe the entire
 kernel (for example, v0's final description of preemption). Their existing runtime
-contracts are interpreted together with v1, STATUS and current source. This proposal
+contracts are interpreted together with v1, STATUS and current source. ABI v2
 does not rewrite those documents or change either ABI's behavior.
 
-## 2. Proposed syscall table
+## 2. Syscall table
 
 Unused argument registers are ignored. `h` is an opaque positive signed 64-bit handle.
 Lengths, offsets, cookies, buffer sizes and requested rights use the full unsigned
 64-bit argument; high bits are validated, never silently truncated.
 
-| No. | Name / proposed wrapper | Arguments in register order | Success |
+| No. | Name / wrapper | Arguments in register order | Success |
 |---|---|---|---|
 | 0 | `exit` / `vos_exit` | status | Does not return; unchanged |
 | 1 | `debug_write` / `vos_debug_write` | buffer, length | Length; unchanged |
@@ -58,14 +58,14 @@ Number 10 provides discovery without changing entry state or inventing `argv`, a
 vector, fixed magic handle values, or a new startup page. There are no write, mount, raw
 device, open-by-inode, seek, duplicate, handle-transfer or root-discovery calls.
 
-Proposed kernel constants are `SYS_FILE_OPEN_AT=6`, `SYS_FILE_READ_AT=7`,
+Kernel constants are `SYS_FILE_OPEN_AT=6`, `SYS_FILE_READ_AT=7`,
 `SYS_FILE_STAT=8`, `SYS_DIRECTORY_NEXT=9`, `SYS_FILE_INITIAL=10`; the new user file header
 defines matching `VOS_SYS_*` constants. Pointer arguments need no alignment beyond being
 valid user ranges; fixed record field offsets do not require aligned user destinations.
 
 ### 2.1 Reusing `SYS_HANDLE_CLOSE` (5)
 
-The current channel validator accepts only `1..0xFFFFFF`. Proposed file tokens have bit 62
+The channel validator accepts only `1..0xFFFFFF`. File tokens have bit 62
 set, bit 63 clear, and a nonzero monotonically issued serial in bits 0–61. These domains
 do not overlap. In v2, number 5 routes a token in the file domain to file close and other
 values to the existing channel close. ABI v0 still gets ENOSYS; ABI v1 still runs the
@@ -80,7 +80,7 @@ succeeds without disk I/O; a repeated close gets EBADHANDLE. Close requires no r
 
 Existing values **1–9 are frozen**: ENOSYS=1, EINVAL=2, EFAULT=3, EAGAIN=4, EPIPE=5,
 EBADHANDLE=6, ENOMEM=7, EMSGSIZE=8, EACCES=9. Existing syscalls keep their present meanings
-and validation order. The following values are proposed additions for file calls only.
+and validation order. The following values are additions for file calls only.
 
 | Name | Value | File-call meaning |
 |---|---|---|
@@ -104,7 +104,7 @@ Paths deeper than 64 components get EINVAL. No Linux errno numbers are imported.
 
 ## 4. Namespace, rights and names
 
-Proposed rights are `VOS_FILE_READ=0x01`, `VOS_FILE_STAT=0x02`,
+Rights are `VOS_FILE_READ=0x01`, `VOS_FILE_STAT=0x02`,
 `VOS_FILE_ENUMERATE=0x04`, `VOS_FILE_TRAVERSE=0x08`; mask `0x0F`.
 These bits belong to the separate file-handle table, not the channel rights namespace.
 
@@ -128,7 +128,7 @@ These bits belong to the separate file-handle table, not the channel rights name
 - No initial grant may name volume-root inode 2. No global root, current working directory,
   `AT_FDCWD`, implicit root handle, path-to-device mapping or fallback grant exists.
 
-The proposed naming decisions (D-S5/D-S6) are **case-sensitive exact byte lookup and no
+The naming decisions (D-S5/D-S6) are **case-sensitive exact byte lookup and no
 Unicode normalization**. NFC and NFD spellings, case variants and invalid UTF-8 byte
 sequences remain distinct. N3.5 accepts opaque name bytes supported by ext2, not a Unicode
 text API. This narrows the older architecture proposal's UTF-8 suggestion without adding
@@ -303,10 +303,15 @@ Detailed retirement, deadlines, volume invalidation and teardown gates are in th
   its original validator. A file serial never wraps; exhaust before reuse, including
   process-slot reuse. Test the last two serials, exhaustion, closed-token retries and
   legacy channel-generation rollover without strengthening/changing the v1 contract.
+- **Full-width rights:** validate every bit of the 64-bit open/grant input against
+  `UINT64_C(15)` before narrowing to compact node rights. Widen the parent mask before
+  complementing it. Bits 4–63, alone or combined with defined rights, are EINVAL after
+  the documented handle/kind/TRAVERSE checks. Trusted grants validate every descriptor
+  before session reservation. Invalid rights consume no token, reference or I/O ticket.
 - **Paths:** validate the complete copied byte string before any filesystem walk. Reject
   leading `/` and every exact `..` component; do not normalize then validate. Check inode
   type after every lookup, including the final component, and refuse every symlink.
-- **No pending user pointers:** the future syscall continuation retains the architectural
+- **No pending user pointers:** the syscall continuation retains the architectural
   trap frame (which necessarily contains the user's registers), not a usable user-memory
   pointer in a scope, driver slot, session buffer or queued request. After waits, decode
   the output address again from that live frame and revalidate the complete writable

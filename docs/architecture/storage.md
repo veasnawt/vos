@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| Status | **Proposal (N3.0), partly implemented.** N3.1 implemented layer 1: a read-only, polled virtio-blk driver (`docs/plans/n3-storage.md` section 5). N3.2 implemented layers 2 and 3: a block-device registry, device-independent errors, validated read-only requests and a bounded read-only cache (section 6 there). N3.3 implemented layer 4 as a kernel-internal, read-only ext2 reader (section 7 there). There is still no VFS or mounting, no file system call and no writable persistent state. Decisions D-S1, D-S2, D-S3, D-S7 and D-S8 were approved on 2026-10-18 (section 12). |
+| Status | **Original N3.0 proposal, partly implemented.** N3.1–N3.4 supply the read-only driver, cache and ext2 reader. Local N3.5 Stages 1–3 add bounded scopes, capability nodes and ABI v2 file calls; [current evidence](../results/n3.5-stage3.md) supersedes historical descriptions. N3.5 remains incomplete. No writable persistent state or large VFS framework. Decisions D-S1, D-S2, D-S3, D-S7 and D-S8 were approved on 2026-10-18 (section 12). |
 | Date | 2026-10-18 (written at `8e30f9b`, the end of N2) |
 | Scope | The layered storage stack from the device driver to the file API; the first device and file-system format; the file-system layout, naming, ownership and permission model; crash and power-loss behaviour |
 | Out of scope | Implementation (N3.1 and later); networking and remote file systems; encryption; graphics; package installation (only its storage needs) |
@@ -107,9 +107,16 @@ No performance numbers appear here because none have been measured.
     exact-byte relative component walking and private operation staging;
   - binding checks include the never-reused registration incarnation, epoch and reset
     sequence, including after waits; process cleanup and independent driver-debt retirement;
-  - no userspace file syscalls, typed close dispatch or ABI note 2 acceptance yet.
   - The [current design](../plans/n3.5-file-api.md) and [Stage 2 evidence](../results/n3.5-stage2.md)
     supersede older proposal details below, including mutable offsets and UTF-8 suggestions.
+- **Since N3.5 Stage 3**:
+  - [ABI v2](../abi/syscall-v2.md): note 2, calls 6–10 and typed close 5, with v0/v1 preserved;
+  - a bridge through the existing nodes/scopes, prevalidated writable ranges, staged
+    single copies and exact initialized metadata/directory wire records;
+  - full-width open/trusted-grant rights validation before compact node storage;
+  - explicit trusted launch grants only; no global root, device/inode selector or ambient
+    authority from mode/uid; immutable provisioned media remain a trust requirement;
+  - [Stage 3 verification and limits](../results/n3.5-stage3.md); stopped for review before Stage 4.
 
 ---
 

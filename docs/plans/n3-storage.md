@@ -2006,3 +2006,11 @@ internal nodes, handles, trusted grants and secure component walking.
 [Stage 2 results](../results/n3.5-stage2.md) record implementation, test evidence,
 memory growth and the device-ID rollover refinement. Main stays unchanged. Stop for
 review before Stage 3; no userspace file calls, close dispatch changes or ABI note 2 yet.
+
+The later review authorized Stage 3 and, after the documented stop, the narrowly
+scoped full-width rights repair (`4384bb1`). [Stage 3 evidence](../results/n3.5-stage3.md)
+records ABI note 2, read-only calls 6–10, typed close 5, validated userspace copies and
+real ring-3 tests. Earlier authorization paragraphs above are historical. N3.5 remains
+incomplete; stop for architectural review before Stage 4. The original budgets and
+frozen ABI v0/v1/media contracts remain in force. No write operation, push, merge to
+main, legacy i386 change or physical hardware test is part of this work.

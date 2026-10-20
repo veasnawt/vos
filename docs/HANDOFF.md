@@ -100,25 +100,32 @@ The full list is in `docs/STATUS.md`. In short:
 
 ## 7. Suggested next milestone
 
-N3.5, the read-only user-space file API, now has a **PROPOSED** design submitted for review
-on 2026-10-20: [implementation plan and test matrix](plans/n3.5-file-api.md) and
-[ABI v2 draft](abi/syscall-v2.md). Base: `c5f5acb`; local branch: `feat/n3.5-file-api`.
-The overall direction is conditionally approved. Stage 1 bounded scopes (`0588fc5`)
-and Stage 2 kernel-only file nodes, process handles and secure directory access are
-implemented locally; [Stage 1 results](results/n3.5-stage1.md) and
-[Stage 2 results and verification limits](results/n3.5-stage2.md).
-The refined design checkpoint is `f7b9efa`. Stop for architectural review before Stage 3:
-no file syscalls, typed close dispatch, ABI note 2 or userspace wrappers exist yet.
-U1/N3.4 remain the latest completed milestones. U2 is the alternative future interrupt
-controller milestone in `docs/ROADMAP.md`, also not started.
+N3.5 remains **INCOMPLETE** on `feat/n3.5-file-api`, based on `c5f5acb`.
+[Plan and limits](plans/n3.5-file-api.md), [ABI v2](abi/syscall-v2.md), and
+[Stage 3 evidence](results/n3.5-stage3.md) describe the current implementation.
+Stages 1/2 provide bounded I/O scopes, nodes, handles and trusted non-root grants.
+The separately verified rights-width repair is `4384bb1`; the original Stage 3 draft
+was preserved and its integration rehearsed in a separate worktree before resumption.
+Stage 3 adds ABI note 2, file calls 6–10, typed close 5, validated wire copies,
+versioned runtime and real ring-3 fixtures. No production launch receives a grant
+automatically; ordinary hello still boots without storage.
+
+Stop for architectural review before Stage 4. Proposed next testing priorities are
+broader failure interleavings, bounds/availability workloads and mutation controls;
+none is authorization to continue. U1/N3.4 remain the latest completed milestones.
+Main is unchanged. No push, merge to main, physical test or writable storage is authorized.
 
 The design-phase unprivileged simulation of
 `apt-get -s --no-install-recommends install grub-efi-amd64-bin mtools` selected the same
-three packages as section 1. At the Stage 2 check OVMF and installed mtools are present;
+three packages as section 1. At the Stage 3 check OVMF and installed mtools are present;
 standard GRUB EFI modules remain missing. No sudo or installation was performed by this
-stage. Selected OVMF boots reuse preserved loader images; they are not full fresh UEFI
+stage. Selected OVMF boots reuse preserved loader images with fresh kernels/modules;
+they are not full fresh UEFI
 verification. Obtain separate explicit approval
 before installing packages or running sudo; never change host bootloader settings.
+The final Stage 3 file test ISO fails before VOS entry in GRUB at CPU-max/128 MiB;
+the planned file matrix passes at 1 GiB/8 GiB. Do not carry low-RAM UEFI forward as
+verified; see the Stage 3 report for baseline/diagnostic comparisons and failed attempts.
 
 ## 8. Physical hardware: restrictions
 

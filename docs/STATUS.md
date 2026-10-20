@@ -39,7 +39,8 @@ On both paths:
 - Kernel threads.
 - Ring-3 programs in separate address spaces, preempted by the timer.
 - IPC channels.
-- System-call ABI v0 and v1.
+- System-call ABI v0/v1, plus local N3.5 Stage 3 ABI v2 file operations;
+  [Stage 3 evidence and verification limits](results/n3.5-stage3.md). N3.5 remains incomplete.
 
 **Interrupts and timing:**
 - 8259 PIC and PIT.
@@ -49,7 +50,9 @@ On both paths:
 **Storage (read-only):**
 - virtio-blk, interrupt-driven where a level-triggered INTx line exists, otherwise polling.
 - Block cache.
-- ext2 reader (kernel-internal; no file API for programs yet).
+- ext2 reader and capability-scoped read-only ABI v2 file calls on the development
+  branch. Only explicit trusted launches receive non-root directory grants; normal
+  hello still requires no disk. No writable operations or authenticated-media claim.
 
 **Display:**
 - Framebuffer console with an original 8×16 font, status bar (PASS/FAIL) and panic banner.
