@@ -24,6 +24,11 @@
 #define SYS_CHANNEL_SEND    3   /* ABI v1 */
 #define SYS_CHANNEL_RECV    4   /* ABI v1 */
 #define SYS_HANDLE_CLOSE    5   /* ABI v1 */
+#define SYS_FILE_OPEN_AT    6   /* ABI v2 */
+#define SYS_FILE_READ_AT    7
+#define SYS_FILE_STAT       8
+#define SYS_DIRECTORY_NEXT  9
+#define SYS_FILE_INITIAL   10
 
 #define VOS_ENOSYS          1
 #define VOS_EINVAL          2
@@ -34,6 +39,17 @@
 #define VOS_ENOMEM          7
 #define VOS_EMSGSIZE        8
 #define VOS_EACCES          9
+#define VOS_ENOENT         10
+#define VOS_ENOTDIR        11
+#define VOS_EISDIR         12
+#define VOS_ENAMETOOLONG   13
+#define VOS_ELOOP          14
+#define VOS_EIO            15
+#define VOS_EUNAVAIL       16
+#define VOS_ESTALE         17
+#define VOS_ETIMEDOUT      18
+#define VOS_EINTR          19
+#define VOS_EUNSUPP        20
 
 #define DEBUG_WRITE_MAX     256
 #define MSG_MAX             256 /* ABI v1: largest channel message */

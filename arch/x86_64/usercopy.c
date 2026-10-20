@@ -24,7 +24,7 @@ static int user_range(uint64_t uptr, size_t len)
     return uptr >= USER_IMAGE_START && uptr < LOWER_HALF_END && len <= LOWER_HALF_END - uptr;
 }
 
-int copy_to_user(uint64_t root, uint64_t uptr, const void *src, size_t len)
+int user_writable(uint64_t root, uint64_t uptr, size_t len)
 {
     struct vmm_mapping m;
 
@@ -38,6 +38,18 @@ int copy_to_user(uint64_t root, uint64_t uptr, const void *src, size_t len)
     for (uint64_t page = uptr & ~(PAGE_SIZE - 1); page < end; page += PAGE_SIZE)
         if (!user_page_writable(root, page, &m))
             return -VOS_EFAULT;
+
+    return 0;
+}
+
+int copy_to_user(uint64_t root, uint64_t uptr, const void *src, size_t len)
+{
+    struct vmm_mapping m;
+    if (user_writable(root, uptr, len))
+        return -VOS_EFAULT;
+    if (!len)
+        return 0;
+    uint64_t end = uptr + len;
 
     for (uint64_t va = uptr; va < end;) {
         uint64_t chunk = PAGE_SIZE - (va & (PAGE_SIZE - 1));

@@ -5,6 +5,7 @@
 #include "process.h"
 #include "thread.h"
 #include "usercopy.h"
+#include "file.h"
 
 void debug_emit(const char *name, const char *data, uint64_t len, void (*put)(char))
 {
@@ -55,7 +56,7 @@ int64_t syscall_dispatch(struct process *p, struct exc_frame *f)
     switch (f->rax) {
     case SYS_DEBUG_WRITE:
         return sys_debug_write(p, f->rdi, f->rsi);
-    /* ABI v1 (N2.4): only for executables whose VOS ABI note says 1. */
+    /* ABI >=1; v2 extends only close's accepted token domain. */
     case SYS_YIELD:
     case SYS_CHANNEL_SEND:
     case SYS_CHANNEL_RECV:
@@ -71,8 +72,18 @@ int64_t syscall_dispatch(struct process *p, struct exc_frame *f)
         case SYS_CHANNEL_RECV:
             return channel_recv(p, (int64_t)f->rdi, f->rsi, f->rdx, 1);
         default:
+            if (p->abi >= 2 && f->rdi > FILE_TOKEN_DOMAIN && !(f->rdi >> 63))
+                return file_close(p, f->rdi);
             return handle_close(p, (int64_t)f->rdi);
         }
+    case SYS_FILE_OPEN_AT:
+    case SYS_FILE_READ_AT:
+    case SYS_FILE_STAT:
+    case SYS_DIRECTORY_NEXT:
+    case SYS_FILE_INITIAL:
+        if (p->abi < 2)
+            return -VOS_ENOSYS;
+        return file_syscall(p, f);
 #ifdef VOS_TEST
     case SYS_TEST_KERNEL_AC: {
         uint64_t flags;

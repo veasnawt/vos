@@ -3,6 +3,8 @@
 #include "lib.h"
 #include "panic.h"
 #include "syscall.h"
+#include "exception.h"
+#include "usercopy.h"
 
 struct node {
     uint64_t token, generation;
@@ -196,15 +198,21 @@ static int finish(struct session *s, struct io_scope *scope)
 }
 
 /* Validate the entire byte path before lookup, even a doomed prefix. */
-static int path_copy(struct session *s, const char *path, uint64_t len)
+static int path_copy(struct session *s, const char *path, uint64_t len,
+                     const struct exc_frame *frame)
 {
     if (!len)
         return -VOS_EINVAL;
     if (len > EXT2_PATH_MAX)
         return -FILE_ENAMETOOLONG;
-    if (!path)
-        return -VOS_EINVAL;
-    memcpy(s->path, path, len);
+    if (frame) {
+        if (copy_from_user(s->owner->root, s->path, frame->rsi, len))
+            return -VOS_EFAULT;
+    } else {
+        if (!path)
+            return -VOS_EINVAL;
+        memcpy(s->path, path, len);
+    }
     s->path[len] = 0;
     unsigned components = 0;
     for (uint64_t i = 0; i < len;) {
@@ -364,7 +372,7 @@ int file_grants_install(struct process *p, const struct file_grant *grants, unsi
         return -VOS_ENOMEM;
     int r = 0;
     for (unsigned i = 0; i < count; i++) {
-        if ((r = path_copy(s, grants[i].path, grants[i].length)))
+        if ((r = path_copy(s, grants[i].path, grants[i].length, NULL)))
             goto fail;
     }
     if (!count) {
@@ -377,7 +385,7 @@ int file_grants_install(struct process *p, const struct file_grant *grants, unsi
     struct ext2_stat st[FILE_INITIAL_MAX];
     uint64_t tokens[FILE_INITIAL_MAX] = {0};
     for (unsigned i = 0; i < count; i++) {
-        path_copy(s, grants[i].path, grants[i].length); /* immutable trusted setup descriptors */
+        path_copy(s, grants[i].path, grants[i].length, NULL); /* immutable trusted setup descriptors */
         r = walk(s, EXT2_ROOT_INO, grants[i].length, &st[i]);
         if (!r && st[i].type != EXT2_T_DIR)
             r = -FILE_ENOTDIR;
@@ -416,7 +424,8 @@ int64_t file_initial(struct process *p, uint64_t index)
     return s && !s->closing && s->initial[index] ? (int64_t)s->initial[index] : -VOS_EBADHANDLE;
 }
 
-int64_t file_open_at(struct process *p, uint64_t base, const char *path, uint64_t len, uint64_t rights)
+static int64_t open_at(struct process *p, uint64_t base, const char *path, uint64_t len,
+                       uint64_t rights, const struct exc_frame *frame)
 {
     struct session *s;
     struct node *n = lookup(p, base, &s);
@@ -436,7 +445,7 @@ int64_t file_open_at(struct process *p, uint64_t base, const char *path, uint64_
         return -VOS_EACCES;
     if (s->active)
         return -VOS_EAGAIN;
-    int r = path_copy(s, path, len);
+    int r = path_copy(s, path, len, frame);
     if (r)
         return r;
     struct node *slot = reserve(s);
@@ -461,6 +470,11 @@ int64_t file_open_at(struct process *p, uint64_t base, const char *path, uint64_
     }
     publish(slot, &st, rights, token);
     return (int64_t)token;
+}
+
+int64_t file_open_at(struct process *p, uint64_t base, const char *path, uint64_t len, uint64_t rights)
+{
+    return open_at(p, base, path, len, rights, NULL);
 }
 
 int64_t file_close(struct process *p, uint64_t token)
@@ -493,14 +507,19 @@ static int access_node(struct process *p, uint64_t token, unsigned kind, unsigne
     return 0;
 }
 
-int file_stat(struct process *p, uint64_t token, struct ext2_stat *out)
+static int stat_node(struct process *p, uint64_t token, struct ext2_stat *out,
+                     const struct exc_frame *frame)
 {
     struct session *s;
     struct node *n;
     int r = access_node(p, token, 0, FILE_STAT, &s, &n);
     if (r)
         return r;
-    if (!out)
+    if (frame && frame->rdx != 64)
+        return -VOS_EINVAL;
+    if (frame && user_writable(p->root, frame->rsi, 64))
+        return -VOS_EFAULT;
+    if (!frame && !out)
         return -VOS_EINVAL;
     struct io_scope scope;
     if ((r = begin(s, &scope)))
@@ -510,12 +529,29 @@ int file_stat(struct process *p, uint64_t token, struct ext2_stat *out)
     int final = finish(s, &scope);
     if (final)
         r = final;
-    if (!r)
-        memcpy(out, &st, sizeof(st));
+    if (!r) {
+        if (frame) {
+            /* Fixed little-endian wire fields, no native padding or inode. */
+            memset(s->stage, 0, 64);
+            uint64_t sizes[2] = {st.size, st.blocks512};
+            uint32_t fields[6] = {st.type, st.mode, st.uid, st.gid, st.links, n->rights};
+            memcpy(s->stage, sizes, sizeof(sizes));
+            memcpy(s->stage + 16, fields, sizeof(fields));
+            r = copy_to_user(p->root, frame->rsi, s->stage, 64);
+            memset(s->stage, 0, 64);
+        } else
+            memcpy(out, &st, sizeof(st));
+    }
     return r;
 }
 
-int64_t file_read_at(struct process *p, uint64_t token, void *out, uint64_t len, uint64_t off)
+int file_stat(struct process *p, uint64_t token, struct ext2_stat *out)
+{
+    return stat_node(p, token, out, NULL);
+}
+
+static int64_t read_at(struct process *p, uint64_t token, void *out, uint64_t len,
+                       uint64_t off, const struct exc_frame *frame)
 {
     struct session *s;
     struct node *n;
@@ -526,7 +562,9 @@ int64_t file_read_at(struct process *p, uint64_t token, void *out, uint64_t len,
         return -VOS_EINVAL;
     if (!len)
         return 0;
-    if (!out)
+    if (frame && user_writable(p->root, frame->rsi, len))
+        return -VOS_EFAULT;
+    if (!frame && !out)
         return -VOS_EINVAL;
     struct io_scope scope;
     if ((r = begin(s, &scope)))
@@ -538,27 +576,47 @@ int64_t file_read_at(struct process *p, uint64_t token, void *out, uint64_t len,
     /* Commit before the no-wait finish erases staging. IF=0: no stop can arise
      * between this last outcome check, copy and finish. Never copy on error.
      */
-    if (!r && !(r = outcome(s, EXT2_OK)))
-        memcpy(out, s->stage, done);
+    if (!r && !(r = outcome(s, EXT2_OK))) {
+        if (frame) {
+            /* Decode again from the live architectural frame after all waits.
+             * Validate requested length even for EOF/short output. No user
+             * address is stored in a session, scope, driver or continuation.
+             */
+            r = user_writable(p->root, frame->rsi, len);
+            if (!r)
+                r = copy_to_user(p->root, frame->rsi, s->stage, done);
+        } else
+            memcpy(out, s->stage, done);
+    }
     int final = finish(s, &scope);
     return r ? r : final ? final : (int64_t)done;
 }
 
-int file_next(struct process *p, uint64_t token, uint64_t *cookie, struct ext2_dirent *out)
+int64_t file_read_at(struct process *p, uint64_t token, void *out, uint64_t len, uint64_t off)
+{
+    return read_at(p, token, out, len, off, NULL);
+}
+
+static int next_entry(struct process *p, uint64_t token, uint64_t *cookie,
+                      struct ext2_dirent *out, const struct exc_frame *frame)
 {
     struct session *s;
     struct node *n;
     int r = access_node(p, token, EXT2_T_DIR, FILE_ENUMERATE, &s, &n);
     if (r)
         return r;
-    if (!cookie || !out)
+    if (frame && frame->r10 != 272)
+        return -VOS_EINVAL;
+    if (frame && user_writable(p->root, frame->rdx, 272))
+        return -VOS_EFAULT;
+    if (!frame && (!cookie || !out))
         return -VOS_EINVAL;
     struct io_scope scope;
     if ((r = begin(s, &scope)))
         return r;
     struct ext2_stat st;
     struct ext2_dirent ent;
-    uint64_t pos = *cookie;
+    uint64_t pos = frame ? frame->rsi : *cookie;
     int eof = 1;
     r = node_stat(s, n->ino, &st);
     uint64_t size = r ? 0 : st.size;
@@ -585,10 +643,47 @@ int file_next(struct process *p, uint64_t token, uint64_t *cookie, struct ext2_d
     if (final)
         r = final;
     if (!r && !eof) {
-        memcpy(out, &ent, sizeof(ent));
-        *cookie = pos;
+        if (frame) {
+            memset(s->stage, 0, 272);
+            uint32_t fields[2] = {ent.type, ent.name_len};
+            memcpy(s->stage, &pos, 8);
+            memcpy(s->stage + 8, fields, 8);
+            memcpy(s->stage + 16, ent.name, ent.name_len);
+            r = copy_to_user(p->root, frame->rdx, s->stage, 272);
+            memset(s->stage, 0, 272);
+        } else {
+            memcpy(out, &ent, sizeof(ent));
+            *cookie = pos;
+        }
     }
     return r ? r : eof ? 0 : 1;
+}
+
+int file_next(struct process *p, uint64_t token, uint64_t *cookie, struct ext2_dirent *out)
+{
+    return next_entry(p, token, cookie, out, NULL);
+}
+
+/* Only syscall.c's ABI gate calls this bridge. All pointer registers stay in
+ * the live trap frame. Common implementations receive NULL kernel pointers.
+ * No second filesystem layer, allocation or additional large buffer.
+ */
+int64_t file_syscall(struct process *p, const struct exc_frame *frame)
+{
+    switch (frame->rax) {
+    case SYS_FILE_OPEN_AT:
+        return open_at(p, frame->rdi, NULL, frame->rdx, frame->r10, frame);
+    case SYS_FILE_READ_AT:
+        return read_at(p, frame->rdi, NULL, frame->rdx, frame->r10, frame);
+    case SYS_FILE_STAT:
+        return stat_node(p, frame->rdi, NULL, frame);
+    case SYS_DIRECTORY_NEXT:
+        return next_entry(p, frame->rdi, NULL, NULL, frame);
+    case SYS_FILE_INITIAL:
+        return file_initial(p, frame->rdi);
+    default:
+        return -VOS_ENOSYS;
+    }
 }
 
 void file_close_all(struct process *p)

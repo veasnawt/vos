@@ -45,4 +45,7 @@ int copy_from_user(uint64_t root, void *dst, uint64_t uptr, size_t len);
  */
 int copy_to_user(uint64_t root, uint64_t uptr, const void *src, size_t len);
 
+/* Same full destination checks, without writing; callers must recheck after waits. */
+int user_writable(uint64_t root, uint64_t uptr, size_t len);
+
 #endif

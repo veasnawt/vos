@@ -168,7 +168,10 @@ mutate note-outside   "PT_NOTE"                  $((NOTE + 8)) 8 "$SIZE"
 mutate note-trailing  "trailing bytes"           $((NOTE + 32)) 8 24
 mutate note-name      "no VOS ABI note"          $((NOTE_OFF + 12)) 1 $((0x58))
 mutate note-type      "no VOS ABI note"          $((NOTE_OFF + 8)) 4 2
-mutate note-version   "version 2"                $((NOTE_OFF + 16)) 4 2
+# Preserve the former note-version.elf bytes/path; 2 is now supported.
+cp "$HELLO" "$T/note-version.elf"; put "$T/note-version.elf" $((NOTE_OFF + 16)) 4 2
+"$CHECK" "$T/note-version.elf" >/dev/null && ok || bad "ABI 2 rejected"
+mutate note-future    "version 3"                $((NOTE_OFF + 16)) 4 3
 mutate note-descsz    "note larger than the segment"  $((NOTE_OFF + 4)) 4 8
 mutate note-namesz    "note larger than the segment"  "$NOTE_OFF" 4 $((0xFFFFFFFF))
 cp "$HELLO" "$T/truncated.elf"; truncate -s 200 "$T/truncated.elf"
@@ -258,6 +261,7 @@ if [ -n "${SUITE_DIR:-}" ]; then
         case $n in
             x87|sse) (( shell == 1 && kernel == 0 )) && grep -q 'x87/MMX/SSE' <<<"$out" && ok ||
                          bad "suite/$n: expected build-time-only rejection, got $shell/$kernel: $out" ;;
+            bad-abi) (( shell == 0 && kernel == 0 )) && ok || bad "frozen ABI 2 fixture should now be accepted" ;;
             bad-*)   (( shell == 1 && kernel == 1 )) && ok || bad "suite/$n: expected rejection by both, got $shell/$kernel" ;;
             *)       (( shell == 0 && kernel == 0 )) && ok || bad "suite/$n: expected acceptance, got $shell/$kernel: $out" ;;
         esac

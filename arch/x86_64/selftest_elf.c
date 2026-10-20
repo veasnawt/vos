@@ -289,7 +289,7 @@ static void test_rejections(void)
     M("note-descsz", ELF_ENOTE, { NO + 4, 4, 8 });
     M("note-name", ELF_ENOTEMISSING, { NO + 12, 1, 'X' });
     M("note-type", ELF_ENOTEMISSING, { NO + 8, 4, 2 });
-    M("note-version", ELF_EABI, { NO + 16, 4, 2 });   /* versions 0 and 1 exist (N2.4) */
+    M("note-version", ELF_EABI, { NO + 16, 4, 3 });   /* first unsupported version */
     /* A second VOS note in the file padding after the first, covered by PT_NOTE. */
     M("note-duplicate", ELF_ENOTEDUP, { N + 32, 8, 40 }, { NO + 20, 4, 4 }, { NO + 24, 4, 4 },
       { NO + 28, 4, 1 }, { NO + 32, 4, 0x00534F56 }, { NO + 36, 4, 0 });
@@ -332,6 +332,11 @@ static void test_rejections(void)
     put(ebuf, NO + 16, 4, 1);
     int r1 = load_elf(&tp, "v1", ebuf, img_size, &im1, &e1);
     expect(r1 == PROC_OK && im1.abi == 1 && tp.abi == 1, "a VOS ABI note version 1 is accepted and recorded");
+    if (r1 == PROC_OK)
+        proc_destroy(&tp);
+    put(ebuf, NO + 16, 4, 2);
+    r1 = load_elf(&tp, "v2", ebuf, img_size, &im1, &e1);
+    expect(r1 == PROC_OK && im1.abi == 2 && tp.abi == 2, "ABI note 2 accepted and recorded without changing entry state");
     if (r1 == PROC_OK)
         proc_destroy(&tp);
     expect(load_elf(&tp, "v0", img, img_size, &im1, &e1) == PROC_OK && im1.abi == 0 && tp.abi == 0,

@@ -112,7 +112,7 @@ for (( i = 0; i < PHNUM; i++ )); do
             if (( namesz == 4 )) && [[ $(bytes $((n + 12)) 4) == 564f5300 ]] && (( ntype == 1 )); then
                 (( descsz == 4 )) || reject "VOS ABI note: descsz $descsz, expected 4"
                 rd $((n + 16)) 4 "VOS ABI version"
-                (( R <= 1 )) || reject "VOS ABI note: version $R, expected 0 or 1"
+                (( R <= 2 )) || reject "VOS ABI note: version $R, expected 0, 1 or 2"
                 abi=$R
                 vos_notes=$((vos_notes + 1))
                 (( vos_notes == 1 )) || reject "more than one VOS ABI note"

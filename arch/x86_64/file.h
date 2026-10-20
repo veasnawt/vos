@@ -1,8 +1,8 @@
-/* N3.5 I2: kernel-only read-only nodes; no syscall/ABI entry.
- * One CPU, IF=0, thread context. Pointer arguments are trusted kernel
- * memory, kept alive across synchronous calls. Never pass user pointers.
- * READY processes allow trusted setup/tests; RUNNING processes require their
- * own thread. Runtime ABI gating and user copies belong to I3.
+/* N3.5 read-only nodes. One CPU, IF=0, thread context.
+ * Native pointer arguments are trusted kernel memory, never user pointers.
+ * file_syscall uses a live kernel trap frame after syscall.c's ABI v2 gate;
+ * user addresses are decoded only at validation/copy boundaries.
+ * READY processes allow trusted setup/tests; RUNNING processes require their own thread.
  */
 #ifndef VOS_X86_64_FILE_H
 #define VOS_X86_64_FILE_H
@@ -18,7 +18,9 @@
 #define FILE_RIGHTS UINT64_C(15) /* full-width input validation, before narrowing */
 #define FILE_TOKEN_DOMAIN (1ULL << 62)
 #define FILE_SERIAL_MAX (FILE_TOKEN_DOMAIN - 1)
-/* Internal errors match proposed additions; syscall.h remains unchanged. */
+struct exc_frame;
+int64_t file_syscall(struct process *p, const struct exc_frame *frame);
+/* Kernel-native error aliases match the additive ABI v2 errors. */
 #define FILE_ENOENT 10
 #define FILE_ENOTDIR 11
 #define FILE_EISDIR 12
