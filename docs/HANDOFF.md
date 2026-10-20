@@ -76,7 +76,8 @@ because GRUB and xorriso embed timestamps and UUIDs, so compare their contents i
 
 - **One x86_64 kernel for both firmware types,** loaded by GRUB through Multiboot2. UEFI is the
   primary future target; Legacy BIOS stays supported.
-- **ABI:** v0 and v1 are frozen (`docs/abi/`). File ABI v2 is reserved for N3.5. `hello.elf`
+- **ABI:** v0 and v1 are frozen (`docs/abi/`). File ABI v2 is implemented locally for
+  incomplete N3.5; Stage 4 completion is blocked (section 7). `hello.elf`
   must stay byte-identical.
 - **Kernel model:** non-preemptible, running with IF = 0. Interrupts are taken only in ring 3
   or in the idle halt.
@@ -102,7 +103,9 @@ The full list is in `docs/STATUS.md`. In short:
 
 N3.5 remains **INCOMPLETE** on `feat/n3.5-file-api`, based on `c5f5acb`.
 [Plan and limits](plans/n3.5-file-api.md), [ABI v2](abi/syscall-v2.md), and
-[Stage 3 evidence](results/n3.5-stage3.md) describe the current implementation.
+[Stage 3 evidence](results/n3.5-stage3.md) describe the ABI implementation;
+[Stage 4 evidence](results/n3.5-stage4.md) records the latest security verification
+and **BLOCKED** completion gate.
 Stages 1/2 provide bounded I/O scopes, nodes, handles and trusted non-root grants.
 The separately verified rights-width repair is `4384bb1`; the original Stage 3 draft
 was preserved and its integration rehearsed in a separate worktree before resumption.
@@ -110,22 +113,28 @@ Stage 3 adds ABI note 2, file calls 6–10, typed close 5, validated wire copies
 versioned runtime and real ring-3 fixtures. No production launch receives a grant
 automatically; ordinary hello still boots without storage.
 
-Stop for architectural review before Stage 4. Proposed next testing priorities are
-broader failure interleavings, bounds/availability workloads and mutation controls;
-none is authorization to continue. U1/N3.4 remain the latest completed milestones.
+Stage 4 adds a separately linked ring-3 adversary, repeated quota/kill/interrupt tests,
+malformed metadata overlays and five isolated mutation controls. Its minimal production
+repair rejects reserved-inode directory records before publication. Fresh full BIOS
+regression passes, including 845 file assertions per configuration. Its UEFI completion
+gate remains blocked: raw CPU-max/128 MiB fails in GRUB before kernel entry, while
+fresh U1 and Stage 2 baselines pass there. No reliable packaging remedy is shipped.
+Stop for independent architectural review before Stage 5; investigate the loader/media
+remedy before proceeding. U1/N3.4 remain the latest completed milestones.
 Main is unchanged. No push, merge to main, physical test or writable storage is authorized.
 
 The design-phase unprivileged simulation of
 `apt-get -s --no-install-recommends install grub-efi-amd64-bin mtools` selected the same
-three packages as section 1. At the Stage 3 check OVMF and installed mtools are present;
+three packages as section 1. At the Stage 4 check OVMF and installed mtools are present;
 standard GRUB EFI modules remain missing. No sudo or installation was performed by this
 stage. Selected OVMF boots reuse preserved loader images with fresh kernels/modules;
 they are not full fresh UEFI
 verification. Obtain separate explicit approval
 before installing packages or running sudo; never change host bootloader settings.
-The final Stage 3 file test ISO fails before VOS entry in GRUB at CPU-max/128 MiB;
-the planned file matrix passes at 1 GiB/8 GiB. Do not carry low-RAM UEFI forward as
-verified; see the Stage 3 report for baseline/diagnostic comparisons and failed attempts.
+The final raw Stage 4 selected optical matrix passes base/1 GiB, virtio/128 MiB,
+file CPU-max/256/512/1024 MiB, default-CPU/128/1024 MiB and sparse/8 GiB;
+CPU-max/128 MiB still fails. Every run uses fresh OVMF VARS. Do not claim full UEFI
+verification or a newly unsupported RAM size; see the Stage 4 comparison and diagnostics.
 
 ## 8. Physical hardware: restrictions
 

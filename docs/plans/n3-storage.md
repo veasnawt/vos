@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| Status | **N3.0 complete (2026-10-18): storage architecture designed, kernel map extended to 4 MiB of 4 KiB pages. N3.1 complete (2026-10-18): read-only, polled virtio-blk driver (section 5). N3.2 complete (2026-10-18): block layer, read-only cache, DMA-frame lifecycle, cooperative waiting (section 6). N3.3 complete (2026-10-19): read-only ext2 reader (section 7). N3.4 complete (2026-10-19): interrupt-driven block I/O, deadlines, cancellation (section 9). N3.5 remains incomplete: Stage 1/2 kernel foundations implemented locally; file ABI and later stages are [Proposal] and need explicit approval.** |
+| Status | **N3.0–N3.4 complete (2026-10-18/19), as recorded below. N3.5 remains incomplete: Stages 1–3 implemented locally; Stage 4 security work verified but completion BLOCKED by low-memory UEFI boot. Stop for architectural review before Stage 5; see section 10.** |
 | Date | 2026-10-18 |
 | Starting point | N2 complete at `8e30f9b` (`docs/plans/n2-foundation.md`, section 3.7) |
 | Target | `ARCH=x86_64`; the i386 kernel stays as it is |
@@ -36,7 +36,7 @@ from the disk is treated as untrusted input.
 | **N3.2** Block layer *(done)* | Block-device registry and interface, validated block I/O, fixed-size read-only cache in PMM frames, device-independent errors, audits; DMA-frame release for refused and stopped devices; cooperative waiting in the driver | Section 6 |
 | **N3.3** ext2 reader *(done)* | Restricted profile (stricter than `storage.md` section 5.3), every field validated, bounded walks | Section 7 |
 | **N3.4** Interrupt completion *(done)* | INTx through the PIC, waiters on wait queues instead of polling; deadlines; cancellation | Section 9 |
-| N3.5 File ABI v2 (read-only) **[INCOMPLETE; Stage 1/2 kernel foundations implemented, userspace file ABI unimplemented]** | Handle-relative open, positional read, stat, single-entry enumeration and close; trusted startup grants; ABI note version 2. [Detailed design](n3.5-file-api.md), [ABI draft](../abi/syscall-v2.md), section 10 below | v0/v1 programs unchanged (`hello.elf` byte-identical); rights and path boundaries enforced; bounded waits, concurrent readers and kill cleanup; full BIOS/UEFI matrix |
+| N3.5 File ABI v2 (read-only) **[INCOMPLETE; Stages 1–3 implemented, Stage 4 completion BLOCKED]** | Handle-relative open, positional read, stat, single-entry enumeration and close; trusted startup grants; ABI note version 2. [Detailed design](n3.5-file-api.md), [ABI v2](../abi/syscall-v2.md), section 10 below | v0/v1 programs unchanged (`hello.elf` byte-identical); rights and path boundaries enforced; bounded waits, concurrent readers and kill cleanup; full BIOS/UEFI matrix still required |
 | N3.6 Closure | Stress with concurrent readers, kills during I/O, exhaustion; documentation | Full regression; audits after every suite |
 
 The order may change at review. Writes (D-S4) are a separate milestone after N3.
@@ -2014,3 +2014,12 @@ real ring-3 tests. Earlier authorization paragraphs above are historical. N3.5 r
 incomplete; stop for architectural review before Stage 4. The original budgets and
 frozen ABI v0/v1/media contracts remain in force. No write operation, push, merge to
 main, legacy i386 change or physical hardware test is part of this work.
+
+The subsequent review authorized Stage 4 adversarial security testing at `e530617`.
+[Stage 4 evidence](../results/n3.5-stage4.md) records real ring-3 boundaries, malformed
+metadata, repeated resource/cancellation tests, mutation controls and fresh full BIOS
+regression. The only production correction rejects reserved-inode directory entries
+before publication. Original budgets and frozen media/executable contracts still hold.
+Fresh U1/Stage 2 comparisons isolate the unresolved CPU-max/128 MiB GRUB failure to
+expanded boot payload/allocation layout. Stage 4 completion is **BLOCKED**; stop for
+architectural review before Stage 5. No reliable packaging workaround is shipped.

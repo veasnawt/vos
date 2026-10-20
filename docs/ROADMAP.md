@@ -21,7 +21,7 @@ Status is updated at each checkpoint (see `docs/STATUS.md`).
 
 | Milestone | Content |
 |---|---|
-| N3.5 **INCOMPLETE** | [Plan](plans/n3.5-file-api.md); Stage 1 scopes, Stage 2 nodes and [Stage 3 ABI v2 integration](results/n3.5-stage3.md) implemented locally, including the [rights-width repair](results/n3.5-rights-repair.md). Stopped for architectural review before Stage 4. |
+| N3.5 **INCOMPLETE** | [Plan](plans/n3.5-file-api.md); Stages 1–3 implemented locally, including the [rights-width repair](results/n3.5-rights-repair.md) and [ABI v2 integration](results/n3.5-stage3.md). [Stage 4 security evidence](results/n3.5-stage4.md) passes BIOS but completion is BLOCKED by CPU-max/128 MiB UEFI boot. Stop for architectural review before Stage 5. |
 | U2 | Broader UEFI and interrupt-controller support: local APIC / IOAPIC (ACPI MADT) or MSI-X, so devices can interrupt under UEFI; more framebuffer formats as verified |
 | U3 | Independent VOS EFI loader, then Secure Boot (own keys first, test keys in OVMF) |
 | H2 | Controlled physical-hardware testing (first: Dell OptiPlex 9020), only with explicit approval of each step |
