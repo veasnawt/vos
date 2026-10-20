@@ -15,7 +15,7 @@
 #define FILE_STAT 2u
 #define FILE_ENUMERATE 4u
 #define FILE_TRAVERSE 8u
-#define FILE_RIGHTS 15u
+#define FILE_RIGHTS UINT64_C(15) /* full-width input validation, before narrowing */
 #define FILE_TOKEN_DOMAIN (1ULL << 62)
 #define FILE_SERIAL_MAX (FILE_TOKEN_DOMAIN - 1)
 /* Internal errors match proposed additions; syscall.h remains unchanged. */
@@ -32,7 +32,8 @@
 #define FILE_EUNSUPP 20
 
 struct file_grant {
-    unsigned index, rights;
+    unsigned index;
+    uint64_t rights;        /* validate before storing the node's compact rights */
     const char *path;       /* trusted relative path from volume root, never app input */
     uint64_t length;
 };

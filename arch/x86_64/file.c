@@ -272,10 +272,12 @@ static int walk(struct session *s, uint32_t base, uint64_t len, struct ext2_stat
     return st->ino == EXT2_ROOT_INO ? -VOS_EACCES : 0;
 }
 
-static void publish(struct node *n, const struct ext2_stat *st, unsigned rights, uint64_t token)
+static void publish(struct node *n, const struct ext2_stat *st, uint64_t rights, uint64_t token)
 {
+    if (rights & ~FILE_RIGHTS)
+        panic("file: publishing unvalidated rights");
     *n = (struct node){ .token = token, .generation = volume.generation, .ino = st->ino,
-                       .rights = rights, .kind = st->type, .used = 2 };
+                       .rights = (unsigned)rights, .kind = st->type, .used = 2 };
     volume.refs++;
 }
 
@@ -346,18 +348,22 @@ int file_grants_install(struct process *p, const struct file_grant *grants, unsi
         return -VOS_EINVAL;
     if (find(p))
         return -VOS_EAGAIN;              /* one atomic provisioning, never recreate grants */
-    struct session *s = allocate(p);
-    if (!s)
-        return -VOS_ENOMEM;
-    int r = 0;
     unsigned seen = 0;
     for (unsigned i = 0; i < count; i++) {
         if (grants[i].index >= FILE_INITIAL_MAX || (grants[i].rights & ~FILE_RIGHTS) ||
             (seen & (1u << grants[i].index))) {
-            r = -VOS_EINVAL;
-            goto fail;
+            return -VOS_EINVAL;
         }
         seen |= 1u << grants[i].index;
+    }
+    /* Validate all descriptor scalars before reserving any session or doing
+     * path work. Unknown high bits cannot disappear at a narrow parameter.
+     */
+    struct session *s = allocate(p);
+    if (!s)
+        return -VOS_ENOMEM;
+    int r = 0;
+    for (unsigned i = 0; i < count; i++) {
         if ((r = path_copy(s, grants[i].path, grants[i].length)))
             goto fail;
     }
@@ -426,7 +432,7 @@ int64_t file_open_at(struct process *p, uint64_t base, const char *path, uint64_
         return -FILE_ENAMETOOLONG;
     if (rights & ~FILE_RIGHTS)
         return -VOS_EINVAL;
-    if (rights & ~n->rights)
+    if (rights & ~(uint64_t)n->rights)
         return -VOS_EACCES;
     if (s->active)
         return -VOS_EAGAIN;
@@ -453,7 +459,7 @@ int64_t file_open_at(struct process *p, uint64_t base, const char *path, uint64_
         memset(slot, 0, sizeof(*slot));
         return r;
     }
-    publish(slot, &st, (unsigned)rights, token);
+    publish(slot, &st, rights, token);
     return (int64_t)token;
 }
 

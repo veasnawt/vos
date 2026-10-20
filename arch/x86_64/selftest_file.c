@@ -191,6 +191,59 @@ static void basic(void)
     file_close_all(p);file_close_all(q);
 }
 
+static void rights_width(void)
+{
+    struct process *p=&procs[0], *q=&procs[3];
+    expect(!grant(p,"dup",FILE_RIGHTS),"full-width rights setup");
+    uint64_t h=file_initial(p,0);
+    int64_t before=file_open_at(p,h,".",1,0);
+    expect(before>0 && !file_close(p,before),"rights rejection token baseline");
+    unsigned handles=file_handle_count(), sessions=file_session_count();
+    uint64_t reads=md.reads;
+    /* Includes the original three reproductions: bit32, bit63, READ|bit32;
+     * all undefined low bits and every high bit are checked in both paths.
+     */
+    for(unsigned bit=4;bit<64;bit++) {
+        uint64_t bad=UINT64_C(1)<<bit;
+        for(unsigned mix=0;mix<3;mix++) {
+            uint64_t rights=bad | (mix==1 ? FILE_READ : mix==2 ? FILE_RIGHTS : 0);
+            struct file_grant g={0,rights,"dup",3};
+            expect(file_open_at(p,h,"x/name.txt",10,rights)==-VOS_EINVAL &&
+                   file_grants_install(q,&g,1)==-VOS_EINVAL &&
+                   file_initial(q,0)==-VOS_EBADHANDLE && md.reads==reads &&
+                   file_handle_count()==handles && file_session_count()==sessions &&
+                   !io_scope_count() && !file_audit(),"undefined rights rejected before I/O/publication/session reservation");
+        }
+    }
+    struct file_grant gs[2]={{0,FILE_RIGHTS,"dup",3},{1,UINT64_MAX,"deep",4}};
+    expect(file_grants_install(q,gs,2)==-VOS_EINVAL && md.reads==reads &&
+           file_session_count()==sessions && file_handle_count()==handles,
+           "invalid second grant has no partial setup effects");
+    int64_t after=file_open_at(p,h,".",1,0);
+    expect(after==before+1 && !file_close(p,after),"rejected rights consume no token serials");
+    for(uint64_t rights=0;rights<=FILE_RIGHTS;rights++) {
+        struct file_grant g={0,rights,"dup",3};
+        expect(!file_grants_install(q,&g,1),"every defined grant combination accepted");
+        int64_t token=file_open_at(p,h,"x/name.txt",10,rights);
+        struct ext2_stat st;
+        expect(token>0 && file_stat(p,token,&st)==(rights&FILE_STAT?0:-VOS_EACCES) &&
+               file_read_at(p,token,NULL,0,0)==(rights&FILE_READ?0:-VOS_EACCES) &&
+               !file_close(p,token),"every defined file combination retains exact READ/STAT authority");
+        uint64_t parent=file_initial(q,0);
+        for(uint64_t child_rights=0;child_rights<=FILE_RIGHTS;child_rights++) {
+            token=file_open_at(q,parent,".",1,child_rights);
+            int allowed=(rights&FILE_TRAVERSE) && !(child_rights & ~rights);
+            expect(allowed ? token>0 && !file_close(q,token) : token==-VOS_EACCES,
+                   "all defined rights subsets preserve independent traversal and attenuation");
+        }
+        file_close_all(q);
+    }
+    file_close_all(p);
+    expect(!file_handle_count() && !file_session_count() && !io_scope_count() &&
+           !file_audit() && !blk_audit() && !ext2_audit() && !proc_audit(),
+           "full-width rights matrix leaves exact empty ownership state");
+}
+
 static void paths(void)
 {
     struct process *p=&procs[0];
@@ -421,7 +474,7 @@ static void fixture_tests(const struct boot_info *bi)
     expect(!blk_register("file-fixture",&ops,NULL,&device),"module backend registered");
     for (unsigned i=0;i<PROC_TABLE;i++)
         expect(!proc_create(&procs[i],"file-test",i==2?fault_code:exit_code,i==2?sizeof(fault_code):sizeof(exit_code)),"registered process owner");
-    basic();paths();failures_and_cookies();concurrent();cancelled_setup();capacity_and_processes();virtio();token_exhaustion();
+    basic();rights_width();paths();failures_and_cookies();concurrent();cancelled_setup();capacity_and_processes();virtio();token_exhaustion();
     proc_destroy(&procs[0]);
     expect(!file_volume_detach() && !blk_unregister(device) && !file_session_count() && !file_handle_count() &&
            !io_scope_count() && !ext2_open_count() && !proc_count() && !file_audit() && !proc_audit() &&
