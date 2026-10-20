@@ -1,5 +1,6 @@
 #include "process.h"
 #include "io_scope.h"
+#include "file.h"
 #include "console.h"
 #include "cpu.h"
 #include "exception.h"
@@ -28,6 +29,11 @@ static int registered(const struct process *p)
     return 0;
 }
 
+int proc_file_live(const struct process *p)
+{
+    return registered(p) && p->pid && (p->state == PROC_READY || p->state == PROC_RUNNING);
+}
+
 const char *proc_audit(void)
 {
     for (unsigned i = 0; i < PROC_TABLE; i++) {
@@ -51,7 +57,7 @@ const char *proc_audit(void)
             if ((p->state == PROC_EXITED || p->state == PROC_KILLED) && p->handles[h].ep)
                 return "an ended process still holds handles";
     }
-    return NULL;
+    return file_audit();
 }
 
 unsigned proc_count(void)
@@ -319,6 +325,9 @@ void proc_destroy(struct process *p)
         panic("process: destroying a process whose thread still exists");
     if ((read_cr3() & PTE_ADDR) == p->root || (read_cr3() & PTE_ADDR) != vmm_kernel_root())
         panic("process: teardown while not on the kernel address space");
+    if (file_process_busy(p))
+        panic("process: file operation has not unwound");
+    file_close_all(p);
     handles_close_all(p);               /* N2.4: a process that never ran may still hold handles */
 
     for (unsigned i = 0; i < p->npages; i++) {
@@ -354,6 +363,9 @@ __attribute__((noreturn)) static void terminate(struct process *p)
 {
     if (p->state != PROC_EXITED && p->state != PROC_KILLED)
         panic("process: terminating without a final state");
+    if (file_process_busy(p))
+        panic("process: file operation has not unwound");
+    file_close_all(p);
     handles_close_all(p);               /* N2.4: peers see -VOS_EPIPE from now on */
     thread_leave_user_space();
     thread_wake_all(&p->waiters);
@@ -393,7 +405,7 @@ static void user_main(void *arg)
 
 int proc_start(struct process *p)
 {
-    if (!registered(p) || p->state != PROC_READY)
+    if (!registered(p) || p->state != PROC_READY || file_process_busy(p))
         return PROC_ESTATE;
     if (read_rflags() & RFLAGS_IF)
         panic("process: interrupts enabled at process start");

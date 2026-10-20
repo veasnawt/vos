@@ -149,6 +149,8 @@ void proc_kill(struct process *p, const char *reason);
 const char *proc_audit(void);
 /* Processes that exist (begun and not destroyed). */
 unsigned proc_count(void);
+/* Kernel file layer: registered READY/RUNNING process, before dereference. */
+int proc_file_live(const struct process *p);
 /*
  * Called by the exception dispatcher for traps whose saved CS has RPL 3, on
  * the current process's thread.
