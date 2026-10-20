@@ -27,7 +27,7 @@ static void expect(int ok, const char *why)
     }
 }
 
-#ifdef VOS_TEST_CASE_ext2
+#ifdef VOS_TEST_CASE_file
 static struct process procs[PROC_TABLE + 1];
 static const uint8_t exit_code[] = {0x31,0xc0,0x31,0xff,0xcd,0x80,0x0f,0x0b};
 static const uint8_t fault_code[] = {0x0f,0x0b};
@@ -811,7 +811,7 @@ int selftest_file(const struct boot_info *bi)
     expect(file_volume_attach(NULL,0)==-VOS_EINVAL && file_initial(NULL,0)==-VOS_EBADHANDLE &&
            file_initial((struct process *)1,0)==-VOS_EBADHANDLE &&
            file_close(NULL,1)==-VOS_EBADHANDLE && !file_audit(),"invalid owners and clean baseline");
-#ifdef VOS_TEST_CASE_ext2
+#ifdef VOS_TEST_CASE_file
     fixture_tests(bi);
 #else
     (void)bi;serial_puts("file: fixture tests not applicable (no ext2 test modules)\r\n");

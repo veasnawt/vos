@@ -338,6 +338,13 @@ arch-test: iso
 	    'ext2: virtio-blk: ' 'selftest: ext2 ' 'VOS-TEST: PASS' -- $(EXT2_DISK)
 	TIMEOUT=240 scripts/exit-test.sh ext2-max build/$(ARCH)-test-ext2/vos.iso 33 \
 	    'smep=on umip=on smap=on' 'ext2: virtio-blk: ' 'selftest: ext2 ' 'VOS-TEST: PASS' -- $(EXT2_DISK) -cpu max
+	$(MAKE) --no-print-directory ARCH=$(ARCH) VOS_TEST=1 VOS_TEST_CASE=file iso
+	TIMEOUT=240 scripts/exit-test.sh file build/$(ARCH)-test-file/vos.iso 33 \
+	    'selftest: file 845 cases, 0 failed' 'VOS-TEST: PASS' -- $(EXT2_DISK)
+	MEM=2G TIMEOUT=240 scripts/exit-test.sh file-2G build/$(ARCH)-test-file/vos.iso 33 \
+	    'selftest: file 845 cases, 0 failed' 'VOS-TEST: PASS' -- $(EXT2_DISK)
+	TIMEOUT=240 scripts/exit-test.sh file-max build/$(ARCH)-test-file/vos.iso 33 \
+	    'smep=on umip=on smap=on' 'selftest: file 845 cases, 0 failed' 'VOS-TEST: PASS' -- $(EXT2_DISK) -cpu max
 	@echo "ext2: the fixture images are unchanged after every run"
 	cd $(EXT2_DIR) && sha256sum -c --quiet SHA256SUMS
 	@echo "vblk: the test disk is unchanged after every run"
@@ -431,6 +438,13 @@ arch-test-uefi:
 	$(UEFI_RUN) TIMEOUT=240 scripts/exit-test.sh uefi-ext2 build/$(ARCH)-test-ext2/vos-uefi.iso 33 \
 	    'ext2: virtio-blk: ' 'NOT APPLICABLE: ext2 readers interrupted while waiting for the device' \
 	    'selftest: ext2 ' 'VOS-TEST: PASS' -- $(EXT2_DISK)
+	$(UEFI_RUN) MEM=128M TIMEOUT=240 scripts/exit-test.sh uefi-ext2-max build/$(ARCH)-test-ext2/vos-uefi.iso 33 \
+	    'ext2: virtio-blk: ' 'selftest: ext2 ' 'VOS-TEST: PASS' -- $(EXT2_DISK) -cpu max
+	$(call uefi-image,file)
+	$(UEFI_RUN) MEM=128M TIMEOUT=240 scripts/exit-test.sh uefi-file build/$(ARCH)-test-file/vos-uefi.iso 33 \
+	    'selftest: file 845 cases, 0 failed' 'VOS-TEST: PASS' -- $(EXT2_DISK)
+	$(UEFI_RUN) MEM=128M TIMEOUT=240 scripts/exit-test.sh uefi-file-max build/$(ARCH)-test-file/vos-uefi.iso 33 \
+	    'selftest: file 845 cases, 0 failed' 'VOS-TEST: PASS' -- $(EXT2_DISK) -cpu max
 	@echo "uefi: the fixture images and the test disk are unchanged after every run"
 	cd $(EXT2_DIR) && sha256sum -c --quiet SHA256SUMS
 	echo "$(VBLK_SHA256)  $(VBLK_DISK)" | sha256sum -c

@@ -70,7 +70,7 @@ def main():
         text = path.read_text()
         assert text.count(original) == 1, label
         path.write_text(text.replace(original, replacement))
-        run("make", "-j4", "ARCH=x86_64", "VOS_TEST=1", "VOS_TEST_CASE=ext2", "iso",
+        run("make", "-j4", "ARCH=x86_64", "VOS_TEST=1", "VOS_TEST_CASE=file", "iso",
             cwd=target, log=output / (label + ".build.log"))
         # This runner checks guest exit 35, both kernel-only markers and no
         # triple fault. A timeout returns failure regardless of earlier output.
@@ -78,7 +78,7 @@ def main():
         if label == "reserved-inode":
             markers.append("I4 metadata mutation 7 exit")
         run("env", "TIMEOUT=240", "scripts/exit-test.sh", "mutation-" + label,
-            "build/x86_64-test-ext2/vos.iso", "35", *markers, "--",
+            "build/x86_64-test-file/vos.iso", "35", *markers, "--",
             "-drive", "file=build/ext2/ext2-1k.img,if=none,id=vd0,format=raw,readonly=on",
             "-device", "virtio-blk-pci,drive=vd0,disable-legacy=on",
             cwd=target, log=output / (label + ".run.log"))
