@@ -1,4 +1,4 @@
-/* Kernel-only I2 tests. Original ext2 fixture bytes stay immutable: faults
+/* I2 kernel and I3 ring-3 tests. Original ext2 fixture bytes stay immutable: faults
  * and adversarial child graphs are overlays in this test-only backend.
  */
 #include "selftest.h"
@@ -13,6 +13,8 @@
 #include "pmm.h"
 #include "syscall.h"
 #include "virtio_blk.h"
+#include "loader.h"
+#include "exception.h"
 
 static unsigned cases, failures;
 static void expect(int ok, const char *why)
@@ -31,6 +33,8 @@ static const uint8_t fault_code[] = {0x0f,0x0b};
 static struct {
     const uint8_t *img;
     uint64_t bytes, epoch, reads;
+    uint64_t fail_sector, prefix_sector;
+    unsigned prefix_seen, failure_seen;
     int state, fail, hold, yield;
     unsigned npatch;
     struct { uint64_t off; unsigned len; uint8_t bytes[256]; } patch[8];
@@ -57,6 +61,12 @@ static int read_backend(void *ctx, uint64_t lba, uint32_t count, void *out, uint
     }
     if (md.yield) thread_yield();
     if (md.fail) return BLK_EIO;
+    if (md.fail_sector && lba<md.fail_sector+8 && lba+count>md.fail_sector) {
+        md.failure_seen++;
+        return BLK_EIO;
+    }
+    if (md.prefix_sector && lba<=md.prefix_sector && lba+count>md.prefix_sector)
+        md.prefix_seen++;
     if (!count || count>8 || cap<count*512u || lba>=md.bytes/512 || count>md.bytes/512-lba)
         return BLK_EINVAL;
     memcpy(out, md.img+lba*512, count*512u);
@@ -463,6 +473,205 @@ static void token_exhaustion(void)
     file_close_all(p);expect(!file_volume_detach(),"serial exhaustion leaves no live node");
 }
 
+/* I3: separately linked real ring-3 callers; reuse I2 processes/backend.
+ * Never accept a userspace log line as a verdict. The kernel checks exit,
+ * exact trap/counters, observed blocked states and final ownership audits.
+ */
+static int load_file_program(const struct boot_info *bi, unsigned index, const char *name)
+{
+    struct elf_image image; int error;
+    for (unsigned i=0;i<bi->module_count;i++) {
+        const struct boot_module *m=&bi->modules[i];
+        if (strlen(m->cmdline)==strlen(name) && !memcmp(m->cmdline,name,strlen(name)))
+            return load_elf(&procs[index],name,phys_to_virt(m->start),m->end-m->start,&image,&error)==PROC_OK;
+    }
+    return 0;
+}
+static int exited(struct process *p)
+{
+    return proc_wait(p)==PROC_EXITED && p->exit_status==0;
+}
+static int error_result(struct process *p, int error)
+{
+    return proc_wait(p)==PROC_EXITED && p->exit_status==error;
+}
+static int pause_program(struct process *p, struct process *controller, int64_t *peer, uint64_t completed)
+{
+    int64_t handle;
+    return !channel_create(p,HANDLE_RECV,controller,HANDLE_SEND,&handle,peer) && handle==1 &&
+           !proc_start(p) && blocked(p->tid) && p->syscalls==completed && !file_process_busy(p);
+}
+static void release_program(struct process *controller, int64_t peer)
+{
+    expect(!channel_send(controller,peer,0,0) && !handle_close(controller,peer),
+           "explicit zero-byte channel barrier releases exactly one prepared reader");
+}
+static void file_userspace(const struct boot_info *bi)
+{
+    struct process *p=&procs[0],*q=&procs[1],*controller=&procs[7];
+    expect(!file_volume_attach(p,device),"module volume for userspace API tests");
+    proc_destroy(p);
+    expect(!proc_create(controller,"file-control",exit_code,sizeof(exit_code)),"trusted IPC barrier controller");
+    expect(load_file_program(bi,0,"file-probe") && p->abi==2,"real ABI v2 ELF negotiation");
+    expect(!grant(p,"dup",FILE_RIGHTS) &&
+           !proc_create(q,"foreign",exit_code,sizeof(exit_code)) && !grant(q,"dup/y",FILE_RIGHTS),
+           "explicit launch grants and immediately following foreign token");
+    int64_t channel,peer;
+    expect(!channel_create(p,HANDLE_RIGHTS,q,HANDLE_RIGHTS,&channel,&peer) && channel==1,
+           "ABI v2 retains ordinary channel close on the disjoint domain");
+    expect(!proc_start(p) && exited(p) && p->syscalls>70 && p->sys_efault>=10,
+           "ring3 file contracts, rights, paths, pointers, wire bytes, cookies, close and quota");
+    proc_destroy(p);proc_destroy(q);
+    const char *gates[]={"file-gate0","file-gate1"};
+    for(unsigned i=0;i<2;i++) {
+        expect(load_file_program(bi,0,gates[i]) && p->abi==i && !proc_start(p) && exited(p) &&
+               p->sys_enosys==(i?5u:6u),"real old ABI rejects new calls before invalid arguments; close gate preserved");
+        proc_destroy(p);
+    }
+    expect(load_file_program(bi,0,"file-nogrant") && !proc_start(p) && exited(p),
+           "ABI v2 launch without trusted grants has no ambient filesystem authority");
+    proc_destroy(p);
+    uint32_t dup=child(2,"dup"), x=child(dup,"x");
+    uint32_t targets[]={child(2,"link-short"),2,child(2,"pipe")};
+    uint8_t kinds[]={EXT2_T_LNK,EXT2_T_DIR,EXT2_T_FIFO};
+    int errors[]={FILE_ELOOP,VOS_EACCES,FILE_EUNSUPP};
+    for(unsigned i=0;i<3;i++) {
+        expect(load_file_program(bi,0,"file-boundary") && !grant(p,"dup",FILE_RIGHTS),"ring3 boundary overlay setup");
+        alias(dup,"x",targets[i],kinds[i]);
+        expect(!proc_start(p) && proc_wait(p)==PROC_EXITED && p->exit_status==errors[i],
+               "ring3 final/intermediate symlink, root alias and special-node confinement");
+        proc_destroy(p);md.npatch=0;blk_invalidate(device);
+    }
+    expect(load_file_program(bi,0,"file-cookie") && !grant(p,"dup/x",FILE_RIGHTS),"ring3 malformed enumeration setup");
+    const uint8_t zero[2]={0,0};patch(dir_entry(x,"name.txt")+4,zero,2);blk_invalidate(device);
+    expect(!proc_start(p) && exited(p),"ring3 malformed entry preserves every directory output byte");
+    proc_destroy(p);md.npatch=0;blk_invalidate(device);
+    expect(load_file_program(bi,0,"file-regs") && !grant(p,"dup",FILE_RIGHTS) &&
+           pause_program(p,controller,&peer,1),"register caller blocked at barrier before stat");
+    blk_invalidate(device);md.hold=1;release_program(controller,peer);
+    expect(blocked(p->tid) && file_process_busy(p),"register stat actually blocks on I/O");
+    thread_wake_all(&gate);
+    expect(exited(p),"all non-result registers, RFLAGS, stack and red zone preserved across blocking file syscall");
+    proc_destroy(p);
+    /* Force two distinct cache lines in a large file. The first ext2 data
+     * chunk succeeds; all backend/fallback reads of the next fail. */
+    expect(load_file_program(bi,0,"file-error") && !grant(p,"dup/x",FILE_RIGHTS),"partial private-prefix failure setup");
+    uint32_t data=child(2,"data.bin");
+    alias(x,"name.txt",data,EXT2_T_REG);
+    uint64_t ip=inode_pos(data), first_sector=(uint64_t)u32(ip+40)*2;
+    uint32_t distant=u32(ip+40+8*4);
+    uint8_t pb[4]={(uint8_t)distant,(uint8_t)(distant>>8),(uint8_t)(distant>>16),(uint8_t)(distant>>24)};
+    patch(ip+44,pb,4);blk_invalidate(device);
+    expect(pause_program(p,controller,&peer,2),"prefix caller blocked at barrier after opening large file");
+    blk_invalidate(device);md.prefix_sector=first_sector;md.fail_sector=((uint64_t)distant*2)&~UINT64_C(7);
+    md.prefix_seen=md.failure_seen=0;
+    release_program(controller,peer);
+    expect(error_result(p,FILE_EIO) && md.prefix_seen && md.failure_seen,
+           "I/O error after a successful private data chunk leaves all 4096 user bytes unchanged");
+    proc_destroy(p);md.fail_sector=md.prefix_sector=0;md.npatch=0;blk_invalidate(device);
+    /* Both callers block at explicit barriers after open, before read. */
+    expect(load_file_program(bi,0,"file-reader") && !grant(p,"dup/x",FILE_RIGHTS) &&
+           load_file_program(bi,1,"file-reader-y") && !grant(q,"dup/y",FILE_RIGHTS),"real concurrent reader provisioning");
+    int64_t second_peer;
+    expect(pause_program(p,controller,&peer,2) && pause_program(q,controller,&second_peer,2),
+           "both ring3 readers blocked at barriers after open");
+    blk_invalidate(device);md.hold=1;
+    release_program(controller,peer);release_program(controller,second_peer);
+    expect(blocked(p->tid) && blocked(q->tid) && file_process_busy(p) && file_process_busy(q) &&
+           io_scope_count()==2 && !file_audit(),"real file syscalls blocked concurrently with private scopes");
+    thread_wake_all(&gate);
+    expect(exited(p) && exited(q),"both ring3 readers resume, read repeatedly and exit");
+    proc_destroy(p);proc_destroy(q);
+    expect(load_file_program(bi,0,"file-reader-y") && !grant(p,"dup/x",FILE_RIGHTS) &&
+           pause_program(p,controller,&peer,2),"negative control: Y reader receives X grant");
+    release_program(controller,peer);
+    expect(error_result(p,4),"reader fixture rejects the other process's distinct contents");
+    proc_destroy(p);
+    expect(!file_session_count() && !file_handle_count() && !io_scope_count() && !proc_audit(),
+           "ring3 exit reclaims all nodes and scopes");
+    /* Actual kill inside read_at, not a pre-entry kill or kernel-only caller. */
+    expect(load_file_program(bi,0,"file-reader") && !grant(p,"dup/x",FILE_RIGHTS) &&
+           pause_program(p,controller,&peer,2),"kill caller blocked at barrier before read");
+    blk_invalidate(device);md.hold=1;release_program(controller,peer);
+    expect(blocked(p->tid) && file_process_busy(p),"observe actual pending userspace I/O before kill");
+    proc_kill(p,"file syscall kill");
+    expect(proc_wait(p)==PROC_KILLED && p->trap.rax==SYS_FILE_READ_AT && p->syscalls==3 &&
+           !file_handle_count() && !file_session_count() && !io_scope_count(),"killed file syscall unwinds before process cleanup and never returns");
+    proc_destroy(p);
+    /* Recoverable error, changed binding and nonfatal interruption all leave
+     * the caller's complete 4096-byte sentinel unchanged (checked in ring3). */
+    for(unsigned scenario=0;scenario<5;scenario++) {
+        expect(load_file_program(bi,0,"file-error") && !grant(p,"dup/x",FILE_RIGHTS) &&
+               pause_program(p,controller,&peer,2),"error caller blocked at barrier before read");
+        blk_invalidate(device);
+        if(!scenario) md.fail=1;
+        else if(scenario==3) expect(!blk_unregister(device),"registry removal before pending userspace read");
+        else if(scenario==4) md.state=BLK_DEV_UNAVAILABLE;
+        else md.hold=1;
+        release_program(controller,peer);
+        if(scenario==1 || scenario==2) {
+            expect(blocked(p->tid) && file_process_busy(p),"error injection observes pending read");
+            if(scenario==1) {blk_note_reset(device);thread_wake_all(&gate);}
+            else expect(thread_interrupt(p->tid)==1,"nonfatal interruption delivered to observed blocked reader");
+        }
+        int error=scenario==0?FILE_EIO:scenario==1 || scenario==3?FILE_ESTALE:scenario==4?FILE_EUNAVAIL:FILE_EINTR;
+        expect(error_result(p,error),
+               "exact negative userspace read result preserves entire output");
+        md.fail=0;md.state=BLK_DEV_READY;proc_destroy(p);
+        if(scenario==1 || scenario==3) {
+            expect(!file_volume_detach(),"retired binding has no active ownership");
+            if(scenario==3) expect(!blk_register("file-fixture",&ops,NULL,&device),"explicit registration after removal");
+            expect(!proc_create(p,"setup",exit_code,sizeof(exit_code)) &&
+                   !file_volume_attach(p,device),"explicit remount after reset");
+            proc_destroy(p);
+        }
+    }
+    /* Real driver abandonment with a process's trap/stack/pages live until
+     * unwind; afterwards only scalar ticket debt survives, serviced by idle. */
+    expect(!file_volume_detach(),"detach module volume before ring3 transport test");
+    const struct vblk_info *vi=vblk_info();
+    if(vi->state==VBLK_READY) {
+        expect(load_file_program(bi,0,"file-reader") && !file_volume_attach(p,vi->blk_id) &&
+               !grant(p,"dup/x",FILE_RIGHTS) && pause_program(p,controller,&peer,2),"transport caller blocked at barrier before read");
+        blk_invalidate(vi->blk_id);vblk_test_skip_notify(1);
+        if(vi->mode==VBLK_MODE_IRQ) {
+            vblk_test_wait_ticks(12);release_program(controller,peer);
+            expect(blocked(p->tid) && file_process_busy(p),"real virtio IRQ syscall is pending");
+            proc_kill(p,"file DMA kill");
+            expect(proc_wait(p)==PROC_KILLED && p->trap.rax==SYS_FILE_READ_AT &&
+                   !file_session_count() && io_scope_count()==1 && vblk_abandoned()==1,"real ring3 kill leaves only scalar driver debt");
+            proc_destroy(p);
+            expect(file_volume_detach()==-VOS_EAGAIN,"debt gates teardown after user pages freed");
+            thread_sleep(16);vblk_test_wait_ticks(0);
+            expect(!io_scope_count() && !vblk_abandoned() && !vblk_audit(),"orphan independently retires after caller destruction");
+        } else {
+            vblk_test_poll_limit(8192);vblk_test_yield_polls(32);
+            uint64_t yields=vi->yields;
+            release_program(controller,peer);
+            for(unsigned wait=0;wait<100 && (!file_process_busy(p) || vi->yields==yields);wait++) thread_yield();
+            expect(file_process_busy(p) && thread_state(p->tid)==THREAD_RUNNABLE && vi->yields>yields,
+                   "actual userspace read pending at known driver poll-yield point");
+            proc_kill(p,"file polling kill");
+            expect(proc_wait(p)==PROC_KILLED && p->trap.rax==SYS_FILE_READ_AT &&
+                   !file_session_count() && !io_scope_count() && !vblk_abandoned(),
+                   "polling kill unwinds at finite request bound with no user return or debt");
+            proc_destroy(p);vblk_test_poll_limit(0);vblk_test_yield_polls(4096);
+            expect(!file_volume_detach() && vblk_reinit()==VBLK_READY,"polling kill resets and drains before new launch");
+            expect(load_file_program(bi,0,"file-error") && !file_volume_attach(p,vi->blk_id) &&
+                   !grant(p,"dup/x",FILE_RIGHTS) && pause_program(p,controller,&peer,2),"timeout caller blocked at barrier before read");
+            blk_invalidate(vi->blk_id);vblk_test_skip_notify(1);vblk_test_poll_limit(2000);
+            release_program(controller,peer);
+            expect(error_result(p,FILE_ETIMEDOUT),"real userspace polling timeout has no output prefix");
+            vblk_test_poll_limit(0);proc_destroy(p);
+        }
+        expect(!file_volume_detach() && vblk_reinit()==VBLK_READY && !vblk_audit(),"ring3 transport fully drained and recovered");
+    }
+    proc_destroy(controller);
+    expect(!proc_create(p,"tail",exit_code,sizeof(exit_code)),"restore internal owner before irreversible token-tail test");
+    expect(!file_session_count() && !file_handle_count() && !io_scope_count() && !proc_audit() &&
+           !sched_audit() && !ext2_audit() && !blk_audit(),"all userspace I/O ownership audits clean");
+}
+
 static void fixture_tests(const struct boot_info *bi)
 {
     const struct boot_module *m=NULL;
@@ -474,7 +683,8 @@ static void fixture_tests(const struct boot_info *bi)
     expect(!blk_register("file-fixture",&ops,NULL,&device),"module backend registered");
     for (unsigned i=0;i<PROC_TABLE;i++)
         expect(!proc_create(&procs[i],"file-test",i==2?fault_code:exit_code,i==2?sizeof(fault_code):sizeof(exit_code)),"registered process owner");
-    basic();rights_width();paths();failures_and_cookies();concurrent();cancelled_setup();capacity_and_processes();virtio();token_exhaustion();
+    basic();rights_width();paths();failures_and_cookies();concurrent();cancelled_setup();capacity_and_processes();virtio();
+    file_userspace(bi);token_exhaustion();
     proc_destroy(&procs[0]);
     expect(!file_volume_detach() && !blk_unregister(device) && !file_session_count() && !file_handle_count() &&
            !io_scope_count() && !ext2_open_count() && !proc_count() && !file_audit() && !proc_audit() &&

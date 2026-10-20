@@ -14,6 +14,30 @@ USER_LDS   := $(USER_DIR)/lib/user.ld
 USER_RT    := $(addprefix $(USER_BUILD)/lib/,crt0.o syscall.o abi_note.o)
 # ABI v1 executables (N2.4): the v1 note and the v1 stubs instead of the v0 note.
 USER_RT_V1 := $(addprefix $(USER_BUILD)/lib/,crt0.o syscall.o syscall_v1.o abi_note_v1.o)
+USER_RT_V2 := $(addprefix $(USER_BUILD)/lib/,crt0.o syscall.o syscall_v1.o syscall_v2.o abi_note_v2.o)
+FILE_DIR := $(USER_BUILD)/filetests
+FILE_ELFS := $(addprefix $(FILE_DIR)/,probe.elf reader.elf reader_y.elf error.elf gate0.elf gate1.elf boundary.elf nogrant.elf cookie.elf regs.elf)
+.PHONY: user-files
+user-files: $(FILE_ELFS)
+$(FILE_DIR)/%.elf: $(USER_BUILD)/filetests/%.o $(USER_RT_V2) $(USER_LDS)
+	$(LD) $(USER_LDFLAGS) -o $@ $(USER_RT_V2) $<
+$(FILE_DIR)/reader.elf: $(USER_BUILD)/filetests/reader.o $(USER_RT_V2) $(USER_LDS)
+	$(LD) $(USER_LDFLAGS) -o $@ $(USER_RT_V2) $<
+$(FILE_DIR)/reader_y.o: $(USER_DIR)/filetests/reader.c Makefile $(USER_DIR)/user.mk
+	@mkdir -p $(dir $@)
+	$(CC) $(USER_CFLAGS) -DEXPECT_Y -MMD -MP -c $< -o $@
+$(FILE_DIR)/error.o: $(USER_DIR)/filetests/reader.c Makefile $(USER_DIR)/user.mk
+	@mkdir -p $(dir $@)
+	$(CC) $(USER_CFLAGS) -DEXPECT_ERROR -MMD -MP -c $< -o $@
+$(FILE_DIR)/error.elf: $(FILE_DIR)/error.o $(USER_RT_V2) $(USER_LDS)
+	$(LD) $(USER_LDFLAGS) -o $@ $(USER_RT_V2) $<
+$(FILE_DIR)/gate0.o $(FILE_DIR)/gate1.o: $(USER_DIR)/filetests/gate.c Makefile $(USER_DIR)/user.mk
+	@mkdir -p $(dir $@)
+	$(CC) $(USER_CFLAGS) -DTEST_ABI=$(if $(findstring gate1,$@),1,0) -MMD -MP -c $< -o $@
+$(FILE_DIR)/gate0.elf: $(FILE_DIR)/gate0.o $(USER_RT) $(USER_BUILD)/lib/syscall_v1.o $(USER_BUILD)/lib/syscall_v2.o $(USER_LDS)
+	$(LD) $(USER_LDFLAGS) -o $@ $(USER_RT) $(USER_BUILD)/lib/syscall_v1.o $(USER_BUILD)/lib/syscall_v2.o $<
+$(FILE_DIR)/gate1.elf: $(FILE_DIR)/gate1.o $(USER_RT_V1) $(USER_BUILD)/lib/syscall_v2.o $(USER_LDS)
+	$(LD) $(USER_LDFLAGS) -o $@ $(USER_RT_V1) $(USER_BUILD)/lib/syscall_v2.o $<
 
 # Freestanding, static, non-PIC, general registers only (no x87/MMX/SSE),
 # no stack protector (it needs TLS), no CET notes, no unwind tables. Only the
@@ -92,10 +116,12 @@ $(ELFCHECK): scripts/elfcheck.c arch/x86_64/elf.c arch/x86_64/elf.h
 # Validation, profile and separation checks, and negative tests. Static only:
 # nothing is loaded or run. The kernel images are checked not to contain the
 # application.
-user-test: user-check $(USER_RT) $(USER_RT_V1) $(KERNEL) $(ELFCHECK) $(SUITE_ELFS)
+user-test: user-check user-files $(USER_RT) $(USER_RT_V1) $(KERNEL) $(ELFCHECK) $(SUITE_ELFS)
 	SUITE_DIR=$(SUITE_DIR) ELFCHECK=$(ELFCHECK) USER_CC="$(CC)" USER_CFLAGS="$(USER_CFLAGS)" USER_LD="$(LD)" \
 	USER_LDFLAGS="$(USER_LDFLAGS_BASE)" USER_LDS=$(USER_LDS) \
 	KERNEL_SYSCALL_H=arch/x86_64/syscall.h USER_SYSCALL_H=$(USER_DIR)/include/vos/syscall.h \
 	    scripts/test-user-elf.sh $(USER_BUILD) $(KERNEL) $(wildcard build/$(ARCH)-test*/vos.bin)
+	@set -e; for f in $(FILE_ELFS); do scripts/check-user-elf.sh $$f; $(ELFCHECK) $$f; done
+	python3 -I scripts/test-file-abi.py
 
 -include $(shell find $(USER_BUILD) -name '*.d' 2>/dev/null)
