@@ -181,16 +181,35 @@ static uint64_t small_span_frame(void)
     return found;
 }
 
-static void test_small_span(void)
+static void test_small_span(const struct boot_info *bi)
 {
     uint64_t f0 = pmm_free_count(), f = small_span_frame();
     volatile uint64_t *p = phys_to_virt(f);
     struct vmm_mapping m;
 
-    expect(f != 0 && pmm_frame_state_in(pmm_kernel(), f) == PMM_FRAME_ALLOCATED,
-           "a free frame in phys [2 MiB, 4 MiB) above the image is allocatable");
-    if (!f)
+    if (!f) {
+        /* A legal GRUB module can cover the entire tail of the second table.
+         * Prove that this explains allocation refusal, with no free or
+         * allocated frame hidden by the test's placement assumption. Never
+         * write into a module just to manufacture a test scratch page. */
+        unsigned pages=0;int covered=1;
+        for(uint64_t pa=(uint64_t)__kernel_phys_end;pa<KMAP_SMALL_SPAN;pa+=PAGE_SIZE) {
+            if(pa<LARGE_2M) continue;
+            int reserved=pa<bi->info_end && pa+PAGE_SIZE>bi->info_start;
+            for(unsigned i=0;i<bi->module_count;i++)
+                reserved |= pa<bi->modules[i].end && pa+PAGE_SIZE>bi->modules[i].start;
+            covered &= reserved && pmm_frame_state_in(pmm_kernel(),pa)==PMM_FRAME_UNAVAILABLE &&
+                       vmm_lookup(vmm_kernel_root(),KERNEL_VMA+pa,&m)==VMM_OK &&
+                       m.pa==pa && m.page_size==PAGE_SIZE && m.flags==VMM_WRITE;
+            pages++;
+        }
+        expect(pages && covered,"fully boot-reserved small-span tail is unavailable to PMM and mapped supervisor RW/NX");
+        expect(pmm_free_count()==f0,"reserved-tail allocation probe releases every temporary frame");
+        serial_puts("selftest: kmap: small-span tail entirely boot-reserved; CPU scratch-write subcase not applicable\r\n");
         return;
+    }
+    expect(pmm_frame_state_in(pmm_kernel(), f) == PMM_FRAME_ALLOCATED,
+           "a free frame in phys [2 MiB, 4 MiB) above the image is allocatable");
     expect(vmm_lookup(vmm_kernel_root(), KERNEL_VMA + f + 8, &m) == VMM_OK && m.pa == f + 8 &&
            m.page_size == PAGE_SIZE && m.flags == VMM_WRITE,
            "its alias: one 4 KiB page, supervisor, writable, NX");
@@ -310,9 +329,9 @@ static void test_verifier(const struct boot_info *bi)
 
     /*
      * N3.0: the second page table, phys [2 MiB, 4 MiB). hi is its highest
-     * page above the image that holds no boot information and no module
-     * (N3.2: a large GRUB module may cover the very last page), so the
-     * running check must name "kernel alias above the image" for it.
+     * page above the image, preferring one outside boot reservations. When
+     * modules cover the whole tail, mutate a module page instead and require
+     * the verifier's exact first owner, rather than mutating page zero.
      */
     unsigned hi = 0;
     for (unsigned p = SMALL_PAGES - 1; !hi && p > ((uint64_t)__kernel_phys_end >> 12); p--) {
@@ -324,8 +343,16 @@ static void test_verifier(const struct boot_info *bi)
         if (!used)
             hi = p;
     }
+    if(!hi) hi=SMALL_PAGES-1;
     expect(hi >= 512 && ((uint64_t)__kernel_phys_end >> 12) <= hi,
-           "a page of the second table above the image holds no module or boot information");
+           "a page of the second table lies above the image");
+    uint64_t hi_pa=(uint64_t)hi<<12;
+    const char *hi_owner="kernel alias above the image";
+    for(unsigned i=0;i<bi->module_count;i++)
+        if(hi_pa<bi->modules[i].end && hi_pa+PAGE_SIZE>bi->modules[i].start)
+            hi_owner="boot module";
+    if(hi_pa<bi->info_end && hi_pa+PAGE_SIZE>bi->info_start)
+        hi_owner="boot information";
     reset();
     cpt[hi] &= ~PTE_NX;
     expect(refused(0, bi, "kernel page", "writable and executable"),
@@ -390,7 +417,7 @@ static void test_verifier(const struct boot_info *bi)
     expect(refused(1, bi, "stack guard page", "reachable"), "running check: guard pages must stay unreachable");
     reset();
     cpt[hi] = 0;
-    expect(refused(1, bi, "kernel alias above the image", "not mapped"),
+    expect(refused(1, bi, hi_owner, "not mapped"),
            "running check: the frames above the image must stay mapped");
     reset();
     cpt[hi] &= ~PTE_W;
@@ -398,7 +425,7 @@ static void test_verifier(const struct boot_info *bi)
            "running check: the frames above the image must stay writable");
     reset();
     cpt[hi] &= ~PTE_NX;
-    expect(refused(1, bi, "kernel alias above the image", "executable"),
+    expect(refused(1, bi, hi_owner, "executable"),
            "running check: the frames above the image must not become executable");
     reset();
     cpd[1] = cpt_pa | PTE_P | PTE_W;    /* phys [2, 4) MiB would translate to [0, 2) MiB */
@@ -705,7 +732,7 @@ int selftest_kmap(const struct boot_info *bi)
 {
     failures = cases = 0;
     test_live(bi);
-    test_small_span();
+    test_small_span(bi);
     test_verifier(bi);
     test_alias_bypass();
     test_stacks();
