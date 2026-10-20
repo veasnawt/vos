@@ -1,4 +1,6 @@
 #include "blockdev.h"
+#include "io_scope.h"
+#include "panic.h"
 #include "lib.h"
 #include "memlayout.h"
 #include "pmm.h"
@@ -24,6 +26,7 @@ struct dev {
     const char *name;
     const struct blk_ops *ops;
     void *ctx;
+    uint64_t reset_seq;
 };
 
 struct line {
@@ -124,6 +127,7 @@ int blk_register(const char *name, const struct blk_ops *ops, void *ctx, blk_id_
     devs[s].name = name;
     devs[s].ops = ops;
     devs[s].ctx = ctx;
+    devs[s].reset_seq = 0;
     ndev++;
     *id = devs[s].gen << ID_GEN_SHIFT | (s + 1);
     return BLK_OK;
@@ -197,7 +201,18 @@ int blk_describe(blk_id_t id, struct blk_desc *d)
     d->sector_size = BLK_SECTOR_SIZE;
     d->max_request = BLK_MAX_REQUEST;
     d->caps = in.caps;
+    d->reset_seq = v->reset_seq;
     return BLK_OK;
+}
+
+void blk_note_reset(blk_id_t id)
+{
+    struct dev *v = lookup(id, NULL);
+    if (!v)
+        return;
+    if (v->reset_seq == UINT64_MAX)
+        panic("blk: reset sequence exhausted");
+    v->reset_seq++;
 }
 
 /* ---- validation ---- */
@@ -277,13 +292,23 @@ static struct line *victim(void)
 }
 
 /* After a whole-line load failed with BLK_EIO: the requested sectors one by one, uncached. */
+static int backend_read(struct dev *d, uint64_t lba, uint32_t count, void *buf, uint64_t cap)
+{
+    int r = io_scope_read();
+    if (r)
+        return r == IO_SCOPE_TIMEOUT ? BLK_ETIMEDOUT : r == IO_SCOPE_BUDGET ? BLK_EBUSY : BLK_EINTR;
+    int err = d->ops->read(d->ctx, lba, count, buf, cap);
+    r = io_scope_check();
+    return r ? (r == IO_SCOPE_TIMEOUT ? BLK_ETIMEDOUT : r == IO_SCOPE_BUDGET ? BLK_EBUSY : BLK_EINTR) : err;
+}
+
 static int fallback(struct dev *d, uint64_t lba, uint32_t k, uint8_t *out)
 {
     for (uint32_t i = 0; i < k; i++) {
         int err;
 
         st.fallback_reads++;
-        if ((err = d->ops->read(d->ctx, lba + i, 1, out + i * BLK_SECTOR_SIZE, BLK_SECTOR_SIZE)))
+        if ((err = backend_read(d, lba + i, 1, out + i * BLK_SECTOR_SIZE, BLK_SECTOR_SIZE)))
             return err;
     }
     return BLK_OK;
@@ -296,6 +321,9 @@ static int line_read(struct dev *d, unsigned slot, struct blk_info *in, uint64_t
     unsigned attempts = 0, waits = 0;
 
     while (attempts < LINE_ATTEMPTS) {
+        int stopped = io_scope_check();
+        if (stopped)
+            return stopped == IO_SCOPE_TIMEOUT ? BLK_ETIMEDOUT : stopped == IO_SCOPE_BUDGET ? BLK_EBUSY : BLK_EINTR;
         struct line *e = find(slot, d->gen, in->epoch, n);
 
         if (e && e->state == LINE_LOADING) {
@@ -304,7 +332,7 @@ static int line_read(struct dev *d, unsigned slot, struct blk_info *in, uint64_t
             uint32_t gen = d->gen;
 
             st.load_waits++;
-            if (thread_block_until(&load_wq, 0) == THREAD_INTERRUPTED)
+            if (io_scope_wait(&load_wq, 0) == THREAD_INTERRUPTED)
                 return BLK_EINTR;           /* N3.4: the loader goes on; this caller gives up */
             if (!d->used || d->gen != gen)
                 return BLK_ENODEV;          /* unregistered while this thread waited */
@@ -346,7 +374,7 @@ static int line_read(struct dev *d, unsigned slot, struct blk_info *in, uint64_t
 
         uint64_t epoch0 = in->epoch;
         st.device_reads++;
-        int err = d->ops->read(d->ctx, n * BLK_LINE_SECTORS, e->nsect, phys_to_virt(e->frame), LINE_BYTES);
+        int err = backend_read(d, n * BLK_LINE_SECTORS, e->nsect, phys_to_virt(e->frame), LINE_BYTES);
         d->ops->info(d->ctx, in);
         if (!err && (in->state != BLK_DEV_READY || in->epoch != epoch0))
             err = BLK_EUNAVAIL;             /* reset while loading: the data is not trusted */

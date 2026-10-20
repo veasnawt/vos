@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| Status | **PROPOSED, 2026-10-20. Design submitted for review; not approved or implemented.** |
+| Status | **PROPOSED, 2026-10-20. Direction conditionally approved; file ABI remains unimplemented. Stage 1 foundations tested locally.** |
 | Base | `main` at `c5f5acb`; U1 and N3.4 complete; x86_64 only |
 | Implementation plan | [N3.5 design, limits, failure model and test matrix](../plans/n3.5-file-api.md) |
 | Existing contracts | [ABI v0](syscall-v0.md), [ABI v1](syscall-v1.md); existing numbers, errors and behavior remain unchanged |

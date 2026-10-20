@@ -4,6 +4,8 @@
 #include "exception.h"
 #include "gdt.h"
 #include "irq.h"
+#include "io_scope.h"
+#include "virtio_blk.h"
 #include "lib.h"
 #include "memlayout.h"
 #include "panic.h"
@@ -472,6 +474,7 @@ void sched_tick(void)
 
     check_entry();
     irq_run_deferred();                 /* device bottom halves (N3.4) */
+    vblk_service();                     /* orphans progress even without a device IRQ */
     if (stats.wakeups != w0) {
         device_woke = 1;                /* a waiter of a device need not wait for the slice to end */
         stats.device_wakeups += stats.wakeups - w0;
@@ -609,6 +612,7 @@ static void idle_main(void *arg)
     (void)arg;
     for (;;) {
         irq_run_deferred();             /* device bottom halves (N3.4) */
+        vblk_service();
         wake_sleepers();
         if (runq_head) {
             thread_yield();
@@ -619,7 +623,7 @@ static void idle_main(void *arg)
          * have a deadline (N3.4), so this is a lost wakeup even with
          * interrupt-driven devices.
          */
-        if (!any_sleeper())
+        if (!any_sleeper() && !vblk_abandoned())
             panic("sched: every thread is blocked and none sleeps (lost wakeup?)");
         stats.idle_halts++;
         idle_halt();                    /* IF = 1 only inside; back with IF = 0 */
@@ -683,6 +687,7 @@ void thread_yield(void)
 __attribute__((noreturn)) void thread_exit(void)
 {
     check_entry();
+    io_scope_thread_exit();
     if (current == &pool[0] || current == idle)
         panic("sched: the boot and idle threads never exit");
     current->state = THREAD_DEAD;

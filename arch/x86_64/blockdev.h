@@ -91,6 +91,7 @@ struct blk_desc {
     uint64_t sectors, epoch;
     uint32_t sector_size, max_request;
     unsigned caps;
+    uint64_t reset_seq;             /* additive reset observation; epoch semantics unchanged */
 };
 
 struct blk_stats {
@@ -105,6 +106,8 @@ unsigned blk_count(void);
 /* The ID of the n-th registered device (0-based), or 0. */
 blk_id_t blk_nth(unsigned n);
 int blk_describe(blk_id_t id, struct blk_desc *d);
+/* Driver notification before reset waiters wake; no I/O or cache mutation. */
+void blk_note_reset(blk_id_t id);
 
 /* Reads (through the cache). buf must be kernel memory: present, writable, supervisor. */
 int blk_read(blk_id_t id, uint64_t lba, uint32_t count, void *buf, uint64_t cap);

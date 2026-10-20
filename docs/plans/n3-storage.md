@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| Status | **N3.0 complete (2026-10-18): storage architecture designed, kernel map extended to 4 MiB of 4 KiB pages. N3.1 complete (2026-10-18): read-only, polled virtio-blk driver (section 5). N3.2 complete (2026-10-18): block layer, read-only cache, DMA-frame lifecycle, cooperative waiting (section 6). N3.3 complete (2026-10-19): read-only ext2 reader (section 7). N3.4 complete (2026-10-19): interrupt-driven block I/O, deadlines, cancellation (section 9). N3.5 and later are [Proposal] and need explicit approval.** |
+| Status | **N3.0 complete (2026-10-18): storage architecture designed, kernel map extended to 4 MiB of 4 KiB pages. N3.1 complete (2026-10-18): read-only, polled virtio-blk driver (section 5). N3.2 complete (2026-10-18): block layer, read-only cache, DMA-frame lifecycle, cooperative waiting (section 6). N3.3 complete (2026-10-19): read-only ext2 reader (section 7). N3.4 complete (2026-10-19): interrupt-driven block I/O, deadlines, cancellation (section 9). N3.5 remains incomplete: Stage 1 foundations tested locally; later stages are [Proposal] and need explicit approval.** |
 | Date | 2026-10-18 |
 | Starting point | N2 complete at `8e30f9b` (`docs/plans/n2-foundation.md`, section 3.7) |
 | Target | `ARCH=x86_64`; the i386 kernel stays as it is |
@@ -36,7 +36,7 @@ from the disk is treated as untrusted input.
 | **N3.2** Block layer *(done)* | Block-device registry and interface, validated block I/O, fixed-size read-only cache in PMM frames, device-independent errors, audits; DMA-frame release for refused and stopped devices; cooperative waiting in the driver | Section 6 |
 | **N3.3** ext2 reader *(done)* | Restricted profile (stricter than `storage.md` section 5.3), every field validated, bounded walks | Section 7 |
 | **N3.4** Interrupt completion *(done)* | INTx through the PIC, waiters on wait queues instead of polling; deadlines; cancellation | Section 9 |
-| N3.5 File ABI v2 (read-only) **[PROPOSED; design submitted 2026-10-20, implementation not started]** | Handle-relative open, positional read, stat, single-entry enumeration and close; trusted startup grants; ABI note version 2. [Detailed design](n3.5-file-api.md), [ABI draft](../abi/syscall-v2.md), section 10 below | v0/v1 programs unchanged (`hello.elf` byte-identical); rights and path boundaries enforced; bounded waits, concurrent readers and kill cleanup; full BIOS/UEFI matrix |
+| N3.5 File ABI v2 (read-only) **[INCOMPLETE; Stage 1 foundations tested locally, file API unimplemented]** | Handle-relative open, positional read, stat, single-entry enumeration and close; trusted startup grants; ABI note version 2. [Detailed design](n3.5-file-api.md), [ABI draft](../abi/syscall-v2.md), section 10 below | v0/v1 programs unchanged (`hello.elf` byte-identical); rights and path boundaries enforced; bounded waits, concurrent readers and kill cleanup; full BIOS/UEFI matrix |
 | N3.6 Closure | Stress with concurrent readers, kills during I/O, exhaustion; documentation | Full regression; audits after every suite |
 
 The order may change at review. Writes (D-S4) are a separate milestone after N3.
@@ -1969,11 +1969,11 @@ model:
 
 Still not in N3.5: writes, mounting more than one volume, MSI/APIC, and networking.
 
-## 10. N3.5 design submission [PROPOSED; not implemented]
+## 10. N3.5 direction conditionally approved [INCOMPLETE]
 
 The 2026-10-20 design phase is based on `main` at `c5f5acb`, with U1 and N3.4 complete.
-The design is on local branch `feat/n3.5-file-api`. Approval to write the design does
-not approve its contracts or implementation; the completed checkpoint is unchanged.
+The design is on local branch `feat/n3.5-file-api`. Conditional approval permitted only
+Stage 1 foundations; the completed overall checkpoint is unchanged.
 
 - [Detailed N3.5 design](n3.5-file-api.md): namespace trust and rights, file-token ownership,
   thin per-process node tables, bounded storage scopes, IRQ/polling cancellation, orphan
@@ -1996,5 +1996,7 @@ not approve its contracts or implementation; the completed checkpoint is unchang
 
 The 2026-10-20 conditional review authorizes **Stage 1 bounded storage foundations only**
 after committing the refined design locally. See the new plan section 13. File handles,
-new syscalls and later stages remain proposed; N3.5 is not complete. Record actual Stage 1
-tests separately, commit verified changes locally and stop for the next review.
+new syscalls and later stages remain proposed; N3.5 is not complete.
+[Stage 1 results](../results/n3.5-stage1.md) record the implementation, local tests,
+footprint and verification limits. Stage 1 is committed locally and stops for review;
+no push, merge or Stage 2 is authorized.

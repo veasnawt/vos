@@ -1,6 +1,7 @@
 #include "virtio_blk.h"
 #include "console.h"
 #include "irq.h"
+#include "io_scope.h"
 #include "lib.h"
 #include "memlayout.h"
 #include "pmm.h"
@@ -115,6 +116,7 @@ static uint16_t next_avail, last_used;
 static int inflight[VBLK_SLOTS], done[VBLK_SLOTS];
 static uint32_t slot_count[VBLK_SLOTS], slot_len[VBLK_SLOTS];
 static struct thread *slot_owner[VBLK_SLOTS];
+static uint64_t slot_ticket[VBLK_SLOTS]; /* scalar only; never a scope or caller-buffer pointer */
 /* N3.4: waiters block on their slot's queue; an abandoned slot has no owner and waits for the device. */
 static struct wait_queue slot_wq[VBLK_SLOTS];
 static int abandoned[VBLK_SLOTS];
@@ -832,6 +834,7 @@ static int usable(void)
 static int broken(const char *why, int err)
 {
     fail(VBLK_BROKEN, why);
+    blk_note_reset(info.blk_id);        /* visible before any waiter resumes; epoch unchanged */
     if (!device_reset()) {
         info.resets_unconfirmed++;
         if (pool_ready)
@@ -839,6 +842,8 @@ static int broken(const char *why, int err)
         pci_cmd(0, 0);
     }
     for (unsigned s = 0; s < VBLK_SLOTS; s++) {
+        io_scope_request_end(slot_ticket[s]);
+        slot_ticket[s] = 0;
         info.abandoned_reset += abandoned[s];
         inflight[s] = done[s] = abandoned[s] = 0;
         slot_owner[s] = 0;
@@ -879,6 +884,10 @@ static int submit_type(uint32_t type, uint64_t lba, uint32_t count, unsigned *sl
     uint32_t bytes = count * BLK_SECTOR_SIZE;
     if (!vblk_dma_ok(hdr_pa, sizeof(struct req_header)) || !vblk_dma_ok(data_pa, bytes) || !vblk_dma_ok(st_pa, 1))
         return broken("request buffer outside the DMA pool", VBLK_EPROTO);
+
+    err = io_scope_request_begin(&slot_ticket[s]);
+    if (err)
+        return err == IO_SCOPE_BUSY ? VBLK_EBUSY : VBLK_EINTR;
 
     struct req_header *h = phys_to_virt(hdr_pa);
     h->type = type;
@@ -955,6 +964,8 @@ static int reap(void)
 /* An abandoned slot the device completed: its data is discarded and the slot is free again. */
 static void retire(unsigned s)
 {
+    io_scope_request_end(slot_ticket[s]);
+    slot_ticket[s] = 0;
     inflight[s] = done[s] = abandoned[s] = 0;
     info.completed++;
     info.abandoned_completed++;
@@ -997,9 +1008,18 @@ static int collect(void)
     return collect_woken(&w);
 }
 
+void vblk_service(void)
+{
+    if (info.state == VBLK_READY && vblk_abandoned()) {
+        unsigned w = 0;
+        collect_woken(&w);
+    }
+}
+
 /* The owner gives up its request; the device keeps the slot until it completes or is reset. */
 static void abandon(unsigned s)
 {
+    io_scope_request_abandon(slot_ticket[s]);
     slot_owner[s] = 0;
     abandoned[s] = 1;
     abandoned_at[s] = irq_ticks();
@@ -1055,16 +1075,24 @@ static void vblk_bottom(void *ctx)
 }
 
 /* Polling mode (the N3.2 wait): poll, yielding every yield_polls polls, within the poll and tick bounds. */
-static int wait_poll(unsigned slot, struct thread *me)
+static int wait_poll(unsigned slot, struct thread *me, uint64_t inherited_deadline)
 {
     uint64_t spins, epoch = info.inits, t0 = irq_ticks();
+    uint64_t deadline = io_scope_deadline(t0 + wait_ticks);
+    uint64_t limit = poll_limit < VBLK_POLL_LIMIT ? poll_limit : VBLK_POLL_LIMIT;
     int err, ticks_over = 0;
 
-    for (spins = 0; spins < poll_limit; spins++) {
+    if (inherited_deadline && inherited_deadline < deadline)
+        deadline = inherited_deadline;
+    for (spins = 0; spins < limit; spins++) {
         if ((err = collect()))
             return err;
         if (done[slot])
             break;
+        if (irq_ticks() >= deadline) {
+            ticks_over = 1;
+            break;
+        }
         if (yield_polls && spins % yield_polls == yield_polls - 1) {
             /*
              * Let other threads (and through them user programs) run. They
@@ -1077,7 +1105,8 @@ static int wait_poll(unsigned slot, struct thread *me)
                 return VBLK_EBROKEN;
             if (done[slot])
                 break;
-            if (irq_ticks() - t0 >= wait_ticks) {
+            io_scope_check();           /* remember cancellation; finish the bounded inner poll safely */
+            if (irq_ticks() >= deadline) {
                 ticks_over = 1;
                 break;
             }
@@ -1088,6 +1117,7 @@ static int wait_poll(unsigned slot, struct thread *me)
     if (!done[slot]) {
         info.timeouts++;
         info.tick_timeouts += ticks_over;
+        io_scope_stop(IO_SCOPE_TIMEOUT);
         return broken(ticks_over ? "request timed out (tick bound)" : "request timed out", VBLK_ETIMEDOUT);
     }
     if (spins > info.max_spins)
@@ -1105,7 +1135,7 @@ static int wait_poll(unsigned slot, struct thread *me)
  */
 static int wait_irq(unsigned slot, struct thread *me)
 {
-    uint64_t epoch = info.inits, deadline = irq_ticks() + wait_ticks;
+    uint64_t epoch = info.inits, deadline = io_scope_deadline(irq_ticks() + wait_ticks);
     int err, r = THREAD_WOKEN;
 
     for (;;) {
@@ -1116,18 +1146,24 @@ static int wait_irq(unsigned slot, struct thread *me)
             return VBLK_OK;
         }
         if (info.mode != VBLK_MODE_IRQ)
-            return wait_poll(slot, me);     /* the line was disabled meanwhile */
+            return wait_poll(slot, me, deadline); /* fallback cannot extend this deadline */
         uint64_t now = irq_ticks();
         if (now >= deadline) {
             info.timeouts++;
             info.tick_timeouts++;
+            io_scope_stop(IO_SCOPE_TIMEOUT);
             return broken("request timed out (deadline)", VBLK_ETIMEDOUT);
         }
         info.blocked_waits++;
-        r = thread_block_until(&slot_wq[slot], deadline - now > recheck_ticks ? now + recheck_ticks : deadline);
+        r = io_scope_wait(&slot_wq[slot], deadline - now > recheck_ticks ? now + recheck_ticks : deadline);
         if (info.state != VBLK_READY || info.inits != epoch || !inflight[slot] || slot_owner[slot] != me)
             return VBLK_EBROKEN;
         if (r == THREAD_INTERRUPTED) {
+            if (io_scope_check() == IO_SCOPE_TIMEOUT) {
+                info.timeouts++;
+                info.tick_timeouts++;
+                return broken("request timed out (scope deadline)", VBLK_ETIMEDOUT);
+            }
             abandon(slot);
             return VBLK_EINTR;
         }
@@ -1143,13 +1179,15 @@ int vblk_wait(unsigned slot, void *buf, uint64_t cap)
         return err;
     if (slot >= VBLK_SLOTS || !inflight[slot] || slot_owner[slot] != me)
         return VBLK_EINVAL;
-    if ((err = info.mode == VBLK_MODE_IRQ ? wait_irq(slot, me) : wait_poll(slot, me)))
+    if ((err = info.mode == VBLK_MODE_IRQ ? wait_irq(slot, me) : wait_poll(slot, me, 0)))
         return err;
 
     uint8_t st = *(volatile uint8_t *)phys_to_virt(info.pool[POOL_HDR] + STATUS_OFF(slot));
     uint32_t count = slot_count[slot], len = slot_len[slot];
     inflight[slot] = done[slot] = 0;
     slot_owner[slot] = 0;
+    io_scope_request_end(slot_ticket[slot]);
+    slot_ticket[slot] = 0;
     info.completed++;
     if (st == ST_IOERR) {
         info.ioerr++;
@@ -1164,6 +1202,8 @@ int vblk_wait(unsigned slot, void *buf, uint64_t cap)
     if (len != count * BLK_SECTOR_SIZE + 1)
         return broken("short completion", VBLK_EPROTO);
     info.ok++;
+    if (io_scope_check())
+        return io_scope_check() == IO_SCOPE_TIMEOUT ? VBLK_ETIMEDOUT : VBLK_EINTR;
     if (!buf)                               /* vblk_read validated it; tests may drop data */
         return VBLK_OK;
     if (cap < (uint64_t)count * BLK_SECTOR_SIZE || !vblk_buffer_ok(buf, (uint64_t)count * BLK_SECTOR_SIZE))
@@ -1211,6 +1251,9 @@ unsigned vblk_abandoned(void)
 static const char *audit_slots(void)
 {
     for (unsigned s = 0; s < VBLK_SLOTS; s++) {
+        if ((slot_ticket[s] && !inflight[s]) ||
+            !io_scope_request_valid(slot_ticket[s], slot_owner[s] ? slot_owner[s]->id : 0, abandoned[s]))
+            return "invalid storage scope request reference";
         if (abandoned[s] && (!inflight[s] || slot_owner[s]))
             return "an abandoned slot is not in flight or still has an owner";
         if (slot_owner[s] && !inflight[s])
@@ -1245,7 +1288,7 @@ const char *vblk_audit(void)
 {
     const char *a;
 
-    if ((a = audit_slots()))
+    if ((a = io_scope_audit()) || (a = audit_slots()))
         return a;
     if (info.pool_held != pool_ready)
         return "pool bookkeeping inconsistent";

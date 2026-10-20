@@ -46,9 +46,11 @@
 #include "channel.h"
 #include "pci.h"
 #include "virtio_blk.h"
+#include "io_scope.h"
+#include "panic.h"
 #include "vmm.h"
 
-#if defined(VOS_TEST_CASE_vblk) || defined(VOS_TEST_CASE_vblk_ioerr)
+#if defined(VOS_TEST_CASE_vblk) || defined(VOS_TEST_CASE_vblk_ioerr) || defined(VOS_TEST_CASE_scope_orphan_idle)
 #define VBLK_LIVE 1
 #endif
 #define VBLK_DISK_SECTORS   2051        /* tests/x86_64/vblk.mk */
@@ -1006,16 +1008,136 @@ static void test_cancel(void)
     id = start_and_cancel(400);
     int abandoned_ok = id > 0 && cw_result == VBLK_EINTR && vblk_abandoned() == 1;
     thread_sleep(25);
-    vblk_test_skip_notify(1);           /* the next request is not notified either: the device never sees them */
-    int r = vblk_read(5, 1, buf, sizeof(buf));
     vblk_test_wait_ticks(0);
-    expect(abandoned_ok && r == VBLK_EBROKEN && in->state == VBLK_BROKEN &&
+    expect(abandoned_ok && in->state == VBLK_BROKEN &&
            streq(in->why, "an abandoned request never completed") && in->abandoned_reset == ar0 + 1 &&
            vblk_inflight() == 0 && vblk_test_device_status() == 0,
-           "an abandoned request still outstanding after the bound resets the device, which releases its slot");
+           "an abandoned request resets and releases its slot without any further I/O");
     expect(set_mode(1) && read_ok(400, 8) && pmm_free_count() == f0 && vblk_audit() == NULL,
            "recovered; the same DMA pool, no frame leaked");
 }
+
+#ifndef VOS_TEST_CASE_vblk_ioerr
+#define SCOPE_OWNER 0xFFFFFFFE00000001ULL
+static volatile int scope_result, scope_end_result;
+
+static void scope_reader(void *arg)
+{
+    struct io_scope scope;
+    uint8_t mine[512];
+    (void)arg;
+    scope_result = io_scope_begin(&scope, SCOPE_OWNER);
+    if (scope_result)
+        return;
+    scope_result = vblk_read(400, 1, mine, sizeof(mine));
+    scope_end_result = io_scope_end(&scope); /* stack can now be reaped/poisoned even with a debt */
+}
+
+static void test_storage_scopes(void)
+{
+    struct io_scope scope;
+    const struct vblk_info *in = vblk_info();
+    struct blk_desc before, after;
+    uint64_t frames = pmm_free_count(), tick;
+    unsigned threads = thread_count(), slot = 0, extra = 0;
+    int irq = in->mode == VBLK_MODE_IRQ, r;
+
+    io_scope_begin(&scope, SCOPE_OWNER);
+    vblk_test_skip_notify(1);
+    int a = vblk_submit(400, 1, &slot);
+    int b = vblk_submit(401, 1, &extra);
+    vblk_test_notify();
+    r = a ? a : vblk_wait(slot, buf, sizeof(buf));
+    int outcome = io_scope_end(&scope);
+    expect(a == VBLK_OK && b == VBLK_EBUSY && r == VBLK_OK && !memcmp(buf, fix(400), 512) &&
+           outcome == IO_SCOPE_OK && !io_scope_count(),
+           "scope: only one owned driver request per ticket, completion releases the reference");
+
+    expect(set_mode(0), "scope: polling setup");
+    io_scope_begin(&scope, SCOPE_OWNER);
+    blk_describe(in->blk_id, &before);
+    vblk_test_poll_limit(2000);
+    vblk_test_yield_polls(0);
+    vblk_test_skip_notify(1);
+    tick = irq_ticks();
+    r = vblk_read(400, 1, buf, sizeof(buf));
+    blk_describe(in->blk_id, &after);
+    outcome = io_scope_end(&scope);
+    expect(r == VBLK_ETIMEDOUT && irq_ticks() == tick && vblk_test_last_spins() == 2000 &&
+           scope.result == IO_SCOPE_TIMEOUT && after.reset_seq == before.reset_seq + 1 &&
+           after.epoch == before.epoch && !vblk_inflight() && outcome == IO_SCOPE_TIMEOUT,
+           "scope: frozen ticks cannot defeat finite polling; reset observed without changing epoch");
+    vblk_test_poll_limit(0);
+    vblk_test_yield_polls(VBLK_YIELD_POLLS);
+    vblk_test_prefer_poll(0);
+    expect(vblk_reinit() == VBLK_READY && !io_scope_count(), "scope: polling timeout recovered without ticket leak");
+
+    if (irq) {
+        io_scope_begin(&scope, SCOPE_OWNER);
+        io_scope_test_limits(&scope, 512, 256, 1024, irq_ticks() + 3);
+        vblk_test_skip_notify(1);
+        tick = irq_ticks();
+        r = vblk_read(400, 1, buf, sizeof(buf));
+        outcome = io_scope_end(&scope);
+        expect(r == VBLK_ETIMEDOUT && irq_ticks() - tick >= 3 && irq_ticks() - tick < 30 &&
+               scope.result == IO_SCOPE_TIMEOUT && !vblk_inflight() &&
+               outcome == IO_SCOPE_TIMEOUT, "scope: IRQ wait uses the earlier whole-operation deadline");
+        expect(vblk_reinit() == VBLK_READY, "scope: IRQ timeout recovery");
+
+        for (unsigned k = 0; k < 4; k++) {
+            vblk_test_wait_ticks(12);
+            vblk_test_skip_notify(1);
+            scope_result = scope_end_result = -1;
+            int64_t tid = thread_create("scope-disk", scope_reader, NULL);
+            int waiting = wait_blocked(tid);
+            io_scope_cancel(SCOPE_OWNER);
+            thread_interrupt(tid);
+            int ended = wait_free(tid, 10);
+            int retained = ended && scope_result == VBLK_EINTR && scope_end_result == IO_SCOPE_INTERRUPTED &&
+                           vblk_abandoned() == 1 && io_scope_count() == 1 && !io_scope_audit() && !vblk_audit();
+            int duplicate = io_scope_begin(&scope, SCOPE_OWNER);
+            if (duplicate == IO_SCOPE_OK)
+                io_scope_end(&scope);
+            expect(waiting && retained && duplicate == IO_SCOPE_BUSY,
+                   "scope: dead caller leaves only a scalar debt; same owner cannot bypass admission");
+            if (k & 1) {
+                vblk_test_notify();       /* completion after the owner's stack was reclaimed */
+                thread_sleep(3);
+                expect(!vblk_abandoned() && !io_scope_count() && in->state == VBLK_READY,
+                       "scope: late completion retires detached ticket exactly once");
+            } else {
+                thread_sleep(16);        /* no subsequent driver operation or device IRQ */
+                expect(!vblk_abandoned() && !io_scope_count() && in->state == VBLK_BROKEN,
+                       "scope: idle maintenance resets a hung orphan without future I/O");
+                expect(vblk_reinit() == VBLK_READY, "scope: orphan reset recovery");
+            }
+            vblk_test_wait_ticks(0);
+        }
+    }
+    expect(!io_scope_count() && !io_scope_audit() && !vblk_audit() && pmm_free_count() == frames &&
+           thread_count() == threads, "scope: repeated cancellation leaves no owner, ticket, frame or thread behind");
+    serial_puts("vblk: storage scopes exercised (IRQ cases only when supported)\r\n");
+}
+
+#ifdef VOS_TEST_CASE_scope_orphan_idle
+static void test_orphan_only_idle(void)
+{
+    static struct wait_queue no_deadline;
+    vblk_test_wait_ticks(12);
+    vblk_test_skip_notify(1);
+    int64_t tid = thread_create("scope-orphan", scope_reader, NULL);
+    if (!wait_blocked(tid))
+        panic("scope orphan setup did not block");
+    io_scope_cancel(SCOPE_OWNER);
+    thread_interrupt(tid);
+    if (!wait_free(tid, 10) || io_scope_count() != 1 || vblk_abandoned() != 1)
+        panic("scope orphan setup did not detach");
+    serial_puts("scope: only orphan deadline remains; no sleeping thread\r\n");
+    thread_block(&no_deadline);
+    panic("scope orphan deadlock unexpectedly resumed");
+}
+#endif
+#endif
 
 /* Interrupted threads in the block layer: one loading a cache line, one waiting for that load. */
 static volatile int bl_result[2], bl_done[2];
@@ -1390,6 +1512,9 @@ int selftest_vblk(const struct boot_info *bi)
 {
     failures = cases = not_applicable = 0;
     mbi = bi;
+#ifdef VOS_TEST_CASE_scope_orphan_idle
+    test_orphan_only_idle();
+#endif
     test_parser();
     test_choices();
     test_buffers();
@@ -1478,6 +1603,7 @@ int selftest_vblk(const struct boot_info *bi)
 #endif
 #ifndef VOS_TEST_CASE_vblk_ioerr
     summary:
+        test_storage_scopes();
 #endif
         expect(vblk_audit() == NULL && vblk_info()->state == VBLK_READY, "final vblk audit clean, device ready");
     } else {

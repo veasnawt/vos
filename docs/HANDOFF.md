@@ -103,9 +103,10 @@ The full list is in `docs/STATUS.md`. In short:
 N3.5, the read-only user-space file API, now has a **PROPOSED** design submitted for review
 on 2026-10-20: [implementation plan and test matrix](plans/n3.5-file-api.md) and
 [ABI v2 draft](abi/syscall-v2.md). Base: `c5f5acb`; local branch: `feat/n3.5-file-api`.
-The overall direction is conditionally approved; only Stage 1 bounded storage foundations
-are authorized after a local documentation checkpoint. Commit tested Stage 1 locally and
-stop for review before file handles, new syscalls or any later stage (plan section 13).
+The overall direction is conditionally approved. Stage 1 bounded storage foundations are
+implemented and tested locally; [results and exact verification limits](results/n3.5-stage1.md).
+The refined design checkpoint is `f7b9efa`. The verified Stage 1 commit stops here: file
+handles, new syscalls and later stages require the next review (plan section 13).
 U1/N3.4 remain the latest completed milestones. U2 is the alternative future interrupt
 controller milestone in `docs/ROADMAP.md`, also not started.
 

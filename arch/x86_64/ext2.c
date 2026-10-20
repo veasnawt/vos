@@ -1,4 +1,5 @@
 #include "ext2.h"
+#include "io_scope.h"
 #include "lib.h"
 #include "memlayout.h"
 #include "thread.h"
@@ -146,7 +147,12 @@ const char *ext2_strerror(int err)
 static int dev_read(struct ext2_fs *fs, uint64_t sector, uint32_t count, void *buf, uint64_t cap)
 {
     struct blk_desc d;
+    if (io_scope_logical())
+        return fail(EXT2_EINTR, "storage operation stopped");
     int err = blk_read(fs->dev, sector, count, buf, cap);
+
+    if (io_scope_check())
+        return fail(EXT2_EINTR, "storage operation stopped");
 
     if (err == BLK_ENODEV || blk_describe(fs->dev, &d) != BLK_OK || d.epoch != fs->epoch) {
         fs->dead = 1;
@@ -458,10 +464,12 @@ static int enter(struct ext2_fs *fs)
     memset(&d, 0, sizeof(d));
     if (!slot_of(fs))
         return fail(EXT2_EINVAL, "not an open reader");
+    if (io_scope_check())
+        return fail(EXT2_EINTR, "storage operation stopped");
     while (fs->busy) {
         if (++waits > FS_WAIT_LIMIT)
             return fail(EXT2_EBUSY, "reader busy");
-        if (thread_block_until(&fs->wq, 0) == THREAD_INTERRUPTED)
+        if (io_scope_wait(&fs->wq, 0) == THREAD_INTERRUPTED)
             return fail(EXT2_EINTR, "interrupted while waiting for the reader");
         if (!fs->used)
             return fail(EXT2_EINVAL, "reader closed meanwhile");
@@ -486,7 +494,7 @@ static int leave(struct ext2_fs *fs, int err)
 {
     fs->busy = 0;
     thread_wake_all(&fs->wq);
-    return err;
+    return io_scope_check() ? EXT2_EINTR : err;
 }
 
 /* An inode number given by a caller: the root or a non-reserved inode. */

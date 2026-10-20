@@ -199,6 +199,8 @@ int vblk_wait(unsigned slot, void *buf, uint64_t cap);
 /* Slots in flight (abandoned ones included), and abandoned ones. */
 unsigned vblk_inflight(void);
 unsigned vblk_abandoned(void);
+/* Thread-context deferred maintenance; no new request or device IRQ needed. */
+void vblk_service(void);
 
 /* Consistency of the driver state; NULL if consistent, else the first problem. */
 const char *vblk_audit(void);

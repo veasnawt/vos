@@ -1,4 +1,5 @@
 #include "process.h"
+#include "io_scope.h"
 #include "console.h"
 #include "cpu.h"
 #include "exception.h"
@@ -433,6 +434,7 @@ void proc_kill(struct process *p, const char *reason)
 {
     if (registered(p) && p->state == PROC_RUNNING && !p->kill_reason) {
         p->kill_reason = reason ? reason : "killed by the kernel";
+        io_scope_cancel(p->pid);
         thread_interrupt(p->tid);       /* blocked in channel_recv: wake it so it can die */
     }
 }

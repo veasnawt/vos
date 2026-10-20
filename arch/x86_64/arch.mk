@@ -10,10 +10,10 @@ ARCH_ASFLAGS    := -g -m64
 ARCH_LDFLAGS    := -m elf_x86_64 -z max-page-size=0x1000
 ARCH_OBJS       := boot.o entry.o usermode.o kernel.o bootinfo.o console.o cpu.o exception.o gdt.o idt.o \
                    lib.o loader.o panic.o pmm.o process.o resv.o syscall.o usercopy.o vmm.o kmap.o irq.o pic.o pit.o thread.o thread_switch.o channel.o elf.o app.o \
-                   pci.o blockdev.o virtio_blk.o ext2.o devmap.o screen.o font8x16.o
+                   pci.o blockdev.o virtio_blk.o ext2.o io_scope.o devmap.o screen.o font8x16.o
 ifeq ($(VOS_TEST),1)
 ARCH_OBJS       += selftest.o selftest_cpu.o selftest_elf.o selftest_ipc.o selftest_irq.o selftest_kmap.o selftest_mp.o selftest_sched.o selftest_stress.o selftest_pmm.o selftest_suite.o \
-                   selftest_user.o selftest_vblk.o selftest_blk.o selftest_ext2.o selftest_vmm.o selftest_screen.o user_progs.o
+                   selftest_user.o selftest_vblk.o selftest_blk.o selftest_ext2.o selftest_vmm.o selftest_screen.o selftest_io_scope.o user_progs.o
 endif
 QEMU            := qemu-system-x86_64
 # The boot application, delivered by GRUB as a Multiboot2 module (grub.cfg).
@@ -343,6 +343,17 @@ arch-test: iso
 	@echo "vblk: the test disk is unchanged after every run"
 	echo "$(VBLK_SHA256)  $(VBLK_DISK)" | sha256sum -c
 	@echo "U1: the early-boot font table is exactly the output of its generator"
+	$(MAKE) --no-print-directory ARCH=$(ARCH) VOS_TEST=1 VOS_TEST_CASE=scope-exit iso
+	scripts/exit-test.sh scope-exit build/$(ARCH)-test-scope-exit/vos.iso 35 \
+	    'panic: io_scope: thread exited without unwinding' --
+	$(MAKE) --no-print-directory ARCH=$(ARCH) VOS_TEST=1 VOS_TEST_CASE=scope-live-end iso
+	scripts/exit-test.sh scope-live-end build/$(ARCH)-test-scope-live-end/vos.iso 35 \
+	    'panic: io_scope: end with wrong owner or live request' --
+	$(MAKE) --no-print-directory ARCH=$(ARCH) VOS_TEST=1 VOS_TEST_CASE=scope-orphan-idle iso
+	scripts/exit-test.sh scope-orphan-idle build/$(ARCH)-test-scope-orphan-idle/vos.iso 35 \
+	    'scope: only orphan deadline remains; no sleeping thread' \
+	    'vblk: device reset: an abandoned request never completed' \
+	    'panic: sched: every thread is blocked and none sleeps (lost wakeup?)' -- $(VBLK_RO)
 	python3 -I scripts/font8x16.py | cmp - $(ARCH_DIR)/font8x16.c
 	@echo "U1: the BIOS screen console (GRUB hands over a VBE framebuffer): PASS badge, then a panic banner"
 	COLOR=2ea043 scripts/halt-test.sh bios-screen $(ISO) $(KERNEL) 25 main 'screen: framebuffer ' \

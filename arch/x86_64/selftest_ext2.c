@@ -29,6 +29,7 @@
 #include "console.h"
 #include "ext2.h"
 #include "irq.h"
+#include "io_scope.h"
 #include "lib.h"
 #include "loader.h"
 #include "memlayout.h"
@@ -195,6 +196,8 @@ static struct moddev {
         uint8_t b[8];
     } patch[MOD_PATCHES];
 } md;
+static struct wait_queue scope_gate;
+static int scope_hold;
 
 static void md_info(void *ctx, struct blk_info *o)
 {
@@ -212,6 +215,10 @@ static int md_read(void *ctx, uint64_t lba, uint32_t count, void *buf, uint64_t 
 
     (void)ctx;
     md.reads++;
+    if (scope_hold) {
+        scope_hold = 0;
+        thread_block_until(&scope_gate, irq_ticks() + 50);
+    }
     if (count == 0 || count > BLK_LINE_SECTORS || cap < (uint64_t)count * BLK_SECTOR_SIZE || lba >= md.sectors ||
         count > md.sectors - lba)
         return BLK_EINVAL;
@@ -1081,6 +1088,48 @@ static int gone(int64_t id)
     return thread_state((uint64_t)id) == THREAD_FREE;
 }
 
+static void test_scoped_reader(void)
+{
+    struct io_scope scope;
+    struct ext2_fs *fs;
+    struct ext2_stat st;
+    uint64_t frames = pmm_free_count();
+    blk_id_t id = md_attach("ext2-1k.img");
+    if (!id || ext2_open(id, &fs) != EXT2_OK) {
+        expect(0, "scope: ext2 setup");
+        if (id)
+            blk_unregister(id);
+        return;
+    }
+    io_scope_begin(&scope, 0xFFFFFFFD00000001ULL);
+    io_scope_test_limits(&scope, 0, 256, 1024, irq_ticks() + 200);
+    uint64_t reads = md.reads;
+    int r = ext2_stat(fs, EXT2_ROOT_INO, &st);
+    int outcome = io_scope_end(&scope);
+    expect(r == EXT2_EINTR && outcome == IO_SCOPE_BUDGET && reads == md.reads && !ext2_audit(),
+           "scope: ext2 logical budget blocks access even to cached metadata, releases reader");
+
+    blk_invalidate(id);
+    intr_fs = fs;
+    intr_ino = EXT2_ROOT_INO;
+    intr_res[0] = -1;
+    scope_hold = 1;
+    int64_t tid = thread_create("scope-ext2", intr_reader, NULL);
+    int waiting = blocked(tid);
+    io_scope_begin(&scope, 0xFFFFFFFD00000001ULL);
+    io_scope_test_limits(&scope, 512, 256, 1024, irq_ticks() + 2);
+    r = ext2_stat(fs, EXT2_ROOT_INO, &st);
+    outcome = io_scope_end(&scope);
+    expect(waiting && r == EXT2_EINTR && outcome == IO_SCOPE_TIMEOUT && thread_state(tid) == THREAD_BLOCKED,
+           "scope: busy-reader deadline ends its follower without releasing the running reader");
+    thread_wake_all(&scope_gate);
+    int finished = gone(tid);
+    expect(finished && intr_res[0] == EXT2_OK && ext2_stat(fs, EXT2_ROOT_INO, &st) == EXT2_OK &&
+           ext2_close(fs) == EXT2_OK && blk_unregister(id) == BLK_OK && pmm_free_count() == frames &&
+           !io_scope_count() && !io_scope_audit() && !ext2_audit() && !blk_audit(),
+           "scope: reader and caller ownership survive timeout, all resources reclaimed");
+}
+
 static void test_interrupted(struct ext2_fs *fs)
 {
     const struct vblk_info *vi = vblk_info();
@@ -1209,6 +1258,7 @@ int selftest_ext2(const struct boot_info *bi)
     test_corruption();
     test_lifecycle();
     test_concurrent();
+    test_scoped_reader();
     expect(pmm_free_count() == f0 && blk_count() == dev0 && ext2_open_count() == 0,
            "module-device tests left no frame, device or reader behind");
     test_virtio();
