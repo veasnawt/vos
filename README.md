@@ -1,6 +1,8 @@
 # VOS
 
-**An experimental, independently developed operating-system kernel for x86 PCs.**
+**VOS (Veasna OS) is an open-source, AI-assisted, from-scratch operating-system project for x86 PCs.**
+
+VOS is being developed with human architectural direction, review, and testing supported by AI coding assistance. The goal is to grow an independent kernel into a usable general-purpose operating system. It is currently **pre-alpha kernel research**, not a desktop OS or a production-ready release. See the [verified status](docs/STATUS.md) and [roadmap](docs/ROADMAP.md) before interpreting capability claims.
 
 [![License: GPL-3.0-only](https://img.shields.io/badge/license-GPL--3.0--only-blue)](LICENSE)
 
