@@ -21,7 +21,7 @@ Status is updated at each checkpoint (see `docs/STATUS.md`).
 
 | Milestone | Content |
 |---|---|
-| N3.5 **INCOMPLETE** | [Direction conditionally approved, 2026-10-20](plans/n3.5-file-api.md); [Stage 1 bounded storage foundations tested locally](results/n3.5-stage1.md); stopped for review before Stage 2. [ABI v2](abi/syscall-v2.md), file handles and later stages remain proposed and unimplemented. |
+| N3.5 **INCOMPLETE** | [Direction conditionally approved, 2026-10-20](plans/n3.5-file-api.md); [Stage 1 scopes](results/n3.5-stage1.md) and [Stage 2 internal nodes/handles](results/n3.5-stage2.md) implemented locally; stopped for review before Stage 3. [ABI v2 file syscalls](abi/syscall-v2.md) and later stages remain proposed and unimplemented. |
 | U2 | Broader UEFI and interrupt-controller support: local APIC / IOAPIC (ACPI MADT) or MSI-X, so devices can interrupt under UEFI; more framebuffer formats as verified |
 | U3 | Independent VOS EFI loader, then Secure Boot (own keys first, test keys in OVMF) |
 | H2 | Controlled physical-hardware testing (first: Dell OptiPlex 9020), only with explicit approval of each step |

@@ -2,15 +2,16 @@
 
 | | |
 |---|---|
-| Status | **PROPOSED, 2026-10-20. Direction conditionally approved; file ABI remains unimplemented. Stage 1 foundations tested locally.** |
+| Status | **PROPOSED, 2026-10-20. Direction conditionally approved; internal Stage 1/2 foundations implemented. File ABI remains unimplemented.** |
 | Base | `main` at `c5f5acb`; U1 and N3.4 complete; x86_64 only |
 | Implementation plan | [N3.5 design, limits, failure model and test matrix](../plans/n3.5-file-api.md) |
 | Existing contracts | [ABI v0](syscall-v0.md), [ABI v1](syscall-v1.md); existing numbers, errors and behavior remain unchanged |
 
 This document specifies proposed behavior, not a claim about the current kernel. At the
 base commit the loader accepts only ABI notes 0 and 1. On 2026-10-20 the overall direction
-was conditionally approved and Stage 1 storage foundations were authorized. File syscalls,
-handles and ABI note 2 remain unimplemented and outside Stage 1 authorization.
+was conditionally approved. Later review authorized Stage 2 kernel-only nodes/handles;
+[Stage 2 evidence](../results/n3.5-stage2.md) records actual tests. File syscalls and ABI
+note 2 remain unimplemented and require Stage 3 review. No contract below changed in I2.
 
 ## 1. Versioning and compatibility
 

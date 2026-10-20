@@ -103,17 +103,21 @@ The full list is in `docs/STATUS.md`. In short:
 N3.5, the read-only user-space file API, now has a **PROPOSED** design submitted for review
 on 2026-10-20: [implementation plan and test matrix](plans/n3.5-file-api.md) and
 [ABI v2 draft](abi/syscall-v2.md). Base: `c5f5acb`; local branch: `feat/n3.5-file-api`.
-The overall direction is conditionally approved. Stage 1 bounded storage foundations are
-implemented and tested locally; [results and exact verification limits](results/n3.5-stage1.md).
-The refined design checkpoint is `f7b9efa`. The verified Stage 1 commit stops here: file
-handles, new syscalls and later stages require the next review (plan section 13).
+The overall direction is conditionally approved. Stage 1 bounded scopes (`0588fc5`)
+and Stage 2 kernel-only file nodes, process handles and secure directory access are
+implemented locally; [Stage 1 results](results/n3.5-stage1.md) and
+[Stage 2 results and verification limits](results/n3.5-stage2.md).
+The refined design checkpoint is `f7b9efa`. Stop for architectural review before Stage 3:
+no file syscalls, typed close dispatch, ABI note 2 or userspace wrappers exist yet.
 U1/N3.4 remain the latest completed milestones. U2 is the alternative future interrupt
 controller milestone in `docs/ROADMAP.md`, also not started.
 
 The design-phase unprivileged simulation of
 `apt-get -s --no-install-recommends install grub-efi-amd64-bin mtools` selected the same
-three packages as section 1. OVMF is present; EFI modules and mtools are missing from
-standard paths. No sudo or installation was performed. Obtain separate explicit approval
+three packages as section 1. At the Stage 2 check OVMF and installed mtools are present;
+standard GRUB EFI modules remain missing. No sudo or installation was performed by this
+stage. Selected OVMF boots reuse preserved loader images; they are not full fresh UEFI
+verification. Obtain separate explicit approval
 before installing packages or running sudo; never change host bootloader settings.
 
 ## 8. Physical hardware: restrictions

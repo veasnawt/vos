@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| Status | **N3.0 complete (2026-10-18): storage architecture designed, kernel map extended to 4 MiB of 4 KiB pages. N3.1 complete (2026-10-18): read-only, polled virtio-blk driver (section 5). N3.2 complete (2026-10-18): block layer, read-only cache, DMA-frame lifecycle, cooperative waiting (section 6). N3.3 complete (2026-10-19): read-only ext2 reader (section 7). N3.4 complete (2026-10-19): interrupt-driven block I/O, deadlines, cancellation (section 9). N3.5 remains incomplete: Stage 1 foundations tested locally; later stages are [Proposal] and need explicit approval.** |
+| Status | **N3.0 complete (2026-10-18): storage architecture designed, kernel map extended to 4 MiB of 4 KiB pages. N3.1 complete (2026-10-18): read-only, polled virtio-blk driver (section 5). N3.2 complete (2026-10-18): block layer, read-only cache, DMA-frame lifecycle, cooperative waiting (section 6). N3.3 complete (2026-10-19): read-only ext2 reader (section 7). N3.4 complete (2026-10-19): interrupt-driven block I/O, deadlines, cancellation (section 9). N3.5 remains incomplete: Stage 1/2 kernel foundations implemented locally; file ABI and later stages are [Proposal] and need explicit approval.** |
 | Date | 2026-10-18 |
 | Starting point | N2 complete at `8e30f9b` (`docs/plans/n2-foundation.md`, section 3.7) |
 | Target | `ARCH=x86_64`; the i386 kernel stays as it is |
@@ -36,7 +36,7 @@ from the disk is treated as untrusted input.
 | **N3.2** Block layer *(done)* | Block-device registry and interface, validated block I/O, fixed-size read-only cache in PMM frames, device-independent errors, audits; DMA-frame release for refused and stopped devices; cooperative waiting in the driver | Section 6 |
 | **N3.3** ext2 reader *(done)* | Restricted profile (stricter than `storage.md` section 5.3), every field validated, bounded walks | Section 7 |
 | **N3.4** Interrupt completion *(done)* | INTx through the PIC, waiters on wait queues instead of polling; deadlines; cancellation | Section 9 |
-| N3.5 File ABI v2 (read-only) **[INCOMPLETE; Stage 1 foundations tested locally, file API unimplemented]** | Handle-relative open, positional read, stat, single-entry enumeration and close; trusted startup grants; ABI note version 2. [Detailed design](n3.5-file-api.md), [ABI draft](../abi/syscall-v2.md), section 10 below | v0/v1 programs unchanged (`hello.elf` byte-identical); rights and path boundaries enforced; bounded waits, concurrent readers and kill cleanup; full BIOS/UEFI matrix |
+| N3.5 File ABI v2 (read-only) **[INCOMPLETE; Stage 1/2 kernel foundations implemented, userspace file ABI unimplemented]** | Handle-relative open, positional read, stat, single-entry enumeration and close; trusted startup grants; ABI note version 2. [Detailed design](n3.5-file-api.md), [ABI draft](../abi/syscall-v2.md), section 10 below | v0/v1 programs unchanged (`hello.elf` byte-identical); rights and path boundaries enforced; bounded waits, concurrent readers and kill cleanup; full BIOS/UEFI matrix |
 | N3.6 Closure | Stress with concurrent readers, kills during I/O, exhaustion; documentation | Full regression; audits after every suite |
 
 The order may change at review. Writes (D-S4) are a separate milestone after N3.
@@ -2000,3 +2000,9 @@ new syscalls and later stages remain proposed; N3.5 is not complete.
 [Stage 1 results](../results/n3.5-stage1.md) record the implementation, local tests,
 footprint and verification limits. Stage 1 is committed locally and stops for review;
 no push, merge or Stage 2 is authorized.
+
+The subsequent review provisionally accepted Stage 1 at `0588fc5` and authorized Stage 2
+internal nodes, handles, trusted grants and secure component walking.
+[Stage 2 results](../results/n3.5-stage2.md) record implementation, test evidence,
+memory growth and the device-ID rollover refinement. Main stays unchanged. Stop for
+review before Stage 3; no userspace file calls, close dispatch changes or ABI note 2 yet.

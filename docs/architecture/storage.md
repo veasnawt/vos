@@ -58,7 +58,7 @@ No performance numbers appear here because none have been measured.
 
 ## 2. Current state [Current]
 
-- No block device, file system or file API. Programs and test data reach the kernel only as
+- **Initial baseline, before N3.1:** no block device, file system or file API. Programs and test data reach the kernel only as
   GRUB Multiboot2 modules, which are reserved in the physical allocator and copied from by the
   ELF loader.
 - QEMU 10.2.1 (`qemu-system-x86_64`) runs every test. The image boots from an ISO through
@@ -100,6 +100,16 @@ No performance numbers appear here because none have been measured.
   - every on-disk field is validated before use;
   - not exposed to programs.
   - Details, tests and limits: `docs/plans/n3-storage.md` section 5.
+
+- **Since N3.5 Stage 2** (`arch/x86_64/file.{h,c}`):
+  - a bounded kernel-only node/handle layer over one explicitly configured ext2 reader;
+  - eight additional file slots/process, four read-only rights, trusted non-root grants,
+    exact-byte relative component walking and private operation staging;
+  - binding checks include the never-reused registration incarnation, epoch and reset
+    sequence, including after waits; process cleanup and independent driver-debt retirement;
+  - no userspace file syscalls, typed close dispatch or ABI note 2 acceptance yet.
+  - The [current design](../plans/n3.5-file-api.md) and [Stage 2 evidence](../results/n3.5-stage2.md)
+    supersede older proposal details below, including mutable offsets and UTF-8 suggestions.
 
 ---
 
