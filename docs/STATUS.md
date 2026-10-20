@@ -41,8 +41,8 @@ On both paths:
 - IPC channels.
 - System-call ABI v0/v1, plus local N3.5 Stage 3 ABI v2 file operations;
   [Stage 3 evidence](results/n3.5-stage3.md) and [Stage 4 security verification](results/n3.5-stage4.md).
-  Stage 4 completion is BLOCKED by pre-entry CPU-max/128 MiB UEFI boot; N3.5 remains
-  incomplete. Stop for architectural review before Stage 5.
+  The targeted Stage 4 UEFI test-payload repair is ready for closure review; repeated
+  CPU-max/128 MiB boots pass. N3.5 remains incomplete. Stop before Stage 5.
 
 **Interrupts and timing:**
 - 8259 PIC and PIT.

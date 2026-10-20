@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| Status | **Stage 3 implemented locally, 2026-10-20; ABI contract unchanged in Stage 4. N3.5 remains INCOMPLETE. [Stage 3 evidence](../results/n3.5-stage3.md) and [Stage 4 security results](../results/n3.5-stage4.md) record the UEFI completion blocker; stop for review before Stage 5.** |
+| Status | **Stage 3 implemented locally, 2026-10-20; ABI contract unchanged in Stage 4 and its targeted UEFI repair. N3.5 remains INCOMPLETE. [Stage 3 evidence](../results/n3.5-stage3.md) and [Stage 4 security/UEFI results](../results/n3.5-stage4.md) record readiness for closure review; stop before Stage 5.** |
 | Base | `main` at `c5f5acb`; U1 and N3.4 complete; x86_64 only |
 | Implementation plan | [N3.5 design, limits, failure model and test matrix](../plans/n3.5-file-api.md) |
 | Existing contracts | [ABI v0](syscall-v0.md), [ABI v1](syscall-v1.md); existing numbers, errors and behavior remain unchanged |
