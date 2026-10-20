@@ -859,6 +859,10 @@ int ext2_readdir(struct ext2_fs *fs, uint32_t dir, uint64_t *cookie, struct ext2
 
             if (!le32(e))
                 continue;
+            /* On-disk directory references are metadata, not caller inode
+             * arguments. Match lookup's rejection before publishing an entry. */
+            if (!entry_ino_ok(fs, le32(e)))
+                return leave(fs, corrupt("directory entry names a reserved inode"));
             ent->ino = le32(e);
             ent->type = fs->filetype ? e[7] : EXT2_T_UNKNOWN;
             ent->name_len = e[6];
