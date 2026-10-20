@@ -277,6 +277,7 @@ void kernel_main(uint32_t mb2_magic, uint32_t mb2_info)
     check(selftest_vblk(&bi) == 0, "vblk self-test");
     check(selftest_blk(&bi) == 0, "block layer self-test");
     check(selftest_ext2(&bi) == 0, "ext2 reader self-test");
+    check(selftest_file(&bi) == 0, "internal file layer self-test");
     check(selftest_screen(&bi) == 0, "screen console self-test");
     check(selftest_io_scope() == 0, "bounded storage scope self-test");
 #if defined(VOS_TEST_CASE_suite) || defined(VOS_TEST_CASE_irq)
