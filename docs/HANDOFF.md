@@ -100,9 +100,20 @@ The full list is in `docs/STATUS.md`. In short:
 
 ## 7. Suggested next milestone
 
-N3.5, the read-only user-space file API, or U2 if UEFI interrupt support comes first. Both are
-described in `docs/ROADMAP.md`; neither has started. Start either with a written design and
-approval, as with the earlier milestones.
+N3.5, the read-only user-space file API, now has a **PROPOSED** design submitted for review
+on 2026-10-20: [implementation plan and test matrix](plans/n3.5-file-api.md) and
+[ABI v2 draft](abi/syscall-v2.md). Base: `c5f5acb`; local branch: `feat/n3.5-file-api`.
+The overall direction is conditionally approved; only Stage 1 bounded storage foundations
+are authorized after a local documentation checkpoint. Commit tested Stage 1 locally and
+stop for review before file handles, new syscalls or any later stage (plan section 13).
+U1/N3.4 remain the latest completed milestones. U2 is the alternative future interrupt
+controller milestone in `docs/ROADMAP.md`, also not started.
+
+The design-phase unprivileged simulation of
+`apt-get -s --no-install-recommends install grub-efi-amd64-bin mtools` selected the same
+three packages as section 1. OVMF is present; EFI modules and mtools are missing from
+standard paths. No sudo or installation was performed. Obtain separate explicit approval
+before installing packages or running sudo; never change host bootloader settings.
 
 ## 8. Physical hardware: restrictions
 

@@ -36,7 +36,7 @@ from the disk is treated as untrusted input.
 | **N3.2** Block layer *(done)* | Block-device registry and interface, validated block I/O, fixed-size read-only cache in PMM frames, device-independent errors, audits; DMA-frame release for refused and stopped devices; cooperative waiting in the driver | Section 6 |
 | **N3.3** ext2 reader *(done)* | Restricted profile (stricter than `storage.md` section 5.3), every field validated, bounded walks | Section 7 |
 | **N3.4** Interrupt completion *(done)* | INTx through the PIC, waiters on wait queues instead of polling; deadlines; cancellation | Section 9 |
-| N3.5 File ABI v2 (read-only) | Handle-relative open, read, stat, enumerate and close; the namespace from trusted configuration; the ABI note version 2 | v0/v1 programs unchanged (`hello.elf` byte-identical); rights and `..` escapes refused; concurrent readers |
+| N3.5 File ABI v2 (read-only) **[PROPOSED; design submitted 2026-10-20, implementation not started]** | Handle-relative open, positional read, stat, single-entry enumeration and close; trusted startup grants; ABI note version 2. [Detailed design](n3.5-file-api.md), [ABI draft](../abi/syscall-v2.md), section 10 below | v0/v1 programs unchanged (`hello.elf` byte-identical); rights and path boundaries enforced; bounded waits, concurrent readers and kill cleanup; full BIOS/UEFI matrix |
 | N3.6 Closure | Stress with concurrent readers, kills during I/O, exhaustion; documentation | Full regression; audits after every suite |
 
 The order may change at review. Writes (D-S4) are a separate milestone after N3.
@@ -1968,3 +1968,33 @@ model:
   and kills during reads.
 
 Still not in N3.5: writes, mounting more than one volume, MSI/APIC, and networking.
+
+## 10. N3.5 design submission [PROPOSED; not implemented]
+
+The 2026-10-20 design phase is based on `main` at `c5f5acb`, with U1 and N3.4 complete.
+The design is on local branch `feat/n3.5-file-api`. Approval to write the design does
+not approve its contracts or implementation; the completed checkpoint is unchanged.
+
+- [Detailed N3.5 design](n3.5-file-api.md): namespace trust and rights, file-token ownership,
+  thin per-process node tables, bounded storage scopes, IRQ/polling cancellation, orphan
+  retirement, exact resource allowances, candidate files, staged implementation, test matrix
+  and unresolved risks.
+- [ABI v2 draft](../abi/syscall-v2.md): proposed calls 6–10, existing close 5 reused by token
+  domain, appended errors 10–20, exact structures and call contracts. ABI v0/v1 numbers,
+  errors, behavior, entry state and old binaries remain unchanged.
+- D-S5/D-S6 are submitted as **case-sensitive exact bytes, no Unicode normalization or
+  UTF-8 validation**. They remain proposed. Every `..` and symlink is refused; no global
+  root is available. Directory authority assumes a trusted provisioned namespace; ext2
+  does not authenticate hostile media.
+- D-S9's file-layer proposal is eight additional file handles per process, two global
+  operation tickets including abandoned requests, <=4 KiB user reads, finite per-call
+  work/deadline limits and <=64 KiB new production static storage. These are design
+  budgets, not measured implementation results.
+- UEFI dependency simulation matched HANDOFF's three-package no-recommends set. No sudo,
+  package installation or bootloader changes were performed; tool setup needs separate
+  approval before future UEFI verification.
+
+The 2026-10-20 conditional review authorizes **Stage 1 bounded storage foundations only**
+after committing the refined design locally. See the new plan section 13. File handles,
+new syscalls and later stages remain proposed; N3.5 is not complete. Record actual Stage 1
+tests separately, commit verified changes locally and stop for the next review.

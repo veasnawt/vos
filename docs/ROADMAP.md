@@ -17,11 +17,11 @@ Status is updated at each checkpoint (see `docs/STATUS.md`).
 | U0 | UEFI feasibility under OVMF | `docs/plans/uefi.md` §1–7 |
 | U1 | UEFI readiness with BIOS compatibility: low-memory loader data, defined CPU state, device-memory window, framebuffer screen console, `make uefi-iso` / `make test-uefi` | `docs/plans/uefi.md` §8 |
 
-## Remaining (planned, not started)
+## Remaining
 
 | Milestone | Content |
 |---|---|
-| N3.5 | Read-only user-space file-system API (file ABI v2): handle-relative open/read/stat/enumerate/close, namespace from trusted configuration, kill-during-I/O rules |
+| N3.5 **INCOMPLETE** | [Direction conditionally approved, 2026-10-20](plans/n3.5-file-api.md); Stage 1 bounded storage foundations authorized, then stop for review. [ABI v2](abi/syscall-v2.md), file handles and later stages remain proposed and unimplemented. |
 | U2 | Broader UEFI and interrupt-controller support: local APIC / IOAPIC (ACPI MADT) or MSI-X, so devices can interrupt under UEFI; more framebuffer formats as verified |
 | U3 | Independent VOS EFI loader, then Secure Boot (own keys first, test keys in OVMF) |
 | H2 | Controlled physical-hardware testing (first: Dell OptiPlex 9020), only with explicit approval of each step |
