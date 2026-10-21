@@ -21,7 +21,7 @@ Status is updated at each checkpoint (see `docs/STATUS.md`).
 
 | Milestone | Content |
 |---|---|
-| N3.5 **INCOMPLETE** | [Plan](plans/n3.5-file-api.md); Stages 1–3 implemented locally, including the [rights-width repair](results/n3.5-rights-repair.md) and [ABI v2 integration](results/n3.5-stage3.md). [Stage 4 security/UEFI evidence](results/n3.5-stage4.md) is READY FOR CLOSURE REVIEW after the targeted test-image split and repeated 128 MiB passes. Stop before Stage 5; independent review required. |
+| N3.5 **INCOMPLETE** | [Plan](plans/n3.5-file-api.md); local read-only ABI v2 implementation and [Stage 4 security/UEFI repair](results/n3.5-stage4.md), whose closure is approved. [Stage 5 final verification](results/n3.5-stage5.md) is **READY FOR N3.5 CLOSURE REVIEW**: 74 BIOS and 38 fresh UEFI passes, unchanged frozen hashes and budgets. Final architectural approval remains required; no N3.6 work. |
 | U2 | Broader UEFI and interrupt-controller support: local APIC / IOAPIC (ACPI MADT) or MSI-X, so devices can interrupt under UEFI; more framebuffer formats as verified |
 | U3 | Independent VOS EFI loader, then Secure Boot (own keys first, test keys in OVMF) |
 | H2 | Controlled physical-hardware testing (first: Dell OptiPlex 9020), only with explicit approval of each step |

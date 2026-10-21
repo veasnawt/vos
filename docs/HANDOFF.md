@@ -77,7 +77,7 @@ because GRUB and xorriso embed timestamps and UUIDs, so compare their contents i
 - **One x86_64 kernel for both firmware types,** loaded by GRUB through Multiboot2. UEFI is the
   primary future target; Legacy BIOS stays supported.
 - **ABI:** v0 and v1 are frozen (`docs/abi/`). File ABI v2 is implemented locally for
-  incomplete N3.5; Stage 4 awaits closure review (section 7). `hello.elf`
+  incomplete N3.5; final architectural closure review is pending (section 7). `hello.elf`
   must stay byte-identical.
 - **Kernel model:** non-preemptible, running with IF = 0. Interrupts are taken only in ring 3
   or in the idle halt.
@@ -99,13 +99,11 @@ The full list is in `docs/STATUS.md`. In short:
 - Only the 32-bpp BGRX framebuffer format.
 - No keyboard, shell, writable file system or networking.
 
-## 7. Suggested next milestone
+## 7. Current development checkpoint and review boundary
 
 N3.5 remains **INCOMPLETE** on `feat/n3.5-file-api`, based on `c5f5acb`.
 [Plan and limits](plans/n3.5-file-api.md), [ABI v2](abi/syscall-v2.md), and
-[Stage 3 evidence](results/n3.5-stage3.md) describe the ABI implementation;
-[Stage 4 evidence](results/n3.5-stage4.md) records the latest security verification
-and the targeted UEFI repair, now **READY FOR STAGE 4 CLOSURE REVIEW**.
+[Stage 3 evidence](results/n3.5-stage3.md) describe the implementation.
 Stages 1/2 provide bounded I/O scopes, nodes, handles and trusted non-root grants.
 The separately verified rights-width repair is `4384bb1`; the original Stage 3 draft
 was preserved and its integration rehearsed in a separate worktree before resumption.
@@ -113,32 +111,41 @@ Stage 3 adds ABI note 2, file calls 6–10, typed close 5, validated wire copies
 versioned runtime and real ring-3 fixtures. No production launch receives a grant
 automatically; ordinary hello still boots without storage.
 
-Stage 4 adds a separately linked ring-3 adversary, repeated quota/kill/interrupt tests,
-malformed metadata overlays and five isolated mutation controls. Its minimal production
-repair rejects reserved-inode directory records before publication. Fresh full BIOS
-regression passes, including 845 file assertions per configuration. The targeted
-follow-up captures GRUB's failed contiguous relocation allocation after loading the
-combined fixtures. Separate mandatory reader/file test images retain all coverage and
-original module bytes; both pass repeated CPU-max/128 MiB UEFI boots. The fresh full
-BIOS regression has 74 passing QEMU verdicts and 302 static checks; all five mutation
-controls and frozen hashes pass. Production loaded bytes and budgets are unchanged.
-Stop for independent Stage 4 closure review before Stage 5. U1/N3.4 remain the latest
-completed milestones; this recommendation does not declare N3.5 complete.
-Main is unchanged. No push, merge to main, physical test or writable storage is authorized.
+[Stage 4 evidence](results/n3.5-stage4.md) preserves adversarial tests, the
+reserved-inode repair, original GRUB failure, rejected experiments and captured
+contiguous-allocation failure. Separate mandatory reader/file test images retain
+the original 27-module union and every assertion. The user approved Stage 4 closure
+at `38ae9e6` and authorized Stage 5.
 
-The design-phase unprivileged simulation of
-`apt-get -s --no-install-recommends install grub-efi-amd64-bin mtools` selected the same
-three packages as section 1. At the Stage 4 check OVMF and installed mtools are present;
-standard GRUB EFI modules remain missing. No sudo or installation was performed by this
-stage. Selected OVMF boots reuse preserved loader images with fresh kernels/modules;
-they are not full fresh UEFI
-verification. Obtain separate explicit approval
-before installing packages or running sudo; never change host bootloader settings.
-The follow-up has 18 selected optical passes, including repeated reader/file 128 MiB
-boots, CPU-max at 192/256/512/1024 MiB and file/sparse 8 GiB. Fresh historical comparisons
-and the original failing combined ISO remain recorded. Every run uses fresh VARS.
-128 MiB acceptance is preserved. Do not claim full fresh UEFI, USB or physical
-verification; review the two-image coverage organization and remaining tooling gap.
+[Stage 5 final verification](results/n3.5-stage5.md) is **READY FOR N3.5 CLOSURE
+REVIEW**: 74 full BIOS passes, 19 full fresh `make test-uefi` passes and 19 additional
+fresh UEFI configurations. These include default/max CPU at 128 MiB, 1 GiB and
+sparse 8 GiB, with fresh VARS, plus production emulated USB/GPT and display cases.
+File tests report 845/0; static checks 302/0; five deliberate mutations are detected.
+All 139 frozen hashes and 131 old userspace ELFs match. Fresh equivalent c5 builds
+confirm cumulative static/reserved growth of 43808/57344 B, within the original
+65536/131072 B limits. Production bytes reproduce; no source change was needed.
+
+The EFI tooling gap is resolved for this verification using authorized ordinary-user
+download/extraction of `grub-efi-amd64-bin` and `grub-efi-amd64-unsigned`
+2.14-2ubuntu1. Existing mtools and OVMF were reused. No sudo, system package
+installation, host bootloader or firmware operation was performed. To reuse the
+retained toolchain:
+
+```sh
+export GRUB_EFI_DIR=/home/veasnawt/.cache/vos-n35-i5-qdSwVV/efi-tools/usr/lib/grub/x86_64-efi
+make test-uefi
+```
+
+If that scratch directory is no longer available, repeat section 1's nonprivileged
+procedure; install only with separate explicit approval. Stage 4's selected-loader
+limitation is historical: full fresh UEFI verification has now run. The final report
+contains all configurations, hashes, measurements, host-audit failures/corrections,
+artifact paths and remaining QEMU/polling/immutable-media/reset/stack-proof limits.
+
+Stop for final architectural closure review. U1/N3.4 remain the latest completed
+milestones; do not mark N3.5 complete before approval. Main is unchanged. No push,
+merge, N3.6 work, physical test or writable storage is authorized.
 
 ## 8. Physical hardware: restrictions
 

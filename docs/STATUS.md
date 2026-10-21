@@ -1,7 +1,9 @@
 # VOS Status
 
-**Checkpoint:** 2026-10-19, U1 complete (details below). The commit is the one this file
-was committed with. The checkpoint tag is `checkpoint-2026-10-19-u1`.
+**Latest completed checkpoint:** 2026-10-19, U1 complete (historical results below).
+The checkpoint tag is `checkpoint-2026-10-19-u1`. Development verification on
+2026-10-21 is [READY FOR N3.5 CLOSURE REVIEW](results/n3.5-stage5.md);
+N3.5 remains **INCOMPLETE** pending final architectural approval.
 
 VOS is an experimental, independently written x86_64 kernel (with a legacy i386 kernel). It
 runs only in QEMU so far: no physical machine has booted it. This is a development checkpoint,
@@ -39,10 +41,12 @@ On both paths:
 - Kernel threads.
 - Ring-3 programs in separate address spaces, preempted by the timer.
 - IPC channels.
-- System-call ABI v0/v1, plus local N3.5 Stage 3 ABI v2 file operations;
-  [Stage 3 evidence](results/n3.5-stage3.md) and [Stage 4 security verification](results/n3.5-stage4.md).
-  The targeted Stage 4 UEFI test-payload repair is ready for closure review; repeated
-  CPU-max/128 MiB boots pass. N3.5 remains incomplete. Stop before Stage 5.
+- System-call ABI v0/v1, plus local N3.5 ABI v2 file operations;
+  [Stage 3 implementation](results/n3.5-stage3.md) and [Stage 4 security verification](results/n3.5-stage4.md).
+  Stage 4 closure is approved. [Stage 5 final verification](results/n3.5-stage5.md)
+  passes 74 BIOS and 38 fresh UEFI runs, 845/0 file assertions, 302/0 static checks
+  and five mutation controls. Frozen hashes and resource budgets hold.
+  N3.5 awaits architectural closure approval; stop before N3.6.
 
 **Interrupts and timing:**
 - 8259 PIC and PIT.
@@ -125,8 +129,9 @@ On BIOS (SeaBIOS: ELCR `0xc00`), virtio-blk interrupt mode is fully tested: 149 
 - **VGA text fallback:** only unit-tested. GRUB always hands this kernel a framebuffer, because
   the kernel requests one.
 - **BIOS display change:** BIOS boots now switch to VBE graphics.
-- **Missing features:** no keyboard input, shell, writable storage, user file API,
-  networking, SMP or ACPI power management. The kernel ends by halting.
+- **Missing features:** no keyboard input, shell, writable storage, networking,
+  SMP or ACPI power management. The local read-only file API awaits N3.5 closure.
+  The production kernel ends by halting.
 
 ## Unsupported (by design, for now)
 

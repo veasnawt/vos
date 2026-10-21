@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| Status | **N3.0–N3.4 complete (2026-10-18/19), as recorded below. N3.5 remains incomplete: Stages 1–3 implemented locally; targeted Stage 4 UEFI repair is READY FOR CLOSURE REVIEW. Stop before Stage 5; see section 10.** |
+| Status | **N3.0–N3.4 complete (2026-10-18/19), as recorded below. N3.5 remains incomplete: Stage 4 closure approved; [Stage 5 final verification](../results/n3.5-stage5.md) is READY FOR N3.5 CLOSURE REVIEW with full fresh BIOS/UEFI results. Final architectural approval pending; see section 10.** |
 | Date | 2026-10-18 |
 | Starting point | N2 complete at `8e30f9b` (`docs/plans/n2-foundation.md`, section 3.7) |
 | Target | `ARCH=x86_64`; the i386 kernel stays as it is |
@@ -36,7 +36,7 @@ from the disk is treated as untrusted input.
 | **N3.2** Block layer *(done)* | Block-device registry and interface, validated block I/O, fixed-size read-only cache in PMM frames, device-independent errors, audits; DMA-frame release for refused and stopped devices; cooperative waiting in the driver | Section 6 |
 | **N3.3** ext2 reader *(done)* | Restricted profile (stricter than `storage.md` section 5.3), every field validated, bounded walks | Section 7 |
 | **N3.4** Interrupt completion *(done)* | INTx through the PIC, waiters on wait queues instead of polling; deadlines; cancellation | Section 9 |
-| N3.5 File ABI v2 (read-only) **[INCOMPLETE; Stage 4 ready for closure review]** | Handle-relative open, positional read, stat, single-entry enumeration and close; trusted startup grants; ABI note version 2. [Detailed design](n3.5-file-api.md), [ABI v2](../abi/syscall-v2.md), section 10 below | Frozen v0/v1/media unchanged; repeated 128 MiB reader/file UEFI and full BIOS pass. Independent closure review and full fresh EFI verification remain |
+| N3.5 File ABI v2 (read-only) **[INCOMPLETE; final closure review pending]** | Handle-relative open, positional read, stat, single-entry enumeration and close; trusted startup grants; ABI note version 2. [Detailed design](n3.5-file-api.md), [ABI v2](../abi/syscall-v2.md), section 10 below | [Stage 5](../results/n3.5-stage5.md): full BIOS and fresh UEFI pass; frozen v0/v1/media and budgets unchanged. Final architectural approval required |
 | N3.6 Closure | Stress with concurrent readers, kills during I/O, exhaustion; documentation | Full regression; audits after every suite |
 
 The order may change at review. Writes (D-S4) are a separate milestone after N3.
@@ -2031,3 +2031,14 @@ assertions, and pass repeated CPU-max/128 MiB boots. Follow-up full BIOS, static
 mutation, lifecycle, compatibility and budget checks pass. The recommendation is
 **READY FOR STAGE 4 CLOSURE REVIEW**, superseding the original blocked checkpoint
 above. This is not independent closure approval or Stage 5/N3.5 completion.
+
+The subsequent user review approved Stage 4 closure at `38ae9e6` and authorized
+Stage 5. [Final verification](../results/n3.5-stage5.md) now passes full fresh
+`make test-uefi` (19 runs), 19 additional UEFI configurations and all 74 BIOS
+verdicts. Nonprivileged extraction resolved the EFI tooling gap without system
+installation or host boot changes. File 845/0, static 302/0, five mutation controls,
+139 frozen hashes and 131 old userspace ELF comparisons pass. Fresh cumulative
+static/reserved growth remains 43808/57344 B, within approved limits. Stage 5 changes
+documentation only. **READY FOR N3.5 CLOSURE REVIEW** supersedes the earlier review
+gate; N3.5 remains incomplete pending final architectural approval. Stop here:
+no push, merge to main, N3.6 implementation or physical hardware work.
