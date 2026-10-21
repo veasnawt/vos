@@ -5,10 +5,12 @@
 commit. Formal approval at verification checkpoint `0109d9b` and documentation
 closure at `398ba19` are earlier historical checkpoints.
 
-**Publication state (this documentation review):** the GitHub repository is public,
-but its main remains `c5f5acb`; the twenty local N3.5 commits have not been pushed.
-Local integration does not constitute GitHub publication. See the
-[integration/recovery summary](results/n3.5-integration.md).
+**Publication state:** N3.5 is complete and published on GitHub main at
+`c0ccdd7d9ba3601c1d6891a3ff6c67516c679213`. The
+[integration/recovery summary](results/n3.5-integration.md) is a preserved historical
+report from before publication. **N3.6 Stage 2 is in development**, limited to
+test-only accounting foundations and a bounded pilot; see the
+[Stage 2 plan](plans/n3.6-storage-closure.md). No commit or later-stage work is authorized.
 [Closure record](results/n3.5-closure.md) and [Stage 5 evidence](results/n3.5-stage5.md)
 define the accepted scope. N3 and N3.6 remain incomplete; N3.6 is the next planned
 storage milestone. No release tag was created. The older U1 tag remains
@@ -56,7 +58,8 @@ On both paths:
   Stage 4 closure is approved. [Stage 5 final verification](results/n3.5-stage5.md)
   passes 74 BIOS and 38 fresh UEFI runs, 845/0 file assertions, 302/0 static checks
   and five mutation controls. Frozen hashes and resource budgets hold.
-  N3.5 closure is approved. N3.6 preparation is planning only; implementation is not authorized.
+  N3.5 closure is approved. N3.6 Stage 2 test-only accounting and its bounded pilot
+  are authorized; no production behavior changes or later stages are authorized.
 
 **Interrupts and timing:**
 - 8259 PIC and PIT.

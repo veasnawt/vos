@@ -21,9 +21,11 @@ VOS is written primarily in freestanding C and x86 assembly. It is **not a Linux
 - A basic framebuffer boot/status/panic console where supported, plus serial diagnostics.
 - BIOS and UEFI boot paths **in QEMU** via GRUB; extensive emulator-based regression tests.
 
-N3.5 is complete and integrated into local main at `0ddb201`; see the
+N3.5 is **complete and published** on GitHub main at `c0ccdd7` (integration
+checkpoint `0ddb201`). See the historical
 [integration and verification summary](docs/results/n3.5-integration.md).
-Publishing that checkpoint to GitHub is a separate step.
+N3.6 Stage 2 accounting foundations are in development on a separate local branch;
+N3.6 and N3 Storage remain incomplete.
 
 The separate [Veasna OS](https://github.com/veasnawt/veasna-os) React/Electron desktop prototype is **not** a graphical environment running on this kernel.
 

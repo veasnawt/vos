@@ -24,7 +24,7 @@ N3 remains **INCOMPLETE** until its separate N3.6 closure work and review.
 
 | Milestone | Content |
 |---|---|
-| N3.6 **PLANNED — NOT STARTED** | Next storage milestone: integrated stress, lifecycle/resource closure and documentation. [Preparation and Stage 1 design questions](plans/n3-storage.md#11-n36-preparation-planning-only); no implementation authorized. |
+| N3.6 **STAGE 2 IN DEVELOPMENT — INCOMPLETE** | Stage 1 design accepted; [test-only accounting foundations and bounded pilot](plans/n3.6-storage-closure.md) authorized. Integrated stress and later verification remain unimplemented/unapproved. |
 | U2 | Broader UEFI and interrupt-controller support: local APIC / IOAPIC (ACPI MADT) or MSI-X, so devices can interrupt under UEFI; more framebuffer formats as verified |
 | U3 | Independent VOS EFI loader, then Secure Boot (own keys first, test keys in OVMF) |
 | H2 | Controlled physical-hardware testing (first: Dell OptiPlex 9020), only with explicit approval of each step |

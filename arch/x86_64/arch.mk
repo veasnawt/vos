@@ -13,7 +13,10 @@ ARCH_OBJS       := boot.o entry.o usermode.o kernel.o bootinfo.o console.o cpu.o
                    pci.o blockdev.o virtio_blk.o ext2.o io_scope.o file.o devmap.o screen.o font8x16.o
 ifeq ($(VOS_TEST),1)
 ARCH_OBJS       += selftest.o selftest_cpu.o selftest_elf.o selftest_ipc.o selftest_irq.o selftest_kmap.o selftest_mp.o selftest_sched.o selftest_stress.o selftest_pmm.o selftest_suite.o \
-                   selftest_user.o selftest_vblk.o selftest_blk.o selftest_ext2.o selftest_vmm.o selftest_screen.o selftest_io_scope.o selftest_file.o user_progs.o
+                   selftest_user.o selftest_vblk.o selftest_blk.o selftest_ext2.o selftest_vmm.o selftest_screen.o selftest_io_scope.o selftest_file.o storage_observe.o user_progs.o
+ifeq ($(VOS_TEST_CASE),accounting)
+ARCH_OBJS += selftest_accounting.o
+endif
 endif
 QEMU            := qemu-system-x86_64
 # The boot application, delivered by GRUB as a Multiboot2 module (grub.cfg).

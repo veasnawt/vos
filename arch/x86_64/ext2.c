@@ -975,3 +975,17 @@ const char *ext2_audit(void)
     }
     return NULL;
 }
+
+#ifdef VOS_TEST
+#include "storage_observe.h"
+
+void ext2_test_observe(struct observe_reader out[EXT2_MAX_FS])
+{
+    for (unsigned i = 0; i < EXT2_MAX_FS; i++) {
+        const struct ext2_fs *fs = &fss[i];
+        out[i] = (struct observe_reader){(uint64_t)fs, fs->epoch,
+            (uint64_t)fs->wq.head, (uint64_t)fs->wq.tail,
+            fs->used, fs->busy, fs->dead, fs->dev};
+    }
+}
+#endif

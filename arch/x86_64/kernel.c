@@ -280,6 +280,12 @@ void kernel_main(uint32_t mb2_magic, uint32_t mb2_info)
     check(selftest_file(&bi) == 0, "internal file layer self-test");
     check(selftest_screen(&bi) == 0, "screen console self-test");
     check(selftest_io_scope() == 0, "bounded storage scope self-test");
+#ifdef VOS_TEST_CASE_accounting
+    if (first_failure)
+        panic("accounting prerequisite self-test failed");
+    extern int selftest_accounting(const struct boot_info *);
+    check(selftest_accounting(&bi) == 0, "N3.6 accounting smoke tests");
+#endif
 #if defined(VOS_TEST_CASE_suite) || defined(VOS_TEST_CASE_irq)
     check(selftest_suite(&bi) == 0, "isolation suite");
 #endif

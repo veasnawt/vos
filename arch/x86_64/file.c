@@ -797,3 +797,40 @@ void file_test_last_tokens(void)
     next_token = FILE_SERIAL_MAX - 1;
 }
 #endif
+
+#ifdef VOS_TEST
+#include "storage_observe.h"
+
+void file_test_observe(struct observe_file *out)
+{
+    out->fs = (uint64_t)volume.fs;
+    out->generation = volume.generation;
+    out->incarnation = volume.incarnation;
+    out->epoch = volume.epoch;
+    out->reset_seq = volume.reset_seq;
+    out->sectors = volume.sectors;
+    out->config_owner = (uint64_t)volume.config_owner;
+    out->config_pid = volume.config_pid;
+    out->config_tid = volume.config_tid;
+    out->device = volume.device;
+    out->refs = volume.refs;
+    out->active = volume.active;
+    out->dead = volume.dead;
+    for (unsigned i = 0; i < PROC_TABLE; i++) {
+        const struct session *s = &sessions[i];
+        struct observe_session *d = &out->sessions[i];
+        d->owner = (uint64_t)s->owner;
+        d->pid = s->pid;
+        d->tid = s->tid;
+        memcpy(d->initial, s->initial, sizeof(d->initial));
+        d->active = s->active;
+        d->closing = s->closing;
+        d->provisioned = s->provisioned;
+        for (unsigned j = 0; j < FILE_MAX; j++) {
+            const struct node *n = &s->nodes[j];
+            d->nodes[j] = (struct observe_node){n->token, n->generation, n->ino,
+                n->rights, n->kind, n->used};
+        }
+    }
+}
+#endif

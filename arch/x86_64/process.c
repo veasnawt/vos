@@ -574,3 +574,17 @@ uint64_t proc_user_trap(struct exc_frame *f)
     serial_puts(")\r\n");
     terminate(p);
 }
+
+#ifdef VOS_TEST
+#include "storage_observe.h"
+
+void proc_test_observe(struct observe_process out[PROC_TABLE])
+{
+    for (unsigned i = 0; i < PROC_TABLE; i++) {
+        const struct process *p = table[i];
+        if (p)
+            out[i] = (struct observe_process){(uint64_t)p, p->pid, p->root,
+                p->tid, p->kstack_top, p->state, p->npages};
+    }
+}
+#endif

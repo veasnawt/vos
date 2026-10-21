@@ -274,3 +274,28 @@ void io_scope_test_limits(struct io_scope *s, unsigned logical, unsigned reads,
     s->deadline = deadline;
 }
 #endif
+
+#ifdef VOS_TEST
+#include "storage_observe.h"
+
+void io_scope_test_observe(struct observe_ticket out[IO_SCOPE_TICKETS])
+{
+    for (unsigned i = 0; i < IO_SCOPE_TICKETS; i++) {
+        const struct ticket *t = &tickets[i];
+        out[i].id = t->id;
+        out[i].pid = t->owner;
+        out[i].tid = t->tid;
+        out[i].scope = (uint64_t)t->scope;
+        out[i].guard = (uint64_t)t->guard;
+        out[i].request = t->request;
+        out[i].abandoned = t->abandoned;
+        if (t->scope) {
+            out[i].deadline = t->scope->deadline;
+            out[i].logical = t->scope->logical_left;
+            out[i].reads = t->scope->reads_left;
+            out[i].waits = t->scope->waits_left;
+            out[i].result = t->scope->result;
+        }
+    }
+}
+#endif

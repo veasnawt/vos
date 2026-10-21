@@ -43,10 +43,10 @@ git clone https://github.com/veasnawt/vos.git && cd vos
 git checkout main            # or the checkpoint tag listed in docs/STATUS.md
 ```
 
-The repository is public. At this documentation review, GitHub main is still the
-`c5f5acb` baseline; the locally integrated N3.5 checkpoint has not been pushed.
-A clone of GitHub main therefore does not yet contain N3.5. `build/` is generated
-and ignored. See [STATUS](STATUS.md) for the local integration/publication state.
+The repository is public. GitHub main includes completed N3.5 at published checkpoint
+`c0ccdd7`; integration checkpoint `0ddb201` is its parent. `build/` is generated
+and ignored. N3.6 Stage 2 development is separate and uncommitted. See
+[STATUS](STATUS.md) for the current state.
 
 ## 3. Build
 
@@ -154,9 +154,9 @@ The full list is in `docs/STATUS.md`. In short:
 
 N3.5 is **COMPLETE** and integrated into local main at
 `0ddb201ec1b13d65af7a22a56f35fafc02a3c9ab`; `feat/n3.5-file-api` points to
-the same commit. GitHub publication of these changes remains a separate, unperformed
-step. The [integration/recovery summary](results/n3.5-integration.md) records the
-final checkpoint and evidence provenance.
+the same integration commit. N3.5 is **published** on GitHub main at `c0ccdd7`.
+The [integration/recovery summary](results/n3.5-integration.md) preserves the earlier
+pre-publication checkpoint and evidence provenance.
 
 Historical checkpoints are formal approval at `0109d9b`, documentation closure at
 `398ba19`, and the pre-N3.5/resource-comparison baseline `c5f5acb`. The
@@ -212,19 +212,21 @@ and guard tests are partial evidence. OVMF still polls without IOAPIC/MSI/MSI-X.
 Finite work is not a real-time/fairness guarantee, and unconfirmed reset may retain
 bounded DMA quarantine. No broader hardware or authenticated-media claim follows.
 
-### N3.6 preparation — planning only
+### N3.6 Stage 2 — accounting foundations in development
 
-N3.6 is the next planned storage milestone, not started. [Preparation](plans/n3-storage.md#11-n36-preparation-planning-only)
-records remaining stress/resource-closure objectives, baseline commits, unchanged
-cumulative budgets, regression requirements and Stage 1 design questions.
-First review deterministic long-run schedules, cold/deep workload availability,
-orphan/reset outcomes and the required stack evidence. Keep both reader/file images
-within the 128 MiB gates and preserve all frozen contracts.
+Stage 1 architecture review is accepted. [Stage 2](plans/n3.6-storage-closure.md)
+authorizes only test-only observation, three smoke scenarios and a focused pilot.
+The initially clean primary worktree now uses `feat/n3.6-storage-closure` from published `c0ccdd7`;
+main and all thirteen worktrees/drafts are preserved. No commits are authorized.
 
-Next steps are review of the publication documentation, a separately authorized
-documentation commit/publication decision, and proposed N3.6 design preparation.
-No push, release tag, N3.6 implementation, physical test or writable storage is
-authorized by this handoff.
+The pilot is limited to one build job/QEMU, 30 minutes and 256 MiB aggregate new
+allocation, with 10 GiB C: reserve plus remaining admission and 256 MiB safety margin.
+Capacity failures require stopping and requesting storage, never reducing features,
+assertions, required coverage or evidence. No old artifacts are removed.
+The proposed later 2 GiB campaign is not authorized.
+
+Stages 3–5, full regression/mutation campaigns, production fixes, physical testing,
+writable storage, pushing and N3.6/N3 closure require separate review.
 
 ## 8. Physical hardware: restrictions
 

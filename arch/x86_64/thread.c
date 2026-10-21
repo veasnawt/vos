@@ -801,3 +801,19 @@ const char *sched_audit(void)
             return "a stack slot is owned by a thread that does not use it";
     return NULL;
 }
+
+#ifdef VOS_TEST
+#include "storage_observe.h"
+
+void thread_test_observe(struct observe_thread out[THREAD_MAX])
+{
+    for (unsigned i = 0; i < THREAD_MAX; i++) {
+        const struct thread *t = &pool[i];
+        if (t->state != THREAD_FREE)
+            out[i] = (struct observe_thread){(uint64_t)t, t->id, (uint64_t)t->proc,
+                t->rsp, t->stack_lo, t->stack_hi,
+                t->stack >= 0 && t->stack < THREAD_STACKS ? (uint64_t)stack_owner[t->stack] : 0,
+                (uint64_t)t->waiting_on, (uint64_t)t->next, t->state, t->stack};
+    }
+}
+#endif
