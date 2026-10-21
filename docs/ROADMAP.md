@@ -14,14 +14,17 @@ Status is updated at each checkpoint (see `docs/STATUS.md`).
 | N3.2 | Block layer and read-only cache | `docs/plans/n3-storage.md` §6 |
 | N3.3 | Read-only ext2 reader (kernel-internal) | `docs/plans/n3-storage.md` §7 |
 | N3.4 | Interrupt-driven block I/O: deadlines, device IRQ layer, cancellation | `docs/plans/n3-storage.md` §9 |
+| N3.5 **COMPLETE** | Read-only userspace file ABI v2, directory capabilities, bounded I/O and resource cleanup; formally approved at verification checkpoint `0109d9b` | [Closure record](results/n3.5-closure.md), [Stage 5 verification](results/n3.5-stage5.md) |
 | U0 | UEFI feasibility under OVMF | `docs/plans/uefi.md` §1–7 |
 | U1 | UEFI readiness with BIOS compatibility: low-memory loader data, defined CPU state, device-memory window, framebuffer screen console, `make uefi-iso` / `make test-uefi` | `docs/plans/uefi.md` §8 |
 
 ## Remaining
 
+N3 remains **INCOMPLETE** until its separate N3.6 closure work and review.
+
 | Milestone | Content |
 |---|---|
-| N3.5 **INCOMPLETE** | [Plan](plans/n3.5-file-api.md); local read-only ABI v2 implementation and [Stage 4 security/UEFI repair](results/n3.5-stage4.md), whose closure is approved. [Stage 5 final verification](results/n3.5-stage5.md) is **READY FOR N3.5 CLOSURE REVIEW**: 74 BIOS and 38 fresh UEFI passes, unchanged frozen hashes and budgets. Final architectural approval remains required; no N3.6 work. |
+| N3.6 **PLANNED — NOT STARTED** | Next storage milestone: integrated stress, lifecycle/resource closure and documentation. [Preparation and Stage 1 design questions](plans/n3-storage.md#11-n36-preparation-planning-only); no implementation authorized. |
 | U2 | Broader UEFI and interrupt-controller support: local APIC / IOAPIC (ACPI MADT) or MSI-X, so devices can interrupt under UEFI; more framebuffer formats as verified |
 | U3 | Independent VOS EFI loader, then Secure Boot (own keys first, test keys in OVMF) |
 | H2 | Controlled physical-hardware testing (first: Dell OptiPlex 9020), only with explicit approval of each step |

@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| Status | **N3.0–N3.4 complete (2026-10-18/19), as recorded below. N3.5 remains incomplete: Stage 4 closure approved; [Stage 5 final verification](../results/n3.5-stage5.md) is READY FOR N3.5 CLOSURE REVIEW with full fresh BIOS/UEFI results. Final architectural approval pending; see section 10.** |
+| Status | **N3.0–N3.5 COMPLETE; N3.5 formally approved on 2026-10-21 at `0109d9b`. [Closure record](../results/n3.5-closure.md). N3 remains INCOMPLETE; N3.6 is PLANNED, NOT STARTED. See sections 10–11.** |
 | Date | 2026-10-18 |
 | Starting point | N2 complete at `8e30f9b` (`docs/plans/n2-foundation.md`, section 3.7) |
 | Target | `ARCH=x86_64`; the i386 kernel stays as it is |
@@ -27,7 +27,7 @@ from the disk is treated as untrusted input.
 - a user-space storage service;
 - the GUI, networking and new language runtimes.
 
-## 2. Stages [Proposal, after N3.0]
+## 2. Stages (N3.0–N3.5 complete; N3.6 planned)
 
 | Stage | Content | Acceptance (examples) |
 |---|---|---|
@@ -36,8 +36,8 @@ from the disk is treated as untrusted input.
 | **N3.2** Block layer *(done)* | Block-device registry and interface, validated block I/O, fixed-size read-only cache in PMM frames, device-independent errors, audits; DMA-frame release for refused and stopped devices; cooperative waiting in the driver | Section 6 |
 | **N3.3** ext2 reader *(done)* | Restricted profile (stricter than `storage.md` section 5.3), every field validated, bounded walks | Section 7 |
 | **N3.4** Interrupt completion *(done)* | INTx through the PIC, waiters on wait queues instead of polling; deadlines; cancellation | Section 9 |
-| N3.5 File ABI v2 (read-only) **[INCOMPLETE; final closure review pending]** | Handle-relative open, positional read, stat, single-entry enumeration and close; trusted startup grants; ABI note version 2. [Detailed design](n3.5-file-api.md), [ABI v2](../abi/syscall-v2.md), section 10 below | [Stage 5](../results/n3.5-stage5.md): full BIOS and fresh UEFI pass; frozen v0/v1/media and budgets unchanged. Final architectural approval required |
-| N3.6 Closure | Stress with concurrent readers, kills during I/O, exhaustion; documentation | Full regression; audits after every suite |
+| N3.5 File ABI v2 (read-only) **COMPLETE** | Handle-relative open, positional read, stat, single-entry enumeration and close; trusted startup grants; ABI note version 2. [Detailed design](n3.5-file-api.md), [ABI v2](../abi/syscall-v2.md), section 10 below | [Stage 5](../results/n3.5-stage5.md) accepted at `0109d9b`; [formal closure](../results/n3.5-closure.md), frozen v0/v1/media and budgets preserved |
+| N3.6 Storage closure **PLANNED, NOT STARTED** | Integrated stress, concurrent readers, kills during I/O, exhaustion and documentation; planning only in section 11 | Proposed full regression, exact resource audits and reviewed stress/stack criteria; separate authorization required |
 
 The order may change at review. Writes (D-S4) are a separate milestone after N3.
 
@@ -1969,7 +1969,12 @@ model:
 
 Still not in N3.5: writes, mounting more than one volume, MSI/APIC, and networking.
 
-## 10. N3.5 direction conditionally approved [INCOMPLETE]
+## 10. N3.5 authorization history and formal closure [COMPLETE]
+
+Current decision: N3.5 is **COMPLETE**, formally approved at `0109d9b`.
+The paragraphs below preserve earlier authorization boundaries and failures;
+the final closure paragraph supersedes their incomplete/pending labels.
+N3 and N3.6 remain incomplete.
 
 The 2026-10-20 design phase is based on `main` at `c5f5acb`, with U1 and N3.4 complete.
 The design is on local branch `feat/n3.5-file-api`. Conditional approval permitted only
@@ -2042,3 +2047,73 @@ static/reserved growth remains 43808/57344 B, within approved limits. Stage 5 ch
 documentation only. **READY FOR N3.5 CLOSURE REVIEW** supersedes the earlier review
 gate; N3.5 remains incomplete pending final architectural approval. Stop here:
 no push, merge to main, N3.6 implementation or physical hardware work.
+
+The user subsequently approved formal N3.5 closure at clean `0109d9b`.
+[Closure evidence review](../results/n3.5-closure.md) confirms the retained Stage 1–5
+results, corrections, compatibility and budgets. **N3.5 is COMPLETE**, within the
+read-only, QEMU-only and trusted-media scope. Physical hardware is untested; full
+dynamic kernel-stack high-water proof remains incomplete; OVMF interrupt/polling
+and bounded reset-quarantine limits still apply. No implementation or test change
+accompanies this approval. N3/N3.6 remain incomplete.
+
+## 11. N3.6 preparation (planning only)
+
+**PLANNED, NOT STARTED.** This is the next storage milestone. Its purpose is integrated
+storage closure: longer deterministic stress, workload availability at existing limits,
+exact cleanup under repeated failure schedules, and consolidated N3 acceptance evidence.
+N3.5 already covers concurrent readers, kills, exhaustion and the full supported BIOS/
+UEFI matrix; N3.6 should define measurable additional coverage before writing tests/code.
+No implementation, writable operation or subsystem redesign is authorized here.
+
+### Baseline and constraints
+
+- Accepted N3.5 verification: `0109d9bcbbaa58a1e703e410fa8dba5bc8c279ec`;
+  tested source checkpoint `38ae9e6`, reader/file image split `28fb56e1`.
+  The documentation-only [formal closure record](../results/n3.5-closure.md) is the
+  handoff. Main/resource baseline remains `c5f5acb62b70f2dbbc75a7bece35ab4548e872f3`.
+- Carry forward cumulative static/reserved limits **65536/131072 B** from c5,
+  measured **43808/57344 B** (headroom **21728/73728 B**). These are not new
+  per-stage allowances. Retain code/rodata <=64 KiB, test-only <=128 KiB, 4 MiB
+  mapping guards, zero extra production PMM pools/threads/stacks unless reviewed.
+- Retain eight sessions/eight file slots each, two global tickets including orphan
+  debt, <=4096-byte reads, and 512/256/1024 work/wait bounds plus the 200-tick deadline
+  and independent finite poll cap. Frozen ABI v0/v1, ABI v2 contracts, 131 old ELFs,
+  i386/hello and all disk-image hashes remain acceptance constraints.
+
+### Proposed regression and stress coverage
+
+Retain full `make test-all` and fresh `make test-uefi`, additional reader/file
+default/max CPU 128 MiB, 1 GiB and sparse 8 GiB checks, static/wire/ABI validation,
+all five mutation controls and frozen-media/reproducibility audits. Preserve separate
+reader/file payloads and every original module/assertion; higher RAM cannot substitute
+for the mandatory 128 MiB gates. Report genuine mode-specific N/A cases separately.
+
+Propose reproducible, bounded long-run reader contention; repeated open/read/stat/
+enumeration cancellation, kill/restart and quota churn; interruption/timeout/reset/
+removal interleavings; orphan retirement with no later file call; and cold/deep/large
+directory workloads at unchanged budgets. Each schedule should audit exact PMM,
+thread, process, node, grant, reader, driver and ticket accounting after recovery.
+Specify seeds/counts, finite abort bounds and exact error/progress expectations at
+design review; never treat a timeout as success or a retained quarantine as reclaimed.
+
+### Carried risks and proposed Stage 1 design questions
+
+Accepted limits persist: QEMU only, physical hardware untested, read-only trusted
+immutable media, one CPU/thread per process, OVMF polling without IOAPIC/MSI/MSI-X,
+finite work without wall-clock/fairness guarantees, bounded unconfirmed-reset DMA
+quarantine, and incomplete full dynamic kernel-stack high-water proof. GRUB payload
+fragmentation remains a reason to guard both low-memory test images as coverage grows.
+
+1. Which deterministic schedules and iteration counts add coverage beyond N3.5,
+   and what exact quiescent/abandoned/quarantined resource states are acceptable?
+2. Which cold/deep workloads must make progress, and when is bounded EAGAIN acceptable,
+   without increasing existing work or memory allowances?
+3. What stack evidence should N3.6 require across C, assembly, scheduler and exception
+   paths, and how can test instrumentation avoid changing the behavior being measured?
+4. How should reset/removal simulations be labeled separately from untested physical
+   hot-unplug/reset-refusal behavior, and what constitutes an exact retirement oracle?
+5. What final N3 closure criteria and artifact-retention procedure should be approved
+   while preserving both 128 MiB payload gates and all frozen compatibility evidence?
+
+These questions are for the next architectural review. N3 and N3.6 remain incomplete;
+no N3.6 implementation, hardware test, release tag, push or merge is authorized.

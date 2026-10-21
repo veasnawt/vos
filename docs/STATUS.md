@@ -1,9 +1,11 @@
 # VOS Status
 
-**Latest completed checkpoint:** 2026-10-19, U1 complete (historical results below).
-The checkpoint tag is `checkpoint-2026-10-19-u1`. Development verification on
-2026-10-21 is [READY FOR N3.5 CLOSURE REVIEW](results/n3.5-stage5.md);
-N3.5 remains **INCOMPLETE** pending final architectural approval.
+**Latest completed milestone:** **N3.5 COMPLETE**, formally approved on 2026-10-21
+at verification checkpoint `0109d9b` on local `feat/n3.5-file-api`.
+[Closure record](results/n3.5-closure.md) and [Stage 5 evidence](results/n3.5-stage5.md)
+define the accepted scope. N3 and N3.6 remain incomplete; N3.6 is the next planned
+storage milestone. No release tag was created. The older U1 tag remains
+`checkpoint-2026-10-19-u1`.
 
 VOS is an experimental, independently written x86_64 kernel (with a legacy i386 kernel). It
 runs only in QEMU so far: no physical machine has booted it. This is a development checkpoint,
@@ -13,7 +15,8 @@ not a release.
 
 N1 (user mode, system calls), N2 (scheduling, preemption of user programs, IPC), N3.0–N3.4
 (W^X higher-half memory, virtio-blk, block cache, read-only ext2, interrupt-driven block I/O),
-U0 (UEFI feasibility) and U1 (UEFI readiness with BIOS compatibility).
+N3.5 (capability-scoped read-only userspace file ABI v2), U0 (UEFI feasibility) and
+U1 (UEFI readiness with BIOS compatibility).
 See `docs/ROADMAP.md`.
 
 ## Boot paths (all verified in QEMU only)
@@ -46,7 +49,7 @@ On both paths:
   Stage 4 closure is approved. [Stage 5 final verification](results/n3.5-stage5.md)
   passes 74 BIOS and 38 fresh UEFI runs, 845/0 file assertions, 302/0 static checks
   and five mutation controls. Frozen hashes and resource budgets hold.
-  N3.5 awaits architectural closure approval; stop before N3.6.
+  N3.5 closure is approved. N3.6 preparation is planning only; implementation is not authorized.
 
 **Interrupts and timing:**
 - 8259 PIC and PIT.
@@ -64,7 +67,25 @@ On both paths:
 - Framebuffer console with an original 8×16 font, status bar (PASS/FAIL) and panic banner.
 - VGA text only when text mode is positively known.
 
-## U1 verification (at this checkpoint)
+## N3.5 accepted verification checkpoint
+
+The user approved closure on the evidence committed at `0109d9b`; the formal closure
+changes documentation only. Historical stage reports and failures remain unchanged.
+
+| Accepted check | Stage 5 result |
+|---|---|
+| Full BIOS | 74 passing QEMU verdicts |
+| Full fresh UEFI plus additional configurations | 19 + 19 = 38 passing runs, fresh VARS; reader/file default and CPU max at 128 MiB, 1 GiB and sparse 8 GiB |
+| File / static / mutation checks | 845/0 file assertions per full file run; 302/0 static; all five deliberate mutation controls detected |
+| Frozen compatibility | 139 hashes and 131 old userspace binaries unchanged; ABI v0/v1 behavior preserved |
+| Reproducibility | Paired production binaries identical; ISO payloads verified separately from timestamps/identifiers |
+| Cumulative footprint vs `c5f5acb` | +43808 B static of 65536 B; +57344 B reserved image of 131072 B |
+
+See the [closure record](results/n3.5-closure.md) for the evidence review and accepted
+limitations, and [N3.6 preparation](plans/n3-storage.md#11-n36-preparation-planning-only)
+for the next design questions. N3/N3.6 are not complete.
+
+## U1 verification (historical 2026-10-19 checkpoint)
 
 | Check | Result |
 |---|---|
@@ -116,6 +137,13 @@ On BIOS (SeaBIOS: ELCR `0xc00`), virtio-blk interrupt mode is fully tested: 149 
 ## Known defects and limitations
 
 - **Hardware:** QEMU only. Untested on any physical machine, including the Dell OptiPlex 9020.
+- **Kernel stack:** full dynamic kernel-stack high-water proof is incomplete.
+  Compiler frame reports and runtime guard/canary tests do not constitute that proof.
+- **Filesystem trust:** read-only; trusted immutable provisioned directory graphs.
+  Namespace/parser validation does not authenticate malicious media or inode/block aliases.
+- **Storage lifetime/timing:** finite work and poll bounds do not promise real-time latency
+  or fairness. Unconfirmed device reset may retain bounded DMA quarantine; physical
+  reset-refusal/hot-unplug reclamation is untested.
 - **Secure Boot:** not supported. GRUB's lockdown refuses unsigned Multiboot2 kernels.
 - **UEFI interrupts:** no IOAPIC, MSI or MSI-X. INTx under OVMF is edge only, so virtio-blk
   polls and its waits cannot be interrupted.
@@ -130,8 +158,7 @@ On BIOS (SeaBIOS: ELCR `0xc00`), virtio-blk interrupt mode is fully tested: 149 
   the kernel requests one.
 - **BIOS display change:** BIOS boots now switch to VBE graphics.
 - **Missing features:** no keyboard input, shell, writable storage, networking,
-  SMP or ACPI power management. The local read-only file API awaits N3.5 closure.
-  The production kernel ends by halting.
+  SMP or ACPI power management. The production kernel ends by halting.
 
 ## Unsupported (by design, for now)
 

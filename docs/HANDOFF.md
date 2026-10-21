@@ -77,7 +77,7 @@ because GRUB and xorriso embed timestamps and UUIDs, so compare their contents i
 - **One x86_64 kernel for both firmware types,** loaded by GRUB through Multiboot2. UEFI is the
   primary future target; Legacy BIOS stays supported.
 - **ABI:** v0 and v1 are frozen (`docs/abi/`). File ABI v2 is implemented locally for
-  incomplete N3.5; final architectural closure review is pending (section 7). `hello.elf`
+  completed N3.5, formally approved at `0109d9b` (section 7). `hello.elf`
   must stay byte-identical.
 - **Kernel model:** non-preemptible, running with IF = 0. Interrupts are taken only in ring 3
   or in the idle halt.
@@ -101,7 +101,9 @@ The full list is in `docs/STATUS.md`. In short:
 
 ## 7. Current development checkpoint and review boundary
 
-N3.5 remains **INCOMPLETE** on `feat/n3.5-file-api`, based on `c5f5acb`.
+N3.5 is **COMPLETE**, formally approved on 2026-10-21 at `0109d9b` on local
+`feat/n3.5-file-api`, based on `c5f5acb`. The [closure record](results/n3.5-closure.md)
+preserves the accepted evidence and limitations. N3 and N3.6 remain incomplete.
 [Plan and limits](plans/n3.5-file-api.md), [ABI v2](abi/syscall-v2.md), and
 [Stage 3 evidence](results/n3.5-stage3.md) describe the implementation.
 Stages 1/2 provide bounded I/O scopes, nodes, handles and trusted non-root grants.
@@ -117,8 +119,8 @@ contiguous-allocation failure. Separate mandatory reader/file test images retain
 the original 27-module union and every assertion. The user approved Stage 4 closure
 at `38ae9e6` and authorized Stage 5.
 
-[Stage 5 final verification](results/n3.5-stage5.md) is **READY FOR N3.5 CLOSURE
-REVIEW**: 74 full BIOS passes, 19 full fresh `make test-uefi` passes and 19 additional
+Accepted [Stage 5 final verification](results/n3.5-stage5.md): 74 full BIOS passes,
+19 full fresh `make test-uefi` passes and 19 additional
 fresh UEFI configurations. These include default/max CPU at 128 MiB, 1 GiB and
 sparse 8 GiB, with fresh VARS, plus production emulated USB/GPT and display cases.
 File tests report 845/0; static checks 302/0; five deliberate mutations are detected.
@@ -143,9 +145,24 @@ limitation is historical: full fresh UEFI verification has now run. The final re
 contains all configurations, hashes, measurements, host-audit failures/corrections,
 artifact paths and remaining QEMU/polling/immutable-media/reset/stack-proof limits.
 
-Stop for final architectural closure review. U1/N3.4 remain the latest completed
-milestones; do not mark N3.5 complete before approval. Main is unchanged. No push,
-merge, N3.6 work, physical test or writable storage is authorized.
+Closure accepts QEMU-only verification; physical hardware remains untested.
+The filesystem interface remains read-only and requires trusted immutable media.
+Full dynamic kernel-stack high-water proof remains incomplete; compiler frame sums
+and guard tests are partial evidence. OVMF still polls without IOAPIC/MSI/MSI-X.
+Finite work is not a real-time/fairness guarantee, and unconfirmed reset may retain
+bounded DMA quarantine. No broader hardware or authenticated-media claim follows.
+
+### N3.6 preparation — planning only
+
+N3.6 is the next planned storage milestone, not started. [Preparation](plans/n3-storage.md#11-n36-preparation-planning-only)
+records remaining stress/resource-closure objectives, baseline commits, unchanged
+cumulative budgets, regression requirements and Stage 1 design questions.
+First review deterministic long-run schedules, cold/deep workload availability,
+orphan/reset outcomes and the required stack evidence. Keep both reader/file images
+within the 128 MiB gates and preserve all frozen contracts.
+
+Stop after documenting N3.5 closure. Main remains `c5f5acb`; no push, merge, release
+tag, N3.6 implementation, physical test or writable storage is authorized.
 
 ## 8. Physical hardware: restrictions
 
