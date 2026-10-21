@@ -1,7 +1,14 @@
 # VOS Status
 
-**Latest completed milestone:** **N3.5 COMPLETE**, formally approved on 2026-10-21
-at verification checkpoint `0109d9b` on local `feat/n3.5-file-api`.
+**Latest completed milestone:** **N3.5 COMPLETE**, integrated into local `main` at
+`0ddb201ec1b13d65af7a22a56f35fafc02a3c9ab`. The feature branch points to the same
+commit. Formal approval at verification checkpoint `0109d9b` and documentation
+closure at `398ba19` are earlier historical checkpoints.
+
+**Publication state (this documentation review):** the GitHub repository is public,
+but its main remains `c5f5acb`; the twenty local N3.5 commits have not been pushed.
+Local integration does not constitute GitHub publication. See the
+[integration/recovery summary](results/n3.5-integration.md).
 [Closure record](results/n3.5-closure.md) and [Stage 5 evidence](results/n3.5-stage5.md)
 define the accepted scope. N3 and N3.6 remain incomplete; N3.6 is the next planned
 storage milestone. No release tag was created. The older U1 tag remains
@@ -44,7 +51,7 @@ On both paths:
 - Kernel threads.
 - Ring-3 programs in separate address spaces, preempted by the timer.
 - IPC channels.
-- System-call ABI v0/v1, plus local N3.5 ABI v2 file operations;
+- System-call ABI v0/v1, plus integrated N3.5 ABI v2 file operations;
   [Stage 3 implementation](results/n3.5-stage3.md) and [Stage 4 security verification](results/n3.5-stage4.md).
   Stage 4 closure is approved. [Stage 5 final verification](results/n3.5-stage5.md)
   passes 74 BIOS and 38 fresh UEFI runs, 845/0 file assertions, 302/0 static checks
@@ -59,8 +66,8 @@ On both paths:
 **Storage (read-only):**
 - virtio-blk, interrupt-driven where a level-triggered INTx line exists, otherwise polling.
 - Block cache.
-- ext2 reader and capability-scoped read-only ABI v2 file calls on the development
-  branch. Only explicit trusted launches receive non-root directory grants; normal
+- ext2 reader and capability-scoped read-only ABI v2 file calls in local main.
+  Only explicit trusted launches receive non-root directory grants; normal
   hello still requires no disk. No writable operations or authenticated-media claim.
 
 **Display:**
@@ -84,6 +91,13 @@ changes documentation only. Historical stage reports and failures remain unchang
 See the [closure record](results/n3.5-closure.md) for the evidence review and accepted
 limitations, and [N3.6 preparation](plans/n3-storage.md#11-n36-preparation-planning-only)
 for the next design questions. N3/N3.6 are not complete.
+
+The subsequent integration audit retained the completed BIOS/UEFI and static
+results, completed the three unfinished mutation controls after sparse-copy
+harness recovery, and rechecked hashes, production reproducibility and resource
+limits. It did not rerun the full regression matrix after the harness repair.
+The repair changes test orchestration only; production and ABI sources remain
+unchanged from the accepted implementation.
 
 ## U1 verification (historical 2026-10-19 checkpoint)
 
@@ -136,7 +150,7 @@ On BIOS (SeaBIOS: ELCR `0xc00`), virtio-blk interrupt mode is fully tested: 149 
 
 ## Known defects and limitations
 
-- **Hardware:** QEMU only. Untested on any physical machine, including the Dell OptiPlex 9020.
+- **Hardware:** QEMU only. Untested on any physical machine.
 - **Kernel stack:** full dynamic kernel-stack high-water proof is incomplete.
   Compiler frame reports and runtime guard/canary tests do not constitute that proof.
 - **Filesystem trust:** read-only; trusted immutable provisioned directory graphs.

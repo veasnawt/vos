@@ -14,9 +14,16 @@ VOS is written primarily in freestanding C and x86 assembly. It is **not a Linux
 
 - A 64-bit higher-half kernel with memory isolation, W^X mappings, and protected stacks.
 - Separately built ELF user programs running in ring 3, system calls, kernel threads, timer preemption, and IPC channels.
-- Read-only virtio-blk access, block caching, and a **kernel-internal** ext2 reader (not a userspace file API).
+- Read-only virtio-blk access, block caching, an ext2 reader, and a completed
+  [userspace file ABI v2](docs/abi/syscall-v2.md). File access uses bounded,
+  process-owned handles and trusted non-root namespace grants; normal programs
+  receive no filesystem access automatically.
 - A basic framebuffer boot/status/panic console where supported, plus serial diagnostics.
 - BIOS and UEFI boot paths **in QEMU** via GRUB; extensive emulator-based regression tests.
+
+N3.5 is complete and integrated into local main at `0ddb201`; see the
+[integration and verification summary](docs/results/n3.5-integration.md).
+Publishing that checkpoint to GitHub is a separate step.
 
 The separate [Veasna OS](https://github.com/veasnawt/veasna-os) React/Electron desktop prototype is **not** a graphical environment running on this kernel.
 
@@ -50,7 +57,9 @@ For an automated check, run `make test-all`. A UEFI ISO and additional OVMF test
 
 gcc (with `gcc-multilib`), binutils, make, grub-mkrescue (+ grub-pc-bin), xorriso,
 qemu-system-i386 and qemu-system-x86_64. The host gcc builds both kernels and the user
-programs, with flags that keep them freestanding.
+programs, with flags that keep them freestanding. Full tests also require Python 3
+and e2fsprogs; see [HANDOFF](docs/HANDOFF.md) for the additional UEFI tools and
+the current mutation runner's host restriction.
 
 ## Architectures
 
@@ -191,6 +200,8 @@ The `m1-32bit` tag marks the original known-good 32-bit baseline.
 - `docs/abi/syscall-v0.md` – the experimental application ABI: entry state, system calls,
   memory protection, executable format
 - `docs/abi/syscall-v1.md` – ABI v1 (N2.4): yield and message channels between processes
+- [ABI v2](docs/abi/syscall-v2.md) – N3.5: handle-relative open/read, metadata,
+  directory enumeration, initial grant discovery and handle close
 - `docs/plans/n1-user-space.md` – the completed N1 milestone: design, stages and verified results
 - `docs/architecture/native-software-platform.md` – the long-term native software architecture
   (proposal), with the current state and security boundaries in its section 3
@@ -200,7 +211,8 @@ The `m1-32bit` tag marks the original known-good 32-bit baseline.
   is complete; its closure (section 3.7) lists guarantees, limits and risks
 - `docs/plans/n3-storage.md` – the N3 roadmap (storage, proposal); N3.0 (storage design, kernel
   map extended to 4 MiB of 4 KiB pages), N3.1 (read-only, polled virtio-blk driver), N3.2
-  (block layer and read-only cache) and N3.3 (read-only ext2 reader) are done
+  (block layer and read-only cache), N3.3 (read-only ext2 reader), N3.4 (interrupt-driven
+  block I/O), and N3.5 (read-only userspace files) are complete; N3.6 remains planned
 - `docs/architecture/storage.md` – the storage architecture proposal: layers, virtio-blk, ext2
   (read-only first), layout, naming, permissions, crash behaviour, open decisions
 - `docs/vision/product-direction.md` – provisional long-term product direction (not a specification)
