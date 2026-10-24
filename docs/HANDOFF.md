@@ -45,7 +45,8 @@ git checkout main            # or the checkpoint tag listed in docs/STATUS.md
 
 The repository is public. N3 is complete on `feat/n3.6-storage-closure`; use
 `git checkout feat/n3.6-storage-closure` to inspect the milestone publication.
-Main remains N3.5 at `c0ccdd7`, with integration checkpoint `0ddb201` as its parent.
+Main contains N3 through PR #2 at `d9a4ade`. The published N4 implementation is
+on `feat/n4-interactive-console`; the owner handles its pull request and merge.
 `build/` is generated and ignored. See [STATUS](STATUS.md) and the
 [final N3 closure record](results/n3-closure.md).
 
@@ -174,7 +175,8 @@ evidence and archives must remain preserved. The original D1r3 root is unfinishe
 unsealed and unarchived. Monitoring gaps are not presented as uninterrupted isolation.
 The accepted run controllers and exact build environments remain in local evidence.
 
-N4 is authorized and in progress on `feat/n4-interactive-console`. The first
+N4 implementation is complete and published on `feat/n4-interactive-console`,
+ready for integration. See the [closure record](results/n4-closure.md). The first
 [keyboard echo increment](results/n4-first-input.md) passes host, BIOS input,
 UEFI input and normal-boot compatibility checks. `make input-run` builds into its
 own `build/n4-input/` tree; the existing EFI extraction environment is still needed
@@ -203,9 +205,15 @@ native ELF build and independent `rust-demo`. The SDK has no allocator or
 dependencies and grants no authority. The shell now consumes it. See
 [writing Rust apps](rust-apps.md) for build/entry/API conventions.
 
-The original N4 objectives are ready for closure. SDK changes await final review
-and publication; merging N4 into main still requires approval. No further feature
-or verification campaign is a prerequisite for the agreed N4 scope.
+The SDK is published at `f7ac43478ea548ddc4bb74ae177b0bb828e67596`.
+The [dynamic cwd prompt](results/n4-dynamic-prompt.md) is published at
+`bdde1bc33f99030ba51fa78078a6db90f87f2a07`: root `VOS>`, nested
+`VOS>docs>results>`, normalized parent/root navigation and unchanged failed-cd
+state. Focused host and BIOS/UEFI checks pass, including prompt-safe editing.
+
+The original N4 objectives are complete and ready for integration. The owner will
+handle the GitHub pull request and merge. No further feature or verification
+campaign is a prerequisite for the agreed scope.
 Rixie Core is optional. Do not rerun N3 campaigns or introduce new N3 gates.
 
 ### Historical N3.5 checkpoints

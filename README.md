@@ -25,6 +25,8 @@ VOS is written primarily in freestanding C and x86 assembly. It is **not a Linux
 - Native Rust `vsh`: `help`, `clear`, `echo`, `pwd`, `ls`, `cd`, `cat` and `exit`.
   Filesystem commands use real read-only ABI v2 handles under an explicit grant
   ([first shell results and screenshots](docs/results/n4-native-vsh.md)).
+  Its [dynamic prompt](docs/results/n4-dynamic-prompt.md) reflects the normalized
+  working directory, for example `VOS>docs>results>`.
 - A minimal shared Rust SDK, reusable entry/runtime conventions and an independent
   native example ([application guide](docs/rust-apps.md)).
 - BIOS and UEFI boot paths **in QEMU** via GRUB; extensive emulator-based regression tests.
@@ -35,13 +37,12 @@ Local `main` and the `feat/n4-interactive-console` development branch have been
 fast-forwarded to that merge, whose source tree is identical to the N3 baseline.
 The [N3 closure record](docs/results/n3-closure.md) contains D1a–D1f,
 5/5 mutation controls, 15/15 larger-RAM stress runs, evidence hashes and preserved
-failure history. **N4 is in progress:** keyboard input, an interactive console,
-`vsh` and Rust-first native application foundations. The first keyboard-to-console
-increment is published at `3a2b642`, and buffered input at `87b99df`.
-The native Rust shell is published at `1beb406`. Shared Rust application
-foundations and the independent example also pass focused host and BIOS/UEFI
-checks. **The original N4 objectives are ready for closure**; the final SDK
-changes await review/publication and N4 has not been merged into main.
+failure history. **The original N4 scope is complete and published** on
+`feat/n4-interactive-console`, ready for the owner's pull request and integration.
+Keyboard input (`3a2b642`), buffered input (`87b99df`), native Rust shell
+(`1beb406`), reusable SDK (`f7ac434`) and normalized cwd prompt (`bdde1bc`) all
+have focused verification and authentic screenshots. See the
+[N4 closure record](docs/results/n4-closure.md). N4 has not been merged into main.
 
 ![VOS BIOS boot console with PASS status](docs/images/n3/vos-n3-bios-boot-status.png)
 

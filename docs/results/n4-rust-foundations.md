@@ -1,9 +1,11 @@
 # N4 Rust application foundations
 
-The original N4 development objectives are implemented and verified. N4 is
-**ready for closure**, pending acceptance/publication of these final SDK changes
-and separately authorized integration. No additional feature or campaign is
-required for the agreed scope. Main has not been changed.
+The original N4 development objectives are implemented and verified. The SDK is
+**published** at
+[`f7ac43478ea548ddc4bb74ae177b0bb828e67596`](https://github.com/veasnawt/vos/commit/f7ac43478ea548ddc4bb74ae177b0bb828e67596).
+The [final N4 closure](n4-closure.md) includes the requested dynamic prompt and
+records readiness for integration. No additional feature or campaign is required
+for the agreed scope. Main has not been changed.
 
 ## Published native shell
 
@@ -91,7 +93,9 @@ The current limits remain explicit: QEMU-only hardware verification, US ASCII,
 read-only files. Quoting, pipes, writable storage, networking, GUI, package
 management and Rixie Core were not added and are not closure prerequisites.
 
-The SDK changes remain uncommitted for the final N4 review. Protected N3/N4
+The reviewed 34-file SDK implementation is committed and pushed. The raw evidence
+index retains its pre-publication state accurately; current publication status is
+recorded in the closure record. Protected N3/N4
 evidence, failures, worktrees, stashes and all seven reference binaries remain
 preserved. D1r3 remains unfinished, unsealed and unarchived. The 3360 MiB ceiling,
 host reserves and isolation rules are unchanged; no N4 merge into main is authorized.
@@ -101,6 +105,7 @@ library/runtime, example, build/boot integration, focused tests, documentation,
 two authentic screenshots and verification records. Final checks reverified all
 seven reference binaries, 38,130 prior evidence entries, the N3 publication
 manifest/archive, previous N4 artifacts, 13 worktrees and two stashes. All N4
-attempts and the manual test build total about 339.99 MiB. Conservative combined
+attempts and the manual test build totaled about 339.99 MiB at the SDK checkpoint. Conservative combined
 accounting is 2721.09 MiB of the unchanged 3360 MiB ceiling, leaving about
-638.91 MiB; C:, E: and Linux reserves pass.
+638.91 MiB at that checkpoint; C:, E: and Linux reserves passed. Current
+publication accounting is in the [N4 closure record](n4-closure.json).

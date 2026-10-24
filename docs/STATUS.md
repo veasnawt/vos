@@ -1,8 +1,13 @@
 # VOS Status
 
-**Latest completed milestone: N3 COMPLETE**, including N3.6 storage closure,
-accepted on 2026-10-24. [Final closure and evidence](results/n3-closure.md)
-consolidate D1a–D1f, five mutation controls and fifteen larger-RAM stress runs.
+**Latest implementation milestone: N4 COMPLETE and ready for integration** on
+`feat/n4-interactive-console`. The owner handles the GitHub pull request and merge.
+[Final N4 closure](results/n4-closure.md) records the original delivered scope,
+publications, focused verification, screenshots and limitations.
+
+N3 remains complete and accepted on 2026-10-24.
+[Final N3 closure and evidence](results/n3-closure.md) consolidate D1a–D1f,
+five mutation controls and fifteen larger-RAM stress runs.
 
 **N3 publication:** `897312fb991b2f55799b37fbd4459fb552acfe82` on
 `feat/n3.6-storage-closure`. GitHub main integrated it through PR #2 at
@@ -12,7 +17,7 @@ is identical to N3. The first N4 keyboard/echo implementation is published on
 `feat/n4-interactive-console`. No new release tag was created; the older U1 tag
 remains `checkpoint-2026-10-19-u1`.
 
-**N4 is ready for closure.** The [first input increment](results/n4-first-input.md)
+**The original N4 scope is complete.** The [first input increment](results/n4-first-input.md)
 is published at `3a2b642`; [buffered input](results/n4-buffered-input.md) is
 published at `87b99dfc867c45bd01f512cf9ecac0117d1a6eac`. The subsequent
 [native Rust vsh](results/n4-native-vsh.md) runs in ring 3 with a granted ABI v3
@@ -22,8 +27,11 @@ Host checks and BIOS/UEFI runtime checks pass, including five ring-3 console
 probes per firmware and the original normal boot-and-halt path. Native shell
 publication is `1beb40677bfeb605da5b2920b70af0fc24138493`.
 The subsequent [shared Rust SDK and independent app](results/n4-rust-foundations.md)
-also pass host, loader and BIOS/UEFI checks. SDK changes remain uncommitted for
-review; N4 final acceptance and merging into main are not claimed.
+also pass host, loader and BIOS/UEFI checks and are published at
+`f7ac43478ea548ddc4bb74ae177b0bb828e67596`. The requested
+[normalized cwd prompt](results/n4-dynamic-prompt.md) is published at
+`bdde1bc33f99030ba51fa78078a6db90f87f2a07`; three host tests and both firmware
+interactions pass. N4 is ready for integration; main remains the N3 baseline.
 
 Historical N3.5 approval, integration, failed attempts and original authorization
 boundaries below remain records of those checkpoints, not current N3 blockers.
@@ -33,6 +41,10 @@ runs only in QEMU so far: no physical machine has booted it. This is a developme
 not a release.
 
 ## Completed milestones
+
+N4 now delivers keyboard input, the buffered console, native Rust `vsh` with the
+seven requested commands and dynamic cwd prompt, and reusable Rust application
+foundations with an independent example. It is published on the feature branch.
 
 N1 (user mode, system calls), N2 (scheduling, preemption of user programs, IPC), N3.0–N3.4
 (W^X higher-half memory, virtio-blk, block cache, read-only ext2, interrupt-driven block I/O),

@@ -1,0 +1,111 @@
+{
+  "scope": "Final N4 publication and preservation, no test campaign",
+  "branch": "feat/n4-interactive-console",
+  "sdk_commit": "f7ac43478ea548ddc4bb74ae177b0bb828e67596",
+  "prompt_commit": "bdde1bc33f99030ba51fa78078a6db90f87f2a07",
+  "main_unchanged": "d9a4ade0db1df8ab7c8c7fe3c4553cd3f36c3622",
+  "original_N4_complete": true,
+  "ready_for_integration": true,
+  "owner_handles_PR_and_merge": true,
+  "protected_binary_sha256": {
+    "production": "7e8c4781292e5dd1c419e0984d001a0e3cf09be5e1bd26a18c283a42b0fd375c",
+    "gateb": "bef4aae6f492a2a041ea64611ed8669a642caf4d236b1472456812e45101ddc9",
+    "gatec": "35e856b9fb28960f359bfa046c62b7e5820a4a1a0fe5c3a73fb90a0189d6046e",
+    "gatec_elf": "8c94e9ca57f19f56ee96f7b578eec2f7bfc335c524f4d31608d3bfc598a069c4",
+    "hello": "c6c6416195a0f18d680d7f8f19be52ce02ff02912ef3bac45324fbe88006cd06",
+    "gated": "52f2562d5578d7be64b8ba9b0605f395259fcffed657662857f2a4f79b065b2e",
+    "gated_elf": "1d0e86e3f8830b53382f5d140a8d0dc9e64ff0c485975784541f1566d5c3705b"
+  },
+  "preserved_prior_entries": 38130,
+  "R4_manifest_entries": 101,
+  "R4_archive_sha256": "12cdf064cb3a213ff1fc3f201a5bb200e4af138f0c53e56314dbf0c32e94dd9e",
+  "previous_N4_manifests": [
+    {
+      "evidence": "docs/results/n4-buffered/evidence.json",
+      "manifest": {
+        "path": "build/n4-buffered-20261024T085345Z/results/manifest.json",
+        "entries": 209,
+        "sha256": "1010baba4251e4f94a0ad0f8228354a8183ad444c9746b376273a9cc9941e0d3"
+      },
+      "verified": true
+    },
+    {
+      "evidence": "docs/results/n4-input/evidence.json",
+      "manifest": {
+        "path": "build/n4-input-20261024T071418Z/results/manifest.json",
+        "entries": 202,
+        "sha256": "c6cdfebaae2536fcdc663f60daafca95f5f16ea20ff5afe665ca37293c7282ff"
+      },
+      "verified": true
+    },
+    {
+      "evidence": "docs/results/n4-prompt/evidence.json",
+      "manifest": {
+        "path": "build/n4-session-20261024T142208Z/results/manifest.json",
+        "entries": 157,
+        "sha256": "de908fcee0a66493341b2389f766ef645df64c6ea6ea9e36ea85ec7bf6987288"
+      },
+      "verified": true
+    },
+    {
+      "evidence": "docs/results/n4-sdk/evidence.json",
+      "manifest": {
+        "path": "build/n4-session-20261024T134442Z/results/manifest.json",
+        "entries": 302,
+        "sha256": "c8958cb9a9f914d98fc4126ff6532300280173b236ba6dccc3a4e83460db55be"
+      },
+      "verified": true
+    },
+    {
+      "evidence": "docs/results/n4-vsh/evidence.json",
+      "manifest": {
+        "path": "build/n4-session-20261024T130158Z/results/manifest.json",
+        "entries": 181,
+        "sha256": "db38ac56778f4e6d4de9d99f23bfb7c55f913dbe845d13607b952ba8fd0a5cbb"
+      },
+      "verified": true
+    }
+  ],
+  "worktrees_preserved": 13,
+  "stashes_preserved": 2,
+  "D1r3": "unfinished, unsealed, unarchived; unchanged",
+  "storage": {
+    "N4_all_attempts_bytes": 424648704,
+    "N4_all_attempts_MiB": 404.9765625,
+    "conservative_combined_bytes": 2921525248,
+    "conservative_combined_MiB": 2786.18359375,
+    "ceiling_MiB": 3360,
+    "remaining_MiB": 573.81640625,
+    "publication_provision_MiB": 2,
+    "reserves": {
+      "charged": 2494779392,
+      "remaining": 1028435968,
+      "C": 12450033664,
+      "E": 251835445248,
+      "linux": 1009793658880,
+      "admitted_extra": 426745856
+    },
+    "no_evidence_deleted": true
+  },
+  "isolation": {
+    "accepted_detection_unchanged": true,
+    "monitor_query_timeout_seconds": 90,
+    "controller_root": "build/n4-session-20261024T142944Z",
+    "reserves_unchanged": true
+  },
+  "preserved_current_attempts": [
+    "build/n4-session-20261024T141515Z (raw-log whitespace lint stopped before commit)",
+    "build/n4-session-20261024T142135Z (audit helper argument error stopped before tests)"
+  ],
+  "no_N3_campaign_repeated": true,
+  "no_new_feature_or_milestone": true,
+  "closure_files": [
+    "README.md",
+    "docs/HANDOFF.md",
+    "docs/ROADMAP.md",
+    "docs/STATUS.md",
+    "docs/results/n4-closure.json",
+    "docs/results/n4-closure.md",
+    "docs/results/n4-rust-foundations.md"
+  ]
+}
