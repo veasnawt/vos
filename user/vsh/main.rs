@@ -2,6 +2,8 @@
 #![no_main]
 
 use vos::raw::*;
+mod prompt;
+use prompt::resolve;
 vos::entry!(shell_main);
 fn write(s: &[u8]) {if vos::console::write_all(s).is_err() {vos::exit(98)}}
 fn error() { write(b"vsh: operation failed\n"); }
@@ -10,20 +12,6 @@ fn trim(s: &[u8]) -> &[u8] {
     while a<b && (s[a]==b' ' || s[a]==b'\t') { a+=1; }
     while b>a && (s[b-1]==b' ' || s[b-1]==b'\t') { b-=1; }
     &s[a..b]
-}
-/* Lexically resolve within the explicitly granted root. Never submit '..' to
- * the file API and never permit cd above that root. Fixed storage, no heap. */
-fn resolve(cwd: &[u8], arg: &[u8], out: &mut [u8;256]) -> Option<usize> {
-    let mut n=0;
-    if !arg.starts_with(b"/") { out[..cwd.len()].copy_from_slice(cwd); n=cwd.len(); }
-    for p in arg.split(|c| *c==b'/') {
-        if p.is_empty() || p==b"." { continue; }
-        if p==b".." { while n>0 && out[n-1]!=b'/' { n-=1; } if n>0 { n-=1; } continue; }
-        if n+p.len()+1>out.len() { return None; }
-        if n>0 { out[n]=b'/'; n+=1; }
-        out[n..n+p.len()].copy_from_slice(p); n+=p.len();
-    }
-    Some(n)
 }
 fn open(base:isize,path:&[u8],rights:u64)->isize {
     if path.is_empty() { return unsafe { vos_file_open_at(base,b".".as_ptr(),1,rights) }; }
@@ -34,7 +22,9 @@ fn shell_main() -> i32 {
     let root=unsafe { vos_file_initial(0) };
     let mut cwd=[0u8;256]; let mut cwd_len=0;
     loop {
-        write(b"VOS> ");
+        let mut display=[0u8;prompt::PROMPT_MAX];
+        let n=prompt::format(&cwd[..cwd_len],&mut display);
+        write(&display[..n]);
         let mut line=[0u8;129];
         let count=unsafe { vos_console_read(line.as_mut_ptr(),line.len()) };
         if count<0 { error(); continue; }

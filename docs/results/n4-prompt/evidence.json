@@ -1,0 +1,322 @@
+{
+  "scope": "N4 focused normalized cwd prompt",
+  "sdk_commit": "f7ac43478ea548ddc4bb74ae177b0bb828e67596",
+  "branch": "feat/n4-interactive-console",
+  "sources": {
+    "user/vsh/main.rs": "358952e5804986b60e05866cf3ca0ca36edc49b1b59c569e156af42f44469009",
+    "user/vsh/prompt.rs": "d5b3929923421236b09e9a167a82fc859137e7873378a310470d2bc804544cdd",
+    "scripts/test-native-vsh.py": "18fb5cdf20d46c3c5f2ac6edc40de221910bb4bbd9c4072033acf9a7f89765e5"
+  },
+  "artifacts": [
+    {
+      "path": "docs/results/n4-prompt/bios-command.json",
+      "sha256": "ed51f426a847fdd795470173fcfed855bee36e9270c2352552d340ed1ccfc6f4",
+      "bytes": 698
+    },
+    {
+      "path": "docs/results/n4-prompt/bios.serial.txt",
+      "sha256": "e19b6b4aafd9a975675c2776d6b1ba04e5edcdd7c6650a9e0db4ecd0db91e8b9",
+      "bytes": 4326
+    },
+    {
+      "path": "docs/results/n4-prompt/host-test.txt",
+      "sha256": "a52d4d390d58e55bcc8d3c6bc97ffd8a9b41c40752249dc5ca4f651657f4740e",
+      "bytes": 236
+    },
+    {
+      "path": "docs/results/n4-prompt/loader.txt",
+      "sha256": "c6fc31ca591dec99cae847c38a8b72c45e670400baffe4a09bf2d058a81c35a0",
+      "bytes": 130
+    },
+    {
+      "path": "docs/results/n4-prompt/result.json",
+      "sha256": "5790a0023a8acfa77d9838f31ad3ea3cbc04c4ed32e3f99bfea9ffecd0022511",
+      "bytes": 5339
+    },
+    {
+      "path": "docs/results/n4-prompt/uefi-command.json",
+      "sha256": "df171601f0a5790faa8ec2f2638b78a40249812426d1c11cf9b8cc383757c68a",
+      "bytes": 934
+    },
+    {
+      "path": "docs/results/n4-prompt/uefi.serial.txt",
+      "sha256": "22e5b5e30ce020e2eeb723231fdf5505e9df5d6cfa10ba5f94adf30b08f70eb1",
+      "bytes": 4672
+    },
+    {
+      "path": "docs/results/n4-prompt/vsh-elf.txt",
+      "sha256": "a4434c4e1ca85e3c2938419874574ff99cb513ad51fe2220bf8741f5b4985c59",
+      "bytes": 147
+    },
+    {
+      "path": "docs/images/n4/vos-n4-bios-cwd-prompt.png",
+      "sha256": "fe62bcaa025237dcc7480e319577f5dedc77504e4197c84e547cd381400f3f3c"
+    },
+    {
+      "path": "docs/images/n4/vos-n4-uefi-cwd-prompt.png",
+      "sha256": "fe62bcaa025237dcc7480e319577f5dedc77504e4197c84e547cd381400f3f3c"
+    }
+  ],
+  "result": {
+    "scope": "normalized vsh cwd prompt",
+    "firmware": {
+      "bios": {
+        "passed": true,
+        "ring3_probes": 0,
+        "commands": [
+          "help",
+          "clear",
+          "echo",
+          "pwd",
+          "ls",
+          "cd",
+          "cat",
+          "exit"
+        ],
+        "prompt_cases": [
+          {
+            "command": "cd docs",
+            "prompt": "VOS>docs> ",
+            "failed": false,
+            "editing": {}
+          },
+          {
+            "command": "cd ./results/../results",
+            "prompt": "VOS>docs>results> ",
+            "failed": false,
+            "editing": {}
+          },
+          {
+            "command": "pwd",
+            "prompt": "VOS>docs>results> ",
+            "failed": false,
+            "editing": {}
+          },
+          {
+            "command": "cd missing",
+            "prompt": "VOS>docs>results> ",
+            "failed": true,
+            "editing": {}
+          },
+          {
+            "command": "cd ..",
+            "prompt": "VOS>docs> ",
+            "failed": false,
+            "editing": {}
+          },
+          {
+            "command": "cd /",
+            "prompt": "VOS> ",
+            "failed": false,
+            "editing": {}
+          },
+          {
+            "command": "cd /docs//results/.",
+            "prompt": "VOS>docs>results> ",
+            "failed": false,
+            "editing": {}
+          },
+          {
+            "command": "cd ../..",
+            "prompt": "VOS> ",
+            "failed": false,
+            "editing": {}
+          },
+          {
+            "command": "cd docsx",
+            "prompt": "VOS>docs> ",
+            "failed": false,
+            "editing": {
+              "backspaces": 1,
+              "initial_backspace": true
+            }
+          },
+          {
+            "command": "",
+            "prompt": "VOS>docs> ",
+            "failed": false,
+            "editing": {}
+          },
+          {
+            "command": "cd ../missing",
+            "prompt": "VOS>docs> ",
+            "failed": true,
+            "editing": {}
+          },
+          {
+            "command": "cd /",
+            "prompt": "VOS> ",
+            "failed": false,
+            "editing": {}
+          },
+          {
+            "command": "echo prompt checks complete",
+            "prompt": "VOS> ",
+            "failed": false,
+            "editing": {}
+          }
+        ],
+        "shell_screenshot": {
+          "width": 1280,
+          "height": 800,
+          "sha256": "08c7a92630dab01ec6aa8a35ed01bb5c2651840f7493cb540ca44843e8ef274e"
+        },
+        "files_screenshot": {
+          "width": 1280,
+          "height": 800,
+          "sha256": "27be64f9179db0d95623e92ca53514bc9b4827edf030404de988ffe9d39b6368"
+        },
+        "exit_status": 0,
+        "reclaimed": true
+      },
+      "uefi": {
+        "passed": true,
+        "ring3_probes": 0,
+        "commands": [
+          "help",
+          "clear",
+          "echo",
+          "pwd",
+          "ls",
+          "cd",
+          "cat",
+          "exit"
+        ],
+        "prompt_cases": [
+          {
+            "command": "cd docs",
+            "prompt": "VOS>docs> ",
+            "failed": false,
+            "editing": {}
+          },
+          {
+            "command": "cd ./results/../results",
+            "prompt": "VOS>docs>results> ",
+            "failed": false,
+            "editing": {}
+          },
+          {
+            "command": "pwd",
+            "prompt": "VOS>docs>results> ",
+            "failed": false,
+            "editing": {}
+          },
+          {
+            "command": "cd missing",
+            "prompt": "VOS>docs>results> ",
+            "failed": true,
+            "editing": {}
+          },
+          {
+            "command": "cd ..",
+            "prompt": "VOS>docs> ",
+            "failed": false,
+            "editing": {}
+          },
+          {
+            "command": "cd /",
+            "prompt": "VOS> ",
+            "failed": false,
+            "editing": {}
+          },
+          {
+            "command": "cd /docs//results/.",
+            "prompt": "VOS>docs>results> ",
+            "failed": false,
+            "editing": {}
+          },
+          {
+            "command": "cd ../..",
+            "prompt": "VOS> ",
+            "failed": false,
+            "editing": {}
+          },
+          {
+            "command": "cd docsx",
+            "prompt": "VOS>docs> ",
+            "failed": false,
+            "editing": {
+              "backspaces": 1,
+              "initial_backspace": true
+            }
+          },
+          {
+            "command": "",
+            "prompt": "VOS>docs> ",
+            "failed": false,
+            "editing": {}
+          },
+          {
+            "command": "cd ../missing",
+            "prompt": "VOS>docs> ",
+            "failed": true,
+            "editing": {}
+          },
+          {
+            "command": "cd /",
+            "prompt": "VOS> ",
+            "failed": false,
+            "editing": {}
+          },
+          {
+            "command": "echo prompt checks complete",
+            "prompt": "VOS> ",
+            "failed": false,
+            "editing": {}
+          }
+        ],
+        "shell_screenshot": {
+          "width": 1280,
+          "height": 800,
+          "sha256": "08c7a92630dab01ec6aa8a35ed01bb5c2651840f7493cb540ca44843e8ef274e"
+        },
+        "files_screenshot": {
+          "width": 1280,
+          "height": 800,
+          "sha256": "27be64f9179db0d95623e92ca53514bc9b4827edf030404de988ffe9d39b6368"
+        },
+        "exit_status": 0,
+        "reclaimed": true
+      }
+    },
+    "rustc": "rustc 1.100.0-nightly (2e2b193f8 2026-09-02)",
+    "passed": true,
+    "disk_sha256": "2da322573f80ba956cefbcd21f4e02c76857ba0228545b5e646c8ef9a73a8213"
+  },
+  "local_root": "build/n4-session-20261024T142208Z",
+  "manifest": {
+    "path": "build/n4-session-20261024T142208Z/results/manifest.json",
+    "entries": 157,
+    "sha256": "de908fcee0a66493341b2389f766ef645df64c6ea6ea9e36ea85ec7bf6987288"
+  },
+  "local_products": {
+    "user/vsh.elf": "4a837277422f97c86f3c3a5ba0fef15de22c002addf9243a4b5d78bd73b5ad5f",
+    "kernel/vos.bin": "b15e17c9b86c554784e7ee8d0ce000405eef5e366e7196de6b66b58954ba644c",
+    "kernel/vos.iso": "417060dac6c512f2d0f138813a457f90c6c41b440f7dc7eb205dcbb6483e6e11",
+    "kernel/vos-uefi.iso": "992c182acd689a3b6f2cd5eef589880875e6116625a193657560629afae3855a",
+    "disk.img": "2da322573f80ba956cefbcd21f4e02c76857ba0228545b5e646c8ef9a73a8213"
+  },
+  "guard": {
+    "result": {
+      "passed": true,
+      "error": null,
+      "returncode": 0,
+      "allocated": 67948544
+    },
+    "samples": 9,
+    "samples_sha256": "63d9d0109f23347783ca5610ee394a6af50b324087bd62f1839cca9fa4836aa6",
+    "all_clean": true,
+    "accepted_detection_unchanged": true,
+    "query_timeout_seconds": 90,
+    "ceiling_MiB_unchanged": 3360
+  },
+  "preservation": {
+    "prior_entries_verified": 38130,
+    "R4_manifest_entries_verified": 101,
+    "R4_archive_identity_verified": true,
+    "failed_pre_test_audit_invocation": "build/n4-session-20261024T142135Z",
+    "all_previous_attempts_preserved": true
+  },
+  "no_N3_campaign_repeated": true,
+  "ABI_unchanged": true
+}

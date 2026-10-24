@@ -1,0 +1,122 @@
+[2J[001;001H[=3h[2J[001;001H[2J[001;001H[8;042;160t[2J[001;001H[2J[001;001H[8;056;240t[2J[001;001HBdsDxe: loading Boot0002 "UEFI QEMU DVD-ROM QM00005 " from PciRoot(0x0)/Pci(0x1F,0x2)/Sata(0x2,0xFFFF,0x0)
+BdsDxe: starting Boot0002 "UEFI QEMU DVD-ROM QM00005 " from PciRoot(0x0)/Pci(0x1F,0x2)/Sata(0x2,0xFFFF,0x0)
+[H[J[1;1HHello from VOS!
+boot: x86_64 long mode, cs=0x8 efer=0xd00 rip=0xffffffff801072a8
+gdt: loaded cs=0x8 ss=0x10 tr=0x28 tss=busy
+tss: rsp0=0xffffffff8013b000 ist1=0xffffffff80132000 ist2=0xffffffff80134000 ist3=0xffffffff80136000 iomap=104 limit=103
+idt: 32 exception vectors loaded, df ist=1, nmi ist=2, mc ist=3
+idt: IRQ vectors 0x20-0x2f present, DPL 0, interrupt gates
+idt: vector 0x80 present, DPL 3 (system calls, ABI v0)
+cpu: wp=on nx=on smep=unsupported umip=unsupported smap=unsupported x87=off(em)
+cpu: inherited cr0=0x80010033 cr4=0x668 efer=0xd00; set cr0=0x80010035 cr4=0x68 efer=0xd00
+boot: loader "GRUB 2.14-2ubuntu1", memory map 21 entries, 127713280 bytes usable
+boot: multiboot2 info at 0x88000-0x89f00
+boot: kernel command line "vos.vsh=1"
+boot: modules 2
+boot: module 0 0x83000-0x86348 "hello"
+boot: module 1 0x1b7000-0x258c88 "vsh"
+boot: reserved 0x0-0x100000 low 1 MiB
+boot: reserved 0x100000-0x1b7000 kernel image
+boot: reserved 0x88000-0x8a000 multiboot2 info
+boot: reserved 0x83000-0x87000 module
+boot: reserved 0x1b7000-0x259000 module
+pmm: 262144 frames tracked below 1 GiB, 30675 usable (122700 KiB), 0 bytes of RAM above 1 GiB ignored
+vmm: identity map removed
+kmap: phys 0-4 MiB as 4 KiB pages: 26 text R-X, 9 R NX, 969 RW NX, 20 guard pages unmapped; 510 x 2 MiB RW NX
+kmap: text 0xffffffff80107000-0xffffffff80121000, rodata 0xffffffff80121000-0xffffffff80129000
+kmap: PDPT[510] 0x105000 -> 0x150000, checked before and after the switch; boot directory retired
+kmap: after the TLB flush the CPU refused a text write (#PF err=0x3) and a guard read (#PF err=0x0)
+devmap: window at 0xffffffff40000000, 40-bit physical addresses, write-combining via PAT entry 4
+screen: framebuffer 1280x800 BGRX at 0x80000000, pitch 5120, write-combining, MTRR type 0, 156x41 cells
+vmm: audit passed: kernel alias 1004 x 4 KiB + 510 x 2 MiB supervisor pages, 26 ring-0 executable (all kernel text, none writable), 0 lower-half tables
+irq: 8259 master 0x20-0x27, slave 0x28-0x2f (cascade IRQ2); masks 0xfffe (IRQ0 only); level-triggered lines (ELCR) 0x0
+pit: channel 0 mode 2, divisor 11932 (99.998 Hz)
+sched: 16 thread records, 15 guarded stacks of 16 KiB at 0xffffffff80153000; boot thread id 1, idle thread id 2
+vblk: virtio-blk at 00:0x2.0 id 0x1042 (modern), ready, 16384 sectors, queue 16 of 256, features VERSION_1 RO (offered 0x10130006e74), polled (interrupt line not level triggered (ELCR)), DMA pool 6 frames, no IOMMU
+app: module "hello" at 0x83000-0x86348, 13128 bytes
+elf: hello: ET_EXEC entry 0x400000, 3 PT_LOAD, 3 pages, VOS ABI 0
+user[hello]: Hello from VOS!
+proc: exit status 0 (cs=0x23 rip=0x40002a)
+proc[hello]: exited status 0, all frames reclaimed
+boot: checks passed
+user[vsh]: VOS native vsh (Rust, ring 3)
+user[vsh]: Type help for commands.
+user[vsh]: 
+user[vsh]: VOS> 
+help
+user[vsh]: Available commands: help, clear, echo, pwd, ls, cd, cat
+user[vsh]: VOS> 
+echo Hello VOS
+user[vsh]: Hello VOS
+user[vsh]: 
+user[vsh]: VOS> 
+clear
+user[vsh]: VOS> 
+pwd
+user[vsh]: /
+user[vsh]: 
+user[vsh]: VOS> 
+ls
+user[vsh]: docs
+user[vsh]: 
+user[vsh]: readme.txt
+user[vsh]: 
+user[vsh]: VOS> 
+cd docs
+user[vsh]: VOS>docs> 
+pwd
+user[vsh]: /docs
+user[vsh]: 
+user[vsh]: VOS>docs> 
+cat welcome.txt
+user[vsh]: Real ext2 file read by native Rust vsh.
+user[vsh]: 
+user[vsh]: VOS>docs> 
+cd ../../
+user[vsh]: VOS> 
+pwd
+user[vsh]: /
+user[vsh]: 
+user[vsh]: VOS> 
+cat missing.txt
+user[vsh]: vsh: operation failed
+user[vsh]: VOS> 
+echo filesystem checks complete
+user[vsh]: filesystem checks complete
+user[vsh]: 
+user[vsh]: VOS> 
+cd docs
+user[vsh]: VOS>docs> 
+cd ./results/../results
+user[vsh]: VOS>docs>results> 
+pwd
+user[vsh]: /docs/results
+user[vsh]: 
+user[vsh]: VOS>docs>results> 
+cd missing
+user[vsh]: vsh: operation failed
+user[vsh]: VOS>docs>results> 
+cd ..
+user[vsh]: VOS>docs> 
+cd /
+user[vsh]: VOS> 
+cd /docs//results/.
+user[vsh]: VOS>docs>results> 
+cd ../..
+user[vsh]: VOS> 
+cd docsx 
+user[vsh]: VOS>docs> 
+
+user[vsh]: VOS>docs> 
+cd ../missing
+user[vsh]: vsh: operation failed
+user[vsh]: VOS>docs> 
+cd /
+user[vsh]: VOS> 
+echo prompt checks complete
+user[vsh]: prompt checks complete
+user[vsh]: 
+user[vsh]: VOS> 
+exit
+proc: exit status 0 (cs=0x23 rip=0x40002a)
+native: vsh PASS, process reclaimed
