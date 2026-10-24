@@ -1,0 +1,1 @@
+check-user-elf: /home/veasnawt/src/myos/build/n4-session-20261024T144105Z/results/vsh/user/vsh.elf: OK (3 PT_LOAD, entry 0x400000, 5 pages, VOS ABI 3)

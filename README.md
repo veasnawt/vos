@@ -29,6 +29,9 @@ VOS is written primarily in freestanding C and x86 assembly. It is **not a Linux
   working directory, for example `VOS>docs>results>`.
 - A minimal shared Rust SDK, reusable entry/runtime conventions and an independent
   native example ([application guide](docs/rust-apps.md)).
+- [Rixie Core v0](docs/rixie-core.md): an independent Rust ring-3 text application
+  with greetings, command explanations and predefined answers. It is a
+  deterministic offline prototype, not a conversational AI model.
 - BIOS and UEFI boot paths **in QEMU** via GRUB; extensive emulator-based regression tests.
 
 **N0–N3 are complete.** N3 storage closure was accepted on 2026-10-24 and is
@@ -37,12 +40,14 @@ Local `main` and the `feat/n4-interactive-console` development branch have been
 fast-forwarded to that merge, whose source tree is identical to the N3 baseline.
 The [N3 closure record](docs/results/n3-closure.md) contains D1a–D1f,
 5/5 mutation controls, 15/15 larger-RAM stress runs, evidence hashes and preserved
-failure history. **The original N4 scope is complete and published** on
-`feat/n4-interactive-console`, ready for the owner's pull request and integration.
+failure history. **N4 is ready for closure**, including the owner's added minimal
+Rixie Core v0 scope, on `feat/n4-interactive-console`.
 Keyboard input (`3a2b642`), buffered input (`87b99df`), native Rust shell
 (`1beb406`), reusable SDK (`f7ac434`) and normalized cwd prompt (`bdde1bc`) all
-have focused verification and authentic screenshots. See the
-[N4 closure record](docs/results/n4-closure.md). N4 has not been merged into main.
+have focused verification and authentic screenshots. The subsequent
+[Rixie prototype](docs/results/n4-rixie-core.md) also passes host and BIOS/UEFI
+checks. See [N4 closure readiness](docs/results/n4-closure.md). The owner handles
+the GitHub pull request and merge; N4 has not been merged into main.
 
 ![VOS BIOS boot console with PASS status](docs/images/n3/vos-n3-bios-boot-status.png)
 
@@ -85,6 +90,10 @@ For another native Rust application, create `user/<name>/main.rs` using
 `make rust-app RUST_APP=<name> RUSTC=/path/to/rustc`. The independent example runs
 with `make rust-demo-run RUSTC=/path/to/rustc`. See the
 [SDK guide](docs/rust-apps.md) and [foundation results](docs/results/n4-rust-foundations.md).
+
+For Rixie, use `make rixie-run RUSTC=/path/to/rustc`, then type `hello`, `help`,
+`explain cd` or `are you AI?`. This is its own boot configuration; `vsh` does not
+launch external applications. See the [Rixie guide](docs/rixie-core.md).
 
 ## What happens when x86_64 VOS boots
 

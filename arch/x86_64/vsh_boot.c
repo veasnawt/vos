@@ -25,6 +25,7 @@ static int option(const char *p,const char *token)
 }
 int vsh_requested(const char *p) {return option(p,"vos.vsh=1");}
 int rust_demo_requested(const char *p) {return option(p,"vos.rust-demo=1");}
+int rixie_requested(const char *p) {return option(p,"vos.rixie=1");}
 
 static int run_module(const struct boot_info *bi, const char *name, int console, int filesystem)
 {
@@ -75,4 +76,10 @@ int rust_demo_run(const struct boot_info *bi)
 {
     screen_begin_input();screen_status(SCREEN_PASS,"Rust SDK example");
     return run_module(bi,"rust-demo",0,0);
+}
+
+int rixie_run(const struct boot_info *bi)
+{
+    /* Independent trusted launch: console only, no filesystem/channel grant. */
+    return run_module(bi,"rixie",1,0);
 }

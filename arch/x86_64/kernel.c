@@ -362,7 +362,10 @@ void kernel_main(uint32_t mb2_magic, uint32_t mb2_info)
     screen_status(first_failure ? SCREEN_FAIL : SCREEN_PASS, first_failure ? "VOS-TEST: FAIL" : "VOS-TEST: PASS");
     outl(TEST_EXIT_PORT, first_failure ? TEST_EXIT_FAIL : TEST_EXIT_PASS);
 #else
-    if (!first_failure && rust_demo_requested(bi.cmdline)) {
+    if (!first_failure && rixie_requested(bi.cmdline)) {
+        check(rixie_run(&bi), "Rixie Core v0");
+        screen_status(first_failure ? SCREEN_FAIL : SCREEN_PASS,first_failure ? "Rixie failed" : "Rixie session complete");
+    } else if (!first_failure && rust_demo_requested(bi.cmdline)) {
         check(rust_demo_run(&bi), "native Rust SDK example");
         screen_status(first_failure ? SCREEN_FAIL : SCREEN_PASS,first_failure ? "Rust SDK example failed" : "Rust SDK example complete");
     } else if (!first_failure && vsh_requested(bi.cmdline)) {

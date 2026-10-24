@@ -1,9 +1,11 @@
 # VOS Status
 
-**Latest implementation milestone: N4 COMPLETE and ready for integration** on
-`feat/n4-interactive-console`. The owner handles the GitHub pull request and merge.
+**N4 implementation is ready for closure**, including the owner's added Rixie
+Core v0 prototype, on `feat/n4-interactive-console`.
+The owner handles final acceptance, the GitHub pull request and merge.
 [Final N4 closure](results/n4-closure.md) records the original delivered scope,
-publications, focused verification, screenshots and limitations.
+publications, the explicit Rixie scope update, focused verification, screenshots
+and limitations. Earlier shell/SDK-only readiness records remain historical.
 
 N3 remains complete and accepted on 2026-10-24.
 [Final N3 closure and evidence](results/n3-closure.md) consolidate D1a–D1f,
@@ -31,7 +33,11 @@ also pass host, loader and BIOS/UEFI checks and are published at
 `f7ac43478ea548ddc4bb74ae177b0bb828e67596`. The requested
 [normalized cwd prompt](results/n4-dynamic-prompt.md) is published at
 `bdde1bc33f99030ba51fa78078a6db90f87f2a07`; three host tests and both firmware
-interactions pass. N4 is ready for integration; main remains the N3 baseline.
+interactions pass. [Rixie Core v0](results/n4-rixie-core.md) subsequently passes
+six host tests and 17 interactions on each firmware, plus independent vsh smoke
+checks. It is a deterministic offline Rust ring-3 application with a console-only
+grant, launched through its own trusted boot configuration. No external-app shell
+launcher or new kernel subsystem was added. Main remains the N3 baseline.
 
 Historical N3.5 approval, integration, failed attempts and original authorization
 boundaries below remain records of those checkpoints, not current N3 blockers.
@@ -44,7 +50,8 @@ not a release.
 
 N4 now delivers keyboard input, the buffered console, native Rust `vsh` with the
 seven requested commands and dynamic cwd prompt, and reusable Rust application
-foundations with an independent example. It is published on the feature branch.
+foundations with an independent example. The authorized extension adds the first
+minimal Rixie Core prototype. All are on the feature branch, ready for N4 closure.
 
 N1 (user mode, system calls), N2 (scheduling, preemption of user programs, IPC), N3.0–N3.4
 (W^X higher-half memory, virtio-blk, block cache, read-only ext2, interrupt-driven block I/O),

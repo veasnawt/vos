@@ -175,8 +175,9 @@ evidence and archives must remain preserved. The original D1r3 root is unfinishe
 unsealed and unarchived. Monitoring gaps are not presented as uninterrupted isolation.
 The accepted run controllers and exact build environments remain in local evidence.
 
-N4 implementation is complete and published on `feat/n4-interactive-console`,
-ready for integration. See the [closure record](results/n4-closure.md). The first
+N4 implementation, including the owner's added minimal Rixie Core v0 scope,
+is ready for closure on `feat/n4-interactive-console`.
+See [closure readiness](results/n4-closure.md). The first
 [keyboard echo increment](results/n4-first-input.md) passes host, BIOS input,
 UEFI input and normal-boot compatibility checks. `make input-run` builds into its
 own `build/n4-input/` tree; the existing EFI extraction environment is still needed
@@ -211,10 +212,18 @@ The [dynamic cwd prompt](results/n4-dynamic-prompt.md) is published at
 `VOS>docs>results>`, normalized parent/root navigation and unchanged failed-cd
 state. Focused host and BIOS/UEFI checks pass, including prompt-safe editing.
 
-The original N4 objectives are complete and ready for integration. The owner will
-handle the GitHub pull request and merge. No further feature or verification
-campaign is a prerequisite for the agreed scope.
-Rixie Core is optional. Do not rerun N3 campaigns or introduce new N3 gates.
+The original shell/SDK objectives are complete. After that publication, the owner
+explicitly extended N4 to include [Rixie Core v0](rixie-core.md) before final
+closure. It is a verified independent Rust ring-3 application using the shared
+SDK, existing bounded console and a small opt-in trusted launch selector. It has
+fixed greetings, help/about, command explanations and five predefined questions;
+it identifies itself as a deterministic offline prototype, not an AI model.
+Use `make rixie-run RUSTC=/path/to/rustc`; it is not a `vsh` external command.
+
+Six host tests, 17 BIOS/UEFI interactions per firmware and independent vsh smoke
+boots pass. No ABI change, kernel subsystem, network, GUI or model was introduced.
+The extended N4 scope is ready for closure. The owner handles acceptance, the
+GitHub pull request and merge. Do not rerun N3 campaigns or introduce new gates.
 
 ### Historical N3.5 checkpoints
 

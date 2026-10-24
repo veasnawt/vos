@@ -4,7 +4,9 @@ VOS applications use the existing static x86-64 ELF profile and system-call ABI.
 The small `vos` source SDK supplies shared bindings, an entry macro and the panic
 convention. There is no allocator, Cargo dependency tree, hosted libc or separate
 Rust application architecture. `vsh` and the independent `rust-demo` use this same
-SDK, C startup, syscall stubs and linker script.
+SDK, C startup, syscall stubs and linker script. The independently launched
+[Rixie Core v0](rixie-core.md) also uses this SDK with an explicit console-only
+grant; it does not import shell internals or add an application framework.
 
 ## Smallest program
 

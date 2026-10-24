@@ -1,6 +1,7 @@
 # VOS Roadmap
 
-N0–N4 implementation objectives are complete; N4 is ready for integration.
+N0–N3 are complete. N4 implementation, including the authorized minimal Rixie
+Core v0 extension, is ready for closure.
 N3 closure was accepted on 2026-10-24 after the existing
 D1/D2/C20 requirements passed. The milestone is published on
 `feat/n3.6-storage-closure` at `897312f`. GitHub main integrated it through
@@ -22,16 +23,19 @@ See [status](STATUS.md) and the [N3 closure record](results/n3-closure.md).
 | N3.4 | Bounded interrupt-driven block I/O and polling fallback | [Storage plan](plans/n3-storage.md) |
 | N3.5 | Capability-scoped read-only ABI v2 files/directories | [Historical closure](results/n3.5-closure.md) |
 | N3.6 / N3 | Integrated accounting/stress, final regression, five mutations, fifteen larger-RAM runs and preserved evidence | [Final N3 closure](results/n3-closure.md) |
-| N4 | Keyboard, buffered console, native Rust shell, cwd prompt, reusable Rust SDK and independent app | [Final N4 closure](results/n4-closure.md) |
+| N4 (ready for closure) | Keyboard, buffered console, native Rust shell, cwd prompt, reusable Rust SDK, independent app and authorized minimal offline Rixie Core v0 | [N4 closure readiness](results/n4-closure.md) |
 | U0/U1 | QEMU UEFI feasibility/readiness, BIOS compatibility and framebuffer diagnostics | [UEFI plan/results](plans/uefi.md) |
 
-## N4: published and ready for integration
+## N4: ready for closure, including Rixie Core v0
 
-The original authorized scope is complete on `feat/n4-interactive-console`,
-based on the integrated N3 baseline. The [closure record](results/n4-closure.md)
-links the five implementation publications, focused host/BIOS/UEFI evidence and
-authentic captures. The owner will create the GitHub pull request and merge;
-this publication does not alter main.
+The original authorized shell/SDK scope is complete on
+`feat/n4-interactive-console`, based on the integrated N3 baseline. After its
+publication, the owner explicitly added the first minimal Rixie Core prototype
+before final closure. [Rixie Core v0](results/n4-rixie-core.md) is now implemented
+and verified as a small independent offline Rust userspace application. The
+[closure record](results/n4-closure.md) links the original publications and the
+scope update, focused host/BIOS/UEFI evidence and authentic captures. The owner
+handles acceptance, the GitHub pull request and merge; main is unchanged.
 
 Delivered in the authorized order:
 
@@ -43,8 +47,13 @@ Delivered in the authorized order:
 5. Rust-first native application foundations: shared bindings/runtime, a reusable
    ELF build and an independent example use the same C entry/syscall/ELF interfaces.
 
-N0–N3 and ABI v0–v3 remain preserved. No further feature or verification campaign
-is required for this N4 scope. Further development requires separate authorization.
+The subsequent Rixie extension reuses that SDK and the existing console ABI with
+a separate trusted launch configuration. It explains commands and selects fixed
+answers; it is not a conversational AI model. No external-program launcher,
+network, GUI or model subsystem is part of this prototype.
+
+N0–N3 and ABI v0–v3 remain preserved. The extended N4 scope is ready for closure;
+further development requires separate authorization.
 
 ## Later work
 

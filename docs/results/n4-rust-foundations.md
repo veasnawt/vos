@@ -90,8 +90,10 @@ match the previously published native-shell view.
 
 The current limits remain explicit: QEMU-only hardware verification, US ASCII,
 128-byte input, one granted console owner, fixed storage/no allocator and trusted
-read-only files. Quoting, pipes, writable storage, networking, GUI, package
-management and Rixie Core were not added and are not closure prerequisites.
+read-only files. These SDK changes did not add quoting, pipes, writable storage,
+networking, GUI, package management or Rixie Core. The owner subsequently extended
+N4 to include the [minimal offline Rixie prototype](n4-rixie-core.md) before final
+closure; its later verification and readiness are recorded separately.
 
 The reviewed 34-file SDK implementation is committed and pushed. The raw evidence
 index retains its pre-publication state accurately; current publication status is

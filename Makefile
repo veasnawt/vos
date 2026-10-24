@@ -165,6 +165,21 @@ rust-demo-uefi-iso: rust-demo-iso
 rust-demo-run: rust-demo-iso
 	qemu-system-x86_64 -m 128M -cdrom $(RUST_BUILD)/kernel/vos.iso -serial stdio -no-reboot -nic none
 
+RIXIE_BUILD ?= build/n4-rixie
+ifneq ($(filter rixie-iso rixie-uefi-iso rixie-run,$(MAKECMDGOALS)),)
+ifeq ($(strip $(RIXIE_BUILD)),)
+$(error RIXIE_BUILD must be nonempty; use a path under build/)
+endif
+endif
+.PHONY: rixie-iso rixie-uefi-iso rixie-run
+rixie-iso:
+	$(MAKE) --no-print-directory ARCH=x86_64 USER_BUILD=$(RIXIE_BUILD)/user RUST_APP=rixie user-rust
+	$(MAKE) --no-print-directory ARCH=x86_64 BUILD=$(RIXIE_BUILD)/kernel USER_BUILD=$(RIXIE_BUILD)/user GRUB_CFG=arch/x86_64/grub-rixie.cfg ISO_FILES=$(RIXIE_BUILD)/user/rixie.elf:boot/rixie.elf iso
+rixie-uefi-iso: rixie-iso
+	$(MAKE) --no-print-directory ARCH=x86_64 BUILD=$(RIXIE_BUILD)/kernel USER_BUILD=$(RIXIE_BUILD)/user GRUB_CFG=arch/x86_64/grub-rixie.cfg ISO_FILES=$(RIXIE_BUILD)/user/rixie.elf:boot/rixie.elf uefi-iso
+rixie-run: rixie-iso
+	qemu-system-x86_64 -m 128M -cdrom $(RIXIE_BUILD)/kernel/vos.iso -serial stdio -no-reboot -nic none
+
 # Like run, but QEMU waits for a debugger on TCP port 1234 (-s -S) and prints
 # the serial port here. GDB is not installed by the build; see
 # docs/plans/n2-foundation.md (tooling) for the commands.
