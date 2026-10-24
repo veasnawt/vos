@@ -1,0 +1,98 @@
+{
+  "kind": "paired optimized host protocol model, not QEMU throughput",
+  "accepted_payload_commit": "ff251a728529908776ec5557cbc359f2247bc369",
+  "baseline_binary_sha256": "4251e04ee57337895181becfba3ac2bc1fc0ced1e2107b6bd7edd5c6ba1a2965",
+  "benchmark_source_sha256": "e9e163be7792ff839600653f8971207049524d92c0fbc89b7cbf982ecd5eed94",
+  "release_command": [
+    "gcc",
+    "-std=gnu11",
+    "-O2",
+    "-Wall",
+    "-Wextra",
+    "-Werror",
+    "-ffunction-sections",
+    "-fdata-sections",
+    "-Wl,--gc-sections",
+    "-Iarch/x86_64",
+    "-Itests/host"
+  ],
+  "baseline": {
+    "kind": "optimized_host_protocol_model",
+    "iterations_per_sample": 20000,
+    "context_bytes": 504,
+    "legacy_ns_per_handshake": [
+      232.485,
+      232.87,
+      261.84,
+      253.65,
+      221.83,
+      229.91,
+      222.79
+    ],
+    "payload_ns_per_two_byte_bidirectional_transaction_with_setup": [
+      487.94,
+      525.68,
+      470.715,
+      485.445,
+      477.615,
+      507.77,
+      622.395
+    ],
+    "sink": 41105935442000
+  },
+  "current": {
+    "kind": "optimized_host_protocol_model",
+    "iterations_per_sample": 20000,
+    "context_bytes": 504,
+    "legacy_ns_per_handshake": [
+      249.605,
+      326.995,
+      265.655,
+      250.18,
+      232.79,
+      235.125,
+      339.61
+    ],
+    "payload_ns_per_two_byte_bidirectional_transaction_with_setup": [
+      949.925,
+      497.685,
+      637.87,
+      478.9,
+      660.39,
+      484.375,
+      503.8
+    ],
+    "sink": 41105935442000
+  },
+  "retry": {
+    "kind": "optimized_host_retry_with_504_byte_state_restore",
+    "context_bytes": 504,
+    "iterations": 20000,
+    "ns_per_retry": [
+      94.29,
+      91.96,
+      92.46,
+      92.27,
+      92.965,
+      91.14,
+      116.285
+    ],
+    "sink": 13013000
+  },
+  "median_change_percent": {
+    "legacy_ns_per_handshake": 7.611243736155027,
+    "payload_ns_per_two_byte_bidirectional_transaction_with_setup": 3.250399639299917
+  },
+  "potential_regression_over_25_percent": false,
+  "host": {
+    "platform": "Linux-6.18.54.1-microsoft-standard-WSL2-x86_64-with-glibc2.43",
+    "logical_cpus": 4,
+    "loadavg": [
+      0.267578125,
+      0.10205078125,
+      0.12939453125
+    ],
+    "CPU_model": "Intel(R) Core(TM) i5-4570 CPU @ 3.20GHz"
+  },
+  "sanitizer_results_separate": true
+}

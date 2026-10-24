@@ -3,7 +3,11 @@
 TCP establishment is published as
 [`4e799c241b6f78ffe26e88274a132bf90772d628`](https://github.com/veasnawt/vos/commit/4e799c241b6f78ffe26e88274a132bf90772d628)
 on `feat/n5-networking`, including the exact reviewed 49-file candidate. The
-payload increment remains **uncommitted for review**. N5 is in progress.
+payload increment was published with all 55 reviewed files as
+[`ff251a728529908776ec5557cbc359f2247bc369`](https://github.com/veasnawt/vos/commit/ff251a728529908776ec5557cbc359f2247bc369).
+The guarded publisher is `build/n5-tcp-data-20261024T191858Z/`; raw evidence
+remains an unchanged historical snapshot. The subsequent
+[retry increment](n5-tcp-retry.md) is uncommitted. N5 is in progress.
 
 ## Git and publication
 
@@ -132,3 +136,8 @@ guests. They show byte/window/ACK counts and explicit timeout/reset cleanup.
 
 Next: bounded retransmission of the retained TX segment, with retry limits and
 packet/ACK-loss tests. Wire closure and reassembly remain unsupported.
+
+The [bounded retry profile](n5-tcp-retry.md) now passes those focused checks.
+Payload mode remains single-transmission unless retransmission is explicitly
+enabled. The owner merged PR #5 after this evidence checkpoint; GitHub main is
+now `ffaf2fb`, matching the establishment tree `4e799c2`. Local main is unchanged.

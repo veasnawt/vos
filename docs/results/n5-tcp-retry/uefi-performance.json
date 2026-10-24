@@ -1,0 +1,26 @@
+{
+  "kind": "optimized_unsanitized_QEMU_loss_scenario",
+  "firmware": "uefi",
+  "kernel_optimization": "-O2 with debug symbols; no sanitizers",
+  "QEMU": "q35/TCG, 128 MiB, modern virtio-net, isolated stream peer",
+  "elapsed_to_PASS_seconds": 7.181282478999492,
+  "QEMU_CPU_seconds": 3.75,
+  "QEMU_observed_VmHWM_KiB": 156044,
+  "guest_RAM_MiB": 128,
+  "context_bytes": 504,
+  "protocol_RX_TX_bytes": 128,
+  "private_DMA_bytes": 45056,
+  "unique_delivered_bytes": 28,
+  "terminal_aborted_TX_bytes": 16,
+  "caveat": "Includes firmware, deliberate loss and fixed retry waits. Not maximum throughput or a matched QEMU latency comparison.",
+  "host": {
+    "platform": "Linux-6.18.54.1-microsoft-standard-WSL2-x86_64-with-glibc2.43",
+    "logical_cpus": 4,
+    "loadavg": [
+      0.40234375,
+      0.14453125,
+      0.14306640625
+    ],
+    "CPU_model": "Intel(R) Core(TM) i5-4570 CPU @ 3.20GHz"
+  }
+}

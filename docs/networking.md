@@ -9,7 +9,8 @@ bounded Ethernet/ARP layer is published at `a6571c1`. Native IPv4/ICMP echo is
 published at `33693b3`. Bounded kernel UDP is implemented and verified below;
 UDP is published at `a5889f9`. A passive TCP establishment prototype is verified
 below, published at `4e799c2`. Opt-in bounded payload exchange is verified below;
-full TCP reliability and explicit userspace authority remain future work.
+payload exchange is published at `ff251a7`. Bounded data retransmission is now
+verified below; full TCP reliability and userspace authority remain future work.
 
 ## Existing infrastructure and choice
 
@@ -424,3 +425,54 @@ are labelled; they are not maximum throughput or hard real-time claims. Historic
 QEMU timing has a different prelude/load and is contextual only. The paired old/new
 host model uses the same workload and compiler conditions. No optimization or
 security-check bypass was introduced; simple bounded copies/shifts remain in use.
+
+## Bounded TCP retransmission
+
+The trusted `vos.tcp-retry=1` profile enables retransmission on the existing
+payload connection. Other profiles keep their accepted behavior. Two byte-sized
+mode/count fields and a 32-bit relative deadline use six previous padding bytes
+between the ports and `since`; the context remains **504 bytes**, below the
+unchanged 512-byte limit. No buffer, queue, heap allocation or DMA pool is added.
+
+`net_tcp_retransmit` emits only retained, outstanding bytes starting at SND.UNA.
+It does not advance SND.NXT or retire data. The retry is capped to the peer's
+current window; a zero window produces no data or retry charge. Persist probes
+are unsupported. Only a successful packet construction consumes one retry;
+short output leaves state and the deadline unchanged.
+
+The owner supplies monotonic PIT ticks. Fixed spacing is 50 ticks, at most three
+retries, inside the unchanged absolute 200-tick TX horizon. The deadline is
+relative to original `tx_since`; it cannot overflow because expiry is checked
+before narrowing elapsed ticks. A late poll schedules the next attempt at least
+50 ticks after the actual retry, without a catch-up burst. Valid partial ACKs
+move the retained prefix and restart only the relative spacing, preserving the
+original absolute horizon and retry count. Duplicate/stale/invalid ACKs do not
+postpone retries. Full ACKs clear retry metadata; a new send starts a new budget.
+
+Terminal expiry explicitly aborts and erases connection buffers/state. Local
+abort and close suppress every later retry. The caller still confirms adapter
+reset before freeing DMA frames. Incoming ACK-range, sequence and checksum checks
+remain in place; ACKs cannot retire bytes beyond SND.NXT. Wraparound, shrinking
+windows, partial/cumulative ACKs, retry exhaustion and destruction are host-tested.
+
+With existing EFI tools and unchanged admission/isolation guards:
+
+```sh
+PYTHONDONTWRITEBYTECODE=1 python3 -B scripts/test-tcp-retry.py \
+  --output "$PWD/build/n5-tcp-retry-$(date -u +%Y%m%dT%H%M%SZ)"
+```
+
+`TCP_RETRY_BUILD` must be nonempty for `tcp-retry-iso` / `tcp-retry-uefi-iso`.
+The isolated peer deliberately drops data, drops an ACK after delivery, deduplicates
+a repeated segment, ACKs a prefix, and blackholes a final segment until retry
+exhaustion. Its explicit loss/delivery decisions are recorded alongside raw PCAP;
+partial prefix acceptance is a controlled peer action, not claimed IP fragmentation.
+No historical QEMU campaign is repeated.
+
+This is fixed, diagnostic data recovery, not production TCP: no RTT estimation,
+exponential backoff, fast retransmit, persist probes, SYN/FIN/RST retransmission,
+reassembly, wire closure or production ISN generator. Network access remains
+kernel-only with ABI v0-v3 and capability boundaries unchanged. Optimized hosted
+path comparisons use the accepted payload binary; unsanitized QEMU CPU/memory and
+capture timings remain separate from ASan/UBSan correctness evidence. See
+[retry results](results/n5-tcp-retry.md) for measurements and exact manifests.

@@ -252,6 +252,18 @@ tcp-data-iso:
 tcp-data-uefi-iso: tcp-data-iso
 	$(MAKE) --no-print-directory ARCH=x86_64 BUILD=$(TCP_DATA_BUILD)/kernel USER_BUILD=$(TCP_DATA_BUILD)/user GRUB_CFG=arch/x86_64/grub-tcp-data.cfg uefi-iso
 
+TCP_RETRY_BUILD ?= build/n5-tcp-retry
+ifneq ($(filter tcp-retry-iso tcp-retry-uefi-iso,$(MAKECMDGOALS)),)
+ifeq ($(strip $(TCP_RETRY_BUILD)),)
+$(error TCP_RETRY_BUILD must be nonempty; use a path under build/)
+endif
+endif
+.PHONY: tcp-retry-iso tcp-retry-uefi-iso
+tcp-retry-iso:
+	$(MAKE) --no-print-directory ARCH=x86_64 BUILD=$(TCP_RETRY_BUILD)/kernel USER_BUILD=$(TCP_RETRY_BUILD)/user GRUB_CFG=arch/x86_64/grub-tcp-retry.cfg iso
+tcp-retry-uefi-iso: tcp-retry-iso
+	$(MAKE) --no-print-directory ARCH=x86_64 BUILD=$(TCP_RETRY_BUILD)/kernel USER_BUILD=$(TCP_RETRY_BUILD)/user GRUB_CFG=arch/x86_64/grub-tcp-retry.cfg uefi-iso
+
 # Like run, but QEMU waits for a debugger on TCP port 1234 (-s -S) and prints
 # the serial port here. GDB is not installed by the build; see
 # docs/plans/n2-foundation.md (tooling) for the commands.

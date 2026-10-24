@@ -1,0 +1,78 @@
+{
+  "bios": {
+    "retry_capture_gaps_us": [
+      500600,
+      499193,
+      505533,
+      499651,
+      499989,
+      500030
+    ],
+    "median_retry_gap_us": 500009.5,
+    "caveat": "Capture observations; PIT boundary behavior checked independently in C. Fixed diagnostic RTO, not adaptive production TCP.",
+    "release": {
+      "kind": "optimized_unsanitized_QEMU_loss_scenario",
+      "firmware": "bios",
+      "kernel_optimization": "-O2 with debug symbols; no sanitizers",
+      "QEMU": "q35/TCG, 128 MiB, modern virtio-net, isolated stream peer",
+      "elapsed_to_PASS_seconds": 5.022934300999623,
+      "QEMU_CPU_seconds": 0.97,
+      "QEMU_observed_VmHWM_KiB": 77780,
+      "guest_RAM_MiB": 128,
+      "context_bytes": 504,
+      "protocol_RX_TX_bytes": 128,
+      "private_DMA_bytes": 45056,
+      "unique_delivered_bytes": 28,
+      "terminal_aborted_TX_bytes": 16,
+      "caveat": "Includes firmware, deliberate loss and fixed retry waits. Not maximum throughput or a matched QEMU latency comparison.",
+      "host": {
+        "platform": "Linux-6.18.54.1-microsoft-standard-WSL2-x86_64-with-glibc2.43",
+        "logical_cpus": 4,
+        "loadavg": [
+          0.35009765625,
+          0.1298828125,
+          0.13818359375
+        ],
+        "CPU_model": "Intel(R) Core(TM) i5-4570 CPU @ 3.20GHz"
+      }
+    }
+  },
+  "uefi": {
+    "retry_capture_gaps_us": [
+      499613,
+      499610,
+      507485,
+      499655,
+      500028,
+      499926
+    ],
+    "median_retry_gap_us": 499790.5,
+    "caveat": "Capture observations; PIT boundary behavior checked independently in C. Fixed diagnostic RTO, not adaptive production TCP.",
+    "release": {
+      "kind": "optimized_unsanitized_QEMU_loss_scenario",
+      "firmware": "uefi",
+      "kernel_optimization": "-O2 with debug symbols; no sanitizers",
+      "QEMU": "q35/TCG, 128 MiB, modern virtio-net, isolated stream peer",
+      "elapsed_to_PASS_seconds": 7.181282478999492,
+      "QEMU_CPU_seconds": 3.75,
+      "QEMU_observed_VmHWM_KiB": 156044,
+      "guest_RAM_MiB": 128,
+      "context_bytes": 504,
+      "protocol_RX_TX_bytes": 128,
+      "private_DMA_bytes": 45056,
+      "unique_delivered_bytes": 28,
+      "terminal_aborted_TX_bytes": 16,
+      "caveat": "Includes firmware, deliberate loss and fixed retry waits. Not maximum throughput or a matched QEMU latency comparison.",
+      "host": {
+        "platform": "Linux-6.18.54.1-microsoft-standard-WSL2-x86_64-with-glibc2.43",
+        "logical_cpus": 4,
+        "loadavg": [
+          0.40234375,
+          0.14453125,
+          0.14306640625
+        ],
+        "CPU_model": "Intel(R) Core(TM) i5-4570 CPU @ 3.20GHz"
+      }
+    }
+  }
+}

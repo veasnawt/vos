@@ -1,6 +1,7 @@
 #include "net_tcp.h"
 #include "lib.h"
 _Static_assert(sizeof(struct net_tcp)<=512,"bounded TCP context");
+_Static_assert(NET_TCP_RETRY_TICKS*(NET_TCP_RETRY_MAX+1)<=NET_TCP_TX_TTL,"bounded retry horizon");
 static uint16_t get16(const uint8_t *p) {return (uint16_t)((unsigned)p[0]*256+p[1]);}
 static uint32_t get32(const uint8_t *p) {return (uint32_t)p[0]<<24|(uint32_t)p[1]<<16|(uint32_t)p[2]<<8|p[3];}
 static void put16(uint8_t *p,uint16_t n) {p[0]=(uint8_t)(n>>8);p[1]=(uint8_t)n;}
@@ -18,6 +19,7 @@ void net_tcp_abort(struct net_tcp *c)
     c->isn=c->peer_isn=c->snd_next=c->rcv_next=0;c->since=0;c->state=NET_TCP_LISTEN;
     c->rx_used=c->tx_used=c->peer_window=0;c->window_dirty=0;
     c->snd_una=c->win_seq=c->win_ack=c->rcv_adv=0;c->tx_since=0;
+    c->retry_count=0;c->retry_after=0;
     memset(c->rx,0,sizeof(c->rx));memset(c->tx,0,sizeof(c->tx));
 }
 static int payload_timeout(const struct net_tcp *c,uint64_t now)
@@ -37,6 +39,12 @@ int net_tcp_enable_payload(struct net_tcp *c)
     if (c->state!=NET_TCP_LISTEN) return NET_ARP_BUSY;
     c->payload_enabled=1;return 0;
 }
+int net_tcp_enable_retransmission(struct net_tcp *c)
+{
+    if (!c || !c->port || !c->payload_enabled) return NET_ARP_EINVAL;
+    if (c->state!=NET_TCP_LISTEN) return NET_ARP_BUSY;
+    c->retry_enabled=1;return 0;
+}
 static int ready(const struct net_tcp *c,uint64_t now)
 {
     if (!c || !c->port || !c->payload_enabled || c->state!=NET_TCP_ESTABLISHED) return NET_ARP_EINVAL;
@@ -53,13 +61,13 @@ static void shift(uint8_t *p,unsigned count,unsigned consumed)
     for (unsigned i=0;i<count-consumed;i++) p[i]=p[i+consumed];
     memset(p+count-consumed,0,consumed);
 }
-static int packet(const struct net_tcp *c,uint32_t ack,unsigned window,const void *data,size_t n,
+static int packet(const struct net_tcp *c,uint32_t seq,uint32_t ack,unsigned window,const void *data,size_t n,
                   uint8_t packet[54+NET_TCP_TX_MAX],void *out,size_t capacity,size_t *length,size_t *size)
 {
     size_t wire=54+n;if (wire<60) wire=60;
     if (!output_ok(out,capacity,length,wire)) return NET_ARP_NOSPACE;
     int e=net_ipv4_begin(&c->ip,c->peer_mac,c->peer,6,20+n,packet,54+NET_TCP_TX_MAX,size);if (e) return e;
-    uint8_t *h=packet+34;put16(h,c->port);put16(h+2,c->peer_port);put32(h+4,c->snd_next);put32(h+8,ack);
+    uint8_t *h=packet+34;put16(h,c->port);put16(h+2,c->peer_port);put32(h+4,seq);put32(h+8,ack);
     h[12]=0x50;h[13]=n?24:16;put16(h+14,(uint16_t)window);
     if (n) memcpy(h+20,data,n);
     put16(h+16,net_ipv4_transport_checksum(c->ip.arp.ip,c->peer,6,h,20+n));return 0;
@@ -73,7 +81,7 @@ int net_tcp_ack(struct net_tcp *c,uint64_t now,void *out,size_t capacity,size_t 
 {
     int e=ready(c,now);if (e) return e;
     uint8_t p[54+NET_TCP_TX_MAX];size_t n;
-    e=packet(c,c->rcv_next,NET_TCP_RX_MAX-c->rx_used,NULL,0,p,out,capacity,length,&n);if (e) return e;
+    e=packet(c,c->snd_next,c->rcv_next,NET_TCP_RX_MAX-c->rx_used,NULL,0,p,out,capacity,length,&n);if (e) return e;
     emitted(c,p,n,out,length);return NET_TCP_ACK;
 }
 int net_tcp_send(struct net_tcp *c,const void *data,size_t n,uint64_t now,void *out,size_t capacity,size_t *length)
@@ -83,10 +91,29 @@ int net_tcp_send(struct net_tcp *c,const void *data,size_t n,uint64_t now,void *
     if (c->tx_used) return NET_ARP_BUSY;
     if (n>c->peer_window) return NET_TCP_WINDOW;
     uint8_t p[54+NET_TCP_TX_MAX];size_t size;
-    e=packet(c,c->rcv_next,NET_TCP_RX_MAX-c->rx_used,data,n,p,out,capacity,length,&size);if (e) return e;
+    e=packet(c,c->snd_next,c->rcv_next,NET_TCP_RX_MAX-c->rx_used,data,n,p,out,capacity,length,&size);if (e) return e;
     memset(c->tx,0,sizeof(c->tx));memcpy(c->tx,p+54,n);c->tx_used=(uint16_t)n;
     c->snd_next+=(uint32_t)n;c->tx_since=now;c->since=now;
+    c->retry_count=0;c->retry_after=c->retry_enabled?NET_TCP_RETRY_TICKS:0;
     emitted(c,p,size,out,length);return NET_TCP_TX_DATA;
+}
+int net_tcp_retransmit(struct net_tcp *c,uint64_t now,void *out,size_t capacity,size_t *length)
+{
+    if (!c || !c->retry_enabled) return NET_ARP_EINVAL;
+    int e=ready(c,now);
+    if (e==NET_TCP_EXPIRED) {net_tcp_abort(c);return e;}
+    if (e) return e;
+    if (!c->tx_used) return NET_TCP_EMPTY;
+    if (c->tx_used!=(uint32_t)(c->snd_next-c->snd_una)) return NET_ARP_EINVAL;
+    uint64_t elapsed=now-c->tx_since;
+    if (elapsed<c->retry_after) return NET_TCP_NOT_DUE;
+    if (c->retry_count>=NET_TCP_RETRY_MAX) {net_tcp_abort(c);return NET_TCP_EXPIRED;}
+    size_t n=c->tx_used;if (n>c->peer_window) n=c->peer_window;
+    if (!n) return NET_TCP_WINDOW; /* Persist probes are outside this profile. */
+    uint8_t p[54+NET_TCP_TX_MAX];size_t size;
+    e=packet(c,c->snd_una,c->rcv_next,NET_TCP_RX_MAX-c->rx_used,c->tx,n,p,out,capacity,length,&size);if (e) return e;
+    c->retry_count++;c->retry_after=(uint32_t)elapsed+NET_TCP_RETRY_TICKS;
+    emitted(c,p,size,out,length);return NET_TCP_RETRANSMITTED;
 }
 int net_tcp_receive(struct net_tcp *c,void *out,size_t capacity,size_t *length,uint64_t now)
 {
@@ -111,10 +138,14 @@ static int payload_input(struct net_tcp *c,const uint8_t *tcp,size_t n,uint64_t 
     if (!sequence_ok) return net_tcp_ack(c,now,out,capacity,length);
     uint8_t p[54+NET_TCP_TX_MAX];size_t size=0;
     if (n) {
-        int e=packet(c,c->rcv_next+(uint32_t)n,actual-(unsigned)n,NULL,0,p,out,capacity,length,&size);if (e) return e;
+        int e=packet(c,c->snd_next,c->rcv_next+(uint32_t)n,actual-(unsigned)n,NULL,0,p,out,capacity,length,&size);if (e) return e;
     }
     if (ack_current) {
-        if (delta) {shift(c->tx,c->tx_used,(unsigned)delta);c->tx_used-=(uint16_t)delta;c->snd_una=ack;c->since=now;if (!c->tx_used) c->tx_since=0;}
+        if (delta) {
+            shift(c->tx,c->tx_used,(unsigned)delta);c->tx_used-=(uint16_t)delta;c->snd_una=ack;c->since=now;
+            if (!c->tx_used) {c->tx_since=0;c->retry_after=0;c->retry_count=0;}
+            else if (c->retry_enabled) c->retry_after=(uint32_t)(now-c->tx_since)+NET_TCP_RETRY_TICKS;
+        }
         if ((uint32_t)(seq-c->win_seq)<0x80000000u && (seq!=c->win_seq || (uint32_t)(ack-c->win_ack)<0x80000000u)) {
             unsigned window=get16(tcp+14);if (window!=c->peer_window) c->since=now;
             c->peer_window=(uint16_t)window;c->win_seq=seq;c->win_ack=ack;

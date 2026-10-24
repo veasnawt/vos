@@ -1,0 +1,63 @@
+{
+  "scope": "bounded TCP retransmission",
+  "firmware": {
+    "bios": {
+      "passed": true,
+      "firmware": "bios",
+      "data_loss_recovered": true,
+      "ACK_loss_recovered_without_redelivery": true,
+      "partial_tail_recovered": true,
+      "retransmissions": 6,
+      "exhaustion_retries": 3,
+      "unique_delivered_bytes": 28,
+      "wire_TCP_payload_bytes": 116,
+      "terminal_aborted_TX_bytes": 16,
+      "TX": 12,
+      "RX": 9,
+      "context_bytes": 504,
+      "adapter_reset_confirmed": true,
+      "DMA_frames_released": 11,
+      "no_retry_after_destruction": true,
+      "endpoint_erased": true,
+      "ABI_v0_hello": true,
+      "no_application_grants": true,
+      "screenshot": {
+        "width": 1280,
+        "height": 800,
+        "sha256": "50dc25c0b4f0381af6633c1b797d774ff775cb1ddacb5f6296579352e9ed9b32"
+      }
+    },
+    "uefi": {
+      "passed": true,
+      "firmware": "uefi",
+      "data_loss_recovered": true,
+      "ACK_loss_recovered_without_redelivery": true,
+      "partial_tail_recovered": true,
+      "retransmissions": 6,
+      "exhaustion_retries": 3,
+      "unique_delivered_bytes": 28,
+      "wire_TCP_payload_bytes": 116,
+      "terminal_aborted_TX_bytes": 16,
+      "TX": 12,
+      "RX": 9,
+      "context_bytes": 504,
+      "adapter_reset_confirmed": true,
+      "DMA_frames_released": 11,
+      "no_retry_after_destruction": true,
+      "endpoint_erased": true,
+      "ABI_v0_hello": true,
+      "no_application_grants": true,
+      "screenshot": {
+        "width": 1280,
+        "height": 800,
+        "sha256": "50dc25c0b4f0381af6633c1b797d774ff775cb1ddacb5f6296579352e9ed9b32"
+      }
+    }
+  },
+  "passed": true,
+  "host_sanitizers": [
+    "address",
+    "undefined"
+  ],
+  "userspace_ABI_unchanged": true
+}

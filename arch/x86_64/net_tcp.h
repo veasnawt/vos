@@ -6,15 +6,20 @@
 #define NET_TCP_TX_MAX 64u
 #define NET_TCP_TX_TTL 200u
 #define NET_TCP_IDLE_TTL 400u
+#define NET_TCP_RETRY_TICKS 50u
+#define NET_TCP_RETRY_MAX 3u
 enum { NET_TCP_CLOSED,NET_TCP_LISTEN,NET_TCP_SYN_RECEIVED,NET_TCP_ESTABLISHED };
 enum { NET_TCP_SYNACK=9,NET_TCP_CONNECTED=10,NET_TCP_EXPIRED=-8 };
 enum { NET_TCP_DATA_ACK=11,NET_TCP_ACK=12,NET_TCP_TX_DATA=13,NET_TCP_ACKED=14,
        NET_TCP_EMPTY=-9,NET_TCP_WINDOW=-10 };
+enum { NET_TCP_RETRANSMITTED=15,NET_TCP_NOT_DUE=-11 };
 struct net_tcp {
     struct net_ipv4 ip;
     uint32_t next_isn,isn,peer_isn,snd_next,rcv_next;
     uint8_t peer[4],peer_mac[6];
     uint16_t port,peer_port;
+    uint8_t retry_enabled,retry_count;
+    uint32_t retry_after; /* Relative to tx_since, bounded by absolute TX TTL. */
     uint64_t since;
     int state;
     uint16_t rx_used,tx_used,peer_window;
@@ -40,7 +45,7 @@ int net_tcp_expire(struct net_tcp *c,uint64_t now);
 /* Local abort only: erase endpoint and state. No FIN/RST exchange implemented. */
 void net_tcp_close(struct net_tcp *c);
 /* Explicit opt-in preserves the establishment-only profile's zero window.
- * Fixed buffers, one in-flight segment, no retransmission or stream queues. */
+ * Fixed buffers, one in-flight segment; retransmission is a separate opt-in. */
 int net_tcp_enable_payload(struct net_tcp *c);
 int net_tcp_send(struct net_tcp *c,const void *data,size_t n,uint64_t now,void *out,size_t capacity,size_t *length);
 /* Partial reads copy at most capacity bytes; no read acknowledges new bytes.
@@ -50,4 +55,9 @@ int net_tcp_ack(struct net_tcp *c,uint64_t now,void *out,size_t capacity,size_t 
 /* Explicit local reset: erase all connection buffers/sequence/deadline state,
  * preserve endpoint configuration and return to LISTEN. No wire FIN/RST. */
 void net_tcp_abort(struct net_tcp *c);
+/* LISTEN-only configuration. Caller polls with monotonic PIT ticks; fixed RTO,
+ * finite retries and unchanged absolute TX TTL. No SYN/FIN/RST retransmission.
+ * Terminal expiry explicitly aborts the connection and erases its buffers. */
+int net_tcp_enable_retransmission(struct net_tcp *c);
+int net_tcp_retransmit(struct net_tcp *c,uint64_t now,void *out,size_t capacity,size_t *length);
 #endif

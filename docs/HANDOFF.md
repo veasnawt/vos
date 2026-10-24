@@ -241,8 +241,10 @@ checks and is published at `a5889f9`, with its exact reviewed 46-file inventory.
 [TCP establishment](results/n5-tcp.md) now passes focused host and BIOS/UEFI
 tests and is published at `4e799c2` with all 49 reviewed files.
 [TCP payload exchange](results/n5-tcp-data.md) now passes focused host and two
-firmware tests, remaining uncommitted. Next: bounded retransmission of retained
-TX data with retry limits; reassembly and wire closure remain unsupported.
+firmware tests and is published at `ff251a7` with all 55 reviewed files.
+[Bounded retransmission](results/n5-tcp-retry.md) now passes focused checks and
+remains uncommitted. Next candidate: bounded FIN/RST closure, subject to approval;
+reassembly, adaptive production recovery and production ISNs remain unsupported.
 During UDP verification the owner merged [PR #4](https://github.com/veasnawt/vos/pull/4)
 to GitHub main at `d01b3f5`, with no tree difference from publication `33693b3`.
 Local main and origin/main remain `bbca69d`; no fetch/merge/ref update was done.
@@ -261,6 +263,12 @@ optimized host-model comparisons and QEMU CPU/memory/timing separately from
 sanitizer correctness tests. The publication reserve-query timeout is preserved
 at `build/n5-tcp-20261024T183512Z/`; fresh guarded publication at
 `build/n5-tcp-20261024T184326Z/` passed with the original timeout/guard unchanged.
+The owner merged PR #5 to GitHub main at `ffaf2fb`; its tree equals `4e799c2`.
+Local main/origin-main remain `bbca69d`. `scripts/test-tcp-retry.py` preserves
+wire records, explicit peer loss/dedup decisions, fixed timer/cleanup checks and
+optimized comparisons against the accepted payload binary. Admission reduced
+the output bound to 64 MiB plus a 16 MiB evidence provision, retaining every
+original reserve and accounting limit. Context layout remains 504 bytes.
 Generated builds must stay outside protected N3/N4 roots;
 all prior evidence, worktrees, stashes and cumulative storage guards remain in force.
 The inherited 3360 MiB ceiling originated in N3 D2/C20. The owner separately
