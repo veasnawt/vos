@@ -457,7 +457,7 @@ static int64_t open_at(struct process *p, uint64_t base, const char *path, uint6
         return r;
     }
     struct ext2_stat st;
-    r = n->generation != volume.generation ? -FILE_ESTALE : walk(s, n->ino, len, &st);
+    r = n->generation != volume.generation ? -FILE_ESTALE : walk(s, n->ino, len, &st); FILE_PUBLICATION_HOLD(r)
     int final = finish(s, &scope);
     if (final)
         r = final;
@@ -525,7 +525,7 @@ static int stat_node(struct process *p, uint64_t token, struct ext2_stat *out,
     if ((r = begin(s, &scope)))
         return r;
     struct ext2_stat st;
-    r = node_stat(s, n->ino, &st);
+    r = node_stat(s, n->ino, &st); FILE_PUBLICATION_HOLD(r)
     int final = finish(s, &scope);
     if (final)
         r = final;
@@ -574,8 +574,8 @@ static int64_t read_at(struct process *p, uint64_t token, void *out, uint64_t le
     if (!r)
         r = outcome(s, ext2_read(volume.fs, n->ino, off, s->stage, len, &done));
     /* Commit before the no-wait finish erases staging. IF=0: no stop can arise
-     * between this last outcome check, copy and finish. Never copy on error.
-     */
+     * between this last outcome check, copy and finish. Never copy on error. */
+#include "file_hold.inc"
     if (!r && !(r = outcome(s, EXT2_OK))) {
         if (frame) {
             /* Decode again from the live architectural frame after all waits.
@@ -638,7 +638,7 @@ static int next_entry(struct process *p, uint64_t token, uint64_t *cookie,
             ent.type = st.type;
         eof = 0;
         break;
-    }
+    } FILE_PUBLICATION_HOLD(r)
     int final = finish(s, &scope);
     if (final)
         r = final;

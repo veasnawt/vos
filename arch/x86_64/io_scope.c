@@ -3,6 +3,9 @@
 #include "irq.h"
 #include "lib.h"
 #include "panic.h"
+#if defined(VOS_TEST) && (defined(VOS_TEST_CASE_storage_stress) || defined(VOS_TEST_CASE_storage_stress_b) || defined(VOS_TEST_CASE_storage_stress_c) || defined(VOS_TEST_CASE_storage_stress_d))
+#include "storage_stress.h"
+#endif
 
 struct ticket {
     uint64_t id, owner, tid;
@@ -81,6 +84,9 @@ int io_scope_end(struct io_scope *s)
 
     if (!t || t->scope != s || t->id != s->ticket || (t->request && !t->abandoned))
         panic("io_scope: end with wrong owner or live request");
+#if defined(VOS_TEST) && (defined(VOS_TEST_CASE_storage_stress) || defined(VOS_TEST_CASE_storage_stress_b) || defined(VOS_TEST_CASE_storage_stress_c) || defined(VOS_TEST_CASE_storage_stress_d))
+    storage_stress_event(STRESS_SCOPE_END, t->owner);
+#endif
     t->scope = NULL;
     t->tid = 0;
     t->guard = NULL;
@@ -158,6 +164,9 @@ int io_scope_wait(struct wait_queue *q, uint64_t local)
 
     if (s && consume(&s->waits_left))
         return THREAD_INTERRUPTED;
+#if defined(VOS_TEST) && (defined(VOS_TEST_CASE_storage_stress) || defined(VOS_TEST_CASE_storage_stress_b) || defined(VOS_TEST_CASE_storage_stress_c) || defined(VOS_TEST_CASE_storage_stress_d))
+    storage_stress_event(STRESS_WAIT, (uint64_t)q);
+#endif
     int r = thread_block_until(q, io_scope_deadline(local));
     if (s && r == THREAD_INTERRUPTED)
         io_scope_stop(IO_SCOPE_INTERRUPTED);
@@ -205,6 +214,9 @@ void io_scope_request_end(uint64_t id)
         return;
     if (!t || !t->request)
         panic("io_scope: double request retirement");
+#if defined(VOS_TEST) && (defined(VOS_TEST_CASE_storage_stress) || defined(VOS_TEST_CASE_storage_stress_b) || defined(VOS_TEST_CASE_storage_stress_c) || defined(VOS_TEST_CASE_storage_stress_d))
+    storage_stress_event(STRESS_RETIRE, id);
+#endif
     t->request = t->abandoned = 0;
     if (!t->scope)
         memset(t, 0, sizeof(*t));

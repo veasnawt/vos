@@ -279,12 +279,23 @@ void kernel_main(uint32_t mb2_magic, uint32_t mb2_info)
     check(selftest_ext2(&bi) == 0, "ext2 reader self-test");
     check(selftest_file(&bi) == 0, "internal file layer self-test");
     check(selftest_screen(&bi) == 0, "screen console self-test");
-    check(selftest_io_scope() == 0, "bounded storage scope self-test");
+    check(selftest_io_scope() == 0, "bounded storage scope self-test"); STORAGE_STRESS_C_DISPATCH(&bi)
 #ifdef VOS_TEST_CASE_accounting
     if (first_failure)
         panic("accounting prerequisite self-test failed");
     extern int selftest_accounting(const struct boot_info *);
     check(selftest_accounting(&bi) == 0, "N3.6 accounting smoke tests");
+#endif
+#ifdef VOS_TEST_CASE_storage_stress_b
+    if (first_failure) panic("Gate B prerequisite self-test failed");
+    extern int selftest_storage_stress_b(const struct boot_info *);
+    check(selftest_storage_stress_b(&bi) == 0, "N3.6 selected Gate B stress");
+#endif
+#ifdef VOS_TEST_CASE_storage_stress
+    if (first_failure)
+        panic("storage stress prerequisite self-test failed");
+    extern int selftest_storage_stress(const struct boot_info *);
+    check(selftest_storage_stress(&bi) == 0, "N3.6 Gate A canary only");
 #endif
 #if defined(VOS_TEST_CASE_suite) || defined(VOS_TEST_CASE_irq)
     check(selftest_suite(&bi) == 0, "isolation suite");
@@ -313,7 +324,7 @@ void kernel_main(uint32_t mb2_magic, uint32_t mb2_info)
 #endif
 #ifdef VOS_TEST
     selftest_kmap_case(first_failure != 0);
-    selftest_sched_case(&bi, first_failure != 0);
+    selftest_sched_case(&bi, first_failure != 0); STORAGE_STRESS_D_DISPATCH(&bi)
 #endif
 #ifdef VOS_TEST_CASE_panic
     panic("test case: deliberate panic");

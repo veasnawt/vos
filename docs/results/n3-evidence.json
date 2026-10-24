@@ -1,0 +1,478 @@
+{
+  "format": 1,
+  "milestone": "N3",
+  "accepted_utc_date": "2026-10-24",
+  "branch": "feat/n3.6-storage-closure",
+  "pre_publication_head": "59d2dc571a7a25b5c5131e9e18b52f95ce588565",
+  "default_main_unchanged": "c0ccdd7d9ba3601c1d6891a3ff6c67516c679213",
+  "scope": "Compact evidence index; raw workspaces/archives remain external. No D1/D2/C20 rerun for publication.",
+  "root_locations": {
+    "linux": "~/vos-evidence",
+    "independent_archives": "E:/VOS-Verification-Evidence"
+  },
+  "membership_note": "manifest_entries counts the entries array. Archive verification also includes MANIFEST.json and may exclude declared regenerable trees. Gate C's original completeness flag is preserved.",
+  "evidence": [
+    {
+      "root": "n36-stage3-gateb-rerun3-20261022T062129Z",
+      "manifest_sha256": "0dc0115fa9495346a6b99e25e2843538a7bf3336198e01dabc25d43b001f39a8",
+      "manifest_entries": 348,
+      "archive_sha256": "a40205b07f5b467a7e2b7c7fd3bf1148ea3c36c3bda43967bd27d2996d8a029c",
+      "archive_verified": 349,
+      "archive_complete": true,
+      "archive_extra_members": []
+    },
+    {
+      "root": "n36-stage3-gatec-exec3-20261022T134816Z",
+      "manifest_sha256": "434f0848cc40ba8808fa246821c4cf37e685096aa43a2c3aa7636ae50aef91df",
+      "manifest_entries": 499,
+      "archive_sha256": "ccc760ab20ad7dab3feee8b3b922ee865d425f1f4d87eaf138c8c93fb9a5362e",
+      "archive_verified": 500,
+      "archive_complete": false,
+      "archive_extra_members": [
+        "ARCHIVE-ADMISSION.json"
+      ]
+    },
+    {
+      "root": "n36-stage3-gated-exec1-20261022T180600Z",
+      "manifest_sha256": "30d9899d7af00cf0fb6a90e34cd1de8582715afd08ff7ec8e9a79fc8b40f38bc",
+      "manifest_entries": 338,
+      "archive_sha256": "c9c315d5add98da0d30a3055217f27a60a6c2c85ee3518128f257d8e9dbb6181",
+      "archive_verified": 339,
+      "archive_complete": true,
+      "archive_extra_members": []
+    },
+    {
+      "root": "n36-final-repair2-20261023T074953Z",
+      "manifest_sha256": "353fd58150688650f494542649872254d70a3da902b1606b017e5501c8c8edca",
+      "manifest_entries": 3318,
+      "archive_sha256": "47302751face05082b00df83c195335149cdce7adf0af6cdee4dad707692be46",
+      "archive_verified": 331,
+      "archive_complete": true,
+      "archive_extra_members": []
+    },
+    {
+      "root": "n36-final-qval1-20261023T082435Z",
+      "manifest_sha256": "078e340cbbbc8c99348e84cf6bc42b3395ba7adebebdfb3e04fd55d39706333f",
+      "manifest_entries": 1001,
+      "archive_sha256": "be4e54a8450cdd11e549862b53161d9b078f49165573c1157fefbae1967f2d80",
+      "archive_verified": 78,
+      "archive_complete": true,
+      "archive_extra_members": []
+    },
+    {
+      "root": "n36-final-d1seal-codex-20261024T034457Z",
+      "manifest_sha256": "b56296a6c7bf1af2a256d720b2cf9aee94097ed6795af27568ff22673aa47839",
+      "manifest_entries": 565,
+      "archive_sha256": "5dcc1b19d09a7a006b5cf2e216c7c43af68f75f40091c4ba225893499284d7f6",
+      "archive_verified": 566,
+      "archive_complete": true,
+      "archive_extra_members": []
+    },
+    {
+      "root": "n36-final-d2-deps-codex-20261024T044859Z",
+      "manifest_sha256": "5eb097d5d11654476e8d7cf51f510e0c4cf181b131521d348baca566a667461d",
+      "manifest_entries": 3031,
+      "archive_sha256": "d19c507c8bd30667dcae328168a24ac928047cec0e65e5d61ac7ec37b6747de0",
+      "archive_verified": 64,
+      "archive_complete": true,
+      "archive_extra_members": []
+    },
+    {
+      "root": "n36-final-c20-codex-20261024T045803Z",
+      "manifest_sha256": "3b37ed3ebb1227c7082759be07e2be2bea3fd5e42d2fb225edf05b9c85dc4179",
+      "manifest_entries": 203,
+      "archive_sha256": "36719f159b8f9430fe74326aa8eb8f5ff8c759710cec3082243c22e3e8a0b03e",
+      "archive_verified": 204,
+      "archive_complete": true,
+      "archive_extra_members": []
+    }
+  ],
+  "gate_c_archive_exception": {
+    "accepted_addendum": "ARCHIVE-VERIFICATION-ADDENDUM.json",
+    "extra_member": "ARCHIVE-ADMISSION.json",
+    "extra_member_sha256": "543db2e972684940fa2a5f1e54ee121339d4729f2aeea85417937a9307ec7077",
+    "byte_identical_to_root": true,
+    "declared_written_after_sealing": true,
+    "archive_not_rewritten": true
+  },
+  "protected_binary_sha256": {
+    "production": "7e8c4781292e5dd1c419e0984d001a0e3cf09be5e1bd26a18c283a42b0fd375c",
+    "gateb": "bef4aae6f492a2a041ea64611ed8669a642caf4d236b1472456812e45101ddc9",
+    "gatec": "35e856b9fb28960f359bfa046c62b7e5820a4a1a0fe5c3a73fb90a0189d6046e",
+    "gatec_elf": "8c94e9ca57f19f56ee96f7b578eec2f7bfc335c524f4d31608d3bfc598a069c4",
+    "hello": "c6c6416195a0f18d680d7f8f19be52ce02ff02912ef3bac45324fbe88006cd06",
+    "gated": "52f2562d5578d7be64b8ba9b0605f395259fcffed657662857f2a4f79b065b2e",
+    "gated_elf": "1d0e86e3f8830b53382f5d140a8d0dc9e64ff0c485975784541f1566d5c3705b"
+  },
+  "D1": {
+    "accepted": true,
+    "a_bios": 74,
+    "b_uefi": 19,
+    "c_additional_uefi": 19,
+    "d_static_elf_checks": 302,
+    "d_abi_constants": 20,
+    "e_frozen_hashes": 139,
+    "e_old_elf_identical": 131,
+    "e_iso_payload_audits": 55,
+    "e_real_content_negative_control": true,
+    "f_layouts": 43,
+    "growth_bytes": {
+      "static": 45864,
+      "reserved": 57344,
+      "code": 17238,
+      "test_only": 19095
+    },
+    "limits_bytes": {
+      "static": 65536,
+      "reserved": 131072,
+      "code": 65536,
+      "test_only": 131072
+    },
+    "largest_physical_end_among_43_layouts": "0x263000"
+  },
+  "D2": {
+    "accepted": true,
+    "count": 5,
+    "strict_single_compile_validator_unchanged": true,
+    "controls": [
+      {
+        "control": "rights-width",
+        "passed": true,
+        "expected_guest_exit": 35,
+        "actual_assertion": "selftest: FAIL: file: undefined rights rejected before I/O/publication/session reservation",
+        "source": "arch/x86_64/file.c",
+        "baseline_sha256": "428ddf8f1a6e62f1fc345e4201b1cbdab99af3768ae664b6a766277800529ba3",
+        "mutant_sha256": "74501b34fa8973c43f03cf5dc83879f555098a535014ed1212b0b7eece4bbd2e",
+        "run_log_sha256": "3f7e33243aba6845d69cf7a53d2a8382a780e188596aa7350dfa7514e30845a3",
+        "serial_sha256": "c4685a8b14a59361e54c01bee90c6a0d423b3630d6c2b31cd468f8f7906cb984"
+      },
+      {
+        "control": "symlink",
+        "passed": true,
+        "expected_guest_exit": 35,
+        "actual_assertion": "selftest: FAIL: file: final and intermediate symlinks never followed",
+        "source": "arch/x86_64/file.c",
+        "baseline_sha256": "428ddf8f1a6e62f1fc345e4201b1cbdab99af3768ae664b6a766277800529ba3",
+        "mutant_sha256": "84843e9fc4498cb4d080718c3d3a16b07894a30b3456a2d8e8e8dfafd168ba16",
+        "run_log_sha256": "9c92e9e17479c885e7edcd73a1ff30b275fda539bdc5ea3df547fa318235a336",
+        "serial_sha256": "112e869c4509ff5958b6b3b4326cc37f16bc7f0c42be00dcf9e2cfc2634a8376"
+      },
+      {
+        "control": "error-copy",
+        "passed": true,
+        "expected_guest_exit": 35,
+        "actual_assertion": "selftest: FAIL: file: I/O error after a successful private data chunk leaves all 4096 user bytes unchanged",
+        "source": "arch/x86_64/file.c",
+        "baseline_sha256": "428ddf8f1a6e62f1fc345e4201b1cbdab99af3768ae664b6a766277800529ba3",
+        "mutant_sha256": "89d5544bf8e087f0b6a4bbd638cd0a1a24fc3749adfb755c78ddeff72922dfa5",
+        "run_log_sha256": "5b313e300ac57a628f9e9dd20c63282d26fdc359f0ba9e5f7fb8dfc9579fea63",
+        "serial_sha256": "7aab6d1fda1ae8f5d5887614368c28078f8e6fffe0de8e9c0bf22af8a067fe02"
+      },
+      {
+        "control": "incarnation",
+        "passed": true,
+        "expected_guest_exit": 35,
+        "actual_assertion": "selftest: FAIL: file: never-reused incarnation rejects aliased device ID before any I/O",
+        "source": "arch/x86_64/file.c",
+        "baseline_sha256": "428ddf8f1a6e62f1fc345e4201b1cbdab99af3768ae664b6a766277800529ba3",
+        "mutant_sha256": "5467da1e864d6c8e5db5baf15efccedf78fd26c1fbc36c96e58242ade42fbd48",
+        "run_log_sha256": "7173a5c566c418958ae4a97794f25ced2fc69a7f20d7c8bb5bf6d09b3fb8881b",
+        "serial_sha256": "8eef0054040f42c5973398bcdb0517c0f28b4434921d04525ee861d89733a370"
+      },
+      {
+        "control": "reserved-inode",
+        "passed": true,
+        "expected_guest_exit": 35,
+        "actual_assertion": "selftest: FAIL: file: I4 corrupt metadata returns EIO with atomic output and reusable reader",
+        "source": "arch/x86_64/ext2.c",
+        "baseline_sha256": "b512598915d43095ca52edf7f06d64ae1b400e96edcce488627bb6a1ac1b4995",
+        "mutant_sha256": "54bd8b89abac27986a44f2b98aaeb7750aa993048d7e4412382a17e02c2f0300",
+        "run_log_sha256": "b61d8931dfb6b805bea3b3fc4e073ec1eef0fc9a289cdc2503181ffebf89ec67",
+        "serial_sha256": "1cbfdce490e56f6c5b9a0d380ca701723f57d63bc0ad3814037c2e75acd1f75c"
+      }
+    ],
+    "allowlist_artifacts": 169,
+    "accepted_observation_artifacts": {
+      "storage_observe.o": "548d40258361aab704d8501dbe725e8060741db778338214ce08baf9d4dfd406",
+      "storage_observe.d": "427dc924a89120364d5483e2523e207fd1bef0ff9c11637c64abd9038bbd0eab"
+    }
+  },
+  "C20": {
+    "accepted": true,
+    "count": 15,
+    "profiles": [
+      {
+        "gate": "b",
+        "firmware": "BIOS",
+        "cpu": "default",
+        "memory": "2G",
+        "passed": true,
+        "exit_status": 33,
+        "serial_sha256": "8a7b10b928e6d2cf71c3b680b3c208911f4c405962a19f48055be7ab112443e3",
+        "ignored_bytes_above_1gib": 1073598464
+      },
+      {
+        "gate": "b",
+        "firmware": "UEFI",
+        "cpu": "default",
+        "memory": "1G",
+        "passed": true,
+        "exit_status": 33,
+        "serial_sha256": "b239091c00d8690a40dc095be1f85e44958a702e5fcf0a71b7e0ad3ba2f75d84",
+        "ignored_bytes_above_1gib": 0
+      },
+      {
+        "gate": "b",
+        "firmware": "UEFI",
+        "cpu": "max",
+        "memory": "1G",
+        "passed": true,
+        "exit_status": 33,
+        "serial_sha256": "c3392ec621aef205fac5144e59a36262b6d1d48ab163d19fe9e029814447d935",
+        "ignored_bytes_above_1gib": 0
+      },
+      {
+        "gate": "b",
+        "firmware": "UEFI",
+        "cpu": "default",
+        "memory": "8G",
+        "passed": true,
+        "exit_status": 33,
+        "serial_sha256": "f797c7cc4a349bcc6668feff9f469f8260c796dc2a5d10be9b989b581ec37aea",
+        "ignored_bytes_above_1gib": 7511085056
+      },
+      {
+        "gate": "b",
+        "firmware": "UEFI",
+        "cpu": "max",
+        "memory": "8G",
+        "passed": true,
+        "exit_status": 33,
+        "serial_sha256": "5c3d395c59645c2f941f5e65a5f7cab067c711ff34cdaee3371e262db779d4cb",
+        "ignored_bytes_above_1gib": 7511085056
+      },
+      {
+        "gate": "c",
+        "firmware": "BIOS",
+        "cpu": "default",
+        "memory": "2G",
+        "passed": true,
+        "exit_status": 33,
+        "serial_sha256": "02f5e8a2c374c81aa45e9e9b60b057c2fd593957cab2db7267a7899d5ae3cf47",
+        "ignored_bytes_above_1gib": 1073598464
+      },
+      {
+        "gate": "c",
+        "firmware": "UEFI",
+        "cpu": "default",
+        "memory": "1G",
+        "passed": true,
+        "exit_status": 33,
+        "serial_sha256": "eb4debbf99d07432669a2dc87242e3af4440a8b22de1da6bdfd1afe9d481f765",
+        "ignored_bytes_above_1gib": 0
+      },
+      {
+        "gate": "c",
+        "firmware": "UEFI",
+        "cpu": "max",
+        "memory": "1G",
+        "passed": true,
+        "exit_status": 33,
+        "serial_sha256": "97c2858cdaca99a20beaafb7b100c26a076dc7d9d6ef61ef7dc7f110e0b0d51e",
+        "ignored_bytes_above_1gib": 0
+      },
+      {
+        "gate": "c",
+        "firmware": "UEFI",
+        "cpu": "default",
+        "memory": "8G",
+        "passed": true,
+        "exit_status": 33,
+        "serial_sha256": "c9804683099bbca22b612e4f84ca6f8cde96c09d02c4b817065e00cb83a18450",
+        "ignored_bytes_above_1gib": 7511085056
+      },
+      {
+        "gate": "c",
+        "firmware": "UEFI",
+        "cpu": "max",
+        "memory": "8G",
+        "passed": true,
+        "exit_status": 33,
+        "serial_sha256": "9e5af955de71bb6f2ca73fb7cb963c0a8bf2878cf5b199dfa1aa108bf4d96566",
+        "ignored_bytes_above_1gib": 7511085056
+      },
+      {
+        "gate": "d",
+        "firmware": "BIOS",
+        "cpu": "default",
+        "memory": "2G",
+        "passed": true,
+        "exit_status": 33,
+        "serial_sha256": "3d9335e7fbe079bf4f93d9493dfff843030510d84270c2cda5ea694a55efd4b9",
+        "ignored_bytes_above_1gib": 1073598464
+      },
+      {
+        "gate": "d",
+        "firmware": "UEFI",
+        "cpu": "default",
+        "memory": "1G",
+        "passed": true,
+        "exit_status": 33,
+        "serial_sha256": "a33a37444d00cad645ba4b7c54a97118a0d8df387c50b863fb32833af6c4254c",
+        "ignored_bytes_above_1gib": 0
+      },
+      {
+        "gate": "d",
+        "firmware": "UEFI",
+        "cpu": "max",
+        "memory": "1G",
+        "passed": true,
+        "exit_status": 33,
+        "serial_sha256": "ff56e25e0a33512b7f235cf2ce73facf9b42c0df29b3ce176fc82298b01848a5",
+        "ignored_bytes_above_1gib": 0
+      },
+      {
+        "gate": "d",
+        "firmware": "UEFI",
+        "cpu": "default",
+        "memory": "8G",
+        "passed": true,
+        "exit_status": 33,
+        "serial_sha256": "1b50534fbc152444c611e3f0e874a658038e47e31dcd85dcfbe3b9484f09aa04",
+        "ignored_bytes_above_1gib": 7511085056
+      },
+      {
+        "gate": "d",
+        "firmware": "UEFI",
+        "cpu": "max",
+        "memory": "8G",
+        "passed": true,
+        "exit_status": 33,
+        "serial_sha256": "4ca8895bcf3f5db784abc53a1491611a29c76cfc635fc10bd182aceddfa012d0",
+        "ignored_bytes_above_1gib": 7511085056
+      }
+    ],
+    "input_sha256": {
+      "media/bios-SC01-SC02/vos.iso": "0e0e9ca19402c6446406ee859e0b28045d7bdab82d85eafcc6c3d4e9c499681a",
+      "media/uefi-SC01-SC02/vos.iso": "c004ce907a9fac39ca258134c4ceb27fe102b68196eac88afb5dbfa2342f3c75",
+      "media/bios-SC03-SC04-SC05/vos.iso": "5e5d2bdaf45414c8e12818149f420206a66d9f163e946b822e31c8f2ae28eb31",
+      "media/uefi-SC03-SC04-SC05/vos.iso": "e34cd905f1a6b4a2f8abd77dc2708ea2e8b34c976558e7450661bf4aa6669b53",
+      "media/bios-SC10-SC11/vos.iso": "94f3a08238d8ec7d7a3a4ceafde140a77235cbb14e6df8a71154a192d9ff5437",
+      "media/uefi-SC10-SC11/vos.iso": "d5fd7e817bc6da5821653938966681dc8420b82f5acbee2e5f29599974cddf75",
+      "inputs/stress.img": "10b81ca2a13667d2d080eb8094082073337e1ae7678c4db1492267b49067a98d",
+      "inputs/OVMF_CODE_4M.fd": "874f15a7c9110e78a89db159f0f68fc97e9076b74777520de1c235426f758aa7",
+      "inputs/OVMF_VARS_4M.fd": "5d2ac383371b408398accee7ec27c8c09ea5b74a0de0ceea6513388b15be5d1e"
+    },
+    "group_watchdog_seconds": 240,
+    "boot_allowance_seconds": 60,
+    "sparse_RAM_allocated_limit_MiB": 384
+  },
+  "C2_T": {
+    "test_only": true,
+    "hook_images": [
+      "vblk",
+      "scope-orphan-idle",
+      "file",
+      "ext2"
+    ],
+    "targeted_vblk_cases": 166,
+    "targeted_blk_cases": 73,
+    "expected_timeouts": 9,
+    "protected_images_unchanged": true
+  },
+  "historical_attempts": [
+    {
+      "root": "n36-final-d1-20261022T222934Z",
+      "status": "failed/incomplete",
+      "sealed": true,
+      "archived": true
+    },
+    {
+      "root": "n36-final-repair1-20261023T031646Z",
+      "status": "expired/interrupted",
+      "sealed": false,
+      "archived": false
+    },
+    {
+      "root": "n36-final-d1r2-20261023T094001Z",
+      "status": "incomplete pre-window attempt",
+      "sealed": true,
+      "archived": true
+    },
+    {
+      "root": "n36-final-d1r3-20261023T131536Z",
+      "status": "unfinished; D1a-D1d completed; D1e stopped",
+      "sealed": false,
+      "archived": false
+    },
+    {
+      "root": "n36-final-d1ef-codex-20261024T024127Z",
+      "status": "D1e/f passed; finalization monitoring timeout",
+      "sealed": false,
+      "archived": false
+    },
+    {
+      "root": "n36-final-d2-codex-20261024T041559Z",
+      "status": "reserve fixture failure and query termination violation",
+      "sealed": false,
+      "archived": false
+    },
+    {
+      "root": "n36-final-d2-recovery-codex-20261024T043252Z",
+      "status": "controller regressions passed; dependency preflight stopped before compile/QEMU",
+      "sealed": false,
+      "archived": false
+    }
+  ],
+  "isolation": {
+    "prior_interruptions_preserved": true,
+    "uninterrupted_visibility_across_gaps_claimed": false,
+    "accepted_D2_clean_samples": 41,
+    "accepted_C20_clean_samples": 61,
+    "query_timeout_seconds": 90
+  },
+  "frozen_D2_C20_storage": {
+    "limit_MiB": 3360,
+    "charged_bytes": 2478645248,
+    "charged_MiB": 2363.8203125,
+    "remaining_MiB": 996.1796875,
+    "observed_peak_MiB": 2416.96875,
+    "headroom_MiB": 2,
+    "allowance_versions_MiB": [
+      2560,
+      3339,
+      3360
+    ],
+    "all_failed_attempts_carried": true,
+    "reserves_unchanged": true
+  },
+  "publication_evidence_root": "n36-final-r4-publication-20261024T063408Z",
+  "publication_note": "R4 receipt/manifest are sealed externally after commit and push; final publication/Git allocation is reported there, under the unchanged 3360 MiB ceiling.",
+  "screenshots": [
+    {
+      "relative_source": "preserved-d1ef/inherited-d1r3/ws/build/x86_64/bios-screen.png",
+      "sha256": "a1883dfca291522ebdc4be15431d5d9f20b1ae1fc783f94d632c53335f028cc6",
+      "bytes": 29651
+    },
+    {
+      "relative_source": "preserved-d1ef/inherited-d1r3/ws/build/x86_64/uefi-boot.png",
+      "sha256": "c4a7f4b66b377255699ed99f5659ea942d9257721b6969f5b000a0537ce62a2c",
+      "bytes": 29485
+    },
+    {
+      "relative_source": "preserved-d1ef/inherited-d1r3/ws/build/x86_64-test-panic/uefi-panic-screen.png",
+      "sha256": "eeec541187c38b3be238af02dd6db90d2a35559e1864fc31f15cfd6d184f371d",
+      "bytes": 22890
+    }
+  ],
+  "reproducibility": {
+    "baseline_c5": "c5f5acb62b70f2dbbc75a7bece35ab4548e872f3",
+    "fixed_environment_file": "build-env.json",
+    "same_path_build_equality": true,
+    "loaded_image_comparison": true,
+    "cross_path_ELF_bit_identity_claimed": false,
+    "ISO_container_bit_reproducibility_claimed": false,
+    "ISO_payloads_verified": true
+  },
+  "next_milestone": "N4: keyboard input, interactive console, vsh, Rust-first native application foundations; explicit implementation authorization required"
+}

@@ -82,4 +82,24 @@ void selftest_vmm_fault_stale_tlb(void);
 void selftest_vmm_fault_nx(void);
 void selftest_vmm_fault_readonly(void);
 
+/* N3.6 Gate C: appended to kernel.c's last common self-test line so no line moves in any other image.
+ * Expands in kernel_main (first_failure, check). */
+#ifdef VOS_TEST_CASE_storage_stress_c
+int selftest_storage_stress_c(const struct boot_info *bi);
+#define STORAGE_STRESS_C_DISPATCH(bi) do { \
+    if (first_failure) panic("Gate C prerequisite self-test failed"); \
+    check(selftest_storage_stress_c(bi) == 0, "N3.6 selected Gate C stress"); } while (0);
+#else
+#define STORAGE_STRESS_C_DISPATCH(bi)
+#endif
+
+/* N3.6 Gate D: appended to kernel.c's last self-test line common to every test image (after all prerequisites,
+ * before the verdict), so no line moves in any other image. Expands in kernel_main (first_failure, check). */
+#ifdef VOS_TEST_CASE_storage_stress_d
+int selftest_storage_stress_d(const struct boot_info *bi);
+#define STORAGE_STRESS_D_DISPATCH(bi) do { if (first_failure) panic("Gate D prerequisite self-test failed"); check(selftest_storage_stress_d(bi) == 0, "N3.6 selected Gate D stress"); } while (0);
+#else
+#define STORAGE_STRESS_D_DISPATCH(bi)
+#endif
+
 #endif

@@ -28,7 +28,7 @@ static void expect(int ok, const char *why)
 }
 
 #ifdef VOS_TEST_CASE_file
-static struct process procs[PROC_TABLE + 1];
+static struct process procs[PROC_TABLE + 1]; void vblk_test_hold_publish(void); void vblk_test_publish_held(void);
 static const uint8_t exit_code[] = {0x31,0xc0,0x31,0xff,0xcd,0x80,0x0f,0x0b};
 static const uint8_t fault_code[] = {0x0f,0x0b};
 static struct {
@@ -444,7 +444,7 @@ static void virtio(void)
     expect(f>0 && file_read_at(p,f,buffer,4096,0)>0 && !file_close(p,f),"real transport read in scoped file layer");
     blk_invalidate(vi->blk_id);
     if (vi->mode==VBLK_MODE_IRQ) {
-        vblk_test_wait_ticks(12);vblk_test_skip_notify(1);worker_handle[0]=h;
+        vblk_test_wait_ticks(12);vblk_test_skip_notify(1);vblk_test_hold_publish();worker_handle[0]=h;
         int64_t tid=thread_create("file-abandon",worker,NULL);
         int waiting=blocked(tid);file_close_all(p);
         expect(waiting && gone(tid) && worker_result[0]==-FILE_EINTR && !file_session_count() &&
@@ -454,7 +454,7 @@ static void virtio(void)
         expect(!io_scope_count() && !vblk_abandoned() && !file_handle_count(),"orphan retires without future file calls");
         vblk_test_wait_ticks(0);
     } else {
-        vblk_test_poll_limit(2000);vblk_test_skip_notify(1);struct ext2_stat st;
+        vblk_test_poll_limit(2000);vblk_test_skip_notify(1);vblk_test_hold_publish();struct ext2_stat st;
         expect(file_stat(p,h,&st)==-FILE_ETIMEDOUT && !io_scope_count() && file_stat(p,h,&st)==-FILE_ESTALE,"poll timeout wins for initiator, then stale");
         vblk_test_poll_limit(0);file_close_all(p);
     }
@@ -737,7 +737,7 @@ static void file_userspace(const struct boot_info *bi)
     if(vi->state==VBLK_READY) {
         expect(load_file_program(bi,0,"file-reader") && !file_volume_attach(p,vi->blk_id) &&
                !grant(p,"dup/x",FILE_RIGHTS) && pause_program(p,controller,&peer,2),"transport caller blocked at barrier before read");
-        blk_invalidate(vi->blk_id);vblk_test_skip_notify(1);
+        blk_invalidate(vi->blk_id);vblk_test_skip_notify(1);vblk_test_hold_publish();
         if(vi->mode==VBLK_MODE_IRQ) {
             vblk_test_wait_ticks(12);release_program(controller,peer);
             expect(blocked(p->tid) && file_process_busy(p),"real virtio IRQ syscall is pending");
@@ -763,7 +763,7 @@ static void file_userspace(const struct boot_info *bi)
             expect(!file_volume_detach() && vblk_reinit()==VBLK_READY,"polling kill resets and drains before new launch");
             expect(load_file_program(bi,0,"file-error") && !file_volume_attach(p,vi->blk_id) &&
                    !grant(p,"dup/x",FILE_RIGHTS) && pause_program(p,controller,&peer,2),"timeout caller blocked at barrier before read");
-            blk_invalidate(vi->blk_id);vblk_test_skip_notify(1);vblk_test_poll_limit(2000);
+            blk_invalidate(vi->blk_id);vblk_test_skip_notify(1);vblk_test_hold_publish();vblk_test_poll_limit(2000);
             release_program(controller,peer);
             expect(error_result(p,FILE_ETIMEDOUT),"real userspace polling timeout has no output prefix");
             vblk_test_poll_limit(0);proc_destroy(p);

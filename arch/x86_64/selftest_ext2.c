@@ -196,7 +196,7 @@ static struct moddev {
         uint8_t b[8];
     } patch[MOD_PATCHES];
 } md;
-static struct wait_queue scope_gate;
+static struct wait_queue scope_gate; void vblk_test_hold_publish(void); void vblk_test_publish_held(void);
 static int scope_hold;
 
 static void md_info(void *ctx, struct blk_info *o)
@@ -1155,7 +1155,7 @@ static void test_interrupted(struct ext2_fs *fs)
         expect(0, "interrupted readers: setup");
         return;
     }
-    vblk_test_skip_notify(1);           /* the first device read is not seen by the device yet */
+    vblk_test_skip_notify(1); vblk_test_hold_publish(); /* the first device read is not seen by the device yet */
     t[0] = thread_create("ext2-intr0", intr_reader, (void *)0);
     int a = blocked(t[0]);
     t[1] = thread_create("ext2-intr1", intr_reader, (void *)1);
@@ -1166,7 +1166,7 @@ static void test_interrupted(struct ext2_fs *fs)
     int fa = gone(t[0]) && intr_res[0] == EXT2_EINTR;
     expect(a && b && fb && fa && ext2_audit() == NULL,
            "ext2: a thread waiting for the busy reader and the reader's thread waiting for the device are interrupted: EXT2_EINTR");
-    vblk_test_notify();
+    vblk_test_publish_held(); vblk_test_notify();
     thread_sleep(3);
     expect(vblk_abandoned() == 0 && ext2_stat(fs, intr_ino, &st) == EXT2_OK && st.size == 32 && ext2_audit() == NULL &&
            blk_audit() == NULL && vblk_audit() == NULL, "the abandoned read completes; the reader works again");

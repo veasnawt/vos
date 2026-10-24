@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| Status | **N3.0–N3.5 COMPLETE; N3.5 formally approved on 2026-10-21 at `0109d9b`. [Closure record](../results/n3.5-closure.md). N3 remains INCOMPLETE; N3.6 is PLANNED, NOT STARTED. See sections 10–11.** |
+| Status | **N3 COMPLETE, including N3.6, accepted 2026-10-24. [Final closure](../results/n3-closure.md). N4 is next; no N4 implementation is included. Historical N3.5 approval remains recorded in section 10.** |
 | Date | 2026-10-18 |
 | Starting point | N2 complete at `8e30f9b` (`docs/plans/n2-foundation.md`, section 3.7) |
 | Target | `ARCH=x86_64`; the i386 kernel stays as it is |
@@ -27,7 +27,7 @@ from the disk is treated as untrusted input.
 - a user-space storage service;
 - the GUI, networking and new language runtimes.
 
-## 2. Stages (N3.0–N3.5 complete; N3.6 planned)
+## 2. Stages (N3.0–N3.6 complete)
 
 | Stage | Content | Acceptance (examples) |
 |---|---|---|
@@ -37,7 +37,7 @@ from the disk is treated as untrusted input.
 | **N3.3** ext2 reader *(done)* | Restricted profile (stricter than `storage.md` section 5.3), every field validated, bounded walks | Section 7 |
 | **N3.4** Interrupt completion *(done)* | INTx through the PIC, waiters on wait queues instead of polling; deadlines; cancellation | Section 9 |
 | N3.5 File ABI v2 (read-only) **COMPLETE** | Handle-relative open, positional read, stat, single-entry enumeration and close; trusted startup grants; ABI note version 2. [Detailed design](n3.5-file-api.md), [ABI v2](../abi/syscall-v2.md), section 10 below | [Stage 5](../results/n3.5-stage5.md) accepted at `0109d9b`; [formal closure](../results/n3.5-closure.md), frozen v0/v1/media and budgets preserved |
-| N3.6 Storage closure **STAGE 2 IN DEVELOPMENT; INCOMPLETE** | Test-only accounting foundations and three-smoke pilot authorized; section 11 and the Stage 2 plan define the boundary | Later stress, full regression and closure require separate authorization; no commits authorized |
+| N3.6 Storage closure **COMPLETE** | Test-only accounting, SC01/02/03/04/05/10/11 stress, layout enforcement and final D1/D2/C20 verification | [Accepted closure](../results/n3-closure.md): D1a–D1f pass, D2 5/5, C20 15/15; sealed evidence and independent archives |
 
 The order may change at review. Writes (D-S4) are a separate milestone after N3.
 
@@ -2058,7 +2058,21 @@ accompanies this approval. N3/N3.6 remain incomplete.
 
 <a id="11-n36-preparation-planning-only"></a>
 
-## 11. N3.6 storage closure
+## 11. N3.6 storage closure [COMPLETE]
+
+Final N3/N3.6 acceptance is dated 2026-10-24. The [closure record](../results/n3-closure.md)
+consolidates Gate B/C/D, D1a–D1f, five mutation controls, fifteen larger-RAM stress
+runs, protected identities, reproducibility, footprint, original screenshots and
+archive verification. The final campaign ceiling is 3360 MiB with unchanged reserves.
+The milestone is published on feat/n3.6-storage-closure; main remains N3.5.
+N4 is next and requires explicit implementation authorization.
+
+The preparation and design questions below are preserved as historical scope,
+not outstanding N3 gates. Their pending labels are superseded by this acceptance.
+Accepted QEMU/media/polling/stack/quarantine and directory-progress limits remain
+explicitly documented; no broader proof is claimed.
+
+### Historical Stage 2 preparation
 
 **STAGE 2 IN DEVELOPMENT; N3.6 INCOMPLETE.** Stage 1 review is accepted; only
 [test-only accounting foundations and the bounded Stage 2 pilot](n3.6-storage-closure.md)
@@ -2122,6 +2136,7 @@ fragmentation remains a reason to guard both low-memory test images as coverage 
 5. What final N3 closure criteria and artifact-retention procedure should be approved
    while preserving both 128 MiB payload gates and all frozen compatibility evidence?
 
-The accepted Stage 1 response guides the bounded Stage 2 plan linked above. N3 and
-N3.6 remain incomplete. No production change, later-stage implementation, hardware
-test, commit, release tag, push or merge is authorized.
+The preceding paragraph records the historical Stage 1/2 authorization boundary.
+The accepted final N3 record at the start of this section supersedes its incomplete
+milestone status. Physical tests, release tags, automatic merges and N4 code still
+require their own explicit authorization.

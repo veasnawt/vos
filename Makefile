@@ -52,7 +52,8 @@ CFLAGS := -std=gnu11 -ffreestanding -fno-pic -fno-pie -fno-stack-protector \
           -O2 -Wall -Wextra
 
 # Provides ARCH_CFLAGS, ARCH_ASFLAGS, ARCH_LDFLAGS, ARCH_OBJS, QEMU,
-# MULTIBOOT_CHECK and the arch-test recipe (which may use TEST_ISO).
+# MULTIBOOT_CHECK and the arch-test recipe (which may use TEST_ISO); optionally
+# ARCH_LINK_CHECK, run on the kernel right after it is linked.
 include $(ARCH_DIR)/arch.mk
 
 OBJS := $(addprefix $(BUILD)/,$(ARCH_OBJS))
@@ -76,6 +77,7 @@ $(BUILD)/%.o: $(ARCH_DIR)/%.c Makefile $(ARCH_DIR)/arch.mk | $(BUILD)
 
 $(KERNEL): $(OBJS) $(ARCH_DIR)/linker.ld
 	$(LD) $(ARCH_LDFLAGS) -nostdlib -T $(ARCH_DIR)/linker.ld -o $@ $(OBJS)
+	$(ARCH_LINK_CHECK)
 
 verify: $(KERNEL)
 	grub-file $(MULTIBOOT_CHECK) $(KERNEL)
