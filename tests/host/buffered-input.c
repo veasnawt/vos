@@ -9,6 +9,8 @@
 static char output[8192];
 static unsigned used, erased, sleeps, event_at, event_count;
 static const char *events;
+static int cancellation_checks;
+static int cancel_after_wait(void *ctx) { assert(ctx==&cancellation_checks);return ++cancellation_checks==2; }
 void serial_putc(char c) { assert(used+1 < sizeof(output)); output[used++]=c; output[used]=0; }
 void serial_puts(const char *s) { while (*s) serial_putc(*s++); }
 void console_erase_previous(void) { erased++; }
@@ -91,6 +93,10 @@ int main(void)
     assert(input_console_read_line(&keyboard,out,sizeof(out))==4 && !strcmp(out,"next"));
     assert(input_console_read_line(&keyboard,out,sizeof(out))==0 && !out[0]);
     assert(event_at==145 && sleeps>0);
+    memset(out,0x5A,sizeof(out));memcpy(sentinel,out,sizeof(out));sequence("",1);
+    assert(input_console_read_line_for(&keyboard,out,sizeof(out),"",cancel_after_wait,&cancellation_checks)==INPUT_CONSOLE_INTERRUPTED);
+    assert(cancellation_checks==2 && event_at==1 && !memcmp(out,sentinel,sizeof(out)));
     puts("PASS: blocking reader retries invalid lines, delivers edited sequential/empty lines and yields via PIT sleep");
+    puts("PASS: cancellation after scheduler wait leaves destination unchanged");
     return 0;
 }

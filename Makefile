@@ -126,6 +126,19 @@ input-uefi-iso:
 input-run: input-iso
 	qemu-system-x86_64 -m 128M -cdrom $(INPUT_BUILD)/kernel/vos.iso -serial stdio -no-reboot -nic none
 
+VSH_BUILD ?= build/n4-vsh
+VSH_DISK ?=
+VSH_DISK_ARGS = $(if $(VSH_DISK),-drive file=$(VSH_DISK)$(comma)if=none$(comma)id=vs0$(comma)format=raw$(comma)readonly=on -device virtio-blk-pci$(comma)drive=vs0$(comma)disable-legacy=on)
+comma := ,
+.PHONY: vsh-iso vsh-uefi-iso vsh-run
+vsh-iso:
+	$(MAKE) --no-print-directory ARCH=x86_64 USER_BUILD=$(VSH_BUILD)/user user-vsh
+	$(MAKE) --no-print-directory ARCH=x86_64 BUILD=$(VSH_BUILD)/kernel USER_BUILD=$(VSH_BUILD)/user GRUB_CFG=arch/x86_64/grub-vsh.cfg ISO_FILES=$(VSH_BUILD)/user/vsh.elf:boot/vsh.elf iso
+vsh-uefi-iso: vsh-iso
+	$(MAKE) --no-print-directory ARCH=x86_64 BUILD=$(VSH_BUILD)/kernel USER_BUILD=$(VSH_BUILD)/user GRUB_CFG=arch/x86_64/grub-vsh.cfg ISO_FILES=$(VSH_BUILD)/user/vsh.elf:boot/vsh.elf uefi-iso
+vsh-run: vsh-iso
+	qemu-system-x86_64 -m 128M -cdrom $(VSH_BUILD)/kernel/vos.iso -serial stdio -no-reboot -nic none $(VSH_DISK_ARGS)
+
 # Like run, but QEMU waits for a debugger on TCP port 1234 (-s -S) and prints
 # the serial port here. GDB is not installed by the build; see
 # docs/plans/n2-foundation.md (tooling) for the commands.

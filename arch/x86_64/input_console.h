@@ -9,6 +9,7 @@ enum input_console_result {
     INPUT_CONSOLE_NOSPACE = -2,
     INPUT_CONSOLE_TOOLONG = -3,
     INPUT_CONSOLE_UNAVAILABLE = -4,
+    INPUT_CONSOLE_INTERRUPTED = -5,
 };
 struct input_console_line {
     unsigned length;
@@ -32,6 +33,10 @@ struct keyboard;
  * an explicitly reported overlong line; returns only complete valid lines.
  */
 int input_console_read_line(struct keyboard *keyboard, char *out, unsigned capacity);
+/* Same reader for a granted process. Optional cancellation is checked after
+ * every scheduler wait; prompt is trusted kernel text, not a user pointer. */
+int input_console_read_line_for(struct keyboard *keyboard, char *out, unsigned capacity,
+                                const char *prompt, int (*cancelled)(void *), void *ctx);
 /* Buffered input demonstration; returns if PS/2 is unavailable. No shell yet. */
 void input_console_run(void);
 

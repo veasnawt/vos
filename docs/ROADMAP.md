@@ -27,17 +27,19 @@ See [status](STATUS.md) and the [N3 closure record](results/n3-closure.md).
 
 N4 development is authorized and uses `feat/n4-interactive-console`, based on
 the integrated N3 baseline. The [first input increment](results/n4-first-input.md)
-was published at `3a2b642`. The next [buffered input increment](results/n4-buffered-input.md)
-also passes focused host and BIOS/UEFI verification.
+was published at `3a2b642`, and [buffered input](results/n4-buffered-input.md) at
+`87b99df`. The first [native Rust vsh](results/n4-native-vsh.md) now also passes
+focused host and BIOS/UEFI verification.
 
 Priorities remain, in order:
 
 1. Keyboard input: first polling path works; further input service work remains.
 2. Interactive text console: buffered editing, completed-line delivery, overflow
    rejection and chronological scrolling work. The kernel reader is ready for a shell/input bridge.
-3. Native `vsh` shell.
-4. `help`, `clear`, `echo`, `pwd`, `ls`, `cd`, `cat`.
-5. Rust-first native application foundations with a language-neutral ABI.
+3. Native `vsh`: the first Rust implementation runs in ring 3 through a granted console.
+4. `help`, `clear`, `echo`, `pwd`, `ls`, `cd`, `cat`: working with bounded text and real read-only filesystem calls.
+5. Rust-first native application foundations: freestanding Rust links through the
+   existing C entry/syscall/ELF interfaces; ABI v3 adds explicitly granted console I/O.
 
 Preserve N0–N3 and ABI v0/v1/v2. Use focused checks as each increment changes
 behavior. Rixie Core is optional and must not delay the shell. No new N3 gates

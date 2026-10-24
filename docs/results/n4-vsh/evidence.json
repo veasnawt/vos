@@ -1,0 +1,266 @@
+{
+  "scope": "First native Rust vsh; focused host and BIOS/UEFI checks",
+  "published_buffered_commit": "87b99dfc867c45bd01f512cf9ecac0117d1a6eac",
+  "branch": "feat/n4-interactive-console",
+  "result": {
+    "scope": "native Rust vsh and ABI v3 console",
+    "firmware": {
+      "bios": {
+        "passed": true,
+        "ring3_probes": 5,
+        "commands": [
+          "help",
+          "clear",
+          "echo",
+          "pwd",
+          "ls",
+          "cd",
+          "cat",
+          "exit"
+        ],
+        "shell_screenshot": {
+          "width": 1280,
+          "height": 800,
+          "sha256": "08c7a92630dab01ec6aa8a35ed01bb5c2651840f7493cb540ca44843e8ef274e"
+        },
+        "files_screenshot": {
+          "width": 1280,
+          "height": 800,
+          "sha256": "efe748ecdb9c70c214effb5df03568f827b9994d433f573e166e4979d137132e"
+        },
+        "exit_status": 0,
+        "reclaimed": true
+      },
+      "uefi": {
+        "passed": true,
+        "ring3_probes": 5,
+        "commands": [
+          "help",
+          "clear",
+          "echo",
+          "pwd",
+          "ls",
+          "cd",
+          "cat",
+          "exit"
+        ],
+        "shell_screenshot": {
+          "width": 1280,
+          "height": 800,
+          "sha256": "08c7a92630dab01ec6aa8a35ed01bb5c2651840f7493cb540ca44843e8ef274e"
+        },
+        "files_screenshot": {
+          "width": 1280,
+          "height": 800,
+          "sha256": "efe748ecdb9c70c214effb5df03568f827b9994d433f573e166e4979d137132e"
+        },
+        "exit_status": 0,
+        "reclaimed": true
+      }
+    },
+    "rustc": "rustc 1.100.0-nightly (2e2b193f8 2026-09-02)",
+    "passed": true,
+    "disk_sha256": "9b2519399499ab42d832add41199c85da005cecabd28f7e34f645e03a6152b16"
+  },
+  "sources": {
+    "Makefile": "b336371665d125573341ad27507afa1f5aab3ee0d880042ec6d3a7cd15ce3a58",
+    "arch/x86_64/arch.mk": "fc012c34b9d93eb93be9b0351db733127811835d91cdcb3f6ba6eb1edbee40a8",
+    "arch/x86_64/console.c": "6c51645cc0384994087dea2a53d497a49d33f40ee29b7ba1c7ea5f6d6f34c0f5",
+    "arch/x86_64/console.h": "0a02544e459b46586548862127bfeb24f76af8a6752d055c9bf24508addfe5fd",
+    "arch/x86_64/elf.h": "be1bd6cdec02ad8ac3475ab112892edde07e379ef63b2b2f6f6b381d3a9a3cdc",
+    "arch/x86_64/input_console.c": "0297f0c2a2a053a9af9e5d33ac57e3ebd94b8353a8a5be366024a0c6eb194551",
+    "arch/x86_64/input_console.h": "6c15e09bb182334f8bf0f5637b6857b44d2d148fd6ff20e896c7680bf6c4f119",
+    "arch/x86_64/kernel.c": "5a7dc43f5d16b87bd4bc930b992bad4f3365ead6e7e662cc1b48e57cf38ab294",
+    "arch/x86_64/process.c": "9e1d49105a668bfb086a135c36d4b1e5a150d732bffea11a359ce0303d88fdaa",
+    "arch/x86_64/selftest_elf.c": "7ac8058151f45e7812842f44dd5bff6c343153af93b908e5d956d3c1f6b9a22a",
+    "arch/x86_64/syscall.c": "c9e2ba2081222a8120fdf74e695583e03354d2a967384c3ea153c2651f87e6c1",
+    "arch/x86_64/syscall.h": "4d8bf00dd7fef12393cb535bd8d2a0840be202065cc1304ecec496f630449b21",
+    "arch/x86_64/user_console.c": "1441903c0c9521b9f89b5df924c4025e160d1781557f17eefd2451c8cde97001",
+    "arch/x86_64/user_console.h": "10c05a39bd3317673df73f6275ace8534c7bd9eee8cd082f9b38a42da93ee231",
+    "arch/x86_64/vsh_boot.c": "c0399be8ae617d95e4ce046dedeaceba4e8d961fea3c76e4a44804529dd10fe5",
+    "arch/x86_64/vsh_boot.h": "66b64ae991ae62613678d5e601bb5a125904102df4bf0d5361b2565c2496394f",
+    "arch/x86_64/grub-vsh.cfg": "5105477b9308d6f44a214957e628ed485f9d37943526bd8ebf9a44fd737ded23",
+    "scripts/check-user-elf.sh": "299b19f9a4b6814fc83b1239cbc07dd6d632db801f4f5a74164995b66d756650",
+    "scripts/test-user-elf.sh": "7a7718ea6209cde922efef00f26d272e865be1c3fd53610a4874ef3772575e95",
+    "scripts/test-native-vsh.py": "f26821cc8153bbf922711bc56e1e8d559837488ecee854948fa4e67931594d47",
+    "tests/host/buffered-input.c": "af1a65eee2bcab3715de1b167f865dfca99363596ecec1b86c7d68d97945fe83",
+    "tests/host/user-console.c": "721a00ea54ce3517a60f4cda492ec4eddc7dcbf7bef8ebe54e74560c02db905b",
+    "user/user.mk": "8cedc319e71b24971d9bc11a6b656e4d27fb306494357bac4b55dc27c2c37368",
+    "user/include/vos/console.h": "df1158e1cc65d86cfcb48430db63d1fb8664eb7984c0e6cbd8c3ede48e694591",
+    "user/lib/abi_note_v3.S": "85d6c744940b742bb8073e3cea08fcda3db83e903f7698324e7bed60b9602511",
+    "user/lib/syscall_v3.S": "9febe8247a6cadcd9c3f36e9b4e09eabcc28ded4512220498d412aa282125e75",
+    "user/vsh/main.rs": "9b94ab11c51dc88c154a3517c743da5d0ac5fb9f850e8b04663e8dfa3750f5c6",
+    "user/vsh/runtime.c": "8ff48d6f6ab5f6f006814c23d9ed6ca123af83d0d8c57f55c85bcc07e856ce5c",
+    "user/vsh/console_probe.c": "2fb2c910b12a81fb2f395957199a67a41ca1f41adec65e7830a8bf56f7ad2a93"
+  },
+  "artifacts": [
+    {
+      "path": "docs/results/n4-vsh/result.json",
+      "size": 1440,
+      "sha256": "71a08609429394e1d4912456496ae6134a6204d3d16a70033265a2fdb68d262d"
+    },
+    {
+      "path": "docs/results/n4-vsh/console-host.txt",
+      "size": 226,
+      "sha256": "27794360e2f75367724605d502167d050a0cc75d1aa4bcc4c786a58ed457a299"
+    },
+    {
+      "path": "docs/results/n4-vsh/reader-host.txt",
+      "size": 377,
+      "sha256": "09997ee3476f480e2953bc428210e6688e404590ca6b9baf1722f4efa61c7c24"
+    },
+    {
+      "path": "docs/results/n4-vsh/elf-negative.txt",
+      "size": 828,
+      "sha256": "1b36c5c461029a1ea2d2695dfbc90858b5a414f400a41f1966b491a40be22ba4"
+    },
+    {
+      "path": "docs/results/n4-vsh/vsh-elf.txt",
+      "size": 147,
+      "sha256": "844455bbaad7783a012187cc0c450dcb60295a7841af4dcc9ae28fb3990e7f15"
+    },
+    {
+      "path": "docs/results/n4-vsh/normal-result.json",
+      "size": 68,
+      "sha256": "61abfe50e0ad057576dac0fae0824ffa255b4a74971d7175835cfd1ede572c66"
+    },
+    {
+      "path": "docs/results/n4-vsh/normal.serial.txt",
+      "size": 2511,
+      "sha256": "6ee473fe6a3f79a3d3e49c5d12a475442f48a488b2cc40043f96ce648c70e079"
+    },
+    {
+      "path": "docs/results/n4-vsh/bios.serial.txt",
+      "size": 4656,
+      "sha256": "f9f877affa4af03204c16435aa2a8924b6279c83a0c2ce60e75f7fa703d3ee5b"
+    },
+    {
+      "path": "docs/results/n4-vsh/bios-command.json",
+      "size": 698,
+      "sha256": "59b1d65994866c1e738bc694118eb2870845cddc000f2f1829ad7e002d42b173"
+    },
+    {
+      "path": "docs/images/n4/vos-n4-bios-native-vsh.png",
+      "size": 7104,
+      "sha256": "08c7a92630dab01ec6aa8a35ed01bb5c2651840f7493cb540ca44843e8ef274e"
+    },
+    {
+      "path": "docs/images/n4/vos-n4-bios-vsh-files.png",
+      "size": 8515,
+      "sha256": "efe748ecdb9c70c214effb5df03568f827b9994d433f573e166e4979d137132e"
+    },
+    {
+      "path": "docs/results/n4-vsh/uefi.serial.txt",
+      "size": 4982,
+      "sha256": "4230be5b07899bc8dd30124ebff5df555901e6fffab4870c2d0490eb6fe5ca9e"
+    },
+    {
+      "path": "docs/results/n4-vsh/uefi-command.json",
+      "size": 934,
+      "sha256": "936dd50e500457348b6d2d6feb84fcddb5738c454a0c82b76aa97015e2761e9f"
+    },
+    {
+      "path": "docs/images/n4/vos-n4-uefi-native-vsh.png",
+      "size": 7104,
+      "sha256": "08c7a92630dab01ec6aa8a35ed01bb5c2651840f7493cb540ca44843e8ef274e"
+    },
+    {
+      "path": "docs/images/n4/vos-n4-uefi-vsh-files.png",
+      "size": 8515,
+      "sha256": "efe748ecdb9c70c214effb5df03568f827b9994d433f573e166e4979d137132e"
+    }
+  ],
+  "local_manifest": {
+    "path": "build/n4-session-20261024T130158Z/results/manifest.json",
+    "entries": 181,
+    "sha256": "db38ac56778f4e6d4de9d99f23bfb7c55f913dbe845d13607b952ba8fd0a5cbb"
+  },
+  "compatibility": {
+    "path": "build/n4-session-20261024T130542Z/compatibility",
+    "result": {
+      "passed": true,
+      "boot_halted": true,
+      "hello_abi_v0": true
+    }
+  },
+  "native_ELF": {
+    "sha256": "42fafa347c7370ab53f868fa7446a77cb4e8f151287b9bd6fb355a52511c4c7c",
+    "bytes": 662504,
+    "ABI": 3,
+    "compiler": "rustc 1.100.0-nightly (2e2b193f8 2026-09-02)",
+    "target": "x86_64-unknown-none",
+    "no_host_libc": true,
+    "C_ABI_stubs": true
+  },
+  "fixture": {
+    "sha256": "9b2519399499ab42d832add41199c85da005cecabd28f7e34f645e03a6152b16",
+    "readonly": true,
+    "grant_path": "shell",
+    "files": [
+      {
+        "path": "outside.txt",
+        "sha256": "aae816e9f90de84eb09a14b9ee7088afa1430c1f0b2bafcb85dbc88a17971bb4"
+      },
+      {
+        "path": "shell/docs/welcome.txt",
+        "sha256": "cb485ecc1503b764591ac7321dc5dd4b9fa9cb60070e919499d45fa63273b55d"
+      },
+      {
+        "path": "shell/readme.txt",
+        "sha256": "5af932e3e1f3b857fc5e1755c254c3d059e386d17259844ccf1ef006ee7df684"
+      }
+    ]
+  },
+  "isolation": {
+    "current_Codex_PID": 11512,
+    "accepted_rules_unchanged": true,
+    "query_timeout_seconds": 90,
+    "samples": 2,
+    "all_clean": true,
+    "last_storage_sample": {
+      "utc": 1792846941.335459,
+      "used": 50098176,
+      "capacity": {
+        "charged": 2494414848,
+        "remaining": 1028800512,
+        "C": 13055856640,
+        "E": 251835445248,
+        "linux": 1010080739328,
+        "admitted_extra": 174755840
+      },
+      "isolation_errors": []
+    }
+  },
+  "native_changes_committed": false,
+  "failed_attempts_preserved": [
+    "build/n4-session-20261024T125936Z",
+    "build/n4-session-20261024T130038Z"
+  ],
+  "no_N3_campaign_rerun": true,
+  "final_review": {
+    "buffered_commit": "87b99dfc867c45bd01f512cf9ecac0117d1a6eac",
+    "changed_files": 52,
+    "native_committed": false,
+    "protected_binary_count": 7,
+    "worktrees": 13,
+    "stashes": 2,
+    "all_prior_N4_artifacts_preserved": true,
+    "n4_all_attempts_MiB": 138.87109375,
+    "conservative_combined_MiB": 2519.8515625,
+    "ceiling_MiB": 3360,
+    "remaining_MiB": 840.1484375,
+    "reserves": {
+      "charged": 2494541824,
+      "remaining": 1028673536,
+      "C": 13051138048,
+      "E": 251835445248,
+      "linux": 1010073632768,
+      "admitted_extra": 147714048
+    }
+  },
+  "qemu_version": "QEMU emulator version 10.2.1 (Debian 1:10.2.1+ds-1ubuntu3.2)",
+  "post_build_comment_only_updates": [
+    "arch/x86_64/elf.h ABI range comment",
+    "user/user.mk static-library comment"
+  ]
+}

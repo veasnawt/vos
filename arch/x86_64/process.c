@@ -1,6 +1,7 @@
 #include "process.h"
 #include "io_scope.h"
 #include "file.h"
+#include "user_console.h"
 #include "console.h"
 #include "cpu.h"
 #include "exception.h"
@@ -331,6 +332,7 @@ void proc_destroy(struct process *p)
     if (file_process_busy(p))
         panic("process: file operation has not unwound");
     file_close_all(p);
+    user_console_revoke(p);
     handles_close_all(p);               /* N2.4: a process that never ran may still hold handles */
 
     for (unsigned i = 0; i < p->npages; i++) {
@@ -369,6 +371,7 @@ __attribute__((noreturn)) static void terminate(struct process *p)
     if (file_process_busy(p))
         panic("process: file operation has not unwound");
     file_close_all(p);
+    user_console_revoke(p);
     handles_close_all(p);               /* N2.4: peers see -VOS_EPIPE from now on */
     thread_leave_user_space();
     thread_wake_all(&p->waiters);

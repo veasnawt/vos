@@ -71,19 +71,28 @@ int input_console_take_line(struct input_console_line *line, char *out, unsigned
 
 int input_console_read_line(struct keyboard *keyboard, char *out, unsigned capacity)
 {
+    return input_console_read_line_for(keyboard, out, capacity, "input> ", 0, 0);
+}
+
+int input_console_read_line_for(struct keyboard *keyboard, char *out, unsigned capacity,
+                                const char *prompt, int (*cancelled)(void *), void *ctx)
+{
     if (!keyboard || !keyboard->ready)
         return INPUT_CONSOLE_UNAVAILABLE;
     if (!out || capacity < INPUT_CONSOLE_LINE_MAX + 1)
         return INPUT_CONSOLE_NOSPACE;
     struct input_console_line line = { 0 };
-    serial_puts("input> ");
+    serial_puts(prompt);
     for (;;) {
+        if (cancelled && cancelled(ctx))
+            return INPUT_CONSOLE_INTERRUPTED;
         input_console_accept(&line, keyboard_poll(keyboard));
         if (line.ready) {
             int result = input_console_take_line(&line, out, capacity);
             if (result != INPUT_CONSOLE_TOOLONG)
                 return result;
-            serial_puts("input: line too long; discarded (128 characters maximum)\r\ninput> ");
+            serial_puts("input: line too long; discarded (128 characters maximum)\r\n");
+            serial_puts(prompt);
         }
         /* Only the existing idle thread enables interrupts for its PIT wait. */
         thread_sleep(1);

@@ -151,7 +151,7 @@ The full list is in `docs/STATUS.md`. In short:
 - No Secure Boot.
 - Under UEFI, virtio-blk polls: no IOAPIC/MSI.
 - Only the 32-bpp BGRX framebuffer format.
-- Opt-in PS/2 buffered input console; no shell, writable file system or networking.
+- Opt-in native Rust `vsh` and PS/2 console; no writable file system or networking.
 
 ## 7. Current development checkpoint and review boundary
 
@@ -188,10 +188,17 @@ It rejects entire overlong submissions, preserves the prompt boundary and scroll
 the opt-in display in reading order. A demo consumer prints `submitted: ...`;
 this is not a shell or a user-mode input ABI.
 
-Next: bridge console input/output to a trusted native `vsh` process, then the
-ordered `help`, `clear`, `echo`, `pwd`, `ls`, `cd`, `cat` commands; add Rust-first native
-application foundations while preserving the language-neutral ABI. Rixie Core
-is optional. Do not rerun N3 campaigns or introduce new N3 gates.
+Buffered input is now published at `87b99dfc867c45bd01f512cf9ecac0117d1a6eac`.
+The subsequent [native Rust vsh](results/n4-native-vsh.md) is implemented and
+verified but uncommitted: ABI v3 console calls 11–13 are available only to an
+explicitly granted process, with ABI v0–v2 preserved. The shell implements
+`help`, `clear`, `echo`, `pwd`, `ls`, `cd`, `cat` and `exit` in userspace.
+Filesystem access uses ABI v2 handles and the trusted non-root `shell` grant.
+The installed Rust bare-metal target links through the existing C ABI/runtime
+and ELF script; no new toolchain was installed.
+
+Next: review/publication of the native shell and the N4 closure decision.
+Rixie Core is optional. Do not rerun N3 campaigns or introduce new N3 gates.
 
 ### Historical N3.5 checkpoints
 

@@ -6,6 +6,7 @@
 #include "thread.h"
 #include "usercopy.h"
 #include "file.h"
+#include "user_console.h"
 
 void debug_emit(const char *name, const char *data, uint64_t len, void (*put)(char))
 {
@@ -54,6 +55,12 @@ static int64_t sys_debug_write(struct process *p, uint64_t buf, uint64_t len)
 int64_t syscall_dispatch(struct process *p, struct exc_frame *f)
 {
     switch (f->rax) {
+    case SYS_CONSOLE_READ:
+    case SYS_CONSOLE_WRITE:
+    case SYS_CONSOLE_CLEAR:
+        if (p->abi < 3)
+            return -VOS_ENOSYS;
+        return user_console_syscall(p, f);
     case SYS_DEBUG_WRITE:
         return sys_debug_write(p, f->rdi, f->rsi);
     /* ABI >=1; v2 extends only close's accepted token domain. */

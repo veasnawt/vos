@@ -15,6 +15,7 @@ USER_RT    := $(addprefix $(USER_BUILD)/lib/,crt0.o syscall.o abi_note.o)
 # ABI v1 executables (N2.4): the v1 note and the v1 stubs instead of the v0 note.
 USER_RT_V1 := $(addprefix $(USER_BUILD)/lib/,crt0.o syscall.o syscall_v1.o abi_note_v1.o)
 USER_RT_V2 := $(addprefix $(USER_BUILD)/lib/,crt0.o syscall.o syscall_v1.o syscall_v2.o abi_note_v2.o)
+USER_RT_V3 := $(addprefix $(USER_BUILD)/lib/,crt0.o syscall.o syscall_v1.o syscall_v2.o syscall_v3.o abi_note_v3.o)
 FILE_DIR := $(USER_BUILD)/filetests
 FILE_ELFS := $(addprefix $(FILE_DIR)/,probe.elf reader.elf reader_y.elf error.elf gate0.elf gate1.elf boundary.elf nogrant.elf cookie.elf regs.elf adversary.elf)
 # Separate Gate A companion; no change to the frozen file/suite lists.
@@ -129,6 +130,30 @@ user-test: user-check user-files $(USER_RT) $(USER_RT_V1) $(KERNEL) $(ELFCHECK) 
 	python3 -I scripts/test-file-abi.py
 
 -include $(shell find $(USER_BUILD) -name '*.d' 2>/dev/null)
+
+# Rust is compiled as a freestanding static library, linked through the same C ABI,
+# entry point, ELF profile and syscall stubs as other native languages.
+RUSTC ?= rustc
+$(USER_BUILD)/vsh/main.a: user/vsh/main.rs
+	@mkdir -p $(dir $@)
+	$(RUSTC) --edition=2024 --crate-type=staticlib --target=x86_64-unknown-none -C panic=abort -C opt-level=s -C relocation-model=static -C code-model=small -C debuginfo=0 -o $@ $<
+$(USER_BUILD)/vsh.elf: $(USER_RT_V3) $(USER_BUILD)/vsh/main.a $(USER_BUILD)/vsh/runtime.o $(USER_LDS)
+	$(LD) $(USER_LDFLAGS) --gc-sections -o $@ $(USER_RT_V3) $(USER_BUILD)/vsh/runtime.o $(USER_BUILD)/vsh/main.a
+.PHONY: user-vsh
+user-vsh: $(USER_BUILD)/vsh.elf
+
+define CONSOLE_PROBE
+$(USER_BUILD)/console-$(1).o: user/vsh/console_probe.c
+	@mkdir -p $$(dir $$@)
+	$$(CC) $$(USER_CFLAGS) $(3) -c $$< -o $$@
+$(USER_BUILD)/console-$(1).elf: $(USER_BUILD)/console-$(1).o $(USER_BUILD)/lib/crt0.o $(USER_BUILD)/lib/syscall.o $(USER_BUILD)/lib/syscall_v3.o $(USER_BUILD)/lib/$(2).o $(USER_LDS)
+	$$(LD) $$(USER_LDFLAGS) -o $$@ $(USER_BUILD)/lib/crt0.o $(USER_BUILD)/lib/syscall.o $(USER_BUILD)/lib/syscall_v3.o $(USER_BUILD)/lib/$(2).o $$<
+endef
+$(eval $(call CONSOLE_PROBE,v0,abi_note,-DEXPECT_GATE=1))
+$(eval $(call CONSOLE_PROBE,v1,abi_note_v1,-DEXPECT_GATE=1))
+$(eval $(call CONSOLE_PROBE,v2,abi_note_v2,-DEXPECT_GATE=1))
+$(eval $(call CONSOLE_PROBE,denied,abi_note_v3,-DEXPECT_GATE=9))
+$(eval $(call CONSOLE_PROBE,owner,abi_note_v3,))
 
 
 # Separate Gate B modules; existing application/file/accounting lists stay frozen.

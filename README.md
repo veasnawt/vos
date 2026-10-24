@@ -8,7 +8,7 @@ VOS is being developed with human architectural direction, review, and testing s
 
 VOS is written primarily in freestanding C and x86 assembly. It is **not a Linux distribution**, and it does not rely on Linux, a host operating system, or a hosted C library at runtime. GRUB currently loads the kernel through Multiboot2 on x86-64. A small legacy i386 build remains available.
 
-**Status: pre-alpha kernel research.** VOS is not an installable or everyday-use operating system. The documented checkpoint has been tested in **QEMU with SeaBIOS and OVMF**, not verified as a functioning physical-machine installation. N4 development now includes an opt-in PS/2 console with buffered command input. A native graphical desktop, mouse input, interactive shell, writable storage and network stack remain future work.
+**Status: pre-alpha kernel research.** VOS is not an installable or everyday-use operating system. The documented checkpoint has been tested in **QEMU with SeaBIOS and OVMF**, not verified as a functioning physical-machine installation. N4 development now includes an opt-in PS/2 console and a native Rust `vsh` shell running in ring 3. A native graphical desktop, mouse input, writable storage and network stack remain future work.
 
 ### What works today
 
@@ -22,6 +22,9 @@ VOS is written primarily in freestanding C and x86 assembly. It is **not a Linux
 - An opt-in keyboard console with US ASCII, Shift/Caps Lock, Backspace, completed
   line delivery on Enter and bounded command buffering
   ([buffered input result](docs/results/n4-buffered-input.md)).
+- Native Rust `vsh`: `help`, `clear`, `echo`, `pwd`, `ls`, `cd`, `cat` and `exit`.
+  Filesystem commands use real read-only ABI v2 handles under an explicit grant
+  ([first shell results and screenshots](docs/results/n4-native-vsh.md)).
 - BIOS and UEFI boot paths **in QEMU** via GRUB; extensive emulator-based regression tests.
 
 **N0–N3 are complete.** N3 storage closure was accepted on 2026-10-24 and is
@@ -32,8 +35,9 @@ The [N3 closure record](docs/results/n3-closure.md) contains D1a–D1f,
 5/5 mutation controls, 15/15 larger-RAM stress runs, evidence hashes and preserved
 failure history. **N4 is in progress:** keyboard input, an interactive console,
 `vsh` and Rust-first native application foundations. The first keyboard-to-console
-increment is published at `3a2b642`. Buffered input also passes focused BIOS/UEFI
-checks; `vsh` and its commands are not implemented yet.
+increment is published at `3a2b642`, and buffered input at `87b99df`.
+The subsequent native Rust shell and console ABI v3 pass focused host and
+BIOS/UEFI checks; those new changes remain uncommitted for review.
 
 ![VOS BIOS boot console with PASS status](docs/images/n3/vos-n3-bios-boot-status.png)
 
@@ -64,6 +68,12 @@ consumer, which displays `submitted: ...`; no command is executed yet.
 `make input-uefi-iso` builds its OVMF
 variant using the existing EFI tool prerequisites. Normal `make run` still uses
 the original boot-and-halt configuration. See the [result and screenshots](docs/results/n4-buffered-input.md).
+
+For the native shell, use `make vsh-run RUSTC=/path/to/rustc` with an installed
+`x86_64-unknown-none` Rust target. `help`, `clear` and `echo` need no disk.
+An optional `VSH_DISK=/path/to/trusted-ext2.img` attaches a read-only volume whose
+`shell` directory becomes the explicitly granted namespace for file commands.
+See [native shell setup and limitations](docs/results/n4-native-vsh.md).
 
 ## What happens when x86_64 VOS boots
 

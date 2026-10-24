@@ -28,6 +28,11 @@ void serial_putc(char c)
     screen_putc(c);                     /* U1: mirrored on the screen console, if any (screen.h) */
 }
 
+void serial_log_putc(char c)
+{
+    serial_raw(c);
+}
+
 void console_erase_previous(void)
 {
     serial_raw('\b');

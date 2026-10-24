@@ -1,0 +1,60 @@
+{
+  "scope": "native Rust vsh and ABI v3 console",
+  "firmware": {
+    "bios": {
+      "passed": true,
+      "ring3_probes": 5,
+      "commands": [
+        "help",
+        "clear",
+        "echo",
+        "pwd",
+        "ls",
+        "cd",
+        "cat",
+        "exit"
+      ],
+      "shell_screenshot": {
+        "width": 1280,
+        "height": 800,
+        "sha256": "08c7a92630dab01ec6aa8a35ed01bb5c2651840f7493cb540ca44843e8ef274e"
+      },
+      "files_screenshot": {
+        "width": 1280,
+        "height": 800,
+        "sha256": "efe748ecdb9c70c214effb5df03568f827b9994d433f573e166e4979d137132e"
+      },
+      "exit_status": 0,
+      "reclaimed": true
+    },
+    "uefi": {
+      "passed": true,
+      "ring3_probes": 5,
+      "commands": [
+        "help",
+        "clear",
+        "echo",
+        "pwd",
+        "ls",
+        "cd",
+        "cat",
+        "exit"
+      ],
+      "shell_screenshot": {
+        "width": 1280,
+        "height": 800,
+        "sha256": "08c7a92630dab01ec6aa8a35ed01bb5c2651840f7493cb540ca44843e8ef274e"
+      },
+      "files_screenshot": {
+        "width": 1280,
+        "height": 800,
+        "sha256": "efe748ecdb9c70c214effb5df03568f827b9994d433f573e166e4979d137132e"
+      },
+      "exit_status": 0,
+      "reclaimed": true
+    }
+  },
+  "rustc": "rustc 1.100.0-nightly (2e2b193f8 2026-09-02)",
+  "passed": true,
+  "disk_sha256": "9b2519399499ab42d832add41199c85da005cecabd28f7e34f645e03a6152b16"
+}

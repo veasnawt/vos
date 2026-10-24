@@ -13,13 +13,14 @@ is identical to N3. The first N4 keyboard/echo implementation is published on
 remains `checkpoint-2026-10-19-u1`.
 
 **N4 is in progress.** The [first input increment](results/n4-first-input.md)
-is published at `3a2b642cd3f2e7b719135c86e77cc787a865b327`. The next
-[buffered input increment](results/n4-buffered-input.md) passes production-code
-host tests and BIOS/UEFI QEMU checks: editing, Enter submission, empty lines,
-exact 128-byte limits, whole-line overflow rejection and chronological scrolling.
-Normal boot-and-halt and ABI v0 hello still pass. The input reader is a kernel C
-interface; a user-mode console bridge, native `vsh`, commands and Rust application
-foundations remain pending.
+is published at `3a2b642`; [buffered input](results/n4-buffered-input.md) is
+published at `87b99dfc867c45bd01f512cf9ecac0117d1a6eac`. The subsequent
+[native Rust vsh](results/n4-native-vsh.md) runs in ring 3 with a granted ABI v3
+console and supports all seven requested commands plus `exit`. File commands
+use real read-only ext2/ABI v2 operations in an explicitly granted namespace.
+Host checks and BIOS/UEFI runtime checks pass, including five ring-3 console
+probes per firmware and the original normal boot-and-halt path. Native shell
+changes are uncommitted; N4 final acceptance is not claimed.
 
 Historical N3.5 approval, integration, failed attempts and original authorization
 boundaries below remain records of those checkpoints, not current N3 blockers.
@@ -206,11 +207,13 @@ On BIOS (SeaBIOS: ELCR `0xc00`), virtio-blk interrupt mode is fully tested: 149 
 - **VGA text fallback:** only unit-tested. GRUB always hands this kernel a framebuffer, because
   the kernel requests one.
 - **BIOS display change:** BIOS boots now switch to VBE graphics.
-- **Input:** PS/2 polling and buffered line input, with a US layout and 128-byte
-  limit; no USB keyboard driver, mouse, terminal input syscall or shell yet.
+- **Input:** PS/2 polling, buffered line input and an explicitly granted ABI v3
+  native text console, with a US layout and 128-byte limit; no USB keyboard or mouse driver.
   Editing appends/deletes at the end; an overlong submission is discarded in full.
-  Boot requires `vos.console=1` to enter it; normal production boot still halts.
-- **Missing features:** shell, writable storage, networking, SMP and ACPI power management.
+  Boot selects `vos.console=1` for the buffered demo or `vos.vsh=1` for the
+  native shell; normal production boot still halts.
+- **Shell:** first native Rust `vsh` only; no quoting, pipes, history or external-program launch.
+- **Missing features:** writable storage, networking, SMP and ACPI power management.
 
 ## Unsupported (by design, for now)
 

@@ -16,6 +16,7 @@
 #include "idt.h"
 #include "irq.h"
 #include "input_console.h"
+#include "vsh_boot.h"
 #include "kmap.h"
 #include "memlayout.h"
 #include "multiboot2.h"
@@ -361,7 +362,10 @@ void kernel_main(uint32_t mb2_magic, uint32_t mb2_info)
     screen_status(first_failure ? SCREEN_FAIL : SCREEN_PASS, first_failure ? "VOS-TEST: FAIL" : "VOS-TEST: PASS");
     outl(TEST_EXIT_PORT, first_failure ? TEST_EXIT_FAIL : TEST_EXIT_PASS);
 #else
-    if (!first_failure && input_console_requested(bi.cmdline))
+    if (!first_failure && vsh_requested(bi.cmdline)) {
+        check(vsh_run(&bi), "native vsh");
+        if (first_failure) screen_status(SCREEN_FAIL, "native vsh failed");
+    } else if (!first_failure && input_console_requested(bi.cmdline))
         input_console_run();
 #endif
 }
