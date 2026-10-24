@@ -231,9 +231,16 @@ The [native networking guide](networking.md) describes the first opt-in modern
 virtio-net driver, fixed DMA/queue bounds, isolated peer workflow and eventual
 explicit network-capability direction. [Results](results/n5-first-network.md)
 include host checks, BIOS/UEFI frame exchange and compatibility boots. No network
-syscall or Rixie Connected implementation is present. Next: Ethernet dispatch and
-ARP, then IPv4/ICMP. Generated builds must stay outside protected N3/N4 roots;
+syscall or Rixie Connected implementation is present. The 40-file adapter
+increment is published at `27fe770`. [Ethernet/ARP](results/n5-arp.md) now also
+passes focused sanitizer-backed host and BIOS/UEFI checks. Next: IPv4/ICMP.
+Generated builds must stay outside protected N3/N4 roots;
 all prior evidence, worktrees, stashes and cumulative storage guards remain in force.
+The inherited 3360 MiB ceiling originated in N3 D2/C20. The owner separately
+approved 272 MiB of additional ARP continuation capacity within that unchanged
+ceiling. Both counters and all physical reserves remain enforced; previous
+attempts remain charged. The budget ledger and controller identities are linked
+from the ARP evidence record.
 
 ### Historical N3.5 checkpoints
 

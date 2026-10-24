@@ -192,6 +192,18 @@ net-iso:
 net-uefi-iso: net-iso
 	$(MAKE) --no-print-directory ARCH=x86_64 BUILD=$(NET_BUILD)/kernel USER_BUILD=$(NET_BUILD)/user GRUB_CFG=arch/x86_64/grub-net.cfg uefi-iso
 
+ARP_BUILD ?= build/n5-arp
+ifneq ($(filter arp-iso arp-uefi-iso,$(MAKECMDGOALS)),)
+ifeq ($(strip $(ARP_BUILD)),)
+$(error ARP_BUILD must be nonempty; use a path under build/)
+endif
+endif
+.PHONY: arp-iso arp-uefi-iso
+arp-iso:
+	$(MAKE) --no-print-directory ARCH=x86_64 BUILD=$(ARP_BUILD)/kernel USER_BUILD=$(ARP_BUILD)/user GRUB_CFG=arch/x86_64/grub-arp.cfg iso
+arp-uefi-iso: arp-iso
+	$(MAKE) --no-print-directory ARCH=x86_64 BUILD=$(ARP_BUILD)/kernel USER_BUILD=$(ARP_BUILD)/user GRUB_CFG=arch/x86_64/grub-arp.cfg uefi-iso
+
 # Like run, but QEMU waits for a debugger on TCP port 1234 (-s -S) and prints
 # the serial port here. GDB is not installed by the build; see
 # docs/plans/n2-foundation.md (tooling) for the commands.

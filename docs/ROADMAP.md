@@ -63,7 +63,10 @@ virtio-net and exchanges bounded raw Ethernet frames in QEMU. The
 [design and resource limits](networking.md) reuse existing PCI, PMM and kernel
 isolation infrastructure. No application gains network access automatically.
 
-Next is bounded Ethernet dispatch and ARP, then IPv4 and ICMP echo. An eventual
+The first increment is published at `27fe770`. Bounded
+[Ethernet dispatch and ARP](results/n5-arp.md) now also pass focused host and
+BIOS/UEFI checks, with a four-entry expiring neighbor cache and safe rejection
+of malformed/unsupported input. The next step is IPv4 and ICMP echo. An eventual
 userspace network interface requires explicit process-owned capability grants,
 resource bounds and revocation. Rixie Connected remains outside this increment.
 Focused checks accompany changes; no N3 campaign or new milestone is introduced.

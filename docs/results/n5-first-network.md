@@ -4,7 +4,10 @@ The accepted N4 implementation is present in main at merge
 `bbca69d850e8c168bfa824ace475a27226b2cdb7`; its tree is identical to N4 publication
 `50cbc8bc49bd10d5272647b267ed23895d2f533d`. Local main fast-forwarded safely and
 `feat/n5-networking` was created from it. No history rewrite, worktree removal or
-stash change occurred. This increment is left uncommitted for review.
+stash change occurred. The reviewed 40-file increment is published as
+[`27fe770676b4ce138eb9596c881a556c820cbe74`](https://github.com/veasnawt/vos/commit/27fe770676b4ce138eb9596c881a556c820cbe74)
+on `feat/n5-networking`. Its raw final-review record retains the pre-publication
+state. Subsequent [Ethernet/ARP work](n5-arp.md) is recorded separately.
 
 The new opt-in modern virtio-net driver initializes the adapter and exchanges raw
 Ethernet frames using fixed queues, copied buffers and a private 44 KiB DMA pool.
@@ -67,5 +70,7 @@ PNG hashes. Original dumps and app-compatibility captures remain in local eviden
 
 All N3 protected evidence, seven reference binaries, earlier N4 records, worktrees
 and stashes remain preserved. Existing reserves and the 3360 MiB cumulative ceiling
-were retained; N4 and all N5 attempts are counted together. No N5 commit or push
-was performed. The next implementation task is bounded Ethernet dispatch and ARP.
+were retained; N4 and all N5 attempts are counted together. Publication preserved
+raw QMP register transcripts byte for byte; their CRLF/whitespace was excluded
+only from style lint after the first publication attempt stopped before commit.
+No test or integrity criterion changed. The next increment adds Ethernet/ARP.

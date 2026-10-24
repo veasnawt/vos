@@ -1,4 +1,5 @@
 #include "net_boot.h"
+#include "net_arp_boot.h"
 #include "virtio_net.h"
 #include "console.h"
 #include "screen.h"
@@ -17,9 +18,8 @@ static int failed(const char *stage,int error)
     serial_puts("\r\n");vnet_stop();return 0;
 }
 
-int net_requested(const char *p)
+static int option(const char *p,const char *token)
 {
-    const char token[]="vos.net=1";
     if (!p) return 0;
     while (*p) {
         while (*p==' ' || *p=='\t') p++;
@@ -38,8 +38,10 @@ static void make_frame(uint8_t *frame,unsigned sequence,int reply)
     memcpy(frame+14,reply?"VOS-N5-RX":"VOS-N5-TX",9);frame[23]=(uint8_t)sequence;
     for (unsigned i=24;i<60;i++) frame[i]=(uint8_t)(sequence+i);
 }
-int net_boot_run(void)
+int net_requested(const char *p) {return option(p,"vos.net=1") || option(p,"vos.arp=1");}
+int net_boot_run(const char *cmdline)
 {
+    if (option(cmdline,"vos.arp=1")) return net_arp_boot_run();
     uint64_t before=pmm_free_count();
     screen_begin_input();display("VOS N5 - bounded virtio-net adapter\n");
     int e=vnet_init();

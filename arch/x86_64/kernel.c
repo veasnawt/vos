@@ -364,7 +364,7 @@ void kernel_main(uint32_t mb2_magic, uint32_t mb2_info)
     outl(TEST_EXIT_PORT, first_failure ? TEST_EXIT_FAIL : TEST_EXIT_PASS);
 #else
     if (!first_failure && net_requested(bi.cmdline)) {
-        check(net_boot_run(), "native network adapter");
+        check(net_boot_run(bi.cmdline), "native network adapter");
         screen_status(first_failure ? SCREEN_FAIL : SCREEN_PASS,first_failure ? "Network check failed" : "N5 adapter increment");
     } else if (!first_failure && rixie_requested(bi.cmdline)) {
         check(rixie_run(&bi), "Rixie Core v0");

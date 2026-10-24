@@ -10,7 +10,12 @@ from that verified merge after safely fast-forwarding local main. The
 [first networking increment](results/n5-first-network.md) provides bounded modern
 virtio-net initialization and raw frame I/O. Host checks and isolated BIOS/UEFI
 frame exchanges pass. There are no application network grants or new syscalls.
-Ethernet dispatch/ARP, IPv4 and ICMP follow; Rixie Connected is not started.
+The first 40-file increment is published at `27fe770676b4ce138eb9596c881a556c820cbe74`.
+[Ethernet/ARP](results/n5-arp.md) now passes 4,598 sanitizer-backed host checks
+and both firmware wire checks (4 TX/11 RX, 8 rejected frames each). It reuses
+the unchanged driver and a four-entry expiring cache. IPv4 and ICMP follow;
+Rixie Connected is not started. The 272 MiB additional ARP allocation is enforced
+alongside the unchanged inherited 3360 MiB aggregate ceiling and host reserves.
 
 N3 remains complete and accepted on 2026-10-24.
 [Final N3 closure and evidence](results/n3-closure.md) consolidate D1a–D1f,

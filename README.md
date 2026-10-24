@@ -34,6 +34,8 @@ VOS is written primarily in freestanding C and x86 assembly. It is **not a Linux
   deterministic offline prototype, not a conversational AI model.
 - An opt-in [modern virtio-net adapter](docs/networking.md): bounded raw Ethernet
   send/receive with private DMA buffers and no automatic application network access.
+  The next increment adds [Ethernet dispatch and ARP](docs/results/n5-arp.md),
+  including bounded neighbor resolution and safe malformed-frame handling.
 - BIOS and UEFI boot paths **in QEMU** via GRUB; extensive emulator-based regression tests.
 
 **N0–N3 are complete.** N3 storage closure was accepted on 2026-10-24 and is
@@ -50,7 +52,8 @@ have focused verification and authentic screenshots. The subsequent
 [Rixie prototype](docs/results/n4-rixie-core.md) also passes host and BIOS/UEFI
 checks. The [N4 record](docs/results/n4-closure.md) preserves its pre-merge checkpoint.
 **N5 is in progress** on `feat/n5-networking`: its [first adapter increment](docs/results/n5-first-network.md)
-passes focused host and BIOS/UEFI frame checks. ARP, IPv4, ICMP and explicit
+is published at `27fe770` with focused host and BIOS/UEFI frame checks. Bounded
+Ethernet/ARP now also passes host and BIOS/UEFI checks; IPv4, ICMP and explicit
 userspace network capabilities are subsequent work. Rixie Connected has not begun.
 
 ![VOS BIOS boot console with PASS status](docs/images/n3/vos-n3-bios-boot-status.png)
