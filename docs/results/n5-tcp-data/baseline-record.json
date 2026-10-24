@@ -1,0 +1,55 @@
+{
+  "scope": "Optimized hosted TCP handshake baseline; not sanitizer or QEMU throughput",
+  "commit": "4e799c241b6f78ffe26e88274a132bf90772d628",
+  "source_sha256": {
+    "arch/x86_64/net_tcp.c": "9b28240e116f3c39bfa00243ae98104b4014a460bb7d4c616e86054083bfdb77",
+    "arch/x86_64/net_tcp.h": "8d70dc37d20e457da79d71aa5601a866de819bb0428549bdbc61e909e9a1f936"
+  },
+  "benchmark_sha256": "e9e163be7792ff839600653f8971207049524d92c0fbc89b7cbf982ecd5eed94",
+  "binary_sha256": "c151777302dc6ca30eb6f8bd197676be4af0bcade126e0917b7c87609be5e395",
+  "command": [
+    "gcc",
+    "-std=gnu11",
+    "-O2",
+    "-Wall",
+    "-Wextra",
+    "-Werror",
+    "-ffunction-sections",
+    "-fdata-sections",
+    "-Wl,--gc-sections",
+    "-Iarch/x86_64",
+    "-Itests/host",
+    "/home/veasnawt/src/myos/build/n5-tcp-data-20261024T185044Z/benchmark.c",
+    "arch/x86_64/net_tcp.c",
+    "arch/x86_64/net_ipv4.c",
+    "arch/x86_64/net_arp.c",
+    "arch/x86_64/net_boot.c",
+    "-o",
+    "/home/veasnawt/src/myos/build/n5-tcp-data-20261024T185044Z/baseline"
+  ],
+  "compiler": "gcc (Ubuntu 15.2.0-16ubuntu1) 15.2.0",
+  "host": "Linux-6.18.54.1-microsoft-standard-WSL2-x86_64-with-glibc2.43",
+  "logical_cpus": 4,
+  "loadavg": [
+    0.0,
+    0.12744140625,
+    0.1767578125
+  ],
+  "CPU_model": "Intel(R) Core(TM) i5-4570 CPU @ 3.20GHz",
+  "result": {
+    "kind": "optimized_host_protocol_model",
+    "iterations_per_sample": 20000,
+    "context_bytes": 344,
+    "legacy_ns_per_handshake": [
+      218.765,
+      311.5,
+      221.11,
+      219.1,
+      240.805,
+      226.685,
+      213.925
+    ],
+    "sink": 429000
+  },
+  "guard_unchanged": true
+}

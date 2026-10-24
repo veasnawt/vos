@@ -74,10 +74,13 @@ boot, with independent PCAP validation, published at `33693b3`.
 with one explicit endpoint, bounded copied datagrams and correct checksum-zero
 handling, published at `a5889f9`. A [passive TCP prototype](results/n5-tcp.md)
 now completes the handshake and bounded timeout/cleanup checks on both firmware
-paths. Streaming, retransmission and wire closure are not implemented.
+paths, published at `4e799c2`. [Opt-in payload exchange](results/n5-tcp-data.md)
+now verifies fixed buffers, in-order reception, partial ACKs, real receive-window
+accounting and explicit timeout cleanup. Full stream reliability, retransmission,
+out-of-order reassembly and wire closure are not implemented.
 The owner merged published networking through
 IPv4 into GitHub main via [PR #4](https://github.com/veasnawt/vos/pull/4) at
-`d01b3f5` while UDP verification ran. Its tree matches `33693b3`. TCP remains
+`d01b3f5` while UDP verification ran. Its tree matches `33693b3`. TCP payload remains
 uncommitted; local main stays `bbca69d`. An eventual
 userspace network interface requires explicit process-owned capability grants,
 resource bounds and revocation. Rixie Connected remains outside this increment.

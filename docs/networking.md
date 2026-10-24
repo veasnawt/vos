@@ -8,7 +8,8 @@ modern virtio-net adapter in QEMU. It is published at `27fe770`. The subsequent
 bounded Ethernet/ARP layer is published at `a6571c1`. Native IPv4/ICMP echo is
 published at `33693b3`. Bounded kernel UDP is implemented and verified below;
 UDP is published at `a5889f9`. A passive TCP establishment prototype is verified
-below; stream transfer and explicit userspace authority remain future work.
+below, published at `4e799c2`. Opt-in bounded payload exchange is verified below;
+full TCP reliability and explicit userspace authority remain future work.
 
 ## Existing infrastructure and choice
 
@@ -349,3 +350,77 @@ rejection counts, reset confirmation and all 11 DMA frames released. There is no
 new DMA pool, userspace interface, routing, DNS, DHCP, TLS, IPv6 or browser.
 The same 272 MiB continuation meter, aggregate 3360 MiB ceiling, reserves and
 continuous isolation rules apply. See [TCP results](results/n5-tcp.md).
+
+## Bounded TCP payload exchange
+
+The trusted `vos.tcp-data=1` profile explicitly enables 64-byte RX and TX buffers
+on the existing passive TCP state machine. `vos.tcp=1` retains the establishment
+prototype's zero advertised window. There is one kernel-owned connection; the
+complete context is 504 bytes, below the unchanged 512-byte bound. No ring-3
+network API, application grant, heap allocation or additional DMA pool is added.
+
+RX accepts only whole in-order segments fitting both actual free space and the
+last advertised window. It copies bytes before advancing RCV.NXT and emitting
+an ACK. Duplicate, overlapping, out-of-order and window-exceeding data produce
+the current ACK/window without accepting or acknowledging new bytes. Partial
+segment trimming and out-of-order reassembly are unsupported. Invalid checksums,
+tuples or future/ambiguous ACKs cannot change buffers or sequence state.
+Insufficient output capacity accepts nothing and returns an explicit error.
+
+Kernel reads can consume a bounded prefix and erase the vacated bytes. Freed
+capacity becomes remotely usable only when an explicit ACK or outgoing data
+advertises it. Every advertised window is backed by available storage. Empty,
+short/invalid output and buffer-full cases have explicit results; there is no
+unbounded queue or hidden data overwrite.
+
+TX copies one segment of 1-64 bytes and requires the peer's current window to fit
+it. The copy remains until valid ACKs retire its prefix; partial ACKs retain and
+erase the appropriate bytes. A second send is busy while bytes remain pending.
+Stale ACKs are ignored without discarding valid incoming data or updating the
+peer window; duplicate ACKs cannot refresh the TX deadline. Data with invalid
+sequence placement cannot retire pending TX. ACK-only segments must fit the
+receive window, including the zero-window boundary. Sequence/window comparisons
+use bounded unsigned modular arithmetic, with wrap tested explicitly.
+
+The owner explicitly expires unacknowledged TX after 200 PIT ticks and an idle
+payload connection after 400 ticks. All connection buffers, peer/sequence/window
+and deadline state are erased, returning to LISTEN with the endpoint mode intact.
+This is an explicit local abort, not a successful delivery or FIN/RST exchange.
+The demo reports the discarded pending RX/TX counts at timeout. Adapter reset
+and DMA release remain separate and keep the original quarantine guarantees.
+
+Reproduce with existing EFI tools and original isolation/storage admission:
+
+```sh
+PYTHONDONTWRITEBYTECODE=1 python3 -B scripts/test-tcp-data.py \
+  --output "$PWD/build/n5-tcp-data-$(date -u +%Y%m%dT%H%M%SZ)"
+```
+
+`TCP_DATA_BUILD` must be nonempty for `make tcp-data-iso` / `tcp-data-uefi-iso`.
+The test supplies the isolated wire peer and records actual payload/ACK frames.
+No unrelated milestone campaign is required. Full retransmission, reassembly,
+FIN/RST closure, active open, congestion control and production ISNs remain
+unsupported. See [payload evidence](results/n5-tcp-data.md).
+
+### Relevant security and performance evidence
+
+ASan/UBSan checks cover bounded buffers, malformed packets, exhaustion, timeouts,
+ACK/sequence/window abuse and cleanup. The C boundary remains the existing
+kernel-only copied-packet interface; DMA descriptors never point at callers'
+buffers. vsh/Rixie, the SDK, capability grants and syscall ABIs remain unchanged.
+No new security failure was observed in the focused checks; this is not a proof
+of production security. Predictable diagnostic ISNs and missing full TCP recovery
+remain material limitations. Before production TCP or cryptographic services,
+VOS needs a properly seeded/reseeded kernel CSPRNG and secret-based per-connection
+ISN generation, with failure behavior when secure entropy is unavailable. This
+increment neither implements nor substitutes a deterministic generator for that.
+
+Compact metrics identify source, compiler flags, host CPU/load and QEMU settings.
+Sanitizer checks are correctness evidence; optimized hosted protocol-model
+timings and unsanitized `-O2` QEMU scenario metrics are separate. Current records
+include context size, private DMA, observed emulator CPU/high-water RSS, packet
+timing and byte counts. Peer pacing, firmware boot and intentional timeout costs
+are labelled; they are not maximum throughput or hard real-time claims. Historical
+QEMU timing has a different prelude/load and is contextual only. The paired old/new
+host model uses the same workload and compiler conditions. No optimization or
+security-check bypass was introduced; simple bounded copies/shifts remain in use.

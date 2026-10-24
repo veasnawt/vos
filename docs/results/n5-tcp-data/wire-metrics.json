@@ -1,0 +1,90 @@
+{
+  "bios": {
+    "payload_to_ACK_capture_us": [
+      9270,
+      7539,
+      7250,
+      6547,
+      6446
+    ],
+    "median_payload_to_ACK_us": 7250,
+    "active_payload_capture_span_us": 78994,
+    "diagnostic_RX_accepted_bytes_per_second": 1822.92325999443,
+    "delivered_read_bytes": 80,
+    "TX_acknowledged_bytes": 4,
+    "handshake_capture_us": 10640,
+    "historical_establishment_handshake_capture_us": 3052,
+    "historical_caveat": "Same q35/TCG/128 MiB flags and host architecture; historical prelude/load differs. Context observation, not a regression benchmark.",
+    "throughput_caveat": "Includes controlled peer polling/window coordination; excludes final deliberate timeout; not stack throughput/goodput.",
+    "release": {
+      "kind": "optimized_unsanitized_QEMU_scenario",
+      "firmware": "bios",
+      "kernel_optimization": "-O2 with debug symbols; no sanitizers",
+      "QEMU": "q35/TCG, 128 MiB, modern virtio-net, isolated stream peer",
+      "elapsed_to_PASS_seconds": 3.5496646809988306,
+      "QEMU_CPU_seconds": 0.92,
+      "QEMU_observed_VmHWM_KiB": 77924,
+      "guest_RAM_MiB": 128,
+      "context_bytes": 504,
+      "protocol_RX_TX_bytes": 128,
+      "private_DMA_bytes": 45056,
+      "accepted_RX_bytes": 144,
+      "sent_TX_bytes": 68,
+      "caveat": "Scenario includes peer polling and deliberate 2-second TX timeout; not maximum throughput or hard real-time measurement.",
+      "host": {
+        "platform": "Linux-6.18.54.1-microsoft-standard-WSL2-x86_64-with-glibc2.43",
+        "logical_cpus": 4,
+        "loadavg": [
+          0.29541015625,
+          0.13720703125,
+          0.1435546875
+        ],
+        "CPU_model": "Intel(R) Core(TM) i5-4570 CPU @ 3.20GHz"
+      }
+    }
+  },
+  "uefi": {
+    "payload_to_ACK_capture_us": [
+      5707,
+      4232,
+      3703,
+      2958,
+      2433
+    ],
+    "median_payload_to_ACK_us": 3703,
+    "active_payload_capture_span_us": 75381,
+    "diagnostic_RX_accepted_bytes_per_second": 1910.295697854897,
+    "delivered_read_bytes": 80,
+    "TX_acknowledged_bytes": 4,
+    "handshake_capture_us": 17506,
+    "historical_establishment_handshake_capture_us": 12390,
+    "historical_caveat": "Same q35/TCG/128 MiB flags and host architecture; historical prelude/load differs. Context observation, not a regression benchmark.",
+    "throughput_caveat": "Includes controlled peer polling/window coordination; excludes final deliberate timeout; not stack throughput/goodput.",
+    "release": {
+      "kind": "optimized_unsanitized_QEMU_scenario",
+      "firmware": "uefi",
+      "kernel_optimization": "-O2 with debug symbols; no sanitizers",
+      "QEMU": "q35/TCG, 128 MiB, modern virtio-net, isolated stream peer",
+      "elapsed_to_PASS_seconds": 5.8535442290012725,
+      "QEMU_CPU_seconds": 3.92,
+      "QEMU_observed_VmHWM_KiB": 156148,
+      "guest_RAM_MiB": 128,
+      "context_bytes": 504,
+      "protocol_RX_TX_bytes": 128,
+      "private_DMA_bytes": 45056,
+      "accepted_RX_bytes": 144,
+      "sent_TX_bytes": 68,
+      "caveat": "Scenario includes peer polling and deliberate 2-second TX timeout; not maximum throughput or hard real-time measurement.",
+      "host": {
+        "platform": "Linux-6.18.54.1-microsoft-standard-WSL2-x86_64-with-glibc2.43",
+        "logical_cpus": 4,
+        "loadavg": [
+          0.35205078125,
+          0.15185546875,
+          0.1484375
+        ],
+        "CPU_model": "Intel(R) Core(TM) i5-4570 CPU @ 3.20GHz"
+      }
+    }
+  }
+}

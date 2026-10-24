@@ -2,8 +2,12 @@
 
 UDP is published as
 [`a5889f908c06ab912321f6fcb8f930e9f12abdd0`](https://github.com/veasnawt/vos/commit/a5889f908c06ab912321f6fcb8f930e9f12abdd0)
-on `feat/n5-networking`, with all 46 reviewed files. The TCP increment is
-**uncommitted for review**. N5 remains in progress.
+on `feat/n5-networking`, with all 46 reviewed files. TCP establishment was then
+published with all 49 reviewed files as
+[`4e799c241b6f78ffe26e88274a132bf90772d628`](https://github.com/veasnawt/vos/commit/4e799c241b6f78ffe26e88274a132bf90772d628).
+Raw pre-publication evidence remains an unchanged historical snapshot.
+The subsequent [opt-in payload increment](n5-tcp-data.md) is uncommitted for review.
+N5 remains in progress.
 
 ## Git ancestry and preservation
 
@@ -104,3 +108,7 @@ userspace networking, DNS, DHCP, TLS, browser or Rixie Connected.
 Next: bounded in-order payload transfer on the established test connection, with
 fixed send/receive buffers and explicit sequence/window accounting. Retransmission
 and wire closure remain unsupported until separately implemented and verified.
+
+That [bounded payload profile](n5-tcp-data.md) now passes focused checks. The
+original `vos.tcp=1` establishment-only profile retains its zero-window behavior;
+payload mode is explicitly selected separately.

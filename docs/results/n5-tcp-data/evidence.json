@@ -1,0 +1,385 @@
+{
+  "scope": "N5 bounded opt-in TCP payload exchange",
+  "published_establishment_commit": "4e799c241b6f78ffe26e88274a132bf90772d628",
+  "TCP_payload_committed": false,
+  "branch": "feat/n5-networking",
+  "sources": {
+    "Makefile": "1631d87bfcd1160e332b9e10c99cc937c9ef599b98f1ace90ddef161ec64ca50",
+    "arch/x86_64/arch.mk": "c1097abbd21be89baddc3416bf9fc7b6490a75fd7c5c4283f877f07b45a14659",
+    "arch/x86_64/grub-tcp-data.cfg": "b97db73596c1f22bb53b6f061cc9c5906f13b945d3bb65f80a33b89cbc909fe0",
+    "arch/x86_64/net_boot.c": "5874b24b912bbe8a971231b1182452ae49fc4dae6b9e4a3f4056b18c16977a77",
+    "arch/x86_64/net_tcp.c": "f14280cfc0edc436824b14c9ceecf58a397d94c97831a0c7eda80f5872076de9",
+    "arch/x86_64/net_tcp.h": "dbe7c08470e26d665d0473aad0cced161cdb624e04a134026b14c826da78a733",
+    "arch/x86_64/net_tcp_data_boot.c": "b47a61470f4a5d669254910c77cdbbac60727870a4c4ae131cd35e4989a9bef6",
+    "arch/x86_64/net_tcp_data_boot.h": "3ee7c8301f718c1cae4d51951c9e5de43b7dcd11ba17e201904951b4c0f32b7e",
+    "scripts/test-tcp-data.py": "69e303ab4b0af8793157655db82b3918efb2df8ca8e7817c4d19f10a849a658a",
+    "tests/host/net-tcp-bench.c": "e9e163be7792ff839600653f8971207049524d92c0fbc89b7cbf982ecd5eed94",
+    "tests/host/net-tcp-data.c": "ae5d62d705edcec7c645d2f71cf86c966da655cc11deec71af65979da4fcad85"
+  },
+  "artifacts": [
+    {
+      "path": "docs/results/n5-tcp-data/baseline-record.json",
+      "size": 1626,
+      "sha256": "2341c0449a58ee5c538510e2b0b4c46d336b459cef41737db4c63caca85881b2"
+    },
+    {
+      "path": "docs/results/n5-tcp-data/bios-command.json",
+      "size": 796,
+      "sha256": "6da20bf6d4f7468336cd894353d08fafde5ab9efe0493d3253a2da685e679c7e"
+    },
+    {
+      "path": "docs/results/n5-tcp-data/bios-performance.json",
+      "size": 885,
+      "sha256": "34e46578cdbf93f7d7750876f46d412b06dfbe5a20f40cc8570396686679c1de"
+    },
+    {
+      "path": "docs/results/n5-tcp-data/bios-registers.txt",
+      "size": 2052,
+      "sha256": "19d19d9ec7235f972018a8a3b3a3dbb2591094658ca2abb48f33e62c8929a380"
+    },
+    {
+      "path": "docs/results/n5-tcp-data/bios-wire.json",
+      "size": 7629,
+      "sha256": "5fe8e69ded5ae089d54020adeeef4333410450abb1a1d8845afad825052dc15d"
+    },
+    {
+      "path": "docs/results/n5-tcp-data/bios.pcap",
+      "size": 2997,
+      "sha256": "4e0b6c8d3079812e621a6942878e22e54b7efd5101c065d7d7fcf89854a2d81f"
+    },
+    {
+      "path": "docs/results/n5-tcp-data/bios.serial.txt",
+      "size": 3174,
+      "sha256": "973866c172e43120c338cb7442394f29beac6d70b216c31c74c8c5c59ddc36b4"
+    },
+    {
+      "path": "docs/results/n5-tcp-data/guard-result.json",
+      "size": 136,
+      "sha256": "ba6c9e0812e670ecf063059acb313b7688cb4948372f2a41cd9210080769c477"
+    },
+    {
+      "path": "docs/results/n5-tcp-data/guard-samples.jsonl",
+      "size": 664,
+      "sha256": "030bdb6c8544265cd94228bb4e80fc815b43471cd607eb59181e933d2e99edb3"
+    },
+    {
+      "path": "docs/results/n5-tcp-data/image-build.txt",
+      "size": 32829,
+      "sha256": "2699406c159b9364bafcbd9e4cafc7ecd981b6d897922abcf639c4a815578c42"
+    },
+    {
+      "path": "docs/results/n5-tcp-data/net-arp-host-build.txt",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/results/n5-tcp-data/net-arp-host.txt",
+      "size": 94,
+      "sha256": "c0da74401be68d10d0609a6171e1dc41679fcc0c896d30235bf6871f6238c4ae"
+    },
+    {
+      "path": "docs/results/n5-tcp-data/net-ipv4-host-build.txt",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/results/n5-tcp-data/net-ipv4-host.txt",
+      "size": 91,
+      "sha256": "92ef95d5cb3ea822a3eceea705b533f9f3b33f4659c80d34a057992e568b6c61"
+    },
+    {
+      "path": "docs/results/n5-tcp-data/net-tcp-data-host-build.txt",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/results/n5-tcp-data/net-tcp-data-host.txt",
+      "size": 116,
+      "sha256": "0d4674f0e31ededa9f610a168ab47bb5fe3ba5ef3a197b9be5dd32e75c42789f"
+    },
+    {
+      "path": "docs/results/n5-tcp-data/net-tcp-host-build.txt",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/results/n5-tcp-data/net-tcp-host.txt",
+      "size": 120,
+      "sha256": "42fbfd5722e491bdf7836275c66079c59747e6840ecf587d14d35dbe14b72f02"
+    },
+    {
+      "path": "docs/results/n5-tcp-data/net-udp-host-build.txt",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/results/n5-tcp-data/net-udp-host.txt",
+      "size": 99,
+      "sha256": "3544517d76924706f1ec4865fb9c4d1d85d2e2cdf7fc2b0a8a31fe86d086b228"
+    },
+    {
+      "path": "docs/results/n5-tcp-data/path-guard.txt",
+      "size": 83,
+      "sha256": "b43152cab34212ae8d6b8c3d7d818e100bc33c6167f67da48335e96772982d8a"
+    },
+    {
+      "path": "docs/results/n5-tcp-data/performance-pair.json",
+      "size": 1787,
+      "sha256": "1407d7c443304422d8a377e5d0f7d82ecdc29508b0f6c6b5b6fea94648d4e423"
+    },
+    {
+      "path": "docs/results/n5-tcp-data/release-model-build.txt",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/results/n5-tcp-data/result.json",
+      "size": 1816,
+      "sha256": "d4972d6cca466a14d1c7753c020059b5e3308e92d7dc52882a7fbe726c8d0e76"
+    },
+    {
+      "path": "docs/results/n5-tcp-data/sources-before.json",
+      "size": 1074,
+      "sha256": "b4e1299badb75ba106e29c98cf16d18c6a052445d1ca05b02c163c46ce999876"
+    },
+    {
+      "path": "docs/results/n5-tcp-data/uefi-command.json",
+      "size": 1033,
+      "sha256": "e7a0e819aaeb12421a84ff7a1a9176d7589859095e3222a1ad6b3b42ef1f4a05"
+    },
+    {
+      "path": "docs/results/n5-tcp-data/uefi-performance.json",
+      "size": 883,
+      "sha256": "e82cfc5d2b2be81ff73b47e54a8e754219753021b4968f49b6c20e02844cb3b5"
+    },
+    {
+      "path": "docs/results/n5-tcp-data/uefi-registers.txt",
+      "size": 2052,
+      "sha256": "dadf6b2ee308a6f2c0eab68d726511a0727558ccd32aa6961ed1ae8f09f9d0ae"
+    },
+    {
+      "path": "docs/results/n5-tcp-data/uefi-wire.json",
+      "size": 7629,
+      "sha256": "5fe8e69ded5ae089d54020adeeef4333410450abb1a1d8845afad825052dc15d"
+    },
+    {
+      "path": "docs/results/n5-tcp-data/uefi.pcap",
+      "size": 2997,
+      "sha256": "3977533e70de442c5f82120ddf209287993d74719e9ed1da8ecca1ca439a17ff"
+    },
+    {
+      "path": "docs/results/n5-tcp-data/uefi.serial.txt",
+      "size": 3504,
+      "sha256": "1fc4aaed8a19a44ec88095f31c998352a3da8a61b1c15cf9702d613950b7d306"
+    },
+    {
+      "path": "docs/results/n5-tcp-data/wire-metrics.json",
+      "size": 3465,
+      "sha256": "18348f567b3df00fb4d6737e5a59876a0cca57565917312c5c08102eb470f2bd"
+    },
+    {
+      "path": "docs/images/n5/vos-n5-bios-tcp-payload.png",
+      "sha256": "76f8f88ddcb7f7e166d5ab19b3518be13819a19a5df1b00f5a117d1f07244427"
+    },
+    {
+      "path": "docs/images/n5/vos-n5-uefi-tcp-payload.png",
+      "sha256": "76f8f88ddcb7f7e166d5ab19b3518be13819a19a5df1b00f5a117d1f07244427"
+    }
+  ],
+  "local_manifest": {
+    "path": "build/n5-tcp-data-20261024T185933Z/results/manifest.json",
+    "entries": 166,
+    "sha256": "d764382c7ae872df9e825222a868e8b31102015321fad271ba4fb82dacbea688"
+  },
+  "pcap_verification": {
+    "bios": {
+      "records": 36,
+      "TX": 16,
+      "RX": 20,
+      "independent_valid_TCP_checksums": 33,
+      "exact_bytes_and_order": true,
+      "sequence_ACK_window_model": true,
+      "RX_accepted": 144,
+      "RX_read": 80,
+      "TX_sent": 68,
+      "TX_retired": 4,
+      "timeout_pending_RX": 64,
+      "timeout_pending_TX": 64,
+      "corrective_ACKs": 5,
+      "invalid_packet_or_ACK_drops": 3,
+      "accepted_stream_sha256": "5cee1d79a3c42106c648a5c6802c514774cf42656383489f46789d29d41ab258",
+      "sha256": "4e0b6c8d3079812e621a6942878e22e54b7efd5101c065d7d7fcf89854a2d81f"
+    },
+    "uefi": {
+      "records": 36,
+      "TX": 16,
+      "RX": 20,
+      "independent_valid_TCP_checksums": 33,
+      "exact_bytes_and_order": true,
+      "sequence_ACK_window_model": true,
+      "RX_accepted": 144,
+      "RX_read": 80,
+      "TX_sent": 68,
+      "TX_retired": 4,
+      "timeout_pending_RX": 64,
+      "timeout_pending_TX": 64,
+      "corrective_ACKs": 5,
+      "invalid_packet_or_ACK_drops": 3,
+      "accepted_stream_sha256": "5cee1d79a3c42106c648a5c6802c514774cf42656383489f46789d29d41ab258",
+      "sha256": "3977533e70de442c5f82120ddf209287993d74719e9ed1da8ecca1ca439a17ff"
+    }
+  },
+  "performance_metrics": {
+    "bios": {
+      "payload_to_ACK_capture_us": [
+        9270,
+        7539,
+        7250,
+        6547,
+        6446
+      ],
+      "median_payload_to_ACK_us": 7250,
+      "active_payload_capture_span_us": 78994,
+      "diagnostic_RX_accepted_bytes_per_second": 1822.92325999443,
+      "delivered_read_bytes": 80,
+      "TX_acknowledged_bytes": 4,
+      "handshake_capture_us": 10640,
+      "historical_establishment_handshake_capture_us": 3052,
+      "historical_caveat": "Same q35/TCG/128 MiB flags and host architecture; historical prelude/load differs. Context observation, not a regression benchmark.",
+      "throughput_caveat": "Includes controlled peer polling/window coordination; excludes final deliberate timeout; not stack throughput/goodput.",
+      "release": {
+        "kind": "optimized_unsanitized_QEMU_scenario",
+        "firmware": "bios",
+        "kernel_optimization": "-O2 with debug symbols; no sanitizers",
+        "QEMU": "q35/TCG, 128 MiB, modern virtio-net, isolated stream peer",
+        "elapsed_to_PASS_seconds": 3.5496646809988306,
+        "QEMU_CPU_seconds": 0.92,
+        "QEMU_observed_VmHWM_KiB": 77924,
+        "guest_RAM_MiB": 128,
+        "context_bytes": 504,
+        "protocol_RX_TX_bytes": 128,
+        "private_DMA_bytes": 45056,
+        "accepted_RX_bytes": 144,
+        "sent_TX_bytes": 68,
+        "caveat": "Scenario includes peer polling and deliberate 2-second TX timeout; not maximum throughput or hard real-time measurement.",
+        "host": {
+          "platform": "Linux-6.18.54.1-microsoft-standard-WSL2-x86_64-with-glibc2.43",
+          "logical_cpus": 4,
+          "loadavg": [
+            0.29541015625,
+            0.13720703125,
+            0.1435546875
+          ],
+          "CPU_model": "Intel(R) Core(TM) i5-4570 CPU @ 3.20GHz"
+        }
+      }
+    },
+    "uefi": {
+      "payload_to_ACK_capture_us": [
+        5707,
+        4232,
+        3703,
+        2958,
+        2433
+      ],
+      "median_payload_to_ACK_us": 3703,
+      "active_payload_capture_span_us": 75381,
+      "diagnostic_RX_accepted_bytes_per_second": 1910.295697854897,
+      "delivered_read_bytes": 80,
+      "TX_acknowledged_bytes": 4,
+      "handshake_capture_us": 17506,
+      "historical_establishment_handshake_capture_us": 12390,
+      "historical_caveat": "Same q35/TCG/128 MiB flags and host architecture; historical prelude/load differs. Context observation, not a regression benchmark.",
+      "throughput_caveat": "Includes controlled peer polling/window coordination; excludes final deliberate timeout; not stack throughput/goodput.",
+      "release": {
+        "kind": "optimized_unsanitized_QEMU_scenario",
+        "firmware": "uefi",
+        "kernel_optimization": "-O2 with debug symbols; no sanitizers",
+        "QEMU": "q35/TCG, 128 MiB, modern virtio-net, isolated stream peer",
+        "elapsed_to_PASS_seconds": 5.8535442290012725,
+        "QEMU_CPU_seconds": 3.92,
+        "QEMU_observed_VmHWM_KiB": 156148,
+        "guest_RAM_MiB": 128,
+        "context_bytes": 504,
+        "protocol_RX_TX_bytes": 128,
+        "private_DMA_bytes": 45056,
+        "accepted_RX_bytes": 144,
+        "sent_TX_bytes": 68,
+        "caveat": "Scenario includes peer polling and deliberate 2-second TX timeout; not maximum throughput or hard real-time measurement.",
+        "host": {
+          "platform": "Linux-6.18.54.1-microsoft-standard-WSL2-x86_64-with-glibc2.43",
+          "logical_cpus": 4,
+          "loadavg": [
+            0.35205078125,
+            0.15185546875,
+            0.1484375
+          ],
+          "CPU_model": "Intel(R) Core(TM) i5-4570 CPU @ 3.20GHz"
+        }
+      }
+    }
+  },
+  "products": {
+    "native/kernel/vos.bin": "d3b27677bde32ae214804ffe97b543fede64c3205258283df32b6e52a1cb8674",
+    "native/kernel/vos.iso": "9595e7d2cdb042ff961bd09386dfcb9ce580a4c7168bdb4ca39166ccc20ad7ce",
+    "native/kernel/vos-uefi.iso": "165061b6d9d51e8783fd442249181431a0f2a1212448d382ffb97c35d8317e08",
+    "native/user/hello.elf": "c6c6416195a0f18d680d7f8f19be52ce02ff02912ef3bac45324fbe88006cd06"
+  },
+  "host_checks": {
+    "payload": 5397,
+    "legacy_TCP": 3808,
+    "UDP": 136730,
+    "IPv4": 1806,
+    "ARP": 4598,
+    "sanitizers": [
+      "address",
+      "undefined"
+    ],
+    "legacy_test_source_unchanged": true,
+    "legacy_check_count_increased_by_context_erasure": 160
+  },
+  "guard": {
+    "controller_root": "build/n5-tcp-data-20261024T185933Z",
+    "query_timeout_seconds": 90,
+    "clean_samples": 3,
+    "sample_sha256": "030bdb6c8544265cd94228bb4e80fc815b43471cd607eb59181e933d2e99edb3",
+    "outcome": {
+      "passed": true,
+      "error": null,
+      "returncode": 0,
+      "allocated": 30695424,
+      "ARP_charged": 151289856,
+      "ARP_limit": 285212672
+    }
+  },
+  "budget": {
+    "ledger": "build/n5-session-20261024T162331Z/ARP-BUDGET.json",
+    "ledger_sha256": "cd2214f6d8fa72a605dfd7acc202ba63033ea75a0bee3f28334b6fcb61184988",
+    "additional_limit_MiB": 272,
+    "aggregate_ceiling_MiB": 3360,
+    "local_bound_MiB": 128,
+    "admission": "build/n5-tcp-data-20261024T184917Z/PAYLOAD-ADMISSION.json",
+    "prior_usage_retained": true
+  },
+  "publication": {
+    "stopped_root": "build/n5-tcp-20261024T183512Z",
+    "reason": "15-second reserve query timeout during read-only hashing before any Git mutation",
+    "fresh_passing_root": "build/n5-tcp-20261024T184326Z",
+    "original_failure_preserved": true,
+    "guard_source_and_timeout_unchanged": true
+  },
+  "no_new_userspace_network_API": true,
+  "ABI_v0_v3_and_vsh_Rixie_sources_unchanged": true,
+  "no_unrelated_campaigns": true,
+  "payload_passed_first_test_attempt": true,
+  "security": {
+    "new_failures_observed": false,
+    "known_limits": [
+      "deterministic ISNs",
+      "no retransmission/reassembly/FIN/RST",
+      "kernel caller buffer contract",
+      "no peer authentication"
+    ],
+    "production_randomness_required": true
+  }
+}

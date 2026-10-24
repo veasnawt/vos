@@ -26,7 +26,12 @@ rejects one four-slot queue overflow. UDP is published at `a5889f9`.
 host checks and both firmware tests: one completed handshake, one half-open
 timeout and 20 rejected inputs each. There is one fixed connection record,
 with no streaming, retransmission, TCP options or FIN/RST closure. TCP changes
-remain uncommitted for review. Application networking is not exposed.
+were published at `4e799c2`. [Bounded TCP payload exchange](results/n5-tcp-data.md)
+now passes 5,397 sanitizer-backed checks and BIOS/UEFI wire tests. Each boot
+accepts 144 bytes, consumes 80, transmits 68 and verifies partial/full ACKs,
+window exhaustion/reopening and explicit timeout/reset erasure. Context size is
+504 bytes with fixed 64-byte RX and TX buffers, below the existing 512-byte bound.
+Payload changes remain uncommitted. Application networking is not exposed.
 GitHub main now contains the owner's [PR #4](https://github.com/veasnawt/vos/pull/4)
 merge `d01b3f5`, whose tree matches IPv4 publication `33693b3`. Local main remains
 `bbca69d`; the executor did not merge, fetch or change that local branch.

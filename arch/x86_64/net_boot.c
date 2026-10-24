@@ -3,6 +3,7 @@
 #include "net_ipv4_boot.h"
 #include "net_udp_boot.h"
 #include "net_tcp_boot.h"
+#include "net_tcp_data_boot.h"
 #include "virtio_net.h"
 #include "console.h"
 #include "screen.h"
@@ -41,9 +42,10 @@ static void make_frame(uint8_t *frame,unsigned sequence,int reply)
     memcpy(frame+14,reply?"VOS-N5-RX":"VOS-N5-TX",9);frame[23]=(uint8_t)sequence;
     for (unsigned i=24;i<60;i++) frame[i]=(uint8_t)(sequence+i);
 }
-int net_requested(const char *p) {return option(p,"vos.net=1") || option(p,"vos.arp=1") || option(p,"vos.ipv4=1") || option(p,"vos.udp=1") || option(p,"vos.tcp=1");}
+int net_requested(const char *p) {return option(p,"vos.net=1") || option(p,"vos.arp=1") || option(p,"vos.ipv4=1") || option(p,"vos.udp=1") || option(p,"vos.tcp=1") || option(p,"vos.tcp-data=1");}
 int net_boot_run(const char *cmdline)
 {
+    if (option(cmdline,"vos.tcp-data=1")) return net_tcp_data_boot_run();
     if (option(cmdline,"vos.tcp=1")) return net_tcp_boot_run();
     if (option(cmdline,"vos.udp=1")) return net_udp_boot_run();
     if (option(cmdline,"vos.ipv4=1")) return net_ipv4_boot_run();
