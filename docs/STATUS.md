@@ -17,7 +17,15 @@ the unchanged driver and a four-entry expiring cache, published at `a6571c1`.
 [Native IPv4/ICMP](results/n5-ipv4.md) now passes 1,806 sanitizer-backed checks
 plus the 4,598-check ARP host regression. Each BIOS/UEFI boot completes two pings,
 answers one request and rejects 11 malformed/unsupported/unmatched packets.
-UDP/TCP and explicit application network authority remain next.
+IPv4/ICMP is published at `33693b3`. [Bounded kernel UDP](results/n5-udp.md)
+now passes 136,730 sanitizer-backed host checks, the existing IPv4/ARP host
+regressions and BIOS/UEFI wire checks. Each boot sends four UDP datagrams,
+receives seven, rejects 12 invalid/unsupported/unbound packets and safely
+rejects one four-slot queue overflow. TCP and explicit application authority
+remain next. UDP changes are uncommitted for review.
+GitHub main now contains the owner's [PR #4](https://github.com/veasnawt/vos/pull/4)
+merge `d01b3f5`, whose tree matches IPv4 publication `33693b3`. Local main remains
+`bbca69d`; the executor did not merge, fetch or change that local branch.
 Rixie Connected is not started. The existing 272 MiB continuation meter is enforced
 alongside the unchanged inherited 3360 MiB aggregate ceiling and host reserves.
 

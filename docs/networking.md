@@ -1,4 +1,4 @@
-# Native networking: virtio-net, ARP, IPv4 and ICMP
+# Native networking: virtio-net, ARP, IPv4, ICMP and UDP
 
 N5 starts from the accepted N4 merge `bbca69d850e8c168bfa824ace475a27226b2cdb7`.
 Its tree matches accepted N4 publication `50cbc8bc49bd10d5272647b267ed23895d2f533d`.
@@ -6,7 +6,8 @@ Local main fast-forwarded to that merge; development uses `feat/n5-networking`.
 The first increment sends and receives bounded raw Ethernet frames through a
 modern virtio-net adapter in QEMU. It is published at `27fe770`. The subsequent
 bounded Ethernet/ARP layer is published at `a6571c1`. Native IPv4/ICMP echo is
-implemented and verified below; UDP/TCP and explicit userspace authority remain next.
+published at `33693b3`. Bounded kernel UDP is implemented and verified below;
+TCP and explicit userspace authority remain next.
 
 ## Existing infrastructure and choice
 
@@ -228,3 +229,62 @@ allocation is reset or expanded. Admission reserved a 128 MiB attempt bound plus
 existing metadata/Git provisions; actual products and evidence are much smaller.
 All original physical reserves and continuous isolation stop conditions apply.
 Normal vsh/Rixie boots, syscall ABIs v0-v3 and application grants are unchanged.
+
+## Bounded kernel UDP
+
+`net_udp.c` owns one explicitly configured local endpoint and four FIFO slots,
+each carrying at most 512 copied payload bytes plus source IP/port and checksum
+presence. The same `net_ipv4` context supplies Ethernet/IP validation, ARP and
+ICMP. Common IPv4 envelope generation and parsing were factored from the existing
+ICMP implementation; the driver, DMA pool and accepted ARP rules are unchanged.
+There is no socket syscall, application network capability or automatic NIC use.
+
+The [RFC 768 wire format](https://www.rfc-editor.org/rfc/rfc768) supplies the
+8-byte UDP header and IPv4 pseudoheader checksum. This bounded profile requires
+UDP length to equal the IPv4 payload length, accepts no UDP options/trailer, and
+rejects destination port zero. Source port zero is valid optional metadata;
+the caller must not treat it as a reply endpoint. Local bind and remote send
+ports must be nonzero; `uint16_t` types bound ports to 65535.
+
+Every generated UDP datagram includes a checksum. A computed zero is emitted as
+`0xffff`; received `0x0000` explicitly means no UDP checksum, which is permitted
+for IPv4 and recorded in queue metadata. Nonzero checksums cover source/destination
+IP, protocol 17, UDP length, ports and payload, including odd-length zero padding.
+Checksum omission provides no payload integrity; no authentication is claimed.
+
+Malformed, unsupported, unbound, oversized and full-queue UDP returns without
+altering state or output. Queued data is independent of the RX buffer. Receive
+copies into a complete caller-owned fixed-size datagram object and clears its
+slot. An empty receive leaves that object untouched. Queue overflow discards the
+new datagram and preserves FIFO contents; there is no allocation, blocking queue,
+automatic retransmission or flow control. Closing erases the endpoint and queue.
+One kernel owner runs at IF=0; this is not a concurrent socket API.
+
+Sending requires an existing ARP neighbor; a miss emits/queues nothing. The
+caller resolves it through the same ARP context before sending. Packet data is
+staged before copying to caller output, preserving the existing alias/lifetime
+contract. The unchanged adapter copies into private DMA memory. Adapter reset
+must still be confirmed before its 11 frames are released; quarantine rules
+remain in force. Protocol close does not substitute for adapter teardown.
+
+The trusted `vos.udp=1` demonstration configures 10.0.2.15:4000 and an isolated
+direct peer at 10.0.2.2:5000. With established EFI tools and storage/isolation
+admission, reproduce the focused checks in a fresh directory:
+
+```sh
+PYTHONDONTWRITEBYTECODE=1 python3 -B scripts/test-udp.py \
+  --output "$PWD/build/n5-udp-$(date -u +%Y%m%dT%H%M%SZ)"
+```
+
+`make udp-iso` / `make udp-uefi-iso` require nonempty `UDP_BUILD`; the test script
+provides the bounded Unix-socket wire peer. Both guests exchange real UDP bytes,
+exercise checksum-zero cases, malformed lengths/checksums, a four-slot overflow,
+FIFO recovery and explicit reset/teardown. Host checks sweep payload sizes 0-512
+with ASan/UBSan and rerun the affected IPv4/ARP host regressions. vsh/Rixie sources,
+ELFs and launch/ABI code remain unchanged; no unrelated N3/N4 campaign is repeated.
+
+This increment has no routing, DHCP, DNS, TCP, IPv6, IP options/reassembly, UDP
+options, unrestricted sockets or browser. The same 272 MiB positive-growth ledger,
+3360 MiB aggregate ceiling, original reserves and continuous isolation guards
+apply, carrying every earlier attempt. See [UDP results](results/n5-udp.md) for
+raw PCAPs, manifest identities, authentic screenshots and final accounting.

@@ -14,6 +14,13 @@ struct net_ipv4 {
 /* Pure kernel protocol code. Buffers must obey net_arp.h's lifetime/alias
  * contract. No DMA, allocation, I/O or application network authority. */
 uint16_t net_checksum(const void *bytes,size_t length); /* Caller bounds length <=1500. */
+struct net_ipv4_payload { const uint8_t *source,*bytes; size_t length; };
+/* Shared local, unfragmented IPv4 validation for a selected protocol. View
+ * changes only on success and borrows the caller's frame until it is reused. */
+int net_ipv4_payload(const struct net_ipv4 *c,const void *frame,size_t length,uint8_t protocol,struct net_ipv4_payload *view);
+/* Bounded Ethernet/IP envelope, zeroed payload/padding. Caller fills payload
+ * and advances identification only after completing its packet. No state change. */
+int net_ipv4_begin(const struct net_ipv4 *c,const uint8_t mac[6],const uint8_t ip[4],uint8_t protocol,size_t payload_length,void *out,size_t capacity,size_t *length);
 int net_ipv4_init(struct net_ipv4 *c,const uint8_t mac[6],const uint8_t ip[4]);
 /* Caller resolves neighbors through c->arp first. No packet queued on a miss.
  * One originated echo at a time; maximum 64 payload bytes, timeout in PIT ticks. */

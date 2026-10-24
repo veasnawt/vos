@@ -2,8 +2,16 @@
 
 The exact reviewed 37-file ARP implementation is committed and pushed as
 [`a6571c19b128f6ffb61e2b38635df55093b49f45`](https://github.com/veasnawt/vos/commit/a6571c19b128f6ffb61e2b38635df55093b49f45)
-on `feat/n5-networking`. Main remains the accepted N4 merge `bbca69d`.
-This subsequent IPv4/ICMP implementation is uncommitted for review.
+on `feat/n5-networking`. Local main remains the accepted N4 merge `bbca69d`.
+The subsequent IPv4/ICMP implementation was published with its exact reviewed
+43-file inventory as
+[`33693b32178c9096295f1d9186547dc9062fbb50`](https://github.com/veasnawt/vos/commit/33693b32178c9096295f1d9186547dc9062fbb50).
+Its guarded publisher at `build/n5-ipv4-20261024T174316Z/` verified the staged
+blobs, remote branch, protected evidence and preserved refs/worktrees/stashes.
+Raw pre-publication JSON records remain unchanged historical snapshots.
+The owner subsequently merged [PR #4](https://github.com/veasnawt/vos/pull/4)
+into GitHub main at `d01b3f5`; its tree matches this publication. Local refs were
+not fetched or changed by the executor.
 
 The [networking guide](../networking.md#bounded-native-ipv4-and-icmp-echo) documents
 the new kernel-only context, parsing bounds, checksums, echo correlation and
@@ -70,8 +78,10 @@ display content produces identical image hashes.
 
 ## Limits and next work
 
-Only local unicast ICMP echo is supported. No routing, reassembly, options, DHCP,
-IPv6, TCP, UDP or DNS is implemented. Applications still have no network syscalls.
-Next is a bounded kernel UDP datagram increment, followed by a separately scoped
-TCP design; explicit capability enforcement is required before application access.
+This standalone profile supports local unicast ICMP echo. It has no routing,
+reassembly, options, DHCP, IPv6, TCP, UDP or DNS. The subsequent
+[kernel UDP increment](n5-udp.md) now passes focused checks using a separate
+opt-in configuration over the same IPv4/ARP context. Applications still have no
+network syscalls. TCP follows; explicit capability enforcement is required before
+application access.
 No browser or Rixie Connected work has begun. N5 remains in progress.

@@ -1,0 +1,45 @@
+Hello from VOS!
+boot: x86_64 long mode, cs=0x8 efer=0x500 rip=0xffffffff801072a8
+gdt: loaded cs=0x8 ss=0x10 tr=0x28 tss=busy
+tss: rsp0=0xffffffff80141000 ist1=0xffffffff80138000 ist2=0xffffffff8013a000 ist3=0xffffffff8013c000 iomap=104 limit=103
+idt: 32 exception vectors loaded, df ist=1, nmi ist=2, mc ist=3
+idt: IRQ vectors 0x20-0x2f present, DPL 0, interrupt gates
+idt: vector 0x80 present, DPL 3 (system calls, ABI v0)
+cpu: wp=on nx=on smep=unsupported umip=unsupported smap=unsupported x87=off(em)
+cpu: inherited cr0=0x80000011 cr4=0x20 efer=0x500; set cr0=0x80010035 cr4=0x68 efer=0xd00
+boot: loader "GRUB 2.14-2ubuntu2.1", memory map 9 entries, 133688320 bytes usable
+boot: multiboot2 info at 0x256350-0x256d60
+boot: kernel command line "vos.udp=1"
+boot: modules 1
+boot: module 0 0x253000-0x256348 "hello"
+boot: reserved 0x0-0x100000 low 1 MiB
+boot: reserved 0x100000-0x1bd000 kernel image
+boot: reserved 0x256000-0x257000 multiboot2 info
+boot: reserved 0x253000-0x257000 module
+pmm: 262144 frames tracked below 1 GiB, 32286 usable (129144 KiB), 0 bytes of RAM above 1 GiB ignored
+vmm: identity map removed
+kmap: phys 0-4 MiB as 4 KiB pages: 31 text R-X, 10 R NX, 963 RW NX, 20 guard pages unmapped; 510 x 2 MiB RW NX
+kmap: text 0xffffffff80107000-0xffffffff80126000, rodata 0xffffffff80126000-0xffffffff8012f000
+kmap: PDPT[510] 0x105000 -> 0x156000, checked before and after the switch; boot directory retired
+kmap: after the TLB flush the CPU refused a text write (#PF err=0x3) and a guard read (#PF err=0x0)
+devmap: window at 0xffffffff40000000, 40-bit physical addresses, write-combining via PAT entry 4
+screen: framebuffer 1280x800 BGRX at 0xfd000000, pitch 5120, write-combining, MTRR type 0, 156x41 cells
+vmm: audit passed: kernel alias 1004 x 4 KiB + 510 x 2 MiB supervisor pages, 31 ring-0 executable (all kernel text, none writable), 0 lower-half tables
+irq: 8259 master 0x20-0x27, slave 0x28-0x2f (cascade IRQ2); masks 0xfffe (IRQ0 only); level-triggered lines (ELCR) 0xc00
+pit: channel 0 mode 2, divisor 11932 (99.998 Hz)
+sched: 16 thread records, 15 guarded stacks of 16 KiB at 0xffffffff80159000; boot thread id 1, idle thread id 2
+vblk: no virtio-blk device on PCI bus 0; block storage unavailable
+app: module "hello" at 0x253000-0x256348, 13128 bytes
+elf: hello: ET_EXEC entry 0x400000, 3 PT_LOAD, 3 pages, VOS ABI 0
+user[hello]: Hello from VOS!
+proc: exit status 0 (cs=0x23 rip=0x40002a)
+proc[hello]: exited status 0, all frames reclaimed
+boot: checks passed
+VOS N5 - bounded native UDP
+Local endpoint: 10.0.2.15:4000; isolated peer: 10.0.2.2:5000
+UDP: checksummed odd-length request/reply verified
+UDP queue: 4 slots, overflow rejected, FIFO preserved; 512-byte payload verified
+UDP: zero checksum and optional source port accepted
+UDP: computed-zero checksum transmitted as ffff; queue usable after overflow
+udp: PASS TX=5 RX=21 accepted=7 rejected=12 full=1; DMA pool released
+Endpoint closed and erased. No application network grants. TCP remains next.

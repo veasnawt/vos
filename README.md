@@ -37,6 +37,8 @@ VOS is written primarily in freestanding C and x86 assembly. It is **not a Linux
   [Ethernet dispatch and ARP](docs/results/n5-arp.md) provide bounded neighbor
   resolution. [Native IPv4 and ICMP echo](docs/results/n5-ipv4.md) now pass real
   isolated-peer ping exchanges on BIOS and UEFI, with safe malformed-input rejection.
+  [Kernel UDP](docs/results/n5-udp.md) adds one configured endpoint, a four-slot
+  receive queue and checksummed datagram exchange without application grants.
 - BIOS and UEFI boot paths **in QEMU** via GRUB; extensive emulator-based regression tests.
 
 **N0–N3 are complete.** N3 storage closure was accepted on 2026-10-24 and is
@@ -55,8 +57,13 @@ checks. The [N4 record](docs/results/n4-closure.md) preserves its pre-merge chec
 **N5 is in progress** on `feat/n5-networking`: its [first adapter increment](docs/results/n5-first-network.md)
 is published at `27fe770` with focused host and BIOS/UEFI frame checks. Bounded
 Ethernet/ARP is published at `a6571c1`. IPv4/ICMP now passes host and BIOS/UEFI
-checks: two native pings and one echo response per boot. UDP/TCP and explicit
+checks: two native pings and one echo response per boot, published at `33693b3`.
+Bounded kernel UDP now passes host and BIOS/UEFI checks. TCP and explicit
 userspace network capabilities remain next. Rixie Connected has not begun.
+
+The owner merged [PR #4](https://github.com/veasnawt/vos/pull/4) into GitHub main
+at `d01b3f5` during UDP verification. Its tree matches published `33693b3`;
+UDP remains uncommitted on the development branch. Local main remains `bbca69d`.
 
 ![VOS BIOS boot console with PASS status](docs/images/n3/vos-n3-bios-boot-status.png)
 

@@ -1,0 +1,1 @@
+IPv4/ICMP host: 1806 checks PASS; bounds, checksums, correlation and maximum echo response

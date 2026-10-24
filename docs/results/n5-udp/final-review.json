@@ -1,0 +1,264 @@
+{
+  "scope": "N5 bounded UDP final review",
+  "published_IPv4_ICMP_increment": "33693b32178c9096295f1d9186547dc9062fbb50",
+  "pushed_branch": "feat/n5-networking",
+  "main_unchanged": "bbca69d850e8c168bfa824ace475a27226b2cdb7",
+  "UDP_committed": false,
+  "owner_merge": {
+    "PR": "https://github.com/veasnawt/vos/pull/4",
+    "remote_main": "d01b3f519006c0831775b7db64e66c81ccdac914",
+    "local_main_and_origin_main": "bbca69d850e8c168bfa824ace475a27226b2cdb7",
+    "published_feature_head": "33693b32178c9096295f1d9186547dc9062fbb50",
+    "zero_file_differences": true,
+    "proof": "build/n5-udp-20261024T180413Z/owner-merge-proof.json",
+    "proof_sha256": "4e77671482b7284a917a6e66a51b144de78a6c21b6f252c53699b313d89fd2ed",
+    "stopped_audit": "build/n5-udp-20261024T175733Z",
+    "strict_remote_ref_check_re_pinned_only_after_independent_merge_verification": true,
+    "no_local_fetch_or_merge": true
+  },
+  "candidate_files": [
+    "Makefile",
+    "README.md",
+    "arch/x86_64/arch.mk",
+    "arch/x86_64/grub-udp.cfg",
+    "arch/x86_64/net_boot.c",
+    "arch/x86_64/net_ipv4.c",
+    "arch/x86_64/net_ipv4.h",
+    "arch/x86_64/net_udp.c",
+    "arch/x86_64/net_udp.h",
+    "arch/x86_64/net_udp_boot.c",
+    "arch/x86_64/net_udp_boot.h",
+    "docs/HANDOFF.md",
+    "docs/ROADMAP.md",
+    "docs/STATUS.md",
+    "docs/images/n5/vos-n5-bios-udp.png",
+    "docs/images/n5/vos-n5-uefi-udp.png",
+    "docs/networking.md",
+    "docs/results/n5-ipv4.md",
+    "docs/results/n5-udp.md",
+    "docs/results/n5-udp/bios-command.json",
+    "docs/results/n5-udp/bios-registers.txt",
+    "docs/results/n5-udp/bios-wire.json",
+    "docs/results/n5-udp/bios.pcap",
+    "docs/results/n5-udp/bios.serial.txt",
+    "docs/results/n5-udp/changed-files.txt",
+    "docs/results/n5-udp/evidence.json",
+    "docs/results/n5-udp/final-review.json",
+    "docs/results/n5-udp/guard-result.json",
+    "docs/results/n5-udp/guard-samples.jsonl",
+    "docs/results/n5-udp/image-build.txt",
+    "docs/results/n5-udp/net-arp-host-build.txt",
+    "docs/results/n5-udp/net-arp-host.txt",
+    "docs/results/n5-udp/net-ipv4-host-build.txt",
+    "docs/results/n5-udp/net-ipv4-host.txt",
+    "docs/results/n5-udp/net-udp-host-build.txt",
+    "docs/results/n5-udp/net-udp-host.txt",
+    "docs/results/n5-udp/path-guard.txt",
+    "docs/results/n5-udp/result.json",
+    "docs/results/n5-udp/sources-before.json",
+    "docs/results/n5-udp/uefi-command.json",
+    "docs/results/n5-udp/uefi-registers.txt",
+    "docs/results/n5-udp/uefi-wire.json",
+    "docs/results/n5-udp/uefi.pcap",
+    "docs/results/n5-udp/uefi.serial.txt",
+    "scripts/test-udp.py",
+    "tests/host/net-udp.c"
+  ],
+  "candidate_count": 46,
+  "candidate_sha256": {
+    "arch/x86_64/arch.mk": "e0a67e0a09108bdbcb85b211fe5b079b2966399e9f62cbba87568106c46a31d3",
+    "docs/results/n5-udp/image-build.txt": "a15ea66b46f1d1d6d99ccc22be37677ae6d02bc9eb489db50ac036ca147aaf5b",
+    "README.md": "8434dd2f87fa19a855316a6fb3d883cd2f4c8d85b8e2aa992c54d19bd410e426",
+    "docs/results/n5-ipv4.md": "06d7f2b8b530c71d9b0d3d5c8f5a24b183ce3f8f4c079685563199276ea9d9af",
+    "Makefile": "23872da62ea7aaecf26544c62a3e531bf89d77a9f6575f8fc1a3257c6d3773cd",
+    "docs/results/n5-udp/evidence.json": "17319542571c1dc8ddc4cb0ec08aba58144ee4dbe5ecbbd696a0ef9681a8dcfa",
+    "docs/results/n5-udp.md": "cc0c26edc45454baa809ca31ef5b109dadebb0d603d5b4a5e9ffb1205c70621d",
+    "docs/results/n5-udp/bios.serial.txt": "f60d7d160e65600733e9bb609dccb8bdf323c54e972f5c26742d55ddf7722b14",
+    "docs/HANDOFF.md": "09f3b57111700701cf0506ebc68832e5416fcccaf1f428042f7d1a71cc0f2ecc",
+    "docs/results/n5-udp/uefi-registers.txt": "ec0b1739df1d4d4770c07026e1fb201fedd636ea78a02e99fac2dc51ba803533",
+    "arch/x86_64/net_ipv4.h": "659b4657925c955d8c857eb1147272fb5d82ee5d07eebec0d5ee8a44b2c0df31",
+    "arch/x86_64/net_ipv4.c": "1c7e23fd1512d5dee91c87f631de12286002aecbfe6a1df1ead53e68789a32c2",
+    "docs/results/n5-udp/result.json": "e96e40cbf96a6ccf7df955da1f281d966836a4e39178367c53f126013ea70eb3",
+    "docs/results/n5-udp/bios-registers.txt": "f357fe0f0d8ddbfefc9e8e221f708ab8848d0f632de3c9e616f3d100c1bcdcc5",
+    "arch/x86_64/net_boot.c": "92a6f02006757eb47a2df6a58dcdf3b2eaca3a20ee0fa632b4e019b073efff16",
+    "arch/x86_64/net_udp_boot.h": "34885b3fd3bd24f46e9852550b887a429257b5ff5d5607aa136563017eac5acb",
+    "docs/results/n5-udp/net-ipv4-host.txt": "92ef95d5cb3ea822a3eceea705b533f9f3b33f4659c80d34a057992e568b6c61",
+    "docs/results/n5-udp/uefi-command.json": "2106ebcb5e198288bfa4c52840c88f143bf14a818fd63a55f6c806772ef9d1d0",
+    "docs/results/n5-udp/bios.pcap": "8fe66411b557fcd53337360ed82c25a4e7dfd264ec8f76e77f64a43592ede650",
+    "docs/STATUS.md": "ba2f6d06833fcf976479360656e55095a6582b761fe7f667de42e92b9ec7507c",
+    "docs/images/n5/vos-n5-uefi-udp.png": "a7d1861cb2b9d847992f2b05f8f9004ba6f3d44e154364824d5ca86d8b44a469",
+    "docs/results/n5-udp/bios-wire.json": "07755a46f6694ca459299793e551f254d2790194534b9a912642a585d3b6ae9e",
+    "docs/results/n5-udp/guard-result.json": "3068ba5f9dd7318488894793d0cac02273e41670176b35946fd7e05ea25c826b",
+    "arch/x86_64/net_udp_boot.c": "9473caacb036ad8152e2d86b8d5d0e3b39f546cfb38501edcf6d5b1cf232ced6",
+    "docs/results/n5-udp/sources-before.json": "5b979debec76b0a07fea9a2ab0f55a85e923d99fba85b4e225f6f08d7d80fd31",
+    "docs/results/n5-udp/bios-command.json": "7744e3409fe09194916510a34d3bd4138bf95757070687a4492844f77f16065f",
+    "docs/results/n5-udp/net-ipv4-host-build.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "docs/results/n5-udp/path-guard.txt": "78e8a2d75a83915c1ab4addb440fa37cbe88460dbab4fad7ec91d199503306cb",
+    "docs/ROADMAP.md": "f0a7c212b2166c1119a9d3c49951e6f3640d11d8a6b65572cdb769f142f202be",
+    "docs/results/n5-udp/net-udp-host.txt": "3544517d76924706f1ec4865fb9c4d1d85d2e2cdf7fc2b0a8a31fe86d086b228",
+    "docs/results/n5-udp/uefi.serial.txt": "c52da037f357bdd6c42e7ae5b217b6a426eecd4c9224a582132486dec10a7b17",
+    "scripts/test-udp.py": "6016f178026b401009ca119db2ce721def48239fe1c9f128890f71f896f8901a",
+    "docs/results/n5-udp/net-arp-host.txt": "c0da74401be68d10d0609a6171e1dc41679fcc0c896d30235bf6871f6238c4ae",
+    "tests/host/net-udp.c": "1c49e380387a3c0d7a1082019a31bc1ce3f185519571f82922c5f194885acead",
+    "docs/results/n5-udp/guard-samples.jsonl": "4f20f04f41555da6079486a337146e4740b32a91452bd970c4c6b4c4d1749281",
+    "arch/x86_64/net_udp.h": "f4604c35c8ebf7a7d46ac6c2fae8b2fa91445b46c2c9017f3f655d86b8443a30",
+    "docs/networking.md": "73e49d98c052e99ca4553c8f71c22daa661ee743197cf9a668a4f176d6ee536b",
+    "docs/results/n5-udp/net-udp-host-build.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "arch/x86_64/net_udp.c": "17957f55386521ed1cb7d59617d04c9d315996a6c47dfcbedea8f4ed2d50e628",
+    "docs/results/n5-udp/uefi-wire.json": "07755a46f6694ca459299793e551f254d2790194534b9a912642a585d3b6ae9e",
+    "docs/results/n5-udp/uefi.pcap": "d41388d651b0bb9f8a4f3d526f484ecb43054ec31c5a4e70cc96ab34bb2ac24f",
+    "docs/results/n5-udp/net-arp-host-build.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "docs/images/n5/vos-n5-bios-udp.png": "a7d1861cb2b9d847992f2b05f8f9004ba6f3d44e154364824d5ca86d8b44a469",
+    "arch/x86_64/grub-udp.cfg": "664488592ece768b881d7200da57a6771a0b6a4eb6d47d3ed0e7d6ba55c8db23"
+  },
+  "protected_binary_sha256": {
+    "production": "7e8c4781292e5dd1c419e0984d001a0e3cf09be5e1bd26a18c283a42b0fd375c",
+    "gateb": "bef4aae6f492a2a041ea64611ed8669a642caf4d236b1472456812e45101ddc9",
+    "gatec": "35e856b9fb28960f359bfa046c62b7e5820a4a1a0fe5c3a73fb90a0189d6046e",
+    "gatec_elf": "8c94e9ca57f19f56ee96f7b578eec2f7bfc335c524f4d31608d3bfc598a069c4",
+    "hello": "c6c6416195a0f18d680d7f8f19be52ce02ff02912ef3bac45324fbe88006cd06",
+    "gated": "52f2562d5578d7be64b8ba9b0605f395259fcffed657662857f2a4f79b065b2e",
+    "gated_elf": "1d0e86e3f8830b53382f5d140a8d0dc9e64ff0c485975784541f1566d5c3705b"
+  },
+  "protected_prior_entries": 38130,
+  "R4_manifest_entries": 101,
+  "R4_archive_identity_verified": true,
+  "N4_N5_manifests_verified": [
+    {
+      "path": "build/n4-session-20261024T134442Z/results/manifest.json",
+      "entries": 302,
+      "sha256": "c8958cb9a9f914d98fc4126ff6532300280173b236ba6dccc3a4e83460db55be"
+    },
+    {
+      "path": "build/n4-session-20261024T144105Z/results/manifest.json",
+      "entries": 269,
+      "sha256": "3325cce5e79f7b84a72053c1a4d3c92fa9a97d669bc7b3ab948ef1881a490e40"
+    },
+    {
+      "path": "build/n4-input-20261024T071418Z/results/manifest.json",
+      "entries": 202,
+      "sha256": "c6cdfebaae2536fcdc663f60daafca95f5f16ea20ff5afe665ca37293c7282ff"
+    },
+    {
+      "path": "build/n4-buffered-20261024T085345Z/results/manifest.json",
+      "entries": 209,
+      "sha256": "1010baba4251e4f94a0ad0f8228354a8183ad444c9746b376273a9cc9941e0d3"
+    },
+    {
+      "path": "build/n4-session-20261024T130158Z/results/manifest.json",
+      "entries": 181,
+      "sha256": "db38ac56778f4e6d4de9d99f23bfb7c55f913dbe845d13607b952ba8fd0a5cbb"
+    },
+    {
+      "path": "build/n4-session-20261024T142208Z/results/manifest.json",
+      "entries": 157,
+      "sha256": "de908fcee0a66493341b2389f766ef645df64c6ea6ea9e36ea85ec7bf6987288"
+    },
+    {
+      "path": "build/n5-session-20261024T154351Z/results/manifest.json",
+      "entries": 373,
+      "sha256": "87f0834585729e2e4473242849698d526cfe9bc221d6a437da5ef6ab5b2d43e3"
+    },
+    {
+      "path": "build/n5-arp-20261024T162933Z/results/manifest.json",
+      "entries": 133,
+      "sha256": "40d51d1a921bbaaba66d4ce396409260897ecaa1823cf7b78f6ef55849d5e9b5"
+    },
+    {
+      "path": "build/n5-ipv4-20261024T172906Z/results/manifest.json",
+      "entries": 140,
+      "sha256": "581017c994f417f51ef1e0a9d24a80fe4b8404f17da855bbdd17d929d2d4c2a1"
+    },
+    {
+      "path": "build/n5-udp-20261024T175141Z/results/manifest.json",
+      "entries": 147,
+      "sha256": "7581aa6ecd6e0b6d6d66455ac4cfe1d1e02fbc882e2ca543e19d0234af730b90"
+    }
+  ],
+  "all_previous_attempts_preserved": true,
+  "D1r3": "unfinished, unsealed and unarchived; preserved",
+  "worktrees": 13,
+  "stashes": 2,
+  "ABI_v0_v3_userspace_and_virtio_net_driver_unchanged": true,
+  "native_apps_preserved": {
+    "vsh/user/vsh.elf": {
+      "path": "build/n4-session-20261024T144105Z/results/vsh/user/vsh.elf",
+      "sha256": "4a837277422f97c86f3c3a5ba0fef15de22c002addf9243a4b5d78bd73b5ad5f"
+    },
+    "rixie/user/rixie.elf": {
+      "path": "build/n4-session-20261024T144105Z/results/rixie/user/rixie.elf",
+      "sha256": "77104da3b33caf809daf5e6674ac4e2fa9edf6a9e2e5dd59828514df76490d32"
+    }
+  },
+  "compatibility_verification": "N4 app/ABI/launch sources unchanged against accepted main; accepted vsh/Rixie ELF and full N4 manifests rehashed; hello runtime passed. No N4 campaign rerun.",
+  "packet_review_recovery": {
+    "original": "build/n5-udp-20261024T175331Z",
+    "corrected": "build/n5-udp-20261024T175403Z",
+    "cause": "Python local variable shadowed sum(); original failure preserved; existing PCAPs reviewed without rerunning guests."
+  },
+  "storage": {
+    "ARP_approved_additional_MiB": 272,
+    "ARP_charged_MiB": 85.84375,
+    "ARP_remaining_MiB": 186.15625,
+    "ARP_metadata_reserve_MiB": 2,
+    "aggregate_charged_MiB": 3158.17578125,
+    "aggregate_remaining_MiB": 201.82421875,
+    "aggregate_ceiling_MiB": 3360,
+    "all_historical_accounting_preserved": true,
+    "reserves": {
+      "charged": 2495766528,
+      "remaining": 1027448832,
+      "C": 12523626496,
+      "E": 251835445248,
+      "linux": 1009289150464,
+      "admitted_extra": 815820800
+    }
+  },
+  "monitor": {
+    "controller_root": "build/n5-udp-20261024T180413Z",
+    "template": "build/n5-udp-20261024T180413Z/monitor-template.py",
+    "template_sha256": "cd48b85ba45ae2f2860520e20327d7077c1fa24651697a714d82dad05b30a0ff",
+    "base_controller_sha256": "58075f232663d7892af6428809c68435790ca05618e7ba947cc916938d3c41c8",
+    "query_timeout_seconds": 90,
+    "original_detection_and_reserves_unchanged": true,
+    "added_counter": "Positive root/source growth plus metadata reserve; no baseline usage removed"
+  },
+  "host_checks": {
+    "UDP": 136730,
+    "IPv4_ICMP_regression": 1806,
+    "ARP_regression": 4598
+  },
+  "wire_checks": {
+    "bios": {
+      "records": 26,
+      "TX": 5,
+      "RX": 21,
+      "all_bytes_and_order_match": true,
+      "independent_valid_UDP_checksums": 14,
+      "explicit_checksum_omission": 1,
+      "computed_zero_is_ffff": true,
+      "negative_controls_verified": 12,
+      "queue_full_control_preserved": true,
+      "UDP_sent": 4,
+      "UDP_received": 7,
+      "unexpected_TX": 0,
+      "sha256": "8fe66411b557fcd53337360ed82c25a4e7dfd264ec8f76e77f64a43592ede650"
+    },
+    "uefi": {
+      "records": 26,
+      "TX": 5,
+      "RX": 21,
+      "all_bytes_and_order_match": true,
+      "independent_valid_UDP_checksums": 14,
+      "explicit_checksum_omission": 1,
+      "computed_zero_is_ffff": true,
+      "negative_controls_verified": 12,
+      "queue_full_control_preserved": true,
+      "UDP_sent": 4,
+      "UDP_received": 7,
+      "unexpected_TX": 0,
+      "sha256": "d41388d651b0bb9f8a4f3d526f484ecb43054ec31c5a4e70cc96ab34bb2ac24f"
+    }
+  },
+  "next_task": "Bounded kernel TCP handshake: one configured endpoint and connection, checksum/sequence validation and timeout cleanup; explicit permissions before userspace networking"
+}
