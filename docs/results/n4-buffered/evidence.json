@@ -1,0 +1,206 @@
+{
+  "scope": "Focused N4 buffered command input; no N3 reruns",
+  "published_first_input_commit": "3a2b642cd3f2e7b719135c86e77cc787a865b327",
+  "branch": "feat/n4-interactive-console",
+  "result": {
+    "scope": "N4 buffered command input",
+    "runs": {
+      "bios": {
+        "passed": true,
+        "hello_abi_v0": true,
+        "edited_line": "input> VOS OK",
+        "second_line": "input> hello vos",
+        "screenshot": {
+          "width": 1280,
+          "height": 800,
+          "sha256": "f394ab164dd0cbff3c86cef0367a32e80a692ebfe333fa8484d5e3e993a67723"
+        },
+        "completed_line_delivery": true,
+        "no_partial_delivery": true,
+        "empty_line": true,
+        "exact_limit_edited": true,
+        "overflow_discarded": true,
+        "recovery": true,
+        "chronological_output_exercised": true,
+        "limits_screenshot": {
+          "width": 1280,
+          "height": 800,
+          "sha256": "94ba0a04af59e9dcf5fab31378f99ad46bd4722ba3230ddd4c348b0f1ddbd03b"
+        }
+      },
+      "uefi": {
+        "passed": true,
+        "hello_abi_v0": true,
+        "edited_line": "input> VOS OK",
+        "second_line": "input> hello vos",
+        "screenshot": {
+          "width": 1280,
+          "height": 800,
+          "sha256": "f394ab164dd0cbff3c86cef0367a32e80a692ebfe333fa8484d5e3e993a67723"
+        },
+        "completed_line_delivery": true,
+        "no_partial_delivery": true,
+        "empty_line": true,
+        "exact_limit_edited": true,
+        "overflow_discarded": true,
+        "recovery": true,
+        "chronological_output_exercised": true,
+        "limits_screenshot": {
+          "width": 1280,
+          "height": 800,
+          "sha256": "94ba0a04af59e9dcf5fab31378f99ad46bd4722ba3230ddd4c348b0f1ddbd03b"
+        }
+      },
+      "normal": {
+        "passed": true,
+        "boot_halted": true,
+        "hello_abi_v0": true
+      }
+    },
+    "host": "PASS",
+    "passed": true
+  },
+  "sources": {
+    "arch/x86_64/input_console.c": "06f69148bea7b91321e0e76733bde17d25f2a93aaffab9ef998b81b4a4ce2477",
+    "arch/x86_64/input_console.h": "be3bc9dc550e9eb68206f6922b2eefb103571a908e12924a5a72e3488ab96655",
+    "arch/x86_64/screen.c": "82f23e6b3000982715d1378efa3005aa8432ddb1e509983f79c6bca9074ea73f",
+    "arch/x86_64/screen.h": "29e8b0e02446c20d529d150906e590c3f2ab8232db89526ac8833f4b9d795ab0",
+    "tests/host/keyboard-input.c": "911be7da11ee9611887353575637194a89e4c07542cd4adcc7fe38b3fc0e806d",
+    "tests/host/screen-input.c": "65f2dfe4607971d49ccd9b57fdabbcbe193d9c37ca66d9bedcffbb2194dd0f8f",
+    "tests/host/buffered-input.c": "884d7a19efef92adb195bc66f6a1e18cdf5d6d30e84aa06c0315b0e51fceac48",
+    "scripts/test-keyboard-console.py": "df374ba2424a510b16071c12276afa421cfe18c6b57c95f8291625bd6509a10a"
+  },
+  "artifacts": [
+    {
+      "path": "docs/results/n4-buffered/bios-command.json",
+      "bytes": 511,
+      "sha256": "76c670bf6fd210fc46f2004a15332dd6945a3fe87445ae48f1f96747897467e8"
+    },
+    {
+      "path": "docs/results/n4-buffered/bios.serial.txt",
+      "bytes": 3589,
+      "sha256": "20e0c91824726472f86c2647e5c92c8018d8f0c2b127721feebb6e92afc9c47f"
+    },
+    {
+      "path": "docs/results/n4-buffered/buffered-test.txt",
+      "bytes": 308,
+      "sha256": "c80d5499e3b0dc7a55d6cff30bd7e3f4545b2523d5b2b9203d8c55308d5d12e0"
+    },
+    {
+      "path": "docs/results/n4-buffered/host-test.txt",
+      "bytes": 262,
+      "sha256": "f651cc5a4ef7bc48cfa4a8ee09ac111569e742df2ac5620d4d47cf4bf2062e4c"
+    },
+    {
+      "path": "docs/results/n4-buffered/normal-command.json",
+      "bytes": 509,
+      "sha256": "9ed32660866f6be0dcf5a84966ab7dbb1182f081a855cf217d7fa76037d12841"
+    },
+    {
+      "path": "docs/results/n4-buffered/normal.serial.txt",
+      "bytes": 2511,
+      "sha256": "4ca90270fbc502ffdb21743af554af9a6fdc912d56fdb007c49423bdf3096cee"
+    },
+    {
+      "path": "docs/results/n4-buffered/result.json",
+      "bytes": 1630,
+      "sha256": "ac811d6c3d0e1987a2243a9d5921c0d067b15c28e98a02a849846e52e896028a"
+    },
+    {
+      "path": "docs/results/n4-buffered/screen-test.txt",
+      "bytes": 189,
+      "sha256": "28a51215d9354e3c8f43253e75f391e7daca55acea63134a699020d725231bb0"
+    },
+    {
+      "path": "docs/results/n4-buffered/uefi-command.json",
+      "bytes": 743,
+      "sha256": "70fb00663f8ff4dac42561ec498eda75ce6ab8bad9befe2ddde4a4fab22d3e16"
+    },
+    {
+      "path": "docs/results/n4-buffered/uefi.serial.txt",
+      "bytes": 3919,
+      "sha256": "69d32fd94b4a061ffe790315d85287b8f4a2df497e11e600608cffa1543fe3c7"
+    },
+    {
+      "path": "docs/images/n4/vos-n4-bios-buffered-input.png",
+      "bytes": 7892,
+      "sha256": "f394ab164dd0cbff3c86cef0367a32e80a692ebfe333fa8484d5e3e993a67723"
+    },
+    {
+      "path": "docs/images/n4/vos-n4-bios-buffered-limits.png",
+      "bytes": 9839,
+      "sha256": "94ba0a04af59e9dcf5fab31378f99ad46bd4722ba3230ddd4c348b0f1ddbd03b"
+    },
+    {
+      "path": "docs/images/n4/vos-n4-uefi-buffered-input.png",
+      "bytes": 7892,
+      "sha256": "f394ab164dd0cbff3c86cef0367a32e80a692ebfe333fa8484d5e3e993a67723"
+    },
+    {
+      "path": "docs/images/n4/vos-n4-uefi-buffered-limits.png",
+      "bytes": 9839,
+      "sha256": "94ba0a04af59e9dcf5fab31378f99ad46bd4722ba3230ddd4c348b0f1ddbd03b"
+    }
+  ],
+  "local_manifest": {
+    "path": "build/n4-buffered-20261024T085345Z/results/manifest.json",
+    "entries": 209,
+    "sha256": "1010baba4251e4f94a0ad0f8228354a8183ad444c9746b376273a9cc9941e0d3"
+  },
+  "hello_sha256": "c6c6416195a0f18d680d7f8f19be52ce02ff02912ef3bac45324fbe88006cd06",
+  "isolation": {
+    "accepted_classifier_unchanged": true,
+    "query_timeout_seconds": 90,
+    "samples": 4,
+    "all_clean": true,
+    "scope": "fresh buffered check only; no claim of visibility across earlier gaps"
+  },
+  "storage": {
+    "local_output_bound_MiB": 128,
+    "ceiling_MiB_unchanged": 3360,
+    "reserves_unchanged": true,
+    "all_prior_N4_attempts_carried": true,
+    "last_guard_sample": {
+      "utc": 1792832080.3515637,
+      "used": 42553344,
+      "capacity": {
+        "charged": 2494140416,
+        "remaining": 1029074944,
+        "C": 13411639296,
+        "E": 252317265920,
+        "linux": 1010157592576,
+        "admitted_extra": 139460608
+      },
+      "isolation_errors": []
+    }
+  },
+  "failed_host_attempt_preserved": "build/n4-buffered-20261024T085310Z",
+  "interface": {
+    "kernel_C_reader": true,
+    "user_input_ABI_added": false,
+    "shell_implemented": false,
+    "line_max_bytes": 128,
+    "extra_NUL_byte": true,
+    "overflow_policy": "discard entire submission, including after Backspace",
+    "scroll_shadow_bytes": 2000
+  },
+  "buffered_changes_committed": false,
+  "final_review": {
+    "first_N4_commit": "3a2b642cd3f2e7b719135c86e77cc787a865b327",
+    "pushed_branch": "feat/n4-interactive-console",
+    "buffered_changed_files": 29,
+    "buffered_committed": false,
+    "N4_all_attempts_MiB": 84.16796875,
+    "conservative_combined_charged_MiB": 2464.86328125,
+    "unchanged_ceiling_MiB": 3360,
+    "remaining_MiB": 895.13671875,
+    "C_free": 13410590720,
+    "E_free": 252317265920,
+    "linux_free": 1010157481984,
+    "reserves_pass": true,
+    "protected_binaries": 7,
+    "worktrees": 13,
+    "stashes": 2,
+    "prior_N4_artifacts_unchanged": true
+  }
+}

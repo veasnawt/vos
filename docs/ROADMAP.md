@@ -27,12 +27,14 @@ See [status](STATUS.md) and the [N3 closure record](results/n3-closure.md).
 
 N4 development is authorized and uses `feat/n4-interactive-console`, based on
 the integrated N3 baseline. The [first input increment](results/n4-first-input.md)
-provides an opt-in PS/2 echo console, verified on BIOS and UEFI in QEMU.
+was published at `3a2b642`. The next [buffered input increment](results/n4-buffered-input.md)
+also passes focused host and BIOS/UEFI verification.
 
 Priorities remain, in order:
 
 1. Keyboard input: first polling path works; further input service work remains.
-2. Interactive text console: echo/edit works; buffered command input is next.
+2. Interactive text console: buffered editing, completed-line delivery, overflow
+   rejection and chronological scrolling work. The kernel reader is ready for a shell/input bridge.
 3. Native `vsh` shell.
 4. `help`, `clear`, `echo`, `pwd`, `ls`, `cd`, `cat`.
 5. Rust-first native application foundations with a language-neutral ABI.

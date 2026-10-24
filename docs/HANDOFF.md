@@ -151,7 +151,7 @@ The full list is in `docs/STATUS.md`. In short:
 - No Secure Boot.
 - Under UEFI, virtio-blk polls: no IOAPIC/MSI.
 - Only the 32-bpp BGRX framebuffer format.
-- First opt-in PS/2 echo console only; no shell, writable file system or networking.
+- Opt-in PS/2 buffered input console; no shell, writable file system or networking.
 
 ## 7. Current development checkpoint and review boundary
 
@@ -180,8 +180,16 @@ UEFI input and normal-boot compatibility checks. `make input-run` builds into it
 own `build/n4-input/` tree; the existing EFI extraction environment is still needed
 for `make input-uefi-iso`. Do not rebuild into protected N3 output/evidence trees.
 
-Next: buffered interactive command input, then native `vsh` and the ordered
-`help`, `clear`, `echo`, `pwd`, `ls`, `cd`, `cat` commands; add Rust-first native
+The first implementation is published at `3a2b642cd3f2e7b719135c86e77cc787a865b327`.
+The subsequent [buffered input implementation](results/n4-buffered-input.md)
+passes focused host and BIOS/UEFI checks. It delivers copied, NUL-terminated
+completed lines through `input_console_read_line` in kernel thread context.
+It rejects entire overlong submissions, preserves the prompt boundary and scrolls
+the opt-in display in reading order. A demo consumer prints `submitted: ...`;
+this is not a shell or a user-mode input ABI.
+
+Next: bridge console input/output to a trusted native `vsh` process, then the
+ordered `help`, `clear`, `echo`, `pwd`, `ls`, `cd`, `cat` commands; add Rust-first native
 application foundations while preserving the language-neutral ABI. Rixie Core
 is optional. Do not rerun N3 campaigns or introduce new N3 gates.
 

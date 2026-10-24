@@ -26,6 +26,8 @@
 #define BDA_VIDEO_MODE  0x449
 #define BDA_COLUMNS     0x44A
 #define EARLY_BYTES     4096
+#define INPUT_COLS      80
+#define INPUT_ROWS      25
 
 static int kind = SCREEN_NONE, inited, busy, panicked;
 static const char *why = "not initialized";
@@ -36,6 +38,8 @@ static int status = SCREEN_BOOTING;
 static const char *status_text;
 static char early[EARLY_BYTES];
 static uint32_t early_len;
+static int input_mode;
+static char input_cells[INPUT_COLS * INPUT_ROWS];
 
 int screen_kind(void)
 {
@@ -129,13 +133,13 @@ static void draw_bar(void)
 
         screen_fill(&fb, 0, 0, fb.width, SCREEN_BAR_H, COLOR_BAR);
         fb_text(SCREEN_MARGIN, ty, "VOS", 3, COLOR_WHITE, COLOR_BAR);
-        fb_text(SCREEN_MARGIN + 5 * 8, ty, "early boot", 10, COLOR_DIM, COLOR_BAR);
+        fb_text(SCREEN_MARGIN + 5 * 8, ty, input_mode ? "console" : "early boot", 10, COLOR_DIM, COLOR_BAR);
         if (status_text && room > 2)
             fb_text(SCREEN_MARGIN + 17 * 8, ty, status_text, room - 4, COLOR_FG, COLOR_BAR);
         screen_fill(&fb, badge_x, 4, badge_w, SCREEN_BAR_H - 8, badge_c);
         fb_text(badge_x + 8, ty, l, llen, status == SCREEN_BOOTING ? COLOR_DIM : COLOR_WHITE, badge_c);
     } else if (kind == SCREEN_VGA_TEXT) {
-        static const char head[] = " VOS early boot";
+        const char *head = input_mode ? " VOS console" : " VOS early boot";
         uint8_t a = status == SCREEN_PASS ? VGA_PASS : status == SCREEN_FAIL ? VGA_FAIL : VGA_BAR;
         unsigned i = 0;
 
@@ -154,6 +158,9 @@ static void draw_bar(void)
 
 static void clear_line(uint32_t r)
 {
+    if (input_mode)
+        for (unsigned i = 0; i < cols; i++)
+            input_cells[r * INPUT_COLS + i] = ' ';
     if (kind == SCREEN_FB)
         screen_fill(&fb, 0, log_y + r * SCREEN_LINE_H, fb.width, SCREEN_LINE_H, COLOR_BG);
     else
@@ -164,6 +171,27 @@ static void clear_line(uint32_t r)
 static void newline(void)
 {
     cx = 0;
+    if (input_mode) {
+        if (cy + 1 < rows) {
+            clear_line(++cy);
+            return;
+        }
+        /* Shift the character shadow, then redraw. Never read device memory. */
+        for (unsigned r = 0; r + 1 < rows; r++)
+            for (unsigned c = 0; c < cols; c++)
+                input_cells[r * INPUT_COLS + c] = input_cells[(r + 1) * INPUT_COLS + c];
+        clear_line(rows - 1);
+        for (unsigned r = 0; r + 1 < rows; r++)
+            for (unsigned c = 0; c < cols; c++) {
+                char ch = input_cells[r * INPUT_COLS + c];
+                if (kind == SCREEN_FB)
+                    screen_glyph(&fb, SCREEN_MARGIN + c * 8, log_y + r * SCREEN_LINE_H + 1,
+                                 ch, COLOR_FG, COLOR_BG);
+                else
+                    vga[(1 + r) * VGA_COLS + c] = (uint16_t)(VGA_LOG << 8 | (uint8_t)ch);
+            }
+        return;
+    }
     if (++cy >= rows)
         cy = 0;
     clear_line(cy);
@@ -180,6 +208,8 @@ static void put(char c)
         return;
     if (cx >= cols)
         newline();
+    if (input_mode)
+        input_cells[cy * INPUT_COLS + cx] = c;
     if (kind == SCREEN_FB)
         screen_glyph(&fb, SCREEN_MARGIN + cx * 8, log_y + cy * SCREEN_LINE_H + 1, c, COLOR_FG, COLOR_BG);
     else
@@ -207,15 +237,40 @@ void screen_erase_previous(void)
         return;
     busy = 1;
     if (!cx) {
+        if (input_mode && !cy) {
+            busy = 0;
+            return;
+        }
         cy = (cy + rows - 1) % rows;
         cx = cols;
     }
     cx--;
+    if (input_mode)
+        input_cells[cy * INPUT_COLS + cx] = ' ';
     if (kind == SCREEN_FB)
         screen_glyph(&fb, SCREEN_MARGIN + cx * 8, log_y + cy * SCREEN_LINE_H + 1,
                      ' ', COLOR_FG, COLOR_BG);
     else
         vga[(1 + cy) * VGA_COLS + cx] = (uint16_t)(VGA_LOG << 8 | ' ');
+    busy = 0;
+}
+
+void screen_begin_input(void)
+{
+    if (!inited || kind == SCREEN_NONE || busy || panicked)
+        return;
+    busy = 1;
+    input_mode = 1;
+    if (cols > INPUT_COLS)
+        cols = INPUT_COLS;
+    if (rows > INPUT_ROWS)
+        rows = INPUT_ROWS;
+    cx = cy = 0;
+    if (kind == SCREEN_FB)
+        screen_fill(&fb, 0, log_y, fb.width, fb.height - log_y, COLOR_BG);
+    for (unsigned r = 0; r < rows; r++)
+        clear_line(r);
+    draw_bar();
     busy = 0;
 }
 

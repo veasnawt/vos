@@ -100,7 +100,7 @@ def terminal_lines(data):
     return lines
 
 
-def boot(out, firmware, iso, interactive=True):
+def boot(out, firmware, iso, interactive=True, buffered=False):
     prefix = out/firmware
     serial = prefix.with_suffix('.serial.log')
     qmp_path = out/(firmware+'.qmp')
@@ -152,6 +152,9 @@ def boot(out, firmware, iso, interactive=True):
             qmp.tap('caps_lock'); qmp.tap('o'); qmp.tap('k'); qmp.tap('caps_lock')
             qmp.tap('up')
             qmp.key('ctrl', True); qmp.tap('c'); qmp.key('ctrl', False)
+            if buffered:
+                time.sleep(.1)
+                require(b'submitted: ' not in serial.read_bytes(), 'partial line reached consumer before Enter')
             qmp.tap('ret')
             for c in 'hello': qmp.tap(c)
             qmp.tap('spc')
@@ -169,8 +172,44 @@ def boot(out, firmware, iso, interactive=True):
             ppm, png = prefix.with_suffix('.ppm'), prefix.with_suffix('.png')
             qmp.execute('screendump', {'filename': str(ppm)})
             shot = png_from_ppm(ppm, png)
-            return {'passed': True, 'hello_abi_v0': True, 'edited_line': 'input> VOS OK',
-                    'second_line': 'input> hello vos', 'screenshot': shot}
+            result = {'passed': True, 'hello_abi_v0': True, 'edited_line': 'input> VOS OK',
+                      'second_line': 'input> hello vos', 'screenshot': shot}
+            if buffered:
+                require(b'submitted: VOS OK\r\n' in raw and b'submitted: hello vos\r\n' in raw,
+                        'edited/second completed line not delivered')
+                # Empty line, exact-capacity editing, overflow discard and next-line recovery.
+                qmp.tap('backspace'); qmp.tap('ret')
+                for _ in range(128): qmp.tap('a')
+                qmp.tap('backspace'); qmp.tap('z'); qmp.tap('ret')
+                for _ in range(129): qmp.tap('x')
+                qmp.tap('backspace'); qmp.tap('ret')
+                for c in 'ready for vsh': qmp.tap('spc' if c==' ' else c)
+                qmp.tap('ret')
+                for i in range(6):
+                    for c in 'line '+str(i+1): qmp.tap('spc' if c==' ' else c)
+                    qmp.tap('ret')
+                deadline = time.monotonic()+8
+                while True:
+                    raw = serial.read_bytes()
+                    if b'submitted: line 6\r\ninput> ' in raw:
+                        break
+                    require(time.monotonic()<deadline, 'buffered input delivery deadline')
+                    time.sleep(.05)
+                lines = raw.split(b'\r\n')
+                require(b'submitted: ' in lines, 'empty line not delivered')
+                require(b'submitted: '+b'a'*127+b'z' in lines, 'exact-limit edit/copy mismatch')
+                require(raw.count(b'input: line too long; discarded (128 characters maximum)')==1,
+                        'overflow was not explicitly rejected once')
+                require(not any(x.startswith(b'submitted: x') for x in lines), 'truncated overflow delivered')
+                require(b'submitted: ready for vsh' in lines, 'reader failed to recover after overflow')
+                require(not any(x in raw for x in (b'panic:',b'boot: FAILED',b'VOS-TEST: FAIL')),
+                        'guest failed after buffered input')
+                qmp.execute('screendump', {'filename': str(out/(firmware+'-limits.ppm'))})
+                limits = png_from_ppm(out/(firmware+'-limits.ppm'),out/(firmware+'-limits.png'))
+                result.update(completed_line_delivery=True,no_partial_delivery=True,empty_line=True,
+                              exact_limit_edited=True,overflow_discarded=True,recovery=True,
+                              chronological_output_exercised=True,limits_screenshot=limits)
+            return result
         finally:
             if qmp:
                 qmp.close()
@@ -186,6 +225,7 @@ def boot(out, firmware, iso, interactive=True):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--output', type=Path, required=True, help='fresh directory under build/')
+    parser.add_argument('--buffered', action='store_true', help='verify completed-line delivery and limits')
     args = parser.parse_args()
     out = args.output.resolve()
     require(out.is_relative_to(REPO/'build') and out != REPO/'build', 'output must be a child of build/')
@@ -193,7 +233,7 @@ def main():
     out.mkdir(parents=True)
     resource.setrlimit(resource.RLIMIT_CORE, (0, 0))
     resource.setrlimit(resource.RLIMIT_FSIZE, (64*1024**2, 64*1024**2))
-    result = {'scope': 'first N4 keyboard-to-console increment', 'runs': {}}
+    result = {'scope': 'N4 buffered command input' if args.buffered else 'first N4 keyboard-to-console increment', 'runs': {}}
     try:
         common = ['gcc', '-std=gnu11', '-O2', '-Wall', '-Wextra', '-Werror', '-ffunction-sections',
                   '-fdata-sections', '-Wl,--gc-sections', '-Iarch/x86_64']
@@ -203,11 +243,15 @@ def main():
         run(common+['tests/host/screen-input.c', 'arch/x86_64/font8x16.c',
                     '-o', str(out/'screen-host')], out/'screen-build.log')
         run([str(out/'screen-host')], out/'screen-test.log', timeout=10)
+        if args.buffered:
+            run(common+['tests/host/buffered-input.c','arch/x86_64/input_console.c',
+                        '-o',str(out/'buffered-host')], out/'buffered-build.log')
+            run([str(out/'buffered-host')],out/'buffered-test.log',timeout=10)
         result['host'] = 'PASS'
         run(['make', '--no-print-directory', 'input-uefi-iso', 'INPUT_BUILD='+str(out/'image')], out/'image-build.log')
         kernel = out/'image/kernel'
-        result['runs']['bios'] = boot(out, 'bios', kernel/'vos.iso')
-        result['runs']['uefi'] = boot(out, 'uefi', kernel/'vos-uefi.iso')
+        result['runs']['bios'] = boot(out, 'bios', kernel/'vos.iso',buffered=args.buffered)
+        result['runs']['uefi'] = boot(out, 'uefi', kernel/'vos-uefi.iso',buffered=args.buffered)
         # Same new kernel, original GRUB config; distinct output tree, no N3 artifacts touched.
         run(['make', '--no-print-directory', 'ARCH=x86_64', 'BUILD='+str(out/'normal'),
              'USER_BUILD='+str(out/'image/user'), 'iso'], out/'normal-build.log')

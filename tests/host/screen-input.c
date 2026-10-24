@@ -34,5 +34,32 @@ int main(void)
     assert(cells[2*VGA_COLS+1]==0x5A5A && cells[2*VGA_COLS+3]==0x5A5A);
     kind=SCREEN_NONE; screen_erase_previous(); assert(cx==2);
     puts("PASS: framebuffer exact erase, wrap/ring boundary, panic/none guards and VGA cell bounds");
+
+    kind=SCREEN_FB; cols=16; rows=6; log_y=36; cx=cy=0;
+    screen_begin_input();
+    assert(input_mode && cx==0 && cy==0);
+    for (unsigned r=0;r<rows;r++)
+        for (unsigned c=0;c<cols;c++) assert(input_cells[r*INPUT_COLS+c]==' ');
+    screen_erase_previous(); assert(cx==0 && cy==0); /* top boundary never wraps */
+    for (unsigned r=0;r<rows;r++) { screen_putc((char)('a'+r)); screen_putc('\n'); }
+    assert(cy==rows-1 && cx==0);
+    for (unsigned r=0;r+1<rows;r++) assert(input_cells[r*INPUT_COLS]==(char)('b'+r));
+    assert(input_cells[(rows-1)*INPUT_COLS]==' ');
+    memcpy(expected,pixels,sizeof(pixels));
+    for (unsigned r=0;r<rows;r++)
+        for (unsigned c=0;c<cols;c++)
+            screen_glyph(&e,SCREEN_MARGIN+c*8,log_y+r*SCREEN_LINE_H+1,
+                         input_cells[r*INPUT_COLS+c],COLOR_FG,COLOR_BG);
+    assert(!memcmp(pixels,expected,sizeof(pixels))); /* shadow agrees with every rendered glyph */
+    cx=cols; screen_putc('x'); /* scroll on a soft wrap, then erase across that wrap */
+    screen_erase_previous(); screen_erase_previous();
+    assert(cx==cols-1 && cy==rows-2 && input_cells[cy*INPUT_COLS+cx]==' ');
+    kind=SCREEN_VGA_TEXT; vga=cells; cols=VGA_COLS; rows=VGA_ROWS-1;
+    screen_begin_input();
+    for (unsigned r=0;r<rows;r++) { screen_putc((char)('A'+r)); screen_putc('\n'); }
+    for (unsigned r=0;r+1<rows;r++)
+        assert(cells[(r+1)*VGA_COLS]==(VGA_LOG<<8|('B'+r)));
+    assert(cells[rows*VGA_COLS]==(VGA_LOG<<8|' '));
+    puts("PASS: opt-in clear, chronological scroll, framebuffer/shadow agreement, VGA scroll and wrap erasure");
     return 0;
 }

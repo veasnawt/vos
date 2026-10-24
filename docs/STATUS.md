@@ -13,10 +13,13 @@ is identical to N3. The first N4 keyboard/echo implementation is published on
 remains `checkpoint-2026-10-19-u1`.
 
 **N4 is in progress.** The [first input increment](results/n4-first-input.md)
-adds an opt-in PS/2 keyboard echo console: US ASCII, Shift/Caps Lock, Backspace
-and Enter. Production-code host tests and BIOS/UEFI QEMU input checks pass;
-normal boot-and-halt and ABI v0 hello also pass. `vsh`, shell commands and the
-Rust native application foundation are still pending.
+is published at `3a2b642cd3f2e7b719135c86e77cc787a865b327`. The next
+[buffered input increment](results/n4-buffered-input.md) passes production-code
+host tests and BIOS/UEFI QEMU checks: editing, Enter submission, empty lines,
+exact 128-byte limits, whole-line overflow rejection and chronological scrolling.
+Normal boot-and-halt and ABI v0 hello still pass. The input reader is a kernel C
+interface; a user-mode console bridge, native `vsh`, commands and Rust application
+foundations remain pending.
 
 Historical N3.5 approval, integration, failed attempts and original authorization
 boundaries below remain records of those checkpoints, not current N3 blockers.
@@ -203,8 +206,9 @@ On BIOS (SeaBIOS: ELCR `0xc00`), virtio-blk interrupt mode is fully tested: 149 
 - **VGA text fallback:** only unit-tested. GRUB always hands this kernel a framebuffer, because
   the kernel requests one.
 - **BIOS display change:** BIOS boots now switch to VBE graphics.
-- **Input:** first PS/2 polling echo path only, with a US layout and 128-cell line
+- **Input:** PS/2 polling and buffered line input, with a US layout and 128-byte
   limit; no USB keyboard driver, mouse, terminal input syscall or shell yet.
+  Editing appends/deletes at the end; an overlong submission is discarded in full.
   Boot requires `vos.console=1` to enter it; normal production boot still halts.
 - **Missing features:** shell, writable storage, networking, SMP and ACPI power management.
 

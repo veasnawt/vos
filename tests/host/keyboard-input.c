@@ -124,7 +124,10 @@ int main(void)
     input_console_accept(&line, '\t'); assert(count == 129);
     input_console_accept(&line, '\b'); assert(line.length == 127 && erased == 2);
     input_console_accept(&line, '\n');
-    assert(!line.length && !memcmp(output+129, "\r\ninput> ", 9));
-    puts("PASS: exact opt-in token, prompt boundary, 128-cell limit, editing and Enter");
+    assert(line.ready && line.length == 127 && !memcmp(output+129, "\r\n", 2));
+    char delivered[INPUT_CONSOLE_LINE_MAX + 1] = "unchanged";
+    assert(input_console_take_line(&line, delivered, sizeof(delivered)) == INPUT_CONSOLE_TOOLONG);
+    assert(!strcmp(delivered, "unchanged") && !line.ready && !line.length);
+    puts("PASS: exact opt-in token, prompt boundary, 128-cell limit, editing, Enter and overflow rejection");
     return 0;
 }
