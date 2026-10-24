@@ -1,0 +1,213 @@
+{
+  "scope": "N5 native IPv4 and ICMP echo",
+  "published_ARP_commit": "a6571c19b128f6ffb61e2b38635df55093b49f45",
+  "branch": "feat/n5-networking",
+  "implementation_committed": false,
+  "sources": {
+    "Makefile": "aef2a2a3d69fe84d0b9ca373929f878ef16e5f922a02d84023b0e1291308b855",
+    "arch/x86_64/arch.mk": "74bff2e4ebedc6b5185859f8046241f2857f8dc3870c8251331ab95918e51096",
+    "arch/x86_64/net_arp.c": "eafe4d97061e9dc75d3d3aedb312c638e121da66c4409e1ae3ab3a6ef8ae63bf",
+    "arch/x86_64/net_arp.h": "4f5ab6cd026fa24140a6ff4abb3b227b10fd5fc4342cf92f1ebf13bb5dbfeded",
+    "arch/x86_64/net_boot.c": "deea5a5289f235ffd82f57b622c1d7c7fb4d55dbbb8be1c39b96789609de5a43",
+    "arch/x86_64/grub-ipv4.cfg": "214854d8d45cc94aa1eb6672eba09898af6f8af1d7199af846419c47373a6d48",
+    "arch/x86_64/net_ipv4.c": "b91e0201aa17c129faabf519293d90cdb91ff22d97c8825ad9ee6f0e2a0fa816",
+    "arch/x86_64/net_ipv4.h": "335a64207ad22f1086339f11ee3d27afd773f60033584d114a89b1bcb9725069",
+    "arch/x86_64/net_ipv4_boot.c": "07acdba8eba2e76b953e64af04bb67e12d670a65f7e9a6dd7b4676897a0d94f6",
+    "arch/x86_64/net_ipv4_boot.h": "02415334f571fec4b651a01369c64626006c50f201b06bceff7a871a20a718dc",
+    "scripts/test-ipv4.py": "d20de8f92e0bbdc9636b248d4e8e38c40c69237d7aa60f109ebc54368769b080",
+    "tests/host/net-ipv4.c": "a9531a517be495fb02b43a429cf34c89764fdd5262573a2292fd73aa772871dd"
+  },
+  "pcap_verification": {
+    "bios": {
+      "records": 19,
+      "TX": 4,
+      "RX": 15,
+      "all_bytes_and_order_match": true,
+      "independent_valid_checksum_packets": 11,
+      "checksum_negative_controls_retained": true,
+      "echo_requests": 2,
+      "matched_replies": 2,
+      "responder_replies": 1,
+      "unexpected_TX": 0,
+      "sha256": "099f68f3c5ac1bb0002eab29dcacbaf8cc7c45a247efcfe6541f4f959b9c4f88"
+    },
+    "uefi": {
+      "records": 19,
+      "TX": 4,
+      "RX": 15,
+      "all_bytes_and_order_match": true,
+      "independent_valid_checksum_packets": 11,
+      "checksum_negative_controls_retained": true,
+      "echo_requests": 2,
+      "matched_replies": 2,
+      "responder_replies": 1,
+      "unexpected_TX": 0,
+      "sha256": "bcb52dc07c0dbccae1140088885eee57dd86e37e89c9c909ea0af2827b9fc2db"
+    }
+  },
+  "local_manifest": {
+    "path": "build/n5-ipv4-20261024T172906Z/results/manifest.json",
+    "entries": 140,
+    "sha256": "581017c994f417f51ef1e0a9d24a80fe4b8404f17da855bbdd17d929d2d4c2a1"
+  },
+  "artifacts": [
+    {
+      "path": "docs/results/n5-ipv4/arp-host-build.txt",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/results/n5-ipv4/arp-host.txt",
+      "size": 94,
+      "sha256": "c0da74401be68d10d0609a6171e1dc41679fcc0c896d30235bf6871f6238c4ae"
+    },
+    {
+      "path": "docs/results/n5-ipv4/bios-command.json",
+      "size": 780,
+      "sha256": "9322aed6a4bdae655f0a4702402e88a98febd216e5ec0390d1095619db7e2549"
+    },
+    {
+      "path": "docs/results/n5-ipv4/bios-registers.txt",
+      "size": 2052,
+      "sha256": "291df76e1d052d0eeb55b2967d9a70cefcf00630258be2801a8d17e1ae2ed16c"
+    },
+    {
+      "path": "docs/results/n5-ipv4/bios-wire.json",
+      "size": 3990,
+      "sha256": "f1eb6501b0e975389589f2f25f4101978bd18fa522170d78b576c9480b1accc9"
+    },
+    {
+      "path": "docs/results/n5-ipv4/bios.pcap",
+      "size": 1570,
+      "sha256": "099f68f3c5ac1bb0002eab29dcacbaf8cc7c45a247efcfe6541f4f959b9c4f88"
+    },
+    {
+      "path": "docs/results/n5-ipv4/bios.serial.txt",
+      "size": 2978,
+      "sha256": "5c228254aeb6c4754162f5dd4eb693f930a7a961565afb6421a45ac1f55507d8"
+    },
+    {
+      "path": "docs/results/n5-ipv4/guard-result.json",
+      "size": 135,
+      "sha256": "54c517df3535959902fafab50c2867b18997b5bf08a0eb1980b507de33bfe56a"
+    },
+    {
+      "path": "docs/results/n5-ipv4/guard-samples.jsonl",
+      "size": 441,
+      "sha256": "1effe5d1718722a3e3b698490f923d638d480523c0df6991f986b561af96cb13"
+    },
+    {
+      "path": "docs/results/n5-ipv4/image-build.txt",
+      "size": 29756,
+      "sha256": "9e1b7ceda5e565f36910fcb166fac89e8e7ace2e52b01840e3fb052bf81a1b8a"
+    },
+    {
+      "path": "docs/results/n5-ipv4/ipv4-host-build.txt",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/results/n5-ipv4/ipv4-host.txt",
+      "size": 91,
+      "sha256": "92ef95d5cb3ea822a3eceea705b533f9f3b33f4659c80d34a057992e568b6c61"
+    },
+    {
+      "path": "docs/results/n5-ipv4/path-guard.txt",
+      "size": 79,
+      "sha256": "e5952d21c9ef7e913db1250ac9ed13163053e00ee9c7b5aa5b4d90f4b9eca604"
+    },
+    {
+      "path": "docs/results/n5-ipv4/result.json",
+      "size": 1263,
+      "sha256": "16bbaba1fcc6a3cedbbd5dc3d8a9bb3f6ff3936d79999526569aec5cfcb8807b"
+    },
+    {
+      "path": "docs/results/n5-ipv4/uefi-command.json",
+      "size": 1013,
+      "sha256": "8079349b4e6f14e00334a4d4d37c11dea683166810d3c1443d04da6a52cc24f5"
+    },
+    {
+      "path": "docs/results/n5-ipv4/uefi-registers.txt",
+      "size": 2052,
+      "sha256": "b01086f051f78a77cf7392b93d765d432b4deafc795fdafea4703ea221f44cd6"
+    },
+    {
+      "path": "docs/results/n5-ipv4/uefi-wire.json",
+      "size": 3990,
+      "sha256": "f1eb6501b0e975389589f2f25f4101978bd18fa522170d78b576c9480b1accc9"
+    },
+    {
+      "path": "docs/results/n5-ipv4/uefi.pcap",
+      "size": 1570,
+      "sha256": "bcb52dc07c0dbccae1140088885eee57dd86e37e89c9c909ea0af2827b9fc2db"
+    },
+    {
+      "path": "docs/results/n5-ipv4/uefi.serial.txt",
+      "size": 3308,
+      "sha256": "e596f8afc134819884f521ce2883c72ca8d26645f1b71e5ebbfa5bd8ac3b6de2"
+    },
+    {
+      "path": "docs/images/n5/vos-n5-bios-ipv4-icmp.png",
+      "sha256": "dab039c5ce804508674a7e7d71e5cc1ac2759a46553e4ac2347565bb99841710"
+    },
+    {
+      "path": "docs/images/n5/vos-n5-uefi-ipv4-icmp.png",
+      "sha256": "dab039c5ce804508674a7e7d71e5cc1ac2759a46553e4ac2347565bb99841710"
+    }
+  ],
+  "products": {
+    "native/kernel/vos.bin": "b09a04e0089395d4e8df75c1188e39da05b836d1db905b43f88f1f1818670312",
+    "native/kernel/vos.iso": "4d3ff30975a69fb02f06d924fc634421b21d43e89e3b0e82a8c417b1e4361ece",
+    "native/kernel/vos-uefi.iso": "14e0359256c3eb1485bba4d81e79e84d46289ab808421f0e0c746850112f8690",
+    "native/user/hello.elf": "c6c6416195a0f18d680d7f8f19be52ce02ff02912ef3bac45324fbe88006cd06"
+  },
+  "host_checks": {
+    "ipv4_icmp": 1806,
+    "ARP_regression": 4598,
+    "sanitizers": [
+      "address",
+      "undefined"
+    ]
+  },
+  "prior_failed_attempt": {
+    "root": "build/n5-ipv4-20261024T172838Z",
+    "failure": "Host fixture sentinel was overwritten by earlier ARP setup; assertion failed before QEMU. Reset sentinel before next operation; no validator or protocol behavior weakened.",
+    "preserved": true
+  },
+  "publication": {
+    "commit": "a6571c19b128f6ffb61e2b38635df55093b49f45",
+    "files": 37,
+    "original_attempt": "build/n5-arp-20261024T171143Z",
+    "recovery": "build/n5-ipv4-20261024T171849Z",
+    "original_failure_preserved": true,
+    "reason": "Post-push adapter compared main against prior feature HEAD instead of accepted main bbca69d; independent published blob/ref/worktree/stash checks passed."
+  },
+  "guard": {
+    "controller_root": "build/n5-ipv4-20261024T172906Z",
+    "query_timeout_seconds": 90,
+    "clean_samples": 2,
+    "sample_sha256": "1effe5d1718722a3e3b698490f923d638d480523c0df6991f986b561af96cb13",
+    "worker_sha256": "35ed703145f28c3b4ec541c47fabfab5f453a1e823a4095b87cb8948eb8002d8",
+    "outcome": {
+      "passed": true,
+      "error": null,
+      "returncode": 0,
+      "allocated": 28721152,
+      "ARP_charged": 59965440,
+      "ARP_limit": 285212672
+    }
+  },
+  "budget": {
+    "ledger": "build/n5-session-20261024T162331Z/ARP-BUDGET.json",
+    "ledger_sha256": "cd2214f6d8fa72a605dfd7acc202ba63033ea75a0bee3f28334b6fcb61184988",
+    "additional_limit_MiB": 272,
+    "aggregate_ceiling_MiB": 3360,
+    "local_bound_MiB": 128,
+    "prior_usage_remains_charged": true,
+    "approval": "Latest user authorization: IPv4/ICMP within available capacity under existing approved accounting rules; existing positive-growth meter retained without reset or expansion."
+  },
+  "normal_vsh_Rixie_ABI_v0_v3_unchanged": true,
+  "no_userspace_network_grants": true,
+  "no_N3_N4_campaigns": true,
+  "no_merge": true
+}

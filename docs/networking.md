@@ -1,12 +1,12 @@
-# Native networking: first N5 adapter increment
+# Native networking: virtio-net, ARP, IPv4 and ICMP
 
 N5 starts from the accepted N4 merge `bbca69d850e8c168bfa824ace475a27226b2cdb7`.
 Its tree matches accepted N4 publication `50cbc8bc49bd10d5272647b267ed23895d2f533d`.
 Local main fast-forwarded to that merge; development uses `feat/n5-networking`.
 The first increment sends and receives bounded raw Ethernet frames through a
 modern virtio-net adapter in QEMU. It is published at `27fe770`. The subsequent
-bounded Ethernet/ARP layer is implemented and verified below; IPv4 and ICMP
-packet handling remain next.
+bounded Ethernet/ARP layer is published at `a6571c1`. Native IPv4/ICMP echo is
+implemented and verified below; UDP/TCP and explicit userspace authority remain next.
 
 ## Existing infrastructure and choice
 
@@ -174,6 +174,57 @@ meter is enforced alongside original physical reserves, local output bounds,
 continuous isolation queries and the aggregate ceiling. All older N4/N5 usage
 remains charged. See [ARP evidence](results/n5-arp.md) for exact final accounting.
 
-Next: bounded IPv4 handling and ICMP echo, with explicit userspace permissions
-required before exposing network access. Rixie Connected is not started. See
-[adapter results](results/n5-first-network.md) and [Ethernet/ARP results](results/n5-arp.md).
+The standalone raw-frame and ARP exercises above remain their original scope.
+The IPv4 dispatcher below reuses shared Ethernet validation and existing ARP.
+See [adapter results](results/n5-first-network.md), [Ethernet/ARP results](results/n5-arp.md)
+and [IPv4/ICMP results](results/n5-ipv4.md). Rixie Connected is not started.
+
+## Bounded native IPv4 and ICMP echo
+
+`net_ipv4.c` reuses the existing Ethernet validator and the ARP context/cache.
+It accepts only local unicast IPv4, checks version, IHL, available/total length,
+TTL, header checksum, source/destination and fragmentation fields before reading
+ICMP. Header options, fragments, forwarding and protocols other than ICMP are
+rejected. Padding is excluded using IP total length. There is no allocation,
+second driver, DMA pool or userspace entry point.
+
+Echo requests/replies require code zero and a correct Internet checksum, including
+odd payload lengths. Replies copy the request identifier, sequence and bounded
+data, then generate fresh IP and ICMP checksums. At MTU 1500, an incoming echo can
+carry up to 1472 data bytes. Generated Ethernet padding is zeroed. Kernel caller
+lifetimes/alias contracts remain those of the ARP interface; output-length storage
+must be separate from packet output, and buffers must not overlap the context.
+
+Origination allows one pending echo, up to 64 payload bytes and 200 PIT ticks
+for correlation. The caller must first resolve the peer through the same ARP
+context. A miss emits nothing and queues no packet. An echo reply must match peer
+IP/MAC, identifier, sequence, exact payload length and bytes within the deadline.
+Wrong or unsolicited replies cannot complete it. No retransmission is automatic.
+These checks provide correlation, not authentication against an on-link attacker.
+
+The trusted demonstration selects `vos.ipv4=1`, local address 10.0.2.15 and a
+directly attached isolated peer at 10.0.2.2. There is no subnet/router configuration,
+gateway, DHCP, DNS, IPv6, UDP, TCP, fragment reassembly or ICMP error processing.
+This is a real VOS ICMP exchange with an independent host wire peer; it does not
+demonstrate internet access or the host's system ping utility.
+
+With the same EFI tools and existing storage/isolation admission:
+
+```sh
+PYTHONDONTWRITEBYTECODE=1 python3 -B scripts/test-ipv4.py \
+  --output "$PWD/build/n5-ipv4-$(date -u +%Y%m%dT%H%M%SZ)"
+```
+
+`make ipv4-iso` / `make ipv4-uefi-iso` use a nonempty `IPV4_BUILD`.
+The script supplies the bounded Unix-socket peer. An unconnected boot cannot
+complete the demonstration. Each guest performs ARP resolution, sends two pings,
+answers an incoming echo request and rejects injected invalid/unsupported or
+unmatched traffic. Host sanitizers exercise bounds and maximum reply size; saved
+PCAPs independently establish the actual wire bytes and checksums.
+
+IPv4 continues the existing positive-growth 272 MiB ledger inside the unchanged
+3360 MiB aggregate ceiling. Prior ARP usage and all failures stay charged; no
+allocation is reset or expanded. Admission reserved a 128 MiB attempt bound plus
+existing metadata/Git provisions; actual products and evidence are much smaller.
+All original physical reserves and continuous isolation stop conditions apply.
+Normal vsh/Rixie boots, syscall ABIs v0-v3 and application grants are unchanged.

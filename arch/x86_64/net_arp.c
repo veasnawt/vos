@@ -68,16 +68,22 @@ int net_arp_query(struct net_arp *a,const uint8_t ip[4],uint64_t now,void *out,s
     memcpy(out,reply,sizeof(reply));*length=sizeof(reply);
     memcpy(a->pending_ip,target,4);a->pending_since=now;a->pending=1;return NET_ARP_REQUEST;
 }
-int net_ethernet_input(struct net_arp *a,const void *frame,size_t length,uint64_t now,void *out,size_t capacity,size_t *output_length)
+int net_ethernet_type(const struct net_arp *a,const void *frame,size_t length,uint16_t *output_type)
 {
-    if (!a || !frame || length<14 || length>VNET_FRAME_MAX) return NET_ARP_EINVAL;
+    if (!a || !frame || !output_type || length<14 || length>VNET_FRAME_MAX) return NET_ARP_EINVAL;
     const uint8_t *p=frame;
     if (!same(p,a->mac,6) && !same(p,broadcast,6)) return NET_ARP_DROP;
     if (!mac_ok(p+6) || same(p+6,a->mac,6)) return NET_ARP_EINVAL;
     unsigned type=be16(p+12);
     if (type<=1500) return NET_ARP_UNSUPPORTED; /* IEEE 802.3 length/LLC, not Ethernet-II. */
     if (type<0x0600) return NET_ARP_EINVAL;
-    if (type!=0x0806) return NET_ARP_UNSUPPORTED; /* IPv4/VLAN/IPv6 are not dispatched yet. */
+    *output_type=(uint16_t)type;return 1;
+}
+int net_ethernet_input(struct net_arp *a,const void *frame,size_t length,uint64_t now,void *out,size_t capacity,size_t *output_length)
+{
+    uint16_t type;int e=net_ethernet_type(a,frame,length,&type);if (e!=1) return e;
+    if (type!=0x0806) return NET_ARP_UNSUPPORTED;
+    const uint8_t *p=frame;
     if (length<42) return NET_ARP_EINVAL;
     if (be16(p+14)!=1 || be16(p+16)!=0x0800) return NET_ARP_UNSUPPORTED;
     if (p[18]!=6 || p[19]!=4 || (be16(p+20)!=1 && be16(p+20)!=2)) return NET_ARP_EINVAL;

@@ -204,6 +204,18 @@ arp-iso:
 arp-uefi-iso: arp-iso
 	$(MAKE) --no-print-directory ARCH=x86_64 BUILD=$(ARP_BUILD)/kernel USER_BUILD=$(ARP_BUILD)/user GRUB_CFG=arch/x86_64/grub-arp.cfg uefi-iso
 
+IPV4_BUILD ?= build/n5-ipv4
+ifneq ($(filter ipv4-iso ipv4-uefi-iso,$(MAKECMDGOALS)),)
+ifeq ($(strip $(IPV4_BUILD)),)
+$(error IPV4_BUILD must be nonempty; use a path under build/)
+endif
+endif
+.PHONY: ipv4-iso ipv4-uefi-iso
+ipv4-iso:
+	$(MAKE) --no-print-directory ARCH=x86_64 BUILD=$(IPV4_BUILD)/kernel USER_BUILD=$(IPV4_BUILD)/user GRUB_CFG=arch/x86_64/grub-ipv4.cfg iso
+ipv4-uefi-iso: ipv4-iso
+	$(MAKE) --no-print-directory ARCH=x86_64 BUILD=$(IPV4_BUILD)/kernel USER_BUILD=$(IPV4_BUILD)/user GRUB_CFG=arch/x86_64/grub-ipv4.cfg uefi-iso
+
 # Like run, but QEMU waits for a debugger on TCP port 1234 (-s -S) and prints
 # the serial port here. GDB is not installed by the build; see
 # docs/plans/n2-foundation.md (tooling) for the commands.

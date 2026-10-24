@@ -66,7 +66,10 @@ isolation infrastructure. No application gains network access automatically.
 The first increment is published at `27fe770`. Bounded
 [Ethernet dispatch and ARP](results/n5-arp.md) now also pass focused host and
 BIOS/UEFI checks, with a four-entry expiring neighbor cache and safe rejection
-of malformed/unsupported input. The next step is IPv4 and ICMP echo. An eventual
+of malformed/unsupported input. ARP is published at `a6571c1`.
+[Native IPv4 and ICMP echo](results/n5-ipv4.md) now pass focused host and
+BIOS/UEFI checks: two originated pings and one incoming request answered per
+boot, with independent PCAP validation. UDP/TCP follow. An eventual
 userspace network interface requires explicit process-owned capability grants,
 resource bounds and revocation. Rixie Connected remains outside this increment.
 Focused checks accompany changes; no N3 campaign or new milestone is introduced.

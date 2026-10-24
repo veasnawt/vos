@@ -233,14 +233,20 @@ explicit network-capability direction. [Results](results/n5-first-network.md)
 include host checks, BIOS/UEFI frame exchange and compatibility boots. No network
 syscall or Rixie Connected implementation is present. The 40-file adapter
 increment is published at `27fe770`. [Ethernet/ARP](results/n5-arp.md) now also
-passes focused sanitizer-backed host and BIOS/UEFI checks. Next: IPv4/ICMP.
+passes focused sanitizer-backed host and BIOS/UEFI checks and is published at
+`a6571c1`. [IPv4/ICMP](results/n5-ipv4.md) now passes its focused host and two
+firmware tests. The implementation remains uncommitted for review; next: UDP/TCP.
+There are no application network grants. Use the fresh-output IPv4 test workflow
+in the guide; it requires its isolated peer, not a standalone unconnected boot.
 Generated builds must stay outside protected N3/N4 roots;
 all prior evidence, worktrees, stashes and cumulative storage guards remain in force.
 The inherited 3360 MiB ceiling originated in N3 D2/C20. The owner separately
 approved 272 MiB of additional ARP continuation capacity within that unchanged
 ceiling. Both counters and all physical reserves remain enforced; previous
 attempts remain charged. The budget ledger and controller identities are linked
-from the ARP evidence record.
+from the ARP evidence record. IPv4 continues that same meter without resetting
+prior usage or increasing either limit. Publication and failed host-fixture
+attempts remain preserved and charged; the IPv4 result records their causes.
 
 ### Historical N3.5 checkpoints
 

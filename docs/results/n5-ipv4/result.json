@@ -1,0 +1,51 @@
+{
+  "scope": "native IPv4 and ICMP echo",
+  "firmware": {
+    "bios": {
+      "passed": true,
+      "firmware": "bios",
+      "pings_sent": 2,
+      "pings_matched": 2,
+      "loss": 0,
+      "echo_requests_answered": 1,
+      "malformed_unsupported_unmatched_rejected": 11,
+      "TX": 4,
+      "RX": 15,
+      "ARP_resolution": true,
+      "DMA_frames_released": 11,
+      "ABI_v0_hello": true,
+      "no_application_grants": true,
+      "screenshot": {
+        "width": 1280,
+        "height": 800,
+        "sha256": "dab039c5ce804508674a7e7d71e5cc1ac2759a46553e4ac2347565bb99841710"
+      }
+    },
+    "uefi": {
+      "passed": true,
+      "firmware": "uefi",
+      "pings_sent": 2,
+      "pings_matched": 2,
+      "loss": 0,
+      "echo_requests_answered": 1,
+      "malformed_unsupported_unmatched_rejected": 11,
+      "TX": 4,
+      "RX": 15,
+      "ARP_resolution": true,
+      "DMA_frames_released": 11,
+      "ABI_v0_hello": true,
+      "no_application_grants": true,
+      "screenshot": {
+        "width": 1280,
+        "height": 800,
+        "sha256": "dab039c5ce804508674a7e7d71e5cc1ac2759a46553e4ac2347565bb99841710"
+      }
+    }
+  },
+  "passed": true,
+  "host_sanitizers": [
+    "address",
+    "undefined"
+  ],
+  "userspace_ABI_unchanged": true
+}

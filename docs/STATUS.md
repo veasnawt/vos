@@ -13,8 +13,12 @@ frame exchanges pass. There are no application network grants or new syscalls.
 The first 40-file increment is published at `27fe770676b4ce138eb9596c881a556c820cbe74`.
 [Ethernet/ARP](results/n5-arp.md) now passes 4,598 sanitizer-backed host checks
 and both firmware wire checks (4 TX/11 RX, 8 rejected frames each). It reuses
-the unchanged driver and a four-entry expiring cache. IPv4 and ICMP follow;
-Rixie Connected is not started. The 272 MiB additional ARP allocation is enforced
+the unchanged driver and a four-entry expiring cache, published at `a6571c1`.
+[Native IPv4/ICMP](results/n5-ipv4.md) now passes 1,806 sanitizer-backed checks
+plus the 4,598-check ARP host regression. Each BIOS/UEFI boot completes two pings,
+answers one request and rejects 11 malformed/unsupported/unmatched packets.
+UDP/TCP and explicit application network authority remain next.
+Rixie Connected is not started. The existing 272 MiB continuation meter is enforced
 alongside the unchanged inherited 3360 MiB aggregate ceiling and host reserves.
 
 N3 remains complete and accepted on 2026-10-24.

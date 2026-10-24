@@ -23,6 +23,9 @@ struct net_arp {
 int net_arp_init(struct net_arp *a,const uint8_t mac[6],const uint8_t ip[4]);
 int net_neighbor_get(struct net_arp *a,const uint8_t ip[4],uint64_t now,uint8_t mac[6]);
 int net_arp_query(struct net_arp *a,const uint8_t ip[4],uint64_t now,void *out,size_t capacity,size_t *length);
+/* Shared Ethernet-II validation. 1 means a bounded local/broadcast frame;
+ * otherwise the existing drop/error codes. Type changes only on success. */
+int net_ethernet_type(const struct net_arp *a,const void *frame,size_t length,uint16_t *type);
 /* Untagged Ethernet-II dispatch. Only Ethernet/IPv4 ARP is supported here.
  * Unsupported types, unrelated targets and unsolicited replies produce no TX. */
 int net_ethernet_input(struct net_arp *a,const void *frame,size_t length,uint64_t now,void *out,size_t capacity,size_t *output_length);

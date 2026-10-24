@@ -3,7 +3,10 @@
 The reviewed first 40-file adapter implementation is committed and pushed as
 [`27fe770676b4ce138eb9596c881a556c820cbe74`](https://github.com/veasnawt/vos/commit/27fe770676b4ce138eb9596c881a556c820cbe74)
 on `feat/n5-networking`. Main remains the accepted N4 merge `bbca69d`. This
-subsequent ARP increment remains uncommitted for review; no merge was performed.
+ARP increment was subsequently published as
+[`a6571c19b128f6ffb61e2b38635df55093b49f45`](https://github.com/veasnawt/vos/commit/a6571c19b128f6ffb61e2b38635df55093b49f45)
+with the exact reviewed 37-file inventory. No merge was performed. Its raw
+pre-publication JSON records remain unchanged historical snapshots.
 
 The [networking guide](../networking.md) describes the new bounded Ethernet-II
 dispatcher, ARP wire validation, request/reply handling and four-entry expiring
@@ -71,5 +74,10 @@ They show real ARP resolution and reply checks, rejected input counts and DMA
 teardown. Identical display content gives identical hashes. They label IPv4 and
 ICMP echo as next work; they do not depict IP connectivity or ping.
 
-The next step is bounded IPv4 packet handling and ICMP echo, using this Ethernet
-dispatch and ARP resolution. No browser or Rixie Connected work has begun.
+The subsequent [IPv4/ICMP increment](n5-ipv4.md) now passes focused checks.
+ARP publication succeeded before a post-push adapter assertion compared main
+against the wrong feature baseline. The failed publisher root
+`build/n5-arp-20261024T171143Z/` remains unchanged. Independent guarded recovery at
+`build/n5-ipv4-20261024T171849Z/` verified all 37 committed blobs, remote refs,
+main, worktrees and stashes. The failure was not relabelled clean.
+No browser or Rixie Connected work has begun.
