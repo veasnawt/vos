@@ -1,0 +1,4 @@
+vsh-iso
+Makefile:132: *** VSH_BUILD must be nonempty; use a path under build/.  Stop.
+rust-app
+Makefile:151: *** RUST_BUILD must be nonempty; use a path under build/.  Stop.

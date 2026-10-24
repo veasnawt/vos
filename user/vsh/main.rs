@@ -1,21 +1,9 @@
 #![no_std]
 #![no_main]
 
-use core::panic::PanicInfo;
-unsafe extern "C" {
-    fn vos_console_read(p: *mut u8, cap: usize) -> isize;
-    fn vos_console_write(p: *const u8, len: usize) -> isize;
-    fn vos_console_clear() -> isize;
-    fn vos_exit(status: i32) -> !;
-    fn vos_file_initial(index: u64) -> isize;
-    fn vos_file_open_at(base: isize, path: *const u8, len: usize, rights: u64) -> isize;
-    fn vos_file_read_at(file: isize, out: *mut u8, len: usize, offset: u64) -> isize;
-    fn vos_directory_next(base: isize, cookie: u64, out: *mut u8, len: usize) -> isize;
-    fn vos_handle_close(handle: isize) -> isize;
-}
-#[panic_handler]
-fn panic(_: &PanicInfo) -> ! { unsafe { vos_exit(99) } }
-fn write(s: &[u8]) { for part in s.chunks(256) { if unsafe { vos_console_write(part.as_ptr(),part.len()) } < 0 { unsafe { vos_exit(98) } } } }
+use vos::raw::*;
+vos::entry!(shell_main);
+fn write(s: &[u8]) {if vos::console::write_all(s).is_err() {vos::exit(98)}}
 fn error() { write(b"vsh: operation failed\n"); }
 fn trim(s: &[u8]) -> &[u8] {
     let mut a=0; let mut b=s.len();
@@ -41,8 +29,7 @@ fn open(base:isize,path:&[u8],rights:u64)->isize {
     if path.is_empty() { return unsafe { vos_file_open_at(base,b".".as_ptr(),1,rights) }; }
     unsafe { vos_file_open_at(base,path.as_ptr(),path.len(),rights) }
 }
-#[unsafe(no_mangle)]
-pub extern "C" fn main() -> i32 {
+fn shell_main() -> i32 {
     write(b"VOS native vsh (Rust, ring 3)\nType help for commands.\n\n");
     let root=unsafe { vos_file_initial(0) };
     let mut cwd=[0u8;256]; let mut cwd_len=0;

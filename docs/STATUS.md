@@ -12,7 +12,7 @@ is identical to N3. The first N4 keyboard/echo implementation is published on
 `feat/n4-interactive-console`. No new release tag was created; the older U1 tag
 remains `checkpoint-2026-10-19-u1`.
 
-**N4 is in progress.** The [first input increment](results/n4-first-input.md)
+**N4 is ready for closure.** The [first input increment](results/n4-first-input.md)
 is published at `3a2b642`; [buffered input](results/n4-buffered-input.md) is
 published at `87b99dfc867c45bd01f512cf9ecac0117d1a6eac`. The subsequent
 [native Rust vsh](results/n4-native-vsh.md) runs in ring 3 with a granted ABI v3
@@ -20,7 +20,10 @@ console and supports all seven requested commands plus `exit`. File commands
 use real read-only ext2/ABI v2 operations in an explicitly granted namespace.
 Host checks and BIOS/UEFI runtime checks pass, including five ring-3 console
 probes per firmware and the original normal boot-and-halt path. Native shell
-changes are uncommitted; N4 final acceptance is not claimed.
+publication is `1beb40677bfeb605da5b2920b70af0fc24138493`.
+The subsequent [shared Rust SDK and independent app](results/n4-rust-foundations.md)
+also pass host, loader and BIOS/UEFI checks. SDK changes remain uncommitted for
+review; N4 final acceptance and merging into main are not claimed.
 
 Historical N3.5 approval, integration, failed attempts and original authorization
 boundaries below remain records of those checkpoints, not current N3 blockers.

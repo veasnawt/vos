@@ -25,6 +25,8 @@ VOS is written primarily in freestanding C and x86 assembly. It is **not a Linux
 - Native Rust `vsh`: `help`, `clear`, `echo`, `pwd`, `ls`, `cd`, `cat` and `exit`.
   Filesystem commands use real read-only ABI v2 handles under an explicit grant
   ([first shell results and screenshots](docs/results/n4-native-vsh.md)).
+- A minimal shared Rust SDK, reusable entry/runtime conventions and an independent
+  native example ([application guide](docs/rust-apps.md)).
 - BIOS and UEFI boot paths **in QEMU** via GRUB; extensive emulator-based regression tests.
 
 **N0–N3 are complete.** N3 storage closure was accepted on 2026-10-24 and is
@@ -36,8 +38,10 @@ The [N3 closure record](docs/results/n3-closure.md) contains D1a–D1f,
 failure history. **N4 is in progress:** keyboard input, an interactive console,
 `vsh` and Rust-first native application foundations. The first keyboard-to-console
 increment is published at `3a2b642`, and buffered input at `87b99df`.
-The subsequent native Rust shell and console ABI v3 pass focused host and
-BIOS/UEFI checks; those new changes remain uncommitted for review.
+The native Rust shell is published at `1beb406`. Shared Rust application
+foundations and the independent example also pass focused host and BIOS/UEFI
+checks. **The original N4 objectives are ready for closure**; the final SDK
+changes await review/publication and N4 has not been merged into main.
 
 ![VOS BIOS boot console with PASS status](docs/images/n3/vos-n3-bios-boot-status.png)
 
@@ -74,6 +78,12 @@ For the native shell, use `make vsh-run RUSTC=/path/to/rustc` with an installed
 An optional `VSH_DISK=/path/to/trusted-ext2.img` attaches a read-only volume whose
 `shell` directory becomes the explicitly granted namespace for file commands.
 See [native shell setup and limitations](docs/results/n4-native-vsh.md).
+
+For another native Rust application, create `user/<name>/main.rs` using
+`vos::entry!(run)`, then build with
+`make rust-app RUST_APP=<name> RUSTC=/path/to/rustc`. The independent example runs
+with `make rust-demo-run RUSTC=/path/to/rustc`. See the
+[SDK guide](docs/rust-apps.md) and [foundation results](docs/results/n4-rust-foundations.md).
 
 ## What happens when x86_64 VOS boots
 

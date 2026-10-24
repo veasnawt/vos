@@ -8,11 +8,11 @@
 #include "virtio_blk.h"
 #include "memlayout.h"
 #include "lib.h"
+#include "screen.h"
 
 static struct process app;
-int vsh_requested(const char *p)
+static int option(const char *p,const char *token)
 {
-    const char token[] = "vos.vsh=1";
     if (!p) return 0;
     while (*p) {
         while (*p == ' ' || *p == '\t') p++;
@@ -23,6 +23,8 @@ int vsh_requested(const char *p)
     }
     return 0;
 }
+int vsh_requested(const char *p) {return option(p,"vos.vsh=1");}
+int rust_demo_requested(const char *p) {return option(p,"vos.rust-demo=1");}
 
 static int run_module(const struct boot_info *bi, const char *name, int console, int filesystem)
 {
@@ -67,4 +69,10 @@ int vsh_run(const struct boot_info *bi)
         if (present && !run_module(bi,names[n],n==4,0)) return 0;
     }
     return run_module(bi, "vsh", 1, 1);
+}
+
+int rust_demo_run(const struct boot_info *bi)
+{
+    screen_begin_input();screen_status(SCREEN_PASS,"Rust SDK example");
+    return run_module(bi,"rust-demo",0,0);
 }

@@ -1,0 +1,249 @@
+{
+  "scope": "Original N4 Rust application foundations",
+  "published_native_vsh": "1beb40677bfeb605da5b2920b70af0fc24138493",
+  "branch": "feat/n4-interactive-console",
+  "result": {
+    "scope": "minimal Rust SDK and independent example",
+    "example": {
+      "bios": {
+        "passed": true,
+        "status": 0,
+        "console_grant": false,
+        "filesystem_grant": false,
+        "shell_loaded": false,
+        "screenshot": {
+          "width": 1280,
+          "height": 800,
+          "sha256": "8ffe0038240c66d19caea639811a0512ff743ac10b73bf194c781fd9c521a678"
+        }
+      },
+      "uefi": {
+        "passed": true,
+        "status": 0,
+        "console_grant": false,
+        "filesystem_grant": false,
+        "shell_loaded": false,
+        "screenshot": {
+          "width": 1280,
+          "height": 800,
+          "sha256": "8ffe0038240c66d19caea639811a0512ff743ac10b73bf194c781fd9c521a678"
+        }
+      }
+    },
+    "shared_vsh": {
+      "scope": "native Rust vsh and ABI v3 console",
+      "firmware": {
+        "bios": {
+          "passed": true,
+          "ring3_probes": 5,
+          "commands": [
+            "help",
+            "clear",
+            "echo",
+            "pwd",
+            "ls",
+            "cd",
+            "cat",
+            "exit"
+          ],
+          "shell_screenshot": {
+            "width": 1280,
+            "height": 800,
+            "sha256": "08c7a92630dab01ec6aa8a35ed01bb5c2651840f7493cb540ca44843e8ef274e"
+          },
+          "files_screenshot": {
+            "width": 1280,
+            "height": 800,
+            "sha256": "efe748ecdb9c70c214effb5df03568f827b9994d433f573e166e4979d137132e"
+          },
+          "exit_status": 0,
+          "reclaimed": true
+        },
+        "uefi": {
+          "passed": true,
+          "ring3_probes": 5,
+          "commands": [
+            "help",
+            "clear",
+            "echo",
+            "pwd",
+            "ls",
+            "cd",
+            "cat",
+            "exit"
+          ],
+          "shell_screenshot": {
+            "width": 1280,
+            "height": 800,
+            "sha256": "08c7a92630dab01ec6aa8a35ed01bb5c2651840f7493cb540ca44843e8ef274e"
+          },
+          "files_screenshot": {
+            "width": 1280,
+            "height": 800,
+            "sha256": "efe748ecdb9c70c214effb5df03568f827b9994d433f573e166e4979d137132e"
+          },
+          "exit_status": 0,
+          "reclaimed": true
+        }
+      },
+      "rustc": "rustc 1.100.0-nightly (2e2b193f8 2026-09-02)",
+      "passed": true,
+      "disk_sha256": "e29808c378fbd919b6befeaf678466f601ddd601712e3516db4a6b8a8c8d34f1"
+    },
+    "passed": true,
+    "example_ELF_sha256": "665a13bdac11b3d3322a0f1ca4dd0987a08b125401ce707dffe44296abb157e6",
+    "sdk_source_sha256": "4434372465239c24a806a33debc2f9a74e815bc5afade0ed5b2f2cf72ff8f8c5"
+  },
+  "sources": {
+    "Makefile": "fe2a14b74869a5c462762bcdc721894e5858c6dc75b0c51b430ed42c686513ff",
+    "user/user.mk": "9bdb4f58eaeb4253e383d4e4aece071a38fb91c151f1d7a3b9b37bc04f1dbc9b",
+    "user/rust/vos.rs": "4434372465239c24a806a33debc2f9a74e815bc5afade0ed5b2f2cf72ff8f8c5",
+    "user/rust/runtime.c": "5241c00ae9c96eb646ab8e0544a4a05fa9807e9e186c221709142c26d8086afa",
+    "user/vsh/runtime.c": "1fad1590964cc15c25b48ab000441d0104dfb90244c134f571db15cf71dd1925",
+    "user/vsh/main.rs": "1a48aba5c25b60513abc80564c85f19afc21d9929c3a1dcdbad9efecaf7e9ada",
+    "user/rust-demo/main.rs": "b0177ccff153f71280ba843ed3312f1c29cf9f7fe3510874d1f7519b07e75a90",
+    "tests/rust/sdk.rs": "be2ac81c7365e8fc39d69226e32e8aacd453dcf035f8b6be9ccee64f18fe8d45",
+    "scripts/test-rust-sdk.py": "c2e5b22283a905fd69bc7d4c5c6b096742b81f3888dd97aadbb90c6792b8e165",
+    "arch/x86_64/grub-rust-demo.cfg": "d2508adb0d2a208ea472761cea2eed8a3bc88e9e74916ab046e43638877ecb52",
+    "arch/x86_64/vsh_boot.c": "7404cfa98f6aab424a020eada7fa349f7f441a403b3d947e02c3a15a90bbfc6d",
+    "arch/x86_64/vsh_boot.h": "15834ef5a96ae148437a4ad6951836a1488b7f3d0f9e3e8b65c69f242131b9ab",
+    "arch/x86_64/kernel.c": "a43588caf0f0f145a2ff84d2f312c45d2c152c1bc08ede976264085a4f4f75c7"
+  },
+  "artifacts": [
+    {
+      "path": "docs/results/n4-sdk/result.json",
+      "size": 2483,
+      "sha256": "963d114deead890e5eafdcdde40a971d53e7bb4eee5bfa77fed6c0b5095452d4"
+    },
+    {
+      "path": "docs/results/n4-sdk/sdk-host-test.txt",
+      "size": 144,
+      "sha256": "db3444b92ec68b34242355c9a9da75626a68e4375734dcb9a9e10174c2742d53"
+    },
+    {
+      "path": "docs/results/n4-sdk/build-path-guards.txt",
+      "size": 174,
+      "sha256": "afd589a54c8cf569482bf4cdc5859df056cafefe58d7fc11b53e2a9c6d4d1901"
+    },
+    {
+      "path": "docs/results/n4-sdk/example-elf.txt",
+      "size": 159,
+      "sha256": "1a5aafccadc5a9254e962d5fc83671c6770b08fdb06a7f0a5746631e72f770d5"
+    },
+    {
+      "path": "docs/results/n4-sdk/example-loader.txt",
+      "size": 142,
+      "sha256": "782b544ae097ea3e23ed3575ade3562d389259feb8fc8590f807a9287aa4dd4a"
+    },
+    {
+      "path": "docs/results/n4-sdk/bios.serial.txt",
+      "size": 2840,
+      "sha256": "739de5b691714241943e5d6cea8ad7b50879b1d68b860bb9acd63a96d52265d5"
+    },
+    {
+      "path": "docs/results/n4-sdk/bios-command.json",
+      "size": 523,
+      "sha256": "23ef6998f3e87d981ad5f41d7bc775ccbd3527c7edfd65a7a20b1ba4608deeb6"
+    },
+    {
+      "path": "docs/results/n4-sdk/shared-vsh-bios.serial.txt",
+      "size": 4656,
+      "sha256": "33e9fd0fa78dce4fe290decee7624dfd4ba75989f9181aa15e4ef8c7dae74d01"
+    },
+    {
+      "path": "docs/images/n4/vos-n4-bios-rust-sdk.png",
+      "size": 7904,
+      "sha256": "8ffe0038240c66d19caea639811a0512ff743ac10b73bf194c781fd9c521a678"
+    },
+    {
+      "path": "docs/results/n4-sdk/uefi.serial.txt",
+      "size": 3166,
+      "sha256": "abd53406515855121202ae88fd244c98cf571132a0b56d9f468c4655a07c5438"
+    },
+    {
+      "path": "docs/results/n4-sdk/uefi-command.json",
+      "size": 767,
+      "sha256": "bb8fd36a7b1f2f43cd1b7374a9cb915bd8f10a68d1d5e4f5261ef97f78a35654"
+    },
+    {
+      "path": "docs/results/n4-sdk/shared-vsh-uefi.serial.txt",
+      "size": 4982,
+      "sha256": "e52c3c194790a5b44146ce159c0bdd675b9fa89e1c5045c0c01aeb7f91d1e97b"
+    },
+    {
+      "path": "docs/images/n4/vos-n4-uefi-rust-sdk.png",
+      "size": 7904,
+      "sha256": "8ffe0038240c66d19caea639811a0512ff743ac10b73bf194c781fd9c521a678"
+    }
+  ],
+  "local_manifest": {
+    "path": "build/n4-session-20261024T134442Z/results/manifest.json",
+    "entries": 302,
+    "sha256": "c8958cb9a9f914d98fc4126ff6532300280173b236ba6dccc3a4e83460db55be"
+  },
+  "binaries": {
+    "vsh.elf": {
+      "sha256": "ec7c7a4435c2dc84ed742bfceb314fcd1db83848d107829c98277812bb575b4b",
+      "bytes": 662664
+    },
+    "rust-demo.elf": {
+      "sha256": "665a13bdac11b3d3322a0f1ca4dd0987a08b125401ce707dffe44296abb157e6",
+      "bytes": 14864
+    },
+    "rust/libvos.rlib": {
+      "sha256": "0802f6a65331afba558c1a118639a0c66617237ed2e3b4ac46a07540b9507c97",
+      "bytes": 69132
+    }
+  },
+  "isolation": {
+    "accepted_rules_unchanged": true,
+    "query_timeout_seconds": 90,
+    "samples": 3,
+    "all_clean": true,
+    "last_sample": {
+      "utc": 1792849518.9303384,
+      "used": 96071680,
+      "capacity": {
+        "charged": 2494574592,
+        "remaining": 1028640768,
+        "C": 12960690176,
+        "E": 251835445248,
+        "linux": 1009862373376,
+        "admitted_extra": 300670976
+      },
+      "isolation_errors": []
+    }
+  },
+  "storage": {
+    "ceiling_MiB_unchanged": 3360,
+    "local_bound_MiB": 128,
+    "reserves_unchanged": true,
+    "failed_attempts_carried": true
+  },
+  "previous_attempt": "build/n4-session-20261024T134114Z",
+  "SDK_committed": false,
+  "N4_ready_for_closure": true,
+  "no_N3_campaign_repeated": true,
+  "final_review": {
+    "native_vsh_commit": "1beb40677bfeb605da5b2920b70af0fc24138493",
+    "SDK_changed_files": 34,
+    "SDK_committed": false,
+    "original_N4_ready_for_closure": true,
+    "worktrees": 13,
+    "stashes": 2,
+    "protected_binaries": 7,
+    "prior_N4_artifacts_unchanged": true,
+    "N4_all_attempts_MiB": 339.98828125,
+    "conservative_combined_MiB": 2721.09375,
+    "ceiling_MiB": 3360,
+    "remaining_MiB": 638.90625,
+    "reserves": {
+      "charged": 2494672896,
+      "remaining": 1028542464,
+      "C": 12958199808,
+      "E": 251835445248,
+      "linux": 1009862254592,
+      "admitted_extra": 358600704
+    }
+  }
+}

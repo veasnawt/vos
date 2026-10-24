@@ -189,15 +189,23 @@ the opt-in display in reading order. A demo consumer prints `submitted: ...`;
 this is not a shell or a user-mode input ABI.
 
 Buffered input is now published at `87b99dfc867c45bd01f512cf9ecac0117d1a6eac`.
-The subsequent [native Rust vsh](results/n4-native-vsh.md) is implemented and
-verified but uncommitted: ABI v3 console calls 11–13 are available only to an
+The subsequent [native Rust vsh](results/n4-native-vsh.md) is published at
+`1beb40677bfeb605da5b2920b70af0fc24138493`: ABI v3 console calls 11–13 are available only to an
 explicitly granted process, with ABI v0–v2 preserved. The shell implements
 `help`, `clear`, `echo`, `pwd`, `ls`, `cd`, `cat` and `exit` in userspace.
 Filesystem access uses ABI v2 handles and the trusted non-root `shell` grant.
 The installed Rust bare-metal target links through the existing C ABI/runtime
 and ELF script; no new toolchain was installed.
 
-Next: review/publication of the native shell and the N4 closure decision.
+The final [Rust application foundations](results/n4-rust-foundations.md) are
+implemented and verified: `user/rust/vos.rs`, shared runtime/macro, reusable
+native ELF build and independent `rust-demo`. The SDK has no allocator or
+dependencies and grants no authority. The shell now consumes it. See
+[writing Rust apps](rust-apps.md) for build/entry/API conventions.
+
+The original N4 objectives are ready for closure. SDK changes await final review
+and publication; merging N4 into main still requires approval. No further feature
+or verification campaign is a prerequisite for the agreed N4 scope.
 Rixie Core is optional. Do not rerun N3 campaigns or introduce new N3 gates.
 
 ### Historical N3.5 checkpoints

@@ -134,13 +134,23 @@ user-test: user-check user-files $(USER_RT) $(USER_RT_V1) $(KERNEL) $(ELFCHECK) 
 # Rust is compiled as a freestanding static library, linked through the same C ABI,
 # entry point, ELF profile and syscall stubs as other native languages.
 RUSTC ?= rustc
-$(USER_BUILD)/vsh/main.a: user/vsh/main.rs
+RUST_APP ?= rust-demo
+VOS_RUST_FLAGS := --edition=2024 --target=x86_64-unknown-none -C panic=abort -C opt-level=s -C relocation-model=static -C code-model=small -C debuginfo=0
+RUST_SDK := $(USER_BUILD)/rust/libvos.rlib
+$(RUST_SDK): user/rust/vos.rs user/user.mk
 	@mkdir -p $(dir $@)
-	$(RUSTC) --edition=2024 --crate-type=staticlib --target=x86_64-unknown-none -C panic=abort -C opt-level=s -C relocation-model=static -C code-model=small -C debuginfo=0 -o $@ $<
-$(USER_BUILD)/vsh.elf: $(USER_RT_V3) $(USER_BUILD)/vsh/main.a $(USER_BUILD)/vsh/runtime.o $(USER_LDS)
-	$(LD) $(USER_LDFLAGS) --gc-sections -o $@ $(USER_RT_V3) $(USER_BUILD)/vsh/runtime.o $(USER_BUILD)/vsh/main.a
-.PHONY: user-vsh
+	$(RUSTC) $(VOS_RUST_FLAGS) --crate-name vos --crate-type=rlib --emit=link,dep-info=$(@:.rlib=.d) -o $@ $<
+define RUST_APPLICATION
+$(USER_BUILD)/$(1)/main.a: user/$(1)/main.rs $(RUST_SDK) user/user.mk
+	@mkdir -p $$(dir $$@)
+	$$(RUSTC) $$(VOS_RUST_FLAGS) --crate-name $$(subst -,_,$(1)) --crate-type=staticlib --extern vos=$$(RUST_SDK) --emit=link,dep-info=$$(@:.a=.d) -o $$@ $$<
+$(USER_BUILD)/$(1).elf: $(USER_RT_V3) $(USER_BUILD)/$(1)/main.a $(USER_BUILD)/rust/runtime.o $(USER_LDS)
+	$$(LD) $$(USER_LDFLAGS) --gc-sections -o $$@ $$(USER_RT_V3) $(USER_BUILD)/rust/runtime.o $(USER_BUILD)/$(1)/main.a
+endef
+$(foreach app,$(sort vsh $(RUST_APP)),$(eval $(call RUST_APPLICATION,$(app))))
+.PHONY: user-vsh user-rust
 user-vsh: $(USER_BUILD)/vsh.elf
+user-rust: $(USER_BUILD)/$(RUST_APP).elf
 
 define CONSOLE_PROBE
 $(USER_BUILD)/console-$(1).o: user/vsh/console_probe.c

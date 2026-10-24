@@ -23,13 +23,15 @@ See [status](STATUS.md) and the [N3 closure record](results/n3-closure.md).
 | N3.6 / N3 | Integrated accounting/stress, final regression, five mutations, fifteen larger-RAM runs and preserved evidence | [Final N3 closure](results/n3-closure.md) |
 | U0/U1 | QEMU UEFI feasibility/readiness, BIOS compatibility and framebuffer diagnostics | [UEFI plan/results](plans/uefi.md) |
 
-## In progress: N4
+## N4: ready for closure
 
 N4 development is authorized and uses `feat/n4-interactive-console`, based on
 the integrated N3 baseline. The [first input increment](results/n4-first-input.md)
 was published at `3a2b642`, and [buffered input](results/n4-buffered-input.md) at
-`87b99df`. The first [native Rust vsh](results/n4-native-vsh.md) now also passes
-focused host and BIOS/UEFI verification.
+`87b99df`. [Native Rust vsh](results/n4-native-vsh.md) is published at `1beb406`.
+The final [Rust application foundations](results/n4-rust-foundations.md) pass
+focused host and BIOS/UEFI verification. The original N4 scope is implemented;
+acceptance/publication of the SDK and authorized integration remain pending.
 
 Priorities remain, in order:
 
@@ -38,8 +40,8 @@ Priorities remain, in order:
    rejection and chronological scrolling work. The kernel reader is ready for a shell/input bridge.
 3. Native `vsh`: the first Rust implementation runs in ring 3 through a granted console.
 4. `help`, `clear`, `echo`, `pwd`, `ls`, `cd`, `cat`: working with bounded text and real read-only filesystem calls.
-5. Rust-first native application foundations: freestanding Rust links through the
-   existing C entry/syscall/ELF interfaces; ABI v3 adds explicitly granted console I/O.
+5. Rust-first native application foundations: shared bindings/runtime, a reusable
+   ELF build and an independent example use the same C entry/syscall/ELF interfaces.
 
 Preserve N0–N3 and ABI v0/v1/v2. Use focused checks as each increment changes
 behavior. Rixie Core is optional and must not delay the shell. No new N3 gates

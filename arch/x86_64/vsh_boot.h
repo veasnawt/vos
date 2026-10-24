@@ -3,4 +3,6 @@
 struct boot_info;
 int vsh_requested(const char *cmdline);
 int vsh_run(const struct boot_info *bi);
+int rust_demo_requested(const char *cmdline);
+int rust_demo_run(const struct boot_info *bi);
 #endif
