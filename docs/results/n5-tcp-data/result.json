@@ -1,0 +1,67 @@
+{
+  "scope": "bounded TCP payload and relevant security/performance evidence",
+  "firmware": {
+    "bios": {
+      "passed": true,
+      "firmware": "bios",
+      "handshakes": 1,
+      "accepted_RX_bytes": 144,
+      "read_RX_bytes": 80,
+      "sent_TX_bytes": 68,
+      "acknowledged_TX_bytes": 4,
+      "timeout_aborted_RX_bytes": 64,
+      "timeout_aborted_TX_bytes": 64,
+      "corrective_ACKs": 5,
+      "invalid_packets_or_ACKs": 3,
+      "TX": 16,
+      "RX": 20,
+      "RX_TX_buffer_bytes": 64,
+      "context_bytes": 504,
+      "timeout_abort": true,
+      "adapter_reset_confirmed": true,
+      "DMA_frames_released": 11,
+      "endpoint_erased": true,
+      "ABI_v0_hello": true,
+      "no_application_grants": true,
+      "screenshot": {
+        "width": 1280,
+        "height": 800,
+        "sha256": "76f8f88ddcb7f7e166d5ab19b3518be13819a19a5df1b00f5a117d1f07244427"
+      }
+    },
+    "uefi": {
+      "passed": true,
+      "firmware": "uefi",
+      "handshakes": 1,
+      "accepted_RX_bytes": 144,
+      "read_RX_bytes": 80,
+      "sent_TX_bytes": 68,
+      "acknowledged_TX_bytes": 4,
+      "timeout_aborted_RX_bytes": 64,
+      "timeout_aborted_TX_bytes": 64,
+      "corrective_ACKs": 5,
+      "invalid_packets_or_ACKs": 3,
+      "TX": 16,
+      "RX": 20,
+      "RX_TX_buffer_bytes": 64,
+      "context_bytes": 504,
+      "timeout_abort": true,
+      "adapter_reset_confirmed": true,
+      "DMA_frames_released": 11,
+      "endpoint_erased": true,
+      "ABI_v0_hello": true,
+      "no_application_grants": true,
+      "screenshot": {
+        "width": 1280,
+        "height": 800,
+        "sha256": "76f8f88ddcb7f7e166d5ab19b3518be13819a19a5df1b00f5a117d1f07244427"
+      }
+    }
+  },
+  "passed": true,
+  "host_sanitizers": [
+    "address",
+    "undefined"
+  ],
+  "userspace_ABI_unchanged": true
+}

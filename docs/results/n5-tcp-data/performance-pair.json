@@ -1,0 +1,72 @@
+{
+  "kind": "paired optimized hosted protocol model, not QEMU throughput",
+  "baseline_record": "/home/veasnawt/src/myos/build/n5-tcp-data-20261024T185044Z/baseline-record.json",
+  "baseline_binary_sha256": "c151777302dc6ca30eb6f8bd197676be4af0bcade126e0917b7c87609be5e395",
+  "same_benchmark_sha256": "e9e163be7792ff839600653f8971207049524d92c0fbc89b7cbf982ecd5eed94",
+  "release_command": [
+    "gcc",
+    "-std=gnu11",
+    "-O2",
+    "-Wall",
+    "-Wextra",
+    "-Werror",
+    "-ffunction-sections",
+    "-fdata-sections",
+    "-Wl,--gc-sections",
+    "-Iarch/x86_64",
+    "-Itests/host",
+    "-DVOS_TCP_PAYLOAD_BENCH"
+  ],
+  "baseline": {
+    "kind": "optimized_host_protocol_model",
+    "iterations_per_sample": 20000,
+    "context_bytes": 344,
+    "legacy_ns_per_handshake": [
+      219.99,
+      217.04,
+      256.755,
+      217.68,
+      214.6,
+      220.135,
+      215.84
+    ],
+    "sink": 429000
+  },
+  "current": {
+    "kind": "optimized_host_protocol_model",
+    "iterations_per_sample": 20000,
+    "context_bytes": 504,
+    "legacy_ns_per_handshake": [
+      227.805,
+      227.795,
+      260.96,
+      229.385,
+      228.055,
+      230.98,
+      253.12
+    ],
+    "payload_ns_per_two_byte_bidirectional_transaction_with_setup": [
+      473.73,
+      472.21,
+      484.395,
+      463.26,
+      542.51,
+      484.015,
+      545.705
+    ],
+    "sink": 41105935442000
+  },
+  "legacy_median_change_percent": 5.377159132671805,
+  "potential_regression_over_25_percent": false,
+  "host": {
+    "platform": "Linux-6.18.54.1-microsoft-standard-WSL2-x86_64-with-glibc2.43",
+    "logical_cpus": 4,
+    "loadavg": [
+      0.1669921875,
+      0.107421875,
+      0.1337890625
+    ],
+    "CPU_model": "Intel(R) Core(TM) i5-4570 CPU @ 3.20GHz"
+  },
+  "sanitizer_results_separate": true
+}

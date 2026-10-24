@@ -26,10 +26,21 @@ rejects one four-slot queue overflow. UDP is published at `a5889f9`.
 host checks and both firmware tests: one completed handshake, one half-open
 timeout and 20 rejected inputs each. There is one fixed connection record,
 with no streaming, retransmission, TCP options or FIN/RST closure. TCP changes
-remain uncommitted for review. Application networking is not exposed.
+were published at `4e799c2`. [Bounded TCP payload exchange](results/n5-tcp-data.md)
+now passes 5,397 sanitizer-backed checks and BIOS/UEFI wire tests. Each boot
+accepts 144 bytes, consumes 80, transmits 68 and verifies partial/full ACKs,
+window exhaustion/reopening and explicit timeout/reset erasure. Context size is
+504 bytes with fixed 64-byte RX and TX buffers, below the existing 512-byte bound.
+Payload exchange is published at `ff251a7`. [Bounded retransmission](results/n5-tcp-retry.md)
+now passes 1,711 new sanitizer checks and BIOS/UEFI loss/ACK-loss/partial-ACK tests.
+Three retries and a 200-tick absolute TX horizon bound terminal cleanup. The
+context remains 504 bytes; retry metadata occupies six former padding bytes.
+Retransmission remains uncommitted. Application networking is not exposed.
 GitHub main now contains the owner's [PR #4](https://github.com/veasnawt/vos/pull/4)
 merge `d01b3f5`, whose tree matches IPv4 publication `33693b3`. Local main remains
 `bbca69d`; the executor did not merge, fetch or change that local branch.
+The owner's later [PR #5](https://github.com/veasnawt/vos/pull/5) advanced GitHub
+main to `ffaf2fb`, with a tree identical to TCP establishment `4e799c2`.
 Rixie Connected is not started. The existing 272 MiB continuation meter is enforced
 alongside the unchanged inherited 3360 MiB aggregate ceiling and host reserves.
 

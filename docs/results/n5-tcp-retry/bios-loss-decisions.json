@@ -1,0 +1,43 @@
+[
+  {
+    "native": 3,
+    "action": "drop data before application delivery",
+    "bytes": 8
+  },
+  {
+    "native": 5,
+    "action": "deliver once but drop ACK",
+    "bytes": 8,
+    "dropped_ACK_hex": "525400123456525400aabbcc080045000028112240004006119e0a0002020a00020f13890fa10102030511223355501000402bdc0000000000000000"
+  },
+  {
+    "native": 6,
+    "action": "duplicate detected; no application redelivery",
+    "bytes": 8
+  },
+  {
+    "native": 7,
+    "action": "accept four-byte prefix; withhold trailing eight bytes",
+    "bytes": 8
+  },
+  {
+    "native": 9,
+    "action": "drop data for retry exhaustion",
+    "bytes": 16
+  },
+  {
+    "native": 10,
+    "action": "drop data for retry exhaustion",
+    "bytes": 16
+  },
+  {
+    "native": 11,
+    "action": "drop data for retry exhaustion",
+    "bytes": 16
+  },
+  {
+    "native": 12,
+    "action": "drop data for retry exhaustion",
+    "bytes": 16
+  }
+]

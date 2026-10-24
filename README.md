@@ -41,6 +41,10 @@ VOS is written primarily in freestanding C and x86 assembly. It is **not a Linux
   receive queue and checksummed datagram exchange without application grants.
   A [TCP establishment prototype](docs/results/n5-tcp.md) completes a controlled
   handshake with one connection record, strict validation and half-open expiry.
+  [Opt-in TCP payload exchange](docs/results/n5-tcp-data.md) adds fixed 64-byte
+  receive/transmit buffers, real window accounting and bounded in-order data.
+  [Bounded retransmission](docs/results/n5-tcp-retry.md) recovers controlled data
+  and ACK loss with finite retries and explicit terminal cleanup.
 - BIOS and UEFI boot paths **in QEMU** via GRUB; extensive emulator-based regression tests.
 
 **N0–N3 are complete.** N3 storage closure was accepted on 2026-10-24 and is
@@ -60,14 +64,17 @@ checks. The [N4 record](docs/results/n4-closure.md) preserves its pre-merge chec
 is published at `27fe770` with focused host and BIOS/UEFI frame checks. Bounded
 Ethernet/ARP is published at `a6571c1`. IPv4/ICMP now passes host and BIOS/UEFI
 checks: two native pings and one echo response per boot, published at `33693b3`.
-Bounded kernel UDP is published at `a5889f9`. A passive TCP establishment
-prototype now passes host and BIOS/UEFI checks; it does not provide streaming,
-retransmission or FIN/RST closure. Explicit application network capabilities
+Bounded kernel UDP is published at `a5889f9`; TCP establishment is published at
+`4e799c2`; payload exchange is published at `ff251a7`. An opt-in retry profile now
+passes host and BIOS/UEFI loss tests without growing the 504-byte context. It has
+fixed diagnostic timers rather than production TCP recovery, and no FIN/RST
+closure or reassembly. Explicit application capabilities
 remain future work. Rixie Connected has not begun.
 
 The owner merged [PR #4](https://github.com/veasnawt/vos/pull/4) into GitHub main
 at `d01b3f5` during UDP verification. Its tree matches published `33693b3`;
-UDP was subsequently published on the development branch. TCP remains uncommitted
+The owner subsequently merged PR #5 at `ffaf2fb`, whose tree matches TCP establishment.
+Payload exchange was published on the feature branch; retransmission changes remain uncommitted
 for review. Local main remains `bbca69d`.
 
 ![VOS BIOS boot console with PASS status](docs/images/n3/vos-n3-bios-boot-status.png)

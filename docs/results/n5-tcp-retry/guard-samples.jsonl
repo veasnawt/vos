@@ -1,0 +1,3 @@
+{"utc": 1792870355.307859, "used": 2265088, "capacity": {"charged": 2496360448, "remaining": 1026854912, "C": 12481482752, "E": 251835445248, "linux": 1009224249344, "admitted_extra": 941875200}, "isolation_errors": []}
+{"utc": 1792870368.2498713, "used": 24543232, "capacity": {"charged": 2496360448, "remaining": 1026854912, "C": 12481449984, "E": 251835445248, "linux": 1009201967104, "admitted_extra": 919597056}, "isolation_errors": []}
+{"utc": 1792870380.6203396, "used": 31379456, "capacity": {"charged": 2496360448, "remaining": 1026854912, "C": 12481441792, "E": 251835445248, "linux": 1009195130880, "admitted_extra": 912760832}, "isolation_errors": []}
