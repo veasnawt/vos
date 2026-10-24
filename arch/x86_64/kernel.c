@@ -17,6 +17,7 @@
 #include "irq.h"
 #include "input_console.h"
 #include "vsh_boot.h"
+#include "net_boot.h"
 #include "kmap.h"
 #include "memlayout.h"
 #include "multiboot2.h"
@@ -362,7 +363,10 @@ void kernel_main(uint32_t mb2_magic, uint32_t mb2_info)
     screen_status(first_failure ? SCREEN_FAIL : SCREEN_PASS, first_failure ? "VOS-TEST: FAIL" : "VOS-TEST: PASS");
     outl(TEST_EXIT_PORT, first_failure ? TEST_EXIT_FAIL : TEST_EXIT_PASS);
 #else
-    if (!first_failure && rixie_requested(bi.cmdline)) {
+    if (!first_failure && net_requested(bi.cmdline)) {
+        check(net_boot_run(), "native network adapter");
+        screen_status(first_failure ? SCREEN_FAIL : SCREEN_PASS,first_failure ? "Network check failed" : "N5 adapter increment");
+    } else if (!first_failure && rixie_requested(bi.cmdline)) {
         check(rixie_run(&bi), "Rixie Core v0");
         screen_status(first_failure ? SCREEN_FAIL : SCREEN_PASS,first_failure ? "Rixie failed" : "Rixie session complete");
     } else if (!first_failure && rust_demo_requested(bi.cmdline)) {

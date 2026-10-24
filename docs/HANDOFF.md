@@ -45,8 +45,8 @@ git checkout main            # or the checkpoint tag listed in docs/STATUS.md
 
 The repository is public. N3 is complete on `feat/n3.6-storage-closure`; use
 `git checkout feat/n3.6-storage-closure` to inspect the milestone publication.
-Main contains N3 through PR #2 at `d9a4ade`. The published N4 implementation is
-on `feat/n4-interactive-console`; the owner handles its pull request and merge.
+Main now contains accepted N4 at `bbca69d`, with the same tree as publication
+`50cbc8b`. N5 work uses `feat/n5-networking`, created from that verified merge.
 `build/` is generated and ignored. See [STATUS](STATUS.md) and the
 [final N3 closure record](results/n3-closure.md).
 
@@ -176,8 +176,8 @@ unsealed and unarchived. Monitoring gaps are not presented as uninterrupted isol
 The accepted run controllers and exact build environments remain in local evidence.
 
 N4 implementation, including the owner's added minimal Rixie Core v0 scope,
-is ready for closure on `feat/n4-interactive-console`.
-See [closure readiness](results/n4-closure.md). The first
+is complete and integrated into main at `bbca69d`.
+See the [pre-merge record](results/n4-closure.md). The first
 [keyboard echo increment](results/n4-first-input.md) passes host, BIOS input,
 UEFI input and normal-boot compatibility checks. `make input-run` builds into its
 own `build/n4-input/` tree; the existing EFI extraction environment is still needed
@@ -222,8 +222,18 @@ Use `make rixie-run RUSTC=/path/to/rustc`; it is not a `vsh` external command.
 
 Six host tests, 17 BIOS/UEFI interactions per firmware and independent vsh smoke
 boots pass. No ABI change, kernel subsystem, network, GUI or model was introduced.
-The extended N4 scope is ready for closure. The owner handles acceptance, the
-GitHub pull request and merge. Do not rerun N3 campaigns or introduce new gates.
+The owner accepted and merged the extended N4 scope. N5 begins from that verified
+tree; the earlier readiness records remain unchanged. Do not rerun N3 campaigns.
+
+### N5 first adapter increment
+
+The [native networking guide](networking.md) describes the first opt-in modern
+virtio-net driver, fixed DMA/queue bounds, isolated peer workflow and eventual
+explicit network-capability direction. [Results](results/n5-first-network.md)
+include host checks, BIOS/UEFI frame exchange and compatibility boots. No network
+syscall or Rixie Connected implementation is present. Next: Ethernet dispatch and
+ARP, then IPv4/ICMP. Generated builds must stay outside protected N3/N4 roots;
+all prior evidence, worktrees, stashes and cumulative storage guards remain in force.
 
 ### Historical N3.5 checkpoints
 

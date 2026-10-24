@@ -1,0 +1,89 @@
+{
+  "scope": "first N5 modern virtio-net adapter increment",
+  "boots": [
+    {
+      "passed": true,
+      "frames": 16,
+      "mode": "net",
+      "firmware": "bios",
+      "ABI_v0_hello": true,
+      "halted": true,
+      "screenshot": {
+        "width": 1280,
+        "height": 800,
+        "sha256": "2af9e81589828d58f02ad1e5e94f292d3d7573e3469b41fa0e133e77bdfcc54a"
+      },
+      "NIC_present": true,
+      "isolated_Unix_peer": true,
+      "no_TAP_NAT_LAN": true
+    },
+    {
+      "passed": true,
+      "frames": 16,
+      "mode": "net",
+      "firmware": "uefi",
+      "ABI_v0_hello": true,
+      "halted": true,
+      "screenshot": {
+        "width": 1280,
+        "height": 800,
+        "sha256": "2af9e81589828d58f02ad1e5e94f292d3d7573e3469b41fa0e133e77bdfcc54a"
+      },
+      "NIC_present": true,
+      "isolated_Unix_peer": true,
+      "no_TAP_NAT_LAN": true
+    },
+    {
+      "passed": true,
+      "frames": 0,
+      "mode": "absent",
+      "firmware": "bios",
+      "ABI_v0_hello": true,
+      "halted": true,
+      "screenshot": {
+        "width": 1280,
+        "height": 800,
+        "sha256": "07e638e2e34b12a37b02fe5c4dbf05a0316bde716edb0d205a04602863f760ea"
+      },
+      "NIC_present": false,
+      "isolated_Unix_peer": false,
+      "no_TAP_NAT_LAN": true
+    },
+    {
+      "passed": true,
+      "frames": 0,
+      "mode": "vsh",
+      "firmware": "bios",
+      "ABI_v0_hello": true,
+      "halted": true,
+      "screenshot": {
+        "width": 1280,
+        "height": 800,
+        "sha256": "0a717c2ad12dd6945e399004c45a77094e85e06f6260a6322ab3c7c2fdd3bbf2"
+      },
+      "NIC_present": true,
+      "isolated_Unix_peer": true,
+      "no_TAP_NAT_LAN": true
+    },
+    {
+      "passed": true,
+      "frames": 0,
+      "mode": "rixie",
+      "firmware": "uefi",
+      "ABI_v0_hello": true,
+      "halted": true,
+      "screenshot": {
+        "width": 1280,
+        "height": 800,
+        "sha256": "0dfdf88ca71021e491c230452fac40645fe8d2c1738dfc803d04bcb9c24b1a20"
+      },
+      "NIC_present": true,
+      "isolated_Unix_peer": true,
+      "no_TAP_NAT_LAN": true
+    }
+  ],
+  "rustc": "rustc 1.100.0-nightly (2e2b193f8 2026-09-02)",
+  "passed": true,
+  "userspace_ABI_unchanged": true,
+  "automatic_application_network_grants": false
+}

@@ -1,0 +1,279 @@
+{
+  "scope": "First N5 bounded modern virtio-net adapter",
+  "branch": "feat/n5-networking",
+  "baseline": "bbca69d850e8c168bfa824ace475a27226b2cdb7",
+  "accepted_N4": "50cbc8bc49bd10d5272647b267ed23895d2f533d",
+  "N4_merge_tree_identical": true,
+  "sources": {
+    "Makefile": "4d6b14c95352001d7b050148a55188d0f945a765a96bf3bed5d76a8987647c1a",
+    "arch/x86_64/arch.mk": "8d58a29be9d8db5def08690c41a24d0b978652a2302e3b8f1222d9f6cfecd9b9",
+    "arch/x86_64/kernel.c": "615aea9ae65d8e28733a1e473cf980b4b14c32e9f85c5f53e3b6b35f1500755c",
+    "arch/x86_64/virtio_net.c": "f23fa484fa199e032950390ac50dd82ca428836c6e625147f7ade12b92786b83",
+    "arch/x86_64/virtio_net.h": "7ee0bf7a34f31edfcdbb8dc6dc77f282664727775fc55ede4aa18cc0bc7f7222",
+    "arch/x86_64/net_boot.c": "bc38440eafebc6eb80d2e5e46aac58f062907aceaae9aaf052b93e175fc3039b",
+    "arch/x86_64/net_boot.h": "eb8527f2028d0ce7c909142ba0681e22c39a29ffbad125ce07b4f1e792d1e344",
+    "arch/x86_64/grub-net.cfg": "37c6f0010843139df3435c4f06159d7edacbea69237eb615d30e32019d487fc9",
+    "scripts/test-virtio-net.py": "dfa5dd391122cbd75bf34442221323e64a296336f6e33864a11769744bc913ef",
+    "tests/host/virtio-net.c": "2e60dbd5d16cb1f23a12876b4447bff7cc8e57c1893e716be7c8f3e47a6c6184"
+  },
+  "artifacts": [
+    {
+      "path": "docs/results/n5-net/absent-bios-command.json",
+      "size": 520,
+      "sha256": "875a4f431edaf364e89c8842e9770e3eeafdbc2a5830690197a4c880671a97ca"
+    },
+    {
+      "path": "docs/results/n5-net/absent-bios.serial.txt",
+      "size": 2552,
+      "sha256": "29869623e019ef290b327c9201ba8893df6c99b6d180a7c72d8245cba26619e2"
+    },
+    {
+      "path": "docs/results/n5-net/host-test.txt",
+      "size": 80,
+      "sha256": "b1e71731c43f564855ea1c856f9c7d069ca57b19536c4fcc1535279a699c6751"
+    },
+    {
+      "path": "docs/results/n5-net/net-bios-command.json",
+      "size": 801,
+      "sha256": "07a448e0d421d90218d73cfbb6fdc2f7cbcb346cdb3f69756dfe261962f0f5af"
+    },
+    {
+      "path": "docs/results/n5-net/net-bios-frames.json",
+      "size": 4857,
+      "sha256": "701f9e832b5abf54ca39abf8ba38982df194add5134d2719b2b8de19d9996686"
+    },
+    {
+      "path": "docs/results/n5-net/net-bios-registers.txt",
+      "size": 2052,
+      "sha256": "543c9f464860ecf9c48231946ada3333ae9f360a7f48bccc565aeab1a53a47ba"
+    },
+    {
+      "path": "docs/results/n5-net/net-bios.pcap",
+      "size": 2456,
+      "sha256": "88e495475792e1e27c521005645cd37e0b5e67cf93741d752fbac205454e443c"
+    },
+    {
+      "path": "docs/results/n5-net/net-bios.serial.txt",
+      "size": 2639,
+      "sha256": "094de37a856fc838f89b01cf3776a0122dfe2cf942fc6aec103f9f9e29051d55"
+    },
+    {
+      "path": "docs/results/n5-net/net-uefi-command.json",
+      "size": 1041,
+      "sha256": "f007912830a5487864a390264861b01c5f79dfa4758fdda4c44673d0cb6164bf"
+    },
+    {
+      "path": "docs/results/n5-net/net-uefi-frames.json",
+      "size": 4857,
+      "sha256": "701f9e832b5abf54ca39abf8ba38982df194add5134d2719b2b8de19d9996686"
+    },
+    {
+      "path": "docs/results/n5-net/net-uefi-registers.txt",
+      "size": 2052,
+      "sha256": "de8bd973bd25c47ebd1bcb81edf63ccf480e2b1bfccc0a8ee157ac2bb66ffe51"
+    },
+    {
+      "path": "docs/results/n5-net/net-uefi.pcap",
+      "size": 2456,
+      "sha256": "4b3f22c109eabe6cda98ecf72c27daff556cbb062cc08567b09f346591c01df7"
+    },
+    {
+      "path": "docs/results/n5-net/net-uefi.serial.txt",
+      "size": 2969,
+      "sha256": "d5cfeacba5302cd9daa30a8a0b040153b49dedc393f262509eabb0ed9b96a782"
+    },
+    {
+      "path": "docs/results/n5-net/path-guard.txt",
+      "size": 78,
+      "sha256": "a389bb33313ec9eb88ab73672087657949c39bbd92a48f9f45fab4235459e465"
+    },
+    {
+      "path": "docs/results/n5-net/result.json",
+      "size": 2264,
+      "sha256": "38a78fdb942d9b1e20ae47e67041ebdc6577e388972d788b8b9241c531bd229a"
+    },
+    {
+      "path": "docs/results/n5-net/rixie-uefi-command.json",
+      "size": 1051,
+      "sha256": "8eb744a0e9363358f42f8d2a8011fa22c3b401a8cbbbae528b8bfcb8d0a49d13"
+    },
+    {
+      "path": "docs/results/n5-net/rixie-uefi.serial.txt",
+      "size": 3365,
+      "sha256": "3517150cbb5a4fd0435ee17364b6be4b99e573594a30bfdf7c64cbfbd6e65217"
+    },
+    {
+      "path": "docs/results/n5-net/vsh-bios-command.json",
+      "size": 801,
+      "sha256": "a862c6f19550175b7e10763a470017b2b94c34572149d8abbfa165fdc801021e"
+    },
+    {
+      "path": "docs/results/n5-net/vsh-bios.serial.txt",
+      "size": 2868,
+      "sha256": "cb879c8be407052a66258677e3b54db4a0d1052675d0c0a41984cc980d0d0589"
+    },
+    {
+      "path": "docs/images/n5/vos-n5-bios-virtio-net.png",
+      "sha256": "2af9e81589828d58f02ad1e5e94f292d3d7573e3469b41fa0e133e77bdfcc54a"
+    },
+    {
+      "path": "docs/images/n5/vos-n5-uefi-virtio-net.png",
+      "sha256": "2af9e81589828d58f02ad1e5e94f292d3d7573e3469b41fa0e133e77bdfcc54a"
+    }
+  ],
+  "result": {
+    "scope": "first N5 modern virtio-net adapter increment",
+    "boots": [
+      {
+        "passed": true,
+        "frames": 16,
+        "mode": "net",
+        "firmware": "bios",
+        "ABI_v0_hello": true,
+        "halted": true,
+        "screenshot": {
+          "width": 1280,
+          "height": 800,
+          "sha256": "2af9e81589828d58f02ad1e5e94f292d3d7573e3469b41fa0e133e77bdfcc54a"
+        },
+        "NIC_present": true,
+        "isolated_Unix_peer": true,
+        "no_TAP_NAT_LAN": true
+      },
+      {
+        "passed": true,
+        "frames": 16,
+        "mode": "net",
+        "firmware": "uefi",
+        "ABI_v0_hello": true,
+        "halted": true,
+        "screenshot": {
+          "width": 1280,
+          "height": 800,
+          "sha256": "2af9e81589828d58f02ad1e5e94f292d3d7573e3469b41fa0e133e77bdfcc54a"
+        },
+        "NIC_present": true,
+        "isolated_Unix_peer": true,
+        "no_TAP_NAT_LAN": true
+      },
+      {
+        "passed": true,
+        "frames": 0,
+        "mode": "absent",
+        "firmware": "bios",
+        "ABI_v0_hello": true,
+        "halted": true,
+        "screenshot": {
+          "width": 1280,
+          "height": 800,
+          "sha256": "07e638e2e34b12a37b02fe5c4dbf05a0316bde716edb0d205a04602863f760ea"
+        },
+        "NIC_present": false,
+        "isolated_Unix_peer": false,
+        "no_TAP_NAT_LAN": true
+      },
+      {
+        "passed": true,
+        "frames": 0,
+        "mode": "vsh",
+        "firmware": "bios",
+        "ABI_v0_hello": true,
+        "halted": true,
+        "screenshot": {
+          "width": 1280,
+          "height": 800,
+          "sha256": "0a717c2ad12dd6945e399004c45a77094e85e06f6260a6322ab3c7c2fdd3bbf2"
+        },
+        "NIC_present": true,
+        "isolated_Unix_peer": true,
+        "no_TAP_NAT_LAN": true
+      },
+      {
+        "passed": true,
+        "frames": 0,
+        "mode": "rixie",
+        "firmware": "uefi",
+        "ABI_v0_hello": true,
+        "halted": true,
+        "screenshot": {
+          "width": 1280,
+          "height": 800,
+          "sha256": "0dfdf88ca71021e491c230452fac40645fe8d2c1738dfc803d04bcb9c24b1a20"
+        },
+        "NIC_present": true,
+        "isolated_Unix_peer": true,
+        "no_TAP_NAT_LAN": true
+      }
+    ],
+    "rustc": "rustc 1.100.0-nightly (2e2b193f8 2026-09-02)",
+    "passed": true,
+    "userspace_ABI_unchanged": true,
+    "automatic_application_network_grants": false
+  },
+  "toolchain": {
+    "gcc": "gcc (Ubuntu 15.2.0-16ubuntu1) 15.2.0",
+    "ld": "GNU ld (GNU Binutils for Ubuntu) 2.46",
+    "make": "GNU Make 4.4.1",
+    "QEMU": "QEMU emulator version 10.2.1 (Debian 1:10.2.1+ds-1ubuntu3.2)",
+    "python": "Python 3.14.4"
+  },
+  "local_manifest": {
+    "path": "build/n5-session-20261024T154351Z/results/manifest.json",
+    "entries": 373,
+    "sha256": "87f0834585729e2e4473242849698d526cfe9bc221d6a437da5ef6ab5b2d43e3"
+  },
+  "pcap_verification": {
+    "net-bios": {
+      "records": 32,
+      "sha256": "88e495475792e1e27c521005645cd37e0b5e67cf93741d752fbac205454e443c"
+    },
+    "net-uefi": {
+      "records": 32,
+      "sha256": "4b3f22c109eabe6cda98ecf72c27daff556cbb062cc08567b09f346591c01df7"
+    }
+  },
+  "product_sha256": {
+    "compat/rixie/vos-uefi.iso": "8624a1b6b0aef6c8d73ff5bea3c8e0e572c2c213d2e1ae768161dbe95a6d77e5",
+    "compat/rixie/vos.bin": "14f5dadb9b13502304855d356f33b77de73f7897c39d3ffaf19023774338f421",
+    "compat/rixie/vos.iso": "60ebc90a2d8133991700a6a145d3c4cd1460c2902ac59e87eb51c28e887c22e4",
+    "compat/vsh/vos.bin": "14f5dadb9b13502304855d356f33b77de73f7897c39d3ffaf19023774338f421",
+    "compat/vsh/vos.iso": "6b6b687ecdbc0135dfd49690d5d6b8394b454812c67a45ebc36d66c9a135ff03",
+    "net/user/vsh.elf": "4a837277422f97c86f3c3a5ba0fef15de22c002addf9243a4b5d78bd73b5ad5f",
+    "net/user/hello.elf": "c6c6416195a0f18d680d7f8f19be52ce02ff02912ef3bac45324fbe88006cd06",
+    "net/user/rixie.elf": "77104da3b33caf809daf5e6674ac4e2fa9edf6a9e2e5dd59828514df76490d32",
+    "net/kernel/vos-uefi.iso": "80e3452d19745ff87cdd1449671da3ecd28a7417f4ddf3b58e0447ccd33017a4",
+    "net/kernel/vos.bin": "14f5dadb9b13502304855d356f33b77de73f7897c39d3ffaf19023774338f421",
+    "net/kernel/vos.iso": "559688b39ac6616f3a448cde2f165ab8d868c8fce2d400896e7e93450a56fc66"
+  },
+  "isolation": {
+    "accepted_detection_unchanged": true,
+    "query_timeout_seconds": 90,
+    "samples": 3,
+    "all_clean": true,
+    "samples_sha256": "1cf104552ba240a24174f3c9082f2e9aa7b98701528c5d3a989131ad005ba26b",
+    "outcome": {
+      "passed": true,
+      "error": null,
+      "returncode": 0,
+      "allocated": 95784960
+    }
+  },
+  "storage": {
+    "local_bound_MiB": 128,
+    "combined_ceiling_MiB": 3360,
+    "all_N4_N5_attempts_carried": true,
+    "reserves_unchanged": true
+  },
+  "QEMU_num_buffers_discrepancy": "Nonmerged socket RX count is zero; count cannot authorize additional descriptors. Actual single-descriptor IDs/lengths and offload checks remain enforced.",
+  "preserved_attempts": [
+    "build/n5-session-20261024T153726Z",
+    "build/n5-session-20261024T153943Z",
+    "build/n5-session-20261024T154135Z",
+    "build/n5-session-20261024T154351Z"
+  ],
+  "userspace_network_grants": false,
+  "no_new_syscalls": true,
+  "no_ARP_IP_or_ping_claimed": true,
+  "Rixie_Connected_not_started": true,
+  "N3_campaigns_not_repeated": true
+}

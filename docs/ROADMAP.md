@@ -1,7 +1,7 @@
 # VOS Roadmap
 
-N0–N3 are complete. N4 implementation, including the authorized minimal Rixie
-Core v0 extension, is ready for closure.
+N0–N4 are complete. Accepted N4, including Rixie Core v0, is integrated into main
+at `bbca69d`; the tree matches publication `50cbc8b`. N5 networking is now authorized.
 N3 closure was accepted on 2026-10-24 after the existing
 D1/D2/C20 requirements passed. The milestone is published on
 `feat/n3.6-storage-closure` at `897312f`. GitHub main integrated it through
@@ -23,10 +23,10 @@ See [status](STATUS.md) and the [N3 closure record](results/n3-closure.md).
 | N3.4 | Bounded interrupt-driven block I/O and polling fallback | [Storage plan](plans/n3-storage.md) |
 | N3.5 | Capability-scoped read-only ABI v2 files/directories | [Historical closure](results/n3.5-closure.md) |
 | N3.6 / N3 | Integrated accounting/stress, final regression, five mutations, fifteen larger-RAM runs and preserved evidence | [Final N3 closure](results/n3-closure.md) |
-| N4 (ready for closure) | Keyboard, buffered console, native Rust shell, cwd prompt, reusable Rust SDK, independent app and authorized minimal offline Rixie Core v0 | [N4 closure readiness](results/n4-closure.md) |
+| N4 | Keyboard, buffered console, native Rust shell, cwd prompt, reusable Rust SDK, independent app and minimal offline Rixie Core v0 | [N4 records](results/n4-closure.md) |
 | U0/U1 | QEMU UEFI feasibility/readiness, BIOS compatibility and framebuffer diagnostics | [UEFI plan/results](plans/uefi.md) |
 
-## N4: ready for closure, including Rixie Core v0
+## N4: complete, including Rixie Core v0
 
 The original authorized shell/SDK scope is complete on
 `feat/n4-interactive-console`, based on the integrated N3 baseline. After its
@@ -35,7 +35,8 @@ before final closure. [Rixie Core v0](results/n4-rixie-core.md) is now implement
 and verified as a small independent offline Rust userspace application. The
 [closure record](results/n4-closure.md) links the original publications and the
 scope update, focused host/BIOS/UEFI evidence and authentic captures. The owner
-handles acceptance, the GitHub pull request and merge; main is unchanged.
+completed acceptance and integration at `bbca69d`; earlier readiness statements
+remain records of the pre-merge checkpoint.
 
 Delivered in the authorized order:
 
@@ -52,8 +53,20 @@ a separate trusted launch configuration. It explains commands and selects fixed
 answers; it is not a conversational AI model. No external-program launcher,
 network, GUI or model subsystem is part of this prototype.
 
-N0–N3 and ABI v0–v3 remain preserved. The extended N4 scope is ready for closure;
-further development requires separate authorization.
+N0–N3 and ABI v0–v3 remain preserved. The extended N4 scope is complete.
+
+## N5: native networking in progress
+
+`feat/n5-networking` starts at the verified N4 merge. The
+[first adapter increment](results/n5-first-network.md) initializes modern
+virtio-net and exchanges bounded raw Ethernet frames in QEMU. The
+[design and resource limits](networking.md) reuse existing PCI, PMM and kernel
+isolation infrastructure. No application gains network access automatically.
+
+Next is bounded Ethernet dispatch and ARP, then IPv4 and ICMP echo. An eventual
+userspace network interface requires explicit process-owned capability grants,
+resource bounds and revocation. Rixie Connected remains outside this increment.
+Focused checks accompany changes; no N3 campaign or new milestone is introduced.
 
 ## Later work
 
@@ -62,7 +75,7 @@ further development requires separate authorization.
 | U2 | IOAPIC/local APIC or MSI-X support and broader verified framebuffer formats |
 | U3 | Independent EFI loader, then Secure Boot |
 | H2 | Controlled physical-hardware tests, with explicit approval of each step |
-| Other milestones | Writable storage, networking and later native UI/platform work remain future designs |
+| Other work | Writable storage and native UI/platform work beyond the authorized N5 networking scope remain future designs |
 
 Current limitations are listed in [STATUS](STATUS.md) and the closure record:
 QEMU-only verification, trusted immutable read-only media, RAM tracked below

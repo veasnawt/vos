@@ -32,6 +32,8 @@ VOS is written primarily in freestanding C and x86 assembly. It is **not a Linux
 - [Rixie Core v0](docs/rixie-core.md): an independent Rust ring-3 text application
   with greetings, command explanations and predefined answers. It is a
   deterministic offline prototype, not a conversational AI model.
+- An opt-in [modern virtio-net adapter](docs/networking.md): bounded raw Ethernet
+  send/receive with private DMA buffers and no automatic application network access.
 - BIOS and UEFI boot paths **in QEMU** via GRUB; extensive emulator-based regression tests.
 
 **N0–N3 are complete.** N3 storage closure was accepted on 2026-10-24 and is
@@ -40,14 +42,16 @@ Local `main` and the `feat/n4-interactive-console` development branch have been
 fast-forwarded to that merge, whose source tree is identical to the N3 baseline.
 The [N3 closure record](docs/results/n3-closure.md) contains D1a–D1f,
 5/5 mutation controls, 15/15 larger-RAM stress runs, evidence hashes and preserved
-failure history. **N4 is ready for closure**, including the owner's added minimal
-Rixie Core v0 scope, on `feat/n4-interactive-console`.
+failure history. **N4 is complete and integrated into main** at `bbca69d`,
+including the Rust SDK, dynamic shell prompt and offline Rixie Core v0.
 Keyboard input (`3a2b642`), buffered input (`87b99df`), native Rust shell
 (`1beb406`), reusable SDK (`f7ac434`) and normalized cwd prompt (`bdde1bc`) all
 have focused verification and authentic screenshots. The subsequent
 [Rixie prototype](docs/results/n4-rixie-core.md) also passes host and BIOS/UEFI
-checks. See [N4 closure readiness](docs/results/n4-closure.md). The owner handles
-the GitHub pull request and merge; N4 has not been merged into main.
+checks. The [N4 record](docs/results/n4-closure.md) preserves its pre-merge checkpoint.
+**N5 is in progress** on `feat/n5-networking`: its [first adapter increment](docs/results/n5-first-network.md)
+passes focused host and BIOS/UEFI frame checks. ARP, IPv4, ICMP and explicit
+userspace network capabilities are subsequent work. Rixie Connected has not begun.
 
 ![VOS BIOS boot console with PASS status](docs/images/n3/vos-n3-bios-boot-status.png)
 

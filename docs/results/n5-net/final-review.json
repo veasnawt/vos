@@ -1,0 +1,126 @@
+{
+  "scope": "First N5 increment review; no new verification campaign",
+  "baseline": "bbca69d850e8c168bfa824ace475a27226b2cdb7",
+  "branch": "feat/n5-networking",
+  "main_contains_accepted_N4": true,
+  "no_N5_commits_or_pushes": true,
+  "preserved_prior_entries": 38130,
+  "protected_binary_sha256": {
+    "production": "7e8c4781292e5dd1c419e0984d001a0e3cf09be5e1bd26a18c283a42b0fd375c",
+    "gateb": "bef4aae6f492a2a041ea64611ed8669a642caf4d236b1472456812e45101ddc9",
+    "gatec": "35e856b9fb28960f359bfa046c62b7e5820a4a1a0fe5c3a73fb90a0189d6046e",
+    "gatec_elf": "8c94e9ca57f19f56ee96f7b578eec2f7bfc335c524f4d31608d3bfc598a069c4",
+    "hello": "c6c6416195a0f18d680d7f8f19be52ce02ff02912ef3bac45324fbe88006cd06",
+    "gated": "52f2562d5578d7be64b8ba9b0605f395259fcffed657662857f2a4f79b065b2e",
+    "gated_elf": "1d0e86e3f8830b53382f5d140a8d0dc9e64ff0c485975784541f1566d5c3705b"
+  },
+  "R4_archive_identity_verified": true,
+  "manifests_verified": [
+    {
+      "path": "build/n4-session-20261024T134442Z/results/manifest.json",
+      "entries": 302,
+      "sha256": "c8958cb9a9f914d98fc4126ff6532300280173b236ba6dccc3a4e83460db55be"
+    },
+    {
+      "path": "build/n4-session-20261024T144105Z/results/manifest.json",
+      "entries": 269,
+      "sha256": "3325cce5e79f7b84a72053c1a4d3c92fa9a97d669bc7b3ab948ef1881a490e40"
+    },
+    {
+      "path": "build/n4-input-20261024T071418Z/results/manifest.json",
+      "entries": 202,
+      "sha256": "c6cdfebaae2536fcdc663f60daafca95f5f16ea20ff5afe665ca37293c7282ff"
+    },
+    {
+      "path": "build/n4-buffered-20261024T085345Z/results/manifest.json",
+      "entries": 209,
+      "sha256": "1010baba4251e4f94a0ad0f8228354a8183ad444c9746b376273a9cc9941e0d3"
+    },
+    {
+      "path": "build/n4-session-20261024T130158Z/results/manifest.json",
+      "entries": 181,
+      "sha256": "db38ac56778f4e6d4de9d99f23bfb7c55f913dbe845d13607b952ba8fd0a5cbb"
+    },
+    {
+      "path": "build/n4-session-20261024T142208Z/results/manifest.json",
+      "entries": 157,
+      "sha256": "de908fcee0a66493341b2389f766ef645df64c6ea6ea9e36ea85ec7bf6987288"
+    },
+    {
+      "path": "build/n5-session-20261024T154351Z/results/manifest.json",
+      "entries": 373,
+      "sha256": "87f0834585729e2e4473242849698d526cfe9bc221d6a437da5ef6ab5b2d43e3"
+    }
+  ],
+  "prior_N4_evidence_preserved": true,
+  "all_N5_attempts_preserved": true,
+  "D1r3": "unfinished, unsealed and unarchived; unchanged",
+  "ABI_v0_v3_and_userspace_sources_unchanged": true,
+  "worktrees": 13,
+  "stashes": 2,
+  "candidate_files": [
+    "Makefile",
+    "README.md",
+    "arch/x86_64/arch.mk",
+    "arch/x86_64/grub-net.cfg",
+    "arch/x86_64/kernel.c",
+    "arch/x86_64/net_boot.c",
+    "arch/x86_64/net_boot.h",
+    "arch/x86_64/virtio_net.c",
+    "arch/x86_64/virtio_net.h",
+    "docs/HANDOFF.md",
+    "docs/ROADMAP.md",
+    "docs/STATUS.md",
+    "docs/images/n5/vos-n5-bios-virtio-net.png",
+    "docs/images/n5/vos-n5-uefi-virtio-net.png",
+    "docs/networking.md",
+    "docs/results/n5-first-network.md",
+    "docs/results/n5-net/absent-bios-command.json",
+    "docs/results/n5-net/absent-bios.serial.txt",
+    "docs/results/n5-net/changed-files.txt",
+    "docs/results/n5-net/evidence.json",
+    "docs/results/n5-net/final-review.json",
+    "docs/results/n5-net/host-test.txt",
+    "docs/results/n5-net/net-bios-command.json",
+    "docs/results/n5-net/net-bios-frames.json",
+    "docs/results/n5-net/net-bios-registers.txt",
+    "docs/results/n5-net/net-bios.pcap",
+    "docs/results/n5-net/net-bios.serial.txt",
+    "docs/results/n5-net/net-uefi-command.json",
+    "docs/results/n5-net/net-uefi-frames.json",
+    "docs/results/n5-net/net-uefi-registers.txt",
+    "docs/results/n5-net/net-uefi.pcap",
+    "docs/results/n5-net/net-uefi.serial.txt",
+    "docs/results/n5-net/path-guard.txt",
+    "docs/results/n5-net/result.json",
+    "docs/results/n5-net/rixie-uefi-command.json",
+    "docs/results/n5-net/rixie-uefi.serial.txt",
+    "docs/results/n5-net/vsh-bios-command.json",
+    "docs/results/n5-net/vsh-bios.serial.txt",
+    "scripts/test-virtio-net.py",
+    "tests/host/virtio-net.c"
+  ],
+  "candidate_count": 40,
+  "storage": {
+    "N4_N5_carried_MiB": 692.60546875,
+    "combined_MiB": 3074.19140625,
+    "remaining_MiB": 285.80859375,
+    "ceiling_MiB": 3360,
+    "publication_provision_MiB": 2,
+    "reserves": {
+      "charged": 2495176704,
+      "remaining": 1028038656,
+      "C": 12421849088,
+      "E": 251835445248,
+      "linux": 1009378205696,
+      "admitted_extra": 728346624
+    }
+  },
+  "isolation": {
+    "controller_root": "build/n5-session-20261024T155105Z",
+    "query_timeout_seconds": 90,
+    "accepted_detection_unchanged": true,
+    "accounting_extension": "All n5 attempt roots are charged alongside existing n4 roots; same ceiling, local bound, reserves and stop conditions"
+  },
+  "next_task": "Bounded Ethernet dispatch and ARP request/reply/cache, then IPv4 and ICMP; no Rixie Connected"
+}
