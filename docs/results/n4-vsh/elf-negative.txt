@@ -1,0 +1,8 @@
+scripts/check-user-elf.sh future-abi
+check-user-elf: /home/veasnawt/src/myos/build/n4-session-20261024T130158Z/results/future-abi.elf: REJECT: VOS ABI note: version 4, expected 0..3
+/home/veasnawt/src/myos/build/n4-session-20261024T130158Z/results/elfcheck future-abi
+elfcheck: /home/veasnawt/src/myos/build/n4-session-20261024T130158Z/results/future-abi.elf: REJECT: VOS ABI note: bad descriptor or unsupported version
+scripts/check-user-elf.sh writable-code
+check-user-elf: /home/veasnawt/src/myos/build/n4-session-20261024T130158Z/results/writable-code.elf: REJECT: PT_LOAD 0: writable and executable
+/home/veasnawt/src/myos/build/n4-session-20261024T130158Z/results/elfcheck writable-code
+elfcheck: /home/veasnawt/src/myos/build/n4-session-20261024T130158Z/results/writable-code.elf: REJECT: PT_LOAD writable and executable

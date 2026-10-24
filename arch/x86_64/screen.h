@@ -20,6 +20,9 @@
  * Rendering never reads the framebuffer. Lines wrap at the right margin;
  * when the log area is full, output continues at its top, and the line
  * after the newest one is kept blank so the end of the log stays visible.
+ * N4's opt-in screen_begin_input switches to an at-most-80x25 chronological
+ * text area. Its small character shadow supports scrolling without VRAM reads;
+ * normal boot/status/panic rendering retains the original circular log behavior.
  */
 #ifndef VOS_X86_64_SCREEN_H
 #define VOS_X86_64_SCREEN_H
@@ -44,6 +47,12 @@
 void screen_init(const struct boot_info *bi);
 /* Mirror one character of the serial log (printable ASCII and '\n'; '\r' and others ignored). */
 void screen_putc(char c);
+/* Erase the preceding cell, including a soft wrap. Caller bounds the input line. */
+void screen_erase_previous(void);
+/* Clear the display's text area for input, then scroll in reading order.
+ * Serial boot diagnostics remain intact. No-op without an initialized screen.
+ */
+void screen_begin_input(void);
 /* The status shown in the bar; text (may be NULL) is shown beside it. */
 void screen_status(int state, const char *text);
 /* The panic banner (called by panic). */

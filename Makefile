@@ -115,6 +115,71 @@ uefi-iso: iso
 run: iso
 	$(QEMU) -cdrom $(ISO)
 
+# N4 first input is opt-in; keep the normal boot/test configurations intact.
+# All generated files, including the user runtime, use a separate build tree.
+INPUT_BUILD ?= build/n4-input
+.PHONY: input-iso input-uefi-iso input-run
+input-iso:
+	$(MAKE) --no-print-directory ARCH=x86_64 BUILD=$(INPUT_BUILD)/kernel USER_BUILD=$(INPUT_BUILD)/user GRUB_CFG=arch/x86_64/grub-input.cfg iso
+input-uefi-iso:
+	$(MAKE) --no-print-directory ARCH=x86_64 BUILD=$(INPUT_BUILD)/kernel USER_BUILD=$(INPUT_BUILD)/user GRUB_CFG=arch/x86_64/grub-input.cfg uefi-iso
+input-run: input-iso
+	qemu-system-x86_64 -m 128M -cdrom $(INPUT_BUILD)/kernel/vos.iso -serial stdio -no-reboot -nic none
+
+VSH_BUILD ?= build/n4-vsh
+ifneq ($(filter vsh-iso vsh-uefi-iso vsh-run,$(MAKECMDGOALS)),)
+ifeq ($(strip $(VSH_BUILD)),)
+$(error VSH_BUILD must be nonempty; use a path under build/)
+endif
+endif
+VSH_DISK ?=
+VSH_DISK_ARGS = $(if $(VSH_DISK),-drive file=$(VSH_DISK)$(comma)if=none$(comma)id=vs0$(comma)format=raw$(comma)readonly=on -device virtio-blk-pci$(comma)drive=vs0$(comma)disable-legacy=on)
+comma := ,
+.PHONY: vsh-iso vsh-uefi-iso vsh-run
+vsh-iso:
+	$(MAKE) --no-print-directory ARCH=x86_64 USER_BUILD=$(VSH_BUILD)/user user-vsh
+	$(MAKE) --no-print-directory ARCH=x86_64 BUILD=$(VSH_BUILD)/kernel USER_BUILD=$(VSH_BUILD)/user GRUB_CFG=arch/x86_64/grub-vsh.cfg ISO_FILES=$(VSH_BUILD)/user/vsh.elf:boot/vsh.elf iso
+vsh-uefi-iso: vsh-iso
+	$(MAKE) --no-print-directory ARCH=x86_64 BUILD=$(VSH_BUILD)/kernel USER_BUILD=$(VSH_BUILD)/user GRUB_CFG=arch/x86_64/grub-vsh.cfg ISO_FILES=$(VSH_BUILD)/user/vsh.elf:boot/vsh.elf uefi-iso
+vsh-run: vsh-iso
+	qemu-system-x86_64 -m 128M -cdrom $(VSH_BUILD)/kernel/vos.iso -serial stdio -no-reboot -nic none $(VSH_DISK_ARGS)
+
+RUST_BUILD ?= build/n4-rust
+RUST_APP ?= rust-demo
+ifneq ($(filter rust-app rust-demo-iso rust-demo-uefi-iso rust-demo-run,$(MAKECMDGOALS)),)
+ifeq ($(strip $(RUST_BUILD)),)
+$(error RUST_BUILD must be nonempty; use a path under build/)
+endif
+ifeq ($(strip $(RUST_APP)),)
+$(error RUST_APP must name an application under user/)
+endif
+endif
+.PHONY: rust-app rust-demo-iso rust-demo-uefi-iso rust-demo-run
+rust-app:
+	$(MAKE) --no-print-directory ARCH=x86_64 USER_BUILD=$(RUST_BUILD)/user RUST_APP=$(RUST_APP) user-rust
+rust-demo-iso:
+	$(MAKE) --no-print-directory ARCH=x86_64 USER_BUILD=$(RUST_BUILD)/user RUST_APP=rust-demo user-rust
+	$(MAKE) --no-print-directory ARCH=x86_64 BUILD=$(RUST_BUILD)/kernel USER_BUILD=$(RUST_BUILD)/user GRUB_CFG=arch/x86_64/grub-rust-demo.cfg ISO_FILES=$(RUST_BUILD)/user/rust-demo.elf:boot/rust-demo.elf iso
+rust-demo-uefi-iso: rust-demo-iso
+	$(MAKE) --no-print-directory ARCH=x86_64 BUILD=$(RUST_BUILD)/kernel USER_BUILD=$(RUST_BUILD)/user GRUB_CFG=arch/x86_64/grub-rust-demo.cfg ISO_FILES=$(RUST_BUILD)/user/rust-demo.elf:boot/rust-demo.elf uefi-iso
+rust-demo-run: rust-demo-iso
+	qemu-system-x86_64 -m 128M -cdrom $(RUST_BUILD)/kernel/vos.iso -serial stdio -no-reboot -nic none
+
+RIXIE_BUILD ?= build/n4-rixie
+ifneq ($(filter rixie-iso rixie-uefi-iso rixie-run,$(MAKECMDGOALS)),)
+ifeq ($(strip $(RIXIE_BUILD)),)
+$(error RIXIE_BUILD must be nonempty; use a path under build/)
+endif
+endif
+.PHONY: rixie-iso rixie-uefi-iso rixie-run
+rixie-iso:
+	$(MAKE) --no-print-directory ARCH=x86_64 USER_BUILD=$(RIXIE_BUILD)/user RUST_APP=rixie user-rust
+	$(MAKE) --no-print-directory ARCH=x86_64 BUILD=$(RIXIE_BUILD)/kernel USER_BUILD=$(RIXIE_BUILD)/user GRUB_CFG=arch/x86_64/grub-rixie.cfg ISO_FILES=$(RIXIE_BUILD)/user/rixie.elf:boot/rixie.elf iso
+rixie-uefi-iso: rixie-iso
+	$(MAKE) --no-print-directory ARCH=x86_64 BUILD=$(RIXIE_BUILD)/kernel USER_BUILD=$(RIXIE_BUILD)/user GRUB_CFG=arch/x86_64/grub-rixie.cfg ISO_FILES=$(RIXIE_BUILD)/user/rixie.elf:boot/rixie.elf uefi-iso
+rixie-run: rixie-iso
+	qemu-system-x86_64 -m 128M -cdrom $(RIXIE_BUILD)/kernel/vos.iso -serial stdio -no-reboot -nic none
+
 # Like run, but QEMU waits for a debugger on TCP port 1234 (-s -S) and prints
 # the serial port here. GDB is not installed by the build; see
 # docs/plans/n2-foundation.md (tooling) for the commands.

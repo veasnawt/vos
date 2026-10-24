@@ -6,6 +6,10 @@
 
 void serial_init(void);
 void serial_putc(char c);
+/* Diagnostics only, without mirroring to the application display. */
+void serial_log_putc(char c);
+/* Erase one echoed input cell on serial and screen; caller protects the prompt. */
+void console_erase_previous(void);
 void serial_puts(const char *s);
 /* Like serial_puts but prints only printable ASCII (others as '?'), at most 120 chars. */
 void serial_puts_safe(const char *s);

@@ -1,0 +1,4 @@
+PASS: completed-line ownership, Enter sealing, prompt boundary, empty lines and atomic capacity retry
+PASS: printable filtering, exact 128-byte/NUL boundary, canaries and whole-line overflow discard
+PASS: blocking reader retries invalid lines, delivers edited sequential/empty lines and yields via PIT sleep
+PASS: cancellation after scheduler wait leaves destination unchanged

@@ -45,7 +45,8 @@ git checkout main            # or the checkpoint tag listed in docs/STATUS.md
 
 The repository is public. N3 is complete on `feat/n3.6-storage-closure`; use
 `git checkout feat/n3.6-storage-closure` to inspect the milestone publication.
-Main remains N3.5 at `c0ccdd7`, with integration checkpoint `0ddb201` as its parent.
+Main contains N3 through PR #2 at `d9a4ade`. The published N4 implementation is
+on `feat/n4-interactive-console`; the owner handles its pull request and merge.
 `build/` is generated and ignored. See [STATUS](STATUS.md) and the
 [final N3 closure record](results/n3-closure.md).
 
@@ -151,12 +152,16 @@ The full list is in `docs/STATUS.md`. In short:
 - No Secure Boot.
 - Under UEFI, virtio-blk polls: no IOAPIC/MSI.
 - Only the 32-bpp BGRX framebuffer format.
-- No keyboard, shell, writable file system or networking.
+- Opt-in native Rust `vsh` and PS/2 console; no writable file system or networking.
 
 ## 7. Current development checkpoint and review boundary
 
 **N3 is complete**, accepted on 2026-10-24. The milestone branch is
-`feat/n3.6-storage-closure`; main is unchanged at N3.5. D1a–D1f, all five D2
+`feat/n3.6-storage-closure` at `897312f`. During authorized N4 development,
+GitHub main merged PR #2 at `d9a4ade`; local main and the N4 branch were safely
+fast-forwarded to that merge after proving its tree identical to N3. The first
+N4 keyboard/echo implementation is published on `feat/n4-interactive-console`.
+D1a–D1f, all five D2
 controls and all fifteen C20 runs passed, with sealed evidence and independently
 verified archives. The [closure record](results/n3-closure.md) and
 [evidence index](results/n3-evidence.json) distinguish passing records from failed,
@@ -170,9 +175,55 @@ evidence and archives must remain preserved. The original D1r3 root is unfinishe
 unsealed and unarchived. Monitoring gaps are not presented as uninterrupted isolation.
 The accepted run controllers and exact build environments remain in local evidence.
 
-N4 is next: keyboard input, interactive console, `vsh` and Rust-first native
-application foundations. Its implementation requires separate explicit authorization.
-Do not rerun completed N3 campaigns or create new N3 gates as part of that handoff.
+N4 implementation, including the owner's added minimal Rixie Core v0 scope,
+is ready for closure on `feat/n4-interactive-console`.
+See [closure readiness](results/n4-closure.md). The first
+[keyboard echo increment](results/n4-first-input.md) passes host, BIOS input,
+UEFI input and normal-boot compatibility checks. `make input-run` builds into its
+own `build/n4-input/` tree; the existing EFI extraction environment is still needed
+for `make input-uefi-iso`. Do not rebuild into protected N3 output/evidence trees.
+
+The first implementation is published at `3a2b642cd3f2e7b719135c86e77cc787a865b327`.
+The subsequent [buffered input implementation](results/n4-buffered-input.md)
+passes focused host and BIOS/UEFI checks. It delivers copied, NUL-terminated
+completed lines through `input_console_read_line` in kernel thread context.
+It rejects entire overlong submissions, preserves the prompt boundary and scrolls
+the opt-in display in reading order. A demo consumer prints `submitted: ...`;
+this is not a shell or a user-mode input ABI.
+
+Buffered input is now published at `87b99dfc867c45bd01f512cf9ecac0117d1a6eac`.
+The subsequent [native Rust vsh](results/n4-native-vsh.md) is published at
+`1beb40677bfeb605da5b2920b70af0fc24138493`: ABI v3 console calls 11–13 are available only to an
+explicitly granted process, with ABI v0–v2 preserved. The shell implements
+`help`, `clear`, `echo`, `pwd`, `ls`, `cd`, `cat` and `exit` in userspace.
+Filesystem access uses ABI v2 handles and the trusted non-root `shell` grant.
+The installed Rust bare-metal target links through the existing C ABI/runtime
+and ELF script; no new toolchain was installed.
+
+The final [Rust application foundations](results/n4-rust-foundations.md) are
+implemented and verified: `user/rust/vos.rs`, shared runtime/macro, reusable
+native ELF build and independent `rust-demo`. The SDK has no allocator or
+dependencies and grants no authority. The shell now consumes it. See
+[writing Rust apps](rust-apps.md) for build/entry/API conventions.
+
+The SDK is published at `f7ac43478ea548ddc4bb74ae177b0bb828e67596`.
+The [dynamic cwd prompt](results/n4-dynamic-prompt.md) is published at
+`bdde1bc33f99030ba51fa78078a6db90f87f2a07`: root `VOS>`, nested
+`VOS>docs>results>`, normalized parent/root navigation and unchanged failed-cd
+state. Focused host and BIOS/UEFI checks pass, including prompt-safe editing.
+
+The original shell/SDK objectives are complete. After that publication, the owner
+explicitly extended N4 to include [Rixie Core v0](rixie-core.md) before final
+closure. It is a verified independent Rust ring-3 application using the shared
+SDK, existing bounded console and a small opt-in trusted launch selector. It has
+fixed greetings, help/about, command explanations and five predefined questions;
+it identifies itself as a deterministic offline prototype, not an AI model.
+Use `make rixie-run RUSTC=/path/to/rustc`; it is not a `vsh` external command.
+
+Six host tests, 17 BIOS/UEFI interactions per firmware and independent vsh smoke
+boots pass. No ABI change, kernel subsystem, network, GUI or model was introduced.
+The extended N4 scope is ready for closure. The owner handles acceptance, the
+GitHub pull request and merge. Do not rerun N3 campaigns or introduce new gates.
 
 ### Historical N3.5 checkpoints
 

@@ -29,6 +29,9 @@
 #define SYS_FILE_STAT       8
 #define SYS_DIRECTORY_NEXT  9
 #define SYS_FILE_INITIAL   10
+#define SYS_CONSOLE_READ   11   /* ABI v3, explicit console grant */
+#define SYS_CONSOLE_WRITE  12
+#define SYS_CONSOLE_CLEAR  13
 
 #define VOS_ENOSYS          1
 #define VOS_EINVAL          2

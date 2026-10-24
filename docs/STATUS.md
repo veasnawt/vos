@@ -1,15 +1,43 @@
 # VOS Status
 
-**Latest completed milestone: N3 COMPLETE**, including N3.6 storage closure,
-accepted on 2026-10-24. [Final closure and evidence](results/n3-closure.md)
-consolidate D1a–D1f, five mutation controls and fifteen larger-RAM stress runs.
+**N4 implementation is ready for closure**, including the owner's added Rixie
+Core v0 prototype, on `feat/n4-interactive-console`.
+The owner handles final acceptance, the GitHub pull request and merge.
+[Final N4 closure](results/n4-closure.md) records the original delivered scope,
+publications, the explicit Rixie scope update, focused verification, screenshots
+and limitations. Earlier shell/SDK-only readiness records remain historical.
 
-**Publication branch:** `feat/n3.6-storage-closure`. Main remains the published
-N3.5 checkpoint `c0ccdd7d9ba3601c1d6891a3ff6c67516c679213`; no automatic merge
-or new release tag accompanies this milestone. The older U1 tag remains
-`checkpoint-2026-10-19-u1`. N0–N3 are complete. **N4 is next:** keyboard input,
-interactive console, `vsh` and Rust-first native application foundations.
-Implementation requires explicit authorization and has not started.
+N3 remains complete and accepted on 2026-10-24.
+[Final N3 closure and evidence](results/n3-closure.md) consolidate D1a–D1f,
+five mutation controls and fifteen larger-RAM stress runs.
+
+**N3 publication:** `897312fb991b2f55799b37fbd4459fb552acfe82` on
+`feat/n3.6-storage-closure`. GitHub main integrated it through PR #2 at
+`d9a4ade0db1df8ab7c8c7fe3c4553cd3f36c3622` during N4 development. Local main
+and `feat/n4-interactive-console` were fast-forwarded to that merge; its tree
+is identical to N3. The first N4 keyboard/echo implementation is published on
+`feat/n4-interactive-console`. No new release tag was created; the older U1 tag
+remains `checkpoint-2026-10-19-u1`.
+
+**The original N4 scope is complete.** The [first input increment](results/n4-first-input.md)
+is published at `3a2b642`; [buffered input](results/n4-buffered-input.md) is
+published at `87b99dfc867c45bd01f512cf9ecac0117d1a6eac`. The subsequent
+[native Rust vsh](results/n4-native-vsh.md) runs in ring 3 with a granted ABI v3
+console and supports all seven requested commands plus `exit`. File commands
+use real read-only ext2/ABI v2 operations in an explicitly granted namespace.
+Host checks and BIOS/UEFI runtime checks pass, including five ring-3 console
+probes per firmware and the original normal boot-and-halt path. Native shell
+publication is `1beb40677bfeb605da5b2920b70af0fc24138493`.
+The subsequent [shared Rust SDK and independent app](results/n4-rust-foundations.md)
+also pass host, loader and BIOS/UEFI checks and are published at
+`f7ac43478ea548ddc4bb74ae177b0bb828e67596`. The requested
+[normalized cwd prompt](results/n4-dynamic-prompt.md) is published at
+`bdde1bc33f99030ba51fa78078a6db90f87f2a07`; three host tests and both firmware
+interactions pass. [Rixie Core v0](results/n4-rixie-core.md) subsequently passes
+six host tests and 17 interactions on each firmware, plus independent vsh smoke
+checks. It is a deterministic offline Rust ring-3 application with a console-only
+grant, launched through its own trusted boot configuration. No external-app shell
+launcher or new kernel subsystem was added. Main remains the N3 baseline.
 
 Historical N3.5 approval, integration, failed attempts and original authorization
 boundaries below remain records of those checkpoints, not current N3 blockers.
@@ -19,6 +47,11 @@ runs only in QEMU so far: no physical machine has booted it. This is a developme
 not a release.
 
 ## Completed milestones
+
+N4 now delivers keyboard input, the buffered console, native Rust `vsh` with the
+seven requested commands and dynamic cwd prompt, and reusable Rust application
+foundations with an independent example. The authorized extension adds the first
+minimal Rixie Core prototype. All are on the feature branch, ready for N4 closure.
 
 N1 (user mode, system calls), N2 (scheduling, preemption of user programs, IPC), N3.0–N3.4
 (W^X higher-half memory, virtio-blk, block cache, read-only ext2, interrupt-driven block I/O),
@@ -196,8 +229,13 @@ On BIOS (SeaBIOS: ELCR `0xc00`), virtio-blk interrupt mode is fully tested: 149 
 - **VGA text fallback:** only unit-tested. GRUB always hands this kernel a framebuffer, because
   the kernel requests one.
 - **BIOS display change:** BIOS boots now switch to VBE graphics.
-- **Missing features:** no keyboard input, shell, writable storage, networking,
-  SMP or ACPI power management. The production kernel ends by halting.
+- **Input:** PS/2 polling, buffered line input and an explicitly granted ABI v3
+  native text console, with a US layout and 128-byte limit; no USB keyboard or mouse driver.
+  Editing appends/deletes at the end; an overlong submission is discarded in full.
+  Boot selects `vos.console=1` for the buffered demo or `vos.vsh=1` for the
+  native shell; normal production boot still halts.
+- **Shell:** first native Rust `vsh` only; no quoting, pipes, history or external-program launch.
+- **Missing features:** writable storage, networking, SMP and ACPI power management.
 
 ## Unsupported (by design, for now)
 

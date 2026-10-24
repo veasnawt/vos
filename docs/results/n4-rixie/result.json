@@ -1,0 +1,312 @@
+{
+  "scope": "Rixie Core v0 and existing vsh launch compatibility",
+  "rixie": {
+    "bios": {
+      "passed": true,
+      "application": "rixie",
+      "cases": [
+        {
+          "input": "",
+          "expected": "",
+          "prompt_safe_editing": false,
+          "passed": true
+        },
+        {
+          "input": "hello",
+          "expected": "Hello! I'm Rixie, at home in VOS.",
+          "prompt_safe_editing": false,
+          "passed": true
+        },
+        {
+          "input": "HELP",
+          "expected": "Topics: hello, help, about, questions, explain <command>, exit",
+          "prompt_safe_editing": false,
+          "passed": true
+        },
+        {
+          "input": "about",
+          "expected": "independent Rust ring-3 application in VOS.",
+          "prompt_safe_editing": false,
+          "passed": true
+        },
+        {
+          "input": "explain cd",
+          "expected": "cd: change vsh's working directory; invalid paths leave it unchanged.",
+          "prompt_safe_editing": false,
+          "passed": true
+        },
+        {
+          "input": "explain cat",
+          "expected": "cat: display a real read-only file under vsh's grant.",
+          "prompt_safe_editing": false,
+          "passed": true
+        },
+        {
+          "input": "what is VOS?",
+          "expected": "independently written operating-system project",
+          "prompt_safe_editing": false,
+          "passed": true
+        },
+        {
+          "input": "are you AI?",
+          "expected": "No. Rixie Core v0 selects fixed replies; I am not a conversational AI model.",
+          "prompt_safe_editing": false,
+          "passed": true
+        },
+        {
+          "input": "questions",
+          "expected": "Try: what is VOS? / are you AI? / are you online?",
+          "prompt_safe_editing": false,
+          "passed": true
+        },
+        {
+          "input": "are you online?",
+          "expected": "entirely offline, with no network or cloud connection.",
+          "prompt_safe_editing": false,
+          "passed": true
+        },
+        {
+          "input": "what can you do?",
+          "expected": "answer a small set of predefined questions.",
+          "prompt_safe_editing": false,
+          "passed": true
+        },
+        {
+          "input": "who made you?",
+          "expected": "VOS is developed under human direction with AI coding assistance.",
+          "prompt_safe_editing": false,
+          "passed": true
+        },
+        {
+          "input": "explain unknown",
+          "expected": "No explanation for that topic.",
+          "prompt_safe_editing": false,
+          "passed": true
+        },
+        {
+          "input": "cd /",
+          "expected": "No predefined reply.",
+          "prompt_safe_editing": false,
+          "passed": true
+        },
+        {
+          "input": "vsh rixie",
+          "expected": "No predefined reply.",
+          "prompt_safe_editing": false,
+          "passed": true
+        },
+        {
+          "input": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+          "expected": "No predefined reply.",
+          "prompt_safe_editing": false,
+          "passed": true
+        },
+        {
+          "input": "hellox",
+          "expected": "Hello! I'm Rixie, at home in VOS.",
+          "prompt_safe_editing": true,
+          "passed": true
+        }
+      ],
+      "exit_status": 0,
+      "reclaimed": true,
+      "ABI_v0_hello": true,
+      "screenshot": {
+        "width": 1280,
+        "height": 800,
+        "sha256": "73aafd8c25b2891cd5f943e0cc4d2555c71804964820dd41629cb32157010cb2"
+      },
+      "network_device": false,
+      "data_disk": false,
+      "console_grant": true,
+      "filesystem_grant": false
+    },
+    "uefi": {
+      "passed": true,
+      "application": "rixie",
+      "cases": [
+        {
+          "input": "",
+          "expected": "",
+          "prompt_safe_editing": false,
+          "passed": true
+        },
+        {
+          "input": "hello",
+          "expected": "Hello! I'm Rixie, at home in VOS.",
+          "prompt_safe_editing": false,
+          "passed": true
+        },
+        {
+          "input": "HELP",
+          "expected": "Topics: hello, help, about, questions, explain <command>, exit",
+          "prompt_safe_editing": false,
+          "passed": true
+        },
+        {
+          "input": "about",
+          "expected": "independent Rust ring-3 application in VOS.",
+          "prompt_safe_editing": false,
+          "passed": true
+        },
+        {
+          "input": "explain cd",
+          "expected": "cd: change vsh's working directory; invalid paths leave it unchanged.",
+          "prompt_safe_editing": false,
+          "passed": true
+        },
+        {
+          "input": "explain cat",
+          "expected": "cat: display a real read-only file under vsh's grant.",
+          "prompt_safe_editing": false,
+          "passed": true
+        },
+        {
+          "input": "what is VOS?",
+          "expected": "independently written operating-system project",
+          "prompt_safe_editing": false,
+          "passed": true
+        },
+        {
+          "input": "are you AI?",
+          "expected": "No. Rixie Core v0 selects fixed replies; I am not a conversational AI model.",
+          "prompt_safe_editing": false,
+          "passed": true
+        },
+        {
+          "input": "questions",
+          "expected": "Try: what is VOS? / are you AI? / are you online?",
+          "prompt_safe_editing": false,
+          "passed": true
+        },
+        {
+          "input": "are you online?",
+          "expected": "entirely offline, with no network or cloud connection.",
+          "prompt_safe_editing": false,
+          "passed": true
+        },
+        {
+          "input": "what can you do?",
+          "expected": "answer a small set of predefined questions.",
+          "prompt_safe_editing": false,
+          "passed": true
+        },
+        {
+          "input": "who made you?",
+          "expected": "VOS is developed under human direction with AI coding assistance.",
+          "prompt_safe_editing": false,
+          "passed": true
+        },
+        {
+          "input": "explain unknown",
+          "expected": "No explanation for that topic.",
+          "prompt_safe_editing": false,
+          "passed": true
+        },
+        {
+          "input": "cd /",
+          "expected": "No predefined reply.",
+          "prompt_safe_editing": false,
+          "passed": true
+        },
+        {
+          "input": "vsh rixie",
+          "expected": "No predefined reply.",
+          "prompt_safe_editing": false,
+          "passed": true
+        },
+        {
+          "input": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+          "expected": "No predefined reply.",
+          "prompt_safe_editing": false,
+          "passed": true
+        },
+        {
+          "input": "hellox",
+          "expected": "Hello! I'm Rixie, at home in VOS.",
+          "prompt_safe_editing": true,
+          "passed": true
+        }
+      ],
+      "exit_status": 0,
+      "reclaimed": true,
+      "ABI_v0_hello": true,
+      "screenshot": {
+        "width": 1280,
+        "height": 800,
+        "sha256": "73aafd8c25b2891cd5f943e0cc4d2555c71804964820dd41629cb32157010cb2"
+      },
+      "network_device": false,
+      "data_disk": false,
+      "console_grant": true,
+      "filesystem_grant": false
+    }
+  },
+  "vsh_smoke": {
+    "bios": {
+      "passed": true,
+      "application": "vsh",
+      "cases": [
+        {
+          "input": "help",
+          "expected": "Available commands: help, clear, echo, pwd, ls, cd, cat",
+          "prompt_safe_editing": false,
+          "passed": true
+        },
+        {
+          "input": "echo vsh remains independent",
+          "expected": "vsh remains independent",
+          "prompt_safe_editing": false,
+          "passed": true
+        }
+      ],
+      "exit_status": 0,
+      "reclaimed": true,
+      "ABI_v0_hello": true,
+      "screenshot": {
+        "width": 1280,
+        "height": 800,
+        "sha256": "32278a397e395775564f85dd7f9144c77f9b82690272f9da281688cfe6deb1cb"
+      },
+      "network_device": false,
+      "data_disk": false,
+      "console_grant": true,
+      "filesystem_grant": false
+    },
+    "uefi": {
+      "passed": true,
+      "application": "vsh",
+      "cases": [
+        {
+          "input": "help",
+          "expected": "Available commands: help, clear, echo, pwd, ls, cd, cat",
+          "prompt_safe_editing": false,
+          "passed": true
+        },
+        {
+          "input": "echo vsh remains independent",
+          "expected": "vsh remains independent",
+          "prompt_safe_editing": false,
+          "passed": true
+        }
+      ],
+      "exit_status": 0,
+      "reclaimed": true,
+      "ABI_v0_hello": true,
+      "screenshot": {
+        "width": 1280,
+        "height": 800,
+        "sha256": "32278a397e395775564f85dd7f9144c77f9b82690272f9da281688cfe6deb1cb"
+      },
+      "network_device": false,
+      "data_disk": false,
+      "console_grant": true,
+      "filesystem_grant": false
+    }
+  },
+  "rustc": "rustc 1.100.0-nightly (2e2b193f8 2026-09-02)",
+  "passed": true,
+  "SDK_unchanged": true,
+  "vsh_ELF_unchanged": true,
+  "rixie_ELF_sha256": "77104da3b33caf809daf5e6674ac4e2fa9edf6a9e2e5dd59828514df76490d32"
+}

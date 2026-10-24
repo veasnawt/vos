@@ -1,0 +1,2 @@
+PASS: explicit grant, live owner, bounded validation, atomic capacity retry and post-wait frame revalidation
+PASS: bounded/sanitized display writes, prefixed diagnostic isolation, clear, PID reuse, cancellation and revocation

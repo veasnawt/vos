@@ -1,0 +1,16 @@
+docs/images/n4/vos-n4-bios-cwd-prompt.png
+docs/images/n4/vos-n4-uefi-cwd-prompt.png
+docs/results/n4-dynamic-prompt.md
+docs/results/n4-prompt/bios-command.json
+docs/results/n4-prompt/bios.serial.txt
+docs/results/n4-prompt/changed-files.txt
+docs/results/n4-prompt/evidence.json
+docs/results/n4-prompt/host-test.txt
+docs/results/n4-prompt/loader.txt
+docs/results/n4-prompt/result.json
+docs/results/n4-prompt/uefi-command.json
+docs/results/n4-prompt/uefi.serial.txt
+docs/results/n4-prompt/vsh-elf.txt
+scripts/test-native-vsh.py
+user/vsh/main.rs
+user/vsh/prompt.rs

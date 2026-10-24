@@ -1,0 +1,23 @@
+[
+  "qemu-system-x86_64",
+  "-machine",
+  "q35",
+  "-accel",
+  "tcg",
+  "-m",
+  "128M",
+  "-cdrom",
+  "/home/veasnawt/src/myos/build/n4-session-20261024T144105Z/results/rixie/kernel/vos.iso",
+  "-boot",
+  "d",
+  "-display",
+  "none",
+  "-nic",
+  "none",
+  "-serial",
+  "file:/home/veasnawt/src/myos/build/n4-session-20261024T144105Z/results/rixie-bios/serial.log",
+  "-qmp",
+  "unix:/home/veasnawt/src/myos/build/n4-session-20261024T144105Z/results/rixie-bios/qmp,server=on,wait=off",
+  "-no-reboot",
+  "-no-shutdown"
+]

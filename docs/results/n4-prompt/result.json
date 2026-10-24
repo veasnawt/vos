@@ -1,0 +1,226 @@
+{
+  "scope": "normalized vsh cwd prompt",
+  "firmware": {
+    "bios": {
+      "passed": true,
+      "ring3_probes": 0,
+      "commands": [
+        "help",
+        "clear",
+        "echo",
+        "pwd",
+        "ls",
+        "cd",
+        "cat",
+        "exit"
+      ],
+      "prompt_cases": [
+        {
+          "command": "cd docs",
+          "prompt": "VOS>docs> ",
+          "failed": false,
+          "editing": {}
+        },
+        {
+          "command": "cd ./results/../results",
+          "prompt": "VOS>docs>results> ",
+          "failed": false,
+          "editing": {}
+        },
+        {
+          "command": "pwd",
+          "prompt": "VOS>docs>results> ",
+          "failed": false,
+          "editing": {}
+        },
+        {
+          "command": "cd missing",
+          "prompt": "VOS>docs>results> ",
+          "failed": true,
+          "editing": {}
+        },
+        {
+          "command": "cd ..",
+          "prompt": "VOS>docs> ",
+          "failed": false,
+          "editing": {}
+        },
+        {
+          "command": "cd /",
+          "prompt": "VOS> ",
+          "failed": false,
+          "editing": {}
+        },
+        {
+          "command": "cd /docs//results/.",
+          "prompt": "VOS>docs>results> ",
+          "failed": false,
+          "editing": {}
+        },
+        {
+          "command": "cd ../..",
+          "prompt": "VOS> ",
+          "failed": false,
+          "editing": {}
+        },
+        {
+          "command": "cd docsx",
+          "prompt": "VOS>docs> ",
+          "failed": false,
+          "editing": {
+            "backspaces": 1,
+            "initial_backspace": true
+          }
+        },
+        {
+          "command": "",
+          "prompt": "VOS>docs> ",
+          "failed": false,
+          "editing": {}
+        },
+        {
+          "command": "cd ../missing",
+          "prompt": "VOS>docs> ",
+          "failed": true,
+          "editing": {}
+        },
+        {
+          "command": "cd /",
+          "prompt": "VOS> ",
+          "failed": false,
+          "editing": {}
+        },
+        {
+          "command": "echo prompt checks complete",
+          "prompt": "VOS> ",
+          "failed": false,
+          "editing": {}
+        }
+      ],
+      "shell_screenshot": {
+        "width": 1280,
+        "height": 800,
+        "sha256": "08c7a92630dab01ec6aa8a35ed01bb5c2651840f7493cb540ca44843e8ef274e"
+      },
+      "files_screenshot": {
+        "width": 1280,
+        "height": 800,
+        "sha256": "27be64f9179db0d95623e92ca53514bc9b4827edf030404de988ffe9d39b6368"
+      },
+      "exit_status": 0,
+      "reclaimed": true
+    },
+    "uefi": {
+      "passed": true,
+      "ring3_probes": 0,
+      "commands": [
+        "help",
+        "clear",
+        "echo",
+        "pwd",
+        "ls",
+        "cd",
+        "cat",
+        "exit"
+      ],
+      "prompt_cases": [
+        {
+          "command": "cd docs",
+          "prompt": "VOS>docs> ",
+          "failed": false,
+          "editing": {}
+        },
+        {
+          "command": "cd ./results/../results",
+          "prompt": "VOS>docs>results> ",
+          "failed": false,
+          "editing": {}
+        },
+        {
+          "command": "pwd",
+          "prompt": "VOS>docs>results> ",
+          "failed": false,
+          "editing": {}
+        },
+        {
+          "command": "cd missing",
+          "prompt": "VOS>docs>results> ",
+          "failed": true,
+          "editing": {}
+        },
+        {
+          "command": "cd ..",
+          "prompt": "VOS>docs> ",
+          "failed": false,
+          "editing": {}
+        },
+        {
+          "command": "cd /",
+          "prompt": "VOS> ",
+          "failed": false,
+          "editing": {}
+        },
+        {
+          "command": "cd /docs//results/.",
+          "prompt": "VOS>docs>results> ",
+          "failed": false,
+          "editing": {}
+        },
+        {
+          "command": "cd ../..",
+          "prompt": "VOS> ",
+          "failed": false,
+          "editing": {}
+        },
+        {
+          "command": "cd docsx",
+          "prompt": "VOS>docs> ",
+          "failed": false,
+          "editing": {
+            "backspaces": 1,
+            "initial_backspace": true
+          }
+        },
+        {
+          "command": "",
+          "prompt": "VOS>docs> ",
+          "failed": false,
+          "editing": {}
+        },
+        {
+          "command": "cd ../missing",
+          "prompt": "VOS>docs> ",
+          "failed": true,
+          "editing": {}
+        },
+        {
+          "command": "cd /",
+          "prompt": "VOS> ",
+          "failed": false,
+          "editing": {}
+        },
+        {
+          "command": "echo prompt checks complete",
+          "prompt": "VOS> ",
+          "failed": false,
+          "editing": {}
+        }
+      ],
+      "shell_screenshot": {
+        "width": 1280,
+        "height": 800,
+        "sha256": "08c7a92630dab01ec6aa8a35ed01bb5c2651840f7493cb540ca44843e8ef274e"
+      },
+      "files_screenshot": {
+        "width": 1280,
+        "height": 800,
+        "sha256": "27be64f9179db0d95623e92ca53514bc9b4827edf030404de988ffe9d39b6368"
+      },
+      "exit_status": 0,
+      "reclaimed": true
+    }
+  },
+  "rustc": "rustc 1.100.0-nightly (2e2b193f8 2026-09-02)",
+  "passed": true,
+  "disk_sha256": "2da322573f80ba956cefbcd21f4e02c76857ba0228545b5e646c8ef9a73a8213"
+}

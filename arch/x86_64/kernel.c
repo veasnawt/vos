@@ -15,6 +15,8 @@
 #include "gdt.h"
 #include "idt.h"
 #include "irq.h"
+#include "input_console.h"
+#include "vsh_boot.h"
 #include "kmap.h"
 #include "memlayout.h"
 #include "multiboot2.h"
@@ -359,5 +361,17 @@ void kernel_main(uint32_t mb2_magic, uint32_t mb2_info)
     serial_puts(first_failure ? "VOS-TEST: FAIL\r\n" : "VOS-TEST: PASS\r\n");
     screen_status(first_failure ? SCREEN_FAIL : SCREEN_PASS, first_failure ? "VOS-TEST: FAIL" : "VOS-TEST: PASS");
     outl(TEST_EXIT_PORT, first_failure ? TEST_EXIT_FAIL : TEST_EXIT_PASS);
+#else
+    if (!first_failure && rixie_requested(bi.cmdline)) {
+        check(rixie_run(&bi), "Rixie Core v0");
+        screen_status(first_failure ? SCREEN_FAIL : SCREEN_PASS,first_failure ? "Rixie failed" : "Rixie session complete");
+    } else if (!first_failure && rust_demo_requested(bi.cmdline)) {
+        check(rust_demo_run(&bi), "native Rust SDK example");
+        screen_status(first_failure ? SCREEN_FAIL : SCREEN_PASS,first_failure ? "Rust SDK example failed" : "Rust SDK example complete");
+    } else if (!first_failure && vsh_requested(bi.cmdline)) {
+        check(vsh_run(&bi), "native vsh");
+        if (first_failure) screen_status(SCREEN_FAIL, "native vsh failed");
+    } else if (!first_failure && input_console_requested(bi.cmdline))
+        input_console_run();
 #endif
 }

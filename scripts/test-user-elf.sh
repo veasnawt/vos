@@ -171,7 +171,7 @@ mutate note-type      "no VOS ABI note"          $((NOTE_OFF + 8)) 4 2
 # Preserve the former note-version.elf bytes/path; 2 is now supported.
 cp "$HELLO" "$T/note-version.elf"; put "$T/note-version.elf" $((NOTE_OFF + 16)) 4 2
 "$CHECK" "$T/note-version.elf" >/dev/null && ok || bad "ABI 2 rejected"
-mutate note-future    "version 3"                $((NOTE_OFF + 16)) 4 3
+mutate note-future    "version 4"                $((NOTE_OFF + 16)) 4 4
 mutate note-descsz    "note larger than the segment"  $((NOTE_OFF + 4)) 4 8
 mutate note-namesz    "note larger than the segment"  "$NOTE_OFF" 4 $((0xFFFFFFFF))
 cp "$HELLO" "$T/truncated.elf"; truncate -s 200 "$T/truncated.elf"

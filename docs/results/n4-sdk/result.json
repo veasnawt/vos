@@ -1,0 +1,92 @@
+{
+  "scope": "minimal Rust SDK and independent example",
+  "example": {
+    "bios": {
+      "passed": true,
+      "status": 0,
+      "console_grant": false,
+      "filesystem_grant": false,
+      "shell_loaded": false,
+      "screenshot": {
+        "width": 1280,
+        "height": 800,
+        "sha256": "8ffe0038240c66d19caea639811a0512ff743ac10b73bf194c781fd9c521a678"
+      }
+    },
+    "uefi": {
+      "passed": true,
+      "status": 0,
+      "console_grant": false,
+      "filesystem_grant": false,
+      "shell_loaded": false,
+      "screenshot": {
+        "width": 1280,
+        "height": 800,
+        "sha256": "8ffe0038240c66d19caea639811a0512ff743ac10b73bf194c781fd9c521a678"
+      }
+    }
+  },
+  "shared_vsh": {
+    "scope": "native Rust vsh and ABI v3 console",
+    "firmware": {
+      "bios": {
+        "passed": true,
+        "ring3_probes": 5,
+        "commands": [
+          "help",
+          "clear",
+          "echo",
+          "pwd",
+          "ls",
+          "cd",
+          "cat",
+          "exit"
+        ],
+        "shell_screenshot": {
+          "width": 1280,
+          "height": 800,
+          "sha256": "08c7a92630dab01ec6aa8a35ed01bb5c2651840f7493cb540ca44843e8ef274e"
+        },
+        "files_screenshot": {
+          "width": 1280,
+          "height": 800,
+          "sha256": "efe748ecdb9c70c214effb5df03568f827b9994d433f573e166e4979d137132e"
+        },
+        "exit_status": 0,
+        "reclaimed": true
+      },
+      "uefi": {
+        "passed": true,
+        "ring3_probes": 5,
+        "commands": [
+          "help",
+          "clear",
+          "echo",
+          "pwd",
+          "ls",
+          "cd",
+          "cat",
+          "exit"
+        ],
+        "shell_screenshot": {
+          "width": 1280,
+          "height": 800,
+          "sha256": "08c7a92630dab01ec6aa8a35ed01bb5c2651840f7493cb540ca44843e8ef274e"
+        },
+        "files_screenshot": {
+          "width": 1280,
+          "height": 800,
+          "sha256": "efe748ecdb9c70c214effb5df03568f827b9994d433f573e166e4979d137132e"
+        },
+        "exit_status": 0,
+        "reclaimed": true
+      }
+    },
+    "rustc": "rustc 1.100.0-nightly (2e2b193f8 2026-09-02)",
+    "passed": true,
+    "disk_sha256": "e29808c378fbd919b6befeaf678466f601ddd601712e3516db4a6b8a8c8d34f1"
+  },
+  "passed": true,
+  "example_ELF_sha256": "665a13bdac11b3d3322a0f1ca4dd0987a08b125401ce707dffe44296abb157e6",
+  "sdk_source_sha256": "4434372465239c24a806a33debc2f9a74e815bc5afade0ed5b2f2cf72ff8f8c5"
+}

@@ -1,0 +1,11 @@
+
+running 6 tests
+test tests::command_explanations ... ok
+test tests::exit_is_explicit ... ok
+test tests::greetings_and_empty ... ok
+test tests::identity_and_help ... ok
+test tests::predefined_questions ... ok
+test tests::unknown_and_bounds ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

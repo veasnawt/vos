@@ -1,0 +1,45 @@
+[2J[001;001H[=3h[2J[001;001H[2J[001;001H[8;042;160t[2J[001;001H[2J[001;001H[8;056;240t[2J[001;001HBdsDxe: loading Boot0002 "UEFI QEMU DVD-ROM QM00005 " from PciRoot(0x0)/Pci(0x1F,0x2)/Sata(0x2,0xFFFF,0x0)
+BdsDxe: starting Boot0002 "UEFI QEMU DVD-ROM QM00005 " from PciRoot(0x0)/Pci(0x1F,0x2)/Sata(0x2,0xFFFF,0x0)
+[H[J[1;1HHello from VOS!
+boot: x86_64 long mode, cs=0x8 efer=0xd00 rip=0xffffffff801072a8
+gdt: loaded cs=0x8 ss=0x10 tr=0x28 tss=busy
+tss: rsp0=0xffffffff8013a000 ist1=0xffffffff80131000 ist2=0xffffffff80133000 ist3=0xffffffff80135000 iomap=104 limit=103
+idt: 32 exception vectors loaded, df ist=1, nmi ist=2, mc ist=3
+idt: IRQ vectors 0x20-0x2f present, DPL 0, interrupt gates
+idt: vector 0x80 present, DPL 3 (system calls, ABI v0)
+cpu: wp=on nx=on smep=unsupported umip=unsupported smap=unsupported x87=off(em)
+cpu: inherited cr0=0x80010033 cr4=0x668 efer=0xd00; set cr0=0x80010035 cr4=0x68 efer=0xd00
+boot: loader "GRUB 2.14-2ubuntu1", memory map 21 entries, 127713280 bytes usable
+boot: multiboot2 info at 0x81000-0x82e88
+boot: kernel command line "vos.console=1"
+boot: modules 1
+boot: module 0 0x7d000-0x80348 "hello"
+boot: reserved 0x0-0x100000 low 1 MiB
+boot: reserved 0x100000-0x1b4000 kernel image
+boot: reserved 0x81000-0x83000 multiboot2 info
+boot: reserved 0x7d000-0x81000 module
+pmm: 262144 frames tracked below 1 GiB, 30840 usable (123360 KiB), 0 bytes of RAM above 1 GiB ignored
+vmm: identity map removed
+kmap: phys 0-4 MiB as 4 KiB pages: 25 text R-X, 9 R NX, 970 RW NX, 20 guard pages unmapped; 510 x 2 MiB RW NX
+kmap: text 0xffffffff80107000-0xffffffff80120000, rodata 0xffffffff80120000-0xffffffff80128000
+kmap: PDPT[510] 0x105000 -> 0x14f000, checked before and after the switch; boot directory retired
+kmap: after the TLB flush the CPU refused a text write (#PF err=0x3) and a guard read (#PF err=0x0)
+devmap: window at 0xffffffff40000000, 40-bit physical addresses, write-combining via PAT entry 4
+screen: framebuffer 1280x800 BGRX at 0x80000000, pitch 5120, write-combining, MTRR type 0, 156x41 cells
+vmm: audit passed: kernel alias 1004 x 4 KiB + 510 x 2 MiB supervisor pages, 25 ring-0 executable (all kernel text, none writable), 0 lower-half tables
+irq: 8259 master 0x20-0x27, slave 0x28-0x2f (cascade IRQ2); masks 0xfffe (IRQ0 only); level-triggered lines (ELCR) 0x0
+pit: channel 0 mode 2, divisor 11932 (99.998 Hz)
+sched: 16 thread records, 15 guarded stacks of 16 KiB at 0xffffffff80152000; boot thread id 1, idle thread id 2
+vblk: no virtio-blk device on PCI bus 0; block storage unavailable
+app: module "hello" at 0x7d000-0x80348, 13128 bytes
+elf: hello: ET_EXEC entry 0x400000, 3 PT_LOAD, 3 pages, VOS ABI 0
+user[hello]: Hello from VOS!
+proc: exit status 0 (cs=0x23 rip=0x40002a)
+proc[hello]: exited status 0, all frames reclaimed
+boot: checks passed
+input: PS/2 ready, translated set 1, polling; IRQ masks unchanged
+VOS input console: type text, Backspace edits, Enter starts a line.
+Echo only; vsh is next. US keyboard, 128 characters per line.
+input> VOS x OK
+input> hello vos
+input> 

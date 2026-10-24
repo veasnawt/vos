@@ -1,0 +1,467 @@
+{
+  "scope": "Owner-authorized N4 extension: independent offline Rixie Core v0",
+  "baseline": "075d540064dfe97ab76b74a5043d4d1c3735ecc1",
+  "SDK_commit": "f7ac43478ea548ddc4bb74ae177b0bb828e67596",
+  "prompt_commit": "bdde1bc33f99030ba51fa78078a6db90f87f2a07",
+  "branch": "feat/n4-interactive-console",
+  "sources": {
+    "Makefile": "db0f19fe98c59913420bc3c5299a3684e76cc8aa5470df829d9b6858249eb88b",
+    "arch/x86_64/kernel.c": "76060106aefefa84068644646cfff6a1ebfc75d626ee12c292a443376924c819",
+    "arch/x86_64/vsh_boot.c": "c4bfcd7e02df3d7be72003aaa305123008b6a0cc8ddd68838c99693978abfd50",
+    "arch/x86_64/vsh_boot.h": "28189f077a6ef9881c8a16146e88ad711f4c638706f1e8a4bce3a0de74e3ccb5",
+    "arch/x86_64/grub-rixie.cfg": "43e8f2800c572f02784683acf18b8e6861d1d4d5f99f2547d071093d52ccd852",
+    "user/rixie/main.rs": "24d050c21de01e6e4aef8d72edb88676f3fd203a5467a6b3dada006100d0111a",
+    "user/rixie/dialog.rs": "9472a6176d43ff46ea4b5bf0fb7e0d49251459f10d590c15bda10d7f4461fe99",
+    "scripts/test-rixie.py": "9d83ea9db6698b7ebfad8bd0377b3cb501d1236cb576dabc7df8734bdf6dae4a"
+  },
+  "artifacts": [
+    {
+      "path": "docs/results/n4-rixie/build-path-guard.txt",
+      "bytes": 80,
+      "sha256": "ad7f65b59d0beb3df567ed023f11e00e31faf55fdf4d21ecf4e078886941f9f3"
+    },
+    {
+      "path": "docs/results/n4-rixie/host-test.txt",
+      "bytes": 343,
+      "sha256": "cfad2227c1430d4d69cb13153f8ea3df1cef17a07fae467538eac7534da70ebd"
+    },
+    {
+      "path": "docs/results/n4-rixie/result.json",
+      "bytes": 9470,
+      "sha256": "73a5fa28ccb74e5372c167ac68f55b321311020b76afbf7290c27f78135dc3bb"
+    },
+    {
+      "path": "docs/results/n4-rixie/rixie-bios-command.json",
+      "bytes": 520,
+      "sha256": "3eb198e3dac22f79ba95966c8d98644973d14d221730ac1f426399a5a15d7ecf"
+    },
+    {
+      "path": "docs/results/n4-rixie/rixie-bios.serial.txt",
+      "bytes": 5170,
+      "sha256": "2f7283ae216d08a52f48c6a4475e2664bca3a1cffdfb1d4382cb0d84c75fb8db"
+    },
+    {
+      "path": "docs/results/n4-rixie/rixie-elf.txt",
+      "bytes": 155,
+      "sha256": "427593b7b2a06fb2ba290ce866d93b7efc52784939b27f4e7b8c54ebe54037e6"
+    },
+    {
+      "path": "docs/results/n4-rixie/rixie-loader.txt",
+      "bytes": 138,
+      "sha256": "fa1e1f9b91de76abd4631d1ec33e4a636a51ffa3a20fc69905a6992a8e55990f"
+    },
+    {
+      "path": "docs/results/n4-rixie/rixie-uefi-command.json",
+      "bytes": 762,
+      "sha256": "aeb2dcb0f7127aabb3ad104f64b9b22448d84fb7206085d51c011d68f95f4714"
+    },
+    {
+      "path": "docs/results/n4-rixie/rixie-uefi.serial.txt",
+      "bytes": 5500,
+      "sha256": "31f1576ad7e2a16a6c88af50fc30f23f15fe3c137a541079cdfccb6127e76d88"
+    },
+    {
+      "path": "docs/results/n4-rixie/vsh-bios-command.json",
+      "bytes": 514,
+      "sha256": "8b92f79d5586ac1824317fa918d54d5454b2aeef4561d806d492fc70f6a40df0"
+    },
+    {
+      "path": "docs/results/n4-rixie/vsh-bios.serial.txt",
+      "bytes": 2986,
+      "sha256": "dfccc7caefc5a0e531aa4081d3ce1d6d7b8116b515cee7e43932d605a105d5ab"
+    },
+    {
+      "path": "docs/results/n4-rixie/vsh-elf.txt",
+      "bytes": 151,
+      "sha256": "911e90aeba424422d2588342d28cc4fc1be562770bb217e14935bf3d0094d15b"
+    },
+    {
+      "path": "docs/results/n4-rixie/vsh-loader.txt",
+      "bytes": 134,
+      "sha256": "a19ece049e6fc206745bc3def704f460e118cc4885e2cb0a0f9fa60569d95cd6"
+    },
+    {
+      "path": "docs/results/n4-rixie/vsh-uefi-command.json",
+      "bytes": 754,
+      "sha256": "13ffb63569da1e8a8ad5a5df91e6e41a646913ee147a8e9aaa99f861a52417ba"
+    },
+    {
+      "path": "docs/results/n4-rixie/vsh-uefi.serial.txt",
+      "bytes": 3316,
+      "sha256": "90ce3b55a4fae32cc8dff11dacc7ed07a005f745d27243d0457bb10126e3c0fa"
+    },
+    {
+      "path": "docs/images/n4/vos-n4-bios-rixie-core-v0.png",
+      "sha256": "73aafd8c25b2891cd5f943e0cc4d2555c71804964820dd41629cb32157010cb2"
+    },
+    {
+      "path": "docs/images/n4/vos-n4-uefi-rixie-core-v0.png",
+      "sha256": "73aafd8c25b2891cd5f943e0cc4d2555c71804964820dd41629cb32157010cb2"
+    }
+  ],
+  "result": {
+    "scope": "Rixie Core v0 and existing vsh launch compatibility",
+    "rixie": {
+      "bios": {
+        "passed": true,
+        "application": "rixie",
+        "cases": [
+          {
+            "input": "",
+            "expected": "",
+            "prompt_safe_editing": false,
+            "passed": true
+          },
+          {
+            "input": "hello",
+            "expected": "Hello! I'm Rixie, at home in VOS.",
+            "prompt_safe_editing": false,
+            "passed": true
+          },
+          {
+            "input": "HELP",
+            "expected": "Topics: hello, help, about, questions, explain <command>, exit",
+            "prompt_safe_editing": false,
+            "passed": true
+          },
+          {
+            "input": "about",
+            "expected": "independent Rust ring-3 application in VOS.",
+            "prompt_safe_editing": false,
+            "passed": true
+          },
+          {
+            "input": "explain cd",
+            "expected": "cd: change vsh's working directory; invalid paths leave it unchanged.",
+            "prompt_safe_editing": false,
+            "passed": true
+          },
+          {
+            "input": "explain cat",
+            "expected": "cat: display a real read-only file under vsh's grant.",
+            "prompt_safe_editing": false,
+            "passed": true
+          },
+          {
+            "input": "what is VOS?",
+            "expected": "independently written operating-system project",
+            "prompt_safe_editing": false,
+            "passed": true
+          },
+          {
+            "input": "are you AI?",
+            "expected": "No. Rixie Core v0 selects fixed replies; I am not a conversational AI model.",
+            "prompt_safe_editing": false,
+            "passed": true
+          },
+          {
+            "input": "questions",
+            "expected": "Try: what is VOS? / are you AI? / are you online?",
+            "prompt_safe_editing": false,
+            "passed": true
+          },
+          {
+            "input": "are you online?",
+            "expected": "entirely offline, with no network or cloud connection.",
+            "prompt_safe_editing": false,
+            "passed": true
+          },
+          {
+            "input": "what can you do?",
+            "expected": "answer a small set of predefined questions.",
+            "prompt_safe_editing": false,
+            "passed": true
+          },
+          {
+            "input": "who made you?",
+            "expected": "VOS is developed under human direction with AI coding assistance.",
+            "prompt_safe_editing": false,
+            "passed": true
+          },
+          {
+            "input": "explain unknown",
+            "expected": "No explanation for that topic.",
+            "prompt_safe_editing": false,
+            "passed": true
+          },
+          {
+            "input": "cd /",
+            "expected": "No predefined reply.",
+            "prompt_safe_editing": false,
+            "passed": true
+          },
+          {
+            "input": "vsh rixie",
+            "expected": "No predefined reply.",
+            "prompt_safe_editing": false,
+            "passed": true
+          },
+          {
+            "input": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+            "expected": "No predefined reply.",
+            "prompt_safe_editing": false,
+            "passed": true
+          },
+          {
+            "input": "hellox",
+            "expected": "Hello! I'm Rixie, at home in VOS.",
+            "prompt_safe_editing": true,
+            "passed": true
+          }
+        ],
+        "exit_status": 0,
+        "reclaimed": true,
+        "ABI_v0_hello": true,
+        "screenshot": {
+          "width": 1280,
+          "height": 800,
+          "sha256": "73aafd8c25b2891cd5f943e0cc4d2555c71804964820dd41629cb32157010cb2"
+        },
+        "network_device": false,
+        "data_disk": false,
+        "console_grant": true,
+        "filesystem_grant": false
+      },
+      "uefi": {
+        "passed": true,
+        "application": "rixie",
+        "cases": [
+          {
+            "input": "",
+            "expected": "",
+            "prompt_safe_editing": false,
+            "passed": true
+          },
+          {
+            "input": "hello",
+            "expected": "Hello! I'm Rixie, at home in VOS.",
+            "prompt_safe_editing": false,
+            "passed": true
+          },
+          {
+            "input": "HELP",
+            "expected": "Topics: hello, help, about, questions, explain <command>, exit",
+            "prompt_safe_editing": false,
+            "passed": true
+          },
+          {
+            "input": "about",
+            "expected": "independent Rust ring-3 application in VOS.",
+            "prompt_safe_editing": false,
+            "passed": true
+          },
+          {
+            "input": "explain cd",
+            "expected": "cd: change vsh's working directory; invalid paths leave it unchanged.",
+            "prompt_safe_editing": false,
+            "passed": true
+          },
+          {
+            "input": "explain cat",
+            "expected": "cat: display a real read-only file under vsh's grant.",
+            "prompt_safe_editing": false,
+            "passed": true
+          },
+          {
+            "input": "what is VOS?",
+            "expected": "independently written operating-system project",
+            "prompt_safe_editing": false,
+            "passed": true
+          },
+          {
+            "input": "are you AI?",
+            "expected": "No. Rixie Core v0 selects fixed replies; I am not a conversational AI model.",
+            "prompt_safe_editing": false,
+            "passed": true
+          },
+          {
+            "input": "questions",
+            "expected": "Try: what is VOS? / are you AI? / are you online?",
+            "prompt_safe_editing": false,
+            "passed": true
+          },
+          {
+            "input": "are you online?",
+            "expected": "entirely offline, with no network or cloud connection.",
+            "prompt_safe_editing": false,
+            "passed": true
+          },
+          {
+            "input": "what can you do?",
+            "expected": "answer a small set of predefined questions.",
+            "prompt_safe_editing": false,
+            "passed": true
+          },
+          {
+            "input": "who made you?",
+            "expected": "VOS is developed under human direction with AI coding assistance.",
+            "prompt_safe_editing": false,
+            "passed": true
+          },
+          {
+            "input": "explain unknown",
+            "expected": "No explanation for that topic.",
+            "prompt_safe_editing": false,
+            "passed": true
+          },
+          {
+            "input": "cd /",
+            "expected": "No predefined reply.",
+            "prompt_safe_editing": false,
+            "passed": true
+          },
+          {
+            "input": "vsh rixie",
+            "expected": "No predefined reply.",
+            "prompt_safe_editing": false,
+            "passed": true
+          },
+          {
+            "input": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+            "expected": "No predefined reply.",
+            "prompt_safe_editing": false,
+            "passed": true
+          },
+          {
+            "input": "hellox",
+            "expected": "Hello! I'm Rixie, at home in VOS.",
+            "prompt_safe_editing": true,
+            "passed": true
+          }
+        ],
+        "exit_status": 0,
+        "reclaimed": true,
+        "ABI_v0_hello": true,
+        "screenshot": {
+          "width": 1280,
+          "height": 800,
+          "sha256": "73aafd8c25b2891cd5f943e0cc4d2555c71804964820dd41629cb32157010cb2"
+        },
+        "network_device": false,
+        "data_disk": false,
+        "console_grant": true,
+        "filesystem_grant": false
+      }
+    },
+    "vsh_smoke": {
+      "bios": {
+        "passed": true,
+        "application": "vsh",
+        "cases": [
+          {
+            "input": "help",
+            "expected": "Available commands: help, clear, echo, pwd, ls, cd, cat",
+            "prompt_safe_editing": false,
+            "passed": true
+          },
+          {
+            "input": "echo vsh remains independent",
+            "expected": "vsh remains independent",
+            "prompt_safe_editing": false,
+            "passed": true
+          }
+        ],
+        "exit_status": 0,
+        "reclaimed": true,
+        "ABI_v0_hello": true,
+        "screenshot": {
+          "width": 1280,
+          "height": 800,
+          "sha256": "32278a397e395775564f85dd7f9144c77f9b82690272f9da281688cfe6deb1cb"
+        },
+        "network_device": false,
+        "data_disk": false,
+        "console_grant": true,
+        "filesystem_grant": false
+      },
+      "uefi": {
+        "passed": true,
+        "application": "vsh",
+        "cases": [
+          {
+            "input": "help",
+            "expected": "Available commands: help, clear, echo, pwd, ls, cd, cat",
+            "prompt_safe_editing": false,
+            "passed": true
+          },
+          {
+            "input": "echo vsh remains independent",
+            "expected": "vsh remains independent",
+            "prompt_safe_editing": false,
+            "passed": true
+          }
+        ],
+        "exit_status": 0,
+        "reclaimed": true,
+        "ABI_v0_hello": true,
+        "screenshot": {
+          "width": 1280,
+          "height": 800,
+          "sha256": "32278a397e395775564f85dd7f9144c77f9b82690272f9da281688cfe6deb1cb"
+        },
+        "network_device": false,
+        "data_disk": false,
+        "console_grant": true,
+        "filesystem_grant": false
+      }
+    },
+    "rustc": "rustc 1.100.0-nightly (2e2b193f8 2026-09-02)",
+    "passed": true,
+    "SDK_unchanged": true,
+    "vsh_ELF_unchanged": true,
+    "rixie_ELF_sha256": "77104da3b33caf809daf5e6674ac4e2fa9edf6a9e2e5dd59828514df76490d32"
+  },
+  "local_manifest": {
+    "path": "build/n4-session-20261024T144105Z/results/manifest.json",
+    "entries": 269,
+    "sha256": "3325cce5e79f7b84a72053c1a4d3c92fa9a97d669bc7b3ab948ef1881a490e40"
+  },
+  "products": {
+    "rixie/user/rixie.elf": "77104da3b33caf809daf5e6674ac4e2fa9edf6a9e2e5dd59828514df76490d32",
+    "rixie/kernel/vos.bin": "88ef0b60ed9b4762580256e5d90ba0fcd1017ee14a2a4ed381cca63b14be1e41",
+    "rixie/kernel/vos.iso": "3c67828ea82f0e980f560287852d72d31d23f2001e07824e88222b7b5aa04cc6",
+    "rixie/kernel/vos-uefi.iso": "3b32de432291425a076a9360f5071e7df5532a24f55ae839d73d61a5cc3e1456",
+    "vsh/user/vsh.elf": "4a837277422f97c86f3c3a5ba0fef15de22c002addf9243a4b5d78bd73b5ad5f",
+    "vsh/kernel/vos.bin": "88ef0b60ed9b4762580256e5d90ba0fcd1017ee14a2a4ed381cca63b14be1e41",
+    "vsh/kernel/vos.iso": "d47810e26854606a1892f29cad13453781a1eeae06639959718f6e2a1948a811",
+    "vsh/kernel/vos-uefi.iso": "5fbdd88d4a912b490923cb8c6feb9381c4a36e4cbdc57127aabee1e08db59272"
+  },
+  "isolation": {
+    "accepted_detection_unchanged": true,
+    "query_timeout_seconds": 90,
+    "samples": 4,
+    "all_clean": true,
+    "controller_root": "build/n4-session-20261024T144105Z",
+    "samples_sha256": "71a6efb5045acc1e85a09342ac63e0f5493f3f8e1f1b3d55c028deb20087b30d",
+    "outcome": {
+      "passed": true,
+      "error": null,
+      "returncode": 0,
+      "allocated": 91406336
+    }
+  },
+  "storage": {
+    "ceiling_MiB_unchanged": 3360,
+    "local_bound_MiB": 128,
+    "reserves_unchanged": true,
+    "all_previous_attempts_carried": true
+  },
+  "capability_profile": {
+    "source": "arch/x86_64/vsh_boot.c: rixie_run reuses run_module",
+    "console": true,
+    "filesystem": false,
+    "channels": false,
+    "existing_grant_and_validation_code_unchanged": true,
+    "no_data_disk": true,
+    "no_NIC": true
+  },
+  "no_new_ABI": true,
+  "no_new_kernel_subsystem": true,
+  "vsh_source_and_ELF_unchanged": true,
+  "deterministic": true,
+  "no_model": true,
+  "no_cloud": true,
+  "N4_ready_for_closure_including_Rixie": true,
+  "main_not_merged": true,
+  "no_N3_campaign_repeated": true
+}

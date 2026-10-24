@@ -1,0 +1,1 @@
+PASS: framebuffer exact erase, wrap/ring boundary, panic/none guards and VGA cell bounds
