@@ -1,0 +1,1 @@
+virtio-net host: 251 checks PASS (real driver, PCI/DMA model, reset quarantine)

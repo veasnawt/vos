@@ -1,0 +1,151 @@
+{
+  "scope": "N5 Ethernet/ARP final review",
+  "published_first_increment": "27fe770676b4ce138eb9596c881a556c820cbe74",
+  "pushed_branch": "feat/n5-networking",
+  "main_unchanged": "bbca69d850e8c168bfa824ace475a27226b2cdb7",
+  "ARP_committed": false,
+  "candidate_files": [
+    "Makefile",
+    "README.md",
+    "arch/x86_64/arch.mk",
+    "arch/x86_64/grub-arp.cfg",
+    "arch/x86_64/kernel.c",
+    "arch/x86_64/net_arp.c",
+    "arch/x86_64/net_arp.h",
+    "arch/x86_64/net_arp_boot.c",
+    "arch/x86_64/net_arp_boot.h",
+    "arch/x86_64/net_boot.c",
+    "arch/x86_64/net_boot.h",
+    "docs/HANDOFF.md",
+    "docs/ROADMAP.md",
+    "docs/STATUS.md",
+    "docs/images/n5/vos-n5-bios-arp.png",
+    "docs/images/n5/vos-n5-uefi-arp.png",
+    "docs/networking.md",
+    "docs/results/n5-arp.md",
+    "docs/results/n5-arp/bios-command.json",
+    "docs/results/n5-arp/bios-registers.txt",
+    "docs/results/n5-arp/bios-wire.json",
+    "docs/results/n5-arp/bios.pcap",
+    "docs/results/n5-arp/bios.serial.txt",
+    "docs/results/n5-arp/changed-files.txt",
+    "docs/results/n5-arp/evidence.json",
+    "docs/results/n5-arp/final-review.json",
+    "docs/results/n5-arp/host-test.txt",
+    "docs/results/n5-arp/path-guard.txt",
+    "docs/results/n5-arp/result.json",
+    "docs/results/n5-arp/uefi-command.json",
+    "docs/results/n5-arp/uefi-registers.txt",
+    "docs/results/n5-arp/uefi-wire.json",
+    "docs/results/n5-arp/uefi.pcap",
+    "docs/results/n5-arp/uefi.serial.txt",
+    "docs/results/n5-first-network.md",
+    "scripts/test-arp.py",
+    "tests/host/net-arp.c"
+  ],
+  "candidate_count": 37,
+  "protected_binary_sha256": {
+    "production": "7e8c4781292e5dd1c419e0984d001a0e3cf09be5e1bd26a18c283a42b0fd375c",
+    "gateb": "bef4aae6f492a2a041ea64611ed8669a642caf4d236b1472456812e45101ddc9",
+    "gatec": "35e856b9fb28960f359bfa046c62b7e5820a4a1a0fe5c3a73fb90a0189d6046e",
+    "gatec_elf": "8c94e9ca57f19f56ee96f7b578eec2f7bfc335c524f4d31608d3bfc598a069c4",
+    "hello": "c6c6416195a0f18d680d7f8f19be52ce02ff02912ef3bac45324fbe88006cd06",
+    "gated": "52f2562d5578d7be64b8ba9b0605f395259fcffed657662857f2a4f79b065b2e",
+    "gated_elf": "1d0e86e3f8830b53382f5d140a8d0dc9e64ff0c485975784541f1566d5c3705b"
+  },
+  "protected_prior_entries": 38130,
+  "R4_manifest_entries": 101,
+  "R4_archive_identity_verified": true,
+  "N4_N5_manifests_verified": [
+    {
+      "path": "build/n4-session-20261024T134442Z/results/manifest.json",
+      "entries": 302,
+      "sha256": "c8958cb9a9f914d98fc4126ff6532300280173b236ba6dccc3a4e83460db55be"
+    },
+    {
+      "path": "build/n4-session-20261024T144105Z/results/manifest.json",
+      "entries": 269,
+      "sha256": "3325cce5e79f7b84a72053c1a4d3c92fa9a97d669bc7b3ab948ef1881a490e40"
+    },
+    {
+      "path": "build/n4-input-20261024T071418Z/results/manifest.json",
+      "entries": 202,
+      "sha256": "c6cdfebaae2536fcdc663f60daafca95f5f16ea20ff5afe665ca37293c7282ff"
+    },
+    {
+      "path": "build/n4-buffered-20261024T085345Z/results/manifest.json",
+      "entries": 209,
+      "sha256": "1010baba4251e4f94a0ad0f8228354a8183ad444c9746b376273a9cc9941e0d3"
+    },
+    {
+      "path": "build/n4-session-20261024T130158Z/results/manifest.json",
+      "entries": 181,
+      "sha256": "db38ac56778f4e6d4de9d99f23bfb7c55f913dbe845d13607b952ba8fd0a5cbb"
+    },
+    {
+      "path": "build/n4-session-20261024T142208Z/results/manifest.json",
+      "entries": 157,
+      "sha256": "de908fcee0a66493341b2389f766ef645df64c6ea6ea9e36ea85ec7bf6987288"
+    },
+    {
+      "path": "build/n5-session-20261024T154351Z/results/manifest.json",
+      "entries": 373,
+      "sha256": "87f0834585729e2e4473242849698d526cfe9bc221d6a437da5ef6ab5b2d43e3"
+    },
+    {
+      "path": "build/n5-arp-20261024T162933Z/results/manifest.json",
+      "entries": 133,
+      "sha256": "40d51d1a921bbaaba66d4ce396409260897ecaa1823cf7b78f6ef55849d5e9b5"
+    }
+  ],
+  "all_previous_attempts_preserved": true,
+  "D1r3": "unfinished, unsealed and unarchived; preserved",
+  "worktrees": 13,
+  "stashes": 2,
+  "ABI_v0_v3_userspace_and_virtio_net_driver_unchanged": true,
+  "storage": {
+    "ARP_approved_additional_MiB": 272,
+    "ARP_charged_MiB": 29.1484375,
+    "ARP_remaining_MiB": 242.8515625,
+    "ARP_metadata_reserve_MiB": 2,
+    "aggregate_charged_MiB": 3101.48046875,
+    "aggregate_remaining_MiB": 258.51953125,
+    "aggregate_ceiling_MiB": 3360,
+    "all_historical_accounting_preserved": true,
+    "reserves": {
+      "charged": 2495328256,
+      "remaining": 1027887104,
+      "C": 12536541184,
+      "E": 251835445248,
+      "linux": 1009349316608,
+      "admitted_extra": 756809728
+    }
+  },
+  "monitor": {
+    "controller_root": "build/n5-arp-20261024T163809Z",
+    "template": "build/n5-arp-20261024T163809Z/monitor-template.py",
+    "template_sha256": "6246e44354016e36b4fef1c8f790d9bb4355b9c73861d0aab532509778595ddc",
+    "base_controller_sha256": "58075f232663d7892af6428809c68435790ca05618e7ba947cc916938d3c41c8",
+    "query_timeout_seconds": 90,
+    "original_detection_and_reserves_unchanged": true,
+    "added_counter": "Positive root/source growth plus metadata reserve; no baseline usage removed"
+  },
+  "host_checks": 4598,
+  "wire_checks": {
+    "bios": {
+      "records": 15,
+      "TX": 4,
+      "RX": 11,
+      "all_bytes_match_peer_records": true,
+      "sha256": "1c5faf9fa80707ae88ac33cf76572be7389b664e05b9e1eb1ca33c0adfe7aa59"
+    },
+    "uefi": {
+      "records": 15,
+      "TX": 4,
+      "RX": 11,
+      "all_bytes_match_peer_records": true,
+      "sha256": "544e327783d6ae8481f49d9b2db104c185e54b181a58a7c41953aacd6ced05d4"
+    }
+  },
+  "next_task": "IPv4 and ICMP echo; explicit permissions before any userspace networking"
+}

@@ -1,11 +1,25 @@
 # VOS Status
 
-**N4 implementation is ready for closure**, including the owner's added Rixie
-Core v0 prototype, on `feat/n4-interactive-console`.
-The owner handles final acceptance, the GitHub pull request and merge.
-[Final N4 closure](results/n4-closure.md) records the original delivered scope,
-publications, the explicit Rixie scope update, focused verification, screenshots
-and limitations. Earlier shell/SDK-only readiness records remain historical.
+**N4 is complete, accepted and integrated into main** at
+`bbca69d850e8c168bfa824ace475a27226b2cdb7`. Its tree matches accepted publication
+`50cbc8bc49bd10d5272647b267ed23895d2f533d`, including Rixie Core v0.
+[N4 records](results/n4-closure.md) preserve the pre-merge readiness and evidence.
+
+**N5 development is authorized and in progress** on `feat/n5-networking`, created
+from that verified merge after safely fast-forwarding local main. The
+[first networking increment](results/n5-first-network.md) provides bounded modern
+virtio-net initialization and raw frame I/O. Host checks and isolated BIOS/UEFI
+frame exchanges pass. There are no application network grants or new syscalls.
+The first 40-file increment is published at `27fe770676b4ce138eb9596c881a556c820cbe74`.
+[Ethernet/ARP](results/n5-arp.md) now passes 4,598 sanitizer-backed host checks
+and both firmware wire checks (4 TX/11 RX, 8 rejected frames each). It reuses
+the unchanged driver and a four-entry expiring cache, published at `a6571c1`.
+[Native IPv4/ICMP](results/n5-ipv4.md) now passes 1,806 sanitizer-backed checks
+plus the 4,598-check ARP host regression. Each BIOS/UEFI boot completes two pings,
+answers one request and rejects 11 malformed/unsupported/unmatched packets.
+UDP/TCP and explicit application network authority remain next.
+Rixie Connected is not started. The existing 272 MiB continuation meter is enforced
+alongside the unchanged inherited 3360 MiB aggregate ceiling and host reserves.
 
 N3 remains complete and accepted on 2026-10-24.
 [Final N3 closure and evidence](results/n3-closure.md) consolidate D1a–D1f,
@@ -37,7 +51,8 @@ interactions pass. [Rixie Core v0](results/n4-rixie-core.md) subsequently passes
 six host tests and 17 interactions on each firmware, plus independent vsh smoke
 checks. It is a deterministic offline Rust ring-3 application with a console-only
 grant, launched through its own trusted boot configuration. No external-app shell
-launcher or new kernel subsystem was added. Main remains the N3 baseline.
+launcher or new kernel subsystem was added. Main now contains this accepted N4
+implementation; the older publication statements below remain historical.
 
 Historical N3.5 approval, integration, failed attempts and original authorization
 boundaries below remain records of those checkpoints, not current N3 blockers.
@@ -51,7 +66,7 @@ not a release.
 N4 now delivers keyboard input, the buffered console, native Rust `vsh` with the
 seven requested commands and dynamic cwd prompt, and reusable Rust application
 foundations with an independent example. The authorized extension adds the first
-minimal Rixie Core prototype. All are on the feature branch, ready for N4 closure.
+minimal Rixie Core prototype. All are integrated into main at the verified N4 merge.
 
 N1 (user mode, system calls), N2 (scheduling, preemption of user programs, IPC), N3.0–N3.4
 (W^X higher-half memory, virtio-blk, block cache, read-only ext2, interrupt-driven block I/O),

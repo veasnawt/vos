@@ -1,0 +1,207 @@
+{
+  "scope": "N5 bounded Ethernet dispatch and ARP",
+  "published_first_increment": "27fe770676b4ce138eb9596c881a556c820cbe74",
+  "branch": "feat/n5-networking",
+  "main": "bbca69d850e8c168bfa824ace475a27226b2cdb7",
+  "sources": {
+    "Makefile": "3d6ab312eb6f26c17b4fa85233375f860b1a7e955fbdb655f11fdbd623d6182b",
+    "arch/x86_64/arch.mk": "79597fde90fb97ec8049cb65ab97635c1be075405190b2f5a6404e5ef3473059",
+    "arch/x86_64/kernel.c": "959078bb262b769c710b821dac1f0bd8348969ea0d00d5f2d7c9aba37e9e41b1",
+    "arch/x86_64/net_boot.c": "71cbca5804c2d677349ed2ca29c152713fe69ab712cf6a8de82ca663e2e06c9b",
+    "arch/x86_64/net_boot.h": "95235e01882b69a3112311f69faed08edeb325297e1491e35287f07795f5eefe",
+    "arch/x86_64/net_arp.c": "1418c2ab09e850ba042c72faebe6215e4c53237e70e00b720b7c64afdbf64b77",
+    "arch/x86_64/net_arp.h": "bd47786b8c1ff277c598f4f3f2b8e26b750ba9b24e23ac464b79302157f52567",
+    "arch/x86_64/net_arp_boot.c": "77314583cf34cb0cdfd32affbd6a53aad6dde6867cddef7a7f458030d41fe3cd",
+    "arch/x86_64/net_arp_boot.h": "3ab8edd55cdd6f01270e5180e81271e78c922ad1ad74496353c4e46711566564",
+    "arch/x86_64/grub-arp.cfg": "bd93768d9f57341b760bc3c8a76db6810ad621be18497c488fcf9cc2ea7aa6b5",
+    "scripts/test-arp.py": "90633ce84e7bbff024c57ac05d3fd37a2e87b0d58fa847a1b9d07f0478deb207",
+    "tests/host/net-arp.c": "6d8c82655972584edd8c8ebd03e251c4fa8f0d2c981e73a361a64cba9362be83"
+  },
+  "artifacts": [
+    {
+      "path": "docs/results/n5-arp/bios-command.json",
+      "size": 776,
+      "sha256": "82c681e9048e6b8a1d7f4d0315d7cdd6edf868ddd283ac410d165d65d6107aba"
+    },
+    {
+      "path": "docs/results/n5-arp/bios-registers.txt",
+      "size": 2052,
+      "sha256": "9be28dc85bc94541d7accb01f60b1ea1adeae0240b160ac0af11ad5e600336a9"
+    },
+    {
+      "path": "docs/results/n5-arp/bios-wire.json",
+      "size": 2955,
+      "sha256": "4962315a8bfc505a594ece2c9fb90ce7c8cce6e44edd955e6c6334cb6ff798aa"
+    },
+    {
+      "path": "docs/results/n5-arp/bios.pcap",
+      "size": 1134,
+      "sha256": "1c5faf9fa80707ae88ac33cf76572be7389b664e05b9e1eb1ca33c0adfe7aa59"
+    },
+    {
+      "path": "docs/results/n5-arp/bios.serial.txt",
+      "size": 2933,
+      "sha256": "c8fdc27528be3883161a131dbb818ca42a98be15c0ae71ca14d68a9fad41c987"
+    },
+    {
+      "path": "docs/results/n5-arp/host-test.txt",
+      "size": 94,
+      "sha256": "c0da74401be68d10d0609a6171e1dc41679fcc0c896d30235bf6871f6238c4ae"
+    },
+    {
+      "path": "docs/results/n5-arp/path-guard.txt",
+      "size": 78,
+      "sha256": "ee178c5efb923dcb68b3b1229ce98303ad5379062786412bb210c2879c60c3a8"
+    },
+    {
+      "path": "docs/results/n5-arp/result.json",
+      "size": 1207,
+      "sha256": "bd23aa7f6f40c4b693c7f3ef6479119d88553292c8716417bbc60fd9579d0eee"
+    },
+    {
+      "path": "docs/results/n5-arp/uefi-command.json",
+      "size": 1008,
+      "sha256": "6493099b8bf880d1111d2bc79221086e88b3512a936c9979ce0a94a4222efdaf"
+    },
+    {
+      "path": "docs/results/n5-arp/uefi-registers.txt",
+      "size": 2052,
+      "sha256": "a182b8f6b976c6e2ef25e316a7f9504cdb149041112206902438b5f2646eb755"
+    },
+    {
+      "path": "docs/results/n5-arp/uefi-wire.json",
+      "size": 2955,
+      "sha256": "4962315a8bfc505a594ece2c9fb90ce7c8cce6e44edd955e6c6334cb6ff798aa"
+    },
+    {
+      "path": "docs/results/n5-arp/uefi.pcap",
+      "size": 1134,
+      "sha256": "544e327783d6ae8481f49d9b2db104c185e54b181a58a7c41953aacd6ced05d4"
+    },
+    {
+      "path": "docs/results/n5-arp/uefi.serial.txt",
+      "size": 3263,
+      "sha256": "5d161999d0bce79375740ae0b89dc74b13eb13f9a5825fa30f994c1d3b5c8315"
+    },
+    {
+      "path": "docs/images/n5/vos-n5-bios-arp.png",
+      "sha256": "ac71aacce1ad1061760653693c1d7e5b113e144f930a534c396a099ecc8583ce"
+    },
+    {
+      "path": "docs/images/n5/vos-n5-uefi-arp.png",
+      "sha256": "ac71aacce1ad1061760653693c1d7e5b113e144f930a534c396a099ecc8583ce"
+    }
+  ],
+  "result": {
+    "scope": "bounded Ethernet dispatch and ARP",
+    "firmware": {
+      "bios": {
+        "passed": true,
+        "firmware": "bios",
+        "TX": 4,
+        "RX": 11,
+        "rejected": 8,
+        "neighbor_resolution": true,
+        "request_reply": true,
+        "probe_reply_without_cache": true,
+        "no_automatic_application_grants": true,
+        "DMA_frames_released": 11,
+        "ABI_v0_hello": true,
+        "screenshot": {
+          "width": 1280,
+          "height": 800,
+          "sha256": "ac71aacce1ad1061760653693c1d7e5b113e144f930a534c396a099ecc8583ce"
+        }
+      },
+      "uefi": {
+        "passed": true,
+        "firmware": "uefi",
+        "TX": 4,
+        "RX": 11,
+        "rejected": 8,
+        "neighbor_resolution": true,
+        "request_reply": true,
+        "probe_reply_without_cache": true,
+        "no_automatic_application_grants": true,
+        "DMA_frames_released": 11,
+        "ABI_v0_hello": true,
+        "screenshot": {
+          "width": 1280,
+          "height": 800,
+          "sha256": "ac71aacce1ad1061760653693c1d7e5b113e144f930a534c396a099ecc8583ce"
+        }
+      }
+    },
+    "passed": true,
+    "virtio_net_driver_unchanged": true,
+    "no_new_syscall_ABI": true,
+    "host_sanitizers": [
+      "address",
+      "undefined"
+    ]
+  },
+  "pcap_verification": {
+    "bios": {
+      "records": 15,
+      "TX": 4,
+      "RX": 11,
+      "all_bytes_match_peer_records": true,
+      "sha256": "1c5faf9fa80707ae88ac33cf76572be7389b664e05b9e1eb1ca33c0adfe7aa59"
+    },
+    "uefi": {
+      "records": 15,
+      "TX": 4,
+      "RX": 11,
+      "all_bytes_match_peer_records": true,
+      "sha256": "544e327783d6ae8481f49d9b2db104c185e54b181a58a7c41953aacd6ced05d4"
+    }
+  },
+  "local_manifest": {
+    "path": "build/n5-arp-20261024T162933Z/results/manifest.json",
+    "entries": 133,
+    "sha256": "40d51d1a921bbaaba66d4ce396409260897ecaa1823cf7b78f6ef55849d5e9b5"
+  },
+  "product_sha256": {
+    "native/kernel/vos.bin": "a21da68cbf52afbb8f9e05b4f3d5ce342ba06b18155d6f3391b50542d44e494c",
+    "native/kernel/vos.iso": "d666b9c95ca1b5559c4c45eefa82aa2b56671570e9073b818b552f1b45f32845",
+    "native/kernel/vos-uefi.iso": "544517a1b402d5ab23b59aae959f59719c0cab21075dac1c40d943530c80175c",
+    "native/user/hello.elf": "c6c6416195a0f18d680d7f8f19be52ce02ff02912ef3bac45324fbe88006cd06"
+  },
+  "guard": {
+    "outcome": {
+      "passed": true,
+      "error": null,
+      "returncode": 0,
+      "allocated": 28246016,
+      "ARP_charged": 30420992,
+      "ARP_limit": 285212672
+    },
+    "clean_samples": 2,
+    "query_timeout_seconds": 90,
+    "controller_root": "build/n5-arp-20261024T162933Z",
+    "sample_sha256": "79c97b61b4b928bf61f2a527b833044fe8cbeacae8c1661b47eaed518ab5e957",
+    "worker_payload_sha256": "7a1d1c085a473be019c6dd56001239b27ad2c385c9a0c1dd3e4912c3cea94497",
+    "monitor_adapter_reference": "See final-review.json for the pinned monitor template and accepted base controller."
+  },
+  "budget": {
+    "approval": "Explicit user approval in this session: 272 MiB additional ARP capacity, inside unchanged 3360 MiB aggregate ceiling",
+    "ledger": "build/n5-session-20261024T162331Z/ARP-BUDGET.json",
+    "ledger_sha256": "cd2214f6d8fa72a605dfd7acc202ba63033ea75a0bee3f28334b6fcb61184988",
+    "additional_limit_MiB": 272,
+    "aggregate_ceiling_MiB": 3360,
+    "local_bound_MiB": 128,
+    "metadata_provision_MiB": 16,
+    "no_old_usage_removed": true,
+    "no_shrink_or_deletion_credits": true
+  },
+  "first_increment_publication": {
+    "root": "build/n5-session-20261024T162109Z",
+    "original_attempt_preserved": "build/n5-session-20261024T161524Z",
+    "raw_register_bytes_unchanged": true
+  },
+  "virtio_net_driver_unchanged": true,
+  "no_new_userspace_network_ABI_or_grants": true,
+  "Rixie_Connected_not_started": true,
+  "no_N3_N4_campaign_repeated": true,
+  "ARP_changes_committed": false
+}

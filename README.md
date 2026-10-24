@@ -8,7 +8,7 @@ VOS is being developed with human architectural direction, review, and testing s
 
 VOS is written primarily in freestanding C and x86 assembly. It is **not a Linux distribution**, and it does not rely on Linux, a host operating system, or a hosted C library at runtime. GRUB currently loads the kernel through Multiboot2 on x86-64. A small legacy i386 build remains available.
 
-**Status: pre-alpha kernel research.** VOS is not an installable or everyday-use operating system. The documented checkpoint has been tested in **QEMU with SeaBIOS and OVMF**, not verified as a functioning physical-machine installation. N4 development now includes an opt-in PS/2 console and a native Rust `vsh` shell running in ring 3. A native graphical desktop, mouse input, writable storage and network stack remain future work.
+**Status: pre-alpha kernel research.** VOS is not an installable or everyday-use operating system. The documented checkpoint has been tested in **QEMU with SeaBIOS and OVMF**, not verified as a functioning physical-machine installation. N4 development now includes an opt-in PS/2 console and a native Rust `vsh` shell running in ring 3. N5 includes bounded native Ethernet, ARP, IPv4 and ICMP echo in QEMU. A native graphical desktop, mouse input and writable storage remain future work.
 
 ### What works today
 
@@ -32,6 +32,11 @@ VOS is written primarily in freestanding C and x86 assembly. It is **not a Linux
 - [Rixie Core v0](docs/rixie-core.md): an independent Rust ring-3 text application
   with greetings, command explanations and predefined answers. It is a
   deterministic offline prototype, not a conversational AI model.
+- An opt-in [modern virtio-net adapter](docs/networking.md): bounded raw Ethernet
+  send/receive with private DMA buffers and no automatic application network access.
+  [Ethernet dispatch and ARP](docs/results/n5-arp.md) provide bounded neighbor
+  resolution. [Native IPv4 and ICMP echo](docs/results/n5-ipv4.md) now pass real
+  isolated-peer ping exchanges on BIOS and UEFI, with safe malformed-input rejection.
 - BIOS and UEFI boot paths **in QEMU** via GRUB; extensive emulator-based regression tests.
 
 **N0–N3 are complete.** N3 storage closure was accepted on 2026-10-24 and is
@@ -40,14 +45,18 @@ Local `main` and the `feat/n4-interactive-console` development branch have been
 fast-forwarded to that merge, whose source tree is identical to the N3 baseline.
 The [N3 closure record](docs/results/n3-closure.md) contains D1a–D1f,
 5/5 mutation controls, 15/15 larger-RAM stress runs, evidence hashes and preserved
-failure history. **N4 is ready for closure**, including the owner's added minimal
-Rixie Core v0 scope, on `feat/n4-interactive-console`.
+failure history. **N4 is complete and integrated into main** at `bbca69d`,
+including the Rust SDK, dynamic shell prompt and offline Rixie Core v0.
 Keyboard input (`3a2b642`), buffered input (`87b99df`), native Rust shell
 (`1beb406`), reusable SDK (`f7ac434`) and normalized cwd prompt (`bdde1bc`) all
 have focused verification and authentic screenshots. The subsequent
 [Rixie prototype](docs/results/n4-rixie-core.md) also passes host and BIOS/UEFI
-checks. See [N4 closure readiness](docs/results/n4-closure.md). The owner handles
-the GitHub pull request and merge; N4 has not been merged into main.
+checks. The [N4 record](docs/results/n4-closure.md) preserves its pre-merge checkpoint.
+**N5 is in progress** on `feat/n5-networking`: its [first adapter increment](docs/results/n5-first-network.md)
+is published at `27fe770` with focused host and BIOS/UEFI frame checks. Bounded
+Ethernet/ARP is published at `a6571c1`. IPv4/ICMP now passes host and BIOS/UEFI
+checks: two native pings and one echo response per boot. UDP/TCP and explicit
+userspace network capabilities remain next. Rixie Connected has not begun.
 
 ![VOS BIOS boot console with PASS status](docs/images/n3/vos-n3-bios-boot-status.png)
 

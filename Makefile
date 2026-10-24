@@ -180,6 +180,42 @@ rixie-uefi-iso: rixie-iso
 rixie-run: rixie-iso
 	qemu-system-x86_64 -m 128M -cdrom $(RIXIE_BUILD)/kernel/vos.iso -serial stdio -no-reboot -nic none
 
+NET_BUILD ?= build/n5-net
+ifneq ($(filter net-iso net-uefi-iso,$(MAKECMDGOALS)),)
+ifeq ($(strip $(NET_BUILD)),)
+$(error NET_BUILD must be nonempty; use a path under build/)
+endif
+endif
+.PHONY: net-iso net-uefi-iso
+net-iso:
+	$(MAKE) --no-print-directory ARCH=x86_64 BUILD=$(NET_BUILD)/kernel USER_BUILD=$(NET_BUILD)/user GRUB_CFG=arch/x86_64/grub-net.cfg iso
+net-uefi-iso: net-iso
+	$(MAKE) --no-print-directory ARCH=x86_64 BUILD=$(NET_BUILD)/kernel USER_BUILD=$(NET_BUILD)/user GRUB_CFG=arch/x86_64/grub-net.cfg uefi-iso
+
+ARP_BUILD ?= build/n5-arp
+ifneq ($(filter arp-iso arp-uefi-iso,$(MAKECMDGOALS)),)
+ifeq ($(strip $(ARP_BUILD)),)
+$(error ARP_BUILD must be nonempty; use a path under build/)
+endif
+endif
+.PHONY: arp-iso arp-uefi-iso
+arp-iso:
+	$(MAKE) --no-print-directory ARCH=x86_64 BUILD=$(ARP_BUILD)/kernel USER_BUILD=$(ARP_BUILD)/user GRUB_CFG=arch/x86_64/grub-arp.cfg iso
+arp-uefi-iso: arp-iso
+	$(MAKE) --no-print-directory ARCH=x86_64 BUILD=$(ARP_BUILD)/kernel USER_BUILD=$(ARP_BUILD)/user GRUB_CFG=arch/x86_64/grub-arp.cfg uefi-iso
+
+IPV4_BUILD ?= build/n5-ipv4
+ifneq ($(filter ipv4-iso ipv4-uefi-iso,$(MAKECMDGOALS)),)
+ifeq ($(strip $(IPV4_BUILD)),)
+$(error IPV4_BUILD must be nonempty; use a path under build/)
+endif
+endif
+.PHONY: ipv4-iso ipv4-uefi-iso
+ipv4-iso:
+	$(MAKE) --no-print-directory ARCH=x86_64 BUILD=$(IPV4_BUILD)/kernel USER_BUILD=$(IPV4_BUILD)/user GRUB_CFG=arch/x86_64/grub-ipv4.cfg iso
+ipv4-uefi-iso: ipv4-iso
+	$(MAKE) --no-print-directory ARCH=x86_64 BUILD=$(IPV4_BUILD)/kernel USER_BUILD=$(IPV4_BUILD)/user GRUB_CFG=arch/x86_64/grub-ipv4.cfg uefi-iso
+
 # Like run, but QEMU waits for a debugger on TCP port 1234 (-s -S) and prints
 # the serial port here. GDB is not installed by the build; see
 # docs/plans/n2-foundation.md (tooling) for the commands.

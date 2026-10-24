@@ -1,0 +1,48 @@
+{
+  "scope": "bounded Ethernet dispatch and ARP",
+  "firmware": {
+    "bios": {
+      "passed": true,
+      "firmware": "bios",
+      "TX": 4,
+      "RX": 11,
+      "rejected": 8,
+      "neighbor_resolution": true,
+      "request_reply": true,
+      "probe_reply_without_cache": true,
+      "no_automatic_application_grants": true,
+      "DMA_frames_released": 11,
+      "ABI_v0_hello": true,
+      "screenshot": {
+        "width": 1280,
+        "height": 800,
+        "sha256": "ac71aacce1ad1061760653693c1d7e5b113e144f930a534c396a099ecc8583ce"
+      }
+    },
+    "uefi": {
+      "passed": true,
+      "firmware": "uefi",
+      "TX": 4,
+      "RX": 11,
+      "rejected": 8,
+      "neighbor_resolution": true,
+      "request_reply": true,
+      "probe_reply_without_cache": true,
+      "no_automatic_application_grants": true,
+      "DMA_frames_released": 11,
+      "ABI_v0_hello": true,
+      "screenshot": {
+        "width": 1280,
+        "height": 800,
+        "sha256": "ac71aacce1ad1061760653693c1d7e5b113e144f930a534c396a099ecc8583ce"
+      }
+    }
+  },
+  "passed": true,
+  "virtio_net_driver_unchanged": true,
+  "no_new_syscall_ABI": true,
+  "host_sanitizers": [
+    "address",
+    "undefined"
+  ]
+}
