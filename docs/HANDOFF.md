@@ -151,12 +151,16 @@ The full list is in `docs/STATUS.md`. In short:
 - No Secure Boot.
 - Under UEFI, virtio-blk polls: no IOAPIC/MSI.
 - Only the 32-bpp BGRX framebuffer format.
-- No keyboard, shell, writable file system or networking.
+- First opt-in PS/2 echo console only; no shell, writable file system or networking.
 
 ## 7. Current development checkpoint and review boundary
 
 **N3 is complete**, accepted on 2026-10-24. The milestone branch is
-`feat/n3.6-storage-closure`; main is unchanged at N3.5. D1a–D1f, all five D2
+`feat/n3.6-storage-closure` at `897312f`. During authorized N4 development,
+GitHub main merged PR #2 at `d9a4ade`; local main and the N4 branch were safely
+fast-forwarded to that merge after proving its tree identical to N3. The first
+N4 keyboard/echo implementation is published on `feat/n4-interactive-console`.
+D1a–D1f, all five D2
 controls and all fifteen C20 runs passed, with sealed evidence and independently
 verified archives. The [closure record](results/n3-closure.md) and
 [evidence index](results/n3-evidence.json) distinguish passing records from failed,
@@ -170,9 +174,16 @@ evidence and archives must remain preserved. The original D1r3 root is unfinishe
 unsealed and unarchived. Monitoring gaps are not presented as uninterrupted isolation.
 The accepted run controllers and exact build environments remain in local evidence.
 
-N4 is next: keyboard input, interactive console, `vsh` and Rust-first native
-application foundations. Its implementation requires separate explicit authorization.
-Do not rerun completed N3 campaigns or create new N3 gates as part of that handoff.
+N4 is authorized and in progress on `feat/n4-interactive-console`. The first
+[keyboard echo increment](results/n4-first-input.md) passes host, BIOS input,
+UEFI input and normal-boot compatibility checks. `make input-run` builds into its
+own `build/n4-input/` tree; the existing EFI extraction environment is still needed
+for `make input-uefi-iso`. Do not rebuild into protected N3 output/evidence trees.
+
+Next: buffered interactive command input, then native `vsh` and the ordered
+`help`, `clear`, `echo`, `pwd`, `ls`, `cd`, `cat` commands; add Rust-first native
+application foundations while preserving the language-neutral ABI. Rixie Core
+is optional. Do not rerun N3 campaigns or introduce new N3 gates.
 
 ### Historical N3.5 checkpoints
 

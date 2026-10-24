@@ -4,12 +4,19 @@
 accepted on 2026-10-24. [Final closure and evidence](results/n3-closure.md)
 consolidate D1a–D1f, five mutation controls and fifteen larger-RAM stress runs.
 
-**Publication branch:** `feat/n3.6-storage-closure`. Main remains the published
-N3.5 checkpoint `c0ccdd7d9ba3601c1d6891a3ff6c67516c679213`; no automatic merge
-or new release tag accompanies this milestone. The older U1 tag remains
-`checkpoint-2026-10-19-u1`. N0–N3 are complete. **N4 is next:** keyboard input,
-interactive console, `vsh` and Rust-first native application foundations.
-Implementation requires explicit authorization and has not started.
+**N3 publication:** `897312fb991b2f55799b37fbd4459fb552acfe82` on
+`feat/n3.6-storage-closure`. GitHub main integrated it through PR #2 at
+`d9a4ade0db1df8ab7c8c7fe3c4553cd3f36c3622` during N4 development. Local main
+and `feat/n4-interactive-console` were fast-forwarded to that merge; its tree
+is identical to N3. The first N4 keyboard/echo implementation is published on
+`feat/n4-interactive-console`. No new release tag was created; the older U1 tag
+remains `checkpoint-2026-10-19-u1`.
+
+**N4 is in progress.** The [first input increment](results/n4-first-input.md)
+adds an opt-in PS/2 keyboard echo console: US ASCII, Shift/Caps Lock, Backspace
+and Enter. Production-code host tests and BIOS/UEFI QEMU input checks pass;
+normal boot-and-halt and ABI v0 hello also pass. `vsh`, shell commands and the
+Rust native application foundation are still pending.
 
 Historical N3.5 approval, integration, failed attempts and original authorization
 boundaries below remain records of those checkpoints, not current N3 blockers.
@@ -196,8 +203,10 @@ On BIOS (SeaBIOS: ELCR `0xc00`), virtio-blk interrupt mode is fully tested: 149 
 - **VGA text fallback:** only unit-tested. GRUB always hands this kernel a framebuffer, because
   the kernel requests one.
 - **BIOS display change:** BIOS boots now switch to VBE graphics.
-- **Missing features:** no keyboard input, shell, writable storage, networking,
-  SMP or ACPI power management. The production kernel ends by halting.
+- **Input:** first PS/2 polling echo path only, with a US layout and 128-cell line
+  limit; no USB keyboard driver, mouse, terminal input syscall or shell yet.
+  Boot requires `vos.console=1` to enter it; normal production boot still halts.
+- **Missing features:** shell, writable storage, networking, SMP and ACPI power management.
 
 ## Unsupported (by design, for now)
 

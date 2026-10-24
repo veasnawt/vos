@@ -115,6 +115,17 @@ uefi-iso: iso
 run: iso
 	$(QEMU) -cdrom $(ISO)
 
+# N4 first input is opt-in; keep the normal boot/test configurations intact.
+# All generated files, including the user runtime, use a separate build tree.
+INPUT_BUILD ?= build/n4-input
+.PHONY: input-iso input-uefi-iso input-run
+input-iso:
+	$(MAKE) --no-print-directory ARCH=x86_64 BUILD=$(INPUT_BUILD)/kernel USER_BUILD=$(INPUT_BUILD)/user GRUB_CFG=arch/x86_64/grub-input.cfg iso
+input-uefi-iso:
+	$(MAKE) --no-print-directory ARCH=x86_64 BUILD=$(INPUT_BUILD)/kernel USER_BUILD=$(INPUT_BUILD)/user GRUB_CFG=arch/x86_64/grub-input.cfg uefi-iso
+input-run: input-iso
+	qemu-system-x86_64 -m 128M -cdrom $(INPUT_BUILD)/kernel/vos.iso -serial stdio -no-reboot -nic none
+
 # Like run, but QEMU waits for a debugger on TCP port 1234 (-s -S) and prints
 # the serial port here. GDB is not installed by the build; see
 # docs/plans/n2-foundation.md (tooling) for the commands.

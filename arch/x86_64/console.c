@@ -15,12 +15,25 @@ void serial_init(void)
     outb(COM1 + 4, 0x03);
 }
 
-void serial_putc(char c)
+static void serial_raw(char c)
 {
     while (!(inb(COM1 + 5) & 0x20))
         ;
     outb(COM1, (uint8_t)c);
+}
+
+void serial_putc(char c)
+{
+    serial_raw(c);
     screen_putc(c);                     /* U1: mirrored on the screen console, if any (screen.h) */
+}
+
+void console_erase_previous(void)
+{
+    serial_raw('\b');
+    serial_raw(' ');
+    serial_raw('\b');
+    screen_erase_previous();
 }
 
 void serial_puts(const char *s)

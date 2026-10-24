@@ -1,0 +1,165 @@
+{
+  "scope": "First N4 keyboard-to-console increment; no N3 reruns",
+  "baseline": "897312fb991b2f55799b37fbd4459fb552acfe82",
+  "branch": "feat/n4-interactive-console",
+  "result": {
+    "scope": "first N4 keyboard-to-console increment",
+    "runs": {
+      "bios": {
+        "passed": true,
+        "hello_abi_v0": true,
+        "edited_line": "input> VOS OK",
+        "second_line": "input> hello vos",
+        "screenshot": {
+          "width": 1280,
+          "height": 800,
+          "sha256": "be1ed30b92cb5ebb720c691206107d81861163169c23ac2f01cd113f1f7128e7"
+        }
+      },
+      "uefi": {
+        "passed": true,
+        "hello_abi_v0": true,
+        "edited_line": "input> VOS OK",
+        "second_line": "input> hello vos",
+        "screenshot": {
+          "width": 1280,
+          "height": 800,
+          "sha256": "c76c466c88cd42e95786dcd95ee59947970a4acdfe923557404f823f3f039235"
+        }
+      },
+      "normal": {
+        "passed": true,
+        "boot_halted": true,
+        "hello_abi_v0": true
+      }
+    },
+    "host": "PASS",
+    "passed": true
+  },
+  "sources": {
+    "Makefile": "b559ad8edc37dc0ded9099574c548748260f3d2b957ffd6c43ab5924b3f3791c",
+    "arch/x86_64/arch.mk": "8f4250ec3703d8431506a95f1629721054be425e44f49b011aa5baac5f379a47",
+    "arch/x86_64/kernel.c": "a3fa63adb3177df9caa460e446a34dfbc32b36115688bc3af83fb9d8a8ef78b8",
+    "arch/x86_64/console.c": "f0d96f7346c3f325ebb65ef88c16d534b120b21fd33b4bbf93416e206e0034aa",
+    "arch/x86_64/console.h": "8b74df38e6ad2ccf46ae05388e80df5108362396365c604efdd350fee61d3056",
+    "arch/x86_64/screen.c": "6ba4e7b076f02def600b35d0f4ecf94accfac50209116c29c98834f24b089daa",
+    "arch/x86_64/screen.h": "3b5b9d4caf959a80c8a78bb39829c9f257d0c3fb3594b2ae9bf13840fa5ffc15",
+    "arch/x86_64/keyboard.c": "def02b9cb34e8c72cfb39590b4e2d81242c3da1dace97bf0f3d5cdba6cd328c7",
+    "arch/x86_64/keyboard.h": "1b766847c7a1964e5515cce2ac0d1c33d4552e49d72d59521b34a34e3c008f00",
+    "arch/x86_64/input_console.c": "2717dad727ce3e00445f8e370a9fd40c5566aca979401cf2b935340a058e1105",
+    "arch/x86_64/input_console.h": "ca2ff1c585761f30aa56ce3f6450a0689dae9c4d38c97a0d0e540bf83f3383a4",
+    "arch/x86_64/grub-input.cfg": "1553082ebc260dc476a5ffa8ec91c29c7999b59bac3bff61ed89aad2c64ce96e",
+    "tests/host/keyboard-input.c": "a0f5831e4623b2fa177da05222c774a1cece73d7288bd0e5e0a990091e844cb4",
+    "tests/host/screen-input.c": "238743a6a9f9164fdaddd63ca279e9e55931b6b6adda7f7d53686c9bf7efa825",
+    "scripts/test-keyboard-console.py": "8adf9dc19cae6500c729524b02990685d90e0d62478e41bd95cf1a0a951e0f82"
+  },
+  "artifacts": [
+    {
+      "path": "docs/results/n4-input/result.json",
+      "sha256": "8a80764de2bb3f9b9ea2ddb68d9128933f1ccc44b26214f52b81b451fb07eea3",
+      "bytes": 829
+    },
+    {
+      "path": "docs/results/n4-input/host-test.txt",
+      "sha256": "d1ef990caab20204b1707da4b0895a81e3a18247318f3e951f3c0b99c705b49d",
+      "bytes": 242
+    },
+    {
+      "path": "docs/results/n4-input/screen-test.txt",
+      "sha256": "4fb3c2d88620885746e07c4c5a3f047f38ec0695e3ca9f297a1aa9e16044efa2",
+      "bytes": 89
+    },
+    {
+      "path": "docs/results/n4-input/bios.serial.txt",
+      "sha256": "0ef3492567a549beca0d3e967de6d2174fc1e0e3b76c2f03f1f411dacd084c4d",
+      "bytes": 2767
+    },
+    {
+      "path": "docs/results/n4-input/uefi.serial.txt",
+      "sha256": "6ba72cac3eb3b8c31cde6cd00bcf5dbc9beaef8b39acca2e8b5ef5f9a54d7590",
+      "bytes": 3097
+    },
+    {
+      "path": "docs/results/n4-input/normal.serial.txt",
+      "sha256": "5381a6282972361931da008acc9969246c2cdc666995204a42d3fdc073171479",
+      "bytes": 2511
+    },
+    {
+      "path": "docs/results/n4-input/bios-command.json",
+      "sha256": "6d7b6ae86c33f8de68903b2ff3c902d20ac3ac45f8b618aac9953fbd2c216042",
+      "bytes": 502
+    },
+    {
+      "path": "docs/results/n4-input/uefi-command.json",
+      "sha256": "84c8d7e2ac4a9323a910a7b60f1de3f9357c9241eab8df47ef55fa4af194a052",
+      "bytes": 731
+    },
+    {
+      "path": "docs/results/n4-input/normal-command.json",
+      "sha256": "a89b0c386edb46b07d6252cf2b5d17e8ed0f421ecf869f5a99874aac21ce2e19",
+      "bytes": 500
+    },
+    {
+      "path": "docs/images/n4/vos-n4-bios-keyboard-echo.png",
+      "sha256": "be1ed30b92cb5ebb720c691206107d81861163169c23ac2f01cd113f1f7128e7",
+      "bytes": 30783
+    },
+    {
+      "path": "docs/images/n4/vos-n4-uefi-keyboard-echo.png",
+      "sha256": "c76c466c88cd42e95786dcd95ee59947970a4acdfe923557404f823f3f039235",
+      "bytes": 30656
+    }
+  ],
+  "full_local_manifest": {
+    "path": "build/n4-input-20261024T071418Z/results/manifest.json",
+    "entries": 202,
+    "sha256": "c6cdfebaae2536fcdc663f60daafca95f5f16ea20ff5afe665ca37293c7282ff"
+  },
+  "qemu_version": "10.2.1",
+  "isolation": {
+    "accepted_classifier_unchanged": true,
+    "query_timeout_seconds": 90,
+    "samples": 2,
+    "all_clean": true,
+    "scope": "Fresh bounded N4 host/QEMU execution; not a claim covering prior controller gaps"
+  },
+  "storage": {
+    "n3_ceiling_MiB_unchanged": 3360,
+    "n4_local_output_bound_MiB": 128,
+    "failed_attempt_preserved": "build/n4-input-20261024T071316Z",
+    "success_output": "build/n4-input-20261024T071418Z",
+    "last_guard_sample": {
+      "utc": 1792826089.9850054,
+      "used": 36343808,
+      "capacity": {
+        "charged": 2493988864,
+        "remaining": 1029226496,
+        "C": 13422108672,
+        "E": 252317265920,
+        "linux": 1010200780800,
+        "admitted_extra": 109129728
+      },
+      "isolation_errors": []
+    },
+    "reserves_unchanged": true
+  },
+  "hello_sha256": "c6c6416195a0f18d680d7f8f19be52ce02ff02912ef3bac45324fbe88006cd06",
+  "review": {
+    "full_N3_campaign_rerun": false,
+    "physical_hardware_tested": false,
+    "ABI_sources_changed": false,
+    "shell_implemented": false
+  },
+  "git_integration": {
+    "initial_local_main": "c0ccdd7d9ba3601c1d6891a3ff6c67516c679213",
+    "accepted_N3": "897312fb991b2f55799b37fbd4459fb552acfe82",
+    "remote_N3_merge_observed_during_work": "d9a4ade0db1df8ab7c8c7fe3c4553cd3f36c3622",
+    "PR": 2,
+    "ahead_of_N3": 1,
+    "behind_N3": 0,
+    "tree_identical_to_tested_baseline": true,
+    "local_main_and_N4_fast_forwarded": true,
+    "uncommitted_files_preserved": 33,
+    "N4_commit_or_push_performed": false
+  }
+}

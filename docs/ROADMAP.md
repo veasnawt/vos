@@ -2,8 +2,10 @@
 
 N0–N3 are complete. N3 closure was accepted on 2026-10-24 after the existing
 D1/D2/C20 requirements passed. The milestone is published on
-`feat/n3.6-storage-closure`; main remains N3.5 until a separately authorized
-merge. See [status](STATUS.md) and the [N3 closure record](results/n3-closure.md).
+`feat/n3.6-storage-closure` at `897312f`. GitHub main integrated it through
+PR #2 (`d9a4ade`) during N4 development. Local main and the N4 branch were
+fast-forwarded to that merge; its source tree is identical to the N3 baseline.
+See [status](STATUS.md) and the [N3 closure record](results/n3-closure.md).
 
 ## Completed
 
@@ -21,13 +23,23 @@ merge. See [status](STATUS.md) and the [N3 closure record](results/n3-closure.md
 | N3.6 / N3 | Integrated accounting/stress, final regression, five mutations, fifteen larger-RAM runs and preserved evidence | [Final N3 closure](results/n3-closure.md) |
 | U0/U1 | QEMU UEFI feasibility/readiness, BIOS compatibility and framebuffer diagnostics | [UEFI plan/results](plans/uefi.md) |
 
-## Next: N4
+## In progress: N4
 
-The next development milestone is **keyboard input, an interactive console,
-`vsh` and Rust-first native application foundations**. Its implementation has
-not started and requires explicit authorization. The current C/assembly kernel,
-ABI boundaries and completed read-only storage work form its baseline.
-This roadmap update does not add N3 requirements or authorize N4 code.
+N4 development is authorized and uses `feat/n4-interactive-console`, based on
+the integrated N3 baseline. The [first input increment](results/n4-first-input.md)
+provides an opt-in PS/2 echo console, verified on BIOS and UEFI in QEMU.
+
+Priorities remain, in order:
+
+1. Keyboard input: first polling path works; further input service work remains.
+2. Interactive text console: echo/edit works; buffered command input is next.
+3. Native `vsh` shell.
+4. `help`, `clear`, `echo`, `pwd`, `ls`, `cd`, `cat`.
+5. Rust-first native application foundations with a language-neutral ABI.
+
+Preserve N0–N3 and ABI v0/v1/v2. Use focused checks as each increment changes
+behavior. Rixie Core is optional and must not delay the shell. No new N3 gates
+or milestones are introduced.
 
 ## Later work
 

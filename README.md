@@ -8,7 +8,7 @@ VOS is being developed with human architectural direction, review, and testing s
 
 VOS is written primarily in freestanding C and x86 assembly. It is **not a Linux distribution**, and it does not rely on Linux, a host operating system, or a hosted C library at runtime. GRUB currently loads the kernel through Multiboot2 on x86-64. A small legacy i386 build remains available.
 
-**Status: pre-alpha kernel research.** VOS is not an installable or everyday-use operating system. The documented checkpoint has been tested in **QEMU with SeaBIOS and OVMF**, not verified as a functioning physical-machine installation. No native graphical desktop, keyboard/mouse input, interactive shell, writable storage, or network stack is available yet.
+**Status: pre-alpha kernel research.** VOS is not an installable or everyday-use operating system. The documented checkpoint has been tested in **QEMU with SeaBIOS and OVMF**, not verified as a functioning physical-machine installation. N4 development now includes an opt-in PS/2 keyboard echo console. A native graphical desktop, mouse input, interactive shell, writable storage and network stack remain future work.
 
 ### What works today
 
@@ -19,14 +19,19 @@ VOS is written primarily in freestanding C and x86 assembly. It is **not a Linux
   process-owned handles and trusted non-root namespace grants; normal programs
   receive no filesystem access automatically.
 - A basic framebuffer boot/status/panic console where supported, plus serial diagnostics.
+- An opt-in keyboard echo console with US ASCII, Shift/Caps Lock, Backspace and Enter
+  ([first N4 result](docs/results/n4-first-input.md)).
 - BIOS and UEFI boot paths **in QEMU** via GRUB; extensive emulator-based regression tests.
 
 **N0–N3 are complete.** N3 storage closure was accepted on 2026-10-24 and is
-published on `feat/n3.6-storage-closure`; `main` remains the N3.5 checkpoint
-`c0ccdd7`. The [N3 closure record](docs/results/n3-closure.md) contains D1a–D1f,
+published at `897312f` and integrated into GitHub main by PR #2 (`d9a4ade`).
+Local `main` and the `feat/n4-interactive-console` development branch have been
+fast-forwarded to that merge, whose source tree is identical to the N3 baseline.
+The [N3 closure record](docs/results/n3-closure.md) contains D1a–D1f,
 5/5 mutation controls, 15/15 larger-RAM stress runs, evidence hashes and preserved
-failure history. **N4 is next:** keyboard input, an interactive console, `vsh`
-and Rust-first native application foundations. N4 implementation has not started.
+failure history. **N4 is in progress:** keyboard input, an interactive console,
+`vsh` and Rust-first native application foundations. The first keyboard-to-console
+increment passes focused BIOS/UEFI checks; `vsh` and its commands are not implemented yet.
 
 ![VOS BIOS boot console with PASS status](docs/images/n3/vos-n3-bios-boot-status.png)
 
@@ -49,6 +54,12 @@ make run
 ~~~
 
 For an automated check, run `make test-all`. A UEFI ISO and additional OVMF tests are available using `make uefi-iso` and `make test-uefi` after installing the additional UEFI build/test tools. VOS is intended for **emulation first**; do not flash experimental images onto a disk holding important data.
+
+To try the first N4 keyboard console, run `make input-run` and type into the QEMU
+display window. It builds into `build/n4-input/`, boots the usual ring-3 hello,
+then starts an echo-only `input> ` prompt. `make input-uefi-iso` builds its OVMF
+variant using the existing EFI tool prerequisites. Normal `make run` still uses
+the original boot-and-halt configuration. See the [result and screenshots](docs/results/n4-first-input.md).
 
 ## What happens when x86_64 VOS boots
 

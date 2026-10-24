@@ -15,6 +15,7 @@
 #include "gdt.h"
 #include "idt.h"
 #include "irq.h"
+#include "input_console.h"
 #include "kmap.h"
 #include "memlayout.h"
 #include "multiboot2.h"
@@ -359,5 +360,8 @@ void kernel_main(uint32_t mb2_magic, uint32_t mb2_info)
     serial_puts(first_failure ? "VOS-TEST: FAIL\r\n" : "VOS-TEST: PASS\r\n");
     screen_status(first_failure ? SCREEN_FAIL : SCREEN_PASS, first_failure ? "VOS-TEST: FAIL" : "VOS-TEST: PASS");
     outl(TEST_EXIT_PORT, first_failure ? TEST_EXIT_FAIL : TEST_EXIT_PASS);
+#else
+    if (!first_failure && input_console_requested(bi.cmdline))
+        input_console_run();
 #endif
 }

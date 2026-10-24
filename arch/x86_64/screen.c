@@ -201,6 +201,24 @@ void screen_putc(char c)
     busy = 0;
 }
 
+void screen_erase_previous(void)
+{
+    if (!inited || kind == SCREEN_NONE || busy || panicked)
+        return;
+    busy = 1;
+    if (!cx) {
+        cy = (cy + rows - 1) % rows;
+        cx = cols;
+    }
+    cx--;
+    if (kind == SCREEN_FB)
+        screen_glyph(&fb, SCREEN_MARGIN + cx * 8, log_y + cy * SCREEN_LINE_H + 1,
+                     ' ', COLOR_FG, COLOR_BG);
+    else
+        vga[(1 + cy) * VGA_COLS + cx] = (uint16_t)(VGA_LOG << 8 | ' ');
+    busy = 0;
+}
+
 void screen_status(int state, const char *text)
 {
     if (state < SCREEN_BOOTING || state > SCREEN_FAIL)

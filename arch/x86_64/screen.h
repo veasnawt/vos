@@ -44,6 +44,8 @@
 void screen_init(const struct boot_info *bi);
 /* Mirror one character of the serial log (printable ASCII and '\n'; '\r' and others ignored). */
 void screen_putc(char c);
+/* Erase the preceding cell, including a soft wrap. Caller bounds the input line. */
+void screen_erase_previous(void);
 /* The status shown in the bar; text (may be NULL) is shown beside it. */
 void screen_status(int state, const char *text);
 /* The panic banner (called by panic). */

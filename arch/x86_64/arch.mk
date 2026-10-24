@@ -13,7 +13,7 @@ ARCH_LDFLAGS    := -m elf_x86_64 -z max-page-size=0x1000
 ARCH_LINK_CHECK  = python3 -I -B scripts/check-kernel-layout.py $@ || { rm -f $@; exit 1; }
 ARCH_OBJS       := boot.o entry.o usermode.o kernel.o bootinfo.o console.o cpu.o exception.o gdt.o idt.o \
                    lib.o loader.o panic.o pmm.o process.o resv.o syscall.o usercopy.o vmm.o kmap.o irq.o pic.o pit.o thread.o thread_switch.o channel.o elf.o app.o \
-                   pci.o blockdev.o virtio_blk.o ext2.o io_scope.o file.o devmap.o screen.o font8x16.o
+                   pci.o blockdev.o virtio_blk.o ext2.o io_scope.o file.o devmap.o screen.o font8x16.o keyboard.o input_console.o
 ifeq ($(VOS_TEST),1)
 ARCH_OBJS       += selftest.o selftest_cpu.o selftest_elf.o selftest_ipc.o selftest_irq.o selftest_kmap.o selftest_mp.o selftest_sched.o selftest_stress.o selftest_pmm.o selftest_suite.o \
                    selftest_user.o selftest_vblk.o selftest_blk.o selftest_ext2.o selftest_vmm.o selftest_screen.o selftest_io_scope.o selftest_file.o storage_observe.o user_progs.o
