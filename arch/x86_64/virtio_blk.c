@@ -7,6 +7,9 @@
 #include "pmm.h"
 #include "thread.h"
 #include "vmm.h"
+#if defined(VOS_TEST) && (defined(VOS_TEST_CASE_storage_stress) || defined(VOS_TEST_CASE_storage_stress_b) || defined(VOS_TEST_CASE_storage_stress_c) || defined(VOS_TEST_CASE_storage_stress_d))
+#include "storage_stress.h"
+#endif
 
 /* PCI identity (virtio 1.2, 4.1.2). */
 #define VIRTIO_VENDOR           0x1AF4
@@ -1084,6 +1087,9 @@ static int wait_poll(unsigned slot, struct thread *me, uint64_t inherited_deadli
 
     if (inherited_deadline && inherited_deadline < deadline)
         deadline = inherited_deadline;
+#if defined(VOS_TEST) && (defined(VOS_TEST_CASE_storage_stress) || defined(VOS_TEST_CASE_storage_stress_b) || defined(VOS_TEST_CASE_storage_stress_c) || defined(VOS_TEST_CASE_storage_stress_d))
+    storage_stress_event(STRESS_POLL, slot);
+#endif
     for (spins = 0; spins < limit; spins++) {
         if ((err = collect()))
             return err;
@@ -1181,6 +1187,9 @@ int vblk_wait(unsigned slot, void *buf, uint64_t cap)
         return VBLK_EINVAL;
     if ((err = info.mode == VBLK_MODE_IRQ ? wait_irq(slot, me) : wait_poll(slot, me, 0)))
         return err;
+#if defined(VOS_TEST) && (defined(VOS_TEST_CASE_storage_stress) || defined(VOS_TEST_CASE_storage_stress_b) || defined(VOS_TEST_CASE_storage_stress_c) || defined(VOS_TEST_CASE_storage_stress_d))
+    storage_stress_event(STRESS_COMPLETE, slot);
+#endif
 
     uint8_t st = *(volatile uint8_t *)phys_to_virt(info.pool[POOL_HDR] + STATUS_OFF(slot));
     uint32_t count = slot_count[slot], len = slot_len[slot];
@@ -1406,5 +1415,94 @@ int vblk_test_submit_type(uint32_t type, uint64_t lba, uint32_t count, unsigned 
     if (type != VBLK_TEST_T_UNKNOWN)        /* allow-list: never OUT, FLUSH, DISCARD, ... */
         return VBLK_EINVAL;
     return submit_type(type, lba, count, slot);
+}
+#endif
+
+#ifdef VOS_TEST
+#include "storage_observe.h"
+
+/* Only the observer's input view is filtered; real desc/pool/request state is untouched. */
+static unsigned observe_table_unavailable;
+
+void vblk_test_observe_hide_table(int hide)
+{
+    observe_table_unavailable = hide != 0;
+}
+
+void vblk_test_observe(struct observe_driver *out)
+{
+    const volatile struct vq_desc *table = observe_table_unavailable ? NULL : desc;
+    out->state = info.state;
+    out->mode = info.mode;
+    out->pool_held = info.pool_held;
+    out->quarantined = info.quarantined;
+    memcpy(out->pool, info.pool, sizeof(out->pool));
+    out->submitted = info.submitted;
+    out->completed = info.completed;
+    out->cancelled = info.cancelled;
+    out->retired_completion = info.abandoned_completed;
+    out->retired_reset = info.abandoned_reset;
+    out->resets = info.resets;
+    out->next_avail = next_avail;
+    out->last_used = last_used;
+    for (unsigned i = 0; i < VBLK_SLOTS; i++)
+        out->slots[i] = (struct observe_slot){(uint64_t)slot_owner[i],
+            slot_owner[i] ? slot_owner[i]->id : 0, slot_ticket[i],
+            (uint64_t)slot_wq[i].head, (uint64_t)slot_wq[i].tail, abandoned_at[i],
+            inflight[i], done[i], abandoned[i], slot_count[i], slot_len[i]};
+    /* Pool allocation precedes table initialization; early failures may retain it.
+     * desc is assigned only after ring initialization and cleared on release.
+     * A retained initialized table remains readable even if the device is not READY.
+     */
+    out->descriptors_available = pool_ready && info.pool_held && table &&
+        pmm_frame_state_in(pmm_kernel(), info.pool[POOL_RING]) == PMM_FRAME_ALLOCATED &&
+        table == (volatile struct vq_desc *)((uint8_t *)phys_to_virt(info.pool[POOL_RING]) + RING_DESC_OFF);
+    memset(out->descriptors, 0, sizeof(out->descriptors));
+    if (out->descriptors_available)
+        for (unsigned i = 0; i < VBLK_QUEUE_SIZE; i++) {
+            out->descriptors[i].address = table[i].addr;
+            out->descriptors[i].length = table[i].len;
+            out->descriptors[i].flags = table[i].flags;
+            out->descriptors[i].next = table[i].next;
+        }
+}
+#endif
+
+#if defined(VOS_TEST) && (defined(VOS_TEST_CASE_vblk) || defined(VOS_TEST_CASE_scope_orphan_idle) || defined(VOS_TEST_CASE_file) || defined(VOS_TEST_CASE_ext2))
+#include "panic.h"
+
+/*
+ * Held publication (N3 final D1 repair; these test images only). A suppressed notification does not keep a request
+ * from the device: QEMU kicks the queue when DRIVER_OK attaches its host notifier and then takes whatever the
+ * available ring holds. While held, submissions fill a private copy of the available ring instead, so the index the
+ * device reads does not move and the request is not exposed (virtio 1.2, 2.7.13.3), whatever kicks arrive. A reset
+ * ends the hold (bring_up points avail at the ring again); vblk_test_publish_held() exposes the held entries in ring
+ * order, before a test notifies the device.
+ */
+static uint16_t held_ring[2 + VBLK_QUEUE_SIZE];
+static volatile uint16_t *held_real;
+
+void vblk_test_hold_publish(void)
+{
+    if (info.state != VBLK_READY || !avail || avail == held_ring)
+        panic("vblk test: publication hold needs a ready, unheld queue");
+    for (unsigned i = 0; i < 2 + VBLK_QUEUE_SIZE; i++)
+        held_ring[i] = avail[i];
+    held_real = avail;
+    avail = held_ring;
+}
+
+void vblk_test_publish_held(void)
+{
+    if (avail == held_ring && info.state == VBLK_READY) {
+        for (uint16_t i = held_real[1]; i != held_ring[1]; i++)
+            held_real[2 + i % VBLK_QUEUE_SIZE] = held_ring[2 + i % VBLK_QUEUE_SIZE];
+        held_real[0] = held_ring[0];
+        barrier();                          /* ring entries before idx (2.7.13) */
+        held_real[1] = held_ring[1];
+        barrier();
+        avail = held_real;
+    }
+    held_real = 0;
 }
 #endif

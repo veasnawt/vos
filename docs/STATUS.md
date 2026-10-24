@@ -1,18 +1,18 @@
 # VOS Status
 
-**Latest completed milestone:** **N3.5 COMPLETE**, integrated into local `main` at
-`0ddb201ec1b13d65af7a22a56f35fafc02a3c9ab`. The feature branch points to the same
-commit. Formal approval at verification checkpoint `0109d9b` and documentation
-closure at `398ba19` are earlier historical checkpoints.
+**Latest completed milestone: N3 COMPLETE**, including N3.6 storage closure,
+accepted on 2026-10-24. [Final closure and evidence](results/n3-closure.md)
+consolidate D1a–D1f, five mutation controls and fifteen larger-RAM stress runs.
 
-**Publication state (this documentation review):** the GitHub repository is public,
-but its main remains `c5f5acb`; the twenty local N3.5 commits have not been pushed.
-Local integration does not constitute GitHub publication. See the
-[integration/recovery summary](results/n3.5-integration.md).
-[Closure record](results/n3.5-closure.md) and [Stage 5 evidence](results/n3.5-stage5.md)
-define the accepted scope. N3 and N3.6 remain incomplete; N3.6 is the next planned
-storage milestone. No release tag was created. The older U1 tag remains
-`checkpoint-2026-10-19-u1`.
+**Publication branch:** `feat/n3.6-storage-closure`. Main remains the published
+N3.5 checkpoint `c0ccdd7d9ba3601c1d6891a3ff6c67516c679213`; no automatic merge
+or new release tag accompanies this milestone. The older U1 tag remains
+`checkpoint-2026-10-19-u1`. N0–N3 are complete. **N4 is next:** keyboard input,
+interactive console, `vsh` and Rust-first native application foundations.
+Implementation requires explicit authorization and has not started.
+
+Historical N3.5 approval, integration, failed attempts and original authorization
+boundaries below remain records of those checkpoints, not current N3 blockers.
 
 VOS is an experimental, independently written x86_64 kernel (with a legacy i386 kernel). It
 runs only in QEMU so far: no physical machine has booted it. This is a development checkpoint,
@@ -22,8 +22,9 @@ not a release.
 
 N1 (user mode, system calls), N2 (scheduling, preemption of user programs, IPC), N3.0–N3.4
 (W^X higher-half memory, virtio-blk, block cache, read-only ext2, interrupt-driven block I/O),
-N3.5 (capability-scoped read-only userspace file ABI v2), U0 (UEFI feasibility) and
-U1 (UEFI readiness with BIOS compatibility).
+N3.5 (capability-scoped read-only userspace file ABI v2), N3.6/N3 (integrated
+storage stress and final closure), U0 (UEFI feasibility) and U1 (UEFI readiness
+with BIOS compatibility).
 See `docs/ROADMAP.md`.
 
 ## Boot paths (all verified in QEMU only)
@@ -56,7 +57,8 @@ On both paths:
   Stage 4 closure is approved. [Stage 5 final verification](results/n3.5-stage5.md)
   passes 74 BIOS and 38 fresh UEFI runs, 845/0 file assertions, 302/0 static checks
   and five mutation controls. Frozen hashes and resource budgets hold.
-  N3.5 closure is approved. N3.6 preparation is planning only; implementation is not authorized.
+  N3.5 closure is approved. N3.6's accounting foundations, deterministic stress
+  and final D1/D2/C20 verification are also complete; see the final N3 record below.
 
 **Interrupts and timing:**
 - 8259 PIC and PIT.
@@ -74,7 +76,26 @@ On both paths:
 - Framebuffer console with an original 8×16 font, status bar (PASS/FAIL) and panic banner.
 - VGA text only when text mode is positively known.
 
-## N3.5 accepted verification checkpoint
+## N3 final accepted verification (2026-10-24)
+
+| Check | Result |
+| --- | --- |
+| D1a/D1b/D1c | 74 BIOS, 19 primary UEFI and 19 additional UEFI passing verdicts |
+| D1d/D1e | Static ELF/ABI checks; 139 frozen hashes, 131 old ELF comparisons and 55 ISO payload audits pass |
+| D1f | 43 layouts pass; cumulative static/reserved growth 45864/57344 B stays within 65536/131072 B |
+| D2 | rights-width, symlink, error-copy, incarnation and reserved-inode: 5/5 detected by intended assertions |
+| C20 | 15/15 profiles: each Gate B/C/D on BIOS default 2 GiB and UEFI default/max at 1 and 8 GiB |
+| Evidence | D1, D2 and C20 sealed; independent archive verification 566/566, 64/64 and 204/204 |
+| Integrity | Seven protected references unchanged; prior evidence, failures, 13 worktrees and two stashes preserved |
+
+D1's C2-T held-publication correction fixes an invalid test assumption about
+un-notified requests; production and protected stress images remain unchanged.
+D1r3 is still unfinished, unsealed and unarchived. Monitoring interruptions and
+failed controller/dependency attempts remain documented, not erased.
+The [closure record](results/n3-closure.md) contains complete scope, hashes,
+reproducibility constraints, storage accounting and authentic screenshots.
+
+## N3.5 accepted verification checkpoint (historical)
 
 The user approved closure on the evidence committed at `0109d9b`; the formal closure
 changes documentation only. Historical stage reports and failures remain unchanged.
@@ -90,7 +111,7 @@ changes documentation only. Historical stage reports and failures remain unchang
 
 See the [closure record](results/n3.5-closure.md) for the evidence review and accepted
 limitations, and [N3.6 preparation](plans/n3-storage.md#11-n36-preparation-planning-only)
-for the next design questions. N3/N3.6 are not complete.
+for the historical design questions. Final N3/N3.6 acceptance is recorded above.
 
 The subsequent integration audit retained the completed BIOS/UEFI and static
 results, completed the three unfinished mutation controls after sparse-copy
@@ -151,6 +172,10 @@ On BIOS (SeaBIOS: ELCR `0xc00`), virtio-blk interrupt mode is fully tested: 149 
 ## Known defects and limitations
 
 - **Hardware:** QEMU only. Untested on any physical machine.
+- **Directory progress:** the 512-unit work limit can reject deep single-block
+  chains and scans before block 344 in the sparse `/scope/huge` fixture; EAGAIN
+  carries no progress cookie. Gate D records exact boundaries; resumable progress
+  remains future work.
 - **Kernel stack:** full dynamic kernel-stack high-water proof is incomplete.
   Compiler frame reports and runtime guard/canary tests do not constitute that proof.
 - **Filesystem trust:** read-only; trusted immutable provisioned directory graphs.

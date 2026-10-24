@@ -64,4 +64,13 @@ const char *file_audit(void);
 uint64_t file_test_issue(uint64_t *serial);
 void file_test_last_tokens(void);       /* irreversible monotonic jump in test image */
 #endif
+/* N3.6 Gate C publication hold, after an operation's private result and before its final cancellation
+ * check: appended to the line that completes open/stat/directory operations in file.c, and in read_at
+ * included at statement position (file_hold.inc), so no line moves in any other image. */
+#if defined(VOS_TEST) && defined(VOS_TEST_CASE_storage_stress_c)
+void storage_stress_c_hold(int op_result);
+#define FILE_PUBLICATION_HOLD(r) storage_stress_c_hold(r);
+#else
+#define FILE_PUBLICATION_HOLD(r)
+#endif
 #endif

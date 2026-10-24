@@ -17,6 +17,10 @@ USER_RT_V1 := $(addprefix $(USER_BUILD)/lib/,crt0.o syscall.o syscall_v1.o abi_n
 USER_RT_V2 := $(addprefix $(USER_BUILD)/lib/,crt0.o syscall.o syscall_v1.o syscall_v2.o abi_note_v2.o)
 FILE_DIR := $(USER_BUILD)/filetests
 FILE_ELFS := $(addprefix $(FILE_DIR)/,probe.elf reader.elf reader_y.elf error.elf gate0.elf gate1.elf boundary.elf nogrant.elf cookie.elf regs.elf adversary.elf)
+# Separate Gate A companion; no change to the frozen file/suite lists.
+STORAGE_STRESS_DIR := $(USER_BUILD)/storage_stress
+$(STORAGE_STRESS_DIR)/canary.elf: $(STORAGE_STRESS_DIR)/canary.o $(USER_RT_V2) $(USER_LDS)
+	$(LD) $(USER_LDFLAGS) -o $@ $(USER_RT_V2) $<
 .PHONY: user-files
 user-files: $(FILE_ELFS)
 $(FILE_DIR)/%.elf: $(USER_BUILD)/filetests/%.o $(USER_RT_V2) $(USER_LDS)
@@ -125,3 +129,35 @@ user-test: user-check user-files $(USER_RT) $(USER_RT_V1) $(KERNEL) $(ELFCHECK) 
 	python3 -I scripts/test-file-abi.py
 
 -include $(shell find $(USER_BUILD) -name '*.d' 2>/dev/null)
+
+
+# Separate Gate B modules; existing application/file/accounting lists stay frozen.
+$(STORAGE_STRESS_DIR)/r0.o $(STORAGE_STRESS_DIR)/r1.o: user/storage_stress/readers.c Makefile user/user.mk
+	@mkdir -p $(dir $@)
+	$(CC) $(USER_CFLAGS) -DREADER_ROLE=$(if $(findstring r0.o,$@),0,1) -MMD -MP -c $< -o $@
+$(STORAGE_STRESS_DIR)/r0.elf: $(STORAGE_STRESS_DIR)/r0.o $(USER_RT_V2) $(USER_LDS)
+	$(LD) $(USER_LDFLAGS) -o $@ $(USER_RT_V2) $<
+$(STORAGE_STRESS_DIR)/r1.elf: $(STORAGE_STRESS_DIR)/r1.o $(USER_RT_V2) $(USER_LDS)
+	$(LD) $(USER_LDFLAGS) -o $@ $(USER_RT_V2) $<
+$(STORAGE_STRESS_DIR)/lifecycle.elf: $(STORAGE_STRESS_DIR)/lifecycle.o $(USER_RT_V2) $(USER_LDS)
+	$(LD) $(USER_LDFLAGS) -o $@ $(USER_RT_V2) $<
+$(STORAGE_STRESS_DIR)/cpu.o: user/storage_stress/companion.c Makefile user/user.mk
+	@mkdir -p $(dir $@)
+	$(CC) $(USER_CFLAGS) -DCOMPANION_CPU -DCPU_EXPECTED=1717253697U -MMD -MP -c $< -o $@
+$(STORAGE_STRESS_DIR)/cpu.elf: $(STORAGE_STRESS_DIR)/cpu.o $(USER_RT) $(USER_LDS)
+	$(LD) $(USER_LDFLAGS) -o $@ $(USER_RT) $<
+$(STORAGE_STRESS_DIR)/ipc0.o $(STORAGE_STRESS_DIR)/ipc1.o: user/storage_stress/companion.c Makefile user/user.mk
+	@mkdir -p $(dir $@)
+	$(CC) $(USER_CFLAGS) $(if $(findstring ipc0.o,$@),-DCOMPANION_INITIATOR,) -MMD -MP -c $< -o $@
+$(STORAGE_STRESS_DIR)/ipc0.elf: $(STORAGE_STRESS_DIR)/ipc0.o $(USER_RT_V1) $(USER_LDS)
+	$(LD) $(USER_LDFLAGS) -o $@ $(USER_RT_V1) $<
+$(STORAGE_STRESS_DIR)/ipc1.elf: $(STORAGE_STRESS_DIR)/ipc1.o $(USER_RT_V1) $(USER_LDS)
+	$(LD) $(USER_LDFLAGS) -o $@ $(USER_RT_V1) $<
+
+# Separate Gate C module; Gate A/B modules and the frozen lists are unchanged.
+$(STORAGE_STRESS_DIR)/gatec.elf: $(STORAGE_STRESS_DIR)/gatec.o $(USER_RT_V2) $(USER_LDS)
+	$(LD) $(USER_LDFLAGS) -o $@ $(USER_RT_V2) $<
+
+# Separate Gate D module; Gate A/B/C modules and the frozen lists are unchanged.
+$(STORAGE_STRESS_DIR)/gated.elf: $(STORAGE_STRESS_DIR)/gated.o $(USER_RT_V2) $(USER_LDS)
+	$(LD) $(USER_LDFLAGS) -o $@ $(USER_RT_V2) $<

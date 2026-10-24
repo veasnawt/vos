@@ -39,7 +39,7 @@ channel elf app pci blockdev virtio_blk ext2 io_scope file devmap screen font8x1
 selftest selftest_cpu selftest_elf selftest_ipc selftest_irq selftest_kmap
 selftest_mp selftest_sched selftest_stress selftest_pmm selftest_suite
 selftest_user selftest_vblk selftest_blk selftest_ext2 selftest_vmm selftest_screen
-selftest_io_scope selftest_file user_progs
+selftest_io_scope selftest_file storage_observe user_progs
 """.split()
 RUNTIME_OBJECTS = "crt0 syscall syscall_v1 syscall_v2 abi_note abi_note_v1 abi_note_v2".split()
 FILE_PROGRAMS = "probe reader reader_y error gate0 gate1 boundary nogrant cookie regs adversary".split()

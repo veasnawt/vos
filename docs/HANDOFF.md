@@ -43,10 +43,11 @@ git clone https://github.com/veasnawt/vos.git && cd vos
 git checkout main            # or the checkpoint tag listed in docs/STATUS.md
 ```
 
-The repository is public. At this documentation review, GitHub main is still the
-`c5f5acb` baseline; the locally integrated N3.5 checkpoint has not been pushed.
-A clone of GitHub main therefore does not yet contain N3.5. `build/` is generated
-and ignored. See [STATUS](STATUS.md) for the local integration/publication state.
+The repository is public. N3 is complete on `feat/n3.6-storage-closure`; use
+`git checkout feat/n3.6-storage-closure` to inspect the milestone publication.
+Main remains N3.5 at `c0ccdd7`, with integration checkpoint `0ddb201` as its parent.
+`build/` is generated and ignored. See [STATUS](STATUS.md) and the
+[final N3 closure record](results/n3-closure.md).
 
 ## 3. Build
 
@@ -96,8 +97,10 @@ that layout or a host-space measurement is unavailable. Native Linux and other W
 layouts are not supported by this runner's present host guard. This is a test-harness
 limitation, not a universal VOS build or runtime requirement.
 
-The runner copies only 167 allowlisted file-test artifacts and required dependency
-files from an already verified build. It excludes fixture source trees and unrelated
+The runner copies only 169 allowlisted file-test artifacts and required dependency
+files from an already verified build. N3 finalization added the accepted
+`storage_observe.o` and `storage_observe.d`; the strict dry-run validator still
+permits only the intended one-source mutation compilation. It excludes fixture source trees and unrelated
 build outputs. GNU `cp --sparse=always --reflink=never` preserves sparse allocation
 without shared copies; failed or dense sparse-file copies are rejected. Symlinks
 are preserved and FIFOs recreated without reading them.
@@ -152,11 +155,32 @@ The full list is in `docs/STATUS.md`. In short:
 
 ## 7. Current development checkpoint and review boundary
 
+**N3 is complete**, accepted on 2026-10-24. The milestone branch is
+`feat/n3.6-storage-closure`; main is unchanged at N3.5. D1a–D1f, all five D2
+controls and all fifteen C20 runs passed, with sealed evidence and independently
+verified archives. The [closure record](results/n3-closure.md) and
+[evidence index](results/n3-evidence.json) distinguish passing records from failed,
+interrupted and unfinished attempts. Existing screenshots were reused unchanged;
+no new display run was needed for publication.
+
+The final-campaign allowance is 3360 MiB, cumulative across all `n36-final-*`
+roots and their E: archives, including failed attempts and source delta. Keep the
+existing C:/E:/Linux reserves and isolation stop rules. Prior worktrees, stashes,
+evidence and archives must remain preserved. The original D1r3 root is unfinished,
+unsealed and unarchived. Monitoring gaps are not presented as uninterrupted isolation.
+The accepted run controllers and exact build environments remain in local evidence.
+
+N4 is next: keyboard input, interactive console, `vsh` and Rust-first native
+application foundations. Its implementation requires separate explicit authorization.
+Do not rerun completed N3 campaigns or create new N3 gates as part of that handoff.
+
+### Historical N3.5 checkpoints
+
 N3.5 is **COMPLETE** and integrated into local main at
 `0ddb201ec1b13d65af7a22a56f35fafc02a3c9ab`; `feat/n3.5-file-api` points to
-the same commit. GitHub publication of these changes remains a separate, unperformed
-step. The [integration/recovery summary](results/n3.5-integration.md) records the
-final checkpoint and evidence provenance.
+the same integration commit. N3.5 is **published** on GitHub main at `c0ccdd7`.
+The [integration/recovery summary](results/n3.5-integration.md) preserves the earlier
+pre-publication checkpoint and evidence provenance.
 
 Historical checkpoints are formal approval at `0109d9b`, documentation closure at
 `398ba19`, and the pre-N3.5/resource-comparison baseline `c5f5acb`. The
@@ -212,19 +236,24 @@ and guard tests are partial evidence. OVMF still polls without IOAPIC/MSI/MSI-X.
 Finite work is not a real-time/fairness guarantee, and unconfirmed reset may retain
 bounded DMA quarantine. No broader hardware or authenticated-media claim follows.
 
-### N3.6 preparation — planning only
+### Historical N3.6 Stage 2 authorization (superseded by accepted closure)
 
-N3.6 is the next planned storage milestone, not started. [Preparation](plans/n3-storage.md#11-n36-preparation-planning-only)
-records remaining stress/resource-closure objectives, baseline commits, unchanged
-cumulative budgets, regression requirements and Stage 1 design questions.
-First review deterministic long-run schedules, cold/deep workload availability,
-orphan/reset outcomes and the required stack evidence. Keep both reader/file images
-within the 128 MiB gates and preserve all frozen contracts.
+The following pilot scope is preserved as history. Its pending labels and earlier
+capacity/authorization boundaries do not override the final N3 acceptance above.
 
-Next steps are review of the publication documentation, a separately authorized
-documentation commit/publication decision, and proposed N3.6 design preparation.
-No push, release tag, N3.6 implementation, physical test or writable storage is
-authorized by this handoff.
+Stage 1 architecture review is accepted. [Stage 2](plans/n3.6-storage-closure.md)
+authorizes only test-only observation, three smoke scenarios and a focused pilot.
+The initially clean primary worktree now uses `feat/n3.6-storage-closure` from published `c0ccdd7`;
+main and all thirteen worktrees/drafts are preserved. No commits are authorized.
+
+The pilot is limited to one build job/QEMU, 30 minutes and 256 MiB aggregate new
+allocation, with 10 GiB C: reserve plus remaining admission and 256 MiB safety margin.
+Capacity failures require stopping and requesting storage, never reducing features,
+assertions, required coverage or evidence. No old artifacts are removed.
+The proposed later 2 GiB campaign is not authorized.
+
+Stages 3–5, full regression/mutation campaigns, production fixes, physical testing,
+writable storage, pushing and N3.6/N3 closure require separate review.
 
 ## 8. Physical hardware: restrictions
 

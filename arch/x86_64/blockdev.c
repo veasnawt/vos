@@ -606,3 +606,27 @@ uint64_t blk_test_issue_incarnation(uint64_t *serial)
     return issue_incarnation(serial);
 }
 #endif
+
+#ifdef VOS_TEST
+#include "storage_observe.h"
+
+void blk_test_observe(struct observe_block *out)
+{
+    out->ready = cache_ready;
+    out->devices_count = ndev;
+    out->head = (uint64_t)load_wq.head;
+    out->tail = (uint64_t)load_wq.tail;
+    out->stats = st;
+    for (unsigned i = 0; i < BLK_MAX_DEVICES; i++) {
+        out->devices[i].used = devs[i].used;
+        out->devices[i].incarnation = devs[i].incarnation;
+        out->devices[i].reset_seq = devs[i].reset_seq;
+        out->devices[i].id = devs[i].used ? devs[i].gen << ID_GEN_SHIFT | (i + 1) : 0;
+    }
+    for (unsigned i = 0; i < BLK_CACHE_LINES; i++) {
+        const struct line *e = &cache[i];
+        out->lines[i] = (struct observe_cache_line){e->frame, e->epoch, e->n, e->sum,
+            e->state, e->slot, e->gen, e->nsect, e->pins};
+    }
+}
+#endif

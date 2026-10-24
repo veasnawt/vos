@@ -278,7 +278,7 @@ static void test_buffers(void)
  * required, a queue of 8): then the state is FAILED and the log line names
  * the reason, which arch.mk checks.
  */
-#if !defined(VBLK_LIVE) && !defined(VOS_TEST_CASE_ext2) && !defined(VOS_TEST_CASE_file)
+#if !defined(VBLK_LIVE) && !defined(VOS_TEST_CASE_ext2) && !defined(VOS_TEST_CASE_file) && !defined(VOS_TEST_CASE_accounting) && !defined(VOS_TEST_CASE_storage_stress) && !defined(VOS_TEST_CASE_storage_stress_b) && !defined(VOS_TEST_CASE_storage_stress_c) && !defined(VOS_TEST_CASE_storage_stress_d)
 static void test_absent(void)
 {
     const struct vblk_info *in = vblk_info();
@@ -313,7 +313,7 @@ static void test_absent(void)
 /* ---- the live device ---- */
 
 #ifdef VBLK_LIVE
-static const uint8_t *fixture;
+static const uint8_t *fixture; void vblk_test_hold_publish(void); void vblk_test_publish_held(void);
 static uint64_t fixture_sectors;
 static uint8_t buf[VBLK_MAX_SECTORS * BLK_SECTOR_SIZE + 64] __attribute__((aligned(16)));
 
@@ -515,7 +515,7 @@ static void test_timeout(void)
     unsigned slot;
 
     vblk_test_poll_limit(20000);
-    vblk_test_skip_notify(1);
+    vblk_test_skip_notify(1); vblk_test_hold_publish();
     int r = vblk_read(5, 1, buf, sizeof(buf));
     uint64_t spins = vblk_test_last_spins();
     vblk_test_poll_limit(0);
@@ -536,7 +536,7 @@ static void test_protocol(void)
     unsigned slot;
 
     /* Two completions for one outstanding request (the device is never notified, so nothing races). */
-    vblk_test_skip_notify(1);
+    vblk_test_skip_notify(1); vblk_test_hold_publish();
     expect(vblk_submit(3, 1, &slot) == VBLK_OK && slot == 0, "request 0 outstanding (device not notified)");
     vblk_test_inject_used(0, 513);
     vblk_test_inject_used(3, 513);
@@ -545,7 +545,7 @@ static void test_protocol(void)
            "more completions than outstanding requests: protocol error, device reset (status 0)");
     expect(recovered(f0), "recovered after the surplus completions");
 
-    vblk_test_skip_notify(1);
+    vblk_test_skip_notify(1); vblk_test_hold_publish();
     vblk_submit(3, 1, &slot);
     vblk_test_inject_used(3, 513);      /* the head of slot 1, which is free */
     expect(vblk_wait(slot, buf, sizeof(buf)) == VBLK_EPROTO &&
@@ -553,7 +553,7 @@ static void test_protocol(void)
            "completion naming a free slot: refused (descriptor ownership)");
     expect(recovered(f0), "recovered after the foreign descriptor");
 
-    vblk_test_skip_notify(1);
+    vblk_test_skip_notify(1); vblk_test_hold_publish();
     vblk_submit(3, 1, &slot);
     vblk_test_inject_used(1, 513);      /* not a chain head */
     expect(vblk_wait(slot, buf, sizeof(buf)) == VBLK_EPROTO &&
@@ -561,7 +561,7 @@ static void test_protocol(void)
            "completion naming a non-head descriptor: refused");
     expect(recovered(f0), "recovered after the non-head descriptor");
 
-    vblk_test_skip_notify(1);
+    vblk_test_skip_notify(1); vblk_test_hold_publish();
     vblk_submit(3, 1, &slot);
     vblk_test_inject_used(0, 5000);
     expect(vblk_wait(slot, buf, sizeof(buf)) == VBLK_EPROTO &&
@@ -569,14 +569,14 @@ static void test_protocol(void)
            "completion longer than the request's buffers: refused");
     expect(recovered(f0), "recovered after the oversized completion");
 
-    vblk_test_skip_notify(1);
+    vblk_test_skip_notify(1); vblk_test_hold_publish();
     vblk_submit(3, 1, &slot);
     vblk_test_inject_used(0, 513);      /* right length, but the device never wrote the status */
     expect(vblk_wait(slot, buf, sizeof(buf)) == VBLK_EPROTO && streq(in->why, "invalid request status"),
            "completion without a written status byte: refused");
     expect(recovered(f0), "recovered after the missing status");
 
-    vblk_test_skip_notify(1);
+    vblk_test_skip_notify(1); vblk_test_hold_publish();
     vblk_submit(3, 1, &slot);
     vblk_test_inject_used(0, 0);        /* nothing written although the status says... nothing */
     expect(vblk_wait(slot, buf, sizeof(buf)) == VBLK_EPROTO, "completion of zero length: refused");
@@ -721,7 +721,7 @@ static void test_reset_while_waiting(void)
     vblk_test_poll_limit(3000000);
     waiter_done = 0;
     waiter_result = -1;
-    vblk_test_skip_notify(2);           /* neither request reaches the device */
+    vblk_test_skip_notify(2); vblk_test_hold_publish(); /* neither request reaches the device */
     int ok = thread_create("vblk-waiter", waiter, 0) > 0;
     thread_yield();                     /* the waiter submits, polls 64 times and yields back */
     ok &= !waiter_done && in->submitted == sub0 + 1;
@@ -759,7 +759,7 @@ static void test_responsive(void)
 
     vblk_test_yield_polls(0);
     vblk_test_poll_limit(3000000);
-    vblk_test_skip_notify(1);
+    vblk_test_skip_notify(1); vblk_test_hold_publish();
     pt = P[0].ticks;
     it = irq_ticks();
     r1 = vblk_read(11, 1, buf, sizeof(buf));
@@ -771,7 +771,7 @@ static void test_responsive(void)
     vblk_test_wait_ticks(30);
     y0 = in->yields;
     tt0 = in->tick_timeouts;
-    vblk_test_skip_notify(1);
+    vblk_test_skip_notify(1); vblk_test_hold_publish();
     pt = P[0].ticks;
     it = irq_ticks();
     r2 = vblk_read(11, 1, buf, sizeof(buf));
@@ -915,7 +915,7 @@ static void test_irq_timeout(void)
     proc_test_tick_budget(5000);
     ok = launch(&P[0], "m-memtag1");
     vblk_test_wait_ticks(30);
-    vblk_test_skip_notify(1);
+    vblk_test_skip_notify(1); vblk_test_hold_publish();
     pt = P[0].ticks;
     t0 = irq_ticks();
     r = vblk_read(11, 1, buf, sizeof(buf));
@@ -965,7 +965,7 @@ static int64_t start_and_cancel(uint64_t lba)
 
     cw_done = 0;
     cw_result = -1;
-    vblk_test_skip_notify(1);
+    vblk_test_skip_notify(1); vblk_test_hold_publish();
     id = thread_create("vblk-cancel", cancel_waiter, (void *)(uintptr_t)lba);
     if (!wait_blocked(id) || thread_interrupt((uint64_t)id) != 1)
         return -1;
@@ -995,7 +995,7 @@ static void test_cancel(void)
            vblk_audit() == NULL, "an interrupted waiter returns VBLK_EINTR and exits; its slot stays in flight, abandoned");
 
     /* The device completes it after the cancellation, into the kept frame. */
-    vblk_test_notify();
+    vblk_test_publish_held(); vblk_test_notify();
     thread_sleep(3);
     expect(untouched && frame_is(data_pa, fix(300)) && vblk_abandoned() == 0 && vblk_inflight() == 0 &&
            in->abandoned_completed == a0 + 1,
@@ -1058,7 +1058,7 @@ static void test_storage_scopes(void)
     blk_describe(in->blk_id, &before);
     vblk_test_poll_limit(2000);
     vblk_test_yield_polls(0);
-    vblk_test_skip_notify(1);
+    vblk_test_skip_notify(1); vblk_test_hold_publish();
     tick = irq_ticks();
     r = vblk_read(400, 1, buf, sizeof(buf));
     blk_describe(in->blk_id, &after);
@@ -1075,7 +1075,7 @@ static void test_storage_scopes(void)
     if (irq) {
         io_scope_begin(&scope, SCOPE_OWNER);
         io_scope_test_limits(&scope, 512, 256, 1024, irq_ticks() + 3);
-        vblk_test_skip_notify(1);
+        vblk_test_skip_notify(1); vblk_test_hold_publish();
         tick = irq_ticks();
         r = vblk_read(400, 1, buf, sizeof(buf));
         outcome = io_scope_end(&scope);
@@ -1086,7 +1086,7 @@ static void test_storage_scopes(void)
 
         for (unsigned k = 0; k < 4; k++) {
             vblk_test_wait_ticks(12);
-            vblk_test_skip_notify(1);
+            vblk_test_skip_notify(1); vblk_test_hold_publish();
             scope_result = scope_end_result = -1;
             int64_t tid = thread_create("scope-disk", scope_reader, NULL);
             int waiting = wait_blocked(tid);
@@ -1101,7 +1101,7 @@ static void test_storage_scopes(void)
             expect(waiting && retained && duplicate == IO_SCOPE_BUSY,
                    "scope: dead caller leaves only a scalar debt; same owner cannot bypass admission");
             if (k & 1) {
-                vblk_test_notify();       /* completion after the owner's stack was reclaimed */
+                vblk_test_publish_held(); vblk_test_notify(); /* completion after the owner's stack was reclaimed */
                 thread_sleep(3);
                 expect(!vblk_abandoned() && !io_scope_count() && in->state == VBLK_READY,
                        "scope: late completion retires detached ticket exactly once");
@@ -1124,7 +1124,7 @@ static void test_orphan_only_idle(void)
 {
     static struct wait_queue no_deadline;
     vblk_test_wait_ticks(12);
-    vblk_test_skip_notify(1);
+    vblk_test_skip_notify(1); vblk_test_hold_publish();
     int64_t tid = thread_create("scope-orphan", scope_reader, NULL);
     if (!wait_blocked(tid))
         panic("scope orphan setup did not block");
@@ -1160,7 +1160,7 @@ static void test_blk_cancel(void)
 
     blk_invalidate(id);
     bl_done[0] = bl_done[1] = 0;
-    vblk_test_skip_notify(1);
+    vblk_test_skip_notify(1); vblk_test_hold_publish();
     t[0] = thread_create("blk-loader", blk_waiter, (void *)0);
     int a = wait_blocked(t[0]) && blk_test_line_state(id, 200) == BLK_LINE_LOADING;
     t[1] = thread_create("blk-follower", blk_waiter, (void *)1);
@@ -1171,7 +1171,7 @@ static void test_blk_cancel(void)
     int fa = wait_free(t[0], 10) && bl_result[0] == BLK_EINTR && blk_test_line_state(id, 200) == BLK_LINE_FREE;
     expect(a && b && fb && fa && vblk_abandoned() == 1 && blk_audit() == NULL,
            "block layer: a thread waiting for another's line load and the loader itself are interrupted: BLK_EINTR, line left FREE");
-    vblk_test_notify();
+    vblk_test_publish_held(); vblk_test_notify();
     thread_sleep(3);
     uint8_t two[2 * BLK_SECTOR_SIZE];
     expect(vblk_abandoned() == 0 && blk_read(id, 1600, 2, two, sizeof(two)) == BLK_OK && !memcmp(two, fix(1600), sizeof(two)) &&
@@ -1221,7 +1221,7 @@ static void test_concurrent(void)
 
     /* Four waiters blocked at once; one notification; the completions may share interrupts. */
     q_done = 0;
-    vblk_test_skip_notify(VBLK_SLOTS);
+    vblk_test_skip_notify(VBLK_SLOTS); vblk_test_hold_publish();
     for (unsigned k = 0; k < VBLK_SLOTS; k++)
         id[k] = thread_create("vblk-q", q_reader, (void *)(uintptr_t)k);
     for (unsigned k = 0; k < VBLK_SLOTS; k++)
@@ -1231,7 +1231,7 @@ static void test_concurrent(void)
            "four waiters blocked with four requests in flight; a fifth request is refused (VBLK_EBUSY)");
     i0 = in->irqs;
     w0 = in->irq_wakeups;
-    vblk_test_notify();
+    vblk_test_publish_held(); vblk_test_notify();
     for (unsigned k = 0; k < 20 && q_done < VBLK_SLOTS; k++)
         thread_sleep(1);
     unsigned good = 0;
@@ -1301,7 +1301,7 @@ static void test_late_irq(void)
     /* A blocked waiter is woken by the reset at once, not at its deadline. */
     waiter_done = 0;
     waiter_result = -1;
-    vblk_test_skip_notify(1);
+    vblk_test_skip_notify(1); vblk_test_hold_publish();
     int64_t id = thread_create("vblk-waiter", waiter, 0);
     int b = wait_blocked(id);
     uint64_t t0 = irq_ticks();
@@ -1518,7 +1518,7 @@ int selftest_vblk(const struct boot_info *bi)
     test_parser();
     test_choices();
     test_buffers();
-#if defined(VOS_TEST_CASE_ext2) || defined(VOS_TEST_CASE_file)
+#if defined(VOS_TEST_CASE_ext2) || defined(VOS_TEST_CASE_file) || defined(VOS_TEST_CASE_accounting) || defined(VOS_TEST_CASE_storage_stress) || defined(VOS_TEST_CASE_storage_stress_b) || defined(VOS_TEST_CASE_storage_stress_c) || defined(VOS_TEST_CASE_storage_stress_d)
     /* Reader and file tests attach the same immutable ext2 disk. */
     expect(vblk_info()->state == VBLK_READY && vblk_audit() == NULL, "virtio-blk device ready (ext2 image)");
 #elif !defined(VBLK_LIVE)

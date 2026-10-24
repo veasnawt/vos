@@ -473,7 +473,7 @@ static void test_ram(void)
 /* ---- the live virtio-blk device ---- */
 
 #ifdef VBLK_LIVE
-static const uint8_t *fixture;
+static const uint8_t *fixture; void vblk_test_hold_publish(void); void vblk_test_publish_held(void);
 
 static int find_fixture(void)
 {
@@ -551,7 +551,7 @@ static void test_live_cache(void)
     expect(disk_ok(id, 0, 1), "sector 0 cached");
     vblk_test_poll_limit(20000);       /* polling mode: the poll bound; interrupt mode (N3.4): the deadline */
     vblk_test_wait_ticks(30);
-    vblk_test_skip_notify(1);
+    vblk_test_skip_notify(1); vblk_test_hold_publish();
     int r = blk_read(id, 1500, 1, big, sizeof(big));
     vblk_test_poll_limit(0);
     vblk_test_wait_ticks(0);
@@ -736,7 +736,7 @@ int selftest_blk(const struct boot_info *bi)
     S = blk_stats();
     expect(streq(blk_strerror(BLK_EIO), "device I/O error") && streq(blk_strerror(BLK_EUNSUPP), "operation not supported") &&
            streq(blk_strerror(99), "unknown error"), "blk_strerror names the codes");
-#if !defined(VBLK_LIVE) && !defined(VOS_TEST_CASE_ext2) && !defined(VOS_TEST_CASE_file)
+#if !defined(VBLK_LIVE) && !defined(VOS_TEST_CASE_ext2) && !defined(VOS_TEST_CASE_file) && !defined(VOS_TEST_CASE_accounting) && !defined(VOS_TEST_CASE_storage_stress) && !defined(VOS_TEST_CASE_storage_stress_b) && !defined(VOS_TEST_CASE_storage_stress_c) && !defined(VOS_TEST_CASE_storage_stress_d)
     expect(blk_count() == 0 && blk_nth(0) == 0 && blk_cache_frames(0, 0) == 0 && blk_audit() == NULL,
            "no usable disk: no device registered, no cache frames");
 #endif

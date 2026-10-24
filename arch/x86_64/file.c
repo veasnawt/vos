@@ -457,7 +457,7 @@ static int64_t open_at(struct process *p, uint64_t base, const char *path, uint6
         return r;
     }
     struct ext2_stat st;
-    r = n->generation != volume.generation ? -FILE_ESTALE : walk(s, n->ino, len, &st);
+    r = n->generation != volume.generation ? -FILE_ESTALE : walk(s, n->ino, len, &st); FILE_PUBLICATION_HOLD(r)
     int final = finish(s, &scope);
     if (final)
         r = final;
@@ -525,7 +525,7 @@ static int stat_node(struct process *p, uint64_t token, struct ext2_stat *out,
     if ((r = begin(s, &scope)))
         return r;
     struct ext2_stat st;
-    r = node_stat(s, n->ino, &st);
+    r = node_stat(s, n->ino, &st); FILE_PUBLICATION_HOLD(r)
     int final = finish(s, &scope);
     if (final)
         r = final;
@@ -574,8 +574,8 @@ static int64_t read_at(struct process *p, uint64_t token, void *out, uint64_t le
     if (!r)
         r = outcome(s, ext2_read(volume.fs, n->ino, off, s->stage, len, &done));
     /* Commit before the no-wait finish erases staging. IF=0: no stop can arise
-     * between this last outcome check, copy and finish. Never copy on error.
-     */
+     * between this last outcome check, copy and finish. Never copy on error. */
+#include "file_hold.inc"
     if (!r && !(r = outcome(s, EXT2_OK))) {
         if (frame) {
             /* Decode again from the live architectural frame after all waits.
@@ -638,7 +638,7 @@ static int next_entry(struct process *p, uint64_t token, uint64_t *cookie,
             ent.type = st.type;
         eof = 0;
         break;
-    }
+    } FILE_PUBLICATION_HOLD(r)
     int final = finish(s, &scope);
     if (final)
         r = final;
@@ -795,5 +795,42 @@ void file_test_last_tokens(void)
     if (next_token >= FILE_SERIAL_MAX - 1)
         panic("file: token test already exhausted");
     next_token = FILE_SERIAL_MAX - 1;
+}
+#endif
+
+#ifdef VOS_TEST
+#include "storage_observe.h"
+
+void file_test_observe(struct observe_file *out)
+{
+    out->fs = (uint64_t)volume.fs;
+    out->generation = volume.generation;
+    out->incarnation = volume.incarnation;
+    out->epoch = volume.epoch;
+    out->reset_seq = volume.reset_seq;
+    out->sectors = volume.sectors;
+    out->config_owner = (uint64_t)volume.config_owner;
+    out->config_pid = volume.config_pid;
+    out->config_tid = volume.config_tid;
+    out->device = volume.device;
+    out->refs = volume.refs;
+    out->active = volume.active;
+    out->dead = volume.dead;
+    for (unsigned i = 0; i < PROC_TABLE; i++) {
+        const struct session *s = &sessions[i];
+        struct observe_session *d = &out->sessions[i];
+        d->owner = (uint64_t)s->owner;
+        d->pid = s->pid;
+        d->tid = s->tid;
+        memcpy(d->initial, s->initial, sizeof(d->initial));
+        d->active = s->active;
+        d->closing = s->closing;
+        d->provisioned = s->provisioned;
+        for (unsigned j = 0; j < FILE_MAX; j++) {
+            const struct node *n = &s->nodes[j];
+            d->nodes[j] = (struct observe_node){n->token, n->generation, n->ino,
+                n->rights, n->kind, n->used};
+        }
+    }
 }
 #endif

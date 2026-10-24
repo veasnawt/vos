@@ -13,6 +13,9 @@
 #include "pmm.h"
 #include "thread.h"
 #include "vmm.h"
+#if defined(VOS_TEST) && (defined(VOS_TEST_CASE_storage_stress) || defined(VOS_TEST_CASE_storage_stress_b) || defined(VOS_TEST_CASE_storage_stress_c) || defined(VOS_TEST_CASE_storage_stress_d))
+#include "storage_stress.h"
+#endif
 
 /* The processes that exist (begun and not destroyed). */
 static struct process *table[PROC_TABLE];
@@ -524,6 +527,13 @@ uint64_t proc_user_trap(struct exc_frame *f)
     }
     if (f->vector == IDT_SYSCALL && f->rax != SYS_EXIT) {
         int64_t res = syscall_dispatch(p, f);
+#if defined(VOS_TEST) && (defined(VOS_TEST_CASE_storage_stress) || defined(VOS_TEST_CASE_storage_stress_b) || defined(VOS_TEST_CASE_storage_stress_c) || defined(VOS_TEST_CASE_storage_stress_d)) /* Scalar progress only, before the existing post-dispatch kill check. */
+#include "stress_d_progress.inc"
+        storage_stress_event(STRESS_PROGRESS, p->pid); STORAGE_STRESS_C_PROGRESS(p, f, res)
+#ifdef VOS_TEST_CASE_storage_stress_b
+        storage_stress_b_progress(p, f, res);
+#endif
+#endif
         p->tick_mark = irq_ticks();     /* yield or a blocking receive: time others ran is not ours */
         if (p->kill_reason) {           /* killed while blocked (or during the call) */
             record(&p->trap, f);
@@ -574,3 +584,17 @@ uint64_t proc_user_trap(struct exc_frame *f)
     serial_puts(")\r\n");
     terminate(p);
 }
+
+#ifdef VOS_TEST
+#include "storage_observe.h"
+
+void proc_test_observe(struct observe_process out[PROC_TABLE])
+{
+    for (unsigned i = 0; i < PROC_TABLE; i++) {
+        const struct process *p = table[i];
+        if (p)
+            out[i] = (struct observe_process){(uint64_t)p, p->pid, p->root,
+                p->tid, p->kstack_top, p->state, p->npages};
+    }
+}
+#endif

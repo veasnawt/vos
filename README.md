@@ -21,9 +21,19 @@ VOS is written primarily in freestanding C and x86 assembly. It is **not a Linux
 - A basic framebuffer boot/status/panic console where supported, plus serial diagnostics.
 - BIOS and UEFI boot paths **in QEMU** via GRUB; extensive emulator-based regression tests.
 
-N3.5 is complete and integrated into local main at `0ddb201`; see the
-[integration and verification summary](docs/results/n3.5-integration.md).
-Publishing that checkpoint to GitHub is a separate step.
+**N0–N3 are complete.** N3 storage closure was accepted on 2026-10-24 and is
+published on `feat/n3.6-storage-closure`; `main` remains the N3.5 checkpoint
+`c0ccdd7`. The [N3 closure record](docs/results/n3-closure.md) contains D1a–D1f,
+5/5 mutation controls, 15/15 larger-RAM stress runs, evidence hashes and preserved
+failure history. **N4 is next:** keyboard input, an interactive console, `vsh`
+and Rust-first native application foundations. N4 implementation has not started.
+
+![VOS BIOS boot console with PASS status](docs/images/n3/vos-n3-bios-boot-status.png)
+
+An authentic, unchanged QEMU capture from accepted D1 evidence: the kernel boots,
+runs ring-3 hello, reclaims its frames and reports PASS. This console has no input
+prompt yet. [UEFI and deliberate-panic screenshots](docs/results/n3-closure.md#authentic-screenshots)
+include provenance and explain exactly what they demonstrate.
 
 The separate [Veasna OS](https://github.com/veasnawt/veasna-os) React/Electron desktop prototype is **not** a graphical environment running on this kernel.
 
@@ -155,6 +165,9 @@ Every QEMU run is headless, sequential and has a timeout. The x86_64 tests inclu
   pages above the image), reading a stack guard page, overflowing its stack, and NMI and
   machine-check entry (one NMI injected through the QEMU monitor); `scripts/check-fault.sh`
   compares the CPU-reported fault with what each case expected;
+- N3.6 deterministic storage stress: accounting and ownership checks, concurrent
+  readers and IPC, lifecycle/kill/publication schedules, work-budget exhaustion,
+  and directory enumeration under the existing bounds; see the [closure record](docs/results/n3-closure.md);
 - an isolation suite of 41 small programs that try forbidden things (write kernel memory,
   execute data, run privileged instructions, pass bad pointers, ...) and must each end exactly
   as their test configuration says, with `hello` run again after each one; it runs with 128 MiB,
@@ -209,10 +222,9 @@ The `m1-32bit` tag marks the original known-good 32-bit baseline.
   (interrupt controller, timer), N2.2 (kernel threads, scheduler), N2.3 (several processes,
   timer preemption), N2.4 (channels, ABI v1) and N2.5 (stress, audits, closure) are done: N2
   is complete; its closure (section 3.7) lists guarantees, limits and risks
-- `docs/plans/n3-storage.md` – the N3 roadmap (storage, proposal); N3.0 (storage design, kernel
-  map extended to 4 MiB of 4 KiB pages), N3.1 (read-only, polled virtio-blk driver), N3.2
-  (block layer and read-only cache), N3.3 (read-only ext2 reader), N3.4 (interrupt-driven
-  block I/O), and N3.5 (read-only userspace files) are complete; N3.6 remains planned
+- [N3 storage plan](docs/plans/n3-storage.md) – N3.0–N3.6 are complete; the
+  [final closure record](docs/results/n3-closure.md) consolidates regression,
+  integrated stress, mutation, footprint, reproducibility and archive evidence
 - `docs/architecture/storage.md` – the storage architecture proposal: layers, virtio-blk, ext2
   (read-only first), layout, naming, permissions, crash behaviour, open decisions
 - `docs/vision/product-direction.md` – provisional long-term product direction (not a specification)
