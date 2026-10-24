@@ -1,0 +1,2 @@
+{"utc": 1792864313.7236853, "used": 4440064, "capacity": {"charged": 2495602688, "remaining": 1027612672, "C": 12530810880, "E": 251835445248, "linux": 1009308037120, "admitted_extra": 916111360}, "isolation_errors": []}
+{"utc": 1792864326.4020991, "used": 29315072, "capacity": {"charged": 2495602688, "remaining": 1027612672, "C": 12530679808, "E": 251835445248, "linux": 1009289498624, "admitted_extra": 891236352}, "isolation_errors": []}

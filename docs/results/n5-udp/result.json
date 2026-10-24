@@ -1,0 +1,61 @@
+{
+  "scope": "bounded native UDP",
+  "firmware": {
+    "bios": {
+      "passed": true,
+      "firmware": "bios",
+      "UDP_sent": 4,
+      "UDP_received": 7,
+      "invalid_unsupported_or_unbound": 12,
+      "queue_full_rejected": 1,
+      "queue_slots": 4,
+      "payload_bound": 512,
+      "TX": 5,
+      "RX": 21,
+      "ARP_resolution": true,
+      "IPv4_zero_checksum_accepted": true,
+      "computed_zero_transmitted_as_ffff": true,
+      "adapter_reset_confirmed": true,
+      "DMA_frames_released": 11,
+      "endpoint_erased": true,
+      "ABI_v0_hello": true,
+      "no_application_grants": true,
+      "screenshot": {
+        "width": 1280,
+        "height": 800,
+        "sha256": "a7d1861cb2b9d847992f2b05f8f9004ba6f3d44e154364824d5ca86d8b44a469"
+      }
+    },
+    "uefi": {
+      "passed": true,
+      "firmware": "uefi",
+      "UDP_sent": 4,
+      "UDP_received": 7,
+      "invalid_unsupported_or_unbound": 12,
+      "queue_full_rejected": 1,
+      "queue_slots": 4,
+      "payload_bound": 512,
+      "TX": 5,
+      "RX": 21,
+      "ARP_resolution": true,
+      "IPv4_zero_checksum_accepted": true,
+      "computed_zero_transmitted_as_ffff": true,
+      "adapter_reset_confirmed": true,
+      "DMA_frames_released": 11,
+      "endpoint_erased": true,
+      "ABI_v0_hello": true,
+      "no_application_grants": true,
+      "screenshot": {
+        "width": 1280,
+        "height": 800,
+        "sha256": "a7d1861cb2b9d847992f2b05f8f9004ba6f3d44e154364824d5ca86d8b44a469"
+      }
+    }
+  },
+  "passed": true,
+  "host_sanitizers": [
+    "address",
+    "undefined"
+  ],
+  "userspace_ABI_unchanged": true
+}
