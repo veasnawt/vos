@@ -4,10 +4,7 @@ static uint16_t get16(const uint8_t *p) {return (uint16_t)((unsigned)p[0]*256+p[
 static void put16(uint8_t *p,uint16_t n) {p[0]=(uint8_t)(n>>8);p[1]=(uint8_t)n;}
 static uint16_t checksum(const uint8_t source[4],const uint8_t dest[4],const uint8_t *udp,size_t n)
 {
-    /* All partial boundaries are even: odd UDP tails retain high-byte padding. */
-    uint32_t sum=(uint16_t)~net_checksum(source,4)+(uint32_t)(uint16_t)~net_checksum(dest,4)+17u+(uint32_t)n+(uint16_t)~net_checksum(udp,n);
-    while (sum>>16) sum=(sum&65535)+(sum>>16);
-    return (uint16_t)~sum;
+    return net_ipv4_transport_checksum(source,dest,17,udp,n);
 }
 int net_udp_init(struct net_udp *c,const uint8_t mac[6],const uint8_t ip[4],uint16_t port)
 {

@@ -14,6 +14,9 @@ struct net_ipv4 {
 /* Pure kernel protocol code. Buffers must obey net_arp.h's lifetime/alias
  * contract. No DMA, allocation, I/O or application network authority. */
 uint16_t net_checksum(const void *bytes,size_t length); /* Caller bounds length <=1500. */
+/* IPv4 pseudoheader plus transport bytes, with even partial boundaries.
+ * Trusted kernel caller bounds length <=1480. Does not apply UDP's zero mapping. */
+uint16_t net_ipv4_transport_checksum(const uint8_t source[4],const uint8_t dest[4],uint8_t protocol,const void *bytes,size_t length);
 struct net_ipv4_payload { const uint8_t *source,*bytes; size_t length; };
 /* Shared local, unfragmented IPv4 validation for a selected protocol. View
  * changes only on success and borrows the caller's frame until it is reused. */

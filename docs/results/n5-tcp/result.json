@@ -1,0 +1,63 @@
+{
+  "scope": "bounded passive TCP establishment",
+  "firmware": {
+    "bios": {
+      "passed": true,
+      "firmware": "bios",
+      "handshakes": 1,
+      "half_open_timeouts": 1,
+      "SYNACK_sent": 2,
+      "rejected": 20,
+      "connection_limit": 1,
+      "context_bound_bytes": 512,
+      "TX": 3,
+      "RX": 24,
+      "ARP_resolution": true,
+      "adapter_reset_confirmed": true,
+      "DMA_frames_released": 11,
+      "endpoint_erased": true,
+      "ABI_v0_hello": true,
+      "deterministic_test_ISNs": true,
+      "no_streaming_or_retransmission": true,
+      "no_FIN_RST_exchange": true,
+      "no_application_grants": true,
+      "screenshot": {
+        "width": 1280,
+        "height": 800,
+        "sha256": "69c6c83e98796aeadc30dac21f1be68b129ba43e0666d7cbaaae1fd6a8afe6d6"
+      }
+    },
+    "uefi": {
+      "passed": true,
+      "firmware": "uefi",
+      "handshakes": 1,
+      "half_open_timeouts": 1,
+      "SYNACK_sent": 2,
+      "rejected": 20,
+      "connection_limit": 1,
+      "context_bound_bytes": 512,
+      "TX": 3,
+      "RX": 24,
+      "ARP_resolution": true,
+      "adapter_reset_confirmed": true,
+      "DMA_frames_released": 11,
+      "endpoint_erased": true,
+      "ABI_v0_hello": true,
+      "deterministic_test_ISNs": true,
+      "no_streaming_or_retransmission": true,
+      "no_FIN_RST_exchange": true,
+      "no_application_grants": true,
+      "screenshot": {
+        "width": 1280,
+        "height": 800,
+        "sha256": "69c6c83e98796aeadc30dac21f1be68b129ba43e0666d7cbaaae1fd6a8afe6d6"
+      }
+    }
+  },
+  "passed": true,
+  "host_sanitizers": [
+    "address",
+    "undefined"
+  ],
+  "userspace_ABI_unchanged": true
+}

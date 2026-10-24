@@ -237,7 +237,11 @@ passes focused sanitizer-backed host and BIOS/UEFI checks and is published at
 `a6571c1`. [IPv4/ICMP](results/n5-ipv4.md) now passes its focused host and two
 firmware tests and is published at `33693b3` (43 reviewed files).
 [Bounded kernel UDP](results/n5-udp.md) now passes focused host and BIOS/UEFI
-checks. UDP remains uncommitted for review; next: a bounded kernel TCP handshake.
+checks and is published at `a5889f9`, with its exact reviewed 46-file inventory.
+[TCP establishment](results/n5-tcp.md) now passes focused host and BIOS/UEFI
+tests and remains uncommitted for review. Next: bounded in-order payload transfer
+with fixed buffers and sequence/window accounting; retransmission and wire
+closure remain unsupported.
 During UDP verification the owner merged [PR #4](https://github.com/veasnawt/vos/pull/4)
 to GitHub main at `d01b3f5`, with no tree difference from publication `33693b3`.
 Local main and origin/main remain `bbca69d`; no fetch/merge/ref update was done.
@@ -247,6 +251,9 @@ There are no application network grants. Use the fresh-output IPv4 test workflow
 in the guide; IPv4 and UDP each require their isolated peer, not a standalone
 unconnected boot. `scripts/test-udp.py` builds fresh images and records real
 datagrams, checksum-zero cases, queue overflow/recovery and reset/teardown.
+`scripts/test-tcp.py` supplies the controlled passive-handshake peer, validates
+sequence/ACK fields, exercises half-open expiry, and records raw PCAPs and capture
+provenance. Its deterministic ISNs are diagnostic; it is not complete TCP.
 Generated builds must stay outside protected N3/N4 roots;
 all prior evidence, worktrees, stashes and cumulative storage guards remain in force.
 The inherited 3360 MiB ceiling originated in N3 D2/C20. The owner separately

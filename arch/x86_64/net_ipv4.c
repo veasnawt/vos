@@ -14,6 +14,12 @@ uint16_t net_checksum(const void *bytes,size_t length)
     while (sum>>16) sum=(sum&0xffff)+(sum>>16);
     return (uint16_t)~sum;
 }
+uint16_t net_ipv4_transport_checksum(const uint8_t source[4],const uint8_t dest[4],uint8_t protocol,const void *bytes,size_t n)
+{
+    uint32_t sum=(uint16_t)~net_checksum(source,4)+(uint32_t)(uint16_t)~net_checksum(dest,4)+protocol+(uint32_t)n+(uint16_t)~net_checksum(bytes,n);
+    while (sum>>16) sum=(sum&65535)+(sum>>16);
+    return (uint16_t)~sum;
+}
 static int output_ok(void *out,size_t capacity,size_t *length,size_t needed)
 {
     uintptr_t a=(uintptr_t)out,b=(uintptr_t)length;

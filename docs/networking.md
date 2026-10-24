@@ -1,4 +1,4 @@
-# Native networking: virtio-net, ARP, IPv4, ICMP and UDP
+# Native networking: virtio-net, ARP, IPv4, ICMP, UDP and TCP establishment
 
 N5 starts from the accepted N4 merge `bbca69d850e8c168bfa824ace475a27226b2cdb7`.
 Its tree matches accepted N4 publication `50cbc8bc49bd10d5272647b267ed23895d2f533d`.
@@ -7,7 +7,8 @@ The first increment sends and receives bounded raw Ethernet frames through a
 modern virtio-net adapter in QEMU. It is published at `27fe770`. The subsequent
 bounded Ethernet/ARP layer is published at `a6571c1`. Native IPv4/ICMP echo is
 published at `33693b3`. Bounded kernel UDP is implemented and verified below;
-TCP and explicit userspace authority remain next.
+UDP is published at `a5889f9`. A passive TCP establishment prototype is verified
+below; stream transfer and explicit userspace authority remain future work.
 
 ## Existing infrastructure and choice
 
@@ -288,3 +289,63 @@ options, unrestricted sockets or browser. The same 272 MiB positive-growth ledge
 3360 MiB aggregate ceiling, original reserves and continuous isolation guards
 apply, carrying every earlier attempt. See [UDP results](results/n5-udp.md) for
 raw PCAPs, manifest identities, authentic screenshots and final accounting.
+
+## Bounded passive TCP establishment
+
+`net_tcp.c` embeds the same IPv4/ARP/ICMP context and one fixed connection record
+(host assertion: at most 512 bytes). It allocates no connection objects, payload
+queues or heap memory. One kernel owner runs at IF=0. There is one explicitly
+configured local port, with CLOSED, LISTEN, SYN_RECEIVED and ESTABLISHED states.
+The demonstration opts in with `vos.tcp=1`; normal vsh/Rixie boots gain no NIC
+initialization, syscall or network authority.
+
+TCP header/sequence and checksum formats follow the relevant parts of
+[RFC 9293](https://www.rfc-editor.org/rfc/rfc9293), without claiming full conformance.
+Existing Ethernet/IP checks bound the segment before TCP reads it. Ports must be
+nonzero; data offset must be in bounds, reserved bits zero and the mandatory
+pseudoheader checksum valid. The existing UDP checksum calculation was factored
+into a shared IPv4 transport helper without changing UDP zero-checksum semantics.
+TCP has no checksum-omission mode: a zero checksum word passes only if the complete
+checksum calculation validates it. Odd lengths are included in shared-helper tests.
+
+This profile supports only a 20-byte TCP header and no payload. Options, data,
+ECN/URG and FIN/RST processing are unsupported and safely rejected. A SYN to the
+configured listening port produces one SYN-ACK with zero advertised receive
+window. SYN consumes one sequence number, including wrap at 32 bits. The final
+ACK must match stored IP/MAC/ports, peer sequence plus one and local ISN plus one.
+Unsolicited ACKs, wrong tuples/sequences/ACKs, duplicate SYNs and a second
+connection cannot establish or consume another record. Invalid input and short
+output leave connection state and output unchanged. Packet input/output may alias
+under the existing kernel caller contract; packet storage never aliases context.
+
+A half-open connection expires after 200 PIT ticks. Its owner explicitly calls
+`net_tcp_expire` to erase peer, sequence and deadline fields and return to LISTEN.
+Even before that call, an expired ACK cannot establish. The caller supplies an
+initial ISN; successive accepted SYNs advance a diagnostic counter by 65536.
+This deterministic test generator is not the unpredictable production ISN design
+required for a general TCP stack. Host checks cover sequence and timer wrap, stale
+ACK rejection and reuse after expiry. Established state is released through
+`net_tcp_close`, which erases the complete context. This is local abort/cleanup,
+not a FIN or RST exchange with the peer. No retransmission is implemented.
+
+The trusted demo first resolves 10.0.2.2 using the existing ARP cache, then listens
+at 10.0.2.15:4001 for the controlled peer's port 5001. It deliberately expires one
+half-open attempt, rejects invalid traffic and completes the next handshake with
+a fresh diagnostic ISN. The host observes the serial timeout marker only to
+coordinate the next SYN; all TCP packets themselves cross the actual virtio-net
+wire interface and are retained in PCAP. No host or guest Linux TCP stack is used.
+
+With established EFI tools and existing storage/isolation admission:
+
+```sh
+PYTHONDONTWRITEBYTECODE=1 python3 -B scripts/test-tcp.py \
+  --output "$PWD/build/n5-tcp-$(date -u +%Y%m%dT%H%M%SZ)"
+```
+
+`make tcp-iso` / `make tcp-uefi-iso` require nonempty `TCP_BUILD`; the test script
+supplies the isolated Unix-socket peer. Host ASan/UBSan checks cover TCP and the
+affected UDP/IPv4/ARP helpers. Two QEMU boots verify handshake, timeout/cleanup,
+rejection counts, reset confirmation and all 11 DMA frames released. There is no
+new DMA pool, userspace interface, routing, DNS, DHCP, TLS, IPv6 or browser.
+The same 272 MiB continuation meter, aggregate 3360 MiB ceiling, reserves and
+continuous isolation rules apply. See [TCP results](results/n5-tcp.md).

@@ -72,9 +72,12 @@ BIOS/UEFI checks: two originated pings and one incoming request answered per
 boot, with independent PCAP validation, published at `33693b3`.
 [Kernel UDP](results/n5-udp.md) now passes focused host and BIOS/UEFI checks,
 with one explicit endpoint, bounded copied datagrams and correct checksum-zero
-handling. TCP is next. The owner merged published networking through
+handling, published at `a5889f9`. A [passive TCP prototype](results/n5-tcp.md)
+now completes the handshake and bounded timeout/cleanup checks on both firmware
+paths. Streaming, retransmission and wire closure are not implemented.
+The owner merged published networking through
 IPv4 into GitHub main via [PR #4](https://github.com/veasnawt/vos/pull/4) at
-`d01b3f5` while UDP verification ran. Its tree matches `33693b3`. UDP remains
+`d01b3f5` while UDP verification ran. Its tree matches `33693b3`. TCP remains
 uncommitted; local main stays `bbca69d`. An eventual
 userspace network interface requires explicit process-owned capability grants,
 resource bounds and revocation. Rixie Connected remains outside this increment.

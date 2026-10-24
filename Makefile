@@ -228,6 +228,18 @@ udp-iso:
 udp-uefi-iso: udp-iso
 	$(MAKE) --no-print-directory ARCH=x86_64 BUILD=$(UDP_BUILD)/kernel USER_BUILD=$(UDP_BUILD)/user GRUB_CFG=arch/x86_64/grub-udp.cfg uefi-iso
 
+TCP_BUILD ?= build/n5-tcp
+ifneq ($(filter tcp-iso tcp-uefi-iso,$(MAKECMDGOALS)),)
+ifeq ($(strip $(TCP_BUILD)),)
+$(error TCP_BUILD must be nonempty; use a path under build/)
+endif
+endif
+.PHONY: tcp-iso tcp-uefi-iso
+tcp-iso:
+	$(MAKE) --no-print-directory ARCH=x86_64 BUILD=$(TCP_BUILD)/kernel USER_BUILD=$(TCP_BUILD)/user GRUB_CFG=arch/x86_64/grub-tcp.cfg iso
+tcp-uefi-iso: tcp-iso
+	$(MAKE) --no-print-directory ARCH=x86_64 BUILD=$(TCP_BUILD)/kernel USER_BUILD=$(TCP_BUILD)/user GRUB_CFG=arch/x86_64/grub-tcp.cfg uefi-iso
+
 # Like run, but QEMU waits for a debugger on TCP port 1234 (-s -S) and prints
 # the serial port here. GDB is not installed by the build; see
 # docs/plans/n2-foundation.md (tooling) for the commands.

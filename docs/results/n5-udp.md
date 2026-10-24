@@ -3,8 +3,12 @@
 IPv4/ICMP is committed and pushed as
 [`33693b32178c9096295f1d9186547dc9062fbb50`](https://github.com/veasnawt/vos/commit/33693b32178c9096295f1d9186547dc9062fbb50)
 on `feat/n5-networking`, with the exact reviewed 43-file inventory.
-Local main remains the accepted N4 merge `bbca69d`. This subsequent UDP increment is
-**uncommitted for review**. N5 remains in progress.
+Local main remains the accepted N4 merge `bbca69d`. The subsequent UDP increment
+was committed and pushed with its exact reviewed 46-file inventory as
+[`a5889f908c06ab912321f6fcb8f930e9f12abdd0`](https://github.com/veasnawt/vos/commit/a5889f908c06ab912321f6fcb8f930e9f12abdd0).
+Its guarded publication root is `build/n5-udp-20261024T181255Z/`. Raw
+pre-publication JSON records remain unchanged historical snapshots. N5 remains
+in progress; the subsequent [TCP prototype](n5-tcp.md) is uncommitted for review.
 
 The [networking guide](../networking.md#bounded-kernel-udp) documents one explicitly
 configured kernel endpoint, four receive slots, a 512-byte payload bound and the
@@ -89,6 +93,7 @@ bytes per datagram are supported. Delivery/order are not guaranteed by UDP.
 There is no routing, retransmission, DHCP, DNS, TCP, IPv6, reassembly, UDP options,
 userspace socket API, browser or Rixie Connected.
 
-Next: a bounded kernel TCP handshake with one explicitly configured endpoint and
-connection, strict checksum/sequence validation and timeout cleanup. Explicit
-capability enforcement remains necessary before any application network API.
+The subsequent [TCP prototype](n5-tcp.md) now verifies passive establishment,
+strict checksum/sequence validation and timeout cleanup. It adds no streaming
+or complete TCP support. Explicit capability enforcement remains necessary before
+any application network API.

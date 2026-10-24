@@ -21,8 +21,12 @@ IPv4/ICMP is published at `33693b3`. [Bounded kernel UDP](results/n5-udp.md)
 now passes 136,730 sanitizer-backed host checks, the existing IPv4/ARP host
 regressions and BIOS/UEFI wire checks. Each boot sends four UDP datagrams,
 receives seven, rejects 12 invalid/unsupported/unbound packets and safely
-rejects one four-slot queue overflow. TCP and explicit application authority
-remain next. UDP changes are uncommitted for review.
+rejects one four-slot queue overflow. UDP is published at `a5889f9`.
+[Passive TCP establishment](results/n5-tcp.md) now passes 3,648 sanitizer-backed
+host checks and both firmware tests: one completed handshake, one half-open
+timeout and 20 rejected inputs each. There is one fixed connection record,
+with no streaming, retransmission, TCP options or FIN/RST closure. TCP changes
+remain uncommitted for review. Application networking is not exposed.
 GitHub main now contains the owner's [PR #4](https://github.com/veasnawt/vos/pull/4)
 merge `d01b3f5`, whose tree matches IPv4 publication `33693b3`. Local main remains
 `bbca69d`; the executor did not merge, fetch or change that local branch.
