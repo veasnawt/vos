@@ -45,8 +45,11 @@ git checkout main            # or the checkpoint tag listed in docs/STATUS.md
 
 The repository is public. N3 is complete on `feat/n3.6-storage-closure`; use
 `git checkout feat/n3.6-storage-closure` to inspect the milestone publication.
-Main now contains accepted N4 at `bbca69d`, with the same tree as publication
-`50cbc8b`. N5 work uses `feat/n5-networking`, created from that verified merge.
+Main contains accepted N0–N5 through [PR #7](https://github.com/veasnawt/vos/pull/7)
+at `39b40a904cce0778c307dd9154fff2531567d6d4`. The owner formally accepted N5
+on 2026-10-25 within its authorized bounded kernel-networking prototype scope.
+N4 remains integrated at `bbca69d` (tree equal to publication `50cbc8b`).
+Historical branches, worktrees and stashes remain preserved.
 `build/` is generated and ignored. See [STATUS](STATUS.md) and the
 [final N3 closure record](results/n3-closure.md).
 
@@ -225,7 +228,32 @@ boots pass. No ABI change, kernel subsystem, network, GUI or model was introduce
 The owner accepted and merged the extended N4 scope. N5 begins from that verified
 tree; the earlier readiness records remain unchanged. Do not rerun N3 campaigns.
 
-### N5 first adapter increment
+### N5 accepted networking checkpoint
+
+The owner formally accepted N5 on 2026-10-25 within its original and subsequently
+authorized bounded prototype scope. [PR #7](https://github.com/veasnawt/vos/pull/7)
+merged closure `9f443746` / feature integration `93053b81` at
+`39b40a904cce0778c307dd9154fff2531567d6d4`. Its tree matches the verified feature
+tree; feature-head build smoke and secret history audit passed.
+
+Accepted capabilities are bounded virtio-net, Ethernet/ARP, IPv4/ICMP, UDP and
+passive TCP establishment, payload, retransmission and FIN/RST cleanup. Authority
+remains kernel-only; ABI v0–v3 and existing capability boundaries are preserved.
+[Closure evidence](results/n5-tcp-close.md) includes 8,505 closure sanitizer checks,
+BIOS/UEFI exchanges, independent PCAP review and authentic screenshots. The
+[manual guide](results/n5-tcp-close-manual.md) replays existing verified images.
+No historic campaign needs repetition.
+
+This is a QEMU-verified prototype, not production networking or verified physical
+x86_64 support. Production ISNs, reassembly, adaptive recovery, DNS/DHCP/IPv6/TLS
+and userspace networking remain deferred. Live TIME-WAIT is explicitly aborted
+after its checks; full 2xMSL expiry is host-tested. This acceptance does not
+authorize application-launch implementation or changes to future milestones.
+
+#### Historical N5 development checkpoints
+
+The following paragraphs retain pre-PR #7 publication and local-branch states;
+they are historical context, not claims that closure is currently uncommitted.
 
 The [native networking guide](networking.md) describes the first opt-in modern
 virtio-net driver, fixed DMA/queue bounds, isolated peer workflow and eventual
