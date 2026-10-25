@@ -5,8 +5,17 @@
 `50cbc8bc49bd10d5272647b267ed23895d2f533d`, including Rixie Core v0.
 [N4 records](results/n4-closure.md) preserve the pre-merge readiness and evidence.
 
-**N5 development is authorized and in progress** on `feat/n5-networking`, created
-from that verified merge after safely fast-forwarding local main. The
+**N5 networking is complete and formally accepted within its original and
+subsequently authorized bounded prototype scope** (owner decision, 2026-10-25).
+[PR #7](https://github.com/veasnawt/vos/pull/7) integrated closure `9f443746` and
+feature integration `93053b81` at
+[`39b40a904cce0778c307dd9154fff2531567d6d4`](https://github.com/veasnawt/vos/commit/39b40a904cce0778c307dd9154fff2531567d6d4).
+Build smoke and secret history audit passed on the feature head. Acceptance
+covers a bounded kernel prototype, not production networking or physical-hardware
+support. Verification is QEMU-only. Production networking, DNS, DHCP, IPv6, TLS
+and userspace networking remain deferred.
+
+The following per-profile results describe the respective implemented increments. The
 [first networking increment](results/n5-first-network.md) provides bounded modern
 virtio-net initialization and raw frame I/O. Host checks and isolated BIOS/UEFI
 frame exchanges pass. There are no application network grants or new syscalls.
@@ -42,8 +51,9 @@ each), with independent packet verification and authentic captures. It supports
 active/passive/simultaneous FIN, exact-sequence reset, FIN retries and timeout
 cleanup in the same 504-byte context. Live active TIME-WAIT is checked and
 explicitly aborted; full 2xMSL expiry is host-tested without shortened timers.
-Closure remains uncommitted. Application networking is not exposed.
-GitHub main now contains the owner's [PR #4](https://github.com/veasnawt/vos/pull/4)
+Closure is published and merged through PR #7. Application networking is not exposed.
+Historical integration checkpoints before PR #7 (retained for context):
+GitHub main then contained the owner's [PR #4](https://github.com/veasnawt/vos/pull/4)
 merge `d01b3f5`, whose tree matches IPv4 publication `33693b3`. Local main remains
 `bbca69d`; the executor did not merge, fetch or change that local branch.
 The owner's later [PR #5](https://github.com/veasnawt/vos/pull/5) advanced GitHub
@@ -92,6 +102,10 @@ runs only in QEMU so far: no physical machine has booted it. This is a developme
 not a release.
 
 ## Completed milestones
+
+N5 networking is formally accepted at `39b40a9`: bounded native Ethernet/ARP,
+IPv4/ICMP, UDP and passive TCP establishment, payload, retransmission and closure.
+Original result records retain their evidence and pre-publication wording.
 
 N4 now delivers keyboard input, the buffered console, native Rust `vsh` with the
 seven requested commands and dynamic cwd prompt, and reusable Rust application
@@ -280,7 +294,7 @@ On BIOS (SeaBIOS: ELCR `0xc00`), virtio-blk interrupt mode is fully tested: 149 
   Boot selects `vos.console=1` for the buffered demo or `vos.vsh=1` for the
   native shell; normal production boot still halts.
 - **Shell:** first native Rust `vsh` only; no quoting, pipes, history or external-program launch.
-- **Missing features:** writable storage, networking, SMP and ACPI power management.
+- **Missing features:** writable storage, production/userspace networking, SMP and ACPI power management.
 
 ## Unsupported (by design, for now)
 
@@ -291,7 +305,8 @@ On BIOS (SeaBIOS: ELCR `0xc00`), virtio-blk interrupt mode is fully tested: 149 
 - Hardware other than QEMU's emulated PC.
 
 
-Resume update: the owner merged PR #6 at 369153dc5bd9a891dd1d805791ef4ea1805f54bf,
+Historical resume checkpoint before PR #7 (not current branch status):
+The owner merged PR #6 at 369153dc5bd9a891dd1d805791ef4ea1805f54bf,
 with the same source tree as published retransmission d512db7. The feature is now
 zero ahead/three behind main. Local main/origin-main stay bbca69d; closure stays
 uncommitted. The original final audit passed before interruption. Its historical

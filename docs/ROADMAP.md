@@ -1,7 +1,11 @@
 # VOS Roadmap
 
-N0–N4 are complete. Accepted N4, including Rixie Core v0, is integrated into main
-at `bbca69d`; the tree matches publication `50cbc8b`. N5 networking is now authorized.
+N0–N5 are complete and accepted within their authorized scopes. The owner formally
+accepted N5 networking on 2026-10-25 as a bounded kernel-controlled prototype.
+[PR #7](https://github.com/veasnawt/vos/pull/7) integrated it into main at
+[`39b40a9`](https://github.com/veasnawt/vos/commit/39b40a904cce0778c307dd9154fff2531567d6d4).
+Acceptance does not establish production networking or physical-hardware support.
+N4, including Rixie Core v0, remains integrated at `bbca69d` (tree `50cbc8b`).
 N3 closure was accepted on 2026-10-24 after the existing
 D1/D2/C20 requirements passed. The milestone is published on
 `feat/n3.6-storage-closure` at `897312f`. GitHub main integrated it through
@@ -24,6 +28,7 @@ See [status](STATUS.md) and the [N3 closure record](results/n3-closure.md).
 | N3.5 | Capability-scoped read-only ABI v2 files/directories | [Historical closure](results/n3.5-closure.md) |
 | N3.6 / N3 | Integrated accounting/stress, final regression, five mutations, fifteen larger-RAM runs and preserved evidence | [Final N3 closure](results/n3-closure.md) |
 | N4 | Keyboard, buffered console, native Rust shell, cwd prompt, reusable Rust SDK, independent app and minimal offline Rixie Core v0 | [N4 records](results/n4-closure.md) |
+| N5 | Bounded kernel virtio-net, Ethernet/ARP, IPv4/ICMP, UDP and passive TCP payload/retransmission/closure; owner accepted 2026-10-25 | [Networking](networking.md), [closure evidence](results/n5-tcp-close.md), [PR #7](https://github.com/veasnawt/vos/pull/7) |
 | U0/U1 | QEMU UEFI feasibility/readiness, BIOS compatibility and framebuffer diagnostics | [UEFI plan/results](plans/uefi.md) |
 
 ## N4: complete, including Rixie Core v0
@@ -55,9 +60,15 @@ network, GUI or model subsystem is part of this prototype.
 
 N0–N3 and ABI v0–v3 remain preserved. The extended N4 scope is complete.
 
-## N5: native networking in progress
+## N5: complete and formally accepted within the bounded prototype scope
 
-`feat/n5-networking` starts at the verified N4 merge. The
+The owner accepted N5's original and subsequently authorized bounded prototype
+scope on 2026-10-25. [PR #7](https://github.com/veasnawt/vos/pull/7) merged closure
+`9f443746` / feature integration `93053b81` at
+`39b40a904cce0778c307dd9154fff2531567d6d4`. Its tree matches the verified feature
+tree; feature-head build smoke and secret history audit passed.
+
+`feat/n5-networking` began at the verified N4 merge. The
 [first adapter increment](results/n5-first-network.md) initializes modern
 virtio-net and exchanges bounded raw Ethernet frames in QEMU. The
 [design and resource limits](networking.md) reuse existing PCI, PMM and kernel
@@ -80,15 +91,20 @@ accounting and explicit timeout cleanup, published at `ff251a7`.
 [Bounded retransmission](results/n5-tcp-retry.md) now recovers controlled data and
 ACK loss with fixed retry limits, published at d512db7.
 [Bounded connection closure](results/n5-tcp-close.md) now verifies FIN states,
-reset validation, retry/timeout interaction and cleanup. It remains uncommitted.
+reset validation, retry/timeout interaction and cleanup, now merged through PR #7.
 Adaptive recovery, out-of-order reassembly and production ISNs remain unsupported.
 The owner merged published networking through
 IPv4 into GitHub main via [PR #4](https://github.com/veasnawt/vos/pull/4) at
 `d01b3f5` while UDP verification ran, then PR #5 advanced main to `ffaf2fb` with
 the TCP establishment tree 4e799c2. The feature now has payload and retry
 publications, subsequently integrated by the owner through PR #6 at 369153d.
-Its tree equals d512db7; the feature is zero ahead/three behind and closure is
-still uncommitted. Local main stays bbca69d. An eventual
+Those historical integrations and pre-publication branch states remain recorded
+in the original verification reports; they do not describe the accepted PR #7
+checkpoint. The accepted TCP profile has one passive connection, fixed 64-byte
+RX/TX buffers and a 504-byte context. Live TIME-WAIT is explicitly aborted after
+its checks; full 2xMSL expiry is host-tested. Production networking, DNS, DHCP,
+IPv6, TLS and userspace networking remain deferred. Verification is QEMU-only;
+physical x86_64 compatibility has not been demonstrated. An eventual
 userspace network interface requires explicit process-owned capability grants,
 resource bounds and revocation. Rixie Connected remains outside this increment.
 Focused checks accompany changes; no N3 campaign or new milestone is introduced.
