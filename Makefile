@@ -369,3 +369,25 @@ desktop-iso:
 	$(MAKE) --no-print-directory ARCH=x86_64 BUILD=$(DESKTOP_BUILD) USER_BUILD=$(DESKTOP_BUILD)/unused-user ARCH_ISO_FILES="$(DESKTOP_APPS)/hello.elf:boot/hello.elf" GRUB_CFG=arch/x86_64/grub-desktop.cfg ISO_FILES="$(DESKTOP_FILES)" iso
 desktop-uefi-iso:
 	$(MAKE) --no-print-directory ARCH=x86_64 BUILD=$(DESKTOP_BUILD) USER_BUILD=$(DESKTOP_BUILD)/unused-user ARCH_ISO_FILES="$(DESKTOP_APPS)/hello.elf:boot/hello.elf" GRUB_CFG=arch/x86_64/grub-desktop.cfg ISO_FILES="$(DESKTOP_FILES)" uefi-iso
+
+
+# N6.2 explicit boot-selected GUI route; no additional shell launch authority.
+GUI_BUILD ?= build/gui
+GUI_APPS ?=
+GUI_VERIFY ?= 0
+GUI_CFG ?= arch/x86_64/grub-gui.cfg
+ifneq ($(filter gui-iso gui-uefi-iso,$(MAKECMDGOALS)),)
+ifeq ($(strip $(GUI_BUILD)),)
+$(error GUI_BUILD must be a fresh admitted nonempty output)
+endif
+ifeq ($(strip $(GUI_APPS)),)
+$(error GUI_APPS must identify verified read-only vsh/hello/rixie ELF inputs)
+endif
+endif
+GUI_FILES = $(foreach n,vsh hello rixie,$(GUI_APPS)/$(n).elf:boot/$(n).elf) $(GUI_BUILD)/user/gui-demo.elf:boot/gui-demo.elf $(if $(filter 1,$(GUI_VERIFY)),$(GUI_BUILD)/user/gui-probe.elf:boot/gui-probe.elf)
+.PHONY: gui-iso gui-uefi-iso
+gui-iso:
+	$(MAKE) --no-print-directory ARCH=x86_64 USER_BUILD=$(GUI_BUILD)/user user-gui
+	$(MAKE) --no-print-directory ARCH=x86_64 BUILD=$(GUI_BUILD)/kernel USER_BUILD=$(GUI_BUILD)/user GUI_VERIFY=$(GUI_VERIFY) TEST_DEFS="$(if $(filter 1,$(GUI_VERIFY)),-DVOS_GUI_VERIFY)" GRUB_CFG=$(GUI_CFG) ISO_FILES="$(GUI_FILES)" iso
+gui-uefi-iso: gui-iso
+	$(MAKE) --no-print-directory ARCH=x86_64 BUILD=$(GUI_BUILD)/kernel USER_BUILD=$(GUI_BUILD)/user GUI_VERIFY=$(GUI_VERIFY) TEST_DEFS="$(if $(filter 1,$(GUI_VERIFY)),-DVOS_GUI_VERIFY)" GRUB_CFG=$(GUI_CFG) ISO_FILES="$(GUI_FILES)" uefi-iso

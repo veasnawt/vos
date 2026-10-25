@@ -8,6 +8,8 @@
 #include "file.h"
 #include "user_console.h"
 #include "exec.h"
+#include "gui.h"
+#include "gui_verify.h"
 #include "exec_verify.h"
 #include "handoff_verify.h"
 
@@ -58,6 +60,15 @@ static int64_t sys_debug_write(struct process *p, uint64_t buf, uint64_t len)
 int64_t syscall_dispatch(struct process *p, struct exc_frame *f)
 {
     switch (f->rax) {
+#ifdef VOS_GUI_VERIFY
+    case SYS_GUI_VERIFY:return gui_verify_syscall(p,f);
+#endif
+    case VOS_GUI_CREATE:
+    case VOS_GUI_UPLOAD:
+    case VOS_GUI_PRESENT:
+    case VOS_GUI_RELEASE:
+    case VOS_GUI_EVENT:
+        return gui_syscall(p,f);
 #ifdef VOS_HANDOFF_VERIFY
     case SYS_HANDOFF_VERIFY:return handoff_verify_syscall(p,f);
 #endif

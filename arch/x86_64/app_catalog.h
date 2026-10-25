@@ -10,7 +10,8 @@
 enum app_policy {
     APP_POLICY_SHELL = 1,
     APP_POLICY_DIAGNOSTIC = 2,
-    APP_POLICY_CONSOLE = 3
+    APP_POLICY_CONSOLE = 3,
+    APP_POLICY_GUI = 4
 };
 enum app_catalog_error {
     APP_CATALOG_OK = 0,

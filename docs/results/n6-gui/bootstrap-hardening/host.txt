@@ -1,0 +1,6 @@
+bootstrap host PASS 523 assertions; 64 actual ELF rejections, 64 process-admission failures, failed service start; modeled service cleanup
+
+Original committed implementation: expected negative-control failure (retained worker):
+bootstrap FAIL line 53: worker==0 && starts==i+1 && stops==i+1 && begins==0
+
+Hosted service/scheduler boundaries are modeled. Actual worker block/wake/reaping is established by 18 repeated native failures per firmware.

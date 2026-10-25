@@ -33,6 +33,8 @@
 static int kind = SCREEN_NONE, inited, busy, panicked;
 static const char *why = "not initialized";
 static struct screen_surface fb;
+static int gui_active;
+static uint32_t gui_x,gui_y,gui_w,gui_h;
 static uint32_t cols, rows, log_y, cx, cy;
 static uint32_t text_x=SCREEN_MARGIN,clear_x,clear_w,clear_bottom;
 static int desktop_mode;
@@ -230,6 +232,7 @@ static void put(char c)
 
 void screen_putc(char c)
 {
+    if(gui_active)return; /* Private GUI content; diagnostics still reach serial. */
     if (!inited) {
         if (early_len < EARLY_BYTES)
             early[early_len++] = c;
@@ -422,4 +425,31 @@ int screen_desktop_begin(void)
     cols=desktop.text_w/8;rows=desktop.text_h/SCREEN_LINE_H;
     busy=0;screen_begin_input();
     return 1;
+}
+
+/* Private presentation sink; only the validated kernel GUI service calls it. */
+int screen_gui_available(void)
+{
+    return inited && kind==SCREEN_FB && desktop_mode && !panicked &&
+           !busy && !gui_active && clear_w>=256 && clear_bottom>=log_y+160;
+}
+int screen_gui_begin(uint32_t w,uint32_t h)
+{
+    if(!screen_gui_available() || !w || !h || w>256 || h>160)return 0;
+    gui_w=w;gui_h=h;gui_x=clear_x+(clear_w-w)/2;
+    gui_y=log_y+(clear_bottom-log_y-h)/2;gui_active=1;
+    screen_fill(&fb,gui_x,gui_y,w,h,0);
+    return 1;
+}
+void screen_gui_row(uint32_t y,const uint32_t *pixels,uint32_t count)
+{
+    if(!gui_active || panicked || busy || y>=gui_h || count!=gui_w || !pixels)return;
+    volatile uint32_t *row=fb.base+(uint64_t)(gui_y+y)*fb.pitch_px+gui_x;
+    for(uint32_t x=0;x<count;x++)row[x]=pixels[x]&0x00ffffffu;
+}
+void screen_gui_end(void)
+{
+    if(!gui_active)return;
+    gui_active=0;
+    (void)screen_desktop_begin(); /* Restore the existing scene and console shadow. */
 }

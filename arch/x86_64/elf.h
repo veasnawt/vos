@@ -70,10 +70,10 @@ struct elf_image {
     unsigned nload;
     struct elf_segment load[ELF_MAX_LOADS];     /* sorted by vaddr, disjoint pages */
     uint64_t pages;                     /* pages needed for all segments */
-    uint32_t abi;                       /* VOS ABI version from the note: 0 through 4 */
+    uint32_t abi;                       /* VOS ABI version from the note: 0 through 5 */
 };
 
-#define ELF_ABI_MAX     4               /* v0-v3 preserved; v4 explicitly granted execution */
+#define ELF_ABI_MAX     5               /* v0-v3 preserved; v4 execution, v5 explicitly granted GUI */
 
 int elf_validate(const uint8_t *img, uint64_t size, struct elf_image *out);
 const char *elf_strerror(int err);

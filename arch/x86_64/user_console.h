@@ -21,4 +21,7 @@ uint64_t console_host_root(void);
 uint8_t console_host_in(uint16_t);
 void console_host_out(uint16_t,uint8_t);
 #endif
+int user_console_gui_begin(struct process *);
+void user_console_gui_end(struct process *);
+char user_console_gui_poll(struct process *);
 #endif

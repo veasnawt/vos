@@ -2,6 +2,7 @@
 #include "bootinfo.h"
 #include "console.h"
 #include "elf.h"
+#include "gui_verify.h"
 #include "lib.h"
 #include "memlayout.h"
 #include "resv.h"
@@ -14,7 +15,11 @@ static const struct {
 } provisioned[] = {
     { 0x1001, "vsh", APP_POLICY_SHELL },
     { 0x1002, "hello", APP_POLICY_DIAGNOSTIC },
-    { 0x1003, "rixie", APP_POLICY_CONSOLE }
+    { 0x1003, "rixie", APP_POLICY_CONSOLE },
+    { 0x1004, "gui-demo", APP_POLICY_GUI },
+#ifdef VOS_GUI_VERIFY
+    { 0x1005, "gui-probe", APP_POLICY_GUI },
+#endif
 };
 
 int app_payload_requested(const char *p)
@@ -40,10 +45,14 @@ static int reject(void)
 
 int app_payload_prepare(const struct boot_info *bi, const struct resv_table *reserved)
 {
-    struct app_source sources[sizeof(provisioned) / sizeof(provisioned[0])] = { 0 };
+    struct app_source sources[APP_CATALOG_MAX] = { 0 };
+    unsigned count=gui_boot_requested(bi ? bi->cmdline : 0) ? 4 : 3;
+#ifdef VOS_GUI_VERIFY
+    if(gui_verify_requested(bi ? bi->cmdline : 0))count=5;
+#endif
     memset(&catalog, 0, sizeof(catalog));
     if (!bi || !reserved || reserved->count > RESV_MAX ||
-        bi->module_count != sizeof(provisioned) / sizeof(provisioned[0]))
+        bi->module_count != count)
         return reject();
     unsigned seen = 0;
     for (unsigned i = 0; i < bi->module_count; i++) {
@@ -54,11 +63,11 @@ int app_payload_prepare(const struct boot_info *bi, const struct resv_table *res
         unsigned n = 0;
         while (n <= APP_CATALOG_NAME_MAX && m->cmdline[n]) n++;
         if (!n || n > APP_CATALOG_NAME_MAX) return reject();
-        unsigned match = sizeof(provisioned) / sizeof(provisioned[0]);
-        for (unsigned j = 0; j < sizeof(provisioned) / sizeof(provisioned[0]); j++)
+        unsigned match = count;
+        for (unsigned j = 0; j < count; j++)
             if (strlen(provisioned[j].name) == n && !memcmp(m->cmdline, provisioned[j].name, n))
                 match = j;
-        if (match == sizeof(provisioned) / sizeof(provisioned[0]) || (seen & (1U << match)))
+        if (match == count || (seen & (1U << match)))
             return reject();
         /* Boot reservations never release pages. Validate coverage of every
          * source page before retaining its kernel-only alias; no copied code
@@ -74,8 +83,8 @@ int app_payload_prepare(const struct boot_info *bi, const struct resv_table *res
         s->length = m->end - m->start;
         seen |= 1U << match;
     }
-    if (seen != (1U << (sizeof(provisioned) / sizeof(provisioned[0]))) - 1 ||
-        app_catalog_build(&catalog, sources, sizeof(sources) / sizeof(sources[0])))
+    if (seen != (1U << (count)) - 1 ||
+        app_catalog_build(&catalog, sources, count))
         return reject();
     serial_puts("catalog: ready "); serial_dec(catalog.count);
     serial_puts(" entries, "); serial_dec(sizeof(catalog));

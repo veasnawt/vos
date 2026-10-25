@@ -39,7 +39,7 @@ int app_catalog_build(struct app_catalog *out, const struct app_source *sources,
             return APP_CATALOG_EINVAL;
         if (!name_valid(s->name)) return APP_CATALOG_ENAME;
         if (s->policy != APP_POLICY_SHELL && s->policy != APP_POLICY_DIAGNOSTIC &&
-            s->policy != APP_POLICY_CONSOLE)
+            s->policy != APP_POLICY_CONSOLE && s->policy != APP_POLICY_GUI)
             return APP_CATALOG_EPOLICY;
         for (size_t j = 0; j < i; j++)
             if (s->identity == candidate.entries[j].identity ||
@@ -48,8 +48,9 @@ int app_catalog_build(struct app_catalog *out, const struct app_source *sources,
         struct elf_image image;
         if (elf_validate(s->image, s->length, &image) != ELF_OK)
             return APP_CATALOG_EEXEC;
-        if (s->policy != APP_POLICY_DIAGNOSTIC && image.abi != 3 &&
-            !(s->policy==APP_POLICY_SHELL && image.abi==4))
+        if ((s->policy==APP_POLICY_GUI && image.abi!=5) ||
+            (s->policy!=APP_POLICY_GUI && s->policy != APP_POLICY_DIAGNOSTIC && image.abi != 3 &&
+            !(s->policy==APP_POLICY_SHELL && image.abi==4)))
             return APP_CATALOG_EPOLICY;
         struct app_catalog_entry *e = &candidate.entries[i];
         e->identity = s->identity;

@@ -82,4 +82,9 @@ void screen_glyph(const struct screen_surface *s, uint32_t x, uint32_t y, char c
 int screen_choose(uint32_t fb_tags, const char *fb_err, int fb_kind, int efi, uint8_t bda_mode, uint16_t bda_cols,
                   const char **why);
 
+/* Kernel-private bounded presentation; never exported as a user pointer. */
+int screen_gui_available(void);
+int screen_gui_begin(uint32_t,uint32_t);
+void screen_gui_row(uint32_t,const uint32_t *,uint32_t);
+void screen_gui_end(void);
 #endif

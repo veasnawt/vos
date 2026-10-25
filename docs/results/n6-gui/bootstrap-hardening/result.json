@@ -1,0 +1,713 @@
+{
+  "passed": true,
+  "scope": "GUI initial ELF-load worker reclamation",
+  "baseline": "e639008949358d80561c149b94fd14654d108a7b",
+  "physical_hardware_verified": false,
+  "source_sha256": {
+    "Makefile": "6912d0beae8476e1a2ac0d114432fd920f057d6910f8ed2d09f3047326a37752",
+    "arch/x86_64/app_catalog.c": "9ce114bba8678bf1cf43c9e2f9db883f54844a57d1eabb19ee5330c1f38ec7c5",
+    "arch/x86_64/app_catalog.h": "b2fa038727b064c09e31ab7d3147d410a45d89afc4353c52a820c9d7c879f014",
+    "arch/x86_64/app_payload.c": "66bb529b4e866158d1521c118ab6749f193303f7d87bf26f536cbfaa21c5d0b4",
+    "arch/x86_64/app_payload.h": "96263b0c4967d29b0984432bf928ed2430724d74aad20b5d1957a45112d12df6",
+    "arch/x86_64/arch.mk": "bd48543eddfb5bf6d7906272413d9fc9107592dea94af5c82f9c7b46ea30719b",
+    "arch/x86_64/desktop.c": "183816b5662fb774d9696188d431afd115ae252e8f4ff031b8eda7a081941187",
+    "arch/x86_64/elf.c": "c01cd9b6d606528077819ffa256daf3158056ca9fe89f70c549a32bd26315b3f",
+    "arch/x86_64/elf.h": "311ac31abfcc60a586f9ac9b39754472e82a4a52ed11d00f47988f7e18e47cf3",
+    "arch/x86_64/exec.c": "0d9664e60bd784e3e114eb0cfac9163f6fadb38f3feac8ca63f8738737f08918",
+    "arch/x86_64/font8x16.c": "1407e6656453950e4f9002a7027b3966baa53d82947300b54401b7a18f7484fc",
+    "arch/x86_64/grub-gui.cfg": "6453fa332662a8d3f5d8f14dc6a7d44bcfb12760a0b88c9c5d1311725a398907",
+    "arch/x86_64/gui.c": "265cd2962d535a9df942175be0495a83954d813e9e826705631e7d8cb0ae51e1",
+    "arch/x86_64/gui.h": "acbe0c613482ed65daaae0847fa5353aace61183ee9a650e67c9e275f49ac78b",
+    "arch/x86_64/gui_verify.c": "6f14a641f53e2af371950467ad814f5209961d03064ec205a33ed0f0bd8b2569",
+    "arch/x86_64/gui_verify.h": "740f72582b4231e7a26a7c79d93fc59c0a7cb3f4a2c939a8ba91316f1a88e457",
+    "arch/x86_64/input_console.c": "0297f0c2a2a053a9af9e5d33ac57e3ebd94b8353a8a5be366024a0c6eb194551",
+    "arch/x86_64/kernel.c": "041ca6c18a3d5ef9c8b3291c47f8eaaf56207da664d94b756c4bf864a807259f",
+    "arch/x86_64/keyboard.c": "f1d0b4e47f6d2ba591ed97ac7b42c7df27e9e069be46ae4c2198e12d08e3380f",
+    "arch/x86_64/loader.c": "6b7d86325c00e88d0a612477ad63a6de07e2acca569efb8fdd95bd0bf44b2220",
+    "arch/x86_64/process.c": "a59718bcaf8ba3e2bd99f99faeccd5ae31efe93bd49817af5c4ae41e8da6924c",
+    "arch/x86_64/screen.c": "e66bf38ca9d390309da383813d4a19ca0a3d27c85008361bbfdc1acc7189fe2e",
+    "arch/x86_64/screen.h": "4126275991c56b98eb2291dbb9fb7e148e3da2835800b4232f2e7072e1b57242",
+    "arch/x86_64/syscall.c": "a8c85f1bfb2c945d66aafdad509ba5c52b0fce95f0a3ecd9f4fdcaa02bddb984",
+    "arch/x86_64/syscall.h": "ecdcf12b6c114cb8c560cebe3cd251decaed909903556911a61c8554f887790d",
+    "arch/x86_64/user_console.c": "7fad92cfcfc1b528cc37eff95d29efcbcb76b148a42873d48e8ae012182f5875",
+    "arch/x86_64/user_console.h": "850e8a8588c621e8d66f07ea96fe692fd55ee521413904286c140bbfdf05342c",
+    "scripts/check-user-elf.sh": "cebf44cf1363858bde08268f9436a9ef3d57283d3dc0900535d9756e967ca4a9",
+    "scripts/test-app-handoff.py": "4f5b8e4b9e44375b133688a5d9bf50e2c3c9ed459a6483eead00d85bb04c01bd",
+    "scripts/test-gui-bootstrap.py": "090e058241af12ce13da6238a5f349891de44eb28abc807f502c73bb19aa324a",
+    "scripts/test-gui.py": "38669a956b249d3bcd8f593168bdc9618df73c4571a9569abb9adda5a9415526",
+    "scripts/test-n6-desktop.py": "b261c28e88a558c16b8efafd109efeb5ce8f487b764702674c2285b6daeff572",
+    "scripts/test-user-elf.sh": "b6debfa2f32fe964f47ecc201736bdfc35cf465af06cd694f5eb0f47a8571fa8",
+    "tests/host/gui-bootstrap.c": "3d4ef9b7920285e3ed05a989253769eb0249d16bb34a5af91a36f2505746f0ba",
+    "tests/host/gui.c": "49760bcfa460f1319f23699cf51703b16e9b04ffd9fc0cc6d7bd0f1630936248",
+    "tests/rust/gui.rs": "ba0dd973951f3e99f6266c04cd1dd2003daa4af284d886cff19441ed69d67f9b",
+    "user/gui-demo/main.rs": "1ffce634e5379da313616c1d4059a853a69c3a5ff4b924f8974ba1cab40bc094",
+    "user/gui-probe/main.rs": "af386104617b7d7443b81cfcb74cdb4d1e3cd950c7a22b8cf7cb6913ee13e5aa",
+    "user/include/vos/gui.h": "473a867903735872c6f91d50299e7c6429d13ae60796d70c821a36e1d186afd3",
+    "user/lib/abi_note_v5.S": "73f32c7a43f2207adfb0c31bada80b22512d581a296de90539c0ca16be2099a4",
+    "user/lib/syscall_v5.S": "9644d8bd6ba37c07de98e4f5ba7195c3f47d8f5253c4b52d7ec0e18c9cc1ab38",
+    "user/rixie/main.rs": "24d050c21de01e6e4aef8d72edb88676f3fd203a5467a6b3dada006100d0111a",
+    "user/rust/gui.rs": "9af9d25a7fdbd85fb1e0b20f3a94e91d40080c9048201266b98f5629c43e4fa1",
+    "user/user.mk": "f4d7d68cdab46e1b9b6022407c2ef905453fbd94ae29417ab43fd07d9d09890e",
+    "user/vsh/main.rs": "ba248268ae8d5dfc4745435a6e282832db9265bf174f9d1d5feb49705998c03b"
+  },
+  "original_defect_negative_control": {
+    "passed": true,
+    "expected_returncode": 1,
+    "diagnostic": "bootstrap FAIL line 53: worker==0 && starts==i+1 && stops==i+1 && begins==0\n"
+  },
+  "host": "bootstrap host PASS 523 assertions; 64 actual ELF rejections, 64 process-admission failures, failed service start; modeled service cleanup\n",
+  "build": {
+    "compile": [
+      "gcc",
+      "-std=gnu11",
+      "-ffreestanding",
+      "-fno-pic",
+      "-fno-pie",
+      "-fno-stack-protector",
+      "-fno-builtin",
+      "-fno-asynchronous-unwind-tables",
+      "-mno-sse",
+      "-mno-mmx",
+      "-O2",
+      "-Wall",
+      "-Wextra",
+      "-g",
+      "-m64",
+      "-mcmodel=kernel",
+      "-mno-red-zone",
+      "-mgeneral-regs-only",
+      "-fcf-protection=none",
+      "-fno-stack-clash-protection",
+      "-DVOS_GUI_VERIFY",
+      "-MMD",
+      "-MP",
+      "-c",
+      "arch/x86_64/gui_verify.c",
+      "-o",
+      "/home/veasnawt/src/myos/build/n6-gui-20261025T083036Z/bootstrap-hardening-1/image/kernel/gui_verify.o"
+    ],
+    "link": [
+      "ld",
+      "-m",
+      "elf_x86_64",
+      "-z",
+      "max-page-size=0x1000",
+      "-nostdlib",
+      "-T",
+      "arch/x86_64/linker.ld",
+      "-o",
+      "/home/veasnawt/src/myos/build/n6-gui-20261025T083036Z/bootstrap-hardening-1/image/kernel/vos.bin",
+      "/home/veasnawt/src/myos/build/n6-gui-20261025T083036Z/image-recipe-recovery-1/image/kernel/boot.o",
+      "/home/veasnawt/src/myos/build/n6-gui-20261025T083036Z/image-recipe-recovery-1/image/kernel/entry.o",
+      "/home/veasnawt/src/myos/build/n6-gui-20261025T083036Z/image-recipe-recovery-1/image/kernel/usermode.o",
+      "/home/veasnawt/src/myos/build/n6-gui-20261025T083036Z/image-recipe-recovery-1/image/kernel/kernel.o",
+      "/home/veasnawt/src/myos/build/n6-gui-20261025T083036Z/image-recipe-recovery-1/image/kernel/bootinfo.o",
+      "/home/veasnawt/src/myos/build/n6-gui-20261025T083036Z/image-recipe-recovery-1/image/kernel/console.o",
+      "/home/veasnawt/src/myos/build/n6-gui-20261025T083036Z/image-recipe-recovery-1/image/kernel/cpu.o",
+      "/home/veasnawt/src/myos/build/n6-gui-20261025T083036Z/image-recipe-recovery-1/image/kernel/exception.o",
+      "/home/veasnawt/src/myos/build/n6-gui-20261025T083036Z/image-recipe-recovery-1/image/kernel/gdt.o",
+      "/home/veasnawt/src/myos/build/n6-gui-20261025T083036Z/image-recipe-recovery-1/image/kernel/idt.o",
+      "/home/veasnawt/src/myos/build/n6-gui-20261025T083036Z/image-recipe-recovery-1/image/kernel/lib.o",
+      "/home/veasnawt/src/myos/build/n6-gui-20261025T083036Z/image-recipe-recovery-1/image/kernel/loader.o",
+      "/home/veasnawt/src/myos/build/n6-gui-20261025T083036Z/image-recipe-recovery-1/image/kernel/panic.o",
+      "/home/veasnawt/src/myos/build/n6-gui-20261025T083036Z/image-recipe-recovery-1/image/kernel/pmm.o",
+      "/home/veasnawt/src/myos/build/n6-gui-20261025T083036Z/image-recipe-recovery-1/image/kernel/process.o",
+      "/home/veasnawt/src/myos/build/n6-gui-20261025T083036Z/image-recipe-recovery-1/image/kernel/resv.o",
+      "/home/veasnawt/src/myos/build/n6-gui-20261025T083036Z/image-recipe-recovery-1/image/kernel/syscall.o",
+      "/home/veasnawt/src/myos/build/n6-gui-20261025T083036Z/image-recipe-recovery-1/image/kernel/usercopy.o",
+      "/home/veasnawt/src/myos/build/n6-gui-20261025T083036Z/image-recipe-recovery-1/image/kernel/vmm.o",
+      "/home/veasnawt/src/myos/build/n6-gui-20261025T083036Z/image-recipe-recovery-1/image/kernel/kmap.o",
+      "/home/veasnawt/src/myos/build/n6-gui-20261025T083036Z/image-recipe-recovery-1/image/kernel/irq.o",
+      "/home/veasnawt/src/myos/build/n6-gui-20261025T083036Z/image-recipe-recovery-1/image/kernel/pic.o",
+      "/home/veasnawt/src/myos/build/n6-gui-20261025T083036Z/image-recipe-recovery-1/image/kernel/pit.o",
+      "/home/veasnawt/src/myos/build/n6-gui-20261025T083036Z/image-recipe-recovery-1/image/kernel/thread.o",
+      "/home/veasnawt/src/myos/build/n6-gui-20261025T083036Z/image-recipe-recovery-1/image/kernel/thread_switch.o",
+      "/home/veasnawt/src/myos/build/n6-gui-20261025T083036Z/image-recipe-recovery-1/image/kernel/channel.o",
+      "/home/veasnawt/src/myos/build/n6-gui-20261025T083036Z/image-recipe-recovery-1/image/kernel/elf.o",
+      "/home/veasnawt/src/myos/build/n6-gui-20261025T083036Z/image-recipe-recovery-1/image/kernel/app.o",
+      "/home/veasnawt/src/myos/build/n6-gui-20261025T083036Z/image-recipe-recovery-1/image/kernel/app_catalog.o",
+      "/home/veasnawt/src/myos/build/n6-gui-20261025T083036Z/catalog-recovery-1/image/kernel/app_payload.o",
+      "/home/veasnawt/src/myos/build/n6-gui-20261025T083036Z/image-recipe-recovery-1/image/kernel/exec.o",
+      "/home/veasnawt/src/myos/build/n6-gui-20261025T083036Z/image-recipe-recovery-1/image/kernel/pci.o",
+      "/home/veasnawt/src/myos/build/n6-gui-20261025T083036Z/image-recipe-recovery-1/image/kernel/blockdev.o",
+      "/home/veasnawt/src/myos/build/n6-gui-20261025T083036Z/image-recipe-recovery-1/image/kernel/virtio_blk.o",
+      "/home/veasnawt/src/myos/build/n6-gui-20261025T083036Z/image-recipe-recovery-1/image/kernel/ext2.o",
+      "/home/veasnawt/src/myos/build/n6-gui-20261025T083036Z/image-recipe-recovery-1/image/kernel/io_scope.o",
+      "/home/veasnawt/src/myos/build/n6-gui-20261025T083036Z/image-recipe-recovery-1/image/kernel/file.o",
+      "/home/veasnawt/src/myos/build/n6-gui-20261025T083036Z/image-recipe-recovery-1/image/kernel/devmap.o",
+      "/home/veasnawt/src/myos/build/n6-gui-20261025T083036Z/image-recipe-recovery-1/image/kernel/screen.o",
+      "/home/veasnawt/src/myos/build/n6-gui-20261025T083036Z/image-recipe-recovery-1/image/kernel/desktop.o",
+      "/home/veasnawt/src/myos/build/n6-gui-20261025T083036Z/image-recipe-recovery-1/image/kernel/gui.o",
+      "/home/veasnawt/src/myos/build/n6-gui-20261025T083036Z/bootstrap-hardening-1/image/kernel/gui_verify.o",
+      "/home/veasnawt/src/myos/build/n6-gui-20261025T083036Z/image-recipe-recovery-1/image/kernel/font8x16.o",
+      "/home/veasnawt/src/myos/build/n6-gui-20261025T083036Z/image-recipe-recovery-1/image/kernel/keyboard.o",
+      "/home/veasnawt/src/myos/build/n6-gui-20261025T083036Z/image-recipe-recovery-1/image/kernel/input_console.o",
+      "/home/veasnawt/src/myos/build/n6-gui-20261025T083036Z/image-recipe-recovery-1/image/kernel/user_console.o",
+      "/home/veasnawt/src/myos/build/n6-gui-20261025T083036Z/image-recipe-recovery-1/image/kernel/vsh_boot.o",
+      "/home/veasnawt/src/myos/build/n6-gui-20261025T083036Z/image-recipe-recovery-1/image/kernel/virtio_net.o",
+      "/home/veasnawt/src/myos/build/n6-gui-20261025T083036Z/image-recipe-recovery-1/image/kernel/net_boot.o",
+      "/home/veasnawt/src/myos/build/n6-gui-20261025T083036Z/image-recipe-recovery-1/image/kernel/net_arp.o",
+      "/home/veasnawt/src/myos/build/n6-gui-20261025T083036Z/image-recipe-recovery-1/image/kernel/net_arp_boot.o",
+      "/home/veasnawt/src/myos/build/n6-gui-20261025T083036Z/image-recipe-recovery-1/image/kernel/net_ipv4.o",
+      "/home/veasnawt/src/myos/build/n6-gui-20261025T083036Z/image-recipe-recovery-1/image/kernel/net_ipv4_boot.o",
+      "/home/veasnawt/src/myos/build/n6-gui-20261025T083036Z/image-recipe-recovery-1/image/kernel/net_udp.o",
+      "/home/veasnawt/src/myos/build/n6-gui-20261025T083036Z/image-recipe-recovery-1/image/kernel/net_udp_boot.o",
+      "/home/veasnawt/src/myos/build/n6-gui-20261025T083036Z/image-recipe-recovery-1/image/kernel/net_tcp.o",
+      "/home/veasnawt/src/myos/build/n6-gui-20261025T083036Z/image-recipe-recovery-1/image/kernel/net_tcp_boot.o",
+      "/home/veasnawt/src/myos/build/n6-gui-20261025T083036Z/image-recipe-recovery-1/image/kernel/net_tcp_data_boot.o",
+      "/home/veasnawt/src/myos/build/n6-gui-20261025T083036Z/image-recipe-recovery-1/image/kernel/net_tcp_retry_boot.o",
+      "/home/veasnawt/src/myos/build/n6-gui-20261025T083036Z/image-recipe-recovery-1/image/kernel/net_tcp_close_boot.o"
+    ],
+    "reused_objects": [
+      {
+        "path": "/home/veasnawt/src/myos/build/n6-gui-20261025T083036Z/image-recipe-recovery-1/image/kernel/boot.o",
+        "sha256": "c54c594612ac52cc0607d74933b3466fa4268bc6abfbdefb0700d65944914e42"
+      },
+      {
+        "path": "/home/veasnawt/src/myos/build/n6-gui-20261025T083036Z/image-recipe-recovery-1/image/kernel/entry.o",
+        "sha256": "e2ccccf37965c11e072e11a7d20cb9a2f65dcf7dbd21a28f89a7baea258a316a"
+      },
+      {
+        "path": "/home/veasnawt/src/myos/build/n6-gui-20261025T083036Z/image-recipe-recovery-1/image/kernel/usermode.o",
+        "sha256": "fea6dcc6ca2ee85f283bbc2cf8f880044716c86020f089b43c192355e6d59cd2"
+      },
+      {
+        "path": "/home/veasnawt/src/myos/build/n6-gui-20261025T083036Z/image-recipe-recovery-1/image/kernel/kernel.o",
+        "sha256": "9ae15afbc80c297d7039e7cc6486ea6f9b85aab1d7955e10ad442c5d3daf9b14"
+      },
+      {
+        "path": "/home/veasnawt/src/myos/build/n6-gui-20261025T083036Z/image-recipe-recovery-1/image/kernel/bootinfo.o",
+        "sha256": "4e84f4bb75d914ab1d6e335fd5fd38fffacbc04273686d8b23b5b87f8f79b750"
+      },
+      {
+        "path": "/home/veasnawt/src/myos/build/n6-gui-20261025T083036Z/image-recipe-recovery-1/image/kernel/console.o",
+        "sha256": "e939e01057514f6e6dea08a236d6d862301789345b4d057be72e7664bc625a9d"
+      },
+      {
+        "path": "/home/veasnawt/src/myos/build/n6-gui-20261025T083036Z/image-recipe-recovery-1/image/kernel/cpu.o",
+        "sha256": "c19b435dc0b9b5a77556f038ad8c17a81995bf540f409fe1d53ccf9fb2b2d1a6"
+      },
+      {
+        "path": "/home/veasnawt/src/myos/build/n6-gui-20261025T083036Z/image-recipe-recovery-1/image/kernel/exception.o",
+        "sha256": "8839c5c18413d829d1a162191587b4a46fa5fc86a67d0dc8bbc4a27dcefff59b"
+      },
+      {
+        "path": "/home/veasnawt/src/myos/build/n6-gui-20261025T083036Z/image-recipe-recovery-1/image/kernel/gdt.o",
+        "sha256": "d0391a88a71872f4e36ca71d419937c49e45496a48fed1eab16eb6ff7056586b"
+      },
+      {
+        "path": "/home/veasnawt/src/myos/build/n6-gui-20261025T083036Z/image-recipe-recovery-1/image/kernel/idt.o",
+        "sha256": "a3cc45c4e7e734bb7175387d40f7f79911e9d800e9bd0c178826c2cfaa0f9957"
+      },
+      {
+        "path": "/home/veasnawt/src/myos/build/n6-gui-20261025T083036Z/image-recipe-recovery-1/image/kernel/lib.o",
+        "sha256": "d6c7f5f144c11d5dfdbc80fac516b7f842a88cb0ca90acadbde2e1f4f18e1f11"
+      },
+      {
+        "path": "/home/veasnawt/src/myos/build/n6-gui-20261025T083036Z/image-recipe-recovery-1/image/kernel/loader.o",
+        "sha256": "2e77696caf644261a2f424e295434db2ca2591aa83417083195aba28d989f7b4"
+      },
+      {
+        "path": "/home/veasnawt/src/myos/build/n6-gui-20261025T083036Z/image-recipe-recovery-1/image/kernel/panic.o",
+        "sha256": "be642e1d02510b536c8f9bb1fdab77c72a7322925f31444a0d2848c911a0cb61"
+      },
+      {
+        "path": "/home/veasnawt/src/myos/build/n6-gui-20261025T083036Z/image-recipe-recovery-1/image/kernel/pmm.o",
+        "sha256": "4c9a473c6c2a14982cbc2055a2465bb6e0bd19386907454c5855ee43d2e4540e"
+      },
+      {
+        "path": "/home/veasnawt/src/myos/build/n6-gui-20261025T083036Z/image-recipe-recovery-1/image/kernel/process.o",
+        "sha256": "1d96176158263d7c03372a520274c67175cd102cd08c60153435a3b0a170d5fc"
+      },
+      {
+        "path": "/home/veasnawt/src/myos/build/n6-gui-20261025T083036Z/image-recipe-recovery-1/image/kernel/resv.o",
+        "sha256": "2089a513c76c4ae3fa72bd2e20ce8e939384ddd406a5009aa6c08502d3d295f5"
+      },
+      {
+        "path": "/home/veasnawt/src/myos/build/n6-gui-20261025T083036Z/image-recipe-recovery-1/image/kernel/syscall.o",
+        "sha256": "15e01f38dfec3a4ac746b580dcd2f0808f1a22b0e6e45b200cf3b29000131888"
+      },
+      {
+        "path": "/home/veasnawt/src/myos/build/n6-gui-20261025T083036Z/image-recipe-recovery-1/image/kernel/usercopy.o",
+        "sha256": "e28406ae1fcf9663241945f17de7f79e727038bdd7f05968d5e657cd91d9d2f9"
+      },
+      {
+        "path": "/home/veasnawt/src/myos/build/n6-gui-20261025T083036Z/image-recipe-recovery-1/image/kernel/vmm.o",
+        "sha256": "bef3498353665562c5c6d7f01ca7f4dda4d4691750e70ab233af17be47729179"
+      },
+      {
+        "path": "/home/veasnawt/src/myos/build/n6-gui-20261025T083036Z/image-recipe-recovery-1/image/kernel/kmap.o",
+        "sha256": "a7b1848a81c983d6017235b564a5203ca53bea733b4d127690510f475c3ff036"
+      },
+      {
+        "path": "/home/veasnawt/src/myos/build/n6-gui-20261025T083036Z/image-recipe-recovery-1/image/kernel/irq.o",
+        "sha256": "8cde10936ae26872cd4b5ed0d6ef177b6c104aab5edbaa822e565bd44d012e95"
+      },
+      {
+        "path": "/home/veasnawt/src/myos/build/n6-gui-20261025T083036Z/image-recipe-recovery-1/image/kernel/pic.o",
+        "sha256": "020d094cf434a2121d4af780f9cf85d048a36b20e599db3827b75e8195c13a7a"
+      },
+      {
+        "path": "/home/veasnawt/src/myos/build/n6-gui-20261025T083036Z/image-recipe-recovery-1/image/kernel/pit.o",
+        "sha256": "6f0ba39ac1afe7ea9b02a63b3945c36401df10774bca869545d50a145c2a32d8"
+      },
+      {
+        "path": "/home/veasnawt/src/myos/build/n6-gui-20261025T083036Z/image-recipe-recovery-1/image/kernel/thread.o",
+        "sha256": "5a526056e71a13943ce1d109dd9f4b524ff1989f51c1b6b6ee19bbe138ae5911"
+      },
+      {
+        "path": "/home/veasnawt/src/myos/build/n6-gui-20261025T083036Z/image-recipe-recovery-1/image/kernel/thread_switch.o",
+        "sha256": "5fddf7aa731a6a2eefb1b05ddb10b4cfe87e932fac3732360d55398595c03e11"
+      },
+      {
+        "path": "/home/veasnawt/src/myos/build/n6-gui-20261025T083036Z/image-recipe-recovery-1/image/kernel/channel.o",
+        "sha256": "b7e46f116da69e8b245e39aeb6d291a8739c0312ffa97288deec67b714443301"
+      },
+      {
+        "path": "/home/veasnawt/src/myos/build/n6-gui-20261025T083036Z/image-recipe-recovery-1/image/kernel/elf.o",
+        "sha256": "81edc93a044fe10d5d9a41fd13cbbb77bcba74dfa35087d5de0ce785a2080724"
+      },
+      {
+        "path": "/home/veasnawt/src/myos/build/n6-gui-20261025T083036Z/image-recipe-recovery-1/image/kernel/app.o",
+        "sha256": "9f2118089a9ead8619092540580e8286b2875c9e8ade8d6d4dbf2d6ca15c86bb"
+      },
+      {
+        "path": "/home/veasnawt/src/myos/build/n6-gui-20261025T083036Z/image-recipe-recovery-1/image/kernel/app_catalog.o",
+        "sha256": "d51f2e37b2789b7821cdd674121e80c8c23824cd0220428b3dbc94990c7bae5f"
+      },
+      {
+        "path": "/home/veasnawt/src/myos/build/n6-gui-20261025T083036Z/catalog-recovery-1/image/kernel/app_payload.o",
+        "sha256": "7cde383c493b544b255e0154c9b56d5bf5411afe609a79710791e7944628b847"
+      },
+      {
+        "path": "/home/veasnawt/src/myos/build/n6-gui-20261025T083036Z/image-recipe-recovery-1/image/kernel/exec.o",
+        "sha256": "16be7be170f8a4f03c0972e30d44598974932618c42d464159fa1c02bea966a5"
+      },
+      {
+        "path": "/home/veasnawt/src/myos/build/n6-gui-20261025T083036Z/image-recipe-recovery-1/image/kernel/pci.o",
+        "sha256": "40c287a429e476ab6a372ab3ae25903d91846bc9e6de6a83c92162262508c82a"
+      },
+      {
+        "path": "/home/veasnawt/src/myos/build/n6-gui-20261025T083036Z/image-recipe-recovery-1/image/kernel/blockdev.o",
+        "sha256": "ae7e6fc4ecdd0f905198921a5f89715cb2c46284ddac7952de29b03299dd43ae"
+      },
+      {
+        "path": "/home/veasnawt/src/myos/build/n6-gui-20261025T083036Z/image-recipe-recovery-1/image/kernel/virtio_blk.o",
+        "sha256": "f38cd875c16725ec67298d3d14404a19568275775e1291956be8a2d1b20582d7"
+      },
+      {
+        "path": "/home/veasnawt/src/myos/build/n6-gui-20261025T083036Z/image-recipe-recovery-1/image/kernel/ext2.o",
+        "sha256": "00d6fe28abad022c2c0558d16f50bf00e9aadc1077453bc4c83e3bbe3cef75bb"
+      },
+      {
+        "path": "/home/veasnawt/src/myos/build/n6-gui-20261025T083036Z/image-recipe-recovery-1/image/kernel/io_scope.o",
+        "sha256": "f00d7dc4aa2a06becd6a027e16d8ee25bc0a85c2770ffd6b9100a808df262a58"
+      },
+      {
+        "path": "/home/veasnawt/src/myos/build/n6-gui-20261025T083036Z/image-recipe-recovery-1/image/kernel/file.o",
+        "sha256": "8ea020b9abe2d4c3d9ef82b2c9e10b17bd471ec12374c7a08e126b70badeba22"
+      },
+      {
+        "path": "/home/veasnawt/src/myos/build/n6-gui-20261025T083036Z/image-recipe-recovery-1/image/kernel/devmap.o",
+        "sha256": "eef2abac1e8c647e48bd7e0e324fbb1a0d101bc7e02e3d4181b4feb0721179a7"
+      },
+      {
+        "path": "/home/veasnawt/src/myos/build/n6-gui-20261025T083036Z/image-recipe-recovery-1/image/kernel/screen.o",
+        "sha256": "ba8584f336f3337b4ac22824bc09c5edb81c89f89d218fdfa37aaf6d65aadbfd"
+      },
+      {
+        "path": "/home/veasnawt/src/myos/build/n6-gui-20261025T083036Z/image-recipe-recovery-1/image/kernel/desktop.o",
+        "sha256": "2b62c6726dc8af4ebb77130e263f982f1f71a892f05d4a864fc517b30ff11641"
+      },
+      {
+        "path": "/home/veasnawt/src/myos/build/n6-gui-20261025T083036Z/image-recipe-recovery-1/image/kernel/gui.o",
+        "sha256": "61f195d6872660b14355790567e8c7765c41e9900975d9d0f0ee679ea463968b"
+      },
+      {
+        "path": "/home/veasnawt/src/myos/build/n6-gui-20261025T083036Z/image-recipe-recovery-1/image/kernel/font8x16.o",
+        "sha256": "9abbfe1e20ba586f6c11559b06fbc406c654cff94c861c8e3be9b13870ccbe95"
+      },
+      {
+        "path": "/home/veasnawt/src/myos/build/n6-gui-20261025T083036Z/image-recipe-recovery-1/image/kernel/keyboard.o",
+        "sha256": "c30db15602d51723e622015f93d7ca9bfe1655b6f58017a68fe3bfb2813306b4"
+      },
+      {
+        "path": "/home/veasnawt/src/myos/build/n6-gui-20261025T083036Z/image-recipe-recovery-1/image/kernel/input_console.o",
+        "sha256": "0e9b467185bd10397f446d14746167e129b88250d2e425bf95339da618545471"
+      },
+      {
+        "path": "/home/veasnawt/src/myos/build/n6-gui-20261025T083036Z/image-recipe-recovery-1/image/kernel/user_console.o",
+        "sha256": "e4297befd6216180779d42f0ba7bd75aca17b92d87980ecd6a3c94dcbf01cc55"
+      },
+      {
+        "path": "/home/veasnawt/src/myos/build/n6-gui-20261025T083036Z/image-recipe-recovery-1/image/kernel/vsh_boot.o",
+        "sha256": "45f44cbf957cad73edc455ee6e21b10e89338f35ef2eacedad48f64849e9da62"
+      },
+      {
+        "path": "/home/veasnawt/src/myos/build/n6-gui-20261025T083036Z/image-recipe-recovery-1/image/kernel/virtio_net.o",
+        "sha256": "60318bb899752f22912ff8601bc35a22ace30751180ec3c21403af97ccc2edc6"
+      },
+      {
+        "path": "/home/veasnawt/src/myos/build/n6-gui-20261025T083036Z/image-recipe-recovery-1/image/kernel/net_boot.o",
+        "sha256": "cce04d0fab285d6b3fb56471a3a58897c21a7ddc38e7990e9840acc98882cd7d"
+      },
+      {
+        "path": "/home/veasnawt/src/myos/build/n6-gui-20261025T083036Z/image-recipe-recovery-1/image/kernel/net_arp.o",
+        "sha256": "90a2c29ec9296a9737318214849a2c8566395142bbef2aac30c04d250764d43b"
+      },
+      {
+        "path": "/home/veasnawt/src/myos/build/n6-gui-20261025T083036Z/image-recipe-recovery-1/image/kernel/net_arp_boot.o",
+        "sha256": "c84bc92f77fd207b419f27186fc347a6b878b931e22ba97ccf9a41e494f8507f"
+      },
+      {
+        "path": "/home/veasnawt/src/myos/build/n6-gui-20261025T083036Z/image-recipe-recovery-1/image/kernel/net_ipv4.o",
+        "sha256": "9e2d8969e6060c325e5f066cdb9f5998acfae878a95585a81197e282438854eb"
+      },
+      {
+        "path": "/home/veasnawt/src/myos/build/n6-gui-20261025T083036Z/image-recipe-recovery-1/image/kernel/net_ipv4_boot.o",
+        "sha256": "52f1366678a2edff78d7ff648a59544816b2bcb5ee4acdaa67a800351c776c88"
+      },
+      {
+        "path": "/home/veasnawt/src/myos/build/n6-gui-20261025T083036Z/image-recipe-recovery-1/image/kernel/net_udp.o",
+        "sha256": "b389c9c80854245751d806fb5640fe31fe962148280c987666d431eee626a0c0"
+      },
+      {
+        "path": "/home/veasnawt/src/myos/build/n6-gui-20261025T083036Z/image-recipe-recovery-1/image/kernel/net_udp_boot.o",
+        "sha256": "97d0d15be414334422735ceefaee1a48ff69e392b65ab09d5b49542dd53b7482"
+      },
+      {
+        "path": "/home/veasnawt/src/myos/build/n6-gui-20261025T083036Z/image-recipe-recovery-1/image/kernel/net_tcp.o",
+        "sha256": "8366a47469ed4ff242a1c7ed02f5d2d551e314500bf565d5e11bde2e501025f6"
+      },
+      {
+        "path": "/home/veasnawt/src/myos/build/n6-gui-20261025T083036Z/image-recipe-recovery-1/image/kernel/net_tcp_boot.o",
+        "sha256": "922c4131a32fa822a69944c2a8ef6a74ce92e9c86dbc4d8af2f5d0fddbc1c49c"
+      },
+      {
+        "path": "/home/veasnawt/src/myos/build/n6-gui-20261025T083036Z/image-recipe-recovery-1/image/kernel/net_tcp_data_boot.o",
+        "sha256": "55a9eb734a15bb90937748172fa7496b3e62aee73df6904befadc91066b0cd44"
+      },
+      {
+        "path": "/home/veasnawt/src/myos/build/n6-gui-20261025T083036Z/image-recipe-recovery-1/image/kernel/net_tcp_retry_boot.o",
+        "sha256": "c23c150ce85881fe2e2794154fa5aff3f31235d080bc2382b935fa53bc826fb8"
+      },
+      {
+        "path": "/home/veasnawt/src/myos/build/n6-gui-20261025T083036Z/image-recipe-recovery-1/image/kernel/net_tcp_close_boot.o",
+        "sha256": "bc48b8b318bf7777b68e36bfb87cc40e864f55ce954587b0f5073e6396bfa2b5"
+      }
+    ],
+    "BIOS": [
+      "xorriso",
+      "-indev",
+      "/home/veasnawt/src/myos/build/n6-gui-20261025T083036Z/catalog-recovery-1/image/kernel/vos.iso",
+      "-outdev",
+      "/home/veasnawt/src/myos/build/n6-gui-20261025T083036Z/bootstrap-hardening-1/image/kernel/vos.iso",
+      "-boot_image",
+      "any",
+      "replay",
+      "-map",
+      "/home/veasnawt/src/myos/build/n6-gui-20261025T083036Z/bootstrap-hardening-1/image/kernel/vos.bin",
+      "/boot/vos.bin",
+      "-commit",
+      "-end"
+    ],
+    "UEFI": [
+      "grub-mkrescue",
+      "-d",
+      "/home/veasnawt/vos-evidence/n36-stage3-gatea-cont-20261021T220119Z/efi-tools/usr/lib/grub/x86_64-efi",
+      "-o",
+      "/home/veasnawt/src/myos/build/n6-gui-20261025T083036Z/bootstrap-hardening-1/image/kernel/vos-uefi.iso",
+      "/home/veasnawt/src/myos/build/n6-gui-20261025T083036Z/bootstrap-hardening-1/image/kernel/isodir-uefi"
+    ],
+    "application_sha256": {
+      "vsh": "e7af3ee56164f587f7ca1338f7ddfcb202b6f4310f10b4dcba6a2576743cb181",
+      "hello": "c6c6416195a0f18d680d7f8f19be52ce02ff02912ef3bac45324fbe88006cd06",
+      "rixie": "77104da3b33caf809daf5e6674ac4e2fa9edf6a9e2e5dd59828514df76490d32",
+      "gui-demo": "f114dbe666ff479229ce851658847a4b11b5f0e5b61f45b73d8a0ee39fc57faa",
+      "gui-probe": "2b976cffcc32802f7c4a9a95cb9d0966db4a4c5c5b0c3aaf91ab240065cbfe2b"
+    },
+    "no_Rust_or_ELF_rebuild": true
+  },
+  "images": {
+    "bios": {
+      "passed": true,
+      "platform": "BIOS",
+      "files": {
+        "/boot/vos.bin": "5cfa5f3134100870bf822bf0810f1928080115d20ea17cd7a2bc2c5a45a18989",
+        "/boot/grub/grub.cfg": "4d4f1151e220f07f3bd89903a9b285425ad598d87c906b9b51d475092ed162ea",
+        "/boot/vsh.elf": "e7af3ee56164f587f7ca1338f7ddfcb202b6f4310f10b4dcba6a2576743cb181",
+        "/boot/hello.elf": "c6c6416195a0f18d680d7f8f19be52ce02ff02912ef3bac45324fbe88006cd06",
+        "/boot/rixie.elf": "77104da3b33caf809daf5e6674ac4e2fa9edf6a9e2e5dd59828514df76490d32",
+        "/boot/gui-demo.elf": "f114dbe666ff479229ce851658847a4b11b5f0e5b61f45b73d8a0ee39fc57faa",
+        "/boot/gui-probe.elf": "2b976cffcc32802f7c4a9a95cb9d0966db4a4c5c5b0c3aaf91ab240065cbfe2b"
+      },
+      "ISO_sha256": "9f72bb33115ba5341767b49d7966fb71ea85398d1c9ec6b6d30f9ea813ddb671"
+    },
+    "uefi": {
+      "passed": true,
+      "platform": "UEFI",
+      "files": {
+        "/boot/vos.bin": "5cfa5f3134100870bf822bf0810f1928080115d20ea17cd7a2bc2c5a45a18989",
+        "/boot/grub/grub.cfg": "0475804a8d08476dcdd3bbf3f5c81cfed04c69b1b0d0b5f876ae1f482a72f536",
+        "/boot/vsh.elf": "e7af3ee56164f587f7ca1338f7ddfcb202b6f4310f10b4dcba6a2576743cb181",
+        "/boot/hello.elf": "c6c6416195a0f18d680d7f8f19be52ce02ff02912ef3bac45324fbe88006cd06",
+        "/boot/rixie.elf": "77104da3b33caf809daf5e6674ac4e2fa9edf6a9e2e5dd59828514df76490d32",
+        "/boot/gui-demo.elf": "f114dbe666ff479229ce851658847a4b11b5f0e5b61f45b73d8a0ee39fc57faa",
+        "/boot/gui-probe.elf": "2b976cffcc32802f7c4a9a95cb9d0966db4a4c5c5b0c3aaf91ab240065cbfe2b"
+      },
+      "ISO_sha256": "be4390165631dd840abec90b0b8bc17b7dd214b809f403f746a523afe92268e2",
+      "partitions": [
+        {
+          "index": 1,
+          "start": 64,
+          "end": 215,
+          "type": "ebd0a0a2-b9e5-4433-87c0-68b6b72699c7",
+          "name": "Gap0"
+        },
+        {
+          "index": 2,
+          "start": 216,
+          "end": 5975,
+          "type": "c12a7328-f81f-11d2-ba4b-00a0c93ec93b",
+          "name": "EFI boot partition"
+        },
+        {
+          "index": 3,
+          "start": 5976,
+          "end": 23679,
+          "type": "48465300-0000-11aa-aa11-00306543ecac",
+          "name": "HFSPLUS"
+        },
+        {
+          "index": 4,
+          "start": 23680,
+          "end": 24279,
+          "type": "ebd0a0a2-b9e5-4433-87c0-68b6b72699c7",
+          "name": "Gap1"
+        }
+      ],
+      "GPT_primary_backup_CRC": true,
+      "nonoverlapping_GPT": true,
+      "EFI_PE32_valid": true,
+      "ESP_file_sha256": "ea0d674c0ee55498e0de0f48dc6ef9461b9d1e9ae1242acdb55948079d2de6a2"
+    }
+  },
+  "firmware": {
+    "bios": {
+      "passed": true,
+      "firmware": "bios",
+      "cases": [
+        {
+          "command": "apps",
+          "expected": "hello",
+          "prompt": "VOS> ",
+          "passed": true
+        },
+        {
+          "command": "hello",
+          "expected": "Hello from VOS!",
+          "prompt": "VOS> ",
+          "passed": true
+        },
+        {
+          "command": "clear",
+          "expected": "",
+          "prompt": "VOS> ",
+          "passed": true
+        },
+        {
+          "command": "echo graphical console",
+          "expected": "graphical console",
+          "prompt": "VOS> ",
+          "passed": true
+        },
+        {
+          "command": "cd docs",
+          "expected": "",
+          "prompt": "VOS>docs> ",
+          "passed": true
+        },
+        {
+          "command": "pwd",
+          "expected": "/docs",
+          "prompt": "VOS>docs> ",
+          "passed": true
+        },
+        {
+          "rixie_command": "hello",
+          "passed": true
+        },
+        {
+          "rixie_command": "about",
+          "passed": true
+        },
+        {
+          "rixie_command": "help",
+          "passed": true
+        },
+        {
+          "command": "pwd",
+          "expected": "/docs",
+          "prompt": "VOS>docs> ",
+          "passed": true
+        },
+        {
+          "command": "hello",
+          "expected": "Hello from VOS!",
+          "prompt": "VOS>docs> ",
+          "passed": true
+        },
+        {
+          "command": "cat welcome.txt",
+          "expected": "Unified apps: real read-only filesystem.",
+          "prompt": "VOS>docs> ",
+          "passed": true
+        },
+        {
+          "command": "cd missing",
+          "expected": "operation failed",
+          "prompt": "VOS>docs> ",
+          "passed": true
+        }
+      ],
+      "actual_vsh": true,
+      "actual_rixie": true,
+      "desktop": true,
+      "cwd_restored": true,
+      "child_reclaimed": true,
+      "parent_reclaimed": true,
+      "halted": true,
+      "screenshot": {
+        "path": "/home/veasnawt/src/myos/build/n6-gui-20261025T083036Z/bootstrap-hardening-1/bios/gui.png",
+        "width": 1024,
+        "height": 768,
+        "sha256": "065a17cd4cffce4485d7cffaa3e9dd6fb1e9eaded659e57ddfdd278003f30e94",
+        "direct_QMP_PNG": true
+      },
+      "shell_screenshot": {
+        "path": "/home/veasnawt/src/myos/build/n6-gui-20261025T083036Z/bootstrap-hardening-1/bios/desktop.png",
+        "width": 1024,
+        "height": 768,
+        "sha256": "9097caa5c637d17a5673e0cb221d564d61191721a1fae8f5e19be2e4ae2ad1db",
+        "direct_QMP_PNG": true
+      },
+      "native_GUI_cases": 10,
+      "native_process_exhaustion": true,
+      "GUI_event_isolation": true,
+      "pixel_oracle": true,
+      "elapsed_seconds": 11.403849613999967,
+      "initial_load_failures": 18,
+      "actual_worker_block_wake_reap": true
+    },
+    "uefi": {
+      "passed": true,
+      "firmware": "uefi",
+      "cases": [
+        {
+          "command": "apps",
+          "expected": "hello",
+          "prompt": "VOS> ",
+          "passed": true
+        },
+        {
+          "command": "hello",
+          "expected": "Hello from VOS!",
+          "prompt": "VOS> ",
+          "passed": true
+        },
+        {
+          "command": "clear",
+          "expected": "",
+          "prompt": "VOS> ",
+          "passed": true
+        },
+        {
+          "command": "echo graphical console",
+          "expected": "graphical console",
+          "prompt": "VOS> ",
+          "passed": true
+        },
+        {
+          "command": "cd docs",
+          "expected": "",
+          "prompt": "VOS>docs> ",
+          "passed": true
+        },
+        {
+          "command": "pwd",
+          "expected": "/docs",
+          "prompt": "VOS>docs> ",
+          "passed": true
+        },
+        {
+          "rixie_command": "hello",
+          "passed": true
+        },
+        {
+          "rixie_command": "about",
+          "passed": true
+        },
+        {
+          "rixie_command": "help",
+          "passed": true
+        },
+        {
+          "command": "pwd",
+          "expected": "/docs",
+          "prompt": "VOS>docs> ",
+          "passed": true
+        },
+        {
+          "command": "hello",
+          "expected": "Hello from VOS!",
+          "prompt": "VOS>docs> ",
+          "passed": true
+        },
+        {
+          "command": "cat welcome.txt",
+          "expected": "Unified apps: real read-only filesystem.",
+          "prompt": "VOS>docs> ",
+          "passed": true
+        },
+        {
+          "command": "cd missing",
+          "expected": "operation failed",
+          "prompt": "VOS>docs> ",
+          "passed": true
+        }
+      ],
+      "actual_vsh": true,
+      "actual_rixie": true,
+      "desktop": true,
+      "cwd_restored": true,
+      "child_reclaimed": true,
+      "parent_reclaimed": true,
+      "halted": true,
+      "screenshot": {
+        "path": "/home/veasnawt/src/myos/build/n6-gui-20261025T083036Z/bootstrap-hardening-1/uefi/gui.png",
+        "width": 1024,
+        "height": 768,
+        "sha256": "065a17cd4cffce4485d7cffaa3e9dd6fb1e9eaded659e57ddfdd278003f30e94",
+        "direct_QMP_PNG": true
+      },
+      "shell_screenshot": {
+        "path": "/home/veasnawt/src/myos/build/n6-gui-20261025T083036Z/bootstrap-hardening-1/uefi/desktop.png",
+        "width": 1024,
+        "height": 768,
+        "sha256": "9097caa5c637d17a5673e0cb221d564d61191721a1fae8f5e19be2e4ae2ad1db",
+        "direct_QMP_PNG": true
+      },
+      "native_GUI_cases": 10,
+      "native_process_exhaustion": true,
+      "GUI_event_isolation": true,
+      "pixel_oracle": true,
+      "elapsed_seconds": 13.944486471000005,
+      "initial_load_failures": 18,
+      "actual_worker_block_wake_reap": true
+    }
+  },
+  "prior_runtime_manifest_sha256": "f0ebd048e9b416b000db4bb318f6d011f3ea6c268fd7f348f074d5ff48f6bd4a",
+  "unaffected_sanitizer_Rust_ELF_evidence_reused": true,
+  "old_monitoring_gap_preserved": true,
+  "no_physical_hardware_claim": true
+}
