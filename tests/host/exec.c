@@ -11,6 +11,11 @@
 #include "syscall.h"
 #include "loader.h"
 #include "panic.h"
+#include "user_console.h"
+int user_console_owned(const struct process *p){(void)p;return 0;}
+int user_console_begin_exec(struct process *p,struct process *c){(void)p;(void)c;return -VOS_EACCES;}
+int user_console_finish_exec(struct process *p,struct process *c,int r){(void)p;(void)c;(void)r;return 0;}
+int user_console_exec_active(const struct process *p,const struct process *c){(void)p;(void)c;return 0;}
 static unsigned assertions,loads,destroys,starts,kills;
 static int benchmark;
 #define CHECK(x) do {assertions++;if(!(x)){fprintf(stderr,"FAIL line %d: %s\n",__LINE__,#x);exit(1);}}while(0)

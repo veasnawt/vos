@@ -8,7 +8,7 @@ struct exc_frame;
 enum exec_event {
  EXEC_EV_QUEUED=1, EXEC_EV_BEFORE_LOAD, EXEC_EV_AFTER_LOAD, EXEC_EV_BEFORE_START,
  EXEC_EV_AFTER_START, EXEC_EV_REAP, EXEC_EV_BEFORE_PUBLISH, EXEC_EV_AFTER_PUBLISH,
- EXEC_EV_CLEANUP
+ EXEC_EV_CLEANUP, EXEC_EV_AFTER_HANDOFF
 };
 #if defined(VOS_EXEC_VERIFY) || defined(VOS_EXEC_HOST)
 void exec_verify_event(enum exec_event, struct process *, struct process *);

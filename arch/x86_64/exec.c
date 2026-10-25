@@ -10,6 +10,7 @@
 #include "cpu.h"
 #include "vmm.h"
 #include "usercopy.h"
+#include "user_console.h"
 
 enum job_state { JOB_FREE, JOB_QUEUED, JOB_LOADING, JOB_RUNNING, JOB_REAPING, JOB_DONE };
 struct authority {
@@ -29,7 +30,7 @@ static struct {
     enum job_state state;
     struct process *parent;
     uint64_t pid, tid, generation, app_id;
-    int cancel, loaded, started;
+    int cancel, loaded, started, foreground, leased;
     int64_t result;
     struct wait_queue completion;
     struct process child;
@@ -115,8 +116,9 @@ static int install(struct process *p,uint32_t rights,const uint64_t *ids,unsigne
     (void)verification_refresh;
 #endif
     if (!setup || p->abi!=4 ||
-        p->kill_reason || !rights || (rights & ~EXEC_RIGHTS) ||
-        count>APP_CATALOG_MAX || (count && !ids))
+        p->kill_reason || !rights || (rights & ~EXEC_ALL) ||
+        count>APP_CATALOG_MAX || (count && !ids) ||
+        ((rights&EXEC_FOREGROUND) && !(rights&EXEC_RUN)))
         return -VOS_EINVAL;
     if (parent_matches(p)) return -VOS_EAGAIN;
     unsigned slot=PROC_TABLE;
@@ -132,7 +134,8 @@ static int install(struct process *p,uint32_t rights,const uint64_t *ids,unsigne
     for (unsigned i=0;i<count;i++) {
         const struct app_catalog_entry *e=app_catalog_find(catalog,ids[i]);
         if (!e) return -VOS_EINVAL;
-        if ((rights & EXEC_RUN) && e->policy!=APP_POLICY_DIAGNOSTIC) return -VOS_EUNSUPP;
+        if ((rights & EXEC_RUN) && e->policy!=APP_POLICY_DIAGNOSTIC &&
+            !(e->policy==APP_POLICY_CONSOLE && (rights&EXEC_FOREGROUND)))return -VOS_EUNSUPP;
         for (unsigned j=0;j<i;j++) if (ids[j]==ids[i]) return -VOS_EINVAL;
     }
     struct authority a={.owner=p,.pid=p->pid,.generation=next_generation++,
@@ -192,8 +195,15 @@ static void process_one(void)
             if (!job.cancel && valid_parent()) {
                 /* Fresh proc_begin installs no channel, file, console,
                  * network or execution grants. There is no inheritance. */
-                r=proc_start(&job.child);
-                if (r!=PROC_OK) result=load_error(r);
+                r=0;
+                if(job.foreground) {
+                    r=user_console_begin_exec(job.parent,&job.child);
+                    job.leased=user_console_exec_active(job.parent,&job.child);
+                    if(!r)event(EXEC_EV_AFTER_HANDOFF);
+                    if(!r && (job.cancel || !valid_parent()))r=-VOS_EINTR;
+                }
+                if(!r)r=proc_start(&job.child);
+                if (r!=PROC_OK) result=r== -VOS_EUNAVAIL || r== -VOS_EACCES || r== -VOS_EINTR ? r:load_error(r);
                 else {
                     job.started=1;job.state=JOB_RUNNING;statistics.started++;
                     event(EXEC_EV_AFTER_START);
@@ -216,6 +226,11 @@ static void process_one(void)
     }
     event(EXEC_EV_CLEANUP);
     event(EXEC_EV_BEFORE_PUBLISH);
+    if(job.leased) {
+        int r=user_console_finish_exec(job.parent,&job.child,valid_parent());
+        job.leased=0;
+        if(r<0 && valid_parent())proc_kill(job.parent,"foreground console restoration failed");
+    }
     if (job.started) {
         if (job.cancel) {kind=VOS_APP_CANCELLED;status=VOS_APP_CANCEL_KERNEL;statistics.cancelled++;}
         result=(int64_t)(((uint64_t)(unsigned)kind<<32)|status);
@@ -303,11 +318,13 @@ int64_t exec_syscall(struct process *p,const struct exc_frame *f)
     if (!f->rdi || f->rsi) return -VOS_EINVAL;
     if (!listed(a,f->rdi)) return -VOS_EACCES;
     const struct app_catalog_entry *e=app_catalog_find(catalog,f->rdi);
-    if (!e || e->policy!=APP_POLICY_DIAGNOSTIC) return -VOS_EUNSUPP;
+    if (!e || (e->policy!=APP_POLICY_DIAGNOSTIC &&
+        !(e->policy==APP_POLICY_CONSOLE && (a->rights&EXEC_FOREGROUND))))return -VOS_EUNSUPP;
+    if ((a->rights&EXEC_FOREGROUND) && !user_console_owned(p))return -VOS_EACCES;
     if (job.state!=JOB_FREE) return -VOS_EAGAIN;
     memset(&job,0,sizeof(job));
     job.parent=p;job.pid=p->pid;job.tid=p->tid;
-    job.generation=a->generation;job.app_id=f->rdi;job.state=JOB_QUEUED;
+    job.generation=a->generation;job.app_id=f->rdi;job.foreground=!!(a->rights&EXEC_FOREGROUND);job.state=JOB_QUEUED;
     statistics.submitted++;
     event(EXEC_EV_QUEUED);
     thread_wake_all(&requests);

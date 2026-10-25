@@ -1,0 +1,268 @@
+{
+  "schema": 1,
+  "increment": 3,
+  "accepted_main": "3ad4dd1acb45b65852769ab52f8eba9941e6361d",
+  "branch": "feat/app-console-handoff",
+  "phase_root": "/home/veasnawt/src/myos/build/app-console-20261025T051241Z",
+  "recovery_control": "/home/veasnawt/src/myos/build/app-console-20261025T051241Z/controls/attempt-2-recovery-20261025T055853Z",
+  "phase_ceiling_bytes": 268435456,
+  "individual_attempt_ceiling_bytes": 117440512,
+  "aggregate_ceiling_bytes": 3523215360,
+  "attempt1": {
+    "state": "FAILED_STORAGE",
+    "charge_bytes": 126603264,
+    "overage_bytes": 9162752,
+    "original_controller_stop_sha256": "6fc3641ed12a5017ebd1ef04078a3705f83e6d9d2c15ade3a6614287af8b7fe3",
+    "original_violation_sha256": "407b9063d32ac421929c9f82c1bea8168174f240012ddcaedbe2e0f43bbf36dd",
+    "original_result_json_absent": true,
+    "original_manifest_json_absent": true,
+    "additive_forensic_manifest_sha256": "17f121a9095754f2075d767665734ef15073d4151ff6655534bcf5b3d58d69c3",
+    "raw_directory": "attempt-1",
+    "must_remain_immutable": true
+  },
+  "owner_recovery": {
+    "accepted_main": "3ad4dd1acb45b65852769ab52f8eba9941e6361d",
+    "aggregate_limit_bytes": 3523215360,
+    "attempt": 2,
+    "attempt_limit_bytes": 117440512,
+    "authorization": "Owner attachment 01341c43-4714-441a-9d0c-0d06bc80b936; exactly attempt 2, preserve failed attempt 1 fully charged and immutable; no future automatic exceptions",
+    "created_utc": 1792907934.4103453,
+    "expires_utc": 1792908773.7824948,
+    "failed_attempt": 1,
+    "failed_attempt_charged_bytes": 126603264,
+    "failed_manifest_sha256": "17f121a9095754f2075d767665734ef15073d4151ff6655534bcf5b3d58d69c3",
+    "historical_attempt_state": "FAILED_STORAGE",
+    "overage_bytes": 9162752,
+    "owner_authorization_sha256": "0e83b439e3e7894912956d79c77e2cad8e59ccd2eb2f84263be25d8e0b275cb9",
+    "phase": "/home/veasnawt/src/myos/build/app-console-20261025T051241Z",
+    "phase_limit_bytes": 268435456,
+    "schema": 1
+  },
+  "recovery_rejection_tests": {
+    "passed": true,
+    "negative_checks": [
+      {
+        "name": "missing receipt",
+        "passed": true
+      },
+      {
+        "name": "forged receipt",
+        "passed": true
+      },
+      {
+        "name": "changed receipt",
+        "passed": true
+      },
+      {
+        "name": "missing manifest",
+        "passed": true
+      },
+      {
+        "name": "forged manifest",
+        "passed": true
+      },
+      {
+        "name": "changed failed manifest",
+        "passed": true
+      },
+      {
+        "name": "missing stop",
+        "passed": true
+      },
+      {
+        "name": "changed stop",
+        "passed": true
+      },
+      {
+        "name": "missing owner authorization",
+        "passed": true
+      },
+      {
+        "name": "changed owner authorization",
+        "passed": true
+      },
+      {
+        "name": "stale authorization",
+        "passed": true
+      },
+      {
+        "name": "wrong phase",
+        "passed": true
+      },
+      {
+        "name": "wrong baseline",
+        "passed": true
+      },
+      {
+        "name": "uncharged attempt 1",
+        "passed": true
+      },
+      {
+        "name": "growing failed attempt",
+        "passed": true
+      },
+      {
+        "name": "attempt 2 over limit",
+        "passed": true
+      },
+      {
+        "name": "unexpected attempt 3",
+        "passed": true
+      }
+    ],
+    "valid_receipt": true,
+    "exact_attempt2_boundary": true,
+    "default_no_exception_rejects_overage": true
+  },
+  "recovery_scripts_sha256": {
+    "reuse-native.py": "257a339398e694db106638b6ab2be1a4eeb9a2ff1cf9722ed6b67e88d83da06e",
+    "owner-recovery-receipt.json": "ca01a695b128871979c63287cd0ca03cad3b216f85abc2ac11ae7b48d21788e6",
+    "recovery_policy.py": "f25c8a8f264c1d894b12abac7c1e65dc71344cbf7617fbc9a38662d74bce683c",
+    "failed-attempt-1-manifest.json": "17f121a9095754f2075d767665734ef15073d4151ff6655534bcf5b3d58d69c3",
+    "controller.py": "6ced5ae662abd03896c036d17bbdbcc22b7946dd76f6001256ed60a26b0aea95",
+    "admission-regression.json": "ee2e9d0f319ab4f44daaf88206cd9ed207f65e49c067bbeb5974408d697e839f",
+    "service.py": "8c061866cc225d80dc7c1a433f83908ff0f0557c23b935ce695af200fa78300a"
+  },
+  "attempt2": {
+    "state": "PASS",
+    "raw_directory": "attempt-2",
+    "result_sha256": "a6959a7a030709349d781675bc4af7c6786e29e9f36bc7d41cd3499fe48d4124",
+    "manifest_sha256": "ab734b5b1398a573cf91d63c00272767e515c200666fcee1c7095350251eede5",
+    "host_evidence_read_only_reuse": true,
+    "build_artifacts_read_only_reuse": true
+  },
+  "earlier_failure": {
+    "root": "controls/recovery-20261025T053517Z",
+    "error": "STOP individual attempt limit",
+    "original_syntax_stop_preserved": true,
+    "all_prior_records_preserved": true
+  },
+  "preservation": {
+    "verified_at_fresh_admission": true,
+    "protected_records": 49,
+    "protected_binaries": 7,
+    "historical_archives": 22,
+    "worktrees": 13,
+    "stashes": 2,
+    "historical_phase_files_verified": true,
+    "index_refs_unchanged_before_local_commit": true,
+    "final_reverification_required_by_commit_gate": true
+  },
+  "runtime": {
+    "profiles": [
+      "instrumented-bios",
+      "production-bios",
+      "instrumented-uefi",
+      "production-uefi"
+    ],
+    "cases_per_instrumented_firmware": 21,
+    "requests": 20,
+    "loaded": 16,
+    "started": 14,
+    "reclaimed": 16,
+    "cancelled": 6,
+    "failed": 6,
+    "console_transfers": 16,
+    "console_restorations": 11,
+    "console_abandoned": 5,
+    "resource_baselines_restored": true,
+    "legacy_broker_marker": "legacy=4 controls=33 submitted=23 started=15 reclaimed=18 cancelled=6 failed=8"
+  },
+  "screenshots": {
+    "bios-rixie": {
+      "path": "/home/veasnawt/src/myos/build/app-console-20261025T051241Z/attempt-2/production-bios/rixie.png",
+      "width": 1024,
+      "height": 768,
+      "sha256": "1e54fb13337f6bc700729b8a0e6ac25de6d75fcfb9b08a88be7c02b2e3c0ffda",
+      "direct_QMP_PNG": true
+    },
+    "bios-restored_shell": {
+      "path": "/home/veasnawt/src/myos/build/app-console-20261025T051241Z/attempt-2/production-bios/restored-shell.png",
+      "width": 1024,
+      "height": 768,
+      "sha256": "70ba7b029e3123b2eb7199bfe1a00c8d9f0b44e8fc3a57e2a72d6624d606b6b6",
+      "direct_QMP_PNG": true
+    },
+    "uefi-rixie": {
+      "path": "/home/veasnawt/src/myos/build/app-console-20261025T051241Z/attempt-2/production-uefi/rixie.png",
+      "width": 1024,
+      "height": 768,
+      "sha256": "1e54fb13337f6bc700729b8a0e6ac25de6d75fcfb9b08a88be7c02b2e3c0ffda",
+      "direct_QMP_PNG": true
+    },
+    "uefi-restored_shell": {
+      "path": "/home/veasnawt/src/myos/build/app-console-20261025T051241Z/attempt-2/production-uefi/restored-shell.png",
+      "width": 1024,
+      "height": 768,
+      "sha256": "70ba7b029e3123b2eb7199bfe1a00c8d9f0b44e8fc3a57e2a72d6624d606b6b6",
+      "direct_QMP_PNG": true
+    }
+  },
+  "accounting_checkpoint": {
+    "phase_charged_bytes": 133382144,
+    "attempt_charged_bytes": {
+      "1": 126603264,
+      "2": 1437696
+    },
+    "finalization_bytes": 4096,
+    "metadata_source_Git_bytes": 5337088,
+    "aggregate_conservative_charged_bytes": 2831769600,
+    "phase_remaining_bytes": 135053312,
+    "aggregate_remaining_bytes": 691445760,
+    "capacity": {
+      "charged": 2497441792,
+      "remaining": 1025773568,
+      "C": 17533911040,
+      "E": 245742219264,
+      "linux": 1009749610496,
+      "admitted_extra": 637534208
+    }
+  },
+  "accounting_note": "Final controller receipt/accounting supersedes this pre-documentation checkpoint; all writes and failed consumption remain charged.",
+  "evidence_note": "Serial text files concatenate the unedited instrumented and production streams with explicit profile headers. Raw per-profile serial/command/registers files remain in attempt-2; no extra archive or expensive campaign was created.",
+  "changed_files": [
+    "Makefile",
+    "arch/x86_64/app_catalog.c",
+    "arch/x86_64/arch.mk",
+    "arch/x86_64/exec.c",
+    "arch/x86_64/exec.h",
+    "arch/x86_64/exec_verify.c",
+    "arch/x86_64/exec_verify.h",
+    "arch/x86_64/grub-handoff.cfg",
+    "arch/x86_64/handoff_verify.c",
+    "arch/x86_64/handoff_verify.h",
+    "arch/x86_64/kernel.c",
+    "arch/x86_64/keyboard.c",
+    "arch/x86_64/keyboard.h",
+    "arch/x86_64/syscall.c",
+    "arch/x86_64/user_console.c",
+    "arch/x86_64/user_console.h",
+    "arch/x86_64/vsh_boot.c",
+    "docs/abi/syscall-v4.md",
+    "docs/images/apps/vos-handoff-bios.png",
+    "docs/images/apps/vos-handoff-uefi.png",
+    "docs/images/apps/vos-rixie-return-bios.png",
+    "docs/images/apps/vos-rixie-return-uefi.png",
+    "docs/results/app-handoff.md",
+    "docs/results/app-handoff/bios.serial.txt",
+    "docs/results/app-handoff/changed-files.txt",
+    "docs/results/app-handoff/evidence.json",
+    "docs/results/app-handoff/host-test.txt",
+    "docs/results/app-handoff/performance.json",
+    "docs/results/app-handoff/result.json",
+    "docs/results/app-handoff/uefi.serial.txt",
+    "scripts/test-app-handoff.py",
+    "tests/host/app-catalog.c",
+    "tests/host/exec.c",
+    "tests/host/user-console-handoff.c",
+    "user/exec-probe/child.c",
+    "user/handoff-probe/control.S",
+    "user/handoff-probe/main.rs",
+    "user/user.mk",
+    "user/vsh/main.rs"
+  ],
+  "physical_hardware_verified": false,
+  "no_push": true,
+  "no_merge": true,
+  "no_N6": true
+}

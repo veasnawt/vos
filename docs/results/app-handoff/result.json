@@ -1,0 +1,1321 @@
+{
+  "passed": true,
+  "attempt": 2,
+  "reused_attempt": 1,
+  "failed_attempt_remains_failed": true,
+  "recovery_receipt_sha256": "ca01a695b128871979c63287cd0ca03cad3b216f85abc2ac11ae7b48d21788e6",
+  "source_sha256": {
+    "Makefile": "178b4a88209fe1056f137afdd28e282581e57a310ef8d127ed2c588ac27e8c10",
+    "arch/x86_64/app_catalog.c": "128addfd1b2d2183a8b8482555e6579c1c01de091543887ba9198bcd6150fb96",
+    "arch/x86_64/app_payload.c": "97c96d78c4df8cacf6e98192fea1a2e614cc6f54b1b084b02bc62737c465e20c",
+    "arch/x86_64/arch.mk": "8fc58627970570d46f365dbf6ba514fb584656aced762fd3f1499ed2daf30db9",
+    "arch/x86_64/elf.c": "c01cd9b6d606528077819ffa256daf3158056ca9fe89f70c549a32bd26315b3f",
+    "arch/x86_64/exec.c": "0d9664e60bd784e3e114eb0cfac9163f6fadb38f3feac8ca63f8738737f08918",
+    "arch/x86_64/exec.h": "2cea67a74278f0c87075a54b3c6ee36e4de67bb4d42d5bf9ed1e16e6b3e5e1fa",
+    "arch/x86_64/exec_verify.c": "ab064929ed86a8bb9bfa6e09e08f6a48c9e9c259d02ede53797c4151c5d2863c",
+    "arch/x86_64/exec_verify.h": "20958c6af1cf92530184983e9d4c1e0d1fe941ef1997f9ca389740921c2fc1cf",
+    "arch/x86_64/grub-handoff.cfg": "6eb00683d0edb432a7b7569340db9eac777cc41d46204f8480c1d7403eb10ba0",
+    "arch/x86_64/handoff_verify.c": "c51eff89e2d08fbfa9fd50d530e32cbf757bb25b7f27dbb483f8a8395928faa3",
+    "arch/x86_64/handoff_verify.h": "496711fde4ac654860a78c1f583a1dafc44eedbc38d1cd0d3c70f0514b58f0af",
+    "arch/x86_64/input_console.c": "0297f0c2a2a053a9af9e5d33ac57e3ebd94b8353a8a5be366024a0c6eb194551",
+    "arch/x86_64/kernel.c": "58cfc475cf51a65bd767cfa21d1f7f5c1d6a660342075618443d13e5dd14e5cd",
+    "arch/x86_64/keyboard.c": "f1d0b4e47f6d2ba591ed97ac7b42c7df27e9e069be46ae4c2198e12d08e3380f",
+    "arch/x86_64/keyboard.h": "183d149a97375a3439f8145b5254e45302f00c5b2aed4fa13f53a1bffdf3295e",
+    "arch/x86_64/loader.c": "6b7d86325c00e88d0a612477ad63a6de07e2acca569efb8fdd95bd0bf44b2220",
+    "arch/x86_64/process.c": "2c086e6aca98a7bcadcfa2d2c0ff69511d51f422d1d26f19e84a504762559a7f",
+    "arch/x86_64/process.h": "04ad253a4ad6830a89ad9a549a12f80bf313228feeed3b5689f385dfe8e72a81",
+    "arch/x86_64/syscall.c": "41065d4b2333cafee7f62da0e43991156953abc274870f091db49b7b37f2078b",
+    "arch/x86_64/thread.c": "8f8685d5878e49338c60977f1acda8a500a7897a0a8f04fafe2f0c8e0c1a35b0",
+    "arch/x86_64/user_console.c": "517ca37d5d2e01fb275c985937f3be3343a089f0e3d8f450b0161f13c394657d",
+    "arch/x86_64/user_console.h": "904982c5bf73b3fb9715601722c711cc6568d59b060c38ba57870c7bb245f1f6",
+    "arch/x86_64/vsh_boot.c": "eb7361d3d18e7302016732b6c010f0a2b32e6b4aaa26e26b4a843051adfc8a0f",
+    "scripts/test-app-handoff.py": "4f5b8e4b9e44375b133688a5d9bf50e2c3c9ed459a6483eead00d85bb04c01bd",
+    "tests/host/app-catalog.c": "a0f7b2ddbf95761250e4ab4c9096898e76cc50e0a71ad7f20c887110da9591e2",
+    "tests/host/exec.c": "87498c3d26d604ea24316638a25522d9ce4fdb22a57f09e6ff95b5643cae3b5b",
+    "tests/host/user-console-handoff.c": "a73661c7b3b88aee4136ef296da4df3caed13b30cf7039124725b336838a02f4",
+    "tests/rust/apps.rs": "c660e997d4b7ec0be84f20be6fca168b01040a45ae6dee06d299a0b1bdbde77b",
+    "user/exec-probe/child.c": "a50a5af99a259e4e4b2d89a9e698479a0dc0021ff984dc37c5ebde0141511a6c",
+    "user/handoff-probe/control.S": "37abdbf8f4a69dd5d78595691aa0bc1e38e5e3f95396bf75ce47126a731b0fbf",
+    "user/handoff-probe/main.rs": "4702a160be2b23384324e19df21df06069499a7ff12497898a14e1395d75ec89",
+    "user/rixie/dialog.rs": "9472a6176d43ff46ea4b5bf0fb7e0d49251459f10d590c15bda10d7f4461fe99",
+    "user/rixie/main.rs": "24d050c21de01e6e4aef8d72edb88676f3fd203a5467a6b3dada006100d0111a",
+    "user/rust/apps.rs": "24e8ca84185ba79a665b7354337cfe1a41c9537ac08f31b57ed53c963e57e3de",
+    "user/rust/vos.rs": "4434372465239c24a806a33debc2f9a74e815bc5afade0ed5b2f2cf72ff8f8c5",
+    "user/user.mk": "a2aa0255e9cb79ab6210ed4e33637846c0e634334708a15b2a1e23b424a4e64a",
+    "user/vsh/main.rs": "ba248268ae8d5dfc4745435a6e282832db9265bf174f9d1d5feb49705998c03b"
+  },
+  "host_results": {
+    "broker-host": "PASS assertions=11232 jobs=1018 loaded=1013 started=1010 reclaimed=1013; actual exec.c, modeled scheduler/loader\n",
+    "console-host": "console-handoff: 49499 assertions PASS; actual console+keyboard+editor; bounded modeled hardware/scheduler; transfers=1007 restored=1003\n",
+    "rust-host": "\nrunning 4 tests\ntest completion ... ok\ntest layout ... ok\ntest wrappers ... ok\ntest zero_and_invalid_records ... ok\n\ntest result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n",
+    "catalog": "app-catalog: 97339 checks PASS; catalog=392 bytes; max=8; no execution or grants\n",
+    "catalog-legacy": "app-catalog: 97339 checks PASS; catalog=392 bytes; max=8; no execution or grants\n"
+  },
+  "host_reused_without_rerun": true,
+  "optimized_host_baseline": {
+    "record": "attempt-1/console-release-{0..6}.log",
+    "timings_recoverable": false,
+    "reason": "Storage stop interrupted in-memory result before persistence; no unsupported timing claim"
+  },
+  "application_sha256": {
+    "vsh": "e7af3ee56164f587f7ca1338f7ddfcb202b6f4310f10b4dcba6a2576743cb181",
+    "hello": "c6c6416195a0f18d680d7f8f19be52ce02ff02912ef3bac45324fbe88006cd06",
+    "rixie": "77104da3b33caf809daf5e6674ac4e2fa9edf6a9e2e5dd59828514df76490d32",
+    "exec-probe": "3c280347339ef108e1b46264a4ec77d1a356c927a6be0edee7d9132a68d8827a",
+    "handoff-probe": "42c660f9d17794d986f0567074b9f81d5d7b64f1d71aa9c35d7e6d03bbd6ad1c",
+    "exec-negative": "4a48375fca14188ba8b04d01d3b9da438400bac5ed37cf778795636715a27fe9",
+    "exec-fault": "14087dc477fcaeaff906617325cbee3fb894d3fbdff33f191119306ce16b0051",
+    "exec-spin": "e31013dad387de9d145f73f371c0f9e957577b8b588a3487160c3a2f03f09309",
+    "exec-recursive": "c445989a87e6ad52a2d38b72d75bac839b340b1a7483033673481e534adef59a",
+    "exec-contender": "1edbc65d0972e0c585e5d740e20256a9458f8fd23263080b1e16a768e0829800",
+    "exec-legacy0": "70cecc269e5a5e06364ee6fd1d7efff84fcd87c3bab8f90b580991730f98c850",
+    "exec-legacy1": "5e38d7d41ee8c563e49d7e3a2af73796a7ad3956c88b5de61a74fb65dc0e313a",
+    "exec-legacy2": "af021e9a4d1d3cab032976e97311961c556bfb0489916067dc710a887af5a34e",
+    "exec-legacy3": "5bc6b5862454e950a970fba3d1494fe70df262130149fa511f8a62c79280c3d3"
+  },
+  "images": {
+    "production": {
+      "bios": {
+        "ISO_sha256": "d4da3bd83ee9c325be2fdf9b9134a20ba365ea0e4903e1be15ec8e87330fb6a6",
+        "payload_sha256": {
+          "vos.bin": "97645121e2df4a74877f8bbecc9ddfb77c754240bd5e60f6336ed96e522f547e",
+          "vsh.elf": "e7af3ee56164f587f7ca1338f7ddfcb202b6f4310f10b4dcba6a2576743cb181",
+          "hello.elf": "c6c6416195a0f18d680d7f8f19be52ce02ff02912ef3bac45324fbe88006cd06",
+          "rixie.elf": "77104da3b33caf809daf5e6674ac4e2fa9edf6a9e2e5dd59828514df76490d32"
+        },
+        "read_only_reuse": true
+      },
+      "uefi": {
+        "ISO_sha256": "ad07eaa418b0976c8dd91b242286189db85d81dfc5a9afbf88ba79ef4971c959",
+        "payload_sha256": {
+          "vos.bin": "97645121e2df4a74877f8bbecc9ddfb77c754240bd5e60f6336ed96e522f547e",
+          "vsh.elf": "e7af3ee56164f587f7ca1338f7ddfcb202b6f4310f10b4dcba6a2576743cb181",
+          "hello.elf": "c6c6416195a0f18d680d7f8f19be52ce02ff02912ef3bac45324fbe88006cd06",
+          "rixie.elf": "77104da3b33caf809daf5e6674ac4e2fa9edf6a9e2e5dd59828514df76490d32"
+        },
+        "read_only_reuse": true
+      }
+    },
+    "instrumented": {
+      "bios": {
+        "ISO_sha256": "05e73bbedad4428bbf13a800d726a1f8a9ba719d30f2aa26921017c9bc76ddcb",
+        "payload_sha256": {
+          "vos.bin": "88d36e85e3ef568e6a28150da7d33f45ebbdb0b29fd15d61dc9e1c585915a641",
+          "vsh.elf": "e7af3ee56164f587f7ca1338f7ddfcb202b6f4310f10b4dcba6a2576743cb181",
+          "hello.elf": "c6c6416195a0f18d680d7f8f19be52ce02ff02912ef3bac45324fbe88006cd06",
+          "rixie.elf": "77104da3b33caf809daf5e6674ac4e2fa9edf6a9e2e5dd59828514df76490d32",
+          "exec-probe.elf": "3c280347339ef108e1b46264a4ec77d1a356c927a6be0edee7d9132a68d8827a",
+          "handoff-probe.elf": "42c660f9d17794d986f0567074b9f81d5d7b64f1d71aa9c35d7e6d03bbd6ad1c",
+          "exec-negative.elf": "4a48375fca14188ba8b04d01d3b9da438400bac5ed37cf778795636715a27fe9",
+          "exec-fault.elf": "14087dc477fcaeaff906617325cbee3fb894d3fbdff33f191119306ce16b0051",
+          "exec-spin.elf": "e31013dad387de9d145f73f371c0f9e957577b8b588a3487160c3a2f03f09309",
+          "exec-recursive.elf": "c445989a87e6ad52a2d38b72d75bac839b340b1a7483033673481e534adef59a",
+          "exec-contender.elf": "1edbc65d0972e0c585e5d740e20256a9458f8fd23263080b1e16a768e0829800",
+          "exec-legacy0.elf": "70cecc269e5a5e06364ee6fd1d7efff84fcd87c3bab8f90b580991730f98c850",
+          "exec-legacy1.elf": "5e38d7d41ee8c563e49d7e3a2af73796a7ad3956c88b5de61a74fb65dc0e313a",
+          "exec-legacy2.elf": "af021e9a4d1d3cab032976e97311961c556bfb0489916067dc710a887af5a34e",
+          "exec-legacy3.elf": "5bc6b5862454e950a970fba3d1494fe70df262130149fa511f8a62c79280c3d3"
+        },
+        "read_only_reuse": true
+      },
+      "uefi": {
+        "ISO_sha256": "96854a012cb1ed9aa852d8871f95d8502dee05491a43dca1a1bb85b7c6327a3b",
+        "payload_sha256": {
+          "vos.bin": "88d36e85e3ef568e6a28150da7d33f45ebbdb0b29fd15d61dc9e1c585915a641",
+          "vsh.elf": "e7af3ee56164f587f7ca1338f7ddfcb202b6f4310f10b4dcba6a2576743cb181",
+          "hello.elf": "c6c6416195a0f18d680d7f8f19be52ce02ff02912ef3bac45324fbe88006cd06",
+          "rixie.elf": "77104da3b33caf809daf5e6674ac4e2fa9edf6a9e2e5dd59828514df76490d32",
+          "exec-probe.elf": "3c280347339ef108e1b46264a4ec77d1a356c927a6be0edee7d9132a68d8827a",
+          "handoff-probe.elf": "42c660f9d17794d986f0567074b9f81d5d7b64f1d71aa9c35d7e6d03bbd6ad1c",
+          "exec-negative.elf": "4a48375fca14188ba8b04d01d3b9da438400bac5ed37cf778795636715a27fe9",
+          "exec-fault.elf": "14087dc477fcaeaff906617325cbee3fb894d3fbdff33f191119306ce16b0051",
+          "exec-spin.elf": "e31013dad387de9d145f73f371c0f9e957577b8b588a3487160c3a2f03f09309",
+          "exec-recursive.elf": "c445989a87e6ad52a2d38b72d75bac839b340b1a7483033673481e534adef59a",
+          "exec-contender.elf": "1edbc65d0972e0c585e5d740e20256a9458f8fd23263080b1e16a768e0829800",
+          "exec-legacy0.elf": "70cecc269e5a5e06364ee6fd1d7efff84fcd87c3bab8f90b580991730f98c850",
+          "exec-legacy1.elf": "5e38d7d41ee8c563e49d7e3a2af73796a7ad3956c88b5de61a74fb65dc0e313a",
+          "exec-legacy2.elf": "af021e9a4d1d3cab032976e97311961c556bfb0489916067dc710a887af5a34e",
+          "exec-legacy3.elf": "5bc6b5862454e950a970fba3d1494fe70df262130149fa511f8a62c79280c3d3"
+        },
+        "read_only_reuse": true
+      }
+    }
+  },
+  "firmware": {
+    "bios": {
+      "instrumented": {
+        "passed": true,
+        "firmware": "bios",
+        "profile": "instrumented",
+        "cases": [
+          {
+            "application": "rixie",
+            "command": "help",
+            "expected": "Topics: hello, help, about, questions",
+            "passed": true
+          },
+          {
+            "application": "rixie",
+            "command": "about",
+            "expected": "independent Rust ring-3 application",
+            "passed": true
+          },
+          {
+            "application": "vsh",
+            "command": "help",
+            "expected": "Available commands: help, clear, echo, pwd, ls, cd, cat, apps, hello, rixie",
+            "prompt": "VOS> ",
+            "passed": true
+          },
+          {
+            "application": "vsh",
+            "command": "apps",
+            "expected": "hello",
+            "prompt": "VOS> ",
+            "passed": true
+          },
+          {
+            "application": "vsh",
+            "command": "echo hello world",
+            "expected": "hello world",
+            "prompt": "VOS> ",
+            "passed": true
+          },
+          {
+            "application": "vsh",
+            "command": "ls",
+            "expected": "docs",
+            "prompt": "VOS> ",
+            "passed": true
+          },
+          {
+            "application": "vsh",
+            "command": "cd docs",
+            "expected": "",
+            "prompt": "VOS>docs> ",
+            "passed": true
+          },
+          {
+            "application": "vsh",
+            "command": "pwd",
+            "expected": "/docs",
+            "prompt": "VOS>docs> ",
+            "passed": true
+          },
+          {
+            "application": "vsh",
+            "command": "hello",
+            "expected": "Hello from VOS!",
+            "prompt": "VOS>docs> ",
+            "passed": true
+          },
+          {
+            "application": "rixie",
+            "command": "hello",
+            "expected": "Hello! I'm Rixie, at home in VOS.",
+            "passed": true
+          },
+          {
+            "application": "rixie",
+            "command": "help",
+            "expected": "Topics: hello, help, about, questions",
+            "passed": true
+          },
+          {
+            "application": "rixie",
+            "command": "about",
+            "expected": "deterministic prototype with no conversational AI model or network",
+            "passed": true
+          },
+          {
+            "application": "rixie",
+            "command": "explain cd",
+            "expected": "invalid paths leave it unchanged",
+            "passed": true
+          },
+          {
+            "application": "rixie",
+            "command": "are you online",
+            "expected": "entirely offline",
+            "passed": true
+          },
+          {
+            "application": "vsh",
+            "command": "pwd",
+            "expected": "/docs",
+            "prompt": "VOS>docs> ",
+            "passed": true
+          },
+          {
+            "application": "vsh",
+            "command": "cat welcome.txt",
+            "expected": "Unified apps: real read-only filesystem.",
+            "prompt": "VOS>docs> ",
+            "passed": true
+          },
+          {
+            "application": "vsh",
+            "command": "hello",
+            "expected": "Hello from VOS!",
+            "prompt": "VOS>docs> ",
+            "passed": true
+          },
+          {
+            "application": "vsh",
+            "command": "hello",
+            "expected": "Hello from VOS!",
+            "prompt": "VOS>docs> ",
+            "passed": true
+          },
+          {
+            "application": "rixie",
+            "command": "hello",
+            "expected": "Hello! I'm Rixie",
+            "passed": true
+          },
+          {
+            "application": "vsh",
+            "command": "pwd",
+            "expected": "/docs",
+            "prompt": "VOS>docs> ",
+            "passed": true
+          },
+          {
+            "application": "vsh",
+            "command": "hello extra",
+            "expected": "application arguments are not supported",
+            "prompt": "VOS>docs> ",
+            "passed": true
+          },
+          {
+            "application": "vsh",
+            "command": "apps extra",
+            "expected": "operation failed",
+            "prompt": "VOS>docs> ",
+            "passed": true
+          },
+          {
+            "application": "vsh",
+            "command": "missing-app",
+            "expected": "unknown command",
+            "prompt": "VOS>docs> ",
+            "passed": true
+          },
+          {
+            "application": "vsh",
+            "command": "/hello",
+            "expected": "unknown command",
+            "prompt": "VOS>docs> ",
+            "passed": true
+          },
+          {
+            "application": "vsh",
+            "command": "cd missing",
+            "expected": "operation failed",
+            "prompt": "VOS>docs> ",
+            "passed": true
+          },
+          {
+            "application": "vsh",
+            "command": "cd /",
+            "expected": "",
+            "prompt": "VOS> ",
+            "passed": true
+          },
+          {
+            "application": "vsh",
+            "command": "clear",
+            "expected": "",
+            "prompt": "VOS> ",
+            "passed": true
+          },
+          {
+            "application": "vsh",
+            "command": "echo shell restored",
+            "expected": "shell restored",
+            "prompt": "VOS> ",
+            "passed": true
+          }
+        ],
+        "screenshots": {},
+        "native_fault_injection": true,
+        "native_cases": 21,
+        "historical_broker_native_cases": 23,
+        "ABI4_vsh": true,
+        "ABI3_rixie": true,
+        "ABI0_hello": true,
+        "explicit_console_restoration": true,
+        "input_boundary_test": true,
+        "process_reclaimed": true,
+        "halted": true,
+        "startup_to_prompt_seconds": 6.721562847000314,
+        "elapsed_seconds": 13.844778482991387,
+        "host_observed_command_latency": [
+          {
+            "command": "help",
+            "after_enter_to_prompt_seconds": 0.00027260000933893025
+          },
+          {
+            "command": "apps",
+            "after_enter_to_prompt_seconds": 0.00028469999961089343
+          },
+          {
+            "command": "echo hello world",
+            "after_enter_to_prompt_seconds": 0.0002796000044327229
+          },
+          {
+            "command": "ls",
+            "after_enter_to_prompt_seconds": 0.00026470000739209354
+          },
+          {
+            "command": "cd docs",
+            "after_enter_to_prompt_seconds": 0.00032210000790655613
+          },
+          {
+            "command": "pwd",
+            "after_enter_to_prompt_seconds": 0.00029689999064430594
+          },
+          {
+            "command": "hello",
+            "after_enter_to_prompt_seconds": 0.0003116000007139519
+          },
+          {
+            "command": "pwd",
+            "after_enter_to_prompt_seconds": 0.00035119999665766954
+          },
+          {
+            "command": "cat welcome.txt",
+            "after_enter_to_prompt_seconds": 0.0002877999941119924
+          },
+          {
+            "command": "hello",
+            "after_enter_to_prompt_seconds": 0.0002960999991046265
+          },
+          {
+            "command": "hello",
+            "after_enter_to_prompt_seconds": 0.0003704999980982393
+          },
+          {
+            "command": "pwd",
+            "after_enter_to_prompt_seconds": 0.0008155999967129901
+          },
+          {
+            "command": "hello extra",
+            "after_enter_to_prompt_seconds": 0.0005647000070894137
+          },
+          {
+            "command": "apps extra",
+            "after_enter_to_prompt_seconds": 0.0006763000128557906
+          },
+          {
+            "command": "missing-app",
+            "after_enter_to_prompt_seconds": 0.00030050000350456685
+          },
+          {
+            "command": "/hello",
+            "after_enter_to_prompt_seconds": 0.00036550099321175367
+          },
+          {
+            "command": "cd missing",
+            "after_enter_to_prompt_seconds": 0.00034889999369625
+          },
+          {
+            "command": "cd /",
+            "after_enter_to_prompt_seconds": 0.0003063000040128827
+          },
+          {
+            "command": "clear",
+            "after_enter_to_prompt_seconds": 0.00029409999842755497
+          },
+          {
+            "command": "echo shell restored",
+            "after_enter_to_prompt_seconds": 0.0002955000090878457
+          }
+        ]
+      },
+      "production": {
+        "passed": true,
+        "firmware": "bios",
+        "profile": "production",
+        "cases": [
+          {
+            "application": "vsh",
+            "command": "help",
+            "expected": "Available commands: help, clear, echo, pwd, ls, cd, cat, apps, hello, rixie",
+            "prompt": "VOS> ",
+            "passed": true
+          },
+          {
+            "application": "vsh",
+            "command": "apps",
+            "expected": "hello",
+            "prompt": "VOS> ",
+            "passed": true
+          },
+          {
+            "application": "vsh",
+            "command": "echo hello world",
+            "expected": "hello world",
+            "prompt": "VOS> ",
+            "passed": true
+          },
+          {
+            "application": "vsh",
+            "command": "ls",
+            "expected": "docs",
+            "prompt": "VOS> ",
+            "passed": true
+          },
+          {
+            "application": "vsh",
+            "command": "cd docs",
+            "expected": "",
+            "prompt": "VOS>docs> ",
+            "passed": true
+          },
+          {
+            "application": "vsh",
+            "command": "pwd",
+            "expected": "/docs",
+            "prompt": "VOS>docs> ",
+            "passed": true
+          },
+          {
+            "application": "vsh",
+            "command": "hello",
+            "expected": "Hello from VOS!",
+            "prompt": "VOS>docs> ",
+            "passed": true
+          },
+          {
+            "application": "rixie",
+            "command": "hello",
+            "expected": "Hello! I'm Rixie, at home in VOS.",
+            "passed": true
+          },
+          {
+            "application": "rixie",
+            "command": "help",
+            "expected": "Topics: hello, help, about, questions",
+            "passed": true
+          },
+          {
+            "application": "rixie",
+            "command": "about",
+            "expected": "deterministic prototype with no conversational AI model or network",
+            "passed": true
+          },
+          {
+            "application": "rixie",
+            "command": "explain cd",
+            "expected": "invalid paths leave it unchanged",
+            "passed": true
+          },
+          {
+            "application": "rixie",
+            "command": "are you online",
+            "expected": "entirely offline",
+            "passed": true
+          },
+          {
+            "application": "vsh",
+            "command": "pwd",
+            "expected": "/docs",
+            "prompt": "VOS>docs> ",
+            "passed": true
+          },
+          {
+            "application": "vsh",
+            "command": "cat welcome.txt",
+            "expected": "Unified apps: real read-only filesystem.",
+            "prompt": "VOS>docs> ",
+            "passed": true
+          },
+          {
+            "application": "vsh",
+            "command": "hello",
+            "expected": "Hello from VOS!",
+            "prompt": "VOS>docs> ",
+            "passed": true
+          },
+          {
+            "application": "vsh",
+            "command": "hello",
+            "expected": "Hello from VOS!",
+            "prompt": "VOS>docs> ",
+            "passed": true
+          },
+          {
+            "application": "rixie",
+            "command": "hello",
+            "expected": "Hello! I'm Rixie",
+            "passed": true
+          },
+          {
+            "application": "vsh",
+            "command": "pwd",
+            "expected": "/docs",
+            "prompt": "VOS>docs> ",
+            "passed": true
+          },
+          {
+            "application": "vsh",
+            "command": "hello extra",
+            "expected": "application arguments are not supported",
+            "prompt": "VOS>docs> ",
+            "passed": true
+          },
+          {
+            "application": "vsh",
+            "command": "apps extra",
+            "expected": "operation failed",
+            "prompt": "VOS>docs> ",
+            "passed": true
+          },
+          {
+            "application": "vsh",
+            "command": "missing-app",
+            "expected": "unknown command",
+            "prompt": "VOS>docs> ",
+            "passed": true
+          },
+          {
+            "application": "vsh",
+            "command": "/hello",
+            "expected": "unknown command",
+            "prompt": "VOS>docs> ",
+            "passed": true
+          },
+          {
+            "application": "vsh",
+            "command": "cd missing",
+            "expected": "operation failed",
+            "prompt": "VOS>docs> ",
+            "passed": true
+          },
+          {
+            "application": "vsh",
+            "command": "cd /",
+            "expected": "",
+            "prompt": "VOS> ",
+            "passed": true
+          },
+          {
+            "application": "vsh",
+            "command": "clear",
+            "expected": "",
+            "prompt": "VOS> ",
+            "passed": true
+          },
+          {
+            "application": "vsh",
+            "command": "echo shell restored",
+            "expected": "shell restored",
+            "prompt": "VOS> ",
+            "passed": true
+          }
+        ],
+        "screenshots": {
+          "rixie": {
+            "path": "/home/veasnawt/src/myos/build/app-console-20261025T051241Z/attempt-2/production-bios/rixie.png",
+            "width": 1024,
+            "height": 768,
+            "sha256": "1e54fb13337f6bc700729b8a0e6ac25de6d75fcfb9b08a88be7c02b2e3c0ffda",
+            "direct_QMP_PNG": true
+          },
+          "restored_shell": {
+            "path": "/home/veasnawt/src/myos/build/app-console-20261025T051241Z/attempt-2/production-bios/restored-shell.png",
+            "width": 1024,
+            "height": 768,
+            "sha256": "70ba7b029e3123b2eb7199bfe1a00c8d9f0b44e8fc3a57e2a72d6624d606b6b6",
+            "direct_QMP_PNG": true
+          }
+        },
+        "native_fault_injection": false,
+        "native_cases": 0,
+        "historical_broker_native_cases": 0,
+        "ABI4_vsh": true,
+        "ABI3_rixie": true,
+        "ABI0_hello": true,
+        "explicit_console_restoration": true,
+        "input_boundary_test": true,
+        "process_reclaimed": true,
+        "halted": true,
+        "startup_to_prompt_seconds": 0.6687213330005761,
+        "elapsed_seconds": 9.078960234997794,
+        "host_observed_command_latency": [
+          {
+            "command": "help",
+            "after_enter_to_prompt_seconds": 0.0001832999987527728
+          },
+          {
+            "command": "apps",
+            "after_enter_to_prompt_seconds": 0.00016539999342057854
+          },
+          {
+            "command": "echo hello world",
+            "after_enter_to_prompt_seconds": 0.0001905999961309135
+          },
+          {
+            "command": "ls",
+            "after_enter_to_prompt_seconds": 0.00022109999554231763
+          },
+          {
+            "command": "cd docs",
+            "after_enter_to_prompt_seconds": 0.00022159999934956431
+          },
+          {
+            "command": "pwd",
+            "after_enter_to_prompt_seconds": 0.00016539999342057854
+          },
+          {
+            "command": "hello",
+            "after_enter_to_prompt_seconds": 0.00026529999740887433
+          },
+          {
+            "command": "pwd",
+            "after_enter_to_prompt_seconds": 0.0001998999941861257
+          },
+          {
+            "command": "cat welcome.txt",
+            "after_enter_to_prompt_seconds": 0.00029999999969732016
+          },
+          {
+            "command": "hello",
+            "after_enter_to_prompt_seconds": 0.0001922000083141029
+          },
+          {
+            "command": "hello",
+            "after_enter_to_prompt_seconds": 0.00031850000959821045
+          },
+          {
+            "command": "pwd",
+            "after_enter_to_prompt_seconds": 0.00022020000324118882
+          },
+          {
+            "command": "hello extra",
+            "after_enter_to_prompt_seconds": 0.00020249999943189323
+          },
+          {
+            "command": "apps extra",
+            "after_enter_to_prompt_seconds": 0.0002452000044286251
+          },
+          {
+            "command": "missing-app",
+            "after_enter_to_prompt_seconds": 0.0001984000118682161
+          },
+          {
+            "command": "/hello",
+            "after_enter_to_prompt_seconds": 0.00022339999850373715
+          },
+          {
+            "command": "cd missing",
+            "after_enter_to_prompt_seconds": 0.00020599999697878957
+          },
+          {
+            "command": "cd /",
+            "after_enter_to_prompt_seconds": 0.00020340000628493726
+          },
+          {
+            "command": "clear",
+            "after_enter_to_prompt_seconds": 0.00019099999917671084
+          },
+          {
+            "command": "echo shell restored",
+            "after_enter_to_prompt_seconds": 0.0002623000036692247
+          }
+        ]
+      }
+    },
+    "uefi": {
+      "instrumented": {
+        "passed": true,
+        "firmware": "uefi",
+        "profile": "instrumented",
+        "cases": [
+          {
+            "application": "rixie",
+            "command": "help",
+            "expected": "Topics: hello, help, about, questions",
+            "passed": true
+          },
+          {
+            "application": "rixie",
+            "command": "about",
+            "expected": "independent Rust ring-3 application",
+            "passed": true
+          },
+          {
+            "application": "vsh",
+            "command": "help",
+            "expected": "Available commands: help, clear, echo, pwd, ls, cd, cat, apps, hello, rixie",
+            "prompt": "VOS> ",
+            "passed": true
+          },
+          {
+            "application": "vsh",
+            "command": "apps",
+            "expected": "hello",
+            "prompt": "VOS> ",
+            "passed": true
+          },
+          {
+            "application": "vsh",
+            "command": "echo hello world",
+            "expected": "hello world",
+            "prompt": "VOS> ",
+            "passed": true
+          },
+          {
+            "application": "vsh",
+            "command": "ls",
+            "expected": "docs",
+            "prompt": "VOS> ",
+            "passed": true
+          },
+          {
+            "application": "vsh",
+            "command": "cd docs",
+            "expected": "",
+            "prompt": "VOS>docs> ",
+            "passed": true
+          },
+          {
+            "application": "vsh",
+            "command": "pwd",
+            "expected": "/docs",
+            "prompt": "VOS>docs> ",
+            "passed": true
+          },
+          {
+            "application": "vsh",
+            "command": "hello",
+            "expected": "Hello from VOS!",
+            "prompt": "VOS>docs> ",
+            "passed": true
+          },
+          {
+            "application": "rixie",
+            "command": "hello",
+            "expected": "Hello! I'm Rixie, at home in VOS.",
+            "passed": true
+          },
+          {
+            "application": "rixie",
+            "command": "help",
+            "expected": "Topics: hello, help, about, questions",
+            "passed": true
+          },
+          {
+            "application": "rixie",
+            "command": "about",
+            "expected": "deterministic prototype with no conversational AI model or network",
+            "passed": true
+          },
+          {
+            "application": "rixie",
+            "command": "explain cd",
+            "expected": "invalid paths leave it unchanged",
+            "passed": true
+          },
+          {
+            "application": "rixie",
+            "command": "are you online",
+            "expected": "entirely offline",
+            "passed": true
+          },
+          {
+            "application": "vsh",
+            "command": "pwd",
+            "expected": "/docs",
+            "prompt": "VOS>docs> ",
+            "passed": true
+          },
+          {
+            "application": "vsh",
+            "command": "cat welcome.txt",
+            "expected": "Unified apps: real read-only filesystem.",
+            "prompt": "VOS>docs> ",
+            "passed": true
+          },
+          {
+            "application": "vsh",
+            "command": "hello",
+            "expected": "Hello from VOS!",
+            "prompt": "VOS>docs> ",
+            "passed": true
+          },
+          {
+            "application": "vsh",
+            "command": "hello",
+            "expected": "Hello from VOS!",
+            "prompt": "VOS>docs> ",
+            "passed": true
+          },
+          {
+            "application": "rixie",
+            "command": "hello",
+            "expected": "Hello! I'm Rixie",
+            "passed": true
+          },
+          {
+            "application": "vsh",
+            "command": "pwd",
+            "expected": "/docs",
+            "prompt": "VOS>docs> ",
+            "passed": true
+          },
+          {
+            "application": "vsh",
+            "command": "hello extra",
+            "expected": "application arguments are not supported",
+            "prompt": "VOS>docs> ",
+            "passed": true
+          },
+          {
+            "application": "vsh",
+            "command": "apps extra",
+            "expected": "operation failed",
+            "prompt": "VOS>docs> ",
+            "passed": true
+          },
+          {
+            "application": "vsh",
+            "command": "missing-app",
+            "expected": "unknown command",
+            "prompt": "VOS>docs> ",
+            "passed": true
+          },
+          {
+            "application": "vsh",
+            "command": "/hello",
+            "expected": "unknown command",
+            "prompt": "VOS>docs> ",
+            "passed": true
+          },
+          {
+            "application": "vsh",
+            "command": "cd missing",
+            "expected": "operation failed",
+            "prompt": "VOS>docs> ",
+            "passed": true
+          },
+          {
+            "application": "vsh",
+            "command": "cd /",
+            "expected": "",
+            "prompt": "VOS> ",
+            "passed": true
+          },
+          {
+            "application": "vsh",
+            "command": "clear",
+            "expected": "",
+            "prompt": "VOS> ",
+            "passed": true
+          },
+          {
+            "application": "vsh",
+            "command": "echo shell restored",
+            "expected": "shell restored",
+            "prompt": "VOS> ",
+            "passed": true
+          }
+        ],
+        "screenshots": {},
+        "native_fault_injection": true,
+        "native_cases": 21,
+        "historical_broker_native_cases": 23,
+        "ABI4_vsh": true,
+        "ABI3_rixie": true,
+        "ABI0_hello": true,
+        "explicit_console_restoration": true,
+        "input_boundary_test": true,
+        "process_reclaimed": true,
+        "halted": true,
+        "startup_to_prompt_seconds": 9.386829787996248,
+        "elapsed_seconds": 16.371365778002655,
+        "host_observed_command_latency": [
+          {
+            "command": "help",
+            "after_enter_to_prompt_seconds": 0.00033910000638570637
+          },
+          {
+            "command": "apps",
+            "after_enter_to_prompt_seconds": 0.00027629999385681003
+          },
+          {
+            "command": "echo hello world",
+            "after_enter_to_prompt_seconds": 0.000440200004959479
+          },
+          {
+            "command": "ls",
+            "after_enter_to_prompt_seconds": 0.00032369999098591506
+          },
+          {
+            "command": "cd docs",
+            "after_enter_to_prompt_seconds": 0.00032900000223889947
+          },
+          {
+            "command": "pwd",
+            "after_enter_to_prompt_seconds": 0.0003332999913254753
+          },
+          {
+            "command": "hello",
+            "after_enter_to_prompt_seconds": 0.00029090000316500664
+          },
+          {
+            "command": "pwd",
+            "after_enter_to_prompt_seconds": 0.00031489999673794955
+          },
+          {
+            "command": "cat welcome.txt",
+            "after_enter_to_prompt_seconds": 0.00028360000578686595
+          },
+          {
+            "command": "hello",
+            "after_enter_to_prompt_seconds": 0.0002747000107774511
+          },
+          {
+            "command": "hello",
+            "after_enter_to_prompt_seconds": 0.0002934010117314756
+          },
+          {
+            "command": "pwd",
+            "after_enter_to_prompt_seconds": 0.0003304999991087243
+          },
+          {
+            "command": "hello extra",
+            "after_enter_to_prompt_seconds": 0.00035909999860450625
+          },
+          {
+            "command": "apps extra",
+            "after_enter_to_prompt_seconds": 0.00033149999217130244
+          },
+          {
+            "command": "missing-app",
+            "after_enter_to_prompt_seconds": 0.0003588999970816076
+          },
+          {
+            "command": "/hello",
+            "after_enter_to_prompt_seconds": 0.0003555000002961606
+          },
+          {
+            "command": "cd missing",
+            "after_enter_to_prompt_seconds": 0.00033549999352544546
+          },
+          {
+            "command": "cd /",
+            "after_enter_to_prompt_seconds": 0.0003198999911546707
+          },
+          {
+            "command": "clear",
+            "after_enter_to_prompt_seconds": 0.0003129999968223274
+          },
+          {
+            "command": "echo shell restored",
+            "after_enter_to_prompt_seconds": 0.0004014000005554408
+          }
+        ]
+      },
+      "production": {
+        "passed": true,
+        "firmware": "uefi",
+        "profile": "production",
+        "cases": [
+          {
+            "application": "vsh",
+            "command": "help",
+            "expected": "Available commands: help, clear, echo, pwd, ls, cd, cat, apps, hello, rixie",
+            "prompt": "VOS> ",
+            "passed": true
+          },
+          {
+            "application": "vsh",
+            "command": "apps",
+            "expected": "hello",
+            "prompt": "VOS> ",
+            "passed": true
+          },
+          {
+            "application": "vsh",
+            "command": "echo hello world",
+            "expected": "hello world",
+            "prompt": "VOS> ",
+            "passed": true
+          },
+          {
+            "application": "vsh",
+            "command": "ls",
+            "expected": "docs",
+            "prompt": "VOS> ",
+            "passed": true
+          },
+          {
+            "application": "vsh",
+            "command": "cd docs",
+            "expected": "",
+            "prompt": "VOS>docs> ",
+            "passed": true
+          },
+          {
+            "application": "vsh",
+            "command": "pwd",
+            "expected": "/docs",
+            "prompt": "VOS>docs> ",
+            "passed": true
+          },
+          {
+            "application": "vsh",
+            "command": "hello",
+            "expected": "Hello from VOS!",
+            "prompt": "VOS>docs> ",
+            "passed": true
+          },
+          {
+            "application": "rixie",
+            "command": "hello",
+            "expected": "Hello! I'm Rixie, at home in VOS.",
+            "passed": true
+          },
+          {
+            "application": "rixie",
+            "command": "help",
+            "expected": "Topics: hello, help, about, questions",
+            "passed": true
+          },
+          {
+            "application": "rixie",
+            "command": "about",
+            "expected": "deterministic prototype with no conversational AI model or network",
+            "passed": true
+          },
+          {
+            "application": "rixie",
+            "command": "explain cd",
+            "expected": "invalid paths leave it unchanged",
+            "passed": true
+          },
+          {
+            "application": "rixie",
+            "command": "are you online",
+            "expected": "entirely offline",
+            "passed": true
+          },
+          {
+            "application": "vsh",
+            "command": "pwd",
+            "expected": "/docs",
+            "prompt": "VOS>docs> ",
+            "passed": true
+          },
+          {
+            "application": "vsh",
+            "command": "cat welcome.txt",
+            "expected": "Unified apps: real read-only filesystem.",
+            "prompt": "VOS>docs> ",
+            "passed": true
+          },
+          {
+            "application": "vsh",
+            "command": "hello",
+            "expected": "Hello from VOS!",
+            "prompt": "VOS>docs> ",
+            "passed": true
+          },
+          {
+            "application": "vsh",
+            "command": "hello",
+            "expected": "Hello from VOS!",
+            "prompt": "VOS>docs> ",
+            "passed": true
+          },
+          {
+            "application": "rixie",
+            "command": "hello",
+            "expected": "Hello! I'm Rixie",
+            "passed": true
+          },
+          {
+            "application": "vsh",
+            "command": "pwd",
+            "expected": "/docs",
+            "prompt": "VOS>docs> ",
+            "passed": true
+          },
+          {
+            "application": "vsh",
+            "command": "hello extra",
+            "expected": "application arguments are not supported",
+            "prompt": "VOS>docs> ",
+            "passed": true
+          },
+          {
+            "application": "vsh",
+            "command": "apps extra",
+            "expected": "operation failed",
+            "prompt": "VOS>docs> ",
+            "passed": true
+          },
+          {
+            "application": "vsh",
+            "command": "missing-app",
+            "expected": "unknown command",
+            "prompt": "VOS>docs> ",
+            "passed": true
+          },
+          {
+            "application": "vsh",
+            "command": "/hello",
+            "expected": "unknown command",
+            "prompt": "VOS>docs> ",
+            "passed": true
+          },
+          {
+            "application": "vsh",
+            "command": "cd missing",
+            "expected": "operation failed",
+            "prompt": "VOS>docs> ",
+            "passed": true
+          },
+          {
+            "application": "vsh",
+            "command": "cd /",
+            "expected": "",
+            "prompt": "VOS> ",
+            "passed": true
+          },
+          {
+            "application": "vsh",
+            "command": "clear",
+            "expected": "",
+            "prompt": "VOS> ",
+            "passed": true
+          },
+          {
+            "application": "vsh",
+            "command": "echo shell restored",
+            "expected": "shell restored",
+            "prompt": "VOS> ",
+            "passed": true
+          }
+        ],
+        "screenshots": {
+          "rixie": {
+            "path": "/home/veasnawt/src/myos/build/app-console-20261025T051241Z/attempt-2/production-uefi/rixie.png",
+            "width": 1024,
+            "height": 768,
+            "sha256": "1e54fb13337f6bc700729b8a0e6ac25de6d75fcfb9b08a88be7c02b2e3c0ffda",
+            "direct_QMP_PNG": true
+          },
+          "restored_shell": {
+            "path": "/home/veasnawt/src/myos/build/app-console-20261025T051241Z/attempt-2/production-uefi/restored-shell.png",
+            "width": 1024,
+            "height": 768,
+            "sha256": "70ba7b029e3123b2eb7199bfe1a00c8d9f0b44e8fc3a57e2a72d6624d606b6b6",
+            "direct_QMP_PNG": true
+          }
+        },
+        "native_fault_injection": false,
+        "native_cases": 0,
+        "historical_broker_native_cases": 0,
+        "ABI4_vsh": true,
+        "ABI3_rixie": true,
+        "ABI0_hello": true,
+        "explicit_console_restoration": true,
+        "input_boundary_test": true,
+        "process_reclaimed": true,
+        "halted": true,
+        "startup_to_prompt_seconds": 4.070529136995901,
+        "elapsed_seconds": 12.496006403001957,
+        "host_observed_command_latency": [
+          {
+            "command": "help",
+            "after_enter_to_prompt_seconds": 0.00018849999469239265
+          },
+          {
+            "command": "apps",
+            "after_enter_to_prompt_seconds": 0.00017300000763498247
+          },
+          {
+            "command": "echo hello world",
+            "after_enter_to_prompt_seconds": 0.00017630000365898013
+          },
+          {
+            "command": "ls",
+            "after_enter_to_prompt_seconds": 0.00025740001001395285
+          },
+          {
+            "command": "cd docs",
+            "after_enter_to_prompt_seconds": 0.00019320000137668103
+          },
+          {
+            "command": "pwd",
+            "after_enter_to_prompt_seconds": 0.00018429999181535095
+          },
+          {
+            "command": "hello",
+            "after_enter_to_prompt_seconds": 0.00020770099945366383
+          },
+          {
+            "command": "pwd",
+            "after_enter_to_prompt_seconds": 0.00027129999944008887
+          },
+          {
+            "command": "cat welcome.txt",
+            "after_enter_to_prompt_seconds": 0.00021779999951831996
+          },
+          {
+            "command": "hello",
+            "after_enter_to_prompt_seconds": 0.00019639999663922936
+          },
+          {
+            "command": "hello",
+            "after_enter_to_prompt_seconds": 0.00024210000992752612
+          },
+          {
+            "command": "pwd",
+            "after_enter_to_prompt_seconds": 0.0002074999938486144
+          },
+          {
+            "command": "hello extra",
+            "after_enter_to_prompt_seconds": 0.0002747999969869852
+          },
+          {
+            "command": "apps extra",
+            "after_enter_to_prompt_seconds": 0.00034949999826494604
+          },
+          {
+            "command": "missing-app",
+            "after_enter_to_prompt_seconds": 0.00019549998978618532
+          },
+          {
+            "command": "/hello",
+            "after_enter_to_prompt_seconds": 0.0002812000020639971
+          },
+          {
+            "command": "cd missing",
+            "after_enter_to_prompt_seconds": 0.00030330001027323306
+          },
+          {
+            "command": "cd /",
+            "after_enter_to_prompt_seconds": 0.0002108999906340614
+          },
+          {
+            "command": "clear",
+            "after_enter_to_prompt_seconds": 0.0003738999948836863
+          },
+          {
+            "command": "echo shell restored",
+            "after_enter_to_prompt_seconds": 0.00030899999546818435
+          }
+        ]
+      }
+    }
+  },
+  "disk_sha256": "5ef98c6e0b4dd983dfb7db1a8d73d0175cbb86c358e61f2957c689d164890dcc",
+  "physical_hardware_verified": false,
+  "no_network_grants": true,
+  "no_background_or_recursive_launch": true,
+  "no_filesystem_executable_loader": true
+}

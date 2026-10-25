@@ -16,6 +16,7 @@ USER_RT    := $(addprefix $(USER_BUILD)/lib/,crt0.o syscall.o abi_note.o)
 USER_RT_V1 := $(addprefix $(USER_BUILD)/lib/,crt0.o syscall.o syscall_v1.o abi_note_v1.o)
 USER_RT_V2 := $(addprefix $(USER_BUILD)/lib/,crt0.o syscall.o syscall_v1.o syscall_v2.o abi_note_v2.o)
 USER_RT_V3 := $(addprefix $(USER_BUILD)/lib/,crt0.o syscall.o syscall_v1.o syscall_v2.o syscall_v3.o abi_note_v3.o)
+USER_RT_V4 := $(addprefix $(USER_BUILD)/lib/,crt0.o syscall.o syscall_v1.o syscall_v2.o syscall_v3.o syscall_v4.o abi_note_v4.o)
 FILE_DIR := $(USER_BUILD)/filetests
 FILE_ELFS := $(addprefix $(FILE_DIR)/,probe.elf reader.elf reader_y.elf error.elf gate0.elf gate1.elf boundary.elf nogrant.elf cookie.elf regs.elf adversary.elf)
 # Separate Gate A companion; no change to the frozen file/suite lists.
@@ -141,11 +142,11 @@ $(RUST_SDK): user/rust/vos.rs user/user.mk
 	@mkdir -p $(dir $@)
 	$(RUSTC) $(VOS_RUST_FLAGS) --crate-name vos --crate-type=rlib --emit=link,dep-info=$(@:.rlib=.d) -o $@ $<
 define RUST_APPLICATION
-$(USER_BUILD)/$(1)/main.a: user/$(1)/main.rs $(RUST_SDK) user/user.mk
+$(USER_BUILD)/$(1)/main.a: user/$(1)/main.rs $(RUST_SDK) $(if $(filter vsh,$(1)),$(USER_BUILD)/rust/libvos_apps.rlib) user/user.mk
 	@mkdir -p $$(dir $$@)
-	$$(RUSTC) $$(VOS_RUST_FLAGS) --crate-name $$(subst -,_,$(1)) --crate-type=staticlib --extern vos=$$(RUST_SDK) --emit=link,dep-info=$$(@:.a=.d) -o $$@ $$<
-$(USER_BUILD)/$(1).elf: $(USER_RT_V3) $(USER_BUILD)/$(1)/main.a $(USER_BUILD)/rust/runtime.o $(USER_LDS)
-	$$(LD) $$(USER_LDFLAGS) --gc-sections -o $$@ $$(USER_RT_V3) $(USER_BUILD)/rust/runtime.o $(USER_BUILD)/$(1)/main.a
+	$$(RUSTC) $$(VOS_RUST_FLAGS) --crate-name $$(subst -,_,$(1)) --crate-type=staticlib --extern vos=$$(RUST_SDK) $(if $(filter vsh,$(1)),-L dependency=$(USER_BUILD)/rust --extern vos_apps=$(USER_BUILD)/rust/libvos_apps.rlib) --emit=link,dep-info=$$(@:.a=.d) -o $$@ $$<
+$(USER_BUILD)/$(1).elf: $(if $(filter vsh,$(1)),$(USER_RT_V4),$(USER_RT_V3)) $(USER_BUILD)/$(1)/main.a $(USER_BUILD)/rust/runtime.o $(USER_LDS)
+	$$(LD) $$(USER_LDFLAGS) --gc-sections -o $$@ $(if $(filter vsh,$(1)),$(USER_RT_V4),$(USER_RT_V3)) $(USER_BUILD)/rust/runtime.o $(USER_BUILD)/$(1)/main.a
 endef
 $(foreach app,$(sort vsh $(RUST_APP)),$(eval $(call RUST_APPLICATION,$(app))))
 .PHONY: user-vsh user-rust
@@ -199,7 +200,6 @@ $(STORAGE_STRESS_DIR)/gated.elf: $(STORAGE_STRESS_DIR)/gated.o $(USER_RT_V2) $(U
 
 
 # ABI v4 is opt-in; existing ABI v0-v3 application/runtime rules remain unchanged.
-USER_RT_V4 := $(addprefix $(USER_BUILD)/lib/,crt0.o syscall.o syscall_v1.o syscall_v2.o syscall_v3.o syscall_v4.o abi_note_v4.o)
 $(USER_BUILD)/rust/libvos_apps.rlib: user/rust/apps.rs $(RUST_SDK)
 	@mkdir -p $(dir $@)
 	$(RUSTC) $(VOS_RUST_FLAGS) --crate-name vos_apps --crate-type=rlib --extern vos=$(RUST_SDK) --emit=link,dep-info=$(@:.rlib=.d) -o $@ $<
@@ -229,3 +229,13 @@ EXEC_FIXTURE_NAMES := negative fault spin recursive contender legacy0 legacy1 le
 EXEC_FIXTURE_ELFS = $(addprefix $(USER_BUILD)/exec-,$(addsuffix .elf,$(EXEC_FIXTURE_NAMES)))
 .PHONY: user-exec-probe
 user-exec-probe: $(USER_BUILD)/exec-probe.elf $(EXEC_FIXTURE_ELFS)
+
+
+# Native ABI v4 foreground-ownership probe; existing SDK/runtime conventions.
+$(USER_BUILD)/handoff-probe/main.a: user/handoff-probe/main.rs $(RUST_SDK) $(USER_BUILD)/rust/libvos_apps.rlib user/user.mk
+	@mkdir -p $(dir $@)
+	$(RUSTC) $(VOS_RUST_FLAGS) --crate-name handoff_probe --crate-type=staticlib -L dependency=$(USER_BUILD)/rust --extern vos=$(RUST_SDK) --extern vos_apps=$(USER_BUILD)/rust/libvos_apps.rlib --emit=link,dep-info=$(@:.a=.d) -o $@ $<
+$(USER_BUILD)/handoff-probe.elf: $(USER_BUILD)/handoff-probe/main.a $(USER_RT_V4) $(USER_BUILD)/handoff-probe/control.o $(USER_BUILD)/rust/runtime.o $(USER_LDS)
+	$(LD) $(USER_LDFLAGS) --gc-sections -o $@ $(USER_RT_V4) $(USER_BUILD)/handoff-probe/control.o $(USER_BUILD)/rust/runtime.o $(USER_BUILD)/handoff-probe/main.a
+.PHONY: user-handoff-probe
+user-handoff-probe: $(USER_BUILD)/handoff-probe.elf

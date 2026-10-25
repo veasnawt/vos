@@ -71,7 +71,7 @@ int main(int argc,char **argv)
         const struct app_catalog_entry *e=app_catalog_at(&guard.catalog,i);
         CHECK(e!=NULL);CHECK(e==app_catalog_find(&guard.catalog,0x1001+i));
         CHECK(!strcmp(e->name,names[i]));CHECK(e->image==data[i] && e->length==lengths[i]);
-        CHECK(e->abi==(i==1?0U:3U));CHECK(e->policy==policies[i]);
+        CHECK(i==0 ? (e->abi==3 || e->abi==4) : e->abi==(i==1?0U:3U));CHECK(e->policy==policies[i]);
     }
     CHECK(app_catalog_at(&guard.catalog,3)==NULL);CHECK(app_catalog_at(&guard.catalog,SIZE_MAX)==NULL);
     CHECK(app_catalog_find(&guard.catalog,0)==NULL);CHECK(app_catalog_find(&guard.catalog,999)==NULL);

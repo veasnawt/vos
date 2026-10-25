@@ -8,6 +8,8 @@ struct exc_frame;
 #define EXEC_ENUM 1u
 #define EXEC_RUN 2u
 #define EXEC_RIGHTS (EXEC_ENUM | EXEC_RUN)
+#define EXEC_FOREGROUND 4u
+#define EXEC_ALL (EXEC_RIGHTS | EXEC_FOREGROUND)
 struct exec_stats {
     uint64_t submitted, loaded, started, reclaimed, completed, cancelled, failed;
 };

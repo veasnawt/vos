@@ -17,6 +17,9 @@ ARCH_OBJS       := boot.o entry.o usermode.o kernel.o bootinfo.o console.o cpu.o
 ifeq ($(EXEC_VERIFY),1)
 ARCH_OBJS += exec_verify.o
 endif
+ifeq ($(HANDOFF_VERIFY),1)
+ARCH_OBJS += handoff_verify.o
+endif
 ifeq ($(VOS_TEST),1)
 ARCH_OBJS       += selftest.o selftest_cpu.o selftest_elf.o selftest_ipc.o selftest_irq.o selftest_kmap.o selftest_mp.o selftest_sched.o selftest_stress.o selftest_pmm.o selftest_suite.o \
                    selftest_user.o selftest_vblk.o selftest_blk.o selftest_ext2.o selftest_vmm.o selftest_screen.o selftest_io_scope.o selftest_file.o storage_observe.o user_progs.o

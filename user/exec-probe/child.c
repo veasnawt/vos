@@ -1,5 +1,6 @@
 #include <vos/syscall.h>
 #include <vos/apps.h>
+#include <vos/console.h>
 #ifndef EXEC_CASE
 #define EXEC_CASE 0
 #endif
@@ -19,6 +20,9 @@ int main(void)
     return 0;
 #elif EXEC_CASE == 4
     if (vos_app_run_foreground(0x1002,0)!=-4) return 40;
+    char input[16];
+    if (vos_console_read(input,sizeof(input))!=-9) return 41;
+    if (vos_console_write("must not appear",15)!=-9) return 42;
     vos_debug_write("one-slot contention denied\n",27);
     return 0;
 #elif EXEC_CASE == 5

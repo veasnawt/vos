@@ -37,4 +37,8 @@ int keyboard_init(struct keyboard *k, const struct keyboard_io *io);
 /* Nonblocking, at most KEYBOARD_DRAIN_LIMIT bytes; 0 if no character is ready. */
 char keyboard_poll(struct keyboard *k);
 
+/* Bounded foreground-session scan boundary; no bytes cross owners. */
+int keyboard_suspend(struct keyboard *k);
+int keyboard_resume(struct keyboard *k);
+
 #endif
