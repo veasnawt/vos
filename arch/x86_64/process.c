@@ -3,6 +3,7 @@
 #include "io_scope.h"
 #include "file.h"
 #include "user_console.h"
+#include "gui.h"
 #include "console.h"
 #include "cpu.h"
 #include "exception.h"
@@ -340,6 +341,7 @@ void proc_destroy(struct process *p)
         panic("process: file operation has not unwound");
     exec_process_end(p);
     file_close_all(p);
+    gui_revoke(p);
     user_console_revoke(p);
     handles_close_all(p);               /* N2.4: a process that never ran may still hold handles */
 
@@ -380,6 +382,7 @@ __attribute__((noreturn)) static void terminate(struct process *p)
         panic("process: file operation has not unwound");
     exec_process_end(p);
     file_close_all(p);
+    gui_revoke(p);
     user_console_revoke(p);
     handles_close_all(p);               /* N2.4: peers see -VOS_EPIPE from now on */
     thread_leave_user_space();
@@ -462,6 +465,7 @@ void proc_kill(struct process *p, const char *reason)
     if (registered(p) && p->state == PROC_RUNNING && !p->kill_reason) {
         p->kill_reason = reason ? reason : "killed by the kernel";
         exec_process_cancel(p);
+        gui_revoke(p);
         io_scope_cancel(p->pid);
         thread_interrupt(p->tid);       /* blocked in channel_recv: wake it so it can die */
     }

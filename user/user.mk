@@ -239,3 +239,24 @@ $(USER_BUILD)/handoff-probe.elf: $(USER_BUILD)/handoff-probe/main.a $(USER_RT_V4
 	$(LD) $(USER_LDFLAGS) --gc-sections -o $@ $(USER_RT_V4) $(USER_BUILD)/handoff-probe/control.o $(USER_BUILD)/rust/runtime.o $(USER_BUILD)/handoff-probe/main.a
 .PHONY: user-handoff-probe
 user-handoff-probe: $(USER_BUILD)/handoff-probe.elf
+
+
+# Additive ABI v5 GUI SDK; existing application targets/runtime conventions remain.
+USER_RT_V5 := $(addprefix $(USER_BUILD)/lib/,crt0.o syscall.o syscall_v1.o syscall_v2.o syscall_v3.o syscall_v4.o syscall_v5.o abi_note_v5.o)
+$(USER_BUILD)/rust/libvos_gui.rlib: user/rust/gui.rs $(RUST_SDK) user/user.mk
+	@mkdir -p $(dir $@)
+	$(RUSTC) $(VOS_RUST_FLAGS) --crate-name vos_gui --crate-type=rlib -L dependency=$(USER_BUILD)/rust --extern vos=$(RUST_SDK) --emit=link,dep-info=$(@:.rlib=.d) -o $@ $<
+define GUI_APPLICATION
+$(USER_BUILD)/$(1)/main.a: user/$(1)/main.rs $(RUST_SDK) $(USER_BUILD)/rust/libvos_gui.rlib user/user.mk
+	@mkdir -p $$(dir $$@)
+	$$(RUSTC) $$(VOS_RUST_FLAGS) --crate-name $$(subst -,_,$(1)) --crate-type=staticlib -L dependency=$(USER_BUILD)/rust --extern vos=$$(RUST_SDK) --extern vos_gui=$(USER_BUILD)/rust/libvos_gui.rlib --emit=link,dep-info=$$(@:.a=.d) -o $$@ $$<
+$(USER_BUILD)/$(1).elf: $(USER_RT_V5) $(USER_BUILD)/$(1)/main.a $(USER_BUILD)/rust/runtime.o $(USER_LDS) $(if $(filter gui-probe,$(1)),$(USER_BUILD)/gui-probe/control.o)
+	$$(LD) $$(USER_LDFLAGS) --gc-sections -o $$@ $$(USER_RT_V5) $(USER_BUILD)/rust/runtime.o $(USER_BUILD)/$(1)/main.a $(if $(filter gui-probe,$(1)),$(USER_BUILD)/gui-probe/control.o)
+endef
+$(foreach app,gui-demo gui-probe,$(eval $(call GUI_APPLICATION,$(app))))
+.PHONY: user-gui
+user-gui: $(USER_BUILD)/gui-demo.elf $(USER_BUILD)/gui-probe.elf
+# Verification query is linked only into the dedicated probe, never the SDK/demo.
+$(USER_BUILD)/gui-probe/control.o: user/lib/syscall_v5.S
+	@mkdir -p $(dir $@)
+	printf '.section .text\n.global vos_gui_verify\nvos_gui_verify:\n mov $$0x7e66,%%eax\n int $$0x80\n ret\n.section .note.GNU-stack,"",@progbits\n' | $(CC) $(USER_ASFLAGS) -x assembler -c -o $@ -

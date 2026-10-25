@@ -13,7 +13,7 @@ ARCH_LDFLAGS    := -m elf_x86_64 -z max-page-size=0x1000
 ARCH_LINK_CHECK  = python3 -I -B scripts/check-kernel-layout.py $@ || { rm -f $@; exit 1; }
 ARCH_OBJS       := boot.o entry.o usermode.o kernel.o bootinfo.o console.o cpu.o exception.o gdt.o idt.o \
                    lib.o loader.o panic.o pmm.o process.o resv.o syscall.o usercopy.o vmm.o kmap.o irq.o pic.o pit.o thread.o thread_switch.o channel.o elf.o app.o app_catalog.o app_payload.o exec.o \
-                   pci.o blockdev.o virtio_blk.o ext2.o io_scope.o file.o devmap.o screen.o desktop.o font8x16.o keyboard.o input_console.o user_console.o vsh_boot.o virtio_net.o net_boot.o net_arp.o net_arp_boot.o net_ipv4.o net_ipv4_boot.o net_udp.o net_udp_boot.o net_tcp.o net_tcp_boot.o net_tcp_data_boot.o net_tcp_retry_boot.o net_tcp_close_boot.o
+                   pci.o blockdev.o virtio_blk.o ext2.o io_scope.o file.o devmap.o screen.o desktop.o gui.o gui_verify.o font8x16.o keyboard.o input_console.o user_console.o vsh_boot.o virtio_net.o net_boot.o net_arp.o net_arp_boot.o net_ipv4.o net_ipv4_boot.o net_udp.o net_udp_boot.o net_tcp.o net_tcp_boot.o net_tcp_data_boot.o net_tcp_retry_boot.o net_tcp_close_boot.o
 ifeq ($(EXEC_VERIFY),1)
 ARCH_OBJS += exec_verify.o
 endif

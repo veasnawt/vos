@@ -1,0 +1,25 @@
+REUSED gui-service
+GUI service PASS 978126 assertions; actual GUI+console+keyboard, allocation rollback, ownership, pointers, bounds, overflow/revocation
+
+REUSED gui-renderer
+PASS 562325 assertions: actual refined renderer/console; single header/full captions/no PASS badge, stride/padding/guards, viewport and fallback
+GUI renderer PASS 2155514 assertions; actual sink, three sizes, stride/padding, chrome isolation
+
+REUSED console-regression
+console-handoff: 49499 assertions PASS; actual console+keyboard+editor; bounded modeled hardware/scheduler; transfers=1007 restored=1003
+
+NEW catalog bootstrap PASS 3033 assertions; actual 3/4/5 ELF payloads, strict negative controls and fail-closed clearing
+
+REUSED Rust ABI tests
+
+running 2 tests
+test abi_sizes_offsets ... ok
+test limits_and_explicit_formats ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+REUSED ELF checks
+test-user-elf: kernel validator agrees on 68 of 72 files (4 build-time-only differences expected)
+test-user-elf: 294 passed, 0 failed
+test-file-abi: 20 independent constant comparisons passed

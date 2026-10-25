@@ -31,6 +31,7 @@
 #include "resv.h"
 #include "screen.h"
 #include "desktop.h"
+#include "gui_verify.h"
 #include "thread.h"
 #include "virtio_blk.h"
 #include "vmm.h"
@@ -402,6 +403,7 @@ void kernel_main(uint32_t mb2_magic, uint32_t mb2_info)
             serial_puts(visible ? "desktop: scene ready; kernel-owned BGRX surface, bounded console viewport\r\n" :
                                  "desktop: unavailable; existing console fallback\r\n");
         }
+        if(gui_boot_requested(bi.cmdline))check(gui_boot_run(&bi),"native GUI surface/event application");
         /* Reuse the trusted catalog, explicit grants and execution broker. */
         check(vsh_run(&bi), "common payload native vsh");
         screen_status(first_failure ? SCREEN_FAIL : SCREEN_PASS,

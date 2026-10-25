@@ -15,6 +15,8 @@
 
 static struct process *owner;
 static uint64_t owner_pid;
+static struct process *gui_owner;
+static uint64_t gui_pid;
 static struct keyboard keyboard;
 static char pending[INPUT_CONSOLE_LINE_MAX + 1];
 static int pending_length = -1;
@@ -62,7 +64,7 @@ int user_console_owned(const struct process *p)
 int user_console_reader_active(const struct process *p){return reader==p && p && reader_pid==p->pid;}
 int user_console_debug_visible(const struct process *p)
 {
-    return owner ? user_console_owned(p) : !lease.active;
+    return gui_owner ? 0 : owner ? user_console_owned(p) : !lease.active;
 }
 int user_console_lease_active(void){return lease.active;}
 int user_console_exec_active(const struct process *p,const struct process *child)
@@ -74,7 +76,7 @@ const struct console_lease_stats *user_console_lease_stats(void){return &stats;}
 
 int user_console_grant(struct process *p)
 {
-    if(owner || lease.active || !proc_file_live(p) || p->state!=PROC_READY ||
+    if(owner || gui_owner || lease.active || !proc_file_live(p) || p->state!=PROC_READY ||
        (p->abi!=3 && p->abi!=4) || p->kill_reason)return -VOS_EACCES;
     if(!keyboard_init(&keyboard,&ports))return -VOS_EUNAVAIL;
     advance();owner=p;owner_pid=p->pid;clear_pending();
@@ -186,4 +188,26 @@ int64_t user_console_syscall(struct process *p, const struct exc_frame *frame)
     int result = pending_length;
     pending_length = -1;
     return result;
+}
+
+/* Trusted GUI focus uses the same keyboard instance/decoder and drain boundary.
+ * Graphical authority is separate from the text-console grant and lease. */
+int user_console_gui_begin(struct process *p)
+{
+    if(owner || gui_owner || lease.active || reader || !proc_file_live(p) ||
+       p->state!=PROC_READY || p->abi!=5 || p->kill_reason)return -VOS_EACCES;
+    if(!keyboard_init(&keyboard,&ports))return -VOS_EUNAVAIL;
+    gui_owner=p;gui_pid=p->pid;clear_pending();advance();return 0;
+}
+void user_console_gui_end(struct process *p)
+{
+    if(gui_owner!=p || !p || gui_pid!=p->pid)return;
+    (void)keyboard_suspend(&keyboard);
+    gui_owner=0;gui_pid=0;clear_pending();advance();
+}
+char user_console_gui_poll(struct process *p)
+{
+    if(!p || gui_owner!=p || !proc_file_live(p) || gui_pid!=p->pid ||
+       p->state!=PROC_RUNNING || p->kill_reason)return 0;
+    return keyboard_poll(&keyboard);
 }
