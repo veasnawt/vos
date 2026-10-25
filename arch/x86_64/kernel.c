@@ -8,6 +8,7 @@
 #include <stdint.h>
 
 #include "app.h"
+#include "app_payload.h"
 #include "bootinfo.h"
 #include "console.h"
 #include "cpu.h"
@@ -261,8 +262,17 @@ void kernel_main(uint32_t mb2_magic, uint32_t mb2_info)
     /* N3.1: the first virtio-blk device on PCI bus 0, read-only and polled; its absence is not an error. */
     vblk_init();
 
-    /* The first native application: GRUB module "hello", run in ring 3. */
-    check(app_run_boot_module(&bi), "boot application ran and exited with status 0");
+    /* The common payload validates every source before any application runs.
+     * Legacy boot/test profiles retain their existing hello path. */
+#ifndef VOS_TEST
+    int payload_ready = 1;
+    if (app_payload_requested(bi.cmdline)) {
+        payload_ready = app_payload_prepare(&bi, &boot_resv);
+        check(payload_ready, "common native application catalog");
+    }
+    if (payload_ready)
+#endif
+        check(app_run_boot_module(&bi), "boot application ran and exited with status 0");
 
     serial_puts(first_failure ? "boot: FAILED\r\n" : "boot: checks passed\r\n");
     screen_status(first_failure ? SCREEN_FAIL : SCREEN_PASS, first_failure ? "boot: FAILED" : "boot: checks passed");
@@ -366,6 +376,12 @@ void kernel_main(uint32_t mb2_magic, uint32_t mb2_info)
     if (!first_failure && net_requested(bi.cmdline)) {
         check(net_boot_run(bi.cmdline), "native network adapter");
         screen_status(first_failure ? SCREEN_FAIL : SCREEN_PASS,first_failure ? "Network check failed" : "N5 adapter increment");
+    } else if (!first_failure && app_payload_requested(bi.cmdline)) {
+        /* Bootstrap only: reuse the accepted vsh loader and grants. No runtime
+         * launch service, child process or console transfer is introduced. */
+        check(vsh_run(&bi), "common payload native vsh");
+        screen_status(first_failure ? SCREEN_FAIL : SCREEN_PASS,
+                      first_failure ? "Common payload failed" : "Common payload: shell reclaimed, catalog retained");
     } else if (!first_failure && rixie_requested(bi.cmdline)) {
         check(rixie_run(&bi), "Rixie Core v0");
         screen_status(first_failure ? SCREEN_FAIL : SCREEN_PASS,first_failure ? "Rixie failed" : "Rixie session complete");
