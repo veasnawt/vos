@@ -289,7 +289,7 @@ static void test_rejections(void)
     M("note-descsz", ELF_ENOTE, { NO + 4, 4, 8 });
     M("note-name", ELF_ENOTEMISSING, { NO + 12, 1, 'X' });
     M("note-type", ELF_ENOTEMISSING, { NO + 8, 4, 2 });
-    M("note-version", ELF_EABI, { NO + 16, 4, 4 });   /* first unsupported version */
+    M("note-version", ELF_EABI, { NO + 16, 4, ELF_ABI_MAX + 1 }); /* first unsupported version */
     /* A second VOS note in the file padding after the first, covered by PT_NOTE. */
     M("note-duplicate", ELF_ENOTEDUP, { N + 32, 8, 40 }, { NO + 20, 4, 4 }, { NO + 24, 4, 4 },
       { NO + 28, 4, 1 }, { NO + 32, 4, 0x00534F56 }, { NO + 36, 4, 0 });

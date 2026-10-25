@@ -7,6 +7,8 @@
 #include "usercopy.h"
 #include "file.h"
 #include "user_console.h"
+#include "exec.h"
+#include "exec_verify.h"
 
 void debug_emit(const char *name, const char *data, uint64_t len, void (*put)(char))
 {
@@ -55,6 +57,14 @@ static int64_t sys_debug_write(struct process *p, uint64_t buf, uint64_t len)
 int64_t syscall_dispatch(struct process *p, struct exc_frame *f)
 {
     switch (f->rax) {
+#ifdef VOS_EXEC_VERIFY
+    case SYS_EXEC_VERIFY:
+        return exec_verify_syscall(p, f);
+#endif
+    case SYS_APP_NEXT:
+    case SYS_APP_RUN_FOREGROUND:
+        if (p->abi < 4) return -VOS_ENOSYS;
+        return exec_syscall(p, f);
     case SYS_CONSOLE_READ:
     case SYS_CONSOLE_WRITE:
     case SYS_CONSOLE_CLEAR:

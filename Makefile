@@ -314,3 +314,20 @@ tcp-close-iso:
 	$(MAKE) --no-print-directory ARCH=x86_64 BUILD=$(TCP_CLOSE_BUILD)/kernel USER_BUILD=$(TCP_CLOSE_BUILD)/user GRUB_CFG=arch/x86_64/grub-tcp-close.cfg iso
 tcp-close-uefi-iso: tcp-close-iso
 	$(MAKE) --no-print-directory ARCH=x86_64 BUILD=$(TCP_CLOSE_BUILD)/kernel USER_BUILD=$(TCP_CLOSE_BUILD)/user GRUB_CFG=arch/x86_64/grub-tcp-close.cfg uefi-iso
+
+
+# Focused execution fixture; no VOS_TEST suite or production console handoff.
+EXEC_BUILD ?= build/app-exec-verify
+ifneq ($(filter exec-probe-iso exec-probe-uefi-iso,$(MAKECMDGOALS)),)
+ifeq ($(strip $(EXEC_BUILD)),)
+$(error EXEC_BUILD must be nonempty; use an admitted fresh path under build/)
+endif
+endif
+EXEC_NAMES := vsh rixie exec-probe exec-negative exec-fault exec-spin exec-recursive exec-contender exec-legacy0 exec-legacy1 exec-legacy2 exec-legacy3
+EXEC_FILES = $(foreach n,$(EXEC_NAMES),$(EXEC_BUILD)/user/$(n).elf:boot/$(n).elf)
+.PHONY: exec-probe-iso exec-probe-uefi-iso
+exec-probe-iso:
+	$(MAKE) --no-print-directory ARCH=x86_64 USER_BUILD=$(EXEC_BUILD)/user RUST_APP=rixie user-vsh user-rust user-exec-probe
+	$(MAKE) --no-print-directory ARCH=x86_64 BUILD=$(EXEC_BUILD)/kernel USER_BUILD=$(EXEC_BUILD)/user EXEC_VERIFY=1 TEST_DEFS=-DVOS_EXEC_VERIFY GRUB_CFG=arch/x86_64/grub-exec.cfg ISO_FILES="$(EXEC_FILES)" iso
+exec-probe-uefi-iso: exec-probe-iso
+	$(MAKE) --no-print-directory ARCH=x86_64 BUILD=$(EXEC_BUILD)/kernel USER_BUILD=$(EXEC_BUILD)/user EXEC_VERIFY=1 TEST_DEFS=-DVOS_EXEC_VERIFY GRUB_CFG=arch/x86_64/grub-exec.cfg ISO_FILES="$(EXEC_FILES)" uefi-iso

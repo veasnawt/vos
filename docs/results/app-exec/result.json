@@ -1,0 +1,358 @@
+{
+  "scope": "ABI v4 execution authority and bounded non-interactive kernel broker",
+  "passed": true,
+  "source_sha256": {
+    "Makefile": "226d76f6e54bf3d95f18a44461e7a12004d19a037d93d19d2275dfbe2bd53426",
+    "arch/x86_64/app_catalog.c": "366f9cc2d6348f2083ffa95ab5a95f699c9ae8a99bd4a47ab8acae576dd70247",
+    "arch/x86_64/app_payload.c": "97c96d78c4df8cacf6e98192fea1a2e614cc6f54b1b084b02bc62737c465e20c",
+    "arch/x86_64/arch.mk": "4df4c1c64dcc9e021d45ebe4487c0e77652de339c3df289e8c4efea03b01856d",
+    "arch/x86_64/elf.c": "c01cd9b6d606528077819ffa256daf3158056ca9fe89f70c549a32bd26315b3f",
+    "arch/x86_64/elf.h": "898c1e90676208c9d876dfa8d58704effc0884a63bf087435961526fb0e247c5",
+    "arch/x86_64/exec.c": "793a848b3bceaef06473773c1029925428e922040a28be091d846c74dd3c6aba",
+    "arch/x86_64/exec.h": "fd86b2462f1d7f85b249f1e9c56ce6bf63464d938e9033b445d2402dbda625e7",
+    "arch/x86_64/exec_verify.c": "0759769dfcf5c47a818c5d17db4cf95570b72958cd32513876d56b51eab8f31e",
+    "arch/x86_64/exec_verify.h": "8d5249430d2107d639392d651d2abff04f4e556b7886155d19910cfd31c47b45",
+    "arch/x86_64/grub-exec.cfg": "791d114f378322b67dd14abf2d10de98e9097ddfbe162f21ab06e268ab902855",
+    "arch/x86_64/kernel.c": "ccd11abf03e3338b8b787a686143864a55642c7b69b741071b31b21eccabdd7b",
+    "arch/x86_64/loader.c": "6b7d86325c00e88d0a612477ad63a6de07e2acca569efb8fdd95bd0bf44b2220",
+    "arch/x86_64/process.c": "2c086e6aca98a7bcadcfa2d2c0ff69511d51f422d1d26f19e84a504762559a7f",
+    "arch/x86_64/process.h": "04ad253a4ad6830a89ad9a549a12f80bf313228feeed3b5689f385dfe8e72a81",
+    "arch/x86_64/selftest_elf.c": "a363dfc4b8da734af3a1d9636ad1db0dce326edb3f57405cb5487d945be681db",
+    "arch/x86_64/syscall.c": "71fe6d344f35a6ecf67a1c6c36896d6992a9937d1ab9721fdf71f5e150387e48",
+    "arch/x86_64/syscall.h": "ecdcf12b6c114cb8c560cebe3cd251decaed909903556911a61c8554f887790d",
+    "arch/x86_64/thread.c": "8f8685d5878e49338c60977f1acda8a500a7897a0a8f04fafe2f0c8e0c1a35b0",
+    "arch/x86_64/user_console.c": "1441903c0c9521b9f89b5df924c4025e160d1781557f17eefd2451c8cde97001",
+    "arch/x86_64/vsh_boot.c": "c4bfcd7e02df3d7be72003aaa305123008b6a0cc8ddd68838c99693978abfd50",
+    "scripts/check-user-elf.sh": "75bec427f5f8c6cdb8b3d4adb6c7e417392c8002ffeb3959672d8d846af61ae6",
+    "scripts/test-app-exec.py": "c9ba0ecaaeae619a4b61349c89b346d41e1abd065bac02d8cd0c538f8dc38412",
+    "scripts/test-app-payload.py": "3c3dc9013fb15fa857a59ac1bffd7cd615a897468c407e5a5731aecc61d3be12",
+    "scripts/test-native-vsh.py": "bbc4481a871251d902a7b78013423551c0df248464dc4d47f6eec17b413897c6",
+    "tests/host/exec.c": "6430da354a87d08270e2394ea67bd82d7b39b89113b1772c04f4fb5d18779881",
+    "tests/rust/apps.rs": "c660e997d4b7ec0be84f20be6fca168b01040a45ae6dee06d299a0b1bdbde77b",
+    "user/exec-probe/child.c": "d7d8c02bcac27c7ecccc57a55567f32c669af78b32af77bc57371d4ef70bc770",
+    "user/exec-probe/control.S": "99a780ddc89437c2c7d5ad89ef9eabe56636b6afbb013f79596b69d066ef44cc",
+    "user/exec-probe/main.rs": "edd7b8ae7b10ac6a3850f1f2773a4b57f8cdd8b2128d352226be705901a86c60",
+    "user/include/vos/apps.h": "483ad03e6623fdd797b99198e9f26288aeed434d296f7453e2226ab83fda26e7",
+    "user/lib/abi_note_v4.S": "09792182f4f1200e802d005e14f3fa15d8d36b3c11bfd3403f63a50c9eb5cd25",
+    "user/lib/syscall_v4.S": "3ff3609537e0216c5d3b619fad719ccf1527d79234be095c1190c1203fe852ac",
+    "user/rixie/main.rs": "24d050c21de01e6e4aef8d72edb88676f3fd203a5467a6b3dada006100d0111a",
+    "user/rust/apps.rs": "24e8ca84185ba79a665b7354337cfe1a41c9537ac08f31b57ed53c963e57e3de",
+    "user/rust/vos.rs": "4434372465239c24a806a33debc2f9a74e815bc5afade0ed5b2f2cf72ff8f8c5",
+    "user/user.mk": "67c0805cf9a169fb83d3094572e9d537dbc9db5a8b32f95390ed9381a71d5e02",
+    "user/vsh/main.rs": "358952e5804986b60e05866cf3ca0ca36edc49b1b59c569e156af42f44469009"
+  },
+  "compiler": "gcc (Ubuntu 15.2.0-16ubuntu1) 15.2.0",
+  "QEMU": "QEMU emulator version 10.2.1 (Debian 1:10.2.1+ds-1ubuntu3.2)",
+  "rustc": "rustc 1.100.0-nightly (2e2b193f8 2026-09-02)",
+  "host_load_before": [
+    0.125,
+    0.0791015625,
+    0.0830078125
+  ],
+  "reused_host_evidence": {
+    "source": "/home/veasnawt/src/myos/build/app-exec-20261025T033737Z/attempt-1",
+    "manifest_sha256": "a5a0f4217ab91db5442214ac0cedef3958eff13f42c28cebc9486e899c3a080b",
+    "artifacts": {
+      "broker-host": "974f97c7bf536e65f2536798828fb49e7c225dee99cd1f06dc87036ea79e72b4",
+      "broker-release": "be5959a39ea896826673d886039c73affaa77acf842a52eb67f296b39ebfaaa3",
+      "host-build.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "host-test.log": "a1c0cd4068504f3fb2f71c15f02db62ad7755896808017449b104c8dcf0b2b09",
+      "release-build.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "release-benchmark.json": "9dc013c1e60cfbd8bfdef01e1925eba52f245274f101a65af6514da826fa6258"
+    },
+    "not_rerun": true
+  },
+  "optimized_host_baseline": {
+    "scope": "optimized host broker plus modeled lifecycle; not native latency",
+    "jobs_per_sample": 1000,
+    "sample_total_ns": [
+      325700,
+      298800,
+      308800,
+      309500,
+      296900,
+      295700,
+      295500
+    ],
+    "median_ns_per_1000_jobs_and_negative_cases": 298800
+  },
+  "reused_Rust_evidence": {
+    "source": "/home/veasnawt/src/myos/build/app-exec-20261025T033737Z/attempt-2",
+    "not_rerun": true,
+    "manifest_sha256": "c58e573568fe09064ed7212d36430599126609133b1c2e90a56814127fcdb21b",
+    "artifacts": {
+      "rust-host": "0aa8e39868aa3bb8ae2f14e17cd83860d92e8a9862a1569733cfa95bad44585a",
+      "rust-build.log": "e10ae6329d4fbcfd4135d344ad6c7f02cd895d5e87eef27ccca5ef2b484a33b8",
+      "rust-test.log": "1fb64bb002a28a3bc53974aedcb631d01b92b92081f9a72adf2eb30bcb0ed587"
+    }
+  },
+  "application_sha256": {
+    "vsh": "4a837277422f97c86f3c3a5ba0fef15de22c002addf9243a4b5d78bd73b5ad5f",
+    "hello": "c6c6416195a0f18d680d7f8f19be52ce02ff02912ef3bac45324fbe88006cd06",
+    "rixie": "77104da3b33caf809daf5e6674ac4e2fa9edf6a9e2e5dd59828514df76490d32",
+    "exec-probe": "3c280347339ef108e1b46264a4ec77d1a356c927a6be0edee7d9132a68d8827a",
+    "exec-negative": "4a48375fca14188ba8b04d01d3b9da438400bac5ed37cf778795636715a27fe9",
+    "exec-fault": "14087dc477fcaeaff906617325cbee3fb894d3fbdff33f191119306ce16b0051",
+    "exec-spin": "e31013dad387de9d145f73f371c0f9e957577b8b588a3487160c3a2f03f09309",
+    "exec-recursive": "c445989a87e6ad52a2d38b72d75bac839b340b1a7483033673481e534adef59a",
+    "exec-contender": "10cb5096941ab0538b73fcc07b63987e433580e0ec55155e968c944a52134db5",
+    "exec-legacy0": "70cecc269e5a5e06364ee6fd1d7efff84fcd87c3bab8f90b580991730f98c850",
+    "exec-legacy1": "5e38d7d41ee8c563e49d7e3a2af73796a7ad3956c88b5de61a74fb65dc0e313a",
+    "exec-legacy2": "af021e9a4d1d3cab032976e97311961c556bfb0489916067dc710a887af5a34e",
+    "exec-legacy3": "5bc6b5862454e950a970fba3d1494fe70df262130149fa511f8a62c79280c3d3"
+  },
+  "ELF_negative_controls": {
+    "future-abi": {
+      "kernel": {
+        "returncode": 1,
+        "diagnostic": "elfcheck: /home/veasnawt/src/myos/build/app-exec-20261025T033737Z/continuation-1/future-abi.elf: REJECT: VOS ABI note: bad descriptor or unsupported version\n"
+      },
+      "build": {
+        "returncode": 1,
+        "diagnostic": "check-user-elf: /home/veasnawt/src/myos/build/app-exec-20261025T033737Z/continuation-1/future-abi.elf: REJECT: VOS ABI note: version 5, expected 0..4\n"
+      }
+    },
+    "writable-code": {
+      "kernel": {
+        "returncode": 1,
+        "diagnostic": "elfcheck: /home/veasnawt/src/myos/build/app-exec-20261025T033737Z/continuation-1/writable-code.elf: REJECT: PT_LOAD writable and executable\n"
+      },
+      "build": {
+        "returncode": 1,
+        "diagnostic": "check-user-elf: /home/veasnawt/src/myos/build/app-exec-20261025T033737Z/continuation-1/writable-code.elf: REJECT: PT_LOAD 0: writable and executable\n"
+      }
+    }
+  },
+  "extracted_payload_sha256": {
+    "bios": {
+      "vos.bin": "40dd44daff5091baf64cc43b185874fce401d5297624b1b16ce674e81f91d0fb",
+      "vsh.elf": "4a837277422f97c86f3c3a5ba0fef15de22c002addf9243a4b5d78bd73b5ad5f",
+      "hello.elf": "c6c6416195a0f18d680d7f8f19be52ce02ff02912ef3bac45324fbe88006cd06",
+      "rixie.elf": "77104da3b33caf809daf5e6674ac4e2fa9edf6a9e2e5dd59828514df76490d32",
+      "exec-probe.elf": "3c280347339ef108e1b46264a4ec77d1a356c927a6be0edee7d9132a68d8827a",
+      "exec-negative.elf": "4a48375fca14188ba8b04d01d3b9da438400bac5ed37cf778795636715a27fe9",
+      "exec-fault.elf": "14087dc477fcaeaff906617325cbee3fb894d3fbdff33f191119306ce16b0051",
+      "exec-spin.elf": "e31013dad387de9d145f73f371c0f9e957577b8b588a3487160c3a2f03f09309",
+      "exec-recursive.elf": "c445989a87e6ad52a2d38b72d75bac839b340b1a7483033673481e534adef59a",
+      "exec-contender.elf": "10cb5096941ab0538b73fcc07b63987e433580e0ec55155e968c944a52134db5",
+      "exec-legacy0.elf": "70cecc269e5a5e06364ee6fd1d7efff84fcd87c3bab8f90b580991730f98c850",
+      "exec-legacy1.elf": "5e38d7d41ee8c563e49d7e3a2af73796a7ad3956c88b5de61a74fb65dc0e313a",
+      "exec-legacy2.elf": "af021e9a4d1d3cab032976e97311961c556bfb0489916067dc710a887af5a34e",
+      "exec-legacy3.elf": "5bc6b5862454e950a970fba3d1494fe70df262130149fa511f8a62c79280c3d3"
+    },
+    "uefi": {
+      "vos.bin": "40dd44daff5091baf64cc43b185874fce401d5297624b1b16ce674e81f91d0fb",
+      "vsh.elf": "4a837277422f97c86f3c3a5ba0fef15de22c002addf9243a4b5d78bd73b5ad5f",
+      "hello.elf": "c6c6416195a0f18d680d7f8f19be52ce02ff02912ef3bac45324fbe88006cd06",
+      "rixie.elf": "77104da3b33caf809daf5e6674ac4e2fa9edf6a9e2e5dd59828514df76490d32",
+      "exec-probe.elf": "3c280347339ef108e1b46264a4ec77d1a356c927a6be0edee7d9132a68d8827a",
+      "exec-negative.elf": "4a48375fca14188ba8b04d01d3b9da438400bac5ed37cf778795636715a27fe9",
+      "exec-fault.elf": "14087dc477fcaeaff906617325cbee3fb894d3fbdff33f191119306ce16b0051",
+      "exec-spin.elf": "e31013dad387de9d145f73f371c0f9e957577b8b588a3487160c3a2f03f09309",
+      "exec-recursive.elf": "c445989a87e6ad52a2d38b72d75bac839b340b1a7483033673481e534adef59a",
+      "exec-contender.elf": "10cb5096941ab0538b73fcc07b63987e433580e0ec55155e968c944a52134db5",
+      "exec-legacy0.elf": "70cecc269e5a5e06364ee6fd1d7efff84fcd87c3bab8f90b580991730f98c850",
+      "exec-legacy1.elf": "5e38d7d41ee8c563e49d7e3a2af73796a7ad3956c88b5de61a74fb65dc0e313a",
+      "exec-legacy2.elf": "af021e9a4d1d3cab032976e97311961c556bfb0489916067dc710a887af5a34e",
+      "exec-legacy3.elf": "5bc6b5862454e950a970fba3d1494fe70df262130149fa511f8a62c79280c3d3"
+    }
+  },
+  "firmware": {
+    "bios": {
+      "passed": true,
+      "firmware": "bios",
+      "execution_markers": [
+        "enumeration and authority bounds PASS",
+        "normal negative fault recursive PASS",
+        "rights revocation stale cookie PASS",
+        "queued loaded pre-start cancellation PASS",
+        "allocation process thread loader rollback PASS",
+        "running reap publication contention PASS",
+        "repeat execution PASS; final parent cancellation follows",
+        "exec-verify: PASS legacy=4",
+        "PMM/process/thread restored; kernel CR3 reaping",
+        "recursive execution denied",
+        "one-slot contention denied"
+      ],
+      "legacy_ABI_probes": 4,
+      "hello_ABI_v0": true,
+      "vsh_ABI_v3": true,
+      "shell_cases": [
+        {
+          "command": "help",
+          "expected": "Available commands: help, clear, echo, pwd, ls, cd, cat",
+          "prompt": "VOS> ",
+          "passed": true
+        },
+        {
+          "command": "echo common payload shell",
+          "expected": "common payload shell",
+          "prompt": "VOS> ",
+          "passed": true
+        },
+        {
+          "command": "pwd",
+          "expected": "/",
+          "prompt": "VOS> ",
+          "passed": true
+        },
+        {
+          "command": "ls",
+          "expected": "docs",
+          "prompt": "VOS> ",
+          "passed": true
+        },
+        {
+          "command": "cd docs",
+          "expected": "",
+          "prompt": "VOS>docs> ",
+          "passed": true
+        },
+        {
+          "command": "cat welcome.txt",
+          "expected": "Shared payload: real read-only filesystem.",
+          "prompt": "VOS>docs> ",
+          "passed": true
+        },
+        {
+          "command": "cd /",
+          "expected": "",
+          "prompt": "VOS> ",
+          "passed": true
+        },
+        {
+          "command": "echo catalogx",
+          "expected": "catalog",
+          "prompt": "VOS> ",
+          "passed": true
+        },
+        {
+          "command": "apps",
+          "expected": "vsh: unknown command",
+          "prompt": "VOS> ",
+          "passed": true
+        },
+        {
+          "command": "rixie",
+          "expected": "vsh: unknown command",
+          "prompt": "VOS> ",
+          "passed": true
+        }
+      ],
+      "process_reclaimed": true,
+      "halted": true,
+      "rixie_not_executed": true,
+      "no_shell_launch_commands": true,
+      "no_network": true,
+      "screenshot": {
+        "width": 1280,
+        "height": 800,
+        "sha256": "b51904a0eacc7f31cdd58f153db669c757d9c79f9171b44a0a282aa1d014aa95"
+      },
+      "startup_to_prompt_seconds": 1.2072992180037545,
+      "elapsed_seconds": 6.925875136003015
+    },
+    "uefi": {
+      "passed": true,
+      "firmware": "uefi",
+      "execution_markers": [
+        "enumeration and authority bounds PASS",
+        "normal negative fault recursive PASS",
+        "rights revocation stale cookie PASS",
+        "queued loaded pre-start cancellation PASS",
+        "allocation process thread loader rollback PASS",
+        "running reap publication contention PASS",
+        "repeat execution PASS; final parent cancellation follows",
+        "exec-verify: PASS legacy=4",
+        "PMM/process/thread restored; kernel CR3 reaping",
+        "recursive execution denied",
+        "one-slot contention denied"
+      ],
+      "legacy_ABI_probes": 4,
+      "hello_ABI_v0": true,
+      "vsh_ABI_v3": true,
+      "shell_cases": [
+        {
+          "command": "help",
+          "expected": "Available commands: help, clear, echo, pwd, ls, cd, cat",
+          "prompt": "VOS> ",
+          "passed": true
+        },
+        {
+          "command": "echo common payload shell",
+          "expected": "common payload shell",
+          "prompt": "VOS> ",
+          "passed": true
+        },
+        {
+          "command": "pwd",
+          "expected": "/",
+          "prompt": "VOS> ",
+          "passed": true
+        },
+        {
+          "command": "ls",
+          "expected": "docs",
+          "prompt": "VOS> ",
+          "passed": true
+        },
+        {
+          "command": "cd docs",
+          "expected": "",
+          "prompt": "VOS>docs> ",
+          "passed": true
+        },
+        {
+          "command": "cat welcome.txt",
+          "expected": "Shared payload: real read-only filesystem.",
+          "prompt": "VOS>docs> ",
+          "passed": true
+        },
+        {
+          "command": "cd /",
+          "expected": "",
+          "prompt": "VOS> ",
+          "passed": true
+        },
+        {
+          "command": "echo catalogx",
+          "expected": "catalog",
+          "prompt": "VOS> ",
+          "passed": true
+        },
+        {
+          "command": "apps",
+          "expected": "vsh: unknown command",
+          "prompt": "VOS> ",
+          "passed": true
+        },
+        {
+          "command": "rixie",
+          "expected": "vsh: unknown command",
+          "prompt": "VOS> ",
+          "passed": true
+        }
+      ],
+      "process_reclaimed": true,
+      "halted": true,
+      "rixie_not_executed": true,
+      "no_shell_launch_commands": true,
+      "no_network": true,
+      "screenshot": {
+        "width": 1280,
+        "height": 800,
+        "sha256": "b51904a0eacc7f31cdd58f153db669c757d9c79f9171b44a0a282aa1d014aa95"
+      },
+      "startup_to_prompt_seconds": 4.019844173002639,
+      "elapsed_seconds": 9.766575776004174
+    }
+  },
+  "disk_sha256": "7caf71279cd6b191a2a18128ea13f533310ae3ffe54770b06c160f11a387b8ef",
+  "host_checks": "PASS assertions=11232 jobs=1018 loaded=1013 started=1010 reclaimed=1013; actual exec.c, modeled scheduler/loader",
+  "rust_checks": "running 4 tests\ntest completion ... ok\ntest layout ... ok\ntest wrappers ... ok\ntest zero_and_invalid_records ... ok\n\ntest result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+  "ABI_v0_v3_compatible": true,
+  "no_console_handoff": true,
+  "no_shell_launch_commands": true,
+  "no_network_grants": true,
+  "physical_hardware_verified": false
+}

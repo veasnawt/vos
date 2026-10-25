@@ -1,0 +1,35 @@
+{
+  "optimized_host": {
+    "scope": "optimized host broker plus modeled lifecycle; not native latency",
+    "jobs_per_sample": 1000,
+    "sample_total_ns": [
+      325700,
+      298800,
+      308800,
+      309500,
+      296900,
+      295700,
+      295500
+    ],
+    "median_ns_per_1000_jobs_and_negative_cases": 298800
+  },
+  "compiler": "gcc (Ubuntu 15.2.0-16ubuntu1) 15.2.0",
+  "rustc": "rustc 1.100.0-nightly (2e2b193f8 2026-09-02)",
+  "QEMU": "QEMU emulator version 10.2.1 (Debian 1:10.2.1+ds-1ubuntu3.2)",
+  "host_load_before": [
+    0.125,
+    0.0791015625,
+    0.0830078125
+  ],
+  "firmware_timing": {
+    "bios": {
+      "startup_to_native_summary_seconds": 1.2072992180037545,
+      "total_seconds": 6.925875136003015
+    },
+    "uefi": {
+      "startup_to_native_summary_seconds": 4.019844173002639,
+      "total_seconds": 9.766575776004174
+    }
+  },
+  "comparison": "New component baseline only; host models and firmware diagnostics are not production/native launch benchmarks."
+}
