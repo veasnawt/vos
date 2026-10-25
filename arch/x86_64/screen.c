@@ -1,4 +1,5 @@
 #include "screen.h"
+#include "desktop.h"
 #include "console.h"
 #include "devmap.h"
 #include "font8x16.h"
@@ -33,6 +34,9 @@ static int kind = SCREEN_NONE, inited, busy, panicked;
 static const char *why = "not initialized";
 static struct screen_surface fb;
 static uint32_t cols, rows, log_y, cx, cy;
+static uint32_t text_x=SCREEN_MARGIN,clear_x,clear_w,clear_bottom;
+static int desktop_mode;
+static struct desktop_layout desktop;
 static volatile uint16_t *vga;
 static int status = SCREEN_BOOTING;
 static const char *status_text;
@@ -122,6 +126,12 @@ static void fb_text(uint32_t x, uint32_t y, const char *t, uint32_t max_chars, u
 
 static void draw_bar(void)
 {
+    /* Ordinary desktop chrome carries identity/context, not a permanent test badge.
+     * Failure and panic paths retain their diagnostic display behavior. */
+    if(desktop_mode && kind==SCREEN_FB && status!=SCREEN_FAIL) {
+        desktop_bar(&fb);
+        return;
+    }
     static const char *const label[] = { "BOOTING", "PASS", "FAIL" };
     const char *l = label[status];
     uint32_t llen = (uint32_t)strlen(l);
@@ -133,7 +143,7 @@ static void draw_bar(void)
 
         screen_fill(&fb, 0, 0, fb.width, SCREEN_BAR_H, COLOR_BAR);
         fb_text(SCREEN_MARGIN, ty, "VOS", 3, COLOR_WHITE, COLOR_BAR);
-        fb_text(SCREEN_MARGIN + 5 * 8, ty, input_mode ? "console" : "early boot", 10, COLOR_DIM, COLOR_BAR);
+        fb_text(SCREEN_MARGIN + 5 * 8, ty, desktop_mode ? "desktop" : input_mode ? "console" : "early boot", 10, COLOR_DIM, COLOR_BAR);
         if (status_text && room > 2)
             fb_text(SCREEN_MARGIN + 17 * 8, ty, status_text, room - 4, COLOR_FG, COLOR_BAR);
         screen_fill(&fb, badge_x, 4, badge_w, SCREEN_BAR_H - 8, badge_c);
@@ -162,7 +172,8 @@ static void clear_line(uint32_t r)
         for (unsigned i = 0; i < cols; i++)
             input_cells[r * INPUT_COLS + i] = ' ';
     if (kind == SCREEN_FB)
-        screen_fill(&fb, 0, log_y + r * SCREEN_LINE_H, fb.width, SCREEN_LINE_H, COLOR_BG);
+        screen_fill(&fb, desktop_mode ? clear_x : 0, log_y + r * SCREEN_LINE_H,
+                    desktop_mode ? clear_w : fb.width, SCREEN_LINE_H, COLOR_BG);
     else
         for (unsigned i = 0; i < VGA_COLS; i++)
             vga[(1 + r) * VGA_COLS + i] = (uint16_t)(VGA_LOG << 8 | ' ');
@@ -185,7 +196,7 @@ static void newline(void)
             for (unsigned c = 0; c < cols; c++) {
                 char ch = input_cells[r * INPUT_COLS + c];
                 if (kind == SCREEN_FB)
-                    screen_glyph(&fb, SCREEN_MARGIN + c * 8, log_y + r * SCREEN_LINE_H + 1,
+                    screen_glyph(&fb, text_x + c * 8, log_y + r * SCREEN_LINE_H + 1,
                                  ch, COLOR_FG, COLOR_BG);
                 else
                     vga[(1 + r) * VGA_COLS + c] = (uint16_t)(VGA_LOG << 8 | (uint8_t)ch);
@@ -211,7 +222,7 @@ static void put(char c)
     if (input_mode)
         input_cells[cy * INPUT_COLS + cx] = c;
     if (kind == SCREEN_FB)
-        screen_glyph(&fb, SCREEN_MARGIN + cx * 8, log_y + cy * SCREEN_LINE_H + 1, c, COLOR_FG, COLOR_BG);
+        screen_glyph(&fb, text_x + cx * 8, log_y + cy * SCREEN_LINE_H + 1, c, COLOR_FG, COLOR_BG);
     else
         vga[(1 + cy) * VGA_COLS + cx] = (uint16_t)(VGA_LOG << 8 | (uint8_t)c);
     cx++;
@@ -248,7 +259,7 @@ void screen_erase_previous(void)
     if (input_mode)
         input_cells[cy * INPUT_COLS + cx] = ' ';
     if (kind == SCREEN_FB)
-        screen_glyph(&fb, SCREEN_MARGIN + cx * 8, log_y + cy * SCREEN_LINE_H + 1,
+        screen_glyph(&fb, text_x + cx * 8, log_y + cy * SCREEN_LINE_H + 1,
                      ' ', COLOR_FG, COLOR_BG);
     else
         vga[(1 + cy) * VGA_COLS + cx] = (uint16_t)(VGA_LOG << 8 | ' ');
@@ -267,7 +278,8 @@ void screen_begin_input(void)
         rows = INPUT_ROWS;
     cx = cy = 0;
     if (kind == SCREEN_FB)
-        screen_fill(&fb, 0, log_y, fb.width, fb.height - log_y, COLOR_BG);
+        screen_fill(&fb, desktop_mode ? clear_x : 0, log_y, desktop_mode ? clear_w : fb.width,
+                    (desktop_mode ? clear_bottom : fb.height) - log_y, COLOR_BG);
     for (unsigned r = 0; r < rows; r++)
         clear_line(r);
     draw_bar();
@@ -348,6 +360,7 @@ void screen_init(const struct boot_info *bi)
             fb.pitch_px = f.pitch / 4;
             fb.width = f.width;
             fb.height = f.height;
+            clear_w=fb.width;clear_bottom=fb.height;
             log_y = SCREEN_BAR_H + 8;
             cols = (fb.width - 2 * SCREEN_MARGIN) / 8;
             rows = (fb.height - log_y - SCREEN_MARGIN) / SCREEN_LINE_H;
@@ -396,4 +409,17 @@ void screen_init(const struct boot_info *bi)
     draw_bar();
     for (uint32_t i = 0; i < early_len; i++)   /* the log so far */
         screen_putc(early[i]);
+}
+
+int screen_desktop_begin(void)
+{
+    if(!inited || kind!=SCREEN_FB || busy || panicked ||
+       !desktop_compute(fb.width,fb.height,&desktop))return 0;
+    busy=1;
+    if(!desktop_paint(&fb,&desktop)){busy=0;return 0;}
+    desktop_mode=1;text_x=desktop.text_x;clear_x=desktop.text_x;
+    log_y=desktop.text_y;clear_w=desktop.text_w;clear_bottom=log_y+desktop.text_h;
+    cols=desktop.text_w/8;rows=desktop.text_h/SCREEN_LINE_H;
+    busy=0;screen_begin_input();
+    return 1;
 }

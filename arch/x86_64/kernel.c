@@ -30,6 +30,7 @@
 #include "pmm.h"
 #include "resv.h"
 #include "screen.h"
+#include "desktop.h"
 #include "thread.h"
 #include "virtio_blk.h"
 #include "vmm.h"
@@ -396,8 +397,12 @@ void kernel_main(uint32_t mb2_magic, uint32_t mb2_info)
         check(net_boot_run(bi.cmdline), "native network adapter");
         screen_status(first_failure ? SCREEN_FAIL : SCREEN_PASS,first_failure ? "Network check failed" : "N5 adapter increment");
     } else if (!first_failure && app_payload_requested(bi.cmdline)) {
-        /* Bootstrap only: reuse the accepted vsh loader and grants. No runtime
-         * launch service, child process or console transfer is introduced. */
+        if(desktop_requested(bi.cmdline)) {
+            int visible=screen_desktop_begin();
+            serial_puts(visible ? "desktop: scene ready; kernel-owned BGRX surface, bounded console viewport\r\n" :
+                                 "desktop: unavailable; existing console fallback\r\n");
+        }
+        /* Reuse the trusted catalog, explicit grants and execution broker. */
         check(vsh_run(&bi), "common payload native vsh");
         screen_status(first_failure ? SCREEN_FAIL : SCREEN_PASS,
                       first_failure ? "Common payload failed" : "Common payload: shell reclaimed, catalog retained");

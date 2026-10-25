@@ -1,0 +1,4 @@
+Reused unchanged C test evidence from layout-refinement-1:
+PASS 562324 assertions: actual refined renderer/console; single header/full captions/no PASS badge, stride/padding/guards, viewport and fallback
+PASS: framebuffer exact erase, wrap/ring boundary, panic/none guards and VGA cell bounds
+PASS: opt-in clear, chronological scroll, framebuffer/shadow agreement, VGA scroll and wrap erasure

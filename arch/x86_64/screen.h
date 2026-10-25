@@ -53,6 +53,9 @@ void screen_erase_previous(void);
  * Serial boot diagnostics remain intact. No-op without an initialized screen.
  */
 void screen_begin_input(void);
+/* Opt-in N6 scene around the existing exclusive foreground console. Falls back
+ * without changing mode when no validated >=640x480 BGRX framebuffer exists. */
+int screen_desktop_begin(void);
 /* The status shown in the bar; text (may be NULL) is shown beside it. */
 void screen_status(int state, const char *text);
 /* The panic banner (called by panic). */
