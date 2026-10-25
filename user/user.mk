@@ -196,3 +196,36 @@ $(STORAGE_STRESS_DIR)/gatec.elf: $(STORAGE_STRESS_DIR)/gatec.o $(USER_RT_V2) $(U
 # Separate Gate D module; Gate A/B/C modules and the frozen lists are unchanged.
 $(STORAGE_STRESS_DIR)/gated.elf: $(STORAGE_STRESS_DIR)/gated.o $(USER_RT_V2) $(USER_LDS)
 	$(LD) $(USER_LDFLAGS) -o $@ $(USER_RT_V2) $<
+
+
+# ABI v4 is opt-in; existing ABI v0-v3 application/runtime rules remain unchanged.
+USER_RT_V4 := $(addprefix $(USER_BUILD)/lib/,crt0.o syscall.o syscall_v1.o syscall_v2.o syscall_v3.o syscall_v4.o abi_note_v4.o)
+$(USER_BUILD)/rust/libvos_apps.rlib: user/rust/apps.rs $(RUST_SDK)
+	@mkdir -p $(dir $@)
+	$(RUSTC) $(VOS_RUST_FLAGS) --crate-name vos_apps --crate-type=rlib --extern vos=$(RUST_SDK) --emit=link,dep-info=$(@:.rlib=.d) -o $@ $<
+$(USER_BUILD)/exec-probe/main.a: user/exec-probe/main.rs $(RUST_SDK) $(USER_BUILD)/rust/libvos_apps.rlib user/user.mk
+	@mkdir -p $(dir $@)
+	$(RUSTC) $(VOS_RUST_FLAGS) --crate-name exec_probe --crate-type=staticlib -L dependency=$(USER_BUILD)/rust --extern vos=$(RUST_SDK) --extern vos_apps=$(USER_BUILD)/rust/libvos_apps.rlib --emit=link,dep-info=$(@:.a=.d) -o $@ $<
+$(USER_BUILD)/exec-probe.elf: $(USER_BUILD)/exec-probe/main.a $(USER_RT_V4) $(USER_BUILD)/exec-probe/control.o $(USER_BUILD)/rust/runtime.o $(USER_LDS)
+	$(LD) $(USER_LDFLAGS) --gc-sections -o $@ $(USER_RT_V4) $(USER_BUILD)/exec-probe/control.o $(USER_BUILD)/rust/runtime.o $(USER_BUILD)/exec-probe/main.a
+
+define EXEC_FIXTURE
+$(USER_BUILD)/exec-$(1).o: user/exec-probe/child.c user/user.mk
+	@mkdir -p $$(dir $$@)
+	$$(CC) $$(USER_CFLAGS) -DEXEC_CASE=$(2) -MMD -MP -c $$< -o $$@
+$(USER_BUILD)/exec-$(1).elf: $(USER_BUILD)/exec-$(1).o $(sort $(3) $(USER_BUILD)/lib/syscall_v4.o) $(USER_LDS)
+	$(LD) $(USER_LDFLAGS) -o $$@ $(filter-out $(USER_BUILD)/lib/syscall_v4.o,$(3)) $(USER_BUILD)/lib/syscall_v4.o $(USER_BUILD)/exec-$(1).o
+endef
+$(eval $(call EXEC_FIXTURE,negative,0,$(USER_RT_V4)))
+$(eval $(call EXEC_FIXTURE,fault,1,$(USER_RT_V4)))
+$(eval $(call EXEC_FIXTURE,spin,2,$(USER_RT_V4)))
+$(eval $(call EXEC_FIXTURE,recursive,3,$(USER_RT_V4)))
+$(eval $(call EXEC_FIXTURE,contender,4,$(USER_RT_V4)))
+$(eval $(call EXEC_FIXTURE,legacy0,5,$(USER_RT)))
+$(eval $(call EXEC_FIXTURE,legacy1,5,$(USER_RT_V1)))
+$(eval $(call EXEC_FIXTURE,legacy2,5,$(USER_RT_V2)))
+$(eval $(call EXEC_FIXTURE,legacy3,5,$(USER_RT_V3)))
+EXEC_FIXTURE_NAMES := negative fault spin recursive contender legacy0 legacy1 legacy2 legacy3
+EXEC_FIXTURE_ELFS = $(addprefix $(USER_BUILD)/exec-,$(addsuffix .elf,$(EXEC_FIXTURE_NAMES)))
+.PHONY: user-exec-probe
+user-exec-probe: $(USER_BUILD)/exec-probe.elf $(EXEC_FIXTURE_ELFS)

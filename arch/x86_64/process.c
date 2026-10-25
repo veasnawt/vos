@@ -1,4 +1,5 @@
 #include "process.h"
+#include "exec.h"
 #include "io_scope.h"
 #include "file.h"
 #include "user_console.h"
@@ -160,9 +161,15 @@ void proc_test_frame_budget(int n)
 }
 #endif
 
+#if defined(VOS_EXEC_VERIFY) && !defined(VOS_TEST)
+/* Narrow allocation injection for the execution fixture; no production deadline. */
+static int frame_budget = -1;
+void proc_test_frame_budget(int n) { frame_budget = n; }
+#endif
+
 static int frame_alloc(uint64_t *pa)
 {
-#ifdef VOS_TEST
+#if defined(VOS_TEST) || defined(VOS_EXEC_VERIFY)
     if (frame_budget == 0) {
         *pa = 0;
         return PMM_ENOMEM;
@@ -331,6 +338,7 @@ void proc_destroy(struct process *p)
         panic("process: teardown while not on the kernel address space");
     if (file_process_busy(p))
         panic("process: file operation has not unwound");
+    exec_process_end(p);
     file_close_all(p);
     user_console_revoke(p);
     handles_close_all(p);               /* N2.4: a process that never ran may still hold handles */
@@ -370,6 +378,7 @@ __attribute__((noreturn)) static void terminate(struct process *p)
         panic("process: terminating without a final state");
     if (file_process_busy(p))
         panic("process: file operation has not unwound");
+    exec_process_end(p);
     file_close_all(p);
     user_console_revoke(p);
     handles_close_all(p);               /* N2.4: peers see -VOS_EPIPE from now on */
@@ -452,6 +461,7 @@ void proc_kill(struct process *p, const char *reason)
 {
     if (registered(p) && p->state == PROC_RUNNING && !p->kill_reason) {
         p->kill_reason = reason ? reason : "killed by the kernel";
+        exec_process_cancel(p);
         io_scope_cancel(p->pid);
         thread_interrupt(p->tid);       /* blocked in channel_recv: wake it so it can die */
     }

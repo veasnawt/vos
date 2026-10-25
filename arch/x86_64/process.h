@@ -169,6 +169,10 @@ uint64_t proc_user_trap(struct exc_frame *f);
  */
 void proc_destroy(struct process *p);
 
+#if defined(VOS_EXEC_VERIFY) && !defined(VOS_TEST)
+void proc_test_frame_budget(int n);
+#endif
+
 #ifdef VOS_TEST
 /* Test hook: allow n more data-frame allocations in proc_create (-1 = unlimited). */
 void proc_test_frame_budget(int n);

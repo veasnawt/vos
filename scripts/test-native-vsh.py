@@ -140,7 +140,7 @@ def main():
                 for i in range(count):
                     p=phoff+56*i;typ,flags=struct.unpack_from('<II',data,p)
                     if kind=='future-abi' and typ==4:
-                        off=struct.unpack_from('<Q',data,p+8)[0];struct.pack_into('<I',data,off+16,4);break
+                        off=struct.unpack_from('<Q',data,p+8)[0];struct.pack_into('<I',data,off+16,5);break
                     if kind=='writable-code' and typ==1 and flags&1:
                         struct.pack_into('<I',data,p+4,7);break
                 bad=out/(kind+'.elf');bad.write_bytes(data)

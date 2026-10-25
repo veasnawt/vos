@@ -32,6 +32,8 @@
 #define SYS_CONSOLE_READ   11   /* ABI v3, explicit console grant */
 #define SYS_CONSOLE_WRITE  12
 #define SYS_CONSOLE_CLEAR  13
+#define SYS_APP_NEXT       14   /* ABI v4; process-owned execution authority */
+#define SYS_APP_RUN_FOREGROUND 15
 
 #define VOS_ENOSYS          1
 #define VOS_EINVAL          2

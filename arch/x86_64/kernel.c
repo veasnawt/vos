@@ -9,6 +9,9 @@
 
 #include "app.h"
 #include "app_payload.h"
+#ifdef VOS_EXEC_VERIFY
+#include "exec_verify.h"
+#endif
 #include "bootinfo.h"
 #include "console.h"
 #include "cpu.h"
@@ -266,6 +269,12 @@ void kernel_main(uint32_t mb2_magic, uint32_t mb2_info)
      * Legacy boot/test profiles retain their existing hello path. */
 #ifndef VOS_TEST
     int payload_ready = 1;
+#ifdef VOS_EXEC_VERIFY
+    if (exec_verify_requested(bi.cmdline)) {
+        payload_ready=exec_verify_prepare(&bi,&boot_resv);
+        check(payload_ready,"execution verification sources");
+    } else
+#endif
     if (app_payload_requested(bi.cmdline)) {
         payload_ready = app_payload_prepare(&bi, &boot_resv);
         check(payload_ready, "common native application catalog");
@@ -373,6 +382,12 @@ void kernel_main(uint32_t mb2_magic, uint32_t mb2_info)
     screen_status(first_failure ? SCREEN_FAIL : SCREEN_PASS, first_failure ? "VOS-TEST: FAIL" : "VOS-TEST: PASS");
     outl(TEST_EXIT_PORT, first_failure ? TEST_EXIT_FAIL : TEST_EXIT_PASS);
 #else
+#ifdef VOS_EXEC_VERIFY
+    if (!first_failure && exec_verify_requested(bi.cmdline)) {
+        check(exec_verify_run(),"ABI v4 execution verification");
+        if (!first_failure) check(vsh_run(&bi),"unchanged vsh after execution verification");
+    } else
+#endif
     if (!first_failure && net_requested(bi.cmdline)) {
         check(net_boot_run(bi.cmdline), "native network adapter");
         screen_status(first_failure ? SCREEN_FAIL : SCREEN_PASS,first_failure ? "Network check failed" : "N5 adapter increment");
