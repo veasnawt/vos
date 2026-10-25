@@ -1,0 +1,65 @@
+{
+  "scope": "bounded TCP connection closure",
+  "firmware": {
+    "bios": {
+      "passed": true,
+      "firmware": "bios",
+      "passive_close_completed": true,
+      "active_and_simultaneous_TIME_WAIT_verified": true,
+      "TIME_WAIT_live_explicit_abort": true,
+      "full_TIME_WAIT_expiry_host_tested": true,
+      "retained_tail_after_peer_FIN": true,
+      "lost_FIN_ACK_recovered": true,
+      "invalid_controls_rejected": true,
+      "exact_sequence_reset_erased_RX_TX": true,
+      "exhaustion_retries": 3,
+      "TX": 23,
+      "RX": 26,
+      "context_bytes": 504,
+      "adapter_reset_confirmed": true,
+      "DMA_frames_released": 11,
+      "no_retry_after_destruction": true,
+      "endpoint_erased": true,
+      "ABI_v0_hello": true,
+      "no_application_grants": true,
+      "screenshot": {
+        "width": 1280,
+        "height": 800,
+        "sha256": "5e9dca7eb087ea5fefaae10a9db3ac35e7cb69038508c6d32eccdf8680965d51"
+      }
+    },
+    "uefi": {
+      "passed": true,
+      "firmware": "uefi",
+      "passive_close_completed": true,
+      "active_and_simultaneous_TIME_WAIT_verified": true,
+      "TIME_WAIT_live_explicit_abort": true,
+      "full_TIME_WAIT_expiry_host_tested": true,
+      "retained_tail_after_peer_FIN": true,
+      "lost_FIN_ACK_recovered": true,
+      "invalid_controls_rejected": true,
+      "exact_sequence_reset_erased_RX_TX": true,
+      "exhaustion_retries": 3,
+      "TX": 23,
+      "RX": 26,
+      "context_bytes": 504,
+      "adapter_reset_confirmed": true,
+      "DMA_frames_released": 11,
+      "no_retry_after_destruction": true,
+      "endpoint_erased": true,
+      "ABI_v0_hello": true,
+      "no_application_grants": true,
+      "screenshot": {
+        "width": 1280,
+        "height": 800,
+        "sha256": "5e9dca7eb087ea5fefaae10a9db3ac35e7cb69038508c6d32eccdf8680965d51"
+      }
+    }
+  },
+  "passed": true,
+  "host_sanitizers": [
+    "address",
+    "undefined"
+  ],
+  "userspace_ABI_unchanged": true
+}

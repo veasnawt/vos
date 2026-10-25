@@ -242,9 +242,13 @@ checks and is published at `a5889f9`, with its exact reviewed 46-file inventory.
 tests and is published at `4e799c2` with all 49 reviewed files.
 [TCP payload exchange](results/n5-tcp-data.md) now passes focused host and two
 firmware tests and is published at `ff251a7` with all 55 reviewed files.
-[Bounded retransmission](results/n5-tcp-retry.md) now passes focused checks and
-remains uncommitted. Next candidate: bounded FIN/RST closure, subject to approval;
-reassembly, adaptive production recovery and production ISNs remain unsupported.
+[Bounded retransmission](results/n5-tcp-retry.md) is published at d512db7
+with all 61 reviewed files. [Bounded FIN/RST closure](results/n5-tcp-close.md)
+now passes focused host and BIOS/UEFI checks and remains uncommitted for review.
+The owner merged PR #6 during the usage interruption at 369153d. Its tree equals
+d512db7; the feature is now zero ahead/three behind GitHub main. No local history
+or refs were reconciled, and closure remains uncommitted.
+Reassembly, adaptive production recovery and production ISNs remain unsupported.
 During UDP verification the owner merged [PR #4](https://github.com/veasnawt/vos/pull/4)
 to GitHub main at `d01b3f5`, with no tree difference from publication `33693b3`.
 Local main and origin/main remain `bbca69d`; no fetch/merge/ref update was done.
@@ -377,3 +381,13 @@ mode, recovery and diagnostic output. Changing firmware mode can prevent the
 installed system from booting until its original settings are restored; do not
 assume a mode change is harmless. Keep individual machine inventories and recovery
 material outside public setup examples.
+
+
+Closure verification is build/n5-tcp-close-20261024T201015Z, with independent
+PCAP review at 201156Z (same prefix). The earlier 200702Z BIOS attempt failed
+a fixture RX count (25 instead of 26), proved independently before correcting
+only the count and repeating under fresh 40+16 MiB admission. All original
+failed records, two admission-helper failures and accounting remain preserved.
+See the closure result for the exact inventory, manifests and final storage.
+Do not repeat historic campaigns or start further features automatically.
+The next major milestone remains the owner's N6 graphical desktop.

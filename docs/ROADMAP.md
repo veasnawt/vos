@@ -78,13 +78,17 @@ paths, published at `4e799c2`. [Opt-in payload exchange](results/n5-tcp-data.md)
 now verifies fixed buffers, in-order reception, partial ACKs, real receive-window
 accounting and explicit timeout cleanup, published at `ff251a7`.
 [Bounded retransmission](results/n5-tcp-retry.md) now recovers controlled data and
-ACK loss with fixed retry limits. Adaptive recovery, out-of-order reassembly and
-wire closure remain unsupported.
+ACK loss with fixed retry limits, published at d512db7.
+[Bounded connection closure](results/n5-tcp-close.md) now verifies FIN states,
+reset validation, retry/timeout interaction and cleanup. It remains uncommitted.
+Adaptive recovery, out-of-order reassembly and production ISNs remain unsupported.
 The owner merged published networking through
 IPv4 into GitHub main via [PR #4](https://github.com/veasnawt/vos/pull/4) at
 `d01b3f5` while UDP verification ran, then PR #5 advanced main to `ffaf2fb` with
-the TCP establishment tree `4e799c2`. Bounded retransmission remains
-uncommitted; local main stays `bbca69d`. An eventual
+the TCP establishment tree 4e799c2. The feature now has payload and retry
+publications, subsequently integrated by the owner through PR #6 at 369153d.
+Its tree equals d512db7; the feature is zero ahead/three behind and closure is
+still uncommitted. Local main stays bbca69d. An eventual
 userspace network interface requires explicit process-owned capability grants,
 resource bounds and revocation. Rixie Connected remains outside this increment.
 Focused checks accompany changes; no N3 campaign or new milestone is introduced.

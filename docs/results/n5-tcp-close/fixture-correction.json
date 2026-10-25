@@ -1,0 +1,10 @@
+{
+  "proof": "build/n5-tcp-close-20261024T200924Z/fixture-count-review.json",
+  "previous": "build/n5-tcp-close-20261024T200702Z",
+  "old_RX": 25,
+  "new_RX": 26,
+  "old_total": 48,
+  "new_total": 49,
+  "TCP_logic_unchanged": true,
+  "original_failure_preserved": true
+}

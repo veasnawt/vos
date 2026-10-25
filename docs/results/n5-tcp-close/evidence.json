@@ -1,0 +1,417 @@
+{
+  "scope": "N5 opt-in bounded TCP connection closure",
+  "published_retransmission_commit": "d512db7cdf40b5b3dbcaf9c18f21041943d1c22c",
+  "closure_committed": false,
+  "branch": "feat/n5-networking",
+  "sources": {
+    "Makefile": "ff0954022c969f3e7e7e3034baeded01eb811938a63a4162c06fa24e20c2cd9c",
+    "arch/x86_64/arch.mk": "028b9acc56865af6ee60ebad2c8b1d067d9341461aca9ed870040c334c3d2805",
+    "arch/x86_64/net_boot.c": "18d9460f50fa269cb4207a557ff096ef0eb471f02ceca73c1820f55acc275279",
+    "arch/x86_64/net_tcp.c": "e5a4183c0b39f767773a083733747b935573c697957978550d3c398edd106975",
+    "arch/x86_64/net_tcp.h": "96ab1eded36a0489cdd30b4603abf3d099d1c734109de71161445bc8c5099e72",
+    "arch/x86_64/net_tcp_close_boot.c": "0397d067af515fba766573101278021a02e2b862658332f9236180fea1900242",
+    "arch/x86_64/net_tcp_close_boot.h": "4d30102b7813a5a5833c80bc5ff4d0789b225288ae436a9588666f545d3b46fe",
+    "arch/x86_64/grub-tcp-close.cfg": "17f8efd5ca4539e228fb64a21459b34f165ff4979b2b6da04b609ffc74a66c74",
+    "scripts/test-tcp-close.py": "be639f80e29e63eb40a07bd43030abd5d37099aba3007d2a70f5d2560e6daeda",
+    "tests/host/net-tcp-close.c": "f9287f08e20be78434d4d2ec07f4393e3f23079f3a398e079fa2339d7383236c",
+    "tests/host/net-tcp-close-bench.c": "3d07cc306430569edef96a230883f87cc4a579aa7b752c20dafe17cb1469ac08"
+  },
+  "artifacts": [
+    {
+      "path": "docs/results/n5-tcp-close/bios-command.json",
+      "size": 800,
+      "sha256": "66e4157cea7d83753e1fb7cb1fbef2ceadbbaae605583f3d541292e92ce29938"
+    },
+    {
+      "path": "docs/results/n5-tcp-close/bios-delivered.hex",
+      "size": 13,
+      "sha256": "0ad80410c0cb9b889e45edddc1dd2f59c5093a6784f3904a97bfa7584890fb12"
+    },
+    {
+      "path": "docs/results/n5-tcp-close/bios-loss-decisions.json",
+      "size": 669,
+      "sha256": "c0f35cd7d35e969381603a7eb7e8f46c6a4fc1fd1cc32d3e24ad4c59b9758b4e"
+    },
+    {
+      "path": "docs/results/n5-tcp-close/bios-performance.json",
+      "size": 908,
+      "sha256": "a796fecc81c1dcd1030f041eb2e14d4fe7f13fa6083e0e4a6dd13a329d38ce7f"
+    },
+    {
+      "path": "docs/results/n5-tcp-close/bios-registers.txt",
+      "size": 2052,
+      "sha256": "94d01fd1cbab459d788dc81b73304e0820068522ea985bd09b6f5ebfa5930549"
+    },
+    {
+      "path": "docs/results/n5-tcp-close/bios-wire.json",
+      "size": 9877,
+      "sha256": "1fe94e006df90ce375f216f8c4884b5e40775e1825b62dcc5a2d9b4e8f291998"
+    },
+    {
+      "path": "docs/results/n5-tcp-close/bios.pcap",
+      "size": 3748,
+      "sha256": "92b2788d46f0be69f78048db45ffcf7f82d99b5d80d75ec38b02f879568488d3"
+    },
+    {
+      "path": "docs/results/n5-tcp-close/bios.serial.txt",
+      "size": 3294,
+      "sha256": "09781970ab3f90626887dea3aab4dcfd5d9bbfd7f6029ee4c4c429165954f719"
+    },
+    {
+      "path": "docs/results/n5-tcp-close/close-model-build.txt",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/results/n5-tcp-close/conservative-plan.json",
+      "size": 515,
+      "sha256": "b5e88333e314db587584624e3d93d6372df3958949874232176298d339f9727a"
+    },
+    {
+      "path": "docs/results/n5-tcp-close/fixture-correction.json",
+      "size": 271,
+      "sha256": "37bd88a480051030bf56b073360c2a64a9976474d3eb71bcfb6ae2795bfe1e4c"
+    },
+    {
+      "path": "docs/results/n5-tcp-close/guard-result.json",
+      "size": 136,
+      "sha256": "960b7c8d4697f04c7c115f17768b8f1b88bb81239859cdd9e1faead30ecc4607"
+    },
+    {
+      "path": "docs/results/n5-tcp-close/guard-samples.jsonl",
+      "size": 665,
+      "sha256": "114baf8b3790f7122db6af2a8722eef81c82ab338317ce7511a37994ec159657"
+    },
+    {
+      "path": "docs/results/n5-tcp-close/image-build.txt",
+      "size": 34020,
+      "sha256": "9a0d64be95c0c0a4b5caf36914b5de8709bda835658064a6cd0e072b2c325ad2"
+    },
+    {
+      "path": "docs/results/n5-tcp-close/net-tcp-close-host-build.txt",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/results/n5-tcp-close/net-tcp-close-host.txt",
+      "size": 140,
+      "sha256": "ea61197e3030b6579be8ea500c5b825b2ac7f9f50b4d0e959c663cbc5f2d1e05"
+    },
+    {
+      "path": "docs/results/n5-tcp-close/net-tcp-data-host-build.txt",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/results/n5-tcp-close/net-tcp-data-host.txt",
+      "size": 116,
+      "sha256": "0d4674f0e31ededa9f610a168ab47bb5fe3ba5ef3a197b9be5dd32e75c42789f"
+    },
+    {
+      "path": "docs/results/n5-tcp-close/net-tcp-host-build.txt",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/results/n5-tcp-close/net-tcp-host.txt",
+      "size": 120,
+      "sha256": "42fbfd5722e491bdf7836275c66079c59747e6840ecf587d14d35dbe14b72f02"
+    },
+    {
+      "path": "docs/results/n5-tcp-close/net-tcp-retry-host-build.txt",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/results/n5-tcp-close/net-tcp-retry-host.txt",
+      "size": 117,
+      "sha256": "f33b72fbe58d8a3a614b09cd30448783d993392e5fa45d0d7fcd5c75b7ec8939"
+    },
+    {
+      "path": "docs/results/n5-tcp-close/original-fixture-count-review.json",
+      "size": 376,
+      "sha256": "e77abd7d3e28fc53c07c63555ffc46e91fb01c2667a18739407f97ff25bd4014"
+    },
+    {
+      "path": "docs/results/n5-tcp-close/path-guard.txt",
+      "size": 84,
+      "sha256": "34d8cd4b04bc28b80fe837d468eb5d96f2094fc0ce3ca4df8b45e35566b1435f"
+    },
+    {
+      "path": "docs/results/n5-tcp-close/performance-pair.json",
+      "size": 3053,
+      "sha256": "0c1d123d3fdfe79dff04a657cc896d729729bc32abc7a1f3b4d172e3d07da75e"
+    },
+    {
+      "path": "docs/results/n5-tcp-close/release-model-build.txt",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/results/n5-tcp-close/result.json",
+      "size": 1968,
+      "sha256": "6de6dbe70e68f7438f49a950668599edfa94993fb53fa857055fdebea1019945"
+    },
+    {
+      "path": "docs/results/n5-tcp-close/retry-model-build.txt",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/results/n5-tcp-close/sources-before.json",
+      "size": 1085,
+      "sha256": "e1e2c9cc8fff4e730ba754c7ee3fb80700c303bc030acbad44c5704ad9cabce2"
+    },
+    {
+      "path": "docs/results/n5-tcp-close/uefi-command.json",
+      "size": 1038,
+      "sha256": "e01fb139cddc84b3b541121751f05bd8570693325c55002e1d24628e04245329"
+    },
+    {
+      "path": "docs/results/n5-tcp-close/uefi-delivered.hex",
+      "size": 13,
+      "sha256": "0ad80410c0cb9b889e45edddc1dd2f59c5093a6784f3904a97bfa7584890fb12"
+    },
+    {
+      "path": "docs/results/n5-tcp-close/uefi-loss-decisions.json",
+      "size": 669,
+      "sha256": "c0f35cd7d35e969381603a7eb7e8f46c6a4fc1fd1cc32d3e24ad4c59b9758b4e"
+    },
+    {
+      "path": "docs/results/n5-tcp-close/uefi-performance.json",
+      "size": 911,
+      "sha256": "959872eac39179ac4508625c08eaa18646ac6d763203fb299f54492d8b76d8a5"
+    },
+    {
+      "path": "docs/results/n5-tcp-close/uefi-registers.txt",
+      "size": 2052,
+      "sha256": "3c6cd50b5e85d84571a9687c7738032d7b1e854f5d70354e95f0a672766e4366"
+    },
+    {
+      "path": "docs/results/n5-tcp-close/uefi-wire.json",
+      "size": 9877,
+      "sha256": "1fe94e006df90ce375f216f8c4884b5e40775e1825b62dcc5a2d9b4e8f291998"
+    },
+    {
+      "path": "docs/results/n5-tcp-close/uefi.pcap",
+      "size": 3748,
+      "sha256": "c839a8bf83ee7fdb1252237a8f4b4760e5a2515748a96963885453e7f9ab093c"
+    },
+    {
+      "path": "docs/results/n5-tcp-close/uefi.serial.txt",
+      "size": 3624,
+      "sha256": "0585805d05cb35ff02fdbe03498a14e770a3947c06051a639bd8a3bce2df8cd5"
+    },
+    {
+      "path": "docs/results/n5-tcp-close/wire-metrics.json",
+      "size": 3804,
+      "sha256": "a36494cc3cedf4d32fe2ef662bd39edd051c6d40e254d011114a37d2c9d2af92"
+    },
+    {
+      "path": "docs/images/n5/vos-n5-bios-tcp-close.png",
+      "sha256": "5e9dca7eb087ea5fefaae10a9db3ac35e7cb69038508c6d32eccdf8680965d51"
+    },
+    {
+      "path": "docs/images/n5/vos-n5-uefi-tcp-close.png",
+      "sha256": "5e9dca7eb087ea5fefaae10a9db3ac35e7cb69038508c6d32eccdf8680965d51"
+    }
+  ],
+  "local_manifest": {
+    "path": "build/n5-tcp-close-20261024T201015Z/results/manifest.json",
+    "entries": 178,
+    "sha256": "fd50661d83aba962ca460c60c70f5533663af9e0d6f1611e8dc223399ddf3a85"
+  },
+  "pcap_verification": {
+    "bios": {
+      "records": 49,
+      "TX": 23,
+      "RX": 26,
+      "independent_TCP_checksums": 47,
+      "independent_TX_and_RX_fields": true,
+      "exact_capture_record_order": true,
+      "passive_FIN_completed": true,
+      "lost_FIN_ACK_retried": true,
+      "partial_tail_only_after_peer_FIN": true,
+      "active_simultaneous_TIME_WAIT_verified": true,
+      "TIME_WAIT_live_explicit_abort": true,
+      "full_2MSL_expiry_host_tested": true,
+      "invalid_FIN_ACK_RST_controls_present": true,
+      "terminal_FIN_three_retries": true,
+      "unique_application_delivery_bytes": 6,
+      "reset_discards_RX_bytes": 2,
+      "reset_discards_TX_bytes": 2,
+      "pcap_sha256": "92b2788d46f0be69f78048db45ffcf7f82d99b5d80d75ec38b02f879568488d3",
+      "loss_decisions_sha256": "c0f35cd7d35e969381603a7eb7e8f46c6a4fc1fd1cc32d3e24ad4c59b9758b4e"
+    },
+    "uefi": {
+      "records": 49,
+      "TX": 23,
+      "RX": 26,
+      "independent_TCP_checksums": 47,
+      "independent_TX_and_RX_fields": true,
+      "exact_capture_record_order": true,
+      "passive_FIN_completed": true,
+      "lost_FIN_ACK_retried": true,
+      "partial_tail_only_after_peer_FIN": true,
+      "active_simultaneous_TIME_WAIT_verified": true,
+      "TIME_WAIT_live_explicit_abort": true,
+      "full_2MSL_expiry_host_tested": true,
+      "invalid_FIN_ACK_RST_controls_present": true,
+      "terminal_FIN_three_retries": true,
+      "unique_application_delivery_bytes": 6,
+      "reset_discards_RX_bytes": 2,
+      "reset_discards_TX_bytes": 2,
+      "pcap_sha256": "c839a8bf83ee7fdb1252237a8f4b4760e5a2515748a96963885453e7f9ab093c",
+      "loss_decisions_sha256": "c0f35cd7d35e969381603a7eb7e8f46c6a4fc1fd1cc32d3e24ad4c59b9758b4e"
+    }
+  },
+  "performance_metrics": {
+    "bios": {
+      "kind": "optimized_unsanitized_QEMU_closure_scenario",
+      "firmware": "bios",
+      "kernel_optimization": "-O2 with debug symbols; no sanitizers",
+      "QEMU": "q35/TCG, 128 MiB, modern virtio-net, isolated stream peer",
+      "elapsed_to_PASS_seconds": 3.898888507996162,
+      "QEMU_CPU_seconds": 0.83,
+      "QEMU_observed_VmHWM_KiB": 77640,
+      "guest_RAM_MiB": 128,
+      "context_bytes": 504,
+      "protocol_RX_TX_bytes": 128,
+      "private_DMA_bytes": 45056,
+      "unique_delivered_bytes": 6,
+      "caveat": "Includes firmware and deliberate FIN loss/timeout. Live TIME-WAIT is explicitly aborted after validation, never shortened. Not matched throughput comparison.",
+      "host": {
+        "platform": "Linux-6.18.54.1-microsoft-standard-WSL2-x86_64-with-glibc2.43",
+        "logical_cpus": 4,
+        "loadavg": [
+          0.3603515625,
+          0.2080078125,
+          0.19677734375
+        ],
+        "CPU_model": "Intel(R) Core(TM) i5-4570 CPU @ 3.20GHz"
+      }
+    },
+    "uefi": {
+      "kind": "optimized_unsanitized_QEMU_closure_scenario",
+      "firmware": "uefi",
+      "kernel_optimization": "-O2 with debug symbols; no sanitizers",
+      "QEMU": "q35/TCG, 128 MiB, modern virtio-net, isolated stream peer",
+      "elapsed_to_PASS_seconds": 6.847110251997947,
+      "QEMU_CPU_seconds": 3.86,
+      "QEMU_observed_VmHWM_KiB": 158140,
+      "guest_RAM_MiB": 128,
+      "context_bytes": 504,
+      "protocol_RX_TX_bytes": 128,
+      "private_DMA_bytes": 45056,
+      "unique_delivered_bytes": 6,
+      "caveat": "Includes firmware and deliberate FIN loss/timeout. Live TIME-WAIT is explicitly aborted after validation, never shortened. Not matched throughput comparison.",
+      "host": {
+        "platform": "Linux-6.18.54.1-microsoft-standard-WSL2-x86_64-with-glibc2.43",
+        "logical_cpus": 4,
+        "loadavg": [
+          0.37841796875,
+          0.21728515625,
+          0.19970703125
+        ],
+        "CPU_model": "Intel(R) Core(TM) i5-4570 CPU @ 3.20GHz"
+      }
+    }
+  },
+  "products": {
+    "native/kernel/vos.bin": "cc4039d4c62ec74000785e2f5b301943bb9a406b56bdf46d0ec5091368150de5",
+    "native/kernel/vos.iso": "87af7bcbc635654027b158de4bef11b5600c156f4b6943a2b5cbec9b3827c43d",
+    "native/kernel/vos-uefi.iso": "123ab93cd71d1d59c442dc9bf4edd6ad38ad8fc7c90bd7dc4c1a542936e87232",
+    "native/user/hello.elf": "c6c6416195a0f18d680d7f8f19be52ce02ff02912ef3bac45324fbe88006cd06"
+  },
+  "host_checks": {
+    "closure": 8505,
+    "retry": 1711,
+    "payload": 5397,
+    "legacy_TCP": 3808,
+    "sanitizers": [
+      "address",
+      "undefined"
+    ],
+    "accepted_test_sources_unchanged": true
+  },
+  "guard": {
+    "controller_root": "build/n5-tcp-close-20261024T201015Z",
+    "query_timeout_seconds": 90,
+    "clean_samples": 3,
+    "sample_sha256": "114baf8b3790f7122db6af2a8722eef81c82ab338317ce7511a37994ec159657",
+    "outcome": {
+      "passed": true,
+      "error": null,
+      "returncode": 0,
+      "allocated": 31670272,
+      "ARP_charged": 242790400,
+      "ARP_limit": 285212672
+    }
+  },
+  "budget": {
+    "ledger": "build/n5-session-20261024T162331Z/ARP-BUDGET.json",
+    "ledger_sha256": "cd2214f6d8fa72a605dfd7acc202ba63033ea75a0bee3f28334b6fcb61184988",
+    "additional_limit_MiB": 272,
+    "aggregate_ceiling_MiB": 3360,
+    "local_bound_MiB": 40,
+    "planned_attempt_and_metadata_MiB": 56,
+    "initial_admission": "build/n5-tcp-close-20261024T195658Z/closure-admission.json",
+    "recovery_admission": "build/n5-tcp-close-20261024T201015Z/conservative-plan.json",
+    "all_prior_usage_retained": true
+  },
+  "layout": {
+    "context_bytes": 504,
+    "unchanged_limit": 512,
+    "closure_enabled_offset": 364,
+    "tx_since_offset_unchanged": 368,
+    "new_padding_bytes_used": 1,
+    "fixed_RX_TX_bytes": 128,
+    "private_DMA_bytes": 45056
+  },
+  "timers": {
+    "retry_ticks": 50,
+    "max_FIN_retries": 3,
+    "absolute_TX_horizon_ticks": 200,
+    "incomplete_close_ticks": 400,
+    "MSL_ticks": 12000,
+    "TIME_WAIT_ticks": 24000,
+    "absolute_close_hard_ticks": 48000,
+    "PIT_Hz": 100,
+    "repeated_FIN_restarts_TIME_WAIT_only": true,
+    "absolute_close_deadline_not_extended": true,
+    "unread_RX_delays_successful_TIME_WAIT_cleanup": true
+  },
+  "publication_root": "build/n5-tcp-retry-20261024T195225Z",
+  "no_new_userspace_network_API": true,
+  "ABI_v0_v3_and_vsh_Rixie_sources_unchanged": true,
+  "no_unrelated_campaigns": true,
+  "passed_first_runtime_attempt": false,
+  "recovery": {
+    "admission_helper_failures": [
+      "build/n5-tcp-close-20261024T195458Z",
+      "build/n5-tcp-close-20261024T195546Z"
+    ],
+    "admission_helper_causes": [
+      "manifest field was local_manifest",
+      "nested controller loader lacked launcher argument; admission moved to existing outer guard"
+    ],
+    "original_runtime": "build/n5-tcp-close-20261024T200702Z",
+    "original_runtime_verdict": false,
+    "independent_count_review": "build/n5-tcp-close-20261024T200924Z/fixture-count-review.json",
+    "old_RX": 25,
+    "correct_RX": 26,
+    "correct_total": 49,
+    "correction_only_fixture_count": true,
+    "TCP_logic_unchanged_for_repeat": true,
+    "all_original_failures_preserved": true
+  },
+  "limitations": [
+    "fixed RTO, no congestion control/adaptive recovery/persist probes",
+    "no out-of-order reassembly or SYN/RST retransmission",
+    "close is BUSY until local buffers are drained; no queued FIN",
+    "live active TIME-WAIT explicitly aborted; full expiry checked with controlled host ticks",
+    "no authentication or challenge-ACK rate limiting; exact-sequence on-path reset remains possible",
+    "diagnostic ISNs; production CSPRNG not implemented",
+    "kernel single-owner caller buffer and 100 Hz monotonic tick contract"
+  ]
+}

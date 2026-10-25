@@ -1,0 +1,1 @@
+TCP host: 3808 checks PASS; strict headers/checksums, one connection, sequence wrap, ACK validation, expiry and erasure

@@ -476,3 +476,37 @@ kernel-only with ABI v0-v3 and capability boundaries unchanged. Optimized hosted
 path comparisons use the accepted payload binary; unsanitized QEMU CPU/memory and
 capture timings remain separate from ASan/UBSan correctness evidence. See
 [retry results](results/n5-tcp-retry.md) for measurements and exact manifests.
+
+## Opt-in TCP connection closure
+
+`net_tcp_enable_closure` enables the new profile only in LISTEN, with payload
+mode already enabled. Local finish waits for drained RX/TX and a nonzero peer
+window, then sends FIN and consumes one sequence number. Peer FIN preserves
+buffered data for receive/EOF and permits retained TX recovery in CLOSE-WAIT.
+FIN-WAIT, CLOSING, LAST-ACK and TIME-WAIT are explicit states; no second buffer,
+endpoint or application network authority is added. One former padding byte
+keeps the context at 504 bytes.
+
+RST is bound to the peer tuple/MAC and exact RCV.NXT; an inaccurate in-window
+reset receives a challenge ACK and an out-of-window reset is dropped.
+TIME-WAIT ignores resets and new SYN reuse. These checks are not authentication;
+challenge-ACK rate limiting and production ISNs remain unsupported.
+
+FIN retries reuse the 50-tick/three-retry/200-tick data recovery bounds.
+Incomplete close expires at 400 ticks; TIME-WAIT lasts 24,000 ticks (2x120-second
+MSL at 100 Hz), restarting on duplicate FIN. A separate 48,000-tick user deadline
+bounds repeated linger extension. Successful linger cleanup requires drained RX;
+timeout/reset/abort explicitly discard retained resources. Endpoint destruction
+permits no later retry, and DMA release still requires adapter reset confirmation.
+
+The live BIOS/UEFI fixture completes passive close, verifies active/simultaneous
+TIME-WAIT and then explicitly locally aborts its linger; it does not shorten the
+2xMSL timer. Full linger expiry is covered with controlled host ticks.
+See [closure results](results/n5-tcp-close.md) for exact supported behavior,
+reproducibility, independent captures, performance and preserved failure history.
+With fresh guarded admission, run `python3 -B scripts/test-tcp-close.py --output <fresh-build-root>`.
+No production-ready TCP claim or application network grant is implied.
+
+For a visible, disk-output-free replay of the already verified closure images,
+see the [manual QEMU guide](results/n5-tcp-close-manual.md). It uses the recorded
+isolated peer and does not rebuild or rerun sanitizer/performance suites.

@@ -45,6 +45,8 @@ VOS is written primarily in freestanding C and x86 assembly. It is **not a Linux
   receive/transmit buffers, real window accounting and bounded in-order data.
   [Bounded retransmission](docs/results/n5-tcp-retry.md) recovers controlled data
   and ACK loss with finite retries and explicit terminal cleanup.
+  [Bounded connection closure](docs/results/n5-tcp-close.md) adds opt-in FIN
+  states, validated resets and bounded cleanup without growing the context.
 - BIOS and UEFI boot paths **in QEMU** via GRUB; extensive emulator-based regression tests.
 
 **N0–N3 are complete.** N3 storage closure was accepted on 2026-10-24 and is
@@ -66,16 +68,19 @@ Ethernet/ARP is published at `a6571c1`. IPv4/ICMP now passes host and BIOS/UEFI
 checks: two native pings and one echo response per boot, published at `33693b3`.
 Bounded kernel UDP is published at `a5889f9`; TCP establishment is published at
 `4e799c2`; payload exchange is published at `ff251a7`. An opt-in retry profile now
-passes host and BIOS/UEFI loss tests without growing the 504-byte context. It has
-fixed diagnostic timers rather than production TCP recovery, and no FIN/RST
-closure or reassembly. Explicit application capabilities
+is published at d512db7 after host and BIOS/UEFI loss tests, with the context
+still 504 bytes. Opt-in FIN/RST closure now passes focused host and BIOS/UEFI
+checks and remains uncommitted for review. Recovery is diagnostic, with no
+out-of-order reassembly or production congestion control. Explicit application capabilities
 remain future work. Rixie Connected has not begun.
 
 The owner merged [PR #4](https://github.com/veasnawt/vos/pull/4) into GitHub main
 at `d01b3f5` during UDP verification. Its tree matches published `33693b3`;
 The owner subsequently merged PR #5 at `ffaf2fb`, whose tree matches TCP establishment.
-Payload exchange was published on the feature branch; retransmission changes remain uncommitted
-for review. Local main remains `bbca69d`.
+Payload and retransmission are published on the feature branch; connection closure
+remains uncommitted for review. The owner subsequently merged PR #6 at 369153d, whose tree matches retransmission
+publication d512db7. The feature is now three commits behind and zero ahead of
+GitHub main; closure remains uncommitted. Local main remains bbca69d.
 
 ![VOS BIOS boot console with PASS status](docs/images/n3/vos-n3-bios-boot-status.png)
 
