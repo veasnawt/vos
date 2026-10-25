@@ -15,6 +15,9 @@
 #include "syscall.h"
 #include "exception.h"
 static struct process application;
+#ifdef VOS_GUI_VERIFY
+static int bootstrap_testing,bootstrap_rejected;
+#endif
 static int option(const char *p,const char *token) {
     if(!p)return 0;
     while(*p) {
@@ -30,6 +33,14 @@ static int load(struct process *p,uint64_t identity) {
     const struct app_catalog_entry *e=app_catalog_find(app_payload_catalog(),identity);
     if(!e || e->policy!=APP_POLICY_GUI || e->abi!=5)return PROC_EEXEC;
     struct elf_image image;int error;
+#ifdef VOS_GUI_VERIFY
+    if(bootstrap_testing && identity==0x1004) {
+        thread_yield(); /* Let the actual input worker block before rejection. */
+        int result=load_elf(p,e->name,e->image,1,&image,&error);
+        bootstrap_rejected=result==PROC_EEXEC && error==ELF_ESIZE;
+        return result;
+    }
+#endif
     return load_elf(p,e->name,e->image,e->length,&image,&error);
 }
 #ifdef VOS_GUI_VERIFY
@@ -80,24 +91,67 @@ static int verify(void) {
     serial_puts("gui-verify: process exhaustion rollback PASS\r\n");
     active=0;return 1;
 }
+
+/* Exercise the real initial-load failure after its worker has run and blocked.
+ * This exists only in the explicitly selected verification image. */
+static int verify_bootstrap_failures(const struct boot_info *bi) {
+    uint64_t free=pmm_free_count();
+    unsigned processes=proc_count(),threads=thread_count();
+    bootstrap_testing=1;
+    for(unsigned i=0;i<THREAD_MAX+2;i++) {
+        struct sched_stats before=*sched_stats();
+        bootstrap_rejected=0;
+        int result=gui_boot_run(bi);
+        const struct sched_stats *after=sched_stats();
+        if(result || !bootstrap_rejected || after->created!=before.created+1 ||
+           after->reaped!=before.reaped+1 || after->blocks<=before.blocks ||
+           gui_frames() || pmm_free_count()!=free || proc_count()!=processes ||
+           thread_count()!=threads || proc_audit() || sched_audit() ||
+           !thread_canaries_intact()) {
+            bootstrap_testing=0;return 0;
+        }
+        serial_puts("gui-bootstrap: rejected ELF ");serial_dec(i);
+        serial_puts(" PASS; worker blocked, awakened and reaped; resources restored\r\n");
+    }
+    bootstrap_testing=0;
+    serial_puts("gui-bootstrap: 18 repeated load failures PASS; no retained workers\r\n");
+    return 1;
+}
+
 #endif
+
 int gui_boot_run(const struct boot_info *bi) {
+#ifdef VOS_GUI_VERIFY
+    if(!bootstrap_testing && gui_verify_requested(bi->cmdline) &&
+       !verify_bootstrap_failures(bi))return 0;
+#endif
     uint64_t free=pmm_free_count();unsigned processes=proc_count(),threads=thread_count();
+    int ok=0,ran=0;
     if(gui_service_start())return 0;
 #ifdef VOS_GUI_VERIFY
-    if(gui_verify_requested(bi->cmdline) && !verify())return 0;
+    if(!bootstrap_testing && gui_verify_requested(bi->cmdline) && !verify()) {
+        /* Verification can fail with a READY probe or allocated table fillers.
+         * proc_run has joined any started probe before returning. */
+        active=armed=0;gui_test_alloc_budget(-1);
+        if(probe.pid)proc_destroy(&probe);
+        for(unsigned i=0;i<PROC_TABLE;i++)if(fillers[i].pid)proc_destroy(&fillers[i]);
+        goto stop;
+    }
 #else
     (void)bi;
 #endif
-    if(load(&application,0x1004)!=PROC_OK)return 0;
-    if(gui_grant(&application,GUI_ALL)) {proc_destroy(&application);gui_service_stop();return 0;}
+    if(load(&application,0x1004)!=PROC_OK)goto stop;
+    if(gui_grant(&application,GUI_ALL)) {proc_destroy(&application);goto stop;}
     serial_puts("gui: native ABI5 demo; one surface <=163840 bytes; upload <=4096 bytes; event queue=16\r\n");
     int state=proc_run(&application);
-    int ok=state==PROC_EXITED && application.exit_status==0;
+    ran=1;ok=state==PROC_EXITED && application.exit_status==0;
     proc_destroy(&application);
+stop:
+    /* The service owns its worker until stop wakes it and joins THREAD_FREE.
+     * No process was published on loader failure; do not destroy it twice. */
     if(gui_service_stop())return 0;
     ok=ok && gui_frames()==0 && pmm_free_count()==free && proc_count()==processes &&
        thread_count()==threads && !proc_audit() && !sched_audit() && thread_canaries_intact();
-    serial_puts(ok ? "gui: PASS; kernel-CR3 reclamation, all resources restored\r\n" : "gui: FAIL\r\n");
+    if(ran)serial_puts(ok ? "gui: PASS; kernel-CR3 reclamation, all resources restored\r\n" : "gui: FAIL\r\n");
     return ok;
 }

@@ -1,0 +1,10 @@
+arch/x86_64/gui_verify.c
+docs/results/n6-gui.md
+docs/results/n6-gui/bootstrap-hardening/bios.serial.txt
+docs/results/n6-gui/bootstrap-hardening/changed-files.txt
+docs/results/n6-gui/bootstrap-hardening/host.txt
+docs/results/n6-gui/bootstrap-hardening/result.json
+docs/results/n6-gui/bootstrap-hardening/uefi.serial.txt
+docs/results/n6-gui/evidence.json
+scripts/test-gui-bootstrap.py
+tests/host/gui-bootstrap.c

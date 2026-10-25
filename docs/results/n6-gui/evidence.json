@@ -5,7 +5,7 @@
   "branch": "feat/n6-gui-surfaces",
   "core_runtime_tests_passed": true,
   "formal_acceptance": false,
-  "known_bootstrap_error_worker_cleanup_limitation": true,
+  "known_bootstrap_error_worker_cleanup_limitation": false,
   "raw_phase": "/home/veasnawt/src/myos/build/n6-gui-20261025T083036Z",
   "passing_output": "/home/veasnawt/src/myos/build/n6-gui-20261025T083036Z/catalog-recovery-1",
   "raw_result_sha256": "d5472981a0baa1eb02e368b3f9d15810077f847e5687ce91615a69c0daf76785",
@@ -186,8 +186,8 @@
     }
   },
   "limits": {
-    "execution_MiB": 104,
-    "phase_MiB": 128,
+    "execution_MiB": 152,
+    "phase_MiB": 176,
     "aggregate_MiB": 3360,
     "catalog_recovery_new_execution_MiB": 40
   },
@@ -231,8 +231,7 @@
   "limitations": [
     "QEMU SeaBIOS/OVMF only",
     "No mouse, window manager, graphical Terminal or final mockup",
-    "No GUI app launching from vsh or runtime service restart",
-    "Pre-grant ELF-load failure in trusted boot route can retain one idle input worker until reboot; not failure-injected"
+    "No GUI app launching from vsh or runtime service restart"
   ],
   "finalization_recovery": {
     "identity": "evidence-finalization-1",
@@ -265,5 +264,382 @@
     "completion_requires_new_passed_receipt_and_guard": true,
     "no_push": true,
     "no_merge": true
+  },
+  "pre_hardening_limits": {
+    "execution_MiB": 104,
+    "phase_MiB": 128,
+    "aggregate_MiB": 3360,
+    "catalog_recovery_new_execution_MiB": 40
+  },
+  "source_hash_scope": "Top-level source hashes describe original catalog-recovery-1 evidence; bootstrap_hardening.source_sha256 records the corrected candidate.",
+  "bootstrap_hardening": {
+    "passed": true,
+    "baseline": "e639008949358d80561c149b94fd14654d108a7b",
+    "raw_output": "/home/veasnawt/src/myos/build/n6-gui-20261025T083036Z/bootstrap-hardening-1",
+    "controller": "/home/veasnawt/src/myos/build/n6-gui-20261025T083036Z/final/bootstrap-hardening-1",
+    "raw_result_sha256": "fbcde4721a48577857597689773ac8534dd6f18522a928f844974d8aea692302",
+    "runtime_manifest_sha256": "48bc7f2281f49ba680359e67cf2eededd97bf92211ef42d2fa653d584eda1bbc",
+    "manifest_payloads": 47,
+    "independently_verified_payloads": 47,
+    "capacity_authorization_sha256": "b18aae4162a77366a0de8cd525b28f3a83c0a0bc1b849937154848fd40790d67",
+    "one_time_execution_ceiling_MiB": 152,
+    "one_time_phase_ceiling_MiB": 176,
+    "aggregate_ceiling_MiB": 3360,
+    "new_execution_provision_MiB": 40,
+    "new_finalization_provision_MiB": 8,
+    "source_sha256": {
+      "Makefile": "6912d0beae8476e1a2ac0d114432fd920f057d6910f8ed2d09f3047326a37752",
+      "arch/x86_64/app_catalog.c": "9ce114bba8678bf1cf43c9e2f9db883f54844a57d1eabb19ee5330c1f38ec7c5",
+      "arch/x86_64/app_catalog.h": "b2fa038727b064c09e31ab7d3147d410a45d89afc4353c52a820c9d7c879f014",
+      "arch/x86_64/app_payload.c": "66bb529b4e866158d1521c118ab6749f193303f7d87bf26f536cbfaa21c5d0b4",
+      "arch/x86_64/app_payload.h": "96263b0c4967d29b0984432bf928ed2430724d74aad20b5d1957a45112d12df6",
+      "arch/x86_64/arch.mk": "bd48543eddfb5bf6d7906272413d9fc9107592dea94af5c82f9c7b46ea30719b",
+      "arch/x86_64/desktop.c": "183816b5662fb774d9696188d431afd115ae252e8f4ff031b8eda7a081941187",
+      "arch/x86_64/elf.c": "c01cd9b6d606528077819ffa256daf3158056ca9fe89f70c549a32bd26315b3f",
+      "arch/x86_64/elf.h": "311ac31abfcc60a586f9ac9b39754472e82a4a52ed11d00f47988f7e18e47cf3",
+      "arch/x86_64/exec.c": "0d9664e60bd784e3e114eb0cfac9163f6fadb38f3feac8ca63f8738737f08918",
+      "arch/x86_64/font8x16.c": "1407e6656453950e4f9002a7027b3966baa53d82947300b54401b7a18f7484fc",
+      "arch/x86_64/grub-gui.cfg": "6453fa332662a8d3f5d8f14dc6a7d44bcfb12760a0b88c9c5d1311725a398907",
+      "arch/x86_64/gui.c": "265cd2962d535a9df942175be0495a83954d813e9e826705631e7d8cb0ae51e1",
+      "arch/x86_64/gui.h": "acbe0c613482ed65daaae0847fa5353aace61183ee9a650e67c9e275f49ac78b",
+      "arch/x86_64/gui_verify.c": "6f14a641f53e2af371950467ad814f5209961d03064ec205a33ed0f0bd8b2569",
+      "arch/x86_64/gui_verify.h": "740f72582b4231e7a26a7c79d93fc59c0a7cb3f4a2c939a8ba91316f1a88e457",
+      "arch/x86_64/input_console.c": "0297f0c2a2a053a9af9e5d33ac57e3ebd94b8353a8a5be366024a0c6eb194551",
+      "arch/x86_64/kernel.c": "041ca6c18a3d5ef9c8b3291c47f8eaaf56207da664d94b756c4bf864a807259f",
+      "arch/x86_64/keyboard.c": "f1d0b4e47f6d2ba591ed97ac7b42c7df27e9e069be46ae4c2198e12d08e3380f",
+      "arch/x86_64/loader.c": "6b7d86325c00e88d0a612477ad63a6de07e2acca569efb8fdd95bd0bf44b2220",
+      "arch/x86_64/process.c": "a59718bcaf8ba3e2bd99f99faeccd5ae31efe93bd49817af5c4ae41e8da6924c",
+      "arch/x86_64/screen.c": "e66bf38ca9d390309da383813d4a19ca0a3d27c85008361bbfdc1acc7189fe2e",
+      "arch/x86_64/screen.h": "4126275991c56b98eb2291dbb9fb7e148e3da2835800b4232f2e7072e1b57242",
+      "arch/x86_64/syscall.c": "a8c85f1bfb2c945d66aafdad509ba5c52b0fce95f0a3ecd9f4fdcaa02bddb984",
+      "arch/x86_64/syscall.h": "ecdcf12b6c114cb8c560cebe3cd251decaed909903556911a61c8554f887790d",
+      "arch/x86_64/user_console.c": "7fad92cfcfc1b528cc37eff95d29efcbcb76b148a42873d48e8ae012182f5875",
+      "arch/x86_64/user_console.h": "850e8a8588c621e8d66f07ea96fe692fd55ee521413904286c140bbfdf05342c",
+      "scripts/check-user-elf.sh": "cebf44cf1363858bde08268f9436a9ef3d57283d3dc0900535d9756e967ca4a9",
+      "scripts/test-app-handoff.py": "4f5b8e4b9e44375b133688a5d9bf50e2c3c9ed459a6483eead00d85bb04c01bd",
+      "scripts/test-gui-bootstrap.py": "090e058241af12ce13da6238a5f349891de44eb28abc807f502c73bb19aa324a",
+      "scripts/test-gui.py": "38669a956b249d3bcd8f593168bdc9618df73c4571a9569abb9adda5a9415526",
+      "scripts/test-n6-desktop.py": "b261c28e88a558c16b8efafd109efeb5ce8f487b764702674c2285b6daeff572",
+      "scripts/test-user-elf.sh": "b6debfa2f32fe964f47ecc201736bdfc35cf465af06cd694f5eb0f47a8571fa8",
+      "tests/host/gui-bootstrap.c": "3d4ef9b7920285e3ed05a989253769eb0249d16bb34a5af91a36f2505746f0ba",
+      "tests/host/gui.c": "49760bcfa460f1319f23699cf51703b16e9b04ffd9fc0cc6d7bd0f1630936248",
+      "tests/rust/gui.rs": "ba0dd973951f3e99f6266c04cd1dd2003daa4af284d886cff19441ed69d67f9b",
+      "user/gui-demo/main.rs": "1ffce634e5379da313616c1d4059a853a69c3a5ff4b924f8974ba1cab40bc094",
+      "user/gui-probe/main.rs": "af386104617b7d7443b81cfcb74cdb4d1e3cd950c7a22b8cf7cb6913ee13e5aa",
+      "user/include/vos/gui.h": "473a867903735872c6f91d50299e7c6429d13ae60796d70c821a36e1d186afd3",
+      "user/lib/abi_note_v5.S": "73f32c7a43f2207adfb0c31bada80b22512d581a296de90539c0ca16be2099a4",
+      "user/lib/syscall_v5.S": "9644d8bd6ba37c07de98e4f5ba7195c3f47d8f5253c4b52d7ec0e18c9cc1ab38",
+      "user/rixie/main.rs": "24d050c21de01e6e4aef8d72edb88676f3fd203a5467a6b3dada006100d0111a",
+      "user/rust/gui.rs": "9af9d25a7fdbd85fb1e0b20f3a94e91d40080c9048201266b98f5629c43e4fa1",
+      "user/user.mk": "f4d7d68cdab46e1b9b6022407c2ef905453fbd94ae29417ab43fd07d9d09890e",
+      "user/vsh/main.rs": "ba248268ae8d5dfc4745435a6e282832db9265bf174f9d1d5feb49705998c03b"
+    },
+    "host": "bootstrap host PASS 523 assertions; 64 actual ELF rejections, 64 process-admission failures, failed service start; modeled service cleanup\n",
+    "original_defect_negative_control": {
+      "passed": true,
+      "expected_returncode": 1,
+      "diagnostic": "bootstrap FAIL line 53: worker==0 && starts==i+1 && stops==i+1 && begins==0\n"
+    },
+    "firmware": {
+      "bios": {
+        "passed": true,
+        "firmware": "bios",
+        "cases": [
+          {
+            "command": "apps",
+            "expected": "hello",
+            "prompt": "VOS> ",
+            "passed": true
+          },
+          {
+            "command": "hello",
+            "expected": "Hello from VOS!",
+            "prompt": "VOS> ",
+            "passed": true
+          },
+          {
+            "command": "clear",
+            "expected": "",
+            "prompt": "VOS> ",
+            "passed": true
+          },
+          {
+            "command": "echo graphical console",
+            "expected": "graphical console",
+            "prompt": "VOS> ",
+            "passed": true
+          },
+          {
+            "command": "cd docs",
+            "expected": "",
+            "prompt": "VOS>docs> ",
+            "passed": true
+          },
+          {
+            "command": "pwd",
+            "expected": "/docs",
+            "prompt": "VOS>docs> ",
+            "passed": true
+          },
+          {
+            "rixie_command": "hello",
+            "passed": true
+          },
+          {
+            "rixie_command": "about",
+            "passed": true
+          },
+          {
+            "rixie_command": "help",
+            "passed": true
+          },
+          {
+            "command": "pwd",
+            "expected": "/docs",
+            "prompt": "VOS>docs> ",
+            "passed": true
+          },
+          {
+            "command": "hello",
+            "expected": "Hello from VOS!",
+            "prompt": "VOS>docs> ",
+            "passed": true
+          },
+          {
+            "command": "cat welcome.txt",
+            "expected": "Unified apps: real read-only filesystem.",
+            "prompt": "VOS>docs> ",
+            "passed": true
+          },
+          {
+            "command": "cd missing",
+            "expected": "operation failed",
+            "prompt": "VOS>docs> ",
+            "passed": true
+          }
+        ],
+        "actual_vsh": true,
+        "actual_rixie": true,
+        "desktop": true,
+        "cwd_restored": true,
+        "child_reclaimed": true,
+        "parent_reclaimed": true,
+        "halted": true,
+        "screenshot": {
+          "path": "/home/veasnawt/src/myos/build/n6-gui-20261025T083036Z/bootstrap-hardening-1/bios/gui.png",
+          "width": 1024,
+          "height": 768,
+          "sha256": "065a17cd4cffce4485d7cffaa3e9dd6fb1e9eaded659e57ddfdd278003f30e94",
+          "direct_QMP_PNG": true
+        },
+        "shell_screenshot": {
+          "path": "/home/veasnawt/src/myos/build/n6-gui-20261025T083036Z/bootstrap-hardening-1/bios/desktop.png",
+          "width": 1024,
+          "height": 768,
+          "sha256": "9097caa5c637d17a5673e0cb221d564d61191721a1fae8f5e19be2e4ae2ad1db",
+          "direct_QMP_PNG": true
+        },
+        "native_GUI_cases": 10,
+        "native_process_exhaustion": true,
+        "GUI_event_isolation": true,
+        "pixel_oracle": true,
+        "elapsed_seconds": 11.403849613999967,
+        "initial_load_failures": 18,
+        "actual_worker_block_wake_reap": true
+      },
+      "uefi": {
+        "passed": true,
+        "firmware": "uefi",
+        "cases": [
+          {
+            "command": "apps",
+            "expected": "hello",
+            "prompt": "VOS> ",
+            "passed": true
+          },
+          {
+            "command": "hello",
+            "expected": "Hello from VOS!",
+            "prompt": "VOS> ",
+            "passed": true
+          },
+          {
+            "command": "clear",
+            "expected": "",
+            "prompt": "VOS> ",
+            "passed": true
+          },
+          {
+            "command": "echo graphical console",
+            "expected": "graphical console",
+            "prompt": "VOS> ",
+            "passed": true
+          },
+          {
+            "command": "cd docs",
+            "expected": "",
+            "prompt": "VOS>docs> ",
+            "passed": true
+          },
+          {
+            "command": "pwd",
+            "expected": "/docs",
+            "prompt": "VOS>docs> ",
+            "passed": true
+          },
+          {
+            "rixie_command": "hello",
+            "passed": true
+          },
+          {
+            "rixie_command": "about",
+            "passed": true
+          },
+          {
+            "rixie_command": "help",
+            "passed": true
+          },
+          {
+            "command": "pwd",
+            "expected": "/docs",
+            "prompt": "VOS>docs> ",
+            "passed": true
+          },
+          {
+            "command": "hello",
+            "expected": "Hello from VOS!",
+            "prompt": "VOS>docs> ",
+            "passed": true
+          },
+          {
+            "command": "cat welcome.txt",
+            "expected": "Unified apps: real read-only filesystem.",
+            "prompt": "VOS>docs> ",
+            "passed": true
+          },
+          {
+            "command": "cd missing",
+            "expected": "operation failed",
+            "prompt": "VOS>docs> ",
+            "passed": true
+          }
+        ],
+        "actual_vsh": true,
+        "actual_rixie": true,
+        "desktop": true,
+        "cwd_restored": true,
+        "child_reclaimed": true,
+        "parent_reclaimed": true,
+        "halted": true,
+        "screenshot": {
+          "path": "/home/veasnawt/src/myos/build/n6-gui-20261025T083036Z/bootstrap-hardening-1/uefi/gui.png",
+          "width": 1024,
+          "height": 768,
+          "sha256": "065a17cd4cffce4485d7cffaa3e9dd6fb1e9eaded659e57ddfdd278003f30e94",
+          "direct_QMP_PNG": true
+        },
+        "shell_screenshot": {
+          "path": "/home/veasnawt/src/myos/build/n6-gui-20261025T083036Z/bootstrap-hardening-1/uefi/desktop.png",
+          "width": 1024,
+          "height": 768,
+          "sha256": "9097caa5c637d17a5673e0cb221d564d61191721a1fae8f5e19be2e4ae2ad1db",
+          "direct_QMP_PNG": true
+        },
+        "native_GUI_cases": 10,
+        "native_process_exhaustion": true,
+        "GUI_event_isolation": true,
+        "pixel_oracle": true,
+        "elapsed_seconds": 13.944486471000005,
+        "initial_load_failures": 18,
+        "actual_worker_block_wake_reap": true
+      }
+    },
+    "pre_commit_checkpoint": {
+      "execution_bytes": 113192960,
+      "new_execution_bytes": 24952832,
+      "phase_charged_bytes": 122732544,
+      "finalization_bytes": 5574656,
+      "metadata_bytes": 3964928,
+      "aggregate_charged_bytes": 3019857920,
+      "execution_remaining_bytes": 46190592,
+      "phase_remaining_bytes": 61816832,
+      "aggregate_remaining_bytes": 503357440,
+      "capacity": {
+        "charged": 2498031616,
+        "remaining": 1025183744,
+        "C": 22632218624,
+        "E": 246122569728,
+        "linux": 1009555779584,
+        "admitted_extra": 922746880
+      }
+    },
+    "changed_files": [
+      "arch/x86_64/gui_verify.c",
+      "docs/results/n6-gui.md",
+      "docs/results/n6-gui/bootstrap-hardening/bios.serial.txt",
+      "docs/results/n6-gui/bootstrap-hardening/changed-files.txt",
+      "docs/results/n6-gui/bootstrap-hardening/host.txt",
+      "docs/results/n6-gui/bootstrap-hardening/result.json",
+      "docs/results/n6-gui/bootstrap-hardening/uefi.serial.txt",
+      "docs/results/n6-gui/evidence.json",
+      "scripts/test-gui-bootstrap.py",
+      "tests/host/gui-bootstrap.c"
+    ],
+    "combined_inventory": [
+      "Makefile",
+      "arch/x86_64/app_catalog.c",
+      "arch/x86_64/app_catalog.h",
+      "arch/x86_64/app_payload.c",
+      "arch/x86_64/arch.mk",
+      "arch/x86_64/elf.h",
+      "arch/x86_64/grub-gui.cfg",
+      "arch/x86_64/gui.c",
+      "arch/x86_64/gui.h",
+      "arch/x86_64/gui_verify.c",
+      "arch/x86_64/gui_verify.h",
+      "arch/x86_64/kernel.c",
+      "arch/x86_64/process.c",
+      "arch/x86_64/screen.c",
+      "arch/x86_64/screen.h",
+      "arch/x86_64/syscall.c",
+      "arch/x86_64/user_console.c",
+      "arch/x86_64/user_console.h",
+      "docs/abi/syscall-v5.md",
+      "docs/images/n6/vos-gui-bios.png",
+      "docs/images/n6/vos-gui-uefi.png",
+      "docs/results/n6-gui.md",
+      "docs/results/n6-gui/bios.serial.txt",
+      "docs/results/n6-gui/bootstrap-hardening/bios.serial.txt",
+      "docs/results/n6-gui/bootstrap-hardening/changed-files.txt",
+      "docs/results/n6-gui/bootstrap-hardening/host.txt",
+      "docs/results/n6-gui/bootstrap-hardening/result.json",
+      "docs/results/n6-gui/bootstrap-hardening/uefi.serial.txt",
+      "docs/results/n6-gui/changed-files.txt",
+      "docs/results/n6-gui/evidence.json",
+      "docs/results/n6-gui/host.txt",
+      "docs/results/n6-gui/result.json",
+      "docs/results/n6-gui/uefi.serial.txt",
+      "scripts/check-user-elf.sh",
+      "scripts/test-gui-bootstrap.py",
+      "scripts/test-gui.py",
+      "scripts/test-user-elf.sh",
+      "tests/host/gui-bootstrap.c",
+      "tests/host/gui.c",
+      "tests/rust/gui.rs",
+      "user/gui-demo/main.rs",
+      "user/gui-probe/main.rs",
+      "user/include/vos/gui.h",
+      "user/lib/abi_note_v5.S",
+      "user/lib/syscall_v5.S",
+      "user/rust/gui.rs",
+      "user/user.mk"
+    ],
+    "original_40_file_commit_preserved": true,
+    "historical_monitoring_gap_preserved": true,
+    "prior_limitation": "Initial GUI ELF-load failure could retain one idle worker; not failure-injected in original candidate",
+    "current_limitation_resolved": true,
+    "formal_acceptance": false,
+    "final_receipt_required": true,
+    "documentation_preparation": "Host request preparation failures (PowerShell provider path, reserved Host variable and recursive serialization) occurred before writing requests. The owned serializer helper was stopped after PID/parent/start/command checks. Runtime evidence and the continuously guarded service remained unchanged; no test rerun or controller restart."
   }
 }

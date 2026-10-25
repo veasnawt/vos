@@ -3,7 +3,7 @@
 The bounded GUI runtime passed focused hosted checks and actual BIOS/UEFI
 interaction. This is a local review candidate on `feat/n6-gui-surfaces`, based
 on `3308cc86cf99d98da4cb353e6678d7782e623d47`. N6 remains in progress.
-The startup-error cleanup limitation below is retained explicitly for review.
+The disclosed startup-error cleanup limitation was corrected in the focused hardening recorded below.
 
 ## Delivered contract
 
@@ -172,7 +172,7 @@ For an already-admitted manual session, boot the preserved BIOS ISO:
 
 ~~~sh
 phase="$PWD/build/n6-gui-20261025T083036Z"
-image="$phase/catalog-recovery-1/image/kernel/vos.iso"
+image="$phase/bootstrap-hardening-1/image/kernel/vos.iso"
 disk="$PWD/build/app-console-20261025T051241Z/attempt-1/disk.img"
 qemu-system-x86_64 -machine q35 -accel tcg -m 128M \
   -cdrom "$image" -boot d -nic none \
@@ -182,7 +182,7 @@ qemu-system-x86_64 -machine q35 -accel tcg -m 128M \
   -device virtio-blk-pci,drive=vs0,disable-legacy=on
 ~~~
 
-This is the verification image. When serial reports OVERFLOW INPUT WINDOW,
+This is the corrected hardening verification image. Its 18 bootstrap failures run automatically. When serial reports OVERFLOW INPUT WINDOW,
 type a at least 20 times within its three-second probe window. After the GUI
 demo appears, a/b changes its colors and q exits to the real shell.
 Use apps, hello and rixie; Rixie's exit returns to the shell. These verification
@@ -242,6 +242,91 @@ gates pass in that namespace's FINAL-RECEIPT.json and guard-result.json.
 An absent receipt or failed guard result does not establish completed finalization.
 No test rerun or implementation correction is part of this recovery.
 
+
+## GUI bootstrap hardening
+
+The owner authorized one hardening attempt from local commit
+`e639008949358d80561c149b94fd14654d108a7b`. The original 40-file commit,
+runtime manifests, failed roots and evidence-only finalization remain immutable.
+
+The defect was the early return after `gui_service_start()` when the initial
+`load_elf()` failed. That path had no GUI owner to revoke and never stopped its
+input service. The correction routes loader failure and grant failure through
+one common `gui_service_stop()` exit. The existing stop mechanism wakes and
+interrupts the worker, yields until its ID reaches THREAD_FREE, and clears the
+worker ID. It does not destroy a process that the loader already rolled back.
+The verification-only failure exit also destroys any registered probe/fillers
+before stopping the service. No scheduler, console authority or ABI changed.
+
+The new hosted regression links the actual production `gui_boot_run`, ELF
+validator and loader. Its modeled service boundary passed 523 ASan/UBSan
+assertions: 64 truncated-ELF rejections, 64 valid-ELF/process-admission failures,
+and a failed service start without double-stop. The same harness against the
+original committed bootstrap returned the expected failure for a retained worker.
+This negative control is preserved; it is not a failed hardening attempt.
+
+On **each of BIOS and UEFI**, verification performed 18 real initial-load
+failures, exceeding the 16-record thread pool size. A test-only hook yields
+after service creation, allowing the real input worker to block, then calls
+the actual loader with the valid catalog ELF truncated to one byte. ELF_ESIZE /
+PROC_EEXEC is required. Every iteration observed exactly one thread created and
+one reaped, a blocking event, zero GUI frames, restored PMM/process/thread counts,
+valid scheduler/process audits and intact stack canaries. This establishes
+reclamation, rather than merely observing that shutdown was requested.
+
+The same firmware sessions then passed all ten existing ring-3 GUI cases,
+including blocked-reader cancellation, focus revocation and queue isolation;
+process-table exhaustion rollback; real a/b/q keyboard delivery and independent
+40,960-pixel RGB comparisons; and subsequent vsh, hello and interactive Rixie
+checks, cwd/prompt restoration and final process reclamation/halt.
+The new bootstrap tests are verification-only; normal sessions have no added
+verification deadline or forced failure.
+
+Only gui_verify.o was rebuilt and the kernel relinked, reusing 59 manifest-pinned
+objects and all five exact native application ELFs read-only. BIOS used the
+verified BIOS-only replay producer; UEFI used fresh GRUB construction.
+Boot files and firmware catalogs were validated before boot; UEFI GPT bounds,
+non-overlap, primary/backup CRCs and EFI/FAT identities passed. ABI v0-v5
+interfaces, Rust source, keyboard decoding, surface implementation and display
+renderer are unchanged. Their unaffected sanitizer/Rust/ELF evidence is reused
+with source/input identity checks, rather than rerun.
+
+The independent post-run audit matched all **47 runtime-manifest payloads**:
+`48bc7f2281f49ba680359e67cf2eededd97bf92211ef42d2fa653d584eda1bbc`.
+Raw result:
+`fbcde4721a48577857597689773ac8534dd6f18522a928f844974d8aea692302`.
+The [hardening result](n6-gui/bootstrap-hardening/result.json),
+[host evidence](n6-gui/bootstrap-hardening/host.txt),
+[BIOS serial](n6-gui/bootstrap-hardening/bios.serial.txt),
+[UEFI serial](n6-gui/bootstrap-hardening/uefi.serial.txt) and
+[10-file hardening inventory](n6-gui/bootstrap-hardening/changed-files.txt)
+are included. The original [40-file inventory](n6-gui/changed-files.txt) remains
+the record for the first commit; the combined implementation contains 47 files.
+
+Raw output is `build/n6-gui-20261025T083036Z/bootstrap-hardening-1`.
+The additive controller namespace is `final/bootstrap-hardening-1` in that phase.
+Its CAPACITY-AUTHORIZATION.json pins the original budget/receipt and accepted
+commit, refreshed signed Codex executor identity and this single owner decision.
+Historical 104/128 MiB limits are not rewritten: only this hardening continuation
+has cumulative **152 MiB execution / 176 MiB phase** ceilings. Aggregate remains
+3,360 MiB; finalization 16 MiB, metadata 8 MiB, fixed Git reservation and physical
+reserve formulas remain unchanged. The admitted new-work provision was 40 MiB
+execution plus 8 MiB finalization/metadata. All previous charges stay included.
+The final receipt and passed controller result record completion; they are not
+assumed before those files exist.
+
+The earlier host-query failures and approximately 86.848-second unconfirmed
+interval remain disclosed above. Fresh hardening admission passed, using unchanged
+90-second isolation and 15-second capacity queries and the existing one-hour
+guarded execution window. This does not retrospectively establish isolation
+during the historical interruption.
+
+The genuine screenshots above remain the original captures. The hardening changes
+only bootstrap lifecycle and test instrumentation, not application pixels or
+chrome; new raw BIOS/UEFI captures and pixel-oracle results confirm the same visual
+behavior. No branding assets, mouse, Terminal application or window manager were
+introduced. QEMU evidence does not establish physical-hardware readiness.
+
 ## Design references, assets and remaining limits
 
 The approved mockup is a future target: application name Terminal, dark-blue
@@ -270,11 +355,7 @@ recreated, edited or integrated. After separate identity/license/use approval,
 selected originals plus licenses/hashes and pinned offline rasterization/atlas
 tools can live in the repository, with no /mnt/e dependency in ordinary builds.
 
-One trusted-bootstrap limitation remains: failure of initial GUI ELF loading
-after input-service creation can leave that one idle kernel worker until reboot.
-The direct loader-exhaustion and per-application cleanup probes passed; they do
-not claim complete rollback of this outer pre-grant startup branch. This is
-retained for owner review, not represented as a passed failure-injection case.
+The original trusted-bootstrap worker-retention defect is corrected and failure-injected as described above. This does not claim exhaustive coverage of every possible hardware or bootstrap failure.
 
 VOS targets independent physical x86_64 computers. Current native evidence is
 QEMU SeaBIOS/OVMF only. Physical firmware/GPU/USB input support and production
