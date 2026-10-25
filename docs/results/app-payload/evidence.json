@@ -1,0 +1,333 @@
+{
+  "scope": "Common native application payload and kernel-private catalog, Increment 1 only",
+  "baseline": "5b23fcbc09e81ee182ed3bece11d26b3f560edae",
+  "branch": "feat/unified-app-payload",
+  "uncommitted": true,
+  "sources": {
+    "Makefile": "16afde9ade6226c355d173687ef51f7b9ced026bf97e88874befe404f9fbe21c",
+    "arch/x86_64/arch.mk": "7f64db50cc9d8b719328d230dc2049a5b8ab39a587693fb51f47dfda8a4d72a9",
+    "arch/x86_64/kernel.c": "35c230f7909166c25f607f8f9cfbaf7548be21fe749be15d89e36ed581fe3cd9",
+    "arch/x86_64/app_catalog.c": "366f9cc2d6348f2083ffa95ab5a95f699c9ae8a99bd4a47ab8acae576dd70247",
+    "arch/x86_64/app_catalog.h": "cba40df9d364f881bdbe566a8ec54fdd32784de016a481ff763bc152ebe3d0b2",
+    "arch/x86_64/app_payload.c": "97c96d78c4df8cacf6e98192fea1a2e614cc6f54b1b084b02bc62737c465e20c",
+    "arch/x86_64/app_payload.h": "96263b0c4967d29b0984432bf928ed2430724d74aad20b5d1957a45112d12df6",
+    "arch/x86_64/grub-apps.cfg": "a9597082a825c4dd489e27fa72f21389c10d7c4d91951331e9d1cea733543e62",
+    "scripts/test-app-payload.py": "3c3dc9013fb15fa857a59ac1bffd7cd615a897468c407e5a5731aecc61d3be12",
+    "tests/host/app-catalog.c": "666c5fd86c6295a6858d03f59bcc8d0e10f1994293ffe15731549715b07d7735"
+  },
+  "local_root": "/home/veasnawt/src/myos/build/app-launch-20261025T015543Z",
+  "local_manifest": {
+    "path": "/home/veasnawt/src/myos/build/app-launch-20261025T015543Z/attempt-1/manifest.json",
+    "entries": 202,
+    "sha256": "a481b78c6a724819f1249d3bc399e7d4ba9041bed5b163713928d58a52e7fa1c"
+  },
+  "result": {
+    "scope": "Common native payload and private kernel catalog only",
+    "passed": true,
+    "source_sha256": {
+      "Makefile": "16afde9ade6226c355d173687ef51f7b9ced026bf97e88874befe404f9fbe21c",
+      "arch/x86_64/arch.mk": "7f64db50cc9d8b719328d230dc2049a5b8ab39a587693fb51f47dfda8a4d72a9",
+      "arch/x86_64/kernel.c": "35c230f7909166c25f607f8f9cfbaf7548be21fe749be15d89e36ed581fe3cd9",
+      "arch/x86_64/app_catalog.c": "366f9cc2d6348f2083ffa95ab5a95f699c9ae8a99bd4a47ab8acae576dd70247",
+      "arch/x86_64/app_catalog.h": "cba40df9d364f881bdbe566a8ec54fdd32784de016a481ff763bc152ebe3d0b2",
+      "arch/x86_64/app_payload.c": "97c96d78c4df8cacf6e98192fea1a2e614cc6f54b1b084b02bc62737c465e20c",
+      "arch/x86_64/app_payload.h": "96263b0c4967d29b0984432bf928ed2430724d74aad20b5d1957a45112d12df6",
+      "arch/x86_64/grub-apps.cfg": "a9597082a825c4dd489e27fa72f21389c10d7c4d91951331e9d1cea733543e62",
+      "scripts/test-app-payload.py": "3c3dc9013fb15fa857a59ac1bffd7cd615a897468c407e5a5731aecc61d3be12",
+      "tests/host/app-catalog.c": "666c5fd86c6295a6858d03f59bcc8d0e10f1994293ffe15731549715b07d7735"
+    },
+    "host_load_before": [
+      0.091796875,
+      0.08154296875,
+      0.08740234375
+    ],
+    "compiler": "gcc (Ubuntu 15.2.0-16ubuntu1) 15.2.0",
+    "QEMU": "QEMU emulator version 10.2.1 (Debian 1:10.2.1+ds-1ubuntu3.2)",
+    "rustc": "rustc 1.100.0-nightly (2e2b193f8 2026-09-02)",
+    "accepted_application_sha256": {
+      "vsh": "4a837277422f97c86f3c3a5ba0fef15de22c002addf9243a4b5d78bd73b5ad5f",
+      "hello": "c6c6416195a0f18d680d7f8f19be52ce02ff02912ef3bac45324fbe88006cd06",
+      "rixie": "77104da3b33caf809daf5e6674ac4e2fa9edf6a9e2e5dd59828514df76490d32"
+    },
+    "optimized_host_catalog_baseline": {
+      "iterations_per_sample": 10000,
+      "catalog_bytes": 392,
+      "source_bytes": 48,
+      "sample_total_ns": [
+        9621800,
+        9630900,
+        10039700,
+        9593900,
+        9643599,
+        9701800,
+        9676900
+      ],
+      "median_ns_per_three_entry_build": 964.3599
+    },
+    "extracted_payload_sha256": {
+      "bios": {
+        "vos.bin": "4a8413af7c0149c1bdd101ee38adac944a02a4fb91257dd0c7f2524e382f59b0",
+        "vsh.elf": "4a837277422f97c86f3c3a5ba0fef15de22c002addf9243a4b5d78bd73b5ad5f",
+        "hello.elf": "c6c6416195a0f18d680d7f8f19be52ce02ff02912ef3bac45324fbe88006cd06",
+        "rixie.elf": "77104da3b33caf809daf5e6674ac4e2fa9edf6a9e2e5dd59828514df76490d32"
+      },
+      "uefi": {
+        "vos.bin": "4a8413af7c0149c1bdd101ee38adac944a02a4fb91257dd0c7f2524e382f59b0",
+        "vsh.elf": "4a837277422f97c86f3c3a5ba0fef15de22c002addf9243a4b5d78bd73b5ad5f",
+        "hello.elf": "c6c6416195a0f18d680d7f8f19be52ce02ff02912ef3bac45324fbe88006cd06",
+        "rixie.elf": "77104da3b33caf809daf5e6674ac4e2fa9edf6a9e2e5dd59828514df76490d32"
+      }
+    },
+    "firmware": {
+      "bios": {
+        "passed": true,
+        "firmware": "bios",
+        "catalog_entries": 3,
+        "catalog_bytes": 392,
+        "hello_ABI_v0": true,
+        "vsh_ABI_v3": true,
+        "shell_cases": [
+          {
+            "command": "help",
+            "expected": "Available commands: help, clear, echo, pwd, ls, cd, cat",
+            "prompt": "VOS> ",
+            "passed": true
+          },
+          {
+            "command": "echo common payload shell",
+            "expected": "common payload shell",
+            "prompt": "VOS> ",
+            "passed": true
+          },
+          {
+            "command": "pwd",
+            "expected": "/",
+            "prompt": "VOS> ",
+            "passed": true
+          },
+          {
+            "command": "ls",
+            "expected": "docs",
+            "prompt": "VOS> ",
+            "passed": true
+          },
+          {
+            "command": "cd docs",
+            "expected": "",
+            "prompt": "VOS>docs> ",
+            "passed": true
+          },
+          {
+            "command": "cat welcome.txt",
+            "expected": "Shared payload: real read-only filesystem.",
+            "prompt": "VOS>docs> ",
+            "passed": true
+          },
+          {
+            "command": "cd /",
+            "expected": "",
+            "prompt": "VOS> ",
+            "passed": true
+          },
+          {
+            "command": "echo catalogx",
+            "expected": "catalog",
+            "prompt": "VOS> ",
+            "passed": true
+          },
+          {
+            "command": "apps",
+            "expected": "vsh: unknown command",
+            "prompt": "VOS> ",
+            "passed": true
+          },
+          {
+            "command": "rixie",
+            "expected": "vsh: unknown command",
+            "prompt": "VOS> ",
+            "passed": true
+          }
+        ],
+        "process_reclaimed": true,
+        "halted": true,
+        "rixie_not_executed": true,
+        "no_runtime_launch_API": true,
+        "no_network": true,
+        "screenshot": {
+          "width": 1280,
+          "height": 800,
+          "sha256": "9a8234f488c9116b471c85a1b7802556d5db7bee6be8cb3baa2669e5d0fad52c"
+        },
+        "startup_to_prompt_seconds": 0.9551875959950848,
+        "elapsed_seconds": 3.6902011959973606
+      },
+      "uefi": {
+        "passed": true,
+        "firmware": "uefi",
+        "catalog_entries": 3,
+        "catalog_bytes": 392,
+        "hello_ABI_v0": true,
+        "vsh_ABI_v3": true,
+        "shell_cases": [
+          {
+            "command": "help",
+            "expected": "Available commands: help, clear, echo, pwd, ls, cd, cat",
+            "prompt": "VOS> ",
+            "passed": true
+          },
+          {
+            "command": "echo common payload shell",
+            "expected": "common payload shell",
+            "prompt": "VOS> ",
+            "passed": true
+          },
+          {
+            "command": "pwd",
+            "expected": "/",
+            "prompt": "VOS> ",
+            "passed": true
+          },
+          {
+            "command": "ls",
+            "expected": "docs",
+            "prompt": "VOS> ",
+            "passed": true
+          },
+          {
+            "command": "cd docs",
+            "expected": "",
+            "prompt": "VOS>docs> ",
+            "passed": true
+          },
+          {
+            "command": "cat welcome.txt",
+            "expected": "Shared payload: real read-only filesystem.",
+            "prompt": "VOS>docs> ",
+            "passed": true
+          },
+          {
+            "command": "cd /",
+            "expected": "",
+            "prompt": "VOS> ",
+            "passed": true
+          },
+          {
+            "command": "echo catalogx",
+            "expected": "catalog",
+            "prompt": "VOS> ",
+            "passed": true
+          },
+          {
+            "command": "apps",
+            "expected": "vsh: unknown command",
+            "prompt": "VOS> ",
+            "passed": true
+          },
+          {
+            "command": "rixie",
+            "expected": "vsh: unknown command",
+            "prompt": "VOS> ",
+            "passed": true
+          }
+        ],
+        "process_reclaimed": true,
+        "halted": true,
+        "rixie_not_executed": true,
+        "no_runtime_launch_API": true,
+        "no_network": true,
+        "screenshot": {
+          "width": 1280,
+          "height": 800,
+          "sha256": "9a8234f488c9116b471c85a1b7802556d5db7bee6be8cb3baa2669e5d0fad52c"
+        },
+        "startup_to_prompt_seconds": 3.685864799997944,
+        "elapsed_seconds": 6.60472322699934
+      }
+    },
+    "disk_sha256": "0337cdce94bbc12edfb83d8b7316c284f401b7f76cd30d109d7b238027745a64",
+    "host_checks": "app-catalog: 97339 checks PASS; catalog=392 bytes; max=8; no execution or grants",
+    "ABI_v0_v3_unchanged": true,
+    "no_process_lifecycle_changes": true,
+    "no_execution_capability_or_syscalls": true,
+    "no_console_handoff": true,
+    "BIOS_UEFI_same_application_payload": true
+  },
+  "application_identity_comparisons": "vsh/Rixie accepted N4 and hello protected N3 ELF SHA-256 match; ISO extraction verified both firmware payloads",
+  "screenshots": {
+    "bios": {
+      "source": "/home/veasnawt/src/myos/build/app-launch-20261025T015543Z/attempt-1/bios/interactive.ppm",
+      "png": "/home/veasnawt/src/myos/build/app-launch-20261025T015543Z/attempt-1/bios/interactive.png",
+      "repository": "docs/images/apps/vos-app-payload-bios.png",
+      "width": 1280,
+      "height": 800,
+      "sha256": "9a8234f488c9116b471c85a1b7802556d5db7bee6be8cb3baa2669e5d0fad52c"
+    },
+    "uefi": {
+      "source": "/home/veasnawt/src/myos/build/app-launch-20261025T015543Z/attempt-1/uefi/interactive.ppm",
+      "png": "/home/veasnawt/src/myos/build/app-launch-20261025T015543Z/attempt-1/uefi/interactive.png",
+      "repository": "docs/images/apps/vos-app-payload-uefi.png",
+      "width": 1280,
+      "height": 800,
+      "sha256": "9a8234f488c9116b471c85a1b7802556d5db7bee6be8cb3baa2669e5d0fad52c"
+    }
+  },
+  "storage": {
+    "budget": "/home/veasnawt/src/myos/build/app-launch-20261025T015543Z/APP-BUDGET.json",
+    "budget_sha256": "96b698bbf4a878345710e80e68000003bbc78c21e38fc61d3df029797d2ecb87",
+    "phase_limit_MiB": 160,
+    "attempt_limit_MiB": 64,
+    "attempts_used": [
+      1
+    ],
+    "attempt2_used": false,
+    "aggregate_limit_MiB": 3360,
+    "historical_N5_ledger": "/mnt/e/VOS-Verification-Evidence/ARP-BUDGET.json",
+    "historical_N5_ledger_sha256": "cd2214f6d8fa72a605dfd7acc202ba63033ea75a0bee3f28334b6fcb61184988",
+    "positive_growth_only": true,
+    "no_storage_cleanup": true
+  },
+  "guard": {
+    "controller": "/home/veasnawt/src/myos/build/app-launch-20261025T015543Z/controller-adapter-source.txt",
+    "immutable_policy": "/home/veasnawt/src/myos/build/app-launch-20261025T015543Z/controller-policy.json",
+    "query_timeout_seconds": 90,
+    "final_result": "/home/veasnawt/src/myos/build/app-launch-20261025T015543Z/final/evidence-recovery-20261025T021725Z/guard-result.json",
+    "preservation_receipt": "/home/veasnawt/src/myos/build/app-launch-20261025T015543Z/final/evidence-recovery-20261025T021725Z/FINAL-RECEIPT.json",
+    "old_detection_reserves_and_stop_conditions_preserved": true,
+    "original_failed_result": "/home/veasnawt/src/myos/build/app-launch-20261025T015543Z/guard-result.json",
+    "recovery_reason": "Final success response supplied passed twice; original failure preserved",
+    "monitoring_scope": "Separate guarded execution windows; no claim of uninterrupted monitoring between them"
+  },
+  "preservation": {
+    "protected_binaries": 7,
+    "worktrees": 13,
+    "stashes": 2,
+    "D1r3": "unfinished, unsealed, unarchived",
+    "retired_N4_N5_roots": 88,
+    "archive_sha256": "d079cc474586f02d5df4d58e0c8ca29e66ae29dfd29d63979f4e03f78aed6f55"
+  },
+  "no_N0_N5_campaign_repeated": true,
+  "no_later_increment": true,
+  "no_physical_hardware_claim": true,
+  "changed_files": [
+    "Makefile",
+    "arch/x86_64/arch.mk",
+    "arch/x86_64/kernel.c",
+    "arch/x86_64/app_catalog.c",
+    "arch/x86_64/app_catalog.h",
+    "arch/x86_64/app_payload.c",
+    "arch/x86_64/app_payload.h",
+    "arch/x86_64/grub-apps.cfg",
+    "scripts/test-app-payload.py",
+    "tests/host/app-catalog.c",
+    "docs/applications.md",
+    "docs/results/app-payload.md",
+    "docs/images/apps/vos-app-payload-bios.png",
+    "docs/images/apps/vos-app-payload-uefi.png",
+    "docs/results/app-payload/evidence.json",
+    "docs/results/app-payload/result.json",
+    "docs/results/app-payload/host-test.txt",
+    "docs/results/app-payload/bios.serial.txt",
+    "docs/results/app-payload/uefi.serial.txt",
+    "docs/results/app-payload/changed-files.txt"
+  ]
+}

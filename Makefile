@@ -180,6 +180,25 @@ rixie-uefi-iso: rixie-iso
 rixie-run: rixie-iso
 	qemu-system-x86_64 -m 128M -cdrom $(RIXIE_BUILD)/kernel/vos.iso -serial stdio -no-reboot -nic none
 
+
+# Common native application payload. Firmware variants carry identical kernel
+# and ELF bytes; both bootstrap vsh and neither selects another application.
+APP_BUILD ?= build/app-payload
+ifneq ($(filter apps-iso apps-uefi-iso apps-run,$(MAKECMDGOALS)),)
+ifeq ($(strip $(APP_BUILD)),)
+$(error APP_BUILD must be nonempty; use a fresh path under build/)
+endif
+endif
+APP_FILES = $(APP_BUILD)/user/vsh.elf:boot/vsh.elf $(APP_BUILD)/user/rixie.elf:boot/rixie.elf
+.PHONY: apps-iso apps-uefi-iso apps-run
+apps-iso:
+	$(MAKE) --no-print-directory ARCH=x86_64 USER_BUILD=$(APP_BUILD)/user RUST_APP=rixie user-vsh user-rust
+	$(MAKE) --no-print-directory ARCH=x86_64 BUILD=$(APP_BUILD)/kernel USER_BUILD=$(APP_BUILD)/user GRUB_CFG=arch/x86_64/grub-apps.cfg ISO_FILES="$(APP_FILES)" iso
+apps-uefi-iso: apps-iso
+	$(MAKE) --no-print-directory ARCH=x86_64 BUILD=$(APP_BUILD)/kernel USER_BUILD=$(APP_BUILD)/user GRUB_CFG=arch/x86_64/grub-apps.cfg ISO_FILES="$(APP_FILES)" uefi-iso
+apps-run: apps-iso
+	qemu-system-x86_64 -m 128M -cdrom $(APP_BUILD)/kernel/vos.iso -serial stdio -no-reboot -nic none $(VSH_DISK_ARGS)
+
 NET_BUILD ?= build/n5-net
 ifneq ($(filter net-iso net-uefi-iso,$(MAKECMDGOALS)),)
 ifeq ($(strip $(NET_BUILD)),)
