@@ -120,7 +120,7 @@ int main(int argc,char **argv)
             for(unsigned i=0;i<count;i++) {
                 uint8_t *p=mutated+ph+56*i;uint32_t type=u32(p),flags=u32(p+4);
                 if(variant==2 && type==1 && (flags&1)) {put32(p+4,7);changed=1;break;}
-                if(variant==3 && type==4) {put32(mutated+u64(p+8)+16,4);changed=1;break;}
+                if(variant==3 && type==4) {put32(mutated+u64(p+8)+16,ELF_ABI_MAX+1);changed=1;break;}
             }
             CHECK(changed);
         }
