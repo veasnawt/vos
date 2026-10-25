@@ -350,3 +350,22 @@ handoff-iso:
 	$(MAKE) --no-print-directory ARCH=x86_64 BUILD=$(HANDOFF_BUILD)/kernel USER_BUILD=$(HANDOFF_USER_BUILD) EXEC_VERIFY=1 HANDOFF_VERIFY=1 TEST_DEFS="-DVOS_EXEC_VERIFY -DVOS_HANDOFF_VERIFY" GRUB_CFG=arch/x86_64/grub-handoff.cfg ISO_FILES="$(HANDOFF_FILES)" iso
 handoff-uefi-iso: handoff-iso
 	$(MAKE) --no-print-directory ARCH=x86_64 BUILD=$(HANDOFF_BUILD)/kernel USER_BUILD=$(HANDOFF_USER_BUILD) EXEC_VERIFY=1 HANDOFF_VERIFY=1 TEST_DEFS="-DVOS_EXEC_VERIFY -DVOS_HANDOFF_VERIFY" GRUB_CFG=arch/x86_64/grub-handoff.cfg ISO_FILES="$(HANDOFF_FILES)" uefi-iso
+
+# N6 builds a fresh kernel/image and stages already-verified application ELFs.
+# Inputs are explicit; the caller must admit storage and validate immutable ELFs.
+DESKTOP_BUILD ?= build/n6-desktop
+DESKTOP_APPS ?=
+ifneq ($(filter desktop-iso desktop-uefi-iso,$(MAKECMDGOALS)),)
+ifeq ($(strip $(DESKTOP_BUILD)),)
+$(error DESKTOP_BUILD must be a fresh admitted output)
+endif
+ifeq ($(strip $(DESKTOP_APPS)),)
+$(error DESKTOP_APPS must identify verified vsh/hello/rixie ELF inputs)
+endif
+endif
+DESKTOP_FILES = $(DESKTOP_APPS)/vsh.elf:boot/vsh.elf $(DESKTOP_APPS)/rixie.elf:boot/rixie.elf
+.PHONY: desktop-iso desktop-uefi-iso
+desktop-iso:
+	$(MAKE) --no-print-directory ARCH=x86_64 BUILD=$(DESKTOP_BUILD) USER_BUILD=$(DESKTOP_BUILD)/unused-user ARCH_ISO_FILES="$(DESKTOP_APPS)/hello.elf:boot/hello.elf" GRUB_CFG=arch/x86_64/grub-desktop.cfg ISO_FILES="$(DESKTOP_FILES)" iso
+desktop-uefi-iso:
+	$(MAKE) --no-print-directory ARCH=x86_64 BUILD=$(DESKTOP_BUILD) USER_BUILD=$(DESKTOP_BUILD)/unused-user ARCH_ISO_FILES="$(DESKTOP_APPS)/hello.elf:boot/hello.elf" GRUB_CFG=arch/x86_64/grub-desktop.cfg ISO_FILES="$(DESKTOP_FILES)" uefi-iso

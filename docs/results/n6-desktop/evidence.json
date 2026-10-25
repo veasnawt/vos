@@ -1,0 +1,502 @@
+{
+  "scope": "N6 graphical slice + authorized layout refinement + one image repair",
+  "baseline": "e211c738d9f0b98a0ddb717b4d17f0063dfe38f0",
+  "branch": "feat/n6-graphical-desktop",
+  "phase_root": "/home/veasnawt/src/myos/build/n6-desktop-20261025T064844Z",
+  "repair_control": "/home/veasnawt/src/myos/build/n6-desktop-20261025T064844Z/final/layout-image-repair-1",
+  "owner_authorization_sha256": "01ef126fd9902b8093fa12920b613102e5852fb56d82d6df8f1c8a8c3924c6a5",
+  "repair_admission": {
+    "passed": true,
+    "identity": "layout-image-repair-1",
+    "phase": "/home/veasnawt/src/myos/build/n6-desktop-20261025T064844Z",
+    "accepted_main": "e211c738d9f0b98a0ddb717b4d17f0063dfe38f0",
+    "owner_sha256": "01ef126fd9902b8093fa12920b613102e5852fb56d82d6df8f1c8a8c3924c6a5",
+    "original_manifest_sha256": "15783d855b9894132b6216fd6856b6376af5721230c1a0ad433c3665ccba75fa",
+    "failed_manifest_sha256": "0b3801d70e1b60b9f21b04ee6d2c132dba08ac51f59e75bca6d01ad995851747",
+    "original_execution_bytes": 33964032,
+    "failed_execution_bytes": 9777152,
+    "execution_limit_bytes": 75497472,
+    "phase_limit_bytes": 100663296,
+    "aggregate_limit_bytes": 3523215360,
+    "forecast": {
+      "stage": 3145728,
+      "producer_scratch": 14680064,
+      "UEFI_ISO": 12582912,
+      "native_results": 1048576,
+      "total": 31457280,
+      "regular_producer_tree_observed_MiB": 9.33984375,
+      "accepted_ISO_MiB": 11.80859375,
+      "accepted_stage_MiB": 2.20703125,
+      "no_duplicate_BIOS_ISO": true,
+      "no_ELF_extraction_copies": true,
+      "no_compilation": true
+    },
+    "admitted_utc": 1792915072.5691764,
+    "deadline_utc": 1792916872.5691764,
+    "writer_scope": [
+      "scripts/test-n6-desktop.py",
+      "docs/results/n6-desktop.md",
+      "docs/results/n6-desktop/result.json",
+      "docs/results/n6-desktop/evidence.json",
+      "docs/results/n6-desktop/host.txt",
+      "docs/results/n6-desktop/bios.serial.txt",
+      "docs/results/n6-desktop/uefi.serial.txt",
+      "docs/results/n6-desktop/changed-files.txt",
+      "docs/images/n6/vos-desktop-bios.png",
+      "docs/images/n6/vos-desktop-uefi.png"
+    ],
+    "normal_controllers_unchanged": true,
+    "failed_controller_stop_sha256": "ef8129cce866081a9e8e5d387757bf7fc18ee0c9b187b88f14aa137e467b5ce6"
+  },
+  "repair_rejection_tests": {
+    "passed": true,
+    "positive_admission": true,
+    "negative_checks": [
+      {
+        "name": "missing authorization",
+        "passed": true
+      },
+      {
+        "name": "forged authorization",
+        "passed": true
+      },
+      {
+        "name": "wrong baseline",
+        "passed": true
+      },
+      {
+        "name": "missing failed manifest",
+        "passed": true
+      },
+      {
+        "name": "wrong failed manifest",
+        "passed": true
+      },
+      {
+        "name": "reuse repair",
+        "passed": true
+      },
+      {
+        "name": "reuse refinement",
+        "passed": true
+      },
+      {
+        "name": "reuse original",
+        "passed": true
+      },
+      {
+        "name": "second repair",
+        "passed": true
+      },
+      {
+        "name": "expired authorization",
+        "passed": true
+      },
+      {
+        "name": "unauthorized write arch/x86_64/desktop.c",
+        "passed": true
+      },
+      {
+        "name": "unauthorized write arch/x86_64/screen.c",
+        "passed": true
+      },
+      {
+        "name": "unauthorized write arch/x86_64/process.c",
+        "passed": true
+      },
+      {
+        "name": "unauthorized write arch/x86_64/exec.c",
+        "passed": true
+      },
+      {
+        "name": "unauthorized write user/vsh/main.rs",
+        "passed": true
+      },
+      {
+        "name": "unauthorized write outside",
+        "passed": true
+      },
+      {
+        "name": "execution exhausted",
+        "passed": true
+      },
+      {
+        "name": "phase exhausted",
+        "passed": true
+      },
+      {
+        "name": "aggregate exhausted",
+        "passed": true
+      },
+      {
+        "name": "foreign agent isolation",
+        "passed": true
+      },
+      {
+        "name": "C reserve breached",
+        "passed": true
+      },
+      {
+        "name": "E reserve breached",
+        "passed": true
+      },
+      {
+        "name": "linux reserve breached",
+        "passed": true
+      },
+      {
+        "name": "family allowance exhausted",
+        "passed": true
+      }
+    ],
+    "unchanged_capacity_function_tested": true,
+    "original_guard_sha256": "4170160dc903e8a547f47a3dd91acbc9a49a427a6f50ca8cf73a1897af2655c5",
+    "failed_admission_mutated_history": false
+  },
+  "original_attempt": {
+    "directory": "attempt-1",
+    "passed": true,
+    "manifest_sha256": "15783d855b9894132b6216fd6856b6376af5721230c1a0ad433c3665ccba75fa",
+    "preserved": true
+  },
+  "failed_refinement": {
+    "directory": "layout-refinement-1",
+    "passed": false,
+    "error": "xorriso UEFI GPT partitions overlap by 80 blocks",
+    "manifest_sha256": "0b3801d70e1b60b9f21b04ee6d2c132dba08ac51f59e75bca6d01ad995851747",
+    "partial_UEFI_ISO_not_reused": true,
+    "preserved": true
+  },
+  "successful_repair": {
+    "directory": "layout-image-repair-1",
+    "result_sha256": "f181f446a610dfc3e21b48545f6b4b5244567f31f0a329c33820eaa4161a0c0c",
+    "manifest_sha256": "ec09c874c6994ba8762cf4b69ed76a6836996a965e05ff90fa3a7f6cefe1507f",
+    "host_evidence_reused": true,
+    "new_C_builds": 0
+  },
+  "current_source_sha256": {
+    "Makefile": "ec025a0265edfd7bcb2e32cda6166cb2022e184f4a3fe57f776d69b529c101cf",
+    "arch/x86_64/arch.mk": "2cf1c56cbf594389d65206df670614314630f809aa5b07644a55b62c24cbffd7",
+    "arch/x86_64/kernel.c": "743e1a930977d4418fa51ca90512e23cf8d193ff1509e5ec4e9d3a1125015940",
+    "arch/x86_64/screen.c": "b4948131e0814db5a49d06e9705001db51251daf699fc4043ab1725f8640fb13",
+    "arch/x86_64/screen.h": "4f9fb622797ce15a98880a74f664c28815d01ddd889202682a7198e748531385",
+    "arch/x86_64/desktop.c": "183816b5662fb774d9696188d431afd115ae252e8f4ff031b8eda7a081941187",
+    "arch/x86_64/desktop.h": "0fda66e88d571928984b272d670ddf28581f11d1ce80e4c6c7a2c3b2ca1c1fc0",
+    "arch/x86_64/grub-desktop.cfg": "5696eab1257021085f2c40f046bc3992cdb54dacd566a3d85754dad1e8e50ad6",
+    "tests/host/desktop.c": "379f47aabc07b63ed6b15de09b42f6b84f88f7326599ef6585a8c83cda1658d4",
+    "scripts/test-n6-desktop.py": "b261c28e88a558c16b8efafd109efeb5ce8f487b764702674c2285b6daeff572",
+    "arch/x86_64/bootinfo.c": "7fbc3649e07f86e29127ff46841965b342e5d2e3325fb70ad4ab0cea163d46db",
+    "arch/x86_64/devmap.c": "a3aa4d5be8e302e2ede1f30eee82047df686683f5327ef7258137aaedf2a449b",
+    "arch/x86_64/user_console.c": "517ca37d5d2e01fb275c985937f3be3343a089f0e3d8f450b0161f13c394657d",
+    "arch/x86_64/exec.c": "0d9664e60bd784e3e114eb0cfac9163f6fadb38f3feac8ca63f8738737f08918",
+    "arch/x86_64/keyboard.c": "f1d0b4e47f6d2ba591ed97ac7b42c7df27e9e069be46ae4c2198e12d08e3380f",
+    "arch/x86_64/input_console.c": "0297f0c2a2a053a9af9e5d33ac57e3ebd94b8353a8a5be366024a0c6eb194551",
+    "user/vsh/main.rs": "ba248268ae8d5dfc4745435a6e282832db9265bf174f9d1d5feb49705998c03b",
+    "user/rixie/main.rs": "24d050c21de01e6e4aef8d72edb88676f3fd203a5467a6b3dada006100d0111a",
+    "scripts/test-app-handoff.py": "4f5b8e4b9e44375b133688a5d9bf50e2c3c9ed459a6483eead00d85bb04c01bd",
+    "scripts/test-native-vsh.py": "bbc4481a871251d902a7b78013423551c0df248464dc4d47f6eec17b413897c6"
+  },
+  "current_host_assertions": 562324,
+  "host_source": "unchanged C/headers/tests; reused from failed image continuation",
+  "image_validation": {
+    "bios": {
+      "passed": true,
+      "platform": "BIOS",
+      "files": {
+        "/boot/vos.bin": "4f2cbed64692cce2babbd044e64c34486a6ef18de1395e9b4c32a1d017228647",
+        "/boot/vsh.elf": "e7af3ee56164f587f7ca1338f7ddfcb202b6f4310f10b4dcba6a2576743cb181",
+        "/boot/hello.elf": "c6c6416195a0f18d680d7f8f19be52ce02ff02912ef3bac45324fbe88006cd06",
+        "/boot/rixie.elf": "77104da3b33caf809daf5e6674ac4e2fa9edf6a9e2e5dd59828514df76490d32",
+        "/boot/grub/grub.cfg": "5696eab1257021085f2c40f046bc3992cdb54dacd566a3d85754dad1e8e50ad6"
+      },
+      "ISO_sha256": "27ecdb5db1a924d28cf867fd76afd97dd7ff2e364d571cf0c1cfd2ddff5d46f0"
+    },
+    "uefi": {
+      "passed": true,
+      "platform": "UEFI",
+      "files": {
+        "/boot/vos.bin": "4f2cbed64692cce2babbd044e64c34486a6ef18de1395e9b4c32a1d017228647",
+        "/boot/vsh.elf": "e7af3ee56164f587f7ca1338f7ddfcb202b6f4310f10b4dcba6a2576743cb181",
+        "/boot/hello.elf": "c6c6416195a0f18d680d7f8f19be52ce02ff02912ef3bac45324fbe88006cd06",
+        "/boot/rixie.elf": "77104da3b33caf809daf5e6674ac4e2fa9edf6a9e2e5dd59828514df76490d32",
+        "/boot/grub/grub.cfg": "b9e0e85b4e9441d277715fd42988974058506081a2b7f150d0cfeda042a47b12"
+      },
+      "ISO_sha256": "8266585d1a691ad07b620bc3dfac4a9d73fcc84e1537122ec1e3ffe4bc4d7e21",
+      "partitions": [
+        {
+          "index": 1,
+          "start": 64,
+          "end": 215,
+          "type": "ebd0a0a2-b9e5-4433-87c0-68b6b72699c7",
+          "name": "Gap0"
+        },
+        {
+          "index": 2,
+          "start": 216,
+          "end": 5975,
+          "type": "c12a7328-f81f-11d2-ba4b-00a0c93ec93b",
+          "name": "EFI boot partition"
+        },
+        {
+          "index": 3,
+          "start": 5976,
+          "end": 23539,
+          "type": "48465300-0000-11aa-aa11-00306543ecac",
+          "name": "HFSPLUS"
+        },
+        {
+          "index": 4,
+          "start": 23540,
+          "end": 24139,
+          "type": "ebd0a0a2-b9e5-4433-87c0-68b6b72699c7",
+          "name": "Gap1"
+        }
+      ],
+      "GPT_primary_backup_CRC": true,
+      "nonoverlapping_GPT": true,
+      "EFI_PE32_valid": true,
+      "ESP_file_sha256": "53a075e3c6d52925d3012b6284089d20b0e3357ea9c2ce4200f9c7e3e65afcd7"
+    }
+  },
+  "firmware": {
+    "bios": {
+      "passed": true,
+      "firmware": "bios",
+      "cases": [
+        {
+          "command": "apps",
+          "expected": "hello",
+          "prompt": "VOS> ",
+          "passed": true
+        },
+        {
+          "command": "hello",
+          "expected": "Hello from VOS!",
+          "prompt": "VOS> ",
+          "passed": true
+        },
+        {
+          "command": "clear",
+          "expected": "",
+          "prompt": "VOS> ",
+          "passed": true
+        },
+        {
+          "command": "echo graphical console",
+          "expected": "graphical console",
+          "prompt": "VOS> ",
+          "passed": true
+        },
+        {
+          "command": "cd docs",
+          "expected": "",
+          "prompt": "VOS>docs> ",
+          "passed": true
+        },
+        {
+          "command": "pwd",
+          "expected": "/docs",
+          "prompt": "VOS>docs> ",
+          "passed": true
+        },
+        {
+          "rixie_command": "hello",
+          "passed": true
+        },
+        {
+          "rixie_command": "about",
+          "passed": true
+        },
+        {
+          "rixie_command": "help",
+          "passed": true
+        },
+        {
+          "command": "pwd",
+          "expected": "/docs",
+          "prompt": "VOS>docs> ",
+          "passed": true
+        },
+        {
+          "command": "hello",
+          "expected": "Hello from VOS!",
+          "prompt": "VOS>docs> ",
+          "passed": true
+        },
+        {
+          "command": "cat welcome.txt",
+          "expected": "Unified apps: real read-only filesystem.",
+          "prompt": "VOS>docs> ",
+          "passed": true
+        },
+        {
+          "command": "cd missing",
+          "expected": "operation failed",
+          "prompt": "VOS>docs> ",
+          "passed": true
+        }
+      ],
+      "actual_vsh": true,
+      "actual_rixie": true,
+      "desktop": true,
+      "cwd_restored": true,
+      "child_reclaimed": true,
+      "parent_reclaimed": true,
+      "halted": true,
+      "screenshot": {
+        "path": "/home/veasnawt/src/myos/build/n6-desktop-20261025T064844Z/layout-image-repair-1/bios/desktop.png",
+        "width": 1024,
+        "height": 768,
+        "sha256": "b5a86c5068773d2154f252a745a8e74144838f7dc0ebb8a5c9e6b03a88fdc843",
+        "direct_QMP_PNG": true
+      },
+      "elapsed_seconds": 5.853013322004699
+    },
+    "uefi": {
+      "passed": true,
+      "firmware": "uefi",
+      "cases": [
+        {
+          "command": "apps",
+          "expected": "hello",
+          "prompt": "VOS> ",
+          "passed": true
+        },
+        {
+          "command": "hello",
+          "expected": "Hello from VOS!",
+          "prompt": "VOS> ",
+          "passed": true
+        },
+        {
+          "command": "clear",
+          "expected": "",
+          "prompt": "VOS> ",
+          "passed": true
+        },
+        {
+          "command": "echo graphical console",
+          "expected": "graphical console",
+          "prompt": "VOS> ",
+          "passed": true
+        },
+        {
+          "command": "cd docs",
+          "expected": "",
+          "prompt": "VOS>docs> ",
+          "passed": true
+        },
+        {
+          "command": "pwd",
+          "expected": "/docs",
+          "prompt": "VOS>docs> ",
+          "passed": true
+        },
+        {
+          "rixie_command": "hello",
+          "passed": true
+        },
+        {
+          "rixie_command": "about",
+          "passed": true
+        },
+        {
+          "rixie_command": "help",
+          "passed": true
+        },
+        {
+          "command": "pwd",
+          "expected": "/docs",
+          "prompt": "VOS>docs> ",
+          "passed": true
+        },
+        {
+          "command": "hello",
+          "expected": "Hello from VOS!",
+          "prompt": "VOS>docs> ",
+          "passed": true
+        },
+        {
+          "command": "cat welcome.txt",
+          "expected": "Unified apps: real read-only filesystem.",
+          "prompt": "VOS>docs> ",
+          "passed": true
+        },
+        {
+          "command": "cd missing",
+          "expected": "operation failed",
+          "prompt": "VOS>docs> ",
+          "passed": true
+        }
+      ],
+      "actual_vsh": true,
+      "actual_rixie": true,
+      "desktop": true,
+      "cwd_restored": true,
+      "child_reclaimed": true,
+      "parent_reclaimed": true,
+      "halted": true,
+      "screenshot": {
+        "path": "/home/veasnawt/src/myos/build/n6-desktop-20261025T064844Z/layout-image-repair-1/uefi/desktop.png",
+        "width": 1024,
+        "height": 768,
+        "sha256": "b5a86c5068773d2154f252a745a8e74144838f7dc0ebb8a5c9e6b03a88fdc843",
+        "direct_QMP_PNG": true
+      },
+      "elapsed_seconds": 8.031093828991288
+    }
+  },
+  "accounting_checkpoint": {
+    "phase_charged_bytes": 64061440,
+    "original_execution_bytes": 33964032,
+    "failed_refinement_bytes": 9777152,
+    "repair_execution_bytes": 15446016,
+    "cumulative_execution_bytes": 59187200,
+    "finalization_bytes": 1253376,
+    "metadata_bytes": 3620864,
+    "aggregate_charged_bytes": 2896945152,
+    "phase_remaining_bytes": 36601856,
+    "capacity": {
+      "charged": 2497789952,
+      "remaining": 1025425408,
+      "C": 17524568064,
+      "E": 245740646400,
+      "linux": 1009686290432,
+      "admitted_extra": 738197504
+    }
+  },
+  "preservation": {
+    "protected_binaries": 7,
+    "archives": 22,
+    "worktrees": 13,
+    "stashes": 2,
+    "required_before_commit": true
+  },
+  "physical_hardware_verified": false,
+  "GUI_surface_ABI": false,
+  "framebuffer_user_mapping": false,
+  "no_push": true,
+  "no_merge": true,
+  "roadmap_unchanged": true,
+  "exact_file_inventory": [
+    "Makefile",
+    "arch/x86_64/arch.mk",
+    "arch/x86_64/desktop.c",
+    "arch/x86_64/desktop.h",
+    "arch/x86_64/grub-desktop.cfg",
+    "arch/x86_64/kernel.c",
+    "arch/x86_64/screen.c",
+    "arch/x86_64/screen.h",
+    "docs/images/n6/vos-desktop-bios.png",
+    "docs/images/n6/vos-desktop-uefi.png",
+    "docs/results/n6-desktop.md",
+    "docs/results/n6-desktop/bios.serial.txt",
+    "docs/results/n6-desktop/changed-files.txt",
+    "docs/results/n6-desktop/evidence.json",
+    "docs/results/n6-desktop/host.txt",
+    "docs/results/n6-desktop/result.json",
+    "docs/results/n6-desktop/uefi.serial.txt",
+    "scripts/test-n6-desktop.py",
+    "tests/host/desktop.c"
+  ]
+}
