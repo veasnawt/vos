@@ -331,3 +331,22 @@ exec-probe-iso:
 	$(MAKE) --no-print-directory ARCH=x86_64 BUILD=$(EXEC_BUILD)/kernel USER_BUILD=$(EXEC_BUILD)/user EXEC_VERIFY=1 TEST_DEFS=-DVOS_EXEC_VERIFY GRUB_CFG=arch/x86_64/grub-exec.cfg ISO_FILES="$(EXEC_FILES)" iso
 exec-probe-uefi-iso: exec-probe-iso
 	$(MAKE) --no-print-directory ARCH=x86_64 BUILD=$(EXEC_BUILD)/kernel USER_BUILD=$(EXEC_BUILD)/user EXEC_VERIFY=1 TEST_DEFS=-DVOS_EXEC_VERIFY GRUB_CFG=arch/x86_64/grub-exec.cfg ISO_FILES="$(EXEC_FILES)" uefi-iso
+
+
+HANDOFF_BUILD ?= build/app-handoff
+HANDOFF_USER_BUILD ?= $(HANDOFF_BUILD)/user
+ifneq ($(filter handoff-iso handoff-uefi-iso,$(MAKECMDGOALS)),)
+ifeq ($(strip $(HANDOFF_BUILD)),)
+$(error HANDOFF_BUILD must be nonempty; use an admitted fresh output)
+endif
+ifeq ($(strip $(HANDOFF_USER_BUILD)),)
+$(error HANDOFF_USER_BUILD must be nonempty)
+endif
+endif
+HANDOFF_FILES = $(foreach n,$(EXEC_NAMES) handoff-probe,$(HANDOFF_USER_BUILD)/$(n).elf:boot/$(n).elf)
+.PHONY: handoff-iso handoff-uefi-iso
+handoff-iso:
+	$(MAKE) --no-print-directory ARCH=x86_64 USER_BUILD=$(HANDOFF_USER_BUILD) RUST_APP=rixie user-vsh user-rust user-exec-probe user-handoff-probe
+	$(MAKE) --no-print-directory ARCH=x86_64 BUILD=$(HANDOFF_BUILD)/kernel USER_BUILD=$(HANDOFF_USER_BUILD) EXEC_VERIFY=1 HANDOFF_VERIFY=1 TEST_DEFS="-DVOS_EXEC_VERIFY -DVOS_HANDOFF_VERIFY" GRUB_CFG=arch/x86_64/grub-handoff.cfg ISO_FILES="$(HANDOFF_FILES)" iso
+handoff-uefi-iso: handoff-iso
+	$(MAKE) --no-print-directory ARCH=x86_64 BUILD=$(HANDOFF_BUILD)/kernel USER_BUILD=$(HANDOFF_USER_BUILD) EXEC_VERIFY=1 HANDOFF_VERIFY=1 TEST_DEFS="-DVOS_EXEC_VERIFY -DVOS_HANDOFF_VERIFY" GRUB_CFG=arch/x86_64/grub-handoff.cfg ISO_FILES="$(HANDOFF_FILES)" uefi-iso

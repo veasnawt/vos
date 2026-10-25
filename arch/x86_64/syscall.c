@@ -9,6 +9,7 @@
 #include "user_console.h"
 #include "exec.h"
 #include "exec_verify.h"
+#include "handoff_verify.h"
 
 void debug_emit(const char *name, const char *data, uint64_t len, void (*put)(char))
 {
@@ -50,13 +51,16 @@ static int64_t sys_debug_write(struct process *p, uint64_t buf, uint64_t len)
         return -VOS_EINVAL;
     if (copy_from_user(p->root, kbuf, buf, len) != 0)
         return -VOS_EFAULT;
-    debug_emit(p->name, kbuf, len, serial_putc);
+    debug_emit(p->name,kbuf,len,user_console_debug_visible(p) ? serial_putc : serial_log_putc);
     return (int64_t)len;
 }
 
 int64_t syscall_dispatch(struct process *p, struct exc_frame *f)
 {
     switch (f->rax) {
+#ifdef VOS_HANDOFF_VERIFY
+    case SYS_HANDOFF_VERIFY:return handoff_verify_syscall(p,f);
+#endif
 #ifdef VOS_EXEC_VERIFY
     case SYS_EXEC_VERIFY:
         return exec_verify_syscall(p, f);

@@ -11,6 +11,7 @@
 #include "app_payload.h"
 #ifdef VOS_EXEC_VERIFY
 #include "exec_verify.h"
+#include "handoff_verify.h"
 #endif
 #include "bootinfo.h"
 #include "console.h"
@@ -385,6 +386,9 @@ void kernel_main(uint32_t mb2_magic, uint32_t mb2_info)
 #ifdef VOS_EXEC_VERIFY
     if (!first_failure && exec_verify_requested(bi.cmdline)) {
         check(exec_verify_run(),"ABI v4 execution verification");
+#ifdef VOS_HANDOFF_VERIFY
+        if(!first_failure && handoff_verify_requested(bi.cmdline))check(handoff_verify_run(&bi),"exclusive console handoff");
+#endif
         if (!first_failure) check(vsh_run(&bi),"unchanged vsh after execution verification");
     } else
 #endif

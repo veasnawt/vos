@@ -1,0 +1,364 @@
+{
+  "measurement_scope": "QEMU TCG host-observed timings; polling starts after QMP key helper returns, excludes key delivery dwell; no physical hardware or end-to-end latency claim",
+  "sanitizer_separate": true,
+  "optimized_host_baseline": {
+    "executions": 7,
+    "retained_logs": "attempt-1/console-release-{0..6}.log",
+    "timing_samples_lost_at_storage_stop": true,
+    "comparison_to_accepted_baseline_available": false
+  },
+  "profiles": {
+    "instrumented-bios": {
+      "startup_to_prompt_seconds": 6.721562847000314,
+      "elapsed_seconds": 13.844778482991387,
+      "samples": [
+        {
+          "command": "help",
+          "after_enter_to_prompt_seconds": 0.00027260000933893025
+        },
+        {
+          "command": "apps",
+          "after_enter_to_prompt_seconds": 0.00028469999961089343
+        },
+        {
+          "command": "echo hello world",
+          "after_enter_to_prompt_seconds": 0.0002796000044327229
+        },
+        {
+          "command": "ls",
+          "after_enter_to_prompt_seconds": 0.00026470000739209354
+        },
+        {
+          "command": "cd docs",
+          "after_enter_to_prompt_seconds": 0.00032210000790655613
+        },
+        {
+          "command": "pwd",
+          "after_enter_to_prompt_seconds": 0.00029689999064430594
+        },
+        {
+          "command": "hello",
+          "after_enter_to_prompt_seconds": 0.0003116000007139519
+        },
+        {
+          "command": "pwd",
+          "after_enter_to_prompt_seconds": 0.00035119999665766954
+        },
+        {
+          "command": "cat welcome.txt",
+          "after_enter_to_prompt_seconds": 0.0002877999941119924
+        },
+        {
+          "command": "hello",
+          "after_enter_to_prompt_seconds": 0.0002960999991046265
+        },
+        {
+          "command": "hello",
+          "after_enter_to_prompt_seconds": 0.0003704999980982393
+        },
+        {
+          "command": "pwd",
+          "after_enter_to_prompt_seconds": 0.0008155999967129901
+        },
+        {
+          "command": "hello extra",
+          "after_enter_to_prompt_seconds": 0.0005647000070894137
+        },
+        {
+          "command": "apps extra",
+          "after_enter_to_prompt_seconds": 0.0006763000128557906
+        },
+        {
+          "command": "missing-app",
+          "after_enter_to_prompt_seconds": 0.00030050000350456685
+        },
+        {
+          "command": "/hello",
+          "after_enter_to_prompt_seconds": 0.00036550099321175367
+        },
+        {
+          "command": "cd missing",
+          "after_enter_to_prompt_seconds": 0.00034889999369625
+        },
+        {
+          "command": "cd /",
+          "after_enter_to_prompt_seconds": 0.0003063000040128827
+        },
+        {
+          "command": "clear",
+          "after_enter_to_prompt_seconds": 0.00029409999842755497
+        },
+        {
+          "command": "echo shell restored",
+          "after_enter_to_prompt_seconds": 0.0002955000090878457
+        }
+      ],
+      "polling_median_seconds": 0.0003034000037587248,
+      "polling_max_seconds": 0.0008155999967129901
+    },
+    "production-bios": {
+      "startup_to_prompt_seconds": 0.6687213330005761,
+      "elapsed_seconds": 9.078960234997794,
+      "samples": [
+        {
+          "command": "help",
+          "after_enter_to_prompt_seconds": 0.0001832999987527728
+        },
+        {
+          "command": "apps",
+          "after_enter_to_prompt_seconds": 0.00016539999342057854
+        },
+        {
+          "command": "echo hello world",
+          "after_enter_to_prompt_seconds": 0.0001905999961309135
+        },
+        {
+          "command": "ls",
+          "after_enter_to_prompt_seconds": 0.00022109999554231763
+        },
+        {
+          "command": "cd docs",
+          "after_enter_to_prompt_seconds": 0.00022159999934956431
+        },
+        {
+          "command": "pwd",
+          "after_enter_to_prompt_seconds": 0.00016539999342057854
+        },
+        {
+          "command": "hello",
+          "after_enter_to_prompt_seconds": 0.00026529999740887433
+        },
+        {
+          "command": "pwd",
+          "after_enter_to_prompt_seconds": 0.0001998999941861257
+        },
+        {
+          "command": "cat welcome.txt",
+          "after_enter_to_prompt_seconds": 0.00029999999969732016
+        },
+        {
+          "command": "hello",
+          "after_enter_to_prompt_seconds": 0.0001922000083141029
+        },
+        {
+          "command": "hello",
+          "after_enter_to_prompt_seconds": 0.00031850000959821045
+        },
+        {
+          "command": "pwd",
+          "after_enter_to_prompt_seconds": 0.00022020000324118882
+        },
+        {
+          "command": "hello extra",
+          "after_enter_to_prompt_seconds": 0.00020249999943189323
+        },
+        {
+          "command": "apps extra",
+          "after_enter_to_prompt_seconds": 0.0002452000044286251
+        },
+        {
+          "command": "missing-app",
+          "after_enter_to_prompt_seconds": 0.0001984000118682161
+        },
+        {
+          "command": "/hello",
+          "after_enter_to_prompt_seconds": 0.00022339999850373715
+        },
+        {
+          "command": "cd missing",
+          "after_enter_to_prompt_seconds": 0.00020599999697878957
+        },
+        {
+          "command": "cd /",
+          "after_enter_to_prompt_seconds": 0.00020340000628493726
+        },
+        {
+          "command": "clear",
+          "after_enter_to_prompt_seconds": 0.00019099999917671084
+        },
+        {
+          "command": "echo shell restored",
+          "after_enter_to_prompt_seconds": 0.0002623000036692247
+        }
+      ],
+      "polling_median_seconds": 0.00020470000163186342,
+      "polling_max_seconds": 0.00031850000959821045
+    },
+    "instrumented-uefi": {
+      "startup_to_prompt_seconds": 9.386829787996248,
+      "elapsed_seconds": 16.371365778002655,
+      "samples": [
+        {
+          "command": "help",
+          "after_enter_to_prompt_seconds": 0.00033910000638570637
+        },
+        {
+          "command": "apps",
+          "after_enter_to_prompt_seconds": 0.00027629999385681003
+        },
+        {
+          "command": "echo hello world",
+          "after_enter_to_prompt_seconds": 0.000440200004959479
+        },
+        {
+          "command": "ls",
+          "after_enter_to_prompt_seconds": 0.00032369999098591506
+        },
+        {
+          "command": "cd docs",
+          "after_enter_to_prompt_seconds": 0.00032900000223889947
+        },
+        {
+          "command": "pwd",
+          "after_enter_to_prompt_seconds": 0.0003332999913254753
+        },
+        {
+          "command": "hello",
+          "after_enter_to_prompt_seconds": 0.00029090000316500664
+        },
+        {
+          "command": "pwd",
+          "after_enter_to_prompt_seconds": 0.00031489999673794955
+        },
+        {
+          "command": "cat welcome.txt",
+          "after_enter_to_prompt_seconds": 0.00028360000578686595
+        },
+        {
+          "command": "hello",
+          "after_enter_to_prompt_seconds": 0.0002747000107774511
+        },
+        {
+          "command": "hello",
+          "after_enter_to_prompt_seconds": 0.0002934010117314756
+        },
+        {
+          "command": "pwd",
+          "after_enter_to_prompt_seconds": 0.0003304999991087243
+        },
+        {
+          "command": "hello extra",
+          "after_enter_to_prompt_seconds": 0.00035909999860450625
+        },
+        {
+          "command": "apps extra",
+          "after_enter_to_prompt_seconds": 0.00033149999217130244
+        },
+        {
+          "command": "missing-app",
+          "after_enter_to_prompt_seconds": 0.0003588999970816076
+        },
+        {
+          "command": "/hello",
+          "after_enter_to_prompt_seconds": 0.0003555000002961606
+        },
+        {
+          "command": "cd missing",
+          "after_enter_to_prompt_seconds": 0.00033549999352544546
+        },
+        {
+          "command": "cd /",
+          "after_enter_to_prompt_seconds": 0.0003198999911546707
+        },
+        {
+          "command": "clear",
+          "after_enter_to_prompt_seconds": 0.0003129999968223274
+        },
+        {
+          "command": "echo shell restored",
+          "after_enter_to_prompt_seconds": 0.0004014000005554408
+        }
+      ],
+      "polling_median_seconds": 0.0003297500006738119,
+      "polling_max_seconds": 0.000440200004959479
+    },
+    "production-uefi": {
+      "startup_to_prompt_seconds": 4.070529136995901,
+      "elapsed_seconds": 12.496006403001957,
+      "samples": [
+        {
+          "command": "help",
+          "after_enter_to_prompt_seconds": 0.00018849999469239265
+        },
+        {
+          "command": "apps",
+          "after_enter_to_prompt_seconds": 0.00017300000763498247
+        },
+        {
+          "command": "echo hello world",
+          "after_enter_to_prompt_seconds": 0.00017630000365898013
+        },
+        {
+          "command": "ls",
+          "after_enter_to_prompt_seconds": 0.00025740001001395285
+        },
+        {
+          "command": "cd docs",
+          "after_enter_to_prompt_seconds": 0.00019320000137668103
+        },
+        {
+          "command": "pwd",
+          "after_enter_to_prompt_seconds": 0.00018429999181535095
+        },
+        {
+          "command": "hello",
+          "after_enter_to_prompt_seconds": 0.00020770099945366383
+        },
+        {
+          "command": "pwd",
+          "after_enter_to_prompt_seconds": 0.00027129999944008887
+        },
+        {
+          "command": "cat welcome.txt",
+          "after_enter_to_prompt_seconds": 0.00021779999951831996
+        },
+        {
+          "command": "hello",
+          "after_enter_to_prompt_seconds": 0.00019639999663922936
+        },
+        {
+          "command": "hello",
+          "after_enter_to_prompt_seconds": 0.00024210000992752612
+        },
+        {
+          "command": "pwd",
+          "after_enter_to_prompt_seconds": 0.0002074999938486144
+        },
+        {
+          "command": "hello extra",
+          "after_enter_to_prompt_seconds": 0.0002747999969869852
+        },
+        {
+          "command": "apps extra",
+          "after_enter_to_prompt_seconds": 0.00034949999826494604
+        },
+        {
+          "command": "missing-app",
+          "after_enter_to_prompt_seconds": 0.00019549998978618532
+        },
+        {
+          "command": "/hello",
+          "after_enter_to_prompt_seconds": 0.0002812000020639971
+        },
+        {
+          "command": "cd missing",
+          "after_enter_to_prompt_seconds": 0.00030330001027323306
+        },
+        {
+          "command": "cd /",
+          "after_enter_to_prompt_seconds": 0.0002108999906340614
+        },
+        {
+          "command": "clear",
+          "after_enter_to_prompt_seconds": 0.0003738999948836863
+        },
+        {
+          "command": "echo shell restored",
+          "after_enter_to_prompt_seconds": 0.00030899999546818435
+        }
+      ],
+      "polling_median_seconds": 0.00021434999507619068,
+      "polling_max_seconds": 0.0003738999948836863
+    }
+  }
+}

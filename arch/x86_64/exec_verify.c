@@ -1,5 +1,6 @@
 /* Explicit verification bootstrap, never a public grant/launch mechanism. */
 #include "exec_verify.h"
+#include "handoff_verify.h"
 #include "exec.h"
 #include "bootinfo.h"
 #include "app_payload.h"
@@ -21,6 +22,7 @@ static struct app_catalog test_catalog;
 static struct process parent, contender, fillers[PROC_TABLE];
 static uint64_t filler_threads[THREAD_MAX], parent_pid;
 static unsigned filler_count, thread_count_used, mode, control_count;
+static int verifying;
 static uint64_t baseline_free;
 static unsigned baseline_processes, baseline_threads;
 static const uint64_t ids[]={0x1002,0x2001,0x2002,0x2003,0x2004};
@@ -62,7 +64,17 @@ static int load_module(struct process *p,const char *name)
 int exec_verify_prepare(const struct boot_info *bi,const struct resv_table *reserved)
 {
     boot=bi;
-    if(bi->module_count!=sizeof(modules)/sizeof(modules[0]))return 0;
+    unsigned extra=0;
+#ifdef VOS_HANDOFF_VERIFY
+    extra=handoff_verify_requested(bi->cmdline) ? 1 : 0;
+#endif
+    if(bi->module_count!=sizeof(modules)/sizeof(modules[0])+extra)return 0;
+    if(extra) {
+        const struct boot_module *m=module("handoff-probe");
+        if(!m || m->start>=m->end || m->end>BOOT_MAP_LIMIT || m->end-m->start>ELF_MAX_FILE)return 0;
+        for(uint64_t p=m->start & ~(PAGE_SIZE-1);p<m->end;p+=PAGE_SIZE)
+            if(!resv_overlaps(reserved,p,p+PAGE_SIZE))return 0;
+    }
     for(unsigned i=0;i<sizeof(modules)/sizeof(modules[0]);i++) {
         const struct boot_module *m=module(modules[i]);
         if(!m || m->start>=m->end || m->end>BOOT_MAP_LIMIT || m->end-m->start>ELF_MAX_FILE)return 0;
@@ -120,11 +132,19 @@ static void cleanup(void)
 }
 void exec_verify_source(const uint8_t **bytes,uint64_t *length)
 {
+    #ifdef VOS_HANDOFF_VERIFY
+    if(handoff_verify_active()){handoff_verify_source(bytes,length);return;}
+#endif
+    if(!verifying)return;
     static const uint8_t bad[64]={0};
     if(mode==15){*bytes=bad;*length=sizeof(bad);}
 }
 void exec_verify_event(enum exec_event event,struct process *p,struct process *child)
 {
+    #ifdef VOS_HANDOFF_VERIFY
+    if(handoff_verify_active()){handoff_verify_event(event,p,child);return;}
+#endif
+    if(!verifying)return;
     if(event==EXEC_EV_QUEUED && mode==4)exec_grant_revoke(p);
     if(event==EXEC_EV_BEFORE_LOAD) {
         if(mode==11)proc_test_frame_budget(0);
@@ -173,6 +193,7 @@ void exec_verify_event(enum exec_event event,struct process *p,struct process *c
 }
 int exec_verify_run(void)
 {
+    verifying=1;
     uint64_t initial_free=pmm_free_count();
     unsigned initial_processes=proc_count(),initial_threads=thread_count();
     need(exec_service_init(&test_catalog)==0,"exec verify: broker start");
@@ -202,6 +223,7 @@ int exec_verify_run(void)
     need(proc_count()==initial_processes && thread_count()==initial_threads &&
          pmm_free_count()==initial_free && !proc_audit() && !sched_audit() &&
          thread_canaries_intact(),"exec verify: final cleanup audit");
+    verifying=0;
     serial_puts("exec-verify: PASS legacy=4 controls=");serial_dec(control_count);
     serial_puts(" submitted=");serial_dec(stats.submitted);
     serial_puts(" started=");serial_dec(stats.started);
@@ -216,8 +238,8 @@ int exec_verify_run(void)
     display("Revocation, cancellation, contention, rollback: PASS\n");
     display("Parent terminated only after child reclamation: PASS\n");
     display("PMM, process and thread audits restored: PASS\n");
-    display("No console grants or shell launching were introduced.\n");
-    screen_status(SCREEN_PASS,"Increment 2 native execution verified");
+    display("Legacy probe held no console or execution-inheritance grants.\n");
+    screen_status(SCREEN_PASS,"ABI v0-v4 non-console execution verified");
     serial_puts("exec-verify: SCREEN READY\r\n");
     thread_sleep(300); /* Fixture-only capture dwell, never an application deadline. */
     return 1;

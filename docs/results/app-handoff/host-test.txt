@@ -1,0 +1,22 @@
+=== Reused unchanged attempt-1 evidence: broker-host ===
+PASS assertions=11232 jobs=1018 loaded=1013 started=1010 reclaimed=1013; actual exec.c, modeled scheduler/loader
+
+=== Reused unchanged attempt-1 evidence: console-host ===
+console-handoff: 49499 assertions PASS; actual console+keyboard+editor; bounded modeled hardware/scheduler; transfers=1007 restored=1003
+
+=== Reused unchanged attempt-1 evidence: rust-host ===
+
+running 4 tests
+test completion ... ok
+test layout ... ok
+test wrappers ... ok
+test zero_and_invalid_records ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+=== Reused unchanged attempt-1 evidence: catalog ===
+app-catalog: 97339 checks PASS; catalog=392 bytes; max=8; no execution or grants
+
+=== Reused unchanged attempt-1 evidence: catalog-legacy ===
+app-catalog: 97339 checks PASS; catalog=392 bytes; max=8; no execution or grants

@@ -2,6 +2,7 @@
 #![no_main]
 
 use vos::raw::*;
+use vos_apps::{self as apps,Completion};
 mod prompt;
 use prompt::resolve;
 vos::entry!(shell_main);
@@ -16,6 +17,48 @@ fn trim(s: &[u8]) -> &[u8] {
 fn open(base:isize,path:&[u8],rights:u64)->isize {
     if path.is_empty() { return unsafe { vos_file_open_at(base,b".".as_ptr(),1,rights) }; }
     unsafe { vos_file_open_at(base,path.as_ptr(),path.len(),rights) }
+}
+fn app_named(name:&[u8])->vos::Result<u64> {
+    let mut cookie=0;
+    for _ in 0..8 {
+        match apps::next(cookie)? {
+            None=>return Err(vos::Error::NO_ENTRY),
+            Some(entry)=>{
+                if &entry.name[..entry.name_length as usize]==name {return Ok(entry.app_id);}
+                cookie=entry.next_cookie;
+            }
+        }
+    }
+    Err(vos::Error::IO)
+}
+fn number(value:i64) {
+    let mut bytes=[0u8;21];let mut i=bytes.len();let mut n=value.unsigned_abs();
+    loop {i-=1;bytes[i]=b'0'+(n%10) as u8;n/=10;if n==0{break;}}
+    if value<0 {i-=1;bytes[i]=b'-';}
+    write(&bytes[i..]);
+}
+fn launch(name:&[u8],arg:&[u8]) {
+    if !arg.is_empty(){write(b"vsh: application arguments are not supported\n");return;}
+    let id=match app_named(name){Ok(id)=>id,Err(_)=>{write(b"vsh: application unavailable or denied\n");return;}};
+    match apps::run(id) {
+        Ok(Completion::Exited(0))=>{},
+        Ok(Completion::Exited(n))=>{write(b"vsh: application exited status ");number(n as i64);write(b"\n");},
+        Ok(Completion::Faulted(n))=>{write(b"vsh: application fault vector ");number(n as i64);write(b"\n");},
+        Ok(Completion::Cancelled(n))=>{write(b"vsh: application cancelled reason ");number(n as i64);write(b"\n");},
+        Err(vos::Error::ACCESS)=>write(b"vsh: launch denied\n"),
+        Err(_)=>write(b"vsh: application failed before start\n"),
+    }
+}
+fn applications() {
+    let mut cookie=0;
+    for _ in 0..8 {
+        match apps::next(cookie) {
+            Ok(Some(entry))=>{write(&entry.name[..entry.name_length as usize]);write(b"\n");cookie=entry.next_cookie;},
+            Ok(None)=>return,
+            Err(_)=>{write(b"vsh: application catalog unavailable or denied\n");return;},
+        }
+    }
+    write(b"vsh: invalid application catalog\n");
 }
 fn shell_main() -> i32 {
     write(b"VOS native vsh (Rust, ring 3)\nType help for commands.\n\n");
@@ -33,7 +76,9 @@ fn shell_main() -> i32 {
         let split=text.iter().position(|c| *c==b' ' || *c==b'\t').unwrap_or(text.len());
         let cmd=&text[..split]; let arg=trim(&text[split..]);
         match cmd {
-            b"help" => write(b"Available commands: help, clear, echo, pwd, ls, cd, cat\n"),
+            b"help" => write(b"Available commands: help, clear, echo, pwd, ls, cd, cat, apps, hello, rixie\n"),
+            b"apps" => {if arg.is_empty(){applications();}else{error();}},
+            b"hello" | b"rixie" => launch(cmd,arg),
             b"clear" => { if unsafe { vos_console_clear() }<0 { error(); } },
             b"echo" => { write(arg); write(b"\n"); },
             b"pwd" => {

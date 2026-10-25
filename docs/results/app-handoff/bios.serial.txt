@@ -1,0 +1,578 @@
+=== instrumented-bios: raw serial stream ===
+Hello from VOS!
+boot: x86_64 long mode, cs=0x8 efer=0x500 rip=0xffffffff801072a8
+gdt: loaded cs=0x8 ss=0x10 tr=0x28 tss=busy
+tss: rsp0=0xffffffff8014d000 ist1=0xffffffff80144000 ist2=0xffffffff80146000 ist3=0xffffffff80148000 iomap=104 limit=103
+idt: 32 exception vectors loaded, df ist=1, nmi ist=2, mc ist=3
+idt: IRQ vectors 0x20-0x2f present, DPL 0, interrupt gates
+idt: vector 0x80 present, DPL 3 (system calls, ABI v0)
+cpu: wp=on nx=on smep=unsupported umip=unsupported smap=unsupported x87=off(em)
+cpu: inherited cr0=0x80000011 cr4=0x20 efer=0x500; set cr0=0x80010035 cr4=0x68 efer=0xd00
+boot: loader "GRUB 2.14-2ubuntu2.1", memory map 9 entries, 133676032 bytes usable
+boot: multiboot2 info at 0x34a350-0x34af00
+boot: kernel command line "vos.exec=1 vos.handoff=1"
+boot: modules 14
+boot: module 0 0x2a5000-0x346dc8 "vsh"
+boot: module 1 0x347000-0x34a348 "hello"
+boot: module 2 0x34b000-0x3ecb68 "rixie"
+boot: module 3 0x3ed000-0x3f0640 "exec-probe"
+boot: module 4 0x3f1000-0x3f4520 "exec-negative"
+boot: module 5 0x3f5000-0x3f8520 "exec-fault"
+boot: module 6 0x3f9000-0x3fc520 "exec-spin"
+boot: module 7 0x3fd000-0x400568 "exec-recursive"
+boot: module 8 0x401000-0x404568 "exec-contender"
+boot: module 9 0x405000-0x408380 "exec-legacy0"
+boot: module 10 0x409000-0x40c418 "exec-legacy1"
+boot: module 11 0x40d000-0x4104e8 "exec-legacy2"
+boot: module 12 0x411000-0x414568 "exec-legacy3"
+boot: module 13 0x415000-0x4b6d60 "handoff-probe"
+boot: reserved 0x0-0x100000 low 1 MiB
+boot: reserved 0x100000-0x1e3000 kernel image
+boot: reserved 0x34a000-0x34b000 multiboot2 info
+boot: reserved 0x2a5000-0x347000 module
+boot: reserved 0x347000-0x34b000 module
+boot: reserved 0x34b000-0x3ed000 module
+boot: reserved 0x3ed000-0x3f1000 module
+boot: reserved 0x3f1000-0x3f5000 module
+boot: reserved 0x3f5000-0x3f9000 module
+boot: reserved 0x3f9000-0x3fd000 module
+boot: reserved 0x3fd000-0x401000 module
+boot: reserved 0x401000-0x405000 module
+boot: reserved 0x405000-0x409000 module
+boot: reserved 0x409000-0x40d000 module
+boot: reserved 0x40d000-0x411000 module
+boot: reserved 0x411000-0x415000 module
+boot: reserved 0x415000-0x4b7000 module
+pmm: 262144 frames tracked below 1 GiB, 31719 usable (126876 KiB), 0 bytes of RAM above 1 GiB ignored
+vmm: identity map removed
+kmap: phys 0-4 MiB as 4 KiB pages: 41 text R-X, 12 R NX, 951 RW NX, 20 guard pages unmapped; 510 x 2 MiB RW NX
+kmap: text 0xffffffff80107000-0xffffffff80130000, rodata 0xffffffff80130000-0xffffffff8013b000
+kmap: PDPT[510] 0x105000 -> 0x162000, checked before and after the switch; boot directory retired
+kmap: after the TLB flush the CPU refused a text write (#PF err=0x3) and a guard read (#PF err=0x0)
+devmap: window at 0xffffffff40000000, 40-bit physical addresses, write-combining via PAT entry 4
+screen: framebuffer 1024x768 BGRX at 0xfd000000, pitch 4096, write-combining, MTRR type 0, 124x39 cells
+vmm: audit passed: kernel alias 1004 x 4 KiB + 510 x 2 MiB supervisor pages, 41 ring-0 executable (all kernel text, none writable), 0 lower-half tables
+irq: 8259 master 0x20-0x27, slave 0x28-0x2f (cascade IRQ2); masks 0xfffe (IRQ0 only); level-triggered lines (ELCR) 0xc00
+pit: channel 0 mode 2, divisor 11932 (99.998 Hz)
+sched: 16 thread records, 15 guarded stacks of 16 KiB at 0xffffffff80165000; boot thread id 1, idle thread id 2
+vblk: virtio-blk at 00:0x2.0 id 0x1042 (modern), ready, 16384 sectors, queue 16 of 256, features VERSION_1 RO (offered 0x10130006e74), interrupts on IRQ 11 (INTA, level), DMA pool 6 frames, no IOMMU
+catalog: ready 3 entries, 392 bytes; all executable source pages reserved
+catalog: vsh id=4097 ABI=4 policy=1 size=662984
+catalog: hello id=4098 ABI=0 policy=2 size=13128
+catalog: rixie id=4099 ABI=3 policy=3 size=662376
+app: module "hello" at 0x347000-0x34a348, 13128 bytes
+elf: hello: ET_EXEC entry 0x400000, 3 PT_LOAD, 3 pages, VOS ABI 0
+user[hello]: Hello from VOS!
+proc: exit status 0 (cs=0x23 rip=0x40002a)
+proc[hello]: exited status 0, all frames reclaimed
+boot: checks passed
+user[exec-legacy0]: legacy execution syscalls ENOSYS
+proc: exit status 0 (cs=0x23 rip=0x40002a)
+user[exec-legacy1]: legacy execution syscalls ENOSYS
+proc: exit status 0 (cs=0x23 rip=0x40002a)
+user[exec-legacy2]: legacy execution syscalls ENOSYS
+proc: exit status 0 (cs=0x23 rip=0x40002a)
+user[exec-legacy3]: legacy execution syscalls ENOSYS
+proc: exit status 0 (cs=0x23 rip=0x40002a)
+user[exec-probe]: enumeration and authority bounds PASS
+user[hello]: Hello from VOS!
+proc: exit status 0 (cs=0x23 rip=0x40002a)
+proc: exit status 4294967289 (cs=0x23 rip=0x40002a)
+proc: killed by #PF page fault err=0x7 (cs=0x23 rip=0x4000b0 cr2=0xffffffff80000000)
+user[exec-recursive]: recursive execution denied
+proc: exit status 0 (cs=0x23 rip=0x40002a)
+user[exec-probe]: normal negative fault recursive PASS
+user[hello]: Hello from VOS!
+proc: exit status 0 (cs=0x23 rip=0x40002a)
+user[exec-probe]: rights revocation stale cookie PASS
+user[exec-probe]: queued loaded pre-start cancellation PASS
+user[exec-probe]: allocation process thread loader rollback PASS
+proc[exec-spin]: killed: execution cancelled
+proc[exec-spin]: killed: execution cancelled
+user[exec-contender]: one-slot contention denied
+proc: exit status 0 (cs=0x23 rip=0x40002a)
+proc[exec-spin]: killed: execution cancelled
+user[hello]: Hello from VOS!
+proc: exit status 0 (cs=0x23 rip=0x40002a)
+user[hello]: Hello from VOS!
+proc: exit status 0 (cs=0x23 rip=0x40002a)
+user[hello]: Hello from VOS!
+proc: exit status 0 (cs=0x23 rip=0x40002a)
+user[exec-probe]: running reap publication contention PASS
+user[hello]: Hello from VOS!
+proc: exit status 0 (cs=0x23 rip=0x40002a)
+user[hello]: Hello from VOS!
+proc: exit status 0 (cs=0x23 rip=0x40002a)
+user[hello]: Hello from VOS!
+proc: exit status 0 (cs=0x23 rip=0x40002a)
+user[exec-probe]: repeat execution PASS; final parent cancellation follows
+proc[exec-spin]: killed: execution cancelled
+proc[exec-probe]: killed: exec verify parent termination
+exec-verify: PASS legacy=4 controls=33 submitted=23 started=15 reclaimed=18 cancelled=6 failed=8 PMM/process/thread restored; kernel CR3 reaping
+exec-verify: SCREEN READY
+user[handoff-probe]: handoff-probe: interactive Rixie follows
+handoff-verify: QUEUE PRE-HANDOFF
+console: foreground child 35
+user[rixie]: Rixie Core v0 - deterministic offline prototype
+user[rixie]: I use predefined replies, not a conversational AI model.
+user[rixie]: Type help for topics; exit ends this session.
+user[rixie]: 
+user[rixie]: Rixie> 
+help
+user[rixie]: Topics: hello, help, about, questions, explain <command>, exit
+user[rixie]: Explain vsh commands: help, clear, echo, pwd, ls, cd, cat, exit
+user[rixie]: Explanations are text only; Rixie does not execute shell commands.
+user[rixie]: Rixie> 
+about
+user[rixie]: Rixie Core v0 is an independent Rust ring-3 application in VOS.
+user[rixie]: I am a deterministic prototype with no conversational AI model or network.
+user[rixie]: Rixie> 
+exit
+user[rixie]: Goodbye from Rixie.
+proc: exit status 0 (cs=0x23 rip=0x40002a)
+console: restored parent 34
+user[handoff-probe]: handoff-probe: console available
+user[handoff-probe]: Parent> 
+parent-ok
+user[handoff-probe]: handoff-probe: parent input isolation PASS
+user[handoff-probe]: handoff-probe: PASS
+proc: exit status 0 (cs=0x23 rip=0x40002a)
+handoff-verify: CASE 0 PASS; resources restored
+console: foreground child 37
+user[hello]: Hello from VOS!
+proc: exit status 0 (cs=0x23 rip=0x40002a)
+console: restored parent 36
+user[handoff-probe]: handoff-probe: console available
+user[handoff-probe]: handoff-probe: PASS
+proc: exit status 0 (cs=0x23 rip=0x40002a)
+handoff-verify: CASE 1 PASS; resources restored
+console: foreground child 39
+proc: exit status 4294967289 (cs=0x23 rip=0x40002a)
+console: restored parent 38
+user[handoff-probe]: handoff-probe: console available
+user[handoff-probe]: handoff-probe: PASS
+proc: exit status 0 (cs=0x23 rip=0x40002a)
+handoff-verify: CASE 2 PASS; resources restored
+console: foreground child 41
+proc: killed by #PF page fault err=0x7 (cs=0x23 rip=0x4000b0 cr2=0xffffffff80000000)
+console: restored parent 40
+user[handoff-probe]: handoff-probe: console available
+user[handoff-probe]: handoff-probe: PASS
+proc: exit status 0 (cs=0x23 rip=0x40002a)
+handoff-verify: CASE 3 PASS; resources restored
+console: foreground child 43
+user[exec-contender]: one-slot contention denied
+proc: exit status 0 (cs=0x23 rip=0x40002a)
+proc[exec-spin]: killed: execution cancelled
+console: restored parent 42
+user[handoff-probe]: handoff-probe: console available
+user[handoff-probe]: handoff-probe: PASS
+proc: exit status 0 (cs=0x23 rip=0x40002a)
+handoff-verify: CASE 4 PASS; resources restored
+console: foreground child 46
+user[hello]: Hello from VOS!
+proc: exit status 0 (cs=0x23 rip=0x40002a)
+console: restored parent 45
+user[handoff-probe]: handoff-probe: console available
+user[handoff-probe]: handoff-probe: PASS
+proc: exit status 0 (cs=0x23 rip=0x40002a)
+handoff-verify: CASE 5 PASS; resources restored
+user[handoff-probe]: handoff-probe: console available
+user[handoff-probe]: handoff-probe: PASS
+proc: exit status 0 (cs=0x23 rip=0x40002a)
+handoff-verify: CASE 6 PASS; resources restored
+console: foreground child 49
+proc[exec-spin]: killed: execution cancelled
+user[handoff-probe]: handoff-probe: PASS
+proc: exit status 0 (cs=0x23 rip=0x40002a)
+handoff-verify: CASE 7 PASS; resources restored
+console: foreground child 51
+proc[exec-spin]: killed: execution cancelled
+proc[handoff-probe]: killed: handoff verify parent terminated
+handoff-verify: CASE 8 PASS; resources restored
+console: foreground child 53
+user[rixie]: Rixie Core v0 - deterministic offline prototype
+user[rixie]: I use predefined replies, not a conversational AI model.
+user[rixie]: Type help for topics; exit ends this session.
+user[rixie]: 
+user[rixie]: Rixie> 
+user[rixie]: Rixie: console I/O failed.
+proc: exit status 1 (cs=0x23 rip=0x40002a)
+console: restored parent 52
+user[handoff-probe]: handoff-probe: console available
+user[handoff-probe]: handoff-probe: PASS
+proc: exit status 0 (cs=0x23 rip=0x40002a)
+handoff-verify: CASE 9 PASS; resources restored
+user[handoff-probe]: handoff-probe: console available
+user[handoff-probe]: handoff-probe: PASS
+proc: exit status 0 (cs=0x23 rip=0x40002a)
+handoff-verify: CASE 10 PASS; resources restored
+user[handoff-probe]: handoff-probe: console available
+user[handoff-probe]: handoff-probe: PASS
+proc: exit status 0 (cs=0x23 rip=0x40002a)
+handoff-verify: CASE 11 PASS; resources restored
+console: foreground child 64
+console: restored parent 63
+user[handoff-probe]: handoff-probe: console available
+user[handoff-probe]: handoff-probe: PASS
+proc: exit status 0 (cs=0x23 rip=0x40002a)
+handoff-verify: CASE 12 PASS; resources restored
+user[handoff-probe]: handoff-probe: console available
+user[handoff-probe]: handoff-probe: PASS
+proc: exit status 0 (cs=0x23 rip=0x40002a)
+handoff-verify: CASE 13 PASS; resources restored
+console: foreground child 67
+user[handoff-probe]: handoff-probe: PASS
+proc: exit status 0 (cs=0x23 rip=0x40002a)
+handoff-verify: CASE 14 PASS; resources restored
+console: foreground child 69
+user[hello]: Hello from VOS!
+proc: exit status 0 (cs=0x23 rip=0x40002a)
+user[handoff-probe]: handoff-probe: PASS
+proc: exit status 0 (cs=0x23 rip=0x40002a)
+handoff-verify: CASE 15 PASS; resources restored
+console: foreground child 71
+proc[exec-spin]: killed: execution cancelled
+user[handoff-probe]: handoff-probe: PASS
+proc: exit status 0 (cs=0x23 rip=0x40002a)
+handoff-verify: CASE 16 PASS; resources restored
+console: foreground child 73
+user[hello]: Hello from VOS!
+proc: exit status 0 (cs=0x23 rip=0x40002a)
+console: restored parent 72
+user[handoff-probe]: handoff-probe: console available
+user[handoff-probe]: handoff-probe: PASS
+proc: exit status 0 (cs=0x23 rip=0x40002a)
+handoff-verify: CASE 17 PASS; resources restored
+user[handoff-probe]: handoff-probe: console available
+user[handoff-probe]: handoff-probe: PASS
+proc: exit status 0 (cs=0x23 rip=0x40002a)
+handoff-verify: CASE 18 PASS; resources restored
+console: foreground child 76
+user[hello]: Hello from VOS!
+proc: exit status 0 (cs=0x23 rip=0x40002a)
+console: restored parent 75
+user[handoff-probe]: handoff-probe: console available
+user[handoff-probe]: handoff-probe: PASS
+proc: exit status 0 (cs=0x23 rip=0x40002a)
+handoff-verify: CASE 19 PASS; resources restored
+console: foreground child 78
+user[exec-recursive]: recursive execution denied
+proc: exit status 0 (cs=0x23 rip=0x40002a)
+console: restored parent 77
+user[handoff-probe]: handoff-probe: console available
+user[handoff-probe]: handoff-probe: PASS
+proc: exit status 0 (cs=0x23 rip=0x40002a)
+handoff-verify: CASE 20 PASS; resources restored
+handoff-verify: PASS cases=21 requests=20 loaded=16 started=14 reclaimed=16 cancelled=6 failed=6 transfers=16 restores=11 abandoned=5; kernel CR3, PMM/process/thread audits restored
+user[vsh]: VOS native vsh (Rust, ring 3)
+user[vsh]: Type help for commands.
+user[vsh]: 
+user[vsh]: VOS> 
+help
+user[vsh]: Available commands: help, clear, echo, pwd, ls, cd, cat, apps, hello, rixie
+user[vsh]: VOS> 
+apps
+user[vsh]: hello
+user[vsh]: 
+user[vsh]: rixie
+user[vsh]: 
+user[vsh]: VOS> 
+echo hello world
+user[vsh]: hello world
+user[vsh]: 
+user[vsh]: VOS> 
+ls
+user[vsh]: docs
+user[vsh]: 
+user[vsh]: VOS> 
+cd docs
+user[vsh]: VOS>docs> 
+pwd
+user[vsh]: /docs
+user[vsh]: 
+user[vsh]: VOS>docs> 
+hello
+console: foreground child 80
+user[hello]: Hello from VOS!
+proc: exit status 0 (cs=0x23 rip=0x40002a)
+console: restored parent 79
+user[vsh]: VOS>docs> 
+rixie
+console: foreground child 81
+user[rixie]: Rixie Core v0 - deterministic offline prototype
+user[rixie]: I use predefined replies, not a conversational AI model.
+user[rixie]: Type help for topics; exit ends this session.
+user[rixie]: 
+user[rixie]: Rixie> 
+hello
+user[rixie]: Hello! I'm Rixie, at home in VOS.
+user[rixie]: Rixie> 
+help
+user[rixie]: Topics: hello, help, about, questions, explain <command>, exit
+user[rixie]: Explain vsh commands: help, clear, echo, pwd, ls, cd, cat, exit
+user[rixie]: Explanations are text only; Rixie does not execute shell commands.
+user[rixie]: Rixie> 
+about
+user[rixie]: Rixie Core v0 is an independent Rust ring-3 application in VOS.
+user[rixie]: I am a deterministic prototype with no conversational AI model or network.
+user[rixie]: Rixie> 
+explain cd
+user[rixie]: cd: change vsh's working directory; invalid paths leave it unchanged.
+user[rixie]: Rixie> 
+are you online
+user[rixie]: No. This prototype is entirely offline, with no network or cloud connection.
+user[rixie]: Rixie> 
+exit
+user[rixie]: Goodbye from Rixie.
+proc: exit status 0 (cs=0x23 rip=0x40002a)
+console: restored parent 79
+user[vsh]: VOS>docs> 
+pwd
+user[vsh]: /docs
+user[vsh]: 
+user[vsh]: VOS>docs> 
+cat welcome.txt
+user[vsh]: Unified apps: real read-only filesystem.
+user[vsh]: 
+user[vsh]: VOS>docs> 
+hello
+console: foreground child 82
+user[hello]: Hello from VOS!
+proc: exit status 0 (cs=0x23 rip=0x40002a)
+console: restored parent 79
+user[vsh]: VOS>docs> 
+hello
+console: foreground child 83
+user[hello]: Hello from VOS!
+proc: exit status 0 (cs=0x23 rip=0x40002a)
+console: restored parent 79
+user[vsh]: VOS>docs> 
+rixie
+console: foreground child 84
+user[rixie]: Rixie Core v0 - deterministic offline prototype
+user[rixie]: I use predefined replies, not a conversational AI model.
+user[rixie]: Type help for topics; exit ends this session.
+user[rixie]: 
+user[rixie]: Rixie> 
+hello
+user[rixie]: Hello! I'm Rixie, at home in VOS.
+user[rixie]: Rixie> 
+exit
+user[rixie]: Goodbye from Rixie.
+proc: exit status 0 (cs=0x23 rip=0x40002a)
+console: restored parent 79
+user[vsh]: VOS>docs> 
+pwd
+user[vsh]: /docs
+user[vsh]: 
+user[vsh]: VOS>docs> 
+hello extra
+user[vsh]: vsh: application arguments are not supported
+user[vsh]: VOS>docs> 
+apps extra
+user[vsh]: vsh: operation failed
+user[vsh]: VOS>docs> 
+missing-app
+user[vsh]: vsh: unknown command
+user[vsh]: VOS>docs> 
+/hello
+user[vsh]: vsh: unknown command
+user[vsh]: VOS>docs> 
+cd missing
+user[vsh]: vsh: operation failed
+user[vsh]: VOS>docs> 
+echo editingx 
+user[vsh]: editing
+user[vsh]: 
+user[vsh]: VOS>docs> 
+cd /
+user[vsh]: VOS> 
+clear
+user[vsh]: VOS> 
+echo shell restored
+user[vsh]: shell restored
+user[vsh]: 
+user[vsh]: VOS> 
+exit
+proc: exit status 0 (cs=0x23 rip=0x40002a)
+native: vsh PASS, process reclaimed
+
+=== production-bios: raw serial stream ===
+Hello from VOS!
+boot: x86_64 long mode, cs=0x8 efer=0x500 rip=0xffffffff801072a8
+gdt: loaded cs=0x8 ss=0x10 tr=0x28 tss=busy
+tss: rsp0=0xffffffff8014a000 ist1=0xffffffff80141000 ist2=0xffffffff80143000 ist3=0xffffffff80145000 iomap=104 limit=103
+idt: 32 exception vectors loaded, df ist=1, nmi ist=2, mc ist=3
+idt: IRQ vectors 0x20-0x2f present, DPL 0, interrupt gates
+idt: vector 0x80 present, DPL 3 (system calls, ABI v0)
+cpu: wp=on nx=on smep=unsupported umip=unsupported smap=unsupported x87=off(em)
+cpu: inherited cr0=0x80000011 cr4=0x20 efer=0x500; set cr0=0x80010035 cr4=0x68 efer=0xd00
+boot: loader "GRUB 2.14-2ubuntu2.1", memory map 9 entries, 133676032 bytes usable
+boot: multiboot2 info at 0x322350-0x322d90
+boot: kernel command line "vos.apps=1"
+boot: modules 3
+boot: module 0 0x27d000-0x31edc8 "vsh"
+boot: module 1 0x31f000-0x322348 "hello"
+boot: module 2 0x323000-0x3c4b68 "rixie"
+boot: reserved 0x0-0x100000 low 1 MiB
+boot: reserved 0x100000-0x1c7000 kernel image
+boot: reserved 0x322000-0x323000 multiboot2 info
+boot: reserved 0x27d000-0x31f000 module
+boot: reserved 0x31f000-0x323000 module
+boot: reserved 0x323000-0x3c5000 module
+pmm: 262144 frames tracked below 1 GiB, 31949 usable (127796 KiB), 0 bytes of RAM above 1 GiB ignored
+vmm: identity map removed
+kmap: phys 0-4 MiB as 4 KiB pages: 39 text R-X, 11 R NX, 954 RW NX, 20 guard pages unmapped; 510 x 2 MiB RW NX
+kmap: text 0xffffffff80107000-0xffffffff8012e000, rodata 0xffffffff8012e000-0xffffffff80138000
+kmap: PDPT[510] 0x105000 -> 0x15f000, checked before and after the switch; boot directory retired
+kmap: after the TLB flush the CPU refused a text write (#PF err=0x3) and a guard read (#PF err=0x0)
+devmap: window at 0xffffffff40000000, 40-bit physical addresses, write-combining via PAT entry 4
+screen: framebuffer 1024x768 BGRX at 0xfd000000, pitch 4096, write-combining, MTRR type 0, 124x39 cells
+vmm: audit passed: kernel alias 1004 x 4 KiB + 510 x 2 MiB supervisor pages, 39 ring-0 executable (all kernel text, none writable), 0 lower-half tables
+irq: 8259 master 0x20-0x27, slave 0x28-0x2f (cascade IRQ2); masks 0xfffe (IRQ0 only); level-triggered lines (ELCR) 0xc00
+pit: channel 0 mode 2, divisor 11932 (99.998 Hz)
+sched: 16 thread records, 15 guarded stacks of 16 KiB at 0xffffffff80162000; boot thread id 1, idle thread id 2
+vblk: virtio-blk at 00:0x2.0 id 0x1042 (modern), ready, 16384 sectors, queue 16 of 256, features VERSION_1 RO (offered 0x10130006e74), interrupts on IRQ 11 (INTA, level), DMA pool 6 frames, no IOMMU
+catalog: ready 3 entries, 392 bytes; all executable source pages reserved
+catalog: vsh id=4097 ABI=4 policy=1 size=662984
+catalog: hello id=4098 ABI=0 policy=2 size=13128
+catalog: rixie id=4099 ABI=3 policy=3 size=662376
+app: module "hello" at 0x31f000-0x322348, 13128 bytes
+elf: hello: ET_EXEC entry 0x400000, 3 PT_LOAD, 3 pages, VOS ABI 0
+user[hello]: Hello from VOS!
+proc: exit status 0 (cs=0x23 rip=0x40002a)
+proc[hello]: exited status 0, all frames reclaimed
+boot: checks passed
+user[vsh]: VOS native vsh (Rust, ring 3)
+user[vsh]: Type help for commands.
+user[vsh]: 
+user[vsh]: VOS> 
+help
+user[vsh]: Available commands: help, clear, echo, pwd, ls, cd, cat, apps, hello, rixie
+user[vsh]: VOS> 
+apps
+user[vsh]: hello
+user[vsh]: 
+user[vsh]: rixie
+user[vsh]: 
+user[vsh]: VOS> 
+echo hello world
+user[vsh]: hello world
+user[vsh]: 
+user[vsh]: VOS> 
+ls
+user[vsh]: docs
+user[vsh]: 
+user[vsh]: VOS> 
+cd docs
+user[vsh]: VOS>docs> 
+pwd
+user[vsh]: /docs
+user[vsh]: 
+user[vsh]: VOS>docs> 
+hello
+console: foreground child 3
+user[hello]: Hello from VOS!
+proc: exit status 0 (cs=0x23 rip=0x40002a)
+console: restored parent 2
+user[vsh]: VOS>docs> 
+rixie
+console: foreground child 4
+user[rixie]: Rixie Core v0 - deterministic offline prototype
+user[rixie]: I use predefined replies, not a conversational AI model.
+user[rixie]: Type help for topics; exit ends this session.
+user[rixie]: 
+user[rixie]: Rixie> 
+hello
+user[rixie]: Hello! I'm Rixie, at home in VOS.
+user[rixie]: Rixie> 
+help
+user[rixie]: Topics: hello, help, about, questions, explain <command>, exit
+user[rixie]: Explain vsh commands: help, clear, echo, pwd, ls, cd, cat, exit
+user[rixie]: Explanations are text only; Rixie does not execute shell commands.
+user[rixie]: Rixie> 
+about
+user[rixie]: Rixie Core v0 is an independent Rust ring-3 application in VOS.
+user[rixie]: I am a deterministic prototype with no conversational AI model or network.
+user[rixie]: Rixie> 
+explain cd
+user[rixie]: cd: change vsh's working directory; invalid paths leave it unchanged.
+user[rixie]: Rixie> 
+are you online
+user[rixie]: No. This prototype is entirely offline, with no network or cloud connection.
+user[rixie]: Rixie> 
+exit
+user[rixie]: Goodbye from Rixie.
+proc: exit status 0 (cs=0x23 rip=0x40002a)
+console: restored parent 2
+user[vsh]: VOS>docs> 
+pwd
+user[vsh]: /docs
+user[vsh]: 
+user[vsh]: VOS>docs> 
+cat welcome.txt
+user[vsh]: Unified apps: real read-only filesystem.
+user[vsh]: 
+user[vsh]: VOS>docs> 
+hello
+console: foreground child 5
+user[hello]: Hello from VOS!
+proc: exit status 0 (cs=0x23 rip=0x40002a)
+console: restored parent 2
+user[vsh]: VOS>docs> 
+hello
+console: foreground child 6
+user[hello]: Hello from VOS!
+proc: exit status 0 (cs=0x23 rip=0x40002a)
+console: restored parent 2
+user[vsh]: VOS>docs> 
+rixie
+console: foreground child 7
+user[rixie]: Rixie Core v0 - deterministic offline prototype
+user[rixie]: I use predefined replies, not a conversational AI model.
+user[rixie]: Type help for topics; exit ends this session.
+user[rixie]: 
+user[rixie]: Rixie> 
+hello
+user[rixie]: Hello! I'm Rixie, at home in VOS.
+user[rixie]: Rixie> 
+exit
+user[rixie]: Goodbye from Rixie.
+proc: exit status 0 (cs=0x23 rip=0x40002a)
+console: restored parent 2
+user[vsh]: VOS>docs> 
+pwd
+user[vsh]: /docs
+user[vsh]: 
+user[vsh]: VOS>docs> 
+hello extra
+user[vsh]: vsh: application arguments are not supported
+user[vsh]: VOS>docs> 
+apps extra
+user[vsh]: vsh: operation failed
+user[vsh]: VOS>docs> 
+missing-app
+user[vsh]: vsh: unknown command
+user[vsh]: VOS>docs> 
+/hello
+user[vsh]: vsh: unknown command
+user[vsh]: VOS>docs> 
+cd missing
+user[vsh]: vsh: operation failed
+user[vsh]: VOS>docs> 
+echo editingx 
+user[vsh]: editing
+user[vsh]: 
+user[vsh]: VOS>docs> 
+cd /
+user[vsh]: VOS> 
+clear
+user[vsh]: VOS> 
+echo shell restored
+user[vsh]: shell restored
+user[vsh]: 
+user[vsh]: VOS> 
+exit
+proc: exit status 0 (cs=0x23 rip=0x40002a)
+native: vsh PASS, process reclaimed

@@ -153,3 +153,34 @@ char keyboard_poll(struct keyboard *k)
     }
     return 0;
 }
+
+int keyboard_suspend(struct keyboard *k)
+{
+    if(!k || !k->io)return 0;
+    if(!k->ready)return 1;
+    k->ready=0;
+    if(!write_port(k,DATA,0xF5))return 0;
+    int ack=0;
+    for(unsigned i=0;i<KEYBOARD_DRAIN_LIMIT;i++) {
+        uint8_t data;
+        if(!read_keyboard(k,&data))break;
+        if(data==0xFA){ack=1;break;}
+    }
+    if(!ack)return 0;
+    for(unsigned i=0;i<KEYBOARD_DRAIN_LIMIT;i++) {
+        if(!(k->io->in(STATUS)&OBF)) {
+            k->decoder=(struct keyboard_decoder){0};
+            return 1;
+        }
+        (void)k->io->in(DATA);
+    }
+    return 0;
+}
+int keyboard_resume(struct keyboard *k)
+{
+    if(!k || !k->io || k->ready)return 0;
+    k->decoder=(struct keyboard_decoder){0};
+    if(!command(k,0xF4))return 0;
+    k->ready=1;
+    return 1;
+}
