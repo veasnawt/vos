@@ -283,3 +283,15 @@ clean:
 	rm -rf build
 
 -include $(OBJS:.o=.d)
+
+TCP_CLOSE_BUILD ?= build/n5-tcp-close
+ifneq ($(filter tcp-close-iso tcp-close-uefi-iso,$(MAKECMDGOALS)),)
+ifeq ($(strip $(TCP_CLOSE_BUILD)),)
+$(error TCP_CLOSE_BUILD must be nonempty; use a path under build/)
+endif
+endif
+.PHONY: tcp-close-iso tcp-close-uefi-iso
+tcp-close-iso:
+	$(MAKE) --no-print-directory ARCH=x86_64 BUILD=$(TCP_CLOSE_BUILD)/kernel USER_BUILD=$(TCP_CLOSE_BUILD)/user GRUB_CFG=arch/x86_64/grub-tcp-close.cfg iso
+tcp-close-uefi-iso: tcp-close-iso
+	$(MAKE) --no-print-directory ARCH=x86_64 BUILD=$(TCP_CLOSE_BUILD)/kernel USER_BUILD=$(TCP_CLOSE_BUILD)/user GRUB_CFG=arch/x86_64/grub-tcp-close.cfg uefi-iso

@@ -1,0 +1,98 @@
+{
+  "wire": {
+    "bios": {
+      "records": 49,
+      "TX": 23,
+      "RX": 26,
+      "independent_TCP_checksums": 47,
+      "independent_TX_and_RX_fields": true,
+      "exact_capture_record_order": true,
+      "passive_FIN_completed": true,
+      "lost_FIN_ACK_retried": true,
+      "partial_tail_only_after_peer_FIN": true,
+      "active_simultaneous_TIME_WAIT_verified": true,
+      "TIME_WAIT_live_explicit_abort": true,
+      "full_2MSL_expiry_host_tested": true,
+      "invalid_FIN_ACK_RST_controls_present": true,
+      "terminal_FIN_three_retries": true,
+      "unique_application_delivery_bytes": 6,
+      "reset_discards_RX_bytes": 2,
+      "reset_discards_TX_bytes": 2,
+      "pcap_sha256": "92b2788d46f0be69f78048db45ffcf7f82d99b5d80d75ec38b02f879568488d3",
+      "loss_decisions_sha256": "c0f35cd7d35e969381603a7eb7e8f46c6a4fc1fd1cc32d3e24ad4c59b9758b4e"
+    },
+    "uefi": {
+      "records": 49,
+      "TX": 23,
+      "RX": 26,
+      "independent_TCP_checksums": 47,
+      "independent_TX_and_RX_fields": true,
+      "exact_capture_record_order": true,
+      "passive_FIN_completed": true,
+      "lost_FIN_ACK_retried": true,
+      "partial_tail_only_after_peer_FIN": true,
+      "active_simultaneous_TIME_WAIT_verified": true,
+      "TIME_WAIT_live_explicit_abort": true,
+      "full_2MSL_expiry_host_tested": true,
+      "invalid_FIN_ACK_RST_controls_present": true,
+      "terminal_FIN_three_retries": true,
+      "unique_application_delivery_bytes": 6,
+      "reset_discards_RX_bytes": 2,
+      "reset_discards_TX_bytes": 2,
+      "pcap_sha256": "c839a8bf83ee7fdb1252237a8f4b4760e5a2515748a96963885453e7f9ab093c",
+      "loss_decisions_sha256": "c0f35cd7d35e969381603a7eb7e8f46c6a4fc1fd1cc32d3e24ad4c59b9758b4e"
+    }
+  },
+  "QEMU_metrics": {
+    "bios": {
+      "kind": "optimized_unsanitized_QEMU_closure_scenario",
+      "firmware": "bios",
+      "kernel_optimization": "-O2 with debug symbols; no sanitizers",
+      "QEMU": "q35/TCG, 128 MiB, modern virtio-net, isolated stream peer",
+      "elapsed_to_PASS_seconds": 3.898888507996162,
+      "QEMU_CPU_seconds": 0.83,
+      "QEMU_observed_VmHWM_KiB": 77640,
+      "guest_RAM_MiB": 128,
+      "context_bytes": 504,
+      "protocol_RX_TX_bytes": 128,
+      "private_DMA_bytes": 45056,
+      "unique_delivered_bytes": 6,
+      "caveat": "Includes firmware and deliberate FIN loss/timeout. Live TIME-WAIT is explicitly aborted after validation, never shortened. Not matched throughput comparison.",
+      "host": {
+        "platform": "Linux-6.18.54.1-microsoft-standard-WSL2-x86_64-with-glibc2.43",
+        "logical_cpus": 4,
+        "loadavg": [
+          0.3603515625,
+          0.2080078125,
+          0.19677734375
+        ],
+        "CPU_model": "Intel(R) Core(TM) i5-4570 CPU @ 3.20GHz"
+      }
+    },
+    "uefi": {
+      "kind": "optimized_unsanitized_QEMU_closure_scenario",
+      "firmware": "uefi",
+      "kernel_optimization": "-O2 with debug symbols; no sanitizers",
+      "QEMU": "q35/TCG, 128 MiB, modern virtio-net, isolated stream peer",
+      "elapsed_to_PASS_seconds": 6.847110251997947,
+      "QEMU_CPU_seconds": 3.86,
+      "QEMU_observed_VmHWM_KiB": 158140,
+      "guest_RAM_MiB": 128,
+      "context_bytes": 504,
+      "protocol_RX_TX_bytes": 128,
+      "private_DMA_bytes": 45056,
+      "unique_delivered_bytes": 6,
+      "caveat": "Includes firmware and deliberate FIN loss/timeout. Live TIME-WAIT is explicitly aborted after validation, never shortened. Not matched throughput comparison.",
+      "host": {
+        "platform": "Linux-6.18.54.1-microsoft-standard-WSL2-x86_64-with-glibc2.43",
+        "logical_cpus": 4,
+        "loadavg": [
+          0.37841796875,
+          0.21728515625,
+          0.19970703125
+        ],
+        "CPU_model": "Intel(R) Core(TM) i5-4570 CPU @ 3.20GHz"
+      }
+    }
+  }
+}

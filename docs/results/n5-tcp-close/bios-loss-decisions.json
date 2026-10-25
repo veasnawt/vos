@@ -1,0 +1,28 @@
+[
+  {
+    "native": 3,
+    "action": "accept two-byte prefix, withhold four-byte tail and half-close peer send side",
+    "bytes": 4
+  },
+  {
+    "native": 6,
+    "action": "drop FIN ACK",
+    "dropped_ACK_hex": "525400123456525400aabbcc080045000028112240004006119e0a0002020a00020f13890fa1010203061122334c501000402be40000000000000000"
+  },
+  {
+    "native": 20,
+    "action": "blackhole FIN to test retry exhaustion"
+  },
+  {
+    "native": 21,
+    "action": "blackhole FIN to test retry exhaustion"
+  },
+  {
+    "native": 22,
+    "action": "blackhole FIN to test retry exhaustion"
+  },
+  {
+    "native": 23,
+    "action": "blackhole FIN to test retry exhaustion"
+  }
+]

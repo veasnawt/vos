@@ -1,0 +1,25 @@
+{
+  "kind": "optimized_unsanitized_QEMU_closure_scenario",
+  "firmware": "bios",
+  "kernel_optimization": "-O2 with debug symbols; no sanitizers",
+  "QEMU": "q35/TCG, 128 MiB, modern virtio-net, isolated stream peer",
+  "elapsed_to_PASS_seconds": 3.898888507996162,
+  "QEMU_CPU_seconds": 0.83,
+  "QEMU_observed_VmHWM_KiB": 77640,
+  "guest_RAM_MiB": 128,
+  "context_bytes": 504,
+  "protocol_RX_TX_bytes": 128,
+  "private_DMA_bytes": 45056,
+  "unique_delivered_bytes": 6,
+  "caveat": "Includes firmware and deliberate FIN loss/timeout. Live TIME-WAIT is explicitly aborted after validation, never shortened. Not matched throughput comparison.",
+  "host": {
+    "platform": "Linux-6.18.54.1-microsoft-standard-WSL2-x86_64-with-glibc2.43",
+    "logical_cpus": 4,
+    "loadavg": [
+      0.3603515625,
+      0.2080078125,
+      0.19677734375
+    ],
+    "CPU_model": "Intel(R) Core(TM) i5-4570 CPU @ 3.20GHz"
+  }
+}

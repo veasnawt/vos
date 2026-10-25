@@ -22,7 +22,7 @@ now passes 136,730 sanitizer-backed host checks, the existing IPv4/ARP host
 regressions and BIOS/UEFI wire checks. Each boot sends four UDP datagrams,
 receives seven, rejects 12 invalid/unsupported/unbound packets and safely
 rejects one four-slot queue overflow. UDP is published at `a5889f9`.
-[Passive TCP establishment](results/n5-tcp.md) now passes 3,648 sanitizer-backed
+[Passive TCP establishment](results/n5-tcp.md) now passes 3,808 sanitizer-backed
 host checks and both firmware tests: one completed handshake, one half-open
 timeout and 20 rejected inputs each. There is one fixed connection record,
 with no streaming, retransmission, TCP options or FIN/RST closure. TCP changes
@@ -35,7 +35,14 @@ Payload exchange is published at `ff251a7`. [Bounded retransmission](results/n5-
 now passes 1,711 new sanitizer checks and BIOS/UEFI loss/ACK-loss/partial-ACK tests.
 Three retries and a 200-tick absolute TX horizon bound terminal cleanup. The
 context remains 504 bytes; retry metadata occupies six former padding bytes.
-Retransmission remains uncommitted. Application networking is not exposed.
+Retransmission is published at d512db7 with all 61 reviewed files.
+[Bounded connection closure](results/n5-tcp-close.md) now passes 8,505 closure
+ASan/UBSan checks, existing TCP regressions and BIOS/UEFI exchanges (23 TX / 26 RX
+each), with independent packet verification and authentic captures. It supports
+active/passive/simultaneous FIN, exact-sequence reset, FIN retries and timeout
+cleanup in the same 504-byte context. Live active TIME-WAIT is checked and
+explicitly aborted; full 2xMSL expiry is host-tested without shortened timers.
+Closure remains uncommitted. Application networking is not exposed.
 GitHub main now contains the owner's [PR #4](https://github.com/veasnawt/vos/pull/4)
 merge `d01b3f5`, whose tree matches IPv4 publication `33693b3`. Local main remains
 `bbca69d`; the executor did not merge, fetch or change that local branch.
@@ -282,3 +289,11 @@ On BIOS (SeaBIOS: ELCR `0xc00`), virtio-blk interrupt mode is fully tested: 149 
 - Writes of any kind to storage.
 - Secure Boot.
 - Hardware other than QEMU's emulated PC.
+
+
+Resume update: the owner merged PR #6 at 369153dc5bd9a891dd1d805791ef4ea1805f54bf,
+with the same source tree as published retransmission d512db7. The feature is now
+zero ahead/three behind main. Local main/origin-main stay bbca69d; closure stays
+uncommitted. The original final audit passed before interruption. Its historical
+remote pin is preserved; the independently checked resume record links the new
+owner merge, unchanged runtime evidence and final accounting.

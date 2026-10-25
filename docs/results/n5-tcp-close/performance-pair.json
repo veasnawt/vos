@@ -1,0 +1,130 @@
+{
+  "kind": "paired optimized host protocol models, not QEMU throughput",
+  "accepted_retry_commit": "d512db7cdf40b5b3dbcaf9c18f21041943d1c22c",
+  "accepted_manifest_sha256": "7b5c643c517b8be33ad1222f2a0610c4848aba9e2104ec6cd957d33798d02f35",
+  "canonical_benchmark_sha256": "e9e163be7792ff839600653f8971207049524d92c0fbc89b7cbf982ecd5eed94",
+  "retry_benchmark_sha256": "ab49427ed2d59cf43931a6edbf2cfe8f2a9c29ced21565d39609bddf0dd9da06",
+  "release_command": [
+    "gcc",
+    "-std=gnu11",
+    "-O2",
+    "-Wall",
+    "-Wextra",
+    "-Werror",
+    "-ffunction-sections",
+    "-fdata-sections",
+    "-Wl,--gc-sections",
+    "-Iarch/x86_64",
+    "-Itests/host"
+  ],
+  "baseline": {
+    "kind": "optimized_host_protocol_model",
+    "iterations_per_sample": 20000,
+    "context_bytes": 504,
+    "legacy_ns_per_handshake": [
+      241.34,
+      233.845,
+      234.03,
+      311.86,
+      233.02,
+      233.635,
+      274.24
+    ],
+    "payload_ns_per_two_byte_bidirectional_transaction_with_setup": [
+      482.665,
+      488.495,
+      484.625,
+      478.29,
+      507.725,
+      478.13,
+      510.585
+    ],
+    "sink": 41105935442000
+  },
+  "current": {
+    "kind": "optimized_host_protocol_model",
+    "iterations_per_sample": 20000,
+    "context_bytes": 504,
+    "legacy_ns_per_handshake": [
+      239.235,
+      250.76,
+      235.7,
+      255.845,
+      236.695,
+      235.485,
+      245.46
+    ],
+    "payload_ns_per_two_byte_bidirectional_transaction_with_setup": [
+      483.005,
+      509.55,
+      498.705,
+      504.26,
+      492.57,
+      509.79,
+      532.455
+    ],
+    "sink": 41105935442000
+  },
+  "retry_baseline": {
+    "kind": "optimized_host_retry_with_504_byte_state_restore",
+    "context_bytes": 504,
+    "iterations": 20000,
+    "ns_per_retry": [
+      90.265,
+      101.64,
+      94.725,
+      97.68,
+      91.515,
+      94.69,
+      91.94
+    ],
+    "sink": 13013000
+  },
+  "retry_current": {
+    "kind": "optimized_host_retry_with_504_byte_state_restore",
+    "context_bytes": 504,
+    "iterations": 20000,
+    "ns_per_retry": [
+      92.185,
+      103.05,
+      111.03,
+      111.01,
+      90.23,
+      116.2,
+      102.37
+    ],
+    "sink": 13013000
+  },
+  "closure": {
+    "kind": "optimized_host_active_FIN_peer_FIN_and_linger_cleanup_with_context_restore",
+    "context_bytes": 504,
+    "iterations": 20000,
+    "ns_per_close": [
+      226.94,
+      208.955,
+      209.43,
+      214.315,
+      224.255,
+      215.465,
+      266.49
+    ],
+    "sink": 160000
+  },
+  "median_change_percent": {
+    "legacy_ns_per_handshake": 2.2240738366876123,
+    "payload_ns_per_two_byte_bidirectional_transaction_with_setup": 4.051586278050046,
+    "ns_per_retry": 8.828809800401306
+  },
+  "potential_regression_over_25_percent": false,
+  "host": {
+    "platform": "Linux-6.18.54.1-microsoft-standard-WSL2-x86_64-with-glibc2.43",
+    "logical_cpus": 4,
+    "loadavg": [
+      0.2431640625,
+      0.1806640625,
+      0.18798828125
+    ],
+    "CPU_model": "Intel(R) Core(TM) i5-4570 CPU @ 3.20GHz"
+  },
+  "sanitizer_results_separate": true
+}

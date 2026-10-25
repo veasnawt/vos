@@ -1,0 +1,1 @@
+TCP closure host: 8505 checks PASS; context=504, active/passive/simultaneous FIN, reset validation, retained data, timers, wrap and cleanup

@@ -1,0 +1,19 @@
+{
+  "attempt_provision_MiB": 40,
+  "finalization_provision_MiB": 16,
+  "total_peak_MiB": 56,
+  "continuation_MiB": 201.33984375,
+  "continuation_peak_MiB": 257.33984375,
+  "aggregate_MiB": 3273.671875,
+  "aggregate_peak_MiB": 3329.671875,
+  "physical_reserves": {
+    "charged": 2496675840,
+    "remaining": 1026539520,
+    "C": 12464070656,
+    "E": 251677470720,
+    "linux": 1009166884864,
+    "admitted_extra": 994738176
+  },
+  "original_failed_attempt_charged": true,
+  "limits_and_reserves_unchanged": true
+}

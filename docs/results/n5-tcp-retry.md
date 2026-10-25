@@ -1,3 +1,8 @@
+> Publication update: the reviewed 61-file retransmission increment was subsequently
+> published as [d512db7](https://github.com/veasnawt/vos/commit/d512db7cdf40b5b3dbcaf9c18f21041943d1c22c).
+> The record below describes its original pre-publication checkpoint. Current
+> uncommitted connection-closure results are in [the closure report](n5-tcp-close.md).
+
 # N5 bounded TCP retransmission
 
 The reviewed 55-file payload increment is published as

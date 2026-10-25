@@ -22,6 +22,28 @@ void net_tcp_abort(struct net_tcp *c)
     c->retry_count=0;c->retry_after=0;
     memset(c->rx,0,sizeof(c->rx));memset(c->tx,0,sizeof(c->tx));
 }
+
+static int fin_pending(const struct net_tcp *c)
+{
+    return c->state==NET_TCP_FIN_WAIT_1 || c->state==NET_TCP_CLOSING || c->state==NET_TCP_LAST_ACK;
+}
+static int peer_finished(const struct net_tcp *c)
+{
+    return c->state==NET_TCP_CLOSE_WAIT || c->state==NET_TCP_CLOSING ||
+           c->state==NET_TCP_LAST_ACK || c->state==NET_TCP_TIME_WAIT;
+}
+static unsigned receive_window(const struct net_tcp *c)
+{
+    return c->closure_enabled && peer_finished(c)?0:NET_TCP_RX_MAX-c->rx_used;
+}
+static int closure_timeout(const struct net_tcp *c,uint64_t now)
+{
+    if (c->state==NET_TCP_TIME_WAIT) return now-c->since>=NET_TCP_CLOSE_HARD_TTL;
+    return now-c->since>=NET_TCP_CLOSE_TTL ||
+        ((c->tx_used || fin_pending(c)) && now-c->tx_since>=NET_TCP_TX_TTL);
+}
+static int fin_packet(struct net_tcp *,uint32_t,uint64_t,void *,size_t,size_t *);
+
 static int payload_timeout(const struct net_tcp *c,uint64_t now)
 {
     return now-c->since>=NET_TCP_IDLE_TTL || (c->tx_used && now-c->tx_since>=NET_TCP_TX_TTL);
@@ -29,6 +51,14 @@ static int payload_timeout(const struct net_tcp *c,uint64_t now)
 int net_tcp_expire(struct net_tcp *c,uint64_t now)
 {
     if (!c || !c->port) return NET_ARP_EINVAL;
+    if (c->closure_enabled && c->state==NET_TCP_TIME_WAIT &&
+        now-c->tx_since>=NET_TCP_TIME_WAIT_TTL && !c->rx_used) {
+        net_tcp_abort(c);return NET_TCP_DONE;
+    }
+    if (c->closure_enabled && c->state>=NET_TCP_CLOSE_WAIT) {
+        if (!closure_timeout(c,now)) return 0;
+        net_tcp_abort(c);return 1;
+    }
     if (!((c->state==NET_TCP_SYN_RECEIVED && now-c->since>=NET_TCP_HANDSHAKE_TTL) ||
           (c->state==NET_TCP_ESTABLISHED && c->payload_enabled && payload_timeout(c,now)))) return 0;
     net_tcp_abort(c);return 1;
@@ -45,10 +75,18 @@ int net_tcp_enable_retransmission(struct net_tcp *c)
     if (c->state!=NET_TCP_LISTEN) return NET_ARP_BUSY;
     c->retry_enabled=1;return 0;
 }
+int net_tcp_enable_closure(struct net_tcp *c)
+{
+    if (!c || !c->port || !c->payload_enabled) return NET_ARP_EINVAL;
+    if (c->state!=NET_TCP_LISTEN) return NET_ARP_BUSY;
+    c->closure_enabled=1;return 0;
+}
 static int ready(const struct net_tcp *c,uint64_t now)
 {
-    if (!c || !c->port || !c->payload_enabled || c->state!=NET_TCP_ESTABLISHED) return NET_ARP_EINVAL;
-    return payload_timeout(c,now)?NET_TCP_EXPIRED:0;
+    if (!c || !c->port || !c->payload_enabled) return NET_ARP_EINVAL;
+    if (c->state==NET_TCP_ESTABLISHED) return payload_timeout(c,now)?NET_TCP_EXPIRED:0;
+    if (!c->closure_enabled || c->state<NET_TCP_CLOSE_WAIT || c->state>NET_TCP_TIME_WAIT) return NET_ARP_EINVAL;
+    return closure_timeout(c,now)?NET_TCP_EXPIRED:0;
 }
 static int output_ok(void *out,size_t capacity,size_t *length,size_t n)
 {
@@ -75,25 +113,26 @@ static int packet(const struct net_tcp *c,uint32_t seq,uint32_t ack,unsigned win
 static void emitted(struct net_tcp *c,const uint8_t *packet,size_t n,void *out,size_t *length)
 {
     memcpy(out,packet,n);*length=n;c->ip.identification++;
-    c->rcv_adv=c->rcv_next+(NET_TCP_RX_MAX-c->rx_used);c->window_dirty=0;
+    c->rcv_adv=c->rcv_next+receive_window(c);c->window_dirty=0;
 }
 int net_tcp_ack(struct net_tcp *c,uint64_t now,void *out,size_t capacity,size_t *length)
 {
     int e=ready(c,now);if (e) return e;
     uint8_t p[54+NET_TCP_TX_MAX];size_t n;
-    e=packet(c,c->snd_next,c->rcv_next,NET_TCP_RX_MAX-c->rx_used,NULL,0,p,out,capacity,length,&n);if (e) return e;
+    e=packet(c,c->snd_next,c->rcv_next,receive_window(c),NULL,0,p,out,capacity,length,&n);if (e) return e;
     emitted(c,p,n,out,length);return NET_TCP_ACK;
 }
 int net_tcp_send(struct net_tcp *c,const void *data,size_t n,uint64_t now,void *out,size_t capacity,size_t *length)
 {
     int e=ready(c,now);if (e) return e;
+    if (c->state!=NET_TCP_ESTABLISHED && c->state!=NET_TCP_CLOSE_WAIT) return NET_ARP_EINVAL;
     if (!data || !n || n>NET_TCP_TX_MAX) return NET_ARP_EINVAL;
     if (c->tx_used) return NET_ARP_BUSY;
     if (n>c->peer_window) return NET_TCP_WINDOW;
     uint8_t p[54+NET_TCP_TX_MAX];size_t size;
-    e=packet(c,c->snd_next,c->rcv_next,NET_TCP_RX_MAX-c->rx_used,data,n,p,out,capacity,length,&size);if (e) return e;
+    e=packet(c,c->snd_next,c->rcv_next,receive_window(c),data,n,p,out,capacity,length,&size);if (e) return e;
     memset(c->tx,0,sizeof(c->tx));memcpy(c->tx,p+54,n);c->tx_used=(uint16_t)n;
-    c->snd_next+=(uint32_t)n;c->tx_since=now;c->since=now;
+    c->snd_next+=(uint32_t)n;c->tx_since=now;if (c->state==NET_TCP_ESTABLISHED) c->since=now;
     c->retry_count=0;c->retry_after=c->retry_enabled?NET_TCP_RETRY_TICKS:0;
     emitted(c,p,size,out,length);return NET_TCP_TX_DATA;
 }
@@ -103,6 +142,16 @@ int net_tcp_retransmit(struct net_tcp *c,uint64_t now,void *out,size_t capacity,
     int e=ready(c,now);
     if (e==NET_TCP_EXPIRED) {net_tcp_abort(c);return e;}
     if (e) return e;
+    if (c->closure_enabled && fin_pending(c)) {
+        uint64_t elapsed=now-c->tx_since;
+        if (c->tx_used || c->snd_next-c->snd_una!=1u) return NET_ARP_EINVAL;
+        if (elapsed<c->retry_after) return NET_TCP_NOT_DUE;
+        if (c->retry_count>=NET_TCP_RETRY_MAX) {net_tcp_abort(c);return NET_TCP_EXPIRED;}
+        if (!c->peer_window) return NET_TCP_WINDOW; /* No persist probes. */
+        e=fin_packet(c,c->snd_una,now,out,capacity,length);if (e) return e;
+        c->retry_count++;c->retry_after=(uint32_t)elapsed+NET_TCP_RETRY_TICKS;
+        return NET_TCP_RETRANSMITTED;
+    }
     if (!c->tx_used) return NET_TCP_EMPTY;
     if (c->tx_used!=(uint32_t)(c->snd_next-c->snd_una)) return NET_ARP_EINVAL;
     uint64_t elapsed=now-c->tx_since;
@@ -111,7 +160,7 @@ int net_tcp_retransmit(struct net_tcp *c,uint64_t now,void *out,size_t capacity,
     size_t n=c->tx_used;if (n>c->peer_window) n=c->peer_window;
     if (!n) return NET_TCP_WINDOW; /* Persist probes are outside this profile. */
     uint8_t p[54+NET_TCP_TX_MAX];size_t size;
-    e=packet(c,c->snd_una,c->rcv_next,NET_TCP_RX_MAX-c->rx_used,c->tx,n,p,out,capacity,length,&size);if (e) return e;
+    e=packet(c,c->snd_una,c->rcv_next,receive_window(c),c->tx,n,p,out,capacity,length,&size);if (e) return e;
     c->retry_count++;c->retry_after=(uint32_t)elapsed+NET_TCP_RETRY_TICKS;
     emitted(c,p,size,out,length);return NET_TCP_RETRANSMITTED;
 }
@@ -119,11 +168,11 @@ int net_tcp_receive(struct net_tcp *c,void *out,size_t capacity,size_t *length,u
 {
     int e=ready(c,now);if (e) return e;
     if (!capacity || !out || !length) return NET_ARP_NOSPACE;
-    if (!c->rx_used) return NET_TCP_EMPTY;
+    if (!c->rx_used) return c->closure_enabled && peer_finished(c)?NET_TCP_EOF:NET_TCP_EMPTY;
     size_t n=c->rx_used;if (n>capacity) n=capacity;
     if (!output_ok(out,capacity,length,n)) return NET_ARP_NOSPACE;
     memcpy(out,c->rx,n);shift(c->rx,c->rx_used,(unsigned)n);c->rx_used-=(uint16_t)n;
-    *length=n;c->window_dirty=1;c->since=now;return 0;
+    *length=n;c->window_dirty=1;if (c->state==NET_TCP_ESTABLISHED) c->since=now;return 0;
 }
 static int payload_input(struct net_tcp *c,const uint8_t *tcp,size_t n,uint64_t now,void *out,size_t capacity,size_t *length)
 {
@@ -155,6 +204,104 @@ static int payload_input(struct net_tcp *c,const uint8_t *tcp,size_t n,uint64_t 
     memcpy(c->rx+c->rx_used,tcp+20,n);c->rx_used+=(uint16_t)n;c->rcv_next+=(uint32_t)n;c->since=now;
     emitted(c,p,size,out,length);return NET_TCP_DATA_ACK;
 }
+
+static int fin_packet(struct net_tcp *c,uint32_t seq,uint64_t now,void *out,size_t capacity,size_t *length)
+{
+    (void)now;uint8_t p[54+NET_TCP_TX_MAX];size_t n;
+    int e=packet(c,seq,c->rcv_next,receive_window(c),NULL,0,p,out,capacity,length,&n);if (e) return e;
+    p[47]=17;put16(p+50,0);put16(p+50,net_ipv4_transport_checksum(c->ip.arp.ip,c->peer,6,p+34,20));
+    emitted(c,p,n,out,length);return 0;
+}
+int net_tcp_finish(struct net_tcp *c,uint64_t now,void *out,size_t capacity,size_t *length)
+{
+    if (!c || !c->closure_enabled) return NET_ARP_EINVAL;
+    int e=ready(c,now);if (e) return e;
+    if (c->state!=NET_TCP_ESTABLISHED && c->state!=NET_TCP_CLOSE_WAIT) return NET_ARP_BUSY;
+    /* No queued FIN flag or extra buffer: caller retries after data is drained. */
+    if (c->tx_used || c->rx_used) return NET_ARP_BUSY;
+    if (!c->peer_window) return NET_TCP_WINDOW;
+    e=fin_packet(c,c->snd_next,now,out,capacity,length);if (e) return e;
+    if (c->state==NET_TCP_ESTABLISHED) {c->since=now;c->state=NET_TCP_FIN_WAIT_1;}
+    else c->state=NET_TCP_LAST_ACK;
+    c->snd_next++;c->tx_since=now;c->retry_count=0;c->retry_after=NET_TCP_RETRY_TICKS;
+    return NET_TCP_FIN_SENT;
+}
+static void time_wait(struct net_tcp *c,uint64_t now)
+{
+    c->state=NET_TCP_TIME_WAIT;c->tx_since=now;c->retry_after=0;c->retry_count=0;
+}
+static int closure_input(struct net_tcp *c,const uint8_t *tcp,size_t n,uint64_t now,void *out,size_t capacity,size_t *length)
+{
+    if ((c->state==NET_TCP_ESTABLISHED && payload_timeout(c,now)) ||
+        (c->state>=NET_TCP_CLOSE_WAIT && closure_timeout(c,now))) return NET_TCP_EXPIRED;
+    uint8_t flags=tcp[13];uint32_t seq=get32(tcp+4),ack=get32(tcp+8);
+    unsigned room=receive_window(c);uint32_t advertised=c->rcv_adv-c->rcv_next;
+    if (advertised<room) room=advertised;
+    if (flags==4 || flags==20) {
+        if (n || c->state==NET_TCP_TIME_WAIT) return NET_ARP_DROP;
+        if (seq==c->rcv_next) {net_tcp_abort(c);return NET_TCP_RESET;}
+        if (room && (uint32_t)(seq-c->rcv_next)<room) return net_tcp_ack(c,now,out,capacity,length);
+        return NET_ARP_DROP;
+    }
+    if (flags!=16 && flags!=24 && flags!=17 && flags!=25) return NET_ARP_DROP;
+    uint32_t delta=ack-c->snd_una,outstanding=c->snd_next-c->snd_una;
+    int current=delta<=outstanding;
+    if (!current && (uint32_t)(c->snd_una-ack)>=0x80000000u) return NET_ARP_DROP;
+    int fin=(flags&1)!=0,received=peer_finished(c);
+    int duplicate_fin=fin && received && seq+(uint32_t)n==c->rcv_next-1u;
+    int sequence_ok;
+    if (duplicate_fin) sequence_ok=1;
+    else if (n || fin) sequence_ok=!received && seq==c->rcv_next &&
+        n<=room && (!fin || n || room);
+    else sequence_ok=room?(uint32_t)(seq-c->rcv_next)<room:seq==c->rcv_next;
+    if (!sequence_ok) return net_tcp_ack(c,now,out,capacity,length);
+    /* A FIN just beyond the advertised right edge is not consumed. Its data
+     * can fill the real buffer; the peer retries FIN after a window update. */
+    if (fin && !duplicate_fin && n==room) fin=0;
+    /* Prepare any required response before committing ACK/data/FIN changes. */
+    uint8_t p[54+NET_TCP_TX_MAX];size_t size=0;
+    uint32_t advance=duplicate_fin?0:(uint32_t)n+(unsigned)fin;
+    if (n || fin) {
+        unsigned window=(fin || received)?0:NET_TCP_RX_MAX-c->rx_used-(unsigned)n;
+        int e=packet(c,c->snd_next,c->rcv_next+advance,window,NULL,0,p,out,capacity,length,&size);if (e) return e;
+    }
+    if (current) {
+        if (delta) {
+            if (fin_pending(c)) {
+                /* One FIN occupies one sequence number, never TX buffer bytes. */
+                if (delta!=1 || outstanding!=1 || c->tx_used) return NET_ARP_EINVAL;
+                c->snd_una=ack;c->retry_after=0;c->retry_count=0;
+                if (c->state==NET_TCP_LAST_ACK) {net_tcp_abort(c);return NET_TCP_DONE;}
+                if (c->state==NET_TCP_CLOSING) time_wait(c,now);
+                else {c->state=NET_TCP_FIN_WAIT_2;c->tx_since=0;}
+            } else {
+                if (delta>c->tx_used) return NET_ARP_EINVAL;
+                shift(c->tx,c->tx_used,(unsigned)delta);c->tx_used-=(uint16_t)delta;c->snd_una=ack;
+                if (c->state==NET_TCP_ESTABLISHED) c->since=now;
+                if (!c->tx_used) {c->tx_since=0;c->retry_after=0;c->retry_count=0;}
+                else if (c->retry_enabled) c->retry_after=(uint32_t)(now-c->tx_since)+NET_TCP_RETRY_TICKS;
+            }
+        }
+        if ((uint32_t)(seq-c->win_seq)<0x80000000u &&
+            (seq!=c->win_seq || (uint32_t)(ack-c->win_ack)<0x80000000u)) {
+            c->peer_window=get16(tcp+14);c->win_seq=seq;c->win_ack=ack;
+        }
+    }
+    if (duplicate_fin) {
+        if (c->state==NET_TCP_TIME_WAIT) c->tx_since=now;
+        emitted(c,p,size,out,length);return NET_TCP_ACK;
+    }
+    if (!n && !fin) return NET_TCP_ACKED;
+    if (n) {memcpy(c->rx+c->rx_used,tcp+20,n);c->rx_used+=(uint16_t)n;c->rcv_next+=(uint32_t)n;}
+    if (fin) {
+        c->rcv_next++;
+        if (c->state==NET_TCP_ESTABLISHED) {c->state=NET_TCP_CLOSE_WAIT;c->since=now;}
+        else if (c->state==NET_TCP_FIN_WAIT_1) c->state=NET_TCP_CLOSING;
+        else if (c->state==NET_TCP_FIN_WAIT_2) time_wait(c,now);
+    } else if (c->state==NET_TCP_ESTABLISHED) c->since=now;
+    emitted(c,p,size,out,length);return fin?NET_TCP_FIN_ACK:NET_TCP_DATA_ACK;
+}
+
 int net_tcp_input(struct net_tcp *c,const void *frame,size_t n,uint64_t now,void *out,size_t capacity,size_t *length)
 {
     if (!c || !c->port) return NET_ARP_EINVAL;
@@ -168,9 +315,18 @@ int net_tcp_input(struct net_tcp *c,const void *frame,size_t n,uint64_t now,void
         net_ipv4_transport_checksum(view.source,c->ip.arp.ip,6,tcp,view.length)) return NET_ARP_EINVAL;
     if (header!=20 || get16(tcp+18)) return NET_ARP_UNSUPPORTED;
     size_t data_length=view.length-20;
-    if (data_length && (!c->payload_enabled || c->state!=NET_TCP_ESTABLISHED)) return NET_ARP_UNSUPPORTED;
+    if (data_length && (!c->payload_enabled || (c->state!=NET_TCP_ESTABLISHED && !(c->closure_enabled && c->state>=NET_TCP_CLOSE_WAIT)))) return NET_ARP_UNSUPPORTED;
     if (get16(tcp+2)!=c->port) return NET_ARP_DROP;
     uint8_t flags=tcp[13];uint32_t seq=get32(tcp+4),ack=get32(tcp+8);
+    if (c->closure_enabled && c->state>=NET_TCP_SYN_RECEIVED) {
+        if (get16(tcp)!=c->peer_port || memcmp(view.source,c->peer,4) || memcmp(p+6,c->peer_mac,6)) return NET_ARP_DROP;
+        if (c->state==NET_TCP_SYN_RECEIVED && (flags==4 || flags==20)) {
+            if (now-c->since>=NET_TCP_HANDSHAKE_TTL) return NET_TCP_EXPIRED;
+            if (data_length || seq!=c->rcv_next) return NET_ARP_DROP;
+            net_tcp_abort(c);return NET_TCP_RESET;
+        }
+        if (c->state>=NET_TCP_ESTABLISHED) return closure_input(c,tcp,data_length,now,out,capacity,length);
+    }
     if (flags!=2 && flags!=16 && !(flags==24 && c->payload_enabled && c->state==NET_TCP_ESTABLISHED)) return NET_ARP_UNSUPPORTED;
     if (c->state==NET_TCP_ESTABLISHED && c->payload_enabled) {
         if ((flags!=16 && flags!=24) || get16(tcp)!=c->peer_port || memcmp(view.source,c->peer,4) || memcmp(p+6,c->peer_mac,6)) return NET_ARP_DROP;

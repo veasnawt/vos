@@ -1,0 +1,11 @@
+{
+  "failed_attempt": "build/n5-tcp-close-20261024T200702Z",
+  "error": "fixture expected RX=25 instead of 26; kernel protocol checks and all exact wire bytes matched",
+  "corrected_RX": 26,
+  "corrected_total_frames": 49,
+  "TX": 23,
+  "checked_IPv4_TCP_checksums": 47,
+  "independent_TX_tuples": true,
+  "independent_RX_tuples": true,
+  "original_verdict_unchanged": true
+}
