@@ -1,17 +1,16 @@
 # VOS Roadmap
 
-N0–N5 are complete and accepted within their authorized scopes. The owner formally
-accepted N5 networking on 2026-10-25 as a bounded kernel-controlled prototype.
-[PR #7](https://github.com/veasnawt/vos/pull/7) integrated it into main at
-[`39b40a9`](https://github.com/veasnawt/vos/commit/39b40a904cce0778c307dd9154fff2531567d6d4).
-Acceptance does not establish production networking or physical-hardware support.
-N4, including Rixie Core v0, remains integrated at `bbca69d` (tree `50cbc8b`).
-N3 closure was accepted on 2026-10-24 after the existing
-D1/D2/C20 requirements passed. The milestone is published on
-`feat/n3.6-storage-closure` at `897312f`. GitHub main integrated it through
-PR #2 (`d9a4ade`) during N4 development. Local main and the N4 branch were
-fast-forwarded to that merge; its source tree is identical to the N3 baseline.
-See [status](STATUS.md) and the [N3 closure record](results/n3-closure.md).
+**N0-N5 are complete and accepted within their authorized scopes.**
+Unified native application launching and the N6.1-N6.3 graphical components are
+also accepted and merged. **N6 remains in progress.** The current owner-accepted
+baseline is [PR #15](https://github.com/veasnawt/vos/pull/15) at
+[`bf5eb43f2e07478e31be8b4123c5a297add67efe`](https://github.com/veasnawt/vos/commit/bf5eb43f2e07478e31be8b4123c5a297add67efe).
+
+The accepted milestone sequence is preserved below. Proposed desktop,
+Rust-kernel and portability work is **not implementation authorization**.
+VOS is pre-alpha and targets independent physical x86_64 computers; current
+verification is QEMU SeaBIOS/OVMF only. See [STATUS](STATUS.md) for precise limits.
+Historical publication and branch narratives remain in their existing reports.
 
 ## Completed
 
@@ -30,6 +29,10 @@ See [status](STATUS.md) and the [N3 closure record](results/n3-closure.md).
 | N4 | Keyboard, buffered console, native Rust shell, cwd prompt, reusable Rust SDK, independent app and minimal offline Rixie Core v0 | [N4 records](results/n4-closure.md) |
 | N5 | Bounded kernel virtio-net, Ethernet/ARP, IPv4/ICMP, UDP and passive TCP payload/retransmission/closure; owner accepted 2026-10-25 | [Networking](networking.md), [closure evidence](results/n5-tcp-close.md), [PR #7](https://github.com/veasnawt/vos/pull/7) |
 | U0/U1 | QEMU UEFI feasibility/readiness, BIOS compatibility and framebuffer diagnostics | [UEFI plan/results](plans/uefi.md) |
+| Unified apps | Common payload/catalog, ABI v4 broker, isolated foreground children and exclusive console restoration | [Payload](results/app-payload.md), [broker](results/app-exec.md), [handoff](results/app-handoff.md); PRs #9-#11 |
+| N6.1 | Framebuffer scene, one system bar and bounded console viewport | [Desktop slice](results/n6-desktop.md), PR #12 |
+| N6.2 | Bounded native GUI surface/events, keyboard delivery and bootstrap rollback | [GUI and hardening](results/n6-gui.md), PR #13 |
+| N6.3 | PS/2 pointer input, primary-button routing, clipped cursor and accepted visibility refinement | [Pointer](results/n6-pointer.md), [cursor refinement](results/n6-cursor-refinement.md), PRs #14-#15 |
 
 ## N4: complete, including Rixie Core v0
 
@@ -109,6 +112,57 @@ userspace network interface requires explicit process-owned capability grants,
 resource bounds and revocation. Rixie Connected remains outside this increment.
 Focused checks accompany changes; no N3 campaign or new milestone is introduced.
 
+## N6: graphical desktop in progress
+
+The accepted slices establish a foundation, not a complete desktop:
+
+1. N6.1 reuses the supported GRUB framebuffer path, private bounded renderer and
+   existing shell console. PR #12 integrated `20d9b93` at `3308cc8`.
+2. N6.2 adds a single explicitly granted ring-3 surface and bounded event queue.
+   PR #13 integrated foundation `e639008` plus bootstrap cleanup `9f59802`
+   at `dfd292c`. Eighteen injected ELF-load failures per firmware verify worker
+   reclamation; historical interruptions and recoveries remain recorded.
+3. N6.3 adds standard PS/2 mouse input through the existing i8042 owner,
+   primary-button semantics, secure event routing and cursor restoration.
+   PR #14 integrated `dccee3b` at `78cc80c`. PR #15 then integrated cursor
+   refinement `ab3d4de` at the accepted baseline above. The owner accepted its
+   manual preview. Cursor size is 21x28 visible pixels on a 32x32 canvas;
+   future size customization belongs to Settings/Accessibility planning.
+
+Existing [N6.1](results/n6-desktop.md), [N6.2](results/n6-gui.md),
+[N6.3](results/n6-pointer.md) and [cursor](results/n6-cursor-refinement.md)
+reports preserve their original local-candidate wording, raw evidence and failure
+history. Their publication/acceptance status is recorded here; they are not
+retroactively rewritten.
+
+Next desktop increments are planning candidates requiring owner approval:
+bounded multi-surface composition and ownership/focus, window interaction,
+a native Rust Terminal using the existing shell, then appropriate desktop/dock
+and Settings integration. No new increment or implementation order is approved
+by this synchronization. Input, rendering and native application UI should
+remain separate; a complete application UI must not be embedded in the kernel.
+
+The approved visual target uses the name **Terminal**, a minimalist dark-blue
+desktop, a bottom-centered floating pill dock and compact circular window
+controls. VOS Display and logo sources require separately approved identity,
+licensing and asset integration. VICons remains a candidate; the GUI architecture
+is icon-library-agnostic and requires no npm/React runtime. These are design
+directions, not implemented desktop features.
+
+## Proposed Rust-first kernel migration and portability
+
+A Rust-first kernel migration is a proposed planning track. No migration or
+R0-A execution is authorized here. A future plan must define small interoperable
+boundaries, preserve supported ABIs and capability semantics, and audit unsafe
+Rust, assembly, FFI, interrupt entry and DMA ownership. Existing Rust application
+support is implemented; kernel migration is not.
+
+Real physical x86_64 operation remains the target. Broader hardware portability
+requires explicit firmware/boot, hardware discovery, APIC/interrupt, memory/DMA,
+storage, input and display resource contracts plus controlled physical testing.
+Other architecture ports are proposals requiring their own feasibility and
+owner authorization. Emulator success alone is not physical-hardware evidence.
+
 ## Later work
 
 | Area | Scope still to be designed/authorized |
@@ -116,7 +170,7 @@ Focused checks accompany changes; no N3 campaign or new milestone is introduced.
 | U2 | IOAPIC/local APIC or MSI-X support and broader verified framebuffer formats |
 | U3 | Independent EFI loader, then Secure Boot |
 | H2 | Controlled physical-hardware tests, with explicit approval of each step |
-| Other work | Writable storage and native UI/platform work beyond the authorized N5 networking scope remain future designs |
+| Other work | Writable storage, production/userspace networking and platform expansion remain separate future designs; the incomplete N6 desktop work is described above |
 
 Current limitations are listed in [STATUS](STATUS.md) and the closure record:
 QEMU-only verification, trusted immutable read-only media, RAM tracked below
