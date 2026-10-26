@@ -84,7 +84,35 @@ int screen_choose(uint32_t fb_tags, const char *fb_err, int fb_kind, int efi, ui
     return SCREEN_NONE;
 }
 
-/* ---- pixels (write only) ---- */
+
+/* Fixed 8x12 kernel-owned software cursor. Readback is confined to this tile;
+ * no framebuffer or underlay address enters an application or the GUI ABI. */
+static struct {int active,drawn;uint32_t x,y,saved[96];} cursor;
+static void cursor_hide(void) {
+    if(!cursor.drawn)return;
+    for(unsigned y=0;y<12 && y<fb.height-cursor.y;y++)
+        for(unsigned x=0;x<8 && x<fb.width-cursor.x;x++)
+            fb.base[(uint64_t)(cursor.y+y)*fb.pitch_px+cursor.x+x]=cursor.saved[y*8+x];
+    cursor.drawn=0;
+}
+static void cursor_show(void) {
+    if(!cursor.active || cursor.drawn || panicked)return;
+    for(unsigned y=0;y<12 && y<fb.height-cursor.y;y++)
+        for(unsigned x=0;x<8 && x<fb.width-cursor.x;x++) {
+            volatile uint32_t *p=fb.base+(uint64_t)(cursor.y+y)*fb.pitch_px+cursor.x+x;
+            cursor.saved[y*8+x]=*p;
+            /* Temporary geometric arrow, deliberately not identity artwork. */
+            if(x<=y/2 && y<11)*p=(x==0 || x==y/2 || y==10)?0x00101a2au:0x00ffffffu;
+        }
+    cursor.drawn=1;
+}
+static int cursor_damage(const struct screen_surface *s,uint32_t x,uint32_t y,uint32_t w,uint32_t h) {
+    int hit=cursor.drawn && s==&fb && x<cursor.x+8 && (uint64_t)x+w>cursor.x &&
+        y<cursor.y+12 && (uint64_t)y+h>cursor.y;
+    if(hit)cursor_hide();
+    return hit;
+}
+/* ---- bounded pixels ---- */
 
 void screen_fill(const struct screen_surface *s, uint32_t x, uint32_t y, uint32_t w, uint32_t h, uint32_t color)
 {
@@ -94,12 +122,14 @@ void screen_fill(const struct screen_surface *s, uint32_t x, uint32_t y, uint32_
         w = s->width - x;
     if (h > s->height - y)
         h = s->height - y;
+    int damaged=cursor_damage(s,x,y,w,h);
     for (uint32_t r = 0; r < h; r++) {
         volatile uint32_t *p = s->base + (uint64_t)(y + r) * s->pitch_px + x;
 
         for (uint32_t c = 0; c < w; c++)
             p[c] = color;
     }
+    if(damaged)cursor_show();
 }
 
 void screen_glyph(const struct screen_surface *s, uint32_t x, uint32_t y, char c, uint32_t fg, uint32_t bg)
@@ -109,6 +139,7 @@ void screen_glyph(const struct screen_surface *s, uint32_t x, uint32_t y, char c
 
     if (x > s->width || s->width - x < 8 || y > s->height || s->height - y < 16)
         return;
+    int damaged=cursor_damage(s,x,y,8,16);
     for (uint32_t r = 0; r < 16; r++) {
         volatile uint32_t *p = s->base + (uint64_t)(y + r) * s->pitch_px + x;
         uint8_t bits = font8x16[i][r];
@@ -116,6 +147,7 @@ void screen_glyph(const struct screen_surface *s, uint32_t x, uint32_t y, char c
         for (uint32_t col = 0; col < 8; col++)
             p[col] = bits & (0x80u >> col) ? fg : bg;
     }
+    if(damaged)cursor_show();
 }
 
 static void fb_text(uint32_t x, uint32_t y, const char *t, uint32_t max_chars, uint32_t fg, uint32_t bg)
@@ -444,12 +476,34 @@ int screen_gui_begin(uint32_t w,uint32_t h)
 void screen_gui_row(uint32_t y,const uint32_t *pixels,uint32_t count)
 {
     if(!gui_active || panicked || busy || y>=gui_h || count!=gui_w || !pixels)return;
+    int damaged=cursor_damage(&fb,gui_x,gui_y+y,count,1);
     volatile uint32_t *row=fb.base+(uint64_t)(gui_y+y)*fb.pitch_px+gui_x;
     for(uint32_t x=0;x<count;x++)row[x]=pixels[x]&0x00ffffffu;
+    if(damaged)cursor_show();
 }
 void screen_gui_end(void)
 {
     if(!gui_active)return;
-    gui_active=0;
+    screen_pointer_end();gui_active=0;
     (void)screen_desktop_begin(); /* Restore the existing scene and console shadow. */
 }
+
+uint32_t screen_pointer_move(int32_t dx,int32_t dy) {
+    if(!cursor.active || !gui_active)return 0;
+    cursor_hide();
+    int64_t x=(int64_t)cursor.x+dx,y=(int64_t)cursor.y+dy;
+    cursor.x=x<0?0:x>=fb.width?fb.width-1:(uint32_t)x;
+    cursor.y=y<0?0:y>=fb.height?fb.height-1:(uint32_t)y;
+    cursor_show();
+    int inside=cursor.x>=gui_x && cursor.x-gui_x<gui_w &&
+               cursor.y>=gui_y && cursor.y-gui_y<gui_h;
+    uint32_t lx=cursor.x<gui_x?0:cursor.x-gui_x>=gui_w?gui_w-1:cursor.x-gui_x;
+    uint32_t ly=cursor.y<gui_y?0:cursor.y-gui_y>=gui_h?gui_h-1:cursor.y-gui_y;
+    return lx|(ly<<8)|(inside?0x20000u:0);
+}
+uint32_t screen_pointer_begin(void) {
+    if(!gui_active || cursor.active)return 0;
+    cursor.x=gui_x+gui_w/2;cursor.y=gui_y+gui_h/2;cursor.active=1;
+    return screen_pointer_move(0,0);
+}
+void screen_pointer_end(void) {cursor_hide();cursor.active=0;}

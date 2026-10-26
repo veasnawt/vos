@@ -22,6 +22,7 @@ pub mod raw {
         pub fn vos_gui_upload(token:u64,desc:*const super::Upload,size:u64)->i64;
         pub fn vos_gui_present(token:u64,zero:u64,zero2:u64)->i64;
         pub fn vos_gui_release(token:u64,zero:u64,zero2:u64)->i64;
+        pub fn vos_gui_pointer_state(event:*mut super::Event,size:u64,zero:u64)->i64;
         pub fn vos_gui_event(event:*mut super::Event,size:u64,flags:u64)->i64;
     }
 }
@@ -53,5 +54,29 @@ pub fn event(block:bool)->Result<Event> {
     let mut e=Event::default();
     let count=result(unsafe{raw::vos_gui_event(&mut e,16,if block{0}else{1})})?;
     if count!=16 || !(e.kind==1 || e.kind==2){return Err(Error::IO)}
+    Ok(e)
+}
+
+pub const POINTER_MOVE:u32=3;
+pub const POINTER_BUTTON:u32=4;
+pub const POINTER_SNAPSHOT:u32=5;
+impl Event {
+    pub fn x(self)->u32 {self.code&255}
+    pub fn y(self)->u32 {(self.code>>8)&255}
+    pub fn left(self)->bool {self.code&0x10000!=0}
+    pub fn inside(self)->bool {self.code&0x20000!=0}
+}
+/// Requires an explicitly installed pointer grant; old event() remains key-only.
+pub fn pointer_event(block:bool)->Result<Event> {
+    let mut e=Event::default();
+    let n=result(unsafe{raw::vos_gui_event(&mut e,16,if block{0}else{1})})?;
+    if n!=16 || !(1..=4).contains(&e.kind){return Err(Error::IO)}
+    Ok(e)
+}
+/// Snapshot is the overflow recovery barrier: discard queued sequence <= this.
+pub fn pointer_state()->Result<Event> {
+    let mut e=Event::default();
+    let n=result(unsafe{raw::vos_gui_pointer_state(&mut e,16,0)})?;
+    if n!=16 || e.kind!=5{return Err(Error::IO)}
     Ok(e)
 }

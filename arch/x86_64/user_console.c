@@ -202,6 +202,7 @@ int user_console_gui_begin(struct process *p)
 void user_console_gui_end(struct process *p)
 {
     if(gui_owner!=p || !p || gui_pid!=p->pid)return;
+    keyboard_pointer_stop(&keyboard);
     (void)keyboard_suspend(&keyboard);
     gui_owner=0;gui_pid=0;clear_pending();advance();
 }
@@ -210,4 +211,24 @@ char user_console_gui_poll(struct process *p)
     if(!p || gui_owner!=p || !proc_file_live(p) || gui_pid!=p->pid ||
        p->state!=PROC_RUNNING || p->kill_reason)return 0;
     return keyboard_poll(&keyboard);
+}
+
+int user_console_pointer_begin(struct process *p) {
+    if(!p || gui_owner!=p || gui_pid!=p->pid)return -VOS_EACCES;
+    return keyboard_pointer_start(&keyboard)?0:-VOS_EUNAVAIL;
+}
+int user_console_pointer_poll(struct process *p,struct pointer_packet *packet) {
+    if(!p || gui_owner!=p || gui_pid!=p->pid || !proc_file_live(p) ||
+       p->state!=PROC_RUNNING || p->kill_reason)return 0;
+    return keyboard_pointer_poll(&keyboard,packet);
+}
+unsigned user_console_pointer_lost(struct process *p) {
+    return p && gui_owner==p && gui_pid==p->pid?keyboard_pointer_lost(&keyboard):0;
+}
+
+void user_console_pointer_end(struct process *p) {
+    if(!p || gui_owner!=p || gui_pid!=p->pid || !keyboard.pointer_ready)return;
+    keyboard_pointer_stop(&keyboard);
+    /* Surface destruction is an input epoch boundary, including queued keys. */
+    if(keyboard_suspend(&keyboard))(void)keyboard_resume(&keyboard);
 }

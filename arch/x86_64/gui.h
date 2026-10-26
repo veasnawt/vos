@@ -7,7 +7,9 @@ struct process;struct exc_frame;
 #define GUI_UPLOAD 2u
 #define GUI_PRESENT 4u
 #define GUI_EVENTS 8u
-#define GUI_ALL 15u
+#define GUI_ALL 15u /* Existing keyboard-only grant is unchanged. */
+#define GUI_POINTER 16u
+#define GUI_VALID_RIGHTS (GUI_ALL|GUI_POINTER)
 #define GUI_FRAMES 40u
 int gui_service_start(void);
 int gui_service_stop(void);

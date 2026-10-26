@@ -101,6 +101,17 @@ int screen_gui_available(void){return !active;}
 int screen_gui_begin(uint32_t width,uint32_t height){CHECK(width && width<=256 && height && height<=160 && !active);active=1;w=width;h=height;return 1;}
 void screen_gui_row(uint32_t y,const uint32_t *p,uint32_t n){CHECK(active && y<h && n==w);memcpy(display[y],p,n*4);}
 void screen_gui_end(void){active=0;}
+static int32_t pointer_x,pointer_y;
+uint32_t screen_pointer_move(int32_t dx,int32_t dy) {
+    int64_t x=(int64_t)pointer_x+dx,y=(int64_t)pointer_y+dy;
+    pointer_x=x<0?0:x>=w+128?(int32_t)(w+127):(int32_t)x;pointer_y=y<0?0:y>=h+128?(int32_t)(h+127):(int32_t)y;
+    int inside=pointer_x>=64 && pointer_y>=64 && pointer_x<64+(int32_t)w && pointer_y<64+(int32_t)h;
+    uint32_t lx=pointer_x<64?0:pointer_x>=64+(int32_t)w?w-1:(uint32_t)pointer_x-64;
+    uint32_t ly=pointer_y<64?0:pointer_y>=64+(int32_t)h?h-1:(uint32_t)pointer_y-64;
+    return lx|(ly<<8)|(inside?0x20000u:0);
+}
+uint32_t screen_pointer_begin(void){pointer_x=w/2+64;pointer_y=h/2+64;return screen_pointer_move(0,0);}
+void screen_pointer_end(void){}
 static int inside(uint64_t p,uint64_t n){return p>=(uintptr_t)arena && n<=sizeof(arena) && p-(uintptr_t)arena<=sizeof(arena)-n;}
 int user_writable(uint64_t r,uint64_t p,size_t n){return r==current.root && inside(p,n)?0:-VOS_EFAULT;}
 int copy_from_user(uint64_t r,void *d,uint64_t p,size_t n){if(user_writable(r,p,n))return -VOS_EFAULT;memcpy(d,(void *)(uintptr_t)p,n);return 0;}

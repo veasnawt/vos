@@ -17,7 +17,8 @@
  * written to any screen before screen_init (output until then is kept in a
  * small buffer and replayed).
  *
- * Rendering never reads the framebuffer. Lines wrap at the right margin;
+ * Text rendering never reads the framebuffer; the optional kernel-private
+ * pointer overlay saves/restores only a bounded 8x12-pixel underlay tile. Lines wrap at the right margin;
  * when the log area is full, output continues at its top, and the line
  * after the newest one is kept blank so the end of the log stays visible.
  * N4's opt-in screen_begin_input switches to an at-most-80x25 chronological
@@ -87,4 +88,7 @@ int screen_gui_available(void);
 int screen_gui_begin(uint32_t,uint32_t);
 void screen_gui_row(uint32_t,const uint32_t *,uint32_t);
 void screen_gui_end(void);
+uint32_t screen_pointer_begin(void);
+uint32_t screen_pointer_move(int32_t,int32_t);
+void screen_pointer_end(void);
 #endif

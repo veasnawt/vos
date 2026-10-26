@@ -1,0 +1,4041 @@
+{
+  "schema": 1,
+  "scope": "N6.3 native PS/2 pointer, local review candidate",
+  "baseline": "dfd292ca807370a0ceaf735d319fc1d15bd45370",
+  "branch": "feat/n6-pointer-input",
+  "physical_hardware_validated": false,
+  "controller": "build/n6-pointer-1/final/motion-recovery-1",
+  "independent_windows_manifest_verification": {
+    "passed": true,
+    "manifests": {
+      "coordinate-log-continuation-1": {
+        "entries": 38,
+        "manifest_sha256": "d524945d35b060dc7079438dda9a5c5ddd8a0de601d66c50e13e9e47f3f47357"
+      },
+      "attempt-1": {
+        "entries": 53,
+        "manifest_sha256": "4d9a857a9a356783a2afc1dc4fcfb9e5a5806117d94e2c308a92b3902adff0aa"
+      },
+      "motion-diagnostic-1": {
+        "entries": 8,
+        "manifest_sha256": "d00a673da46f467a6d5c0c20c3f91865a0e3a2df2780bded6e676742fa29567e"
+      },
+      "verification-continuation-1": {
+        "entries": 81,
+        "manifest_sha256": "eb57a7f66c36bebded04e05e01d6a3724b626ebb5f5dc86783d2c51da534efce"
+      },
+      "image-continuation-1": {
+        "entries": 23,
+        "manifest_sha256": "9df209da08f03f32fea9f6c9dbc220e5c23264d737b424ebb5d316f3ab8f71de"
+      },
+      "motion-continuation-1": {
+        "entries": 78,
+        "manifest_sha256": "8ab47ecdf43bf4fe088f372d23deb9113bdfb2d7a1ea0cda1c1b5e5542e11699"
+      }
+    },
+    "total_entries": 281
+  },
+  "tested_source_sha256": {
+    "Makefile": "6912d0beae8476e1a2ac0d114432fd920f057d6910f8ed2d09f3047326a37752",
+    "arch/x86_64/app_payload.c": "10b3322088c69a9484787300eae3ad25a71ea7d5542ca45a6aa190b9647e1d11",
+    "arch/x86_64/arch.mk": "3823b3b416dc6475eda292178127867be1c816eb0c2cd5aebfb9e46f9445cb2e",
+    "arch/x86_64/desktop.c": "183816b5662fb774d9696188d431afd115ae252e8f4ff031b8eda7a081941187",
+    "arch/x86_64/elf.c": "c01cd9b6d606528077819ffa256daf3158056ca9fe89f70c549a32bd26315b3f",
+    "arch/x86_64/exec.c": "0d9664e60bd784e3e114eb0cfac9163f6fadb38f3feac8ca63f8738737f08918",
+    "arch/x86_64/font8x16.c": "1407e6656453950e4f9002a7027b3966baa53d82947300b54401b7a18f7484fc",
+    "arch/x86_64/grub-pointer.cfg": "c49155e86a7e9457e3bb8a335344b6895e260cb780ccc7a5afe92547cc18920a",
+    "arch/x86_64/gui.c": "a66f681a42336a18ad2ac0f6d6dcd0e7ecc058f1adfb1879dbc98a1db4397d9a",
+    "arch/x86_64/gui.h": "71697b09dd553b44c2307b94c006ed85c2b80e46b460b0634cc98347c966b410",
+    "arch/x86_64/gui_verify.c": "e5b691bd9548c874c22a21d6acf769665ea4db0f2df1ad9a70c14e454935126f",
+    "arch/x86_64/gui_verify.h": "dbf9569b2639211f9f898702bc194d7e61293aaed5d5b9dcbb01ef7c95b0b3c3",
+    "arch/x86_64/input_console.c": "0297f0c2a2a053a9af9e5d33ac57e3ebd94b8353a8a5be366024a0c6eb194551",
+    "arch/x86_64/keyboard.c": "fb75b7e97b693d688ae2456b0f129d047e5fec33b33474200a788d4fec8e96eb",
+    "arch/x86_64/keyboard.h": "c6104c37cd72472e32a16471a22c2149e15e68f4baff2c64072a054b088a68b7",
+    "arch/x86_64/pointer.c": "01775a7eb0780d68fdac47eb2a92d5fececb1e93690f40abcd7bf040c29777ff",
+    "arch/x86_64/pointer.h": "7ed1b6597f0155f9cd4720a2c0fe712e08d6b7cf51ad6acc010841e7f8f291b7",
+    "arch/x86_64/process.c": "a59718bcaf8ba3e2bd99f99faeccd5ae31efe93bd49817af5c4ae41e8da6924c",
+    "arch/x86_64/screen.c": "c39fa6b7364134828a7eb4c7a5b4628a9d32bc71421cd3d3eb80808df313fc96",
+    "arch/x86_64/screen.h": "de6ea75d74814d5d830af3a8042b6a3f7bd569b0d5c9a98b60f70eed434232ec",
+    "arch/x86_64/syscall.c": "6f0b4e52214bb407ddc25c6493ab48a362f0408867c9e0f8e664b10ce3ae7282",
+    "arch/x86_64/user_console.c": "dfe1d32f0f2a6c4cf42dd15c8988b50523e23750c630941bc79601bfa142a553",
+    "arch/x86_64/user_console.h": "d8fef1d9b9a651a6a4ec083f58e83527b08a1ef5970697a45a2c49251ceafb4c",
+    "scripts/elfcheck.c": "d99abd95972757c7e456ffd3ab4d7ef53b98b6faaa9df73ab2596cf7670416e0",
+    "scripts/test-app-handoff.py": "4f5b8e4b9e44375b133688a5d9bf50e2c3c9ed459a6483eead00d85bb04c01bd",
+    "scripts/test-gui.py": "38669a956b249d3bcd8f593168bdc9618df73c4571a9569abb9adda5a9415526",
+    "scripts/test-pointer.py": "3fd5cfbd4fc83872ebd2ba4d4eefb9d61f3177fbc71a55498c67d52eae3699d0",
+    "tests/host/gui.c": "a50218d37f605fa41eb12c1852586ba8c32f320b14a23db9039371501889ba0b",
+    "tests/host/pointer.c": "aa153c2185f14aaeb9813b3b2213259e18ed99501bc8a57e4bd0a0e66f7d85a2",
+    "tests/rust/pointer.rs": "ab15a557d39c84b04c5714dcfbbe3d659c0c3459825cbb22d2826c24ec8ce4d4",
+    "user/gui-demo/main.rs": "1ffce634e5379da313616c1d4059a853a69c3a5ff4b924f8974ba1cab40bc094",
+    "user/include/vos/gui.h": "4f2adec6c21e06d47b0fed13acb4fe55f99ca8ea45b16a060e28efe0e89318cc",
+    "user/lib/abi_note_v5.S": "73f32c7a43f2207adfb0c31bada80b22512d581a296de90539c0ca16be2099a4",
+    "user/lib/crt0.S": "c12e37d354d12ad898862c7ff30237542b5ae39617b6f2501db15559f999f3f7",
+    "user/lib/syscall.S": "51bbc36e439fab3751954bd59524d1f01da1d9c96291272e399ed8d89b31a967",
+    "user/lib/syscall_v1.S": "856382682d6b0800487e5bb9aef3308c1060e6297626d6a64b6925865a546587",
+    "user/lib/syscall_v2.S": "66f08c0353c6347da369a8a5af54d2ead5444d0a3778b5ac3c8e82949fb34072",
+    "user/lib/syscall_v3.S": "9febe8247a6cadcd9c3f36e9b4e09eabcc28ded4512220498d412aa282125e75",
+    "user/lib/syscall_v4.S": "3ff3609537e0216c5d3b619fad719ccf1527d79234be095c1190c1203fe852ac",
+    "user/lib/syscall_v5.S": "6baad5bdd30737714810abbadb9b20b19438355ad87af1ed91bbc38e48442cc6",
+    "user/lib/user.ld": "dd4fd6c2aafe9a1c2ca49100ef5bbb22458f4175bc690e3dc04de74f573980bb",
+    "user/pointer-demo/main.rs": "6bb889910b4f186cab006b23783b59d0461f9123e5210423982b9e33e9749ee9",
+    "user/pointer-probe/main.rs": "fb91f75ab47afba6f8bbdc4e5176a28f3397c1018ecddb13137b7180c366ba1e",
+    "user/rixie/main.rs": "24d050c21de01e6e4aef8d72edb88676f3fd203a5467a6b3dada006100d0111a",
+    "user/rust/gui.rs": "aff91f42c057644d5d5aea3bd08798de8cf6c70ee6a643f13082345f43942fcb",
+    "user/rust/runtime.c": "5241c00ae9c96eb646ab8e0544a4a05fa9807e9e186c221709142c26d8086afa",
+    "user/rust/vos.rs": "4434372465239c24a806a33debc2f9a74e815bc5afade0ed5b2f2cf72ff8f8c5",
+    "user/user.mk": "3234c42364abffe86ccc90deb05df26318f4c6e74dc25874ca8308b8ef00ada7",
+    "user/vsh/main.rs": "ba248268ae8d5dfc4745435a6e282832db9265bf174f9d1d5feb49705998c03b"
+  },
+  "runtime_results": "build/n6-pointer-1/motion-continuation-1/result.json",
+  "diagnosis": {
+    "passed": true,
+    "scope": "bounded root-cause diagnosis; not N6.3 acceptance",
+    "input_events": [
+      {
+        "events": [
+          {
+            "type": "rel",
+            "data": {
+              "axis": "x",
+              "value": 12
+            }
+          },
+          {
+            "type": "rel",
+            "data": {
+              "axis": "y",
+              "value": -8
+            }
+          }
+        ],
+        "emitted_before": 0,
+        "emitted_after": 1,
+        "guest_read_bytes": 3,
+        "state": {
+          "emitted": [
+            {
+              "device": "0x5b8d1a9ca5b8",
+              "dx": 12,
+              "dy": 8,
+              "dz": 0,
+              "header": 8
+            }
+          ],
+          "read_bytes": [
+            8,
+            12,
+            8
+          ],
+          "decoded": [
+            {
+              "dx": 12,
+              "dy": 8,
+              "buttons": 0,
+              "bytes": [
+                8,
+                12,
+                8
+              ]
+            }
+          ],
+          "dx": 12,
+          "dy": 8,
+          "drained": true
+        }
+      },
+      {
+        "events": [
+          {
+            "type": "btn",
+            "data": {
+              "button": "left",
+              "down": true
+            }
+          }
+        ],
+        "emitted_before": 1,
+        "emitted_after": 2,
+        "guest_read_bytes": 6,
+        "state": {
+          "emitted": [
+            {
+              "device": "0x5b8d1a9ca5b8",
+              "dx": 12,
+              "dy": 8,
+              "dz": 0,
+              "header": 8
+            },
+            {
+              "device": "0x5b8d1a9ca5b8",
+              "dx": 0,
+              "dy": 0,
+              "dz": 0,
+              "header": 9
+            }
+          ],
+          "read_bytes": [
+            8,
+            12,
+            8,
+            9,
+            0,
+            0
+          ],
+          "decoded": [
+            {
+              "dx": 12,
+              "dy": 8,
+              "buttons": 0,
+              "bytes": [
+                8,
+                12,
+                8
+              ]
+            },
+            {
+              "dx": 0,
+              "dy": 0,
+              "buttons": 1,
+              "bytes": [
+                9,
+                0,
+                0
+              ]
+            }
+          ],
+          "dx": 12,
+          "dy": 8,
+          "drained": true
+        }
+      },
+      {
+        "events": [
+          {
+            "type": "btn",
+            "data": {
+              "button": "left",
+              "down": false
+            }
+          }
+        ],
+        "emitted_before": 2,
+        "emitted_after": 3,
+        "guest_read_bytes": 9,
+        "state": {
+          "emitted": [
+            {
+              "device": "0x5b8d1a9ca5b8",
+              "dx": 12,
+              "dy": 8,
+              "dz": 0,
+              "header": 8
+            },
+            {
+              "device": "0x5b8d1a9ca5b8",
+              "dx": 0,
+              "dy": 0,
+              "dz": 0,
+              "header": 9
+            },
+            {
+              "device": "0x5b8d1a9ca5b8",
+              "dx": 0,
+              "dy": 0,
+              "dz": 0,
+              "header": 8
+            }
+          ],
+          "read_bytes": [
+            8,
+            12,
+            8,
+            9,
+            0,
+            0,
+            8,
+            0,
+            0
+          ],
+          "decoded": [
+            {
+              "dx": 12,
+              "dy": 8,
+              "buttons": 0,
+              "bytes": [
+                8,
+                12,
+                8
+              ]
+            },
+            {
+              "dx": 0,
+              "dy": 0,
+              "buttons": 1,
+              "bytes": [
+                9,
+                0,
+                0
+              ]
+            },
+            {
+              "dx": 0,
+              "dy": 0,
+              "buttons": 0,
+              "bytes": [
+                8,
+                0,
+                0
+              ]
+            }
+          ],
+          "dx": 12,
+          "dy": 8,
+          "drained": true
+        }
+      },
+      {
+        "events": [
+          {
+            "type": "rel",
+            "data": {
+              "axis": "x",
+              "value": -3000
+            }
+          },
+          {
+            "type": "rel",
+            "data": {
+              "axis": "y",
+              "value": -3000
+            }
+          }
+        ],
+        "emitted_before": 3,
+        "emitted_after": 8,
+        "guest_read_bytes": 24,
+        "state": {
+          "emitted": [
+            {
+              "device": "0x5b8d1a9ca5b8",
+              "dx": 12,
+              "dy": 8,
+              "dz": 0,
+              "header": 8
+            },
+            {
+              "device": "0x5b8d1a9ca5b8",
+              "dx": 0,
+              "dy": 0,
+              "dz": 0,
+              "header": 9
+            },
+            {
+              "device": "0x5b8d1a9ca5b8",
+              "dx": 0,
+              "dy": 0,
+              "dz": 0,
+              "header": 8
+            },
+            {
+              "device": "0x5b8d1a9ca5b8",
+              "dx": -127,
+              "dy": 127,
+              "dz": 0,
+              "header": 24
+            },
+            {
+              "device": "0x5b8d1a9ca5b8",
+              "dx": -127,
+              "dy": 127,
+              "dz": 0,
+              "header": 24
+            },
+            {
+              "device": "0x5b8d1a9ca5b8",
+              "dx": -127,
+              "dy": 127,
+              "dz": 0,
+              "header": 24
+            },
+            {
+              "device": "0x5b8d1a9ca5b8",
+              "dx": -127,
+              "dy": 127,
+              "dz": 0,
+              "header": 24
+            },
+            {
+              "device": "0x5b8d1a9ca5b8",
+              "dx": -127,
+              "dy": 127,
+              "dz": 0,
+              "header": 24
+            }
+          ],
+          "read_bytes": [
+            8,
+            12,
+            8,
+            9,
+            0,
+            0,
+            8,
+            0,
+            0,
+            24,
+            129,
+            127,
+            24,
+            129,
+            127,
+            24,
+            129,
+            127,
+            24,
+            129,
+            127,
+            24,
+            129,
+            127
+          ],
+          "decoded": [
+            {
+              "dx": 12,
+              "dy": 8,
+              "buttons": 0,
+              "bytes": [
+                8,
+                12,
+                8
+              ]
+            },
+            {
+              "dx": 0,
+              "dy": 0,
+              "buttons": 1,
+              "bytes": [
+                9,
+                0,
+                0
+              ]
+            },
+            {
+              "dx": 0,
+              "dy": 0,
+              "buttons": 0,
+              "bytes": [
+                8,
+                0,
+                0
+              ]
+            },
+            {
+              "dx": -127,
+              "dy": 127,
+              "buttons": 0,
+              "bytes": [
+                24,
+                129,
+                127
+              ]
+            },
+            {
+              "dx": -127,
+              "dy": 127,
+              "buttons": 0,
+              "bytes": [
+                24,
+                129,
+                127
+              ]
+            },
+            {
+              "dx": -127,
+              "dy": 127,
+              "buttons": 0,
+              "bytes": [
+                24,
+                129,
+                127
+              ]
+            },
+            {
+              "dx": -127,
+              "dy": 127,
+              "buttons": 0,
+              "bytes": [
+                24,
+                129,
+                127
+              ]
+            },
+            {
+              "dx": -127,
+              "dy": 127,
+              "buttons": 0,
+              "bytes": [
+                24,
+                129,
+                127
+              ]
+            }
+          ],
+          "dx": -623,
+          "dy": 643,
+          "drained": true
+        }
+      },
+      {
+        "events": [
+          {
+            "type": "rel",
+            "data": {
+              "axis": "x",
+              "value": 3000
+            }
+          }
+        ],
+        "emitted_before": 8,
+        "emitted_after": 13,
+        "guest_read_bytes": 39,
+        "state": {
+          "emitted": [
+            {
+              "device": "0x5b8d1a9ca5b8",
+              "dx": 12,
+              "dy": 8,
+              "dz": 0,
+              "header": 8
+            },
+            {
+              "device": "0x5b8d1a9ca5b8",
+              "dx": 0,
+              "dy": 0,
+              "dz": 0,
+              "header": 9
+            },
+            {
+              "device": "0x5b8d1a9ca5b8",
+              "dx": 0,
+              "dy": 0,
+              "dz": 0,
+              "header": 8
+            },
+            {
+              "device": "0x5b8d1a9ca5b8",
+              "dx": -127,
+              "dy": 127,
+              "dz": 0,
+              "header": 24
+            },
+            {
+              "device": "0x5b8d1a9ca5b8",
+              "dx": -127,
+              "dy": 127,
+              "dz": 0,
+              "header": 24
+            },
+            {
+              "device": "0x5b8d1a9ca5b8",
+              "dx": -127,
+              "dy": 127,
+              "dz": 0,
+              "header": 24
+            },
+            {
+              "device": "0x5b8d1a9ca5b8",
+              "dx": -127,
+              "dy": 127,
+              "dz": 0,
+              "header": 24
+            },
+            {
+              "device": "0x5b8d1a9ca5b8",
+              "dx": -127,
+              "dy": 127,
+              "dz": 0,
+              "header": 24
+            },
+            {
+              "device": "0x5b8d1a9ca5b8",
+              "dx": 127,
+              "dy": 127,
+              "dz": 0,
+              "header": 8
+            },
+            {
+              "device": "0x5b8d1a9ca5b8",
+              "dx": 127,
+              "dy": 127,
+              "dz": 0,
+              "header": 8
+            },
+            {
+              "device": "0x5b8d1a9ca5b8",
+              "dx": 127,
+              "dy": 127,
+              "dz": 0,
+              "header": 8
+            },
+            {
+              "device": "0x5b8d1a9ca5b8",
+              "dx": 127,
+              "dy": 127,
+              "dz": 0,
+              "header": 8
+            },
+            {
+              "device": "0x5b8d1a9ca5b8",
+              "dx": 127,
+              "dy": 127,
+              "dz": 0,
+              "header": 8
+            }
+          ],
+          "read_bytes": [
+            8,
+            12,
+            8,
+            9,
+            0,
+            0,
+            8,
+            0,
+            0,
+            24,
+            129,
+            127,
+            24,
+            129,
+            127,
+            24,
+            129,
+            127,
+            24,
+            129,
+            127,
+            24,
+            129,
+            127,
+            8,
+            127,
+            127,
+            8,
+            127,
+            127,
+            8,
+            127,
+            127,
+            8,
+            127,
+            127,
+            8,
+            127,
+            127
+          ],
+          "decoded": [
+            {
+              "dx": 12,
+              "dy": 8,
+              "buttons": 0,
+              "bytes": [
+                8,
+                12,
+                8
+              ]
+            },
+            {
+              "dx": 0,
+              "dy": 0,
+              "buttons": 1,
+              "bytes": [
+                9,
+                0,
+                0
+              ]
+            },
+            {
+              "dx": 0,
+              "dy": 0,
+              "buttons": 0,
+              "bytes": [
+                8,
+                0,
+                0
+              ]
+            },
+            {
+              "dx": -127,
+              "dy": 127,
+              "buttons": 0,
+              "bytes": [
+                24,
+                129,
+                127
+              ]
+            },
+            {
+              "dx": -127,
+              "dy": 127,
+              "buttons": 0,
+              "bytes": [
+                24,
+                129,
+                127
+              ]
+            },
+            {
+              "dx": -127,
+              "dy": 127,
+              "buttons": 0,
+              "bytes": [
+                24,
+                129,
+                127
+              ]
+            },
+            {
+              "dx": -127,
+              "dy": 127,
+              "buttons": 0,
+              "bytes": [
+                24,
+                129,
+                127
+              ]
+            },
+            {
+              "dx": -127,
+              "dy": 127,
+              "buttons": 0,
+              "bytes": [
+                24,
+                129,
+                127
+              ]
+            },
+            {
+              "dx": 127,
+              "dy": 127,
+              "buttons": 0,
+              "bytes": [
+                8,
+                127,
+                127
+              ]
+            },
+            {
+              "dx": 127,
+              "dy": 127,
+              "buttons": 0,
+              "bytes": [
+                8,
+                127,
+                127
+              ]
+            },
+            {
+              "dx": 127,
+              "dy": 127,
+              "buttons": 0,
+              "bytes": [
+                8,
+                127,
+                127
+              ]
+            },
+            {
+              "dx": 127,
+              "dy": 127,
+              "buttons": 0,
+              "bytes": [
+                8,
+                127,
+                127
+              ]
+            },
+            {
+              "dx": 127,
+              "dy": 127,
+              "buttons": 0,
+              "bytes": [
+                8,
+                127,
+                127
+              ]
+            }
+          ],
+          "dx": 12,
+          "dy": 1278,
+          "drained": true
+        }
+      }
+    ],
+    "source_reference": "https://github.com/qemu/qemu/blob/v10.2.1/hw/input/ps2.c",
+    "queue_bytes": 16,
+    "standard_packet_bytes": 3,
+    "max_axis_per_packet": 127,
+    "first_vector": {
+      "injected": [
+        -3000,
+        -3000
+      ],
+      "packets_emitted": 5,
+      "guest_packets_read": 5,
+      "decoded_mouse_delta": [
+        -635,
+        635
+      ],
+      "unemitted_mouse_accumulator": [
+        -2365,
+        2365
+      ]
+    },
+    "second_vector": {
+      "injected": [
+        3000,
+        0
+      ],
+      "packets_emitted": 5,
+      "guest_packets_read": 5,
+      "decoded_mouse_delta": [
+        635,
+        635
+      ],
+      "unemitted_mouse_accumulator": [
+        0,
+        1730
+      ]
+    },
+    "zero_sync": {
+      "injected": [
+        0,
+        0
+      ],
+      "packets_emitted": 5,
+      "decoded_mouse_delta": [
+        0,
+        635
+      ]
+    },
+    "actual_cursor": [
+      635,
+      0
+    ],
+    "expected_original_corner": [
+      1023,
+      0
+    ],
+    "original_acceptance_remains_failed": true,
+    "root_cause": "Input generation/synchronization: oversized QMP vectors fill the PS/2 queue; reading drains generated bytes but does not trigger another mouse sync. The following opposite vector cancels un-emitted X displacement before it is packetized.",
+    "no_generated_packet_lost": true,
+    "no_decode_mismatch": true,
+    "guest_bytes_received": 54,
+    "trace": {
+      "emitted": [
+        {
+          "device": "0x5b8d1a9ca5b8",
+          "dx": 12,
+          "dy": 8,
+          "dz": 0,
+          "header": 8
+        },
+        {
+          "device": "0x5b8d1a9ca5b8",
+          "dx": 0,
+          "dy": 0,
+          "dz": 0,
+          "header": 9
+        },
+        {
+          "device": "0x5b8d1a9ca5b8",
+          "dx": 0,
+          "dy": 0,
+          "dz": 0,
+          "header": 8
+        },
+        {
+          "device": "0x5b8d1a9ca5b8",
+          "dx": -127,
+          "dy": 127,
+          "dz": 0,
+          "header": 24
+        },
+        {
+          "device": "0x5b8d1a9ca5b8",
+          "dx": -127,
+          "dy": 127,
+          "dz": 0,
+          "header": 24
+        },
+        {
+          "device": "0x5b8d1a9ca5b8",
+          "dx": -127,
+          "dy": 127,
+          "dz": 0,
+          "header": 24
+        },
+        {
+          "device": "0x5b8d1a9ca5b8",
+          "dx": -127,
+          "dy": 127,
+          "dz": 0,
+          "header": 24
+        },
+        {
+          "device": "0x5b8d1a9ca5b8",
+          "dx": -127,
+          "dy": 127,
+          "dz": 0,
+          "header": 24
+        },
+        {
+          "device": "0x5b8d1a9ca5b8",
+          "dx": 127,
+          "dy": 127,
+          "dz": 0,
+          "header": 8
+        },
+        {
+          "device": "0x5b8d1a9ca5b8",
+          "dx": 127,
+          "dy": 127,
+          "dz": 0,
+          "header": 8
+        },
+        {
+          "device": "0x5b8d1a9ca5b8",
+          "dx": 127,
+          "dy": 127,
+          "dz": 0,
+          "header": 8
+        },
+        {
+          "device": "0x5b8d1a9ca5b8",
+          "dx": 127,
+          "dy": 127,
+          "dz": 0,
+          "header": 8
+        },
+        {
+          "device": "0x5b8d1a9ca5b8",
+          "dx": 127,
+          "dy": 127,
+          "dz": 0,
+          "header": 8
+        },
+        {
+          "device": "0x5b8d1a9ca5b8",
+          "dx": 0,
+          "dy": 127,
+          "dz": 0,
+          "header": 8
+        },
+        {
+          "device": "0x5b8d1a9ca5b8",
+          "dx": 0,
+          "dy": 127,
+          "dz": 0,
+          "header": 8
+        },
+        {
+          "device": "0x5b8d1a9ca5b8",
+          "dx": 0,
+          "dy": 127,
+          "dz": 0,
+          "header": 8
+        },
+        {
+          "device": "0x5b8d1a9ca5b8",
+          "dx": 0,
+          "dy": 127,
+          "dz": 0,
+          "header": 8
+        },
+        {
+          "device": "0x5b8d1a9ca5b8",
+          "dx": 0,
+          "dy": 127,
+          "dz": 0,
+          "header": 8
+        }
+      ],
+      "read_bytes": [
+        8,
+        12,
+        8,
+        9,
+        0,
+        0,
+        8,
+        0,
+        0,
+        24,
+        129,
+        127,
+        24,
+        129,
+        127,
+        24,
+        129,
+        127,
+        24,
+        129,
+        127,
+        24,
+        129,
+        127,
+        8,
+        127,
+        127,
+        8,
+        127,
+        127,
+        8,
+        127,
+        127,
+        8,
+        127,
+        127,
+        8,
+        127,
+        127,
+        8,
+        0,
+        127,
+        8,
+        0,
+        127,
+        8,
+        0,
+        127,
+        8,
+        0,
+        127,
+        8,
+        0,
+        127
+      ],
+      "decoded": [
+        {
+          "dx": 12,
+          "dy": 8,
+          "buttons": 0,
+          "bytes": [
+            8,
+            12,
+            8
+          ]
+        },
+        {
+          "dx": 0,
+          "dy": 0,
+          "buttons": 1,
+          "bytes": [
+            9,
+            0,
+            0
+          ]
+        },
+        {
+          "dx": 0,
+          "dy": 0,
+          "buttons": 0,
+          "bytes": [
+            8,
+            0,
+            0
+          ]
+        },
+        {
+          "dx": -127,
+          "dy": 127,
+          "buttons": 0,
+          "bytes": [
+            24,
+            129,
+            127
+          ]
+        },
+        {
+          "dx": -127,
+          "dy": 127,
+          "buttons": 0,
+          "bytes": [
+            24,
+            129,
+            127
+          ]
+        },
+        {
+          "dx": -127,
+          "dy": 127,
+          "buttons": 0,
+          "bytes": [
+            24,
+            129,
+            127
+          ]
+        },
+        {
+          "dx": -127,
+          "dy": 127,
+          "buttons": 0,
+          "bytes": [
+            24,
+            129,
+            127
+          ]
+        },
+        {
+          "dx": -127,
+          "dy": 127,
+          "buttons": 0,
+          "bytes": [
+            24,
+            129,
+            127
+          ]
+        },
+        {
+          "dx": 127,
+          "dy": 127,
+          "buttons": 0,
+          "bytes": [
+            8,
+            127,
+            127
+          ]
+        },
+        {
+          "dx": 127,
+          "dy": 127,
+          "buttons": 0,
+          "bytes": [
+            8,
+            127,
+            127
+          ]
+        },
+        {
+          "dx": 127,
+          "dy": 127,
+          "buttons": 0,
+          "bytes": [
+            8,
+            127,
+            127
+          ]
+        },
+        {
+          "dx": 127,
+          "dy": 127,
+          "buttons": 0,
+          "bytes": [
+            8,
+            127,
+            127
+          ]
+        },
+        {
+          "dx": 127,
+          "dy": 127,
+          "buttons": 0,
+          "bytes": [
+            8,
+            127,
+            127
+          ]
+        },
+        {
+          "dx": 0,
+          "dy": 127,
+          "buttons": 0,
+          "bytes": [
+            8,
+            0,
+            127
+          ]
+        },
+        {
+          "dx": 0,
+          "dy": 127,
+          "buttons": 0,
+          "bytes": [
+            8,
+            0,
+            127
+          ]
+        },
+        {
+          "dx": 0,
+          "dy": 127,
+          "buttons": 0,
+          "bytes": [
+            8,
+            0,
+            127
+          ]
+        },
+        {
+          "dx": 0,
+          "dy": 127,
+          "buttons": 0,
+          "bytes": [
+            8,
+            0,
+            127
+          ]
+        },
+        {
+          "dx": 0,
+          "dy": 127,
+          "buttons": 0,
+          "bytes": [
+            8,
+            0,
+            127
+          ]
+        }
+      ],
+      "dx": 12,
+      "dy": 1913,
+      "drained": true
+    },
+    "screenshots": [
+      {
+        "path": "/home/veasnawt/src/myos/build/n6-pointer-1/motion-diagnostic-1/diagnostic-original-top-left.png",
+        "width": 1024,
+        "height": 768,
+        "sha256": "21e68e663970894213cb3a8df96206a37f36b55330c2e30f70ff1f6b5145d0f3",
+        "direct_QMP_PNG": true
+      },
+      {
+        "path": "/home/veasnawt/src/myos/build/n6-pointer-1/motion-diagnostic-1/diagnostic-original-top-right.png",
+        "width": 1024,
+        "height": 768,
+        "sha256": "97cc7ba72be7c13d4d93258cadab68f0f38c5b9d196719f021b8bd0fe85c2413",
+        "direct_QMP_PNG": true
+      }
+    ],
+    "no_kernel_or_application_changes": true,
+    "correction_required": "Bounded zero-relative synchronization, only after all previously emitted packets are guest-read, until emitted axis sums equal the complete injected vector; keep exact corner/pixel assertions."
+  },
+  "firmware": {
+    "normal-bios": {
+      "elapsed": 18.11988622800004,
+      "shell": true,
+      "pixel_oracles": {
+        "first-cursor": {
+          "passed": true,
+          "cursor": [
+            512,
+            390
+          ],
+          "panel_rgb": "0x409ddd",
+          "width": 1024,
+          "height": 768
+        },
+        "movement": {
+          "passed": true,
+          "cursor": [
+            524,
+            382
+          ],
+          "panel_rgb": "0x409ddd",
+          "width": 1024,
+          "height": 768
+        },
+        "press": {
+          "passed": true,
+          "cursor": [
+            524,
+            382
+          ],
+          "panel_rgb": "0xe8b34e",
+          "width": 1024,
+          "height": 768
+        },
+        "click": {
+          "passed": true,
+          "cursor": [
+            524,
+            382
+          ],
+          "panel_rgb": "0x42c497",
+          "width": 1024,
+          "height": 768
+        }
+      },
+      "screenshots": {
+        "first-cursor": {
+          "path": "/home/veasnawt/src/myos/build/n6-pointer-1/motion-continuation-1/interactive-bios/preview-first-cursor.png",
+          "width": 1024,
+          "height": 768,
+          "sha256": "d6d51dfd83e684c548fefbe700499db99e8bf70fb5ecf1ca1b9a907b4f46528f",
+          "direct_QMP_PNG": true
+        },
+        "movement": {
+          "path": "/home/veasnawt/src/myos/build/n6-pointer-1/motion-continuation-1/interactive-bios/preview-movement.png",
+          "width": 1024,
+          "height": 768,
+          "sha256": "3e6147676f54492da9c6f6d0cc13e1483e416e0be32e5ab8cf51a285675a1df8",
+          "direct_QMP_PNG": true
+        },
+        "press": {
+          "path": "/home/veasnawt/src/myos/build/n6-pointer-1/motion-continuation-1/interactive-bios/preview-left-press.png",
+          "width": 1024,
+          "height": 768,
+          "sha256": "a07add5d09b3662c9bb95ff66f339104af051f73b87819482fb7ff5203de7465",
+          "direct_QMP_PNG": true
+        },
+        "click": {
+          "path": "/home/veasnawt/src/myos/build/n6-pointer-1/motion-continuation-1/interactive-bios/preview-click-response.png",
+          "width": 1024,
+          "height": 768,
+          "sha256": "3d4860a9d63c31ba60409cde341938ffd5501e06eb8b5fc33f72dc25b75ae5cc",
+          "direct_QMP_PNG": true
+        },
+        "top-left": {
+          "path": "/home/veasnawt/src/myos/build/n6-pointer-1/motion-continuation-1/interactive-bios/edge-top-left.png",
+          "width": 1024,
+          "height": 768,
+          "sha256": "21e68e663970894213cb3a8df96206a37f36b55330c2e30f70ff1f6b5145d0f3",
+          "direct_QMP_PNG": true
+        },
+        "top-right": {
+          "path": "/home/veasnawt/src/myos/build/n6-pointer-1/motion-continuation-1/interactive-bios/edge-top-right.png",
+          "width": 1024,
+          "height": 768,
+          "sha256": "265b1c0c37793e2577fc88ec9e8f80e9d6e67723d9d3a6eda67d26b27673feb2",
+          "direct_QMP_PNG": true
+        },
+        "bottom-right": {
+          "path": "/home/veasnawt/src/myos/build/n6-pointer-1/motion-continuation-1/interactive-bios/edge-bottom-right.png",
+          "width": 1024,
+          "height": 768,
+          "sha256": "c678e1d76abfad6e980a5667dd0627b6162e37a805ec1c11e9a83ecc57d49edc",
+          "direct_QMP_PNG": true
+        },
+        "bottom-left": {
+          "path": "/home/veasnawt/src/myos/build/n6-pointer-1/motion-continuation-1/interactive-bios/edge-bottom-left.png",
+          "width": 1024,
+          "height": 768,
+          "sha256": "5845f32844733336ab5d29eaded357d670cefdd3dacd7462b9ebfd73849816d7",
+          "direct_QMP_PNG": true
+        },
+        "final": {
+          "path": "/home/veasnawt/src/myos/build/n6-pointer-1/motion-continuation-1/interactive-bios/final-pointer.png",
+          "width": 1024,
+          "height": 768,
+          "sha256": "f559584c3fceacbd0095e8fadb39055561628c0fd4f89ca866b8226f99d52d9a",
+          "direct_QMP_PNG": true
+        }
+      },
+      "passed": true,
+      "bootstrap": 0,
+      "normal": true,
+      "cleanup": true,
+      "cases": 0
+    },
+    "verify-uefi": {
+      "elapsed": 34.507169242999964,
+      "shell": true,
+      "pixel_oracles": {
+        "first-cursor": {
+          "passed": true,
+          "cursor": [
+            512,
+            390
+          ],
+          "panel_rgb": "0x409ddd",
+          "width": 1024,
+          "height": 768
+        },
+        "movement": {
+          "passed": true,
+          "cursor": [
+            524,
+            382
+          ],
+          "panel_rgb": "0x409ddd",
+          "width": 1024,
+          "height": 768
+        },
+        "press": {
+          "passed": true,
+          "cursor": [
+            524,
+            382
+          ],
+          "panel_rgb": "0xe8b34e",
+          "width": 1024,
+          "height": 768
+        },
+        "click": {
+          "passed": true,
+          "cursor": [
+            524,
+            382
+          ],
+          "panel_rgb": "0x42c497",
+          "width": 1024,
+          "height": 768
+        }
+      },
+      "screenshots": {
+        "first-cursor": {
+          "path": "/home/veasnawt/src/myos/build/n6-pointer-1/motion-continuation-1/uefi/preview-first-cursor.png",
+          "width": 1024,
+          "height": 768,
+          "sha256": "8e827704cc9a5befcde64920f70ce886ea1934c0fb12d6a5eb593c370472ee34",
+          "direct_QMP_PNG": true
+        },
+        "movement": {
+          "path": "/home/veasnawt/src/myos/build/n6-pointer-1/motion-continuation-1/uefi/preview-movement.png",
+          "width": 1024,
+          "height": 768,
+          "sha256": "6b7a81784f9d11039e2603823777aeb18e06b3e0677be85ade0b60371ae2df92",
+          "direct_QMP_PNG": true
+        },
+        "press": {
+          "path": "/home/veasnawt/src/myos/build/n6-pointer-1/motion-continuation-1/uefi/preview-left-press.png",
+          "width": 1024,
+          "height": 768,
+          "sha256": "b8b2349d298f25c5571b4f2fa980b9338131856b875187090434514807afefb7",
+          "direct_QMP_PNG": true
+        },
+        "click": {
+          "path": "/home/veasnawt/src/myos/build/n6-pointer-1/motion-continuation-1/uefi/preview-click-response.png",
+          "width": 1024,
+          "height": 768,
+          "sha256": "5e69e5792cf2532aaee48952d9f0359601cc23eeb85d10b9d708542466af6274",
+          "direct_QMP_PNG": true
+        },
+        "top-left": {
+          "path": "/home/veasnawt/src/myos/build/n6-pointer-1/motion-continuation-1/uefi/edge-top-left.png",
+          "width": 1024,
+          "height": 768,
+          "sha256": "8c265b9ea5e9ffb12d9be15142d3e5872a1afa52cf2bf7b4237ce1b45af06ecc",
+          "direct_QMP_PNG": true
+        },
+        "top-right": {
+          "path": "/home/veasnawt/src/myos/build/n6-pointer-1/motion-continuation-1/uefi/edge-top-right.png",
+          "width": 1024,
+          "height": 768,
+          "sha256": "b1c6d77780e685af41a2b337e6ca3626b5b3acd3b264e6a0840890aba7b20a4c",
+          "direct_QMP_PNG": true
+        },
+        "bottom-right": {
+          "path": "/home/veasnawt/src/myos/build/n6-pointer-1/motion-continuation-1/uefi/edge-bottom-right.png",
+          "width": 1024,
+          "height": 768,
+          "sha256": "75d708b8f3afb5cb386ea6d7b75a43a4adbd1744964e54f606b0c24c9a03d431",
+          "direct_QMP_PNG": true
+        },
+        "bottom-left": {
+          "path": "/home/veasnawt/src/myos/build/n6-pointer-1/motion-continuation-1/uefi/edge-bottom-left.png",
+          "width": 1024,
+          "height": 768,
+          "sha256": "d85b3a11489333ba4c3ad306ef52c5f179cb73f19b10e8a914e2652c9501c955",
+          "direct_QMP_PNG": true
+        },
+        "final": {
+          "path": "/home/veasnawt/src/myos/build/n6-pointer-1/motion-continuation-1/uefi/final-pointer.png",
+          "width": 1024,
+          "height": 768,
+          "sha256": "33135d594600712250f519b6d599fa7b3746a5d2b136438c7e13cabad52c6383",
+          "direct_QMP_PNG": true
+        }
+      },
+      "passed": true,
+      "bootstrap": 18,
+      "normal": false,
+      "cleanup": true,
+      "cases": 16
+    },
+    "normal-uefi": {
+      "elapsed": 15.616394027000013,
+      "shell": true,
+      "pixel_oracles": {
+        "first-cursor": {
+          "passed": true,
+          "cursor": [
+            512,
+            390
+          ],
+          "panel_rgb": "0x409ddd",
+          "width": 1024,
+          "height": 768
+        },
+        "movement": {
+          "passed": true,
+          "cursor": [
+            524,
+            382
+          ],
+          "panel_rgb": "0x409ddd",
+          "width": 1024,
+          "height": 768
+        },
+        "press": {
+          "passed": true,
+          "cursor": [
+            524,
+            382
+          ],
+          "panel_rgb": "0xe8b34e",
+          "width": 1024,
+          "height": 768
+        },
+        "click": {
+          "passed": true,
+          "cursor": [
+            524,
+            382
+          ],
+          "panel_rgb": "0x42c497",
+          "width": 1024,
+          "height": 768
+        }
+      },
+      "screenshots": {
+        "first-cursor": {
+          "path": "/home/veasnawt/src/myos/build/n6-pointer-1/motion-continuation-1/interactive-uefi/preview-first-cursor.png",
+          "width": 1024,
+          "height": 768,
+          "sha256": "d6d51dfd83e684c548fefbe700499db99e8bf70fb5ecf1ca1b9a907b4f46528f",
+          "direct_QMP_PNG": true
+        },
+        "movement": {
+          "path": "/home/veasnawt/src/myos/build/n6-pointer-1/motion-continuation-1/interactive-uefi/preview-movement.png",
+          "width": 1024,
+          "height": 768,
+          "sha256": "3e6147676f54492da9c6f6d0cc13e1483e416e0be32e5ab8cf51a285675a1df8",
+          "direct_QMP_PNG": true
+        },
+        "press": {
+          "path": "/home/veasnawt/src/myos/build/n6-pointer-1/motion-continuation-1/interactive-uefi/preview-left-press.png",
+          "width": 1024,
+          "height": 768,
+          "sha256": "a07add5d09b3662c9bb95ff66f339104af051f73b87819482fb7ff5203de7465",
+          "direct_QMP_PNG": true
+        },
+        "click": {
+          "path": "/home/veasnawt/src/myos/build/n6-pointer-1/motion-continuation-1/interactive-uefi/preview-click-response.png",
+          "width": 1024,
+          "height": 768,
+          "sha256": "3d4860a9d63c31ba60409cde341938ffd5501e06eb8b5fc33f72dc25b75ae5cc",
+          "direct_QMP_PNG": true
+        },
+        "final": {
+          "path": "/home/veasnawt/src/myos/build/n6-pointer-1/motion-continuation-1/interactive-uefi/final-pointer.png",
+          "width": 1024,
+          "height": 768,
+          "sha256": "a07add5d09b3662c9bb95ff66f339104af051f73b87819482fb7ff5203de7465",
+          "direct_QMP_PNG": true
+        }
+      },
+      "passed": true,
+      "bootstrap": 0,
+      "normal": true,
+      "cleanup": true,
+      "cases": 0
+    }
+  },
+  "images": {
+    "normal-bios": {
+      "sha256": "80df1dd1aa95100083e3fe2e364ba724339200b9a1ceb6a2db7c9c237323ef48",
+      "passed": true
+    },
+    "verify-uefi": {
+      "sha256": "f392c5fbad2798d2fbc4fa12fc4857ace3c86ce278a4dfb3ee9852c875405cc8",
+      "passed": true
+    },
+    "normal-uefi": {
+      "sha256": "e623debefb576e39d16ff9208af6bc55b15fa4a5630e101ca1aa3937abc5cb4e",
+      "passed": true
+    }
+  },
+  "inputs_and_traces": {
+    "uefi": {
+      "input": [
+        {
+          "elapsed": 6.808946484999979,
+          "events": [
+            {
+              "type": "rel",
+              "data": {
+                "axis": "x",
+                "value": 1
+              }
+            }
+          ]
+        },
+        {
+          "elapsed": 6.835043485999961,
+          "events": [
+            {
+              "type": "rel",
+              "data": {
+                "axis": "x",
+                "value": -1
+              }
+            }
+          ]
+        },
+        {
+          "elapsed": 6.861451185999954,
+          "events": [
+            {
+              "type": "rel",
+              "data": {
+                "axis": "x",
+                "value": 1
+              }
+            }
+          ]
+        },
+        {
+          "elapsed": 6.887614886999984,
+          "events": [
+            {
+              "type": "rel",
+              "data": {
+                "axis": "x",
+                "value": -1
+              }
+            }
+          ]
+        },
+        {
+          "elapsed": 6.913846286999956,
+          "events": [
+            {
+              "type": "rel",
+              "data": {
+                "axis": "x",
+                "value": 1
+              }
+            }
+          ]
+        },
+        {
+          "elapsed": 6.940088887999991,
+          "events": [
+            {
+              "type": "rel",
+              "data": {
+                "axis": "x",
+                "value": -1
+              }
+            }
+          ]
+        },
+        {
+          "elapsed": 6.966312287999983,
+          "events": [
+            {
+              "type": "rel",
+              "data": {
+                "axis": "x",
+                "value": 1
+              }
+            }
+          ]
+        },
+        {
+          "elapsed": 6.992479788999958,
+          "events": [
+            {
+              "type": "rel",
+              "data": {
+                "axis": "x",
+                "value": -1
+              }
+            }
+          ]
+        },
+        {
+          "elapsed": 7.018569689000003,
+          "events": [
+            {
+              "type": "rel",
+              "data": {
+                "axis": "x",
+                "value": 1
+              }
+            }
+          ]
+        },
+        {
+          "elapsed": 7.044918389999964,
+          "events": [
+            {
+              "type": "rel",
+              "data": {
+                "axis": "x",
+                "value": -1
+              }
+            }
+          ]
+        },
+        {
+          "elapsed": 7.0711495900000045,
+          "events": [
+            {
+              "type": "rel",
+              "data": {
+                "axis": "x",
+                "value": 1
+              }
+            }
+          ]
+        },
+        {
+          "elapsed": 7.097263190999968,
+          "events": [
+            {
+              "type": "rel",
+              "data": {
+                "axis": "x",
+                "value": -1
+              }
+            }
+          ]
+        },
+        {
+          "elapsed": 7.123493791999977,
+          "events": [
+            {
+              "type": "rel",
+              "data": {
+                "axis": "x",
+                "value": 1
+              }
+            }
+          ]
+        },
+        {
+          "elapsed": 7.149781791999999,
+          "events": [
+            {
+              "type": "rel",
+              "data": {
+                "axis": "x",
+                "value": -1
+              }
+            }
+          ]
+        },
+        {
+          "elapsed": 7.175985892999961,
+          "events": [
+            {
+              "type": "rel",
+              "data": {
+                "axis": "x",
+                "value": 1
+              }
+            }
+          ]
+        },
+        {
+          "elapsed": 7.202321592999965,
+          "events": [
+            {
+              "type": "rel",
+              "data": {
+                "axis": "x",
+                "value": -1
+              }
+            }
+          ]
+        },
+        {
+          "elapsed": 7.229125194000005,
+          "events": [
+            {
+              "type": "rel",
+              "data": {
+                "axis": "x",
+                "value": 1
+              }
+            }
+          ]
+        },
+        {
+          "elapsed": 7.255286194000007,
+          "events": [
+            {
+              "type": "rel",
+              "data": {
+                "axis": "x",
+                "value": -1
+              }
+            }
+          ]
+        },
+        {
+          "elapsed": 7.281520494999995,
+          "events": [
+            {
+              "type": "rel",
+              "data": {
+                "axis": "x",
+                "value": 1
+              }
+            }
+          ]
+        },
+        {
+          "elapsed": 7.307517695000001,
+          "events": [
+            {
+              "type": "rel",
+              "data": {
+                "axis": "x",
+                "value": -1
+              }
+            }
+          ]
+        },
+        {
+          "elapsed": 7.333677695999995,
+          "events": [
+            {
+              "type": "rel",
+              "data": {
+                "axis": "x",
+                "value": 1
+              }
+            }
+          ]
+        },
+        {
+          "elapsed": 7.359781397000006,
+          "events": [
+            {
+              "type": "rel",
+              "data": {
+                "axis": "x",
+                "value": -1
+              }
+            }
+          ]
+        },
+        {
+          "elapsed": 7.385963696999966,
+          "events": [
+            {
+              "type": "rel",
+              "data": {
+                "axis": "x",
+                "value": 1
+              }
+            }
+          ]
+        },
+        {
+          "elapsed": 7.412214097999993,
+          "events": [
+            {
+              "type": "rel",
+              "data": {
+                "axis": "x",
+                "value": -1
+              }
+            }
+          ]
+        },
+        {
+          "elapsed": 7.438305098000001,
+          "events": [
+            {
+              "type": "rel",
+              "data": {
+                "axis": "x",
+                "value": 1
+              }
+            }
+          ]
+        },
+        {
+          "elapsed": 7.464803598999993,
+          "events": [
+            {
+              "type": "rel",
+              "data": {
+                "axis": "x",
+                "value": -1
+              }
+            }
+          ]
+        },
+        {
+          "elapsed": 7.490850898999952,
+          "events": [
+            {
+              "type": "rel",
+              "data": {
+                "axis": "x",
+                "value": 1
+              }
+            }
+          ]
+        },
+        {
+          "elapsed": 7.516925799999967,
+          "events": [
+            {
+              "type": "rel",
+              "data": {
+                "axis": "x",
+                "value": -1
+              }
+            }
+          ]
+        },
+        {
+          "elapsed": 7.5432828999999515,
+          "events": [
+            {
+              "type": "rel",
+              "data": {
+                "axis": "x",
+                "value": 1
+              }
+            }
+          ]
+        },
+        {
+          "elapsed": 7.569418000999974,
+          "events": [
+            {
+              "type": "rel",
+              "data": {
+                "axis": "x",
+                "value": -1
+              }
+            }
+          ]
+        },
+        {
+          "elapsed": 7.5957265010000015,
+          "events": [
+            {
+              "type": "rel",
+              "data": {
+                "axis": "x",
+                "value": 1
+              }
+            }
+          ]
+        },
+        {
+          "elapsed": 7.621795101999965,
+          "events": [
+            {
+              "type": "rel",
+              "data": {
+                "axis": "x",
+                "value": -1
+              }
+            }
+          ]
+        },
+        {
+          "elapsed": 7.648214002999964,
+          "events": [
+            {
+              "type": "rel",
+              "data": {
+                "axis": "x",
+                "value": 1
+              }
+            }
+          ]
+        },
+        {
+          "elapsed": 7.674597102999996,
+          "events": [
+            {
+              "type": "rel",
+              "data": {
+                "axis": "x",
+                "value": -1
+              }
+            }
+          ]
+        },
+        {
+          "elapsed": 7.7007215040000006,
+          "events": [
+            {
+              "type": "rel",
+              "data": {
+                "axis": "x",
+                "value": 1
+              }
+            }
+          ]
+        },
+        {
+          "elapsed": 7.726938703999963,
+          "events": [
+            {
+              "type": "rel",
+              "data": {
+                "axis": "x",
+                "value": -1
+              }
+            }
+          ]
+        },
+        {
+          "elapsed": 7.7530718049999905,
+          "events": [
+            {
+              "type": "rel",
+              "data": {
+                "axis": "x",
+                "value": 1
+              }
+            }
+          ]
+        },
+        {
+          "elapsed": 7.779562604999967,
+          "events": [
+            {
+              "type": "rel",
+              "data": {
+                "axis": "x",
+                "value": -1
+              }
+            }
+          ]
+        },
+        {
+          "elapsed": 7.805683305999992,
+          "events": [
+            {
+              "type": "rel",
+              "data": {
+                "axis": "x",
+                "value": 1
+              }
+            }
+          ]
+        },
+        {
+          "elapsed": 7.831898905999992,
+          "events": [
+            {
+              "type": "rel",
+              "data": {
+                "axis": "x",
+                "value": -1
+              }
+            }
+          ]
+        },
+        {
+          "elapsed": 7.858384107000006,
+          "events": [
+            {
+              "type": "rel",
+              "data": {
+                "axis": "x",
+                "value": 1
+              }
+            }
+          ]
+        },
+        {
+          "elapsed": 7.884442207999996,
+          "events": [
+            {
+              "type": "rel",
+              "data": {
+                "axis": "x",
+                "value": -1
+              }
+            }
+          ]
+        },
+        {
+          "elapsed": 7.910853008000004,
+          "events": [
+            {
+              "type": "rel",
+              "data": {
+                "axis": "x",
+                "value": 1
+              }
+            }
+          ]
+        },
+        {
+          "elapsed": 7.936937008999962,
+          "events": [
+            {
+              "type": "rel",
+              "data": {
+                "axis": "x",
+                "value": -1
+              }
+            }
+          ]
+        },
+        {
+          "elapsed": 7.963226408999958,
+          "events": [
+            {
+              "type": "rel",
+              "data": {
+                "axis": "x",
+                "value": 1
+              }
+            }
+          ]
+        },
+        {
+          "elapsed": 7.989370009999959,
+          "events": [
+            {
+              "type": "rel",
+              "data": {
+                "axis": "x",
+                "value": -1
+              }
+            }
+          ]
+        },
+        {
+          "elapsed": 8.015479509999977,
+          "events": [
+            {
+              "type": "rel",
+              "data": {
+                "axis": "x",
+                "value": 1
+              }
+            }
+          ]
+        },
+        {
+          "elapsed": 8.041539710999984,
+          "events": [
+            {
+              "type": "rel",
+              "data": {
+                "axis": "x",
+                "value": -1
+              }
+            }
+          ]
+        },
+        {
+          "elapsed": 15.809124474999976,
+          "kind": "requested",
+          "events": [
+            {
+              "type": "rel",
+              "data": {
+                "axis": "x",
+                "value": 12
+              }
+            },
+            {
+              "type": "rel",
+              "data": {
+                "axis": "y",
+                "value": -8
+              }
+            }
+          ],
+          "target_emitted_delta": [
+            12,
+            8
+          ]
+        },
+        {
+          "elapsed": 15.816059374999952,
+          "kind": "guest-read-complete",
+          "emitted_packets": 1,
+          "read_bytes": 3,
+          "emitted_delta": [
+            12,
+            8
+          ],
+          "flushes": 0
+        },
+        {
+          "elapsed": 19.59189420199999,
+          "kind": "requested",
+          "events": [
+            {
+              "type": "btn",
+              "data": {
+                "button": "left",
+                "down": true
+              }
+            }
+          ],
+          "target_emitted_delta": [
+            12,
+            8
+          ]
+        },
+        {
+          "elapsed": 19.59664950199999,
+          "kind": "guest-read-complete",
+          "emitted_packets": 2,
+          "read_bytes": 6,
+          "emitted_delta": [
+            12,
+            8
+          ],
+          "flushes": 0
+        },
+        {
+          "elapsed": 22.08200203399997,
+          "kind": "requested",
+          "events": [
+            {
+              "type": "btn",
+              "data": {
+                "button": "left",
+                "down": false
+              }
+            }
+          ],
+          "target_emitted_delta": [
+            12,
+            8
+          ]
+        },
+        {
+          "elapsed": 22.08681653499997,
+          "kind": "guest-read-complete",
+          "emitted_packets": 3,
+          "read_bytes": 9,
+          "emitted_delta": [
+            12,
+            8
+          ],
+          "flushes": 0
+        },
+        {
+          "elapsed": 24.03059091299997,
+          "kind": "requested",
+          "events": [
+            {
+              "type": "rel",
+              "data": {
+                "axis": "x",
+                "value": -3000
+              }
+            },
+            {
+              "type": "rel",
+              "data": {
+                "axis": "y",
+                "value": -3000
+              }
+            }
+          ],
+          "target_emitted_delta": [
+            -2988,
+            3008
+          ]
+        },
+        {
+          "elapsed": 24.038603412999976,
+          "kind": "zero-relative-sync",
+          "events": [
+            {
+              "type": "rel",
+              "data": {
+                "axis": "x",
+                "value": 0
+              }
+            }
+          ]
+        },
+        {
+          "elapsed": 24.04889391399996,
+          "kind": "zero-relative-sync",
+          "events": [
+            {
+              "type": "rel",
+              "data": {
+                "axis": "x",
+                "value": 0
+              }
+            }
+          ]
+        },
+        {
+          "elapsed": 24.05735941399996,
+          "kind": "zero-relative-sync",
+          "events": [
+            {
+              "type": "rel",
+              "data": {
+                "axis": "x",
+                "value": 0
+              }
+            }
+          ]
+        },
+        {
+          "elapsed": 24.06855931399997,
+          "kind": "zero-relative-sync",
+          "events": [
+            {
+              "type": "rel",
+              "data": {
+                "axis": "x",
+                "value": 0
+              }
+            }
+          ]
+        },
+        {
+          "elapsed": 24.076342314999977,
+          "kind": "guest-read-complete",
+          "emitted_packets": 27,
+          "read_bytes": 81,
+          "emitted_delta": [
+            -2988,
+            3008
+          ],
+          "flushes": 4
+        },
+        {
+          "elapsed": 26.212407200999962,
+          "kind": "requested",
+          "events": [
+            {
+              "type": "rel",
+              "data": {
+                "axis": "x",
+                "value": 3000
+              }
+            }
+          ],
+          "target_emitted_delta": [
+            12,
+            3008
+          ]
+        },
+        {
+          "elapsed": 26.21889730099997,
+          "kind": "zero-relative-sync",
+          "events": [
+            {
+              "type": "rel",
+              "data": {
+                "axis": "x",
+                "value": 0
+              }
+            }
+          ]
+        },
+        {
+          "elapsed": 26.22793600099999,
+          "kind": "zero-relative-sync",
+          "events": [
+            {
+              "type": "rel",
+              "data": {
+                "axis": "x",
+                "value": 0
+              }
+            }
+          ]
+        },
+        {
+          "elapsed": 26.237641201999963,
+          "kind": "zero-relative-sync",
+          "events": [
+            {
+              "type": "rel",
+              "data": {
+                "axis": "x",
+                "value": 0
+              }
+            }
+          ]
+        },
+        {
+          "elapsed": 26.24721150199997,
+          "kind": "zero-relative-sync",
+          "events": [
+            {
+              "type": "rel",
+              "data": {
+                "axis": "x",
+                "value": 0
+              }
+            }
+          ]
+        },
+        {
+          "elapsed": 26.256751802999986,
+          "kind": "guest-read-complete",
+          "emitted_packets": 51,
+          "read_bytes": 153,
+          "emitted_delta": [
+            12,
+            3008
+          ],
+          "flushes": 4
+        },
+        {
+          "elapsed": 28.131327177999992,
+          "kind": "requested",
+          "events": [
+            {
+              "type": "rel",
+              "data": {
+                "axis": "y",
+                "value": 3000
+              }
+            }
+          ],
+          "target_emitted_delta": [
+            12,
+            8
+          ]
+        },
+        {
+          "elapsed": 28.139081877999956,
+          "kind": "zero-relative-sync",
+          "events": [
+            {
+              "type": "rel",
+              "data": {
+                "axis": "x",
+                "value": 0
+              }
+            }
+          ]
+        },
+        {
+          "elapsed": 28.149326478999967,
+          "kind": "zero-relative-sync",
+          "events": [
+            {
+              "type": "rel",
+              "data": {
+                "axis": "x",
+                "value": 0
+              }
+            }
+          ]
+        },
+        {
+          "elapsed": 28.160627078999994,
+          "kind": "zero-relative-sync",
+          "events": [
+            {
+              "type": "rel",
+              "data": {
+                "axis": "x",
+                "value": 0
+              }
+            }
+          ]
+        },
+        {
+          "elapsed": 28.169200880000005,
+          "kind": "zero-relative-sync",
+          "events": [
+            {
+              "type": "rel",
+              "data": {
+                "axis": "x",
+                "value": 0
+              }
+            }
+          ]
+        },
+        {
+          "elapsed": 28.180119979999972,
+          "kind": "guest-read-complete",
+          "emitted_packets": 75,
+          "read_bytes": 225,
+          "emitted_delta": [
+            12,
+            8
+          ],
+          "flushes": 4
+        },
+        {
+          "elapsed": 30.046451325999953,
+          "kind": "requested",
+          "events": [
+            {
+              "type": "rel",
+              "data": {
+                "axis": "x",
+                "value": -3000
+              }
+            }
+          ],
+          "target_emitted_delta": [
+            -2988,
+            8
+          ]
+        },
+        {
+          "elapsed": 30.073215226000002,
+          "kind": "zero-relative-sync",
+          "events": [
+            {
+              "type": "rel",
+              "data": {
+                "axis": "x",
+                "value": 0
+              }
+            }
+          ]
+        },
+        {
+          "elapsed": 30.078275625999993,
+          "kind": "zero-relative-sync",
+          "events": [
+            {
+              "type": "rel",
+              "data": {
+                "axis": "x",
+                "value": 0
+              }
+            }
+          ]
+        },
+        {
+          "elapsed": 30.089929826000002,
+          "kind": "zero-relative-sync",
+          "events": [
+            {
+              "type": "rel",
+              "data": {
+                "axis": "x",
+                "value": 0
+              }
+            }
+          ]
+        },
+        {
+          "elapsed": 30.098522226,
+          "kind": "zero-relative-sync",
+          "events": [
+            {
+              "type": "rel",
+              "data": {
+                "axis": "x",
+                "value": 0
+              }
+            }
+          ]
+        },
+        {
+          "elapsed": 30.109724425999957,
+          "kind": "guest-read-complete",
+          "emitted_packets": 99,
+          "read_bytes": 297,
+          "emitted_delta": [
+            -2988,
+            8
+          ],
+          "flushes": 4
+        },
+        {
+          "elapsed": 31.979632632999994,
+          "kind": "requested",
+          "events": [
+            {
+              "type": "rel",
+              "data": {
+                "axis": "x",
+                "value": 512
+              }
+            },
+            {
+              "type": "rel",
+              "data": {
+                "axis": "y",
+                "value": -377
+              }
+            }
+          ],
+          "target_emitted_delta": [
+            -2476,
+            385
+          ]
+        },
+        {
+          "elapsed": 31.98788773299998,
+          "kind": "guest-read-complete",
+          "emitted_packets": 104,
+          "read_bytes": 312,
+          "emitted_delta": [
+            -2476,
+            385
+          ],
+          "flushes": 0
+        },
+        {
+          "elapsed": 31.990390633000004,
+          "kind": "requested",
+          "events": [
+            {
+              "type": "rel",
+              "data": {
+                "axis": "x",
+                "value": 1
+              }
+            }
+          ],
+          "target_emitted_delta": [
+            -2475,
+            385
+          ]
+        },
+        {
+          "elapsed": 31.998416832999965,
+          "kind": "guest-read-complete",
+          "emitted_packets": 105,
+          "read_bytes": 315,
+          "emitted_delta": [
+            -2475,
+            385
+          ],
+          "flushes": 0
+        },
+        {
+          "elapsed": 32.00081453299998,
+          "kind": "requested",
+          "events": [
+            {
+              "type": "btn",
+              "data": {
+                "button": "left",
+                "down": true
+              }
+            }
+          ],
+          "target_emitted_delta": [
+            -2475,
+            385
+          ]
+        },
+        {
+          "elapsed": 32.009833533999995,
+          "kind": "guest-read-complete",
+          "emitted_packets": 106,
+          "read_bytes": 318,
+          "emitted_delta": [
+            -2475,
+            385
+          ],
+          "flushes": 0
+        },
+        {
+          "elapsed": 32.01213683399999,
+          "kind": "requested",
+          "events": [
+            {
+              "type": "btn",
+              "data": {
+                "button": "left",
+                "down": false
+              }
+            }
+          ],
+          "target_emitted_delta": [
+            -2475,
+            385
+          ]
+        },
+        {
+          "elapsed": 32.020516233999956,
+          "kind": "guest-read-complete",
+          "emitted_packets": 107,
+          "read_bytes": 321,
+          "emitted_delta": [
+            -2475,
+            385
+          ],
+          "flushes": 0
+        },
+        {
+          "elapsed": 32.02291093399998,
+          "kind": "requested",
+          "events": [
+            {
+              "type": "btn",
+              "data": {
+                "button": "left",
+                "down": true
+              }
+            }
+          ],
+          "target_emitted_delta": [
+            -2475,
+            385
+          ]
+        },
+        {
+          "elapsed": 32.02777423399999,
+          "kind": "guest-read-complete",
+          "emitted_packets": 108,
+          "read_bytes": 324,
+          "emitted_delta": [
+            -2475,
+            385
+          ],
+          "flushes": 0
+        },
+        {
+          "elapsed": 32.030064333999974,
+          "kind": "requested",
+          "events": [
+            {
+              "type": "btn",
+              "data": {
+                "button": "left",
+                "down": false
+              }
+            }
+          ],
+          "target_emitted_delta": [
+            -2475,
+            385
+          ]
+        },
+        {
+          "elapsed": 32.038507633999984,
+          "kind": "guest-read-complete",
+          "emitted_packets": 109,
+          "read_bytes": 327,
+          "emitted_delta": [
+            -2475,
+            385
+          ],
+          "flushes": 0
+        },
+        {
+          "elapsed": 32.04124403399999,
+          "kind": "requested",
+          "events": [
+            {
+              "type": "btn",
+              "data": {
+                "button": "left",
+                "down": true
+              }
+            }
+          ],
+          "target_emitted_delta": [
+            -2475,
+            385
+          ]
+        },
+        {
+          "elapsed": 32.04968503399999,
+          "kind": "guest-read-complete",
+          "emitted_packets": 110,
+          "read_bytes": 330,
+          "emitted_delta": [
+            -2475,
+            385
+          ],
+          "flushes": 0
+        },
+        {
+          "elapsed": 32.05207983399998,
+          "kind": "requested",
+          "events": [
+            {
+              "type": "btn",
+              "data": {
+                "button": "left",
+                "down": false
+              }
+            }
+          ],
+          "target_emitted_delta": [
+            -2475,
+            385
+          ]
+        },
+        {
+          "elapsed": 32.05778383399996,
+          "kind": "guest-read-complete",
+          "emitted_packets": 111,
+          "read_bytes": 333,
+          "emitted_delta": [
+            -2475,
+            385
+          ],
+          "flushes": 0
+        },
+        {
+          "elapsed": 32.060139033999974,
+          "kind": "requested",
+          "events": [
+            {
+              "type": "btn",
+              "data": {
+                "button": "left",
+                "down": true
+              }
+            }
+          ],
+          "target_emitted_delta": [
+            -2475,
+            385
+          ]
+        },
+        {
+          "elapsed": 32.068342933999986,
+          "kind": "guest-read-complete",
+          "emitted_packets": 112,
+          "read_bytes": 336,
+          "emitted_delta": [
+            -2475,
+            385
+          ],
+          "flushes": 0
+        },
+        {
+          "elapsed": 32.071611034,
+          "kind": "requested",
+          "events": [
+            {
+              "type": "btn",
+              "data": {
+                "button": "left",
+                "down": false
+              }
+            }
+          ],
+          "target_emitted_delta": [
+            -2475,
+            385
+          ]
+        },
+        {
+          "elapsed": 32.080206533999956,
+          "kind": "guest-read-complete",
+          "emitted_packets": 113,
+          "read_bytes": 339,
+          "emitted_delta": [
+            -2475,
+            385
+          ],
+          "flushes": 0
+        },
+        {
+          "elapsed": 32.13766713399997,
+          "kind": "requested",
+          "events": [
+            {
+              "type": "btn",
+              "data": {
+                "button": "left",
+                "down": true
+              }
+            }
+          ],
+          "target_emitted_delta": [
+            -2475,
+            385
+          ]
+        },
+        {
+          "elapsed": 32.14971613399996,
+          "kind": "guest-read-complete",
+          "emitted_packets": 114,
+          "read_bytes": 342,
+          "emitted_delta": [
+            -2475,
+            385
+          ],
+          "flushes": 0
+        },
+        {
+          "elapsed": 32.891260837000004,
+          "events": [
+            {
+              "type": "btn",
+              "data": {
+                "button": "left",
+                "down": false
+              }
+            }
+          ]
+        }
+      ],
+      "serial_sha256": "482c9750ba9cc8a1f1b95c5215d86c4add1d6df897b15ff77129683930842eaa",
+      "trace_sha256": "c4b5365b400c9677c7fa7b820cb0768a7ab544d0e7a794dd860339d04c20b9ed",
+      "command": [
+        "qemu-system-x86_64",
+        "-machine",
+        "q35",
+        "-accel",
+        "tcg",
+        "-m",
+        "128M",
+        "-cdrom",
+        "/home/veasnawt/src/myos/build/n6-pointer-1/motion-continuation-1/verify-uefi.iso",
+        "-boot",
+        "d",
+        "-display",
+        "none",
+        "-nic",
+        "none",
+        "-vga",
+        "none",
+        "-device",
+        "VGA,edid=on,xres=1024,yres=768",
+        "-serial",
+        "file:/home/veasnawt/src/myos/build/n6-pointer-1/motion-continuation-1/uefi/serial.log",
+        "-qmp",
+        "unix:/home/veasnawt/src/myos/build/n6-pointer-1/motion-continuation-1/uefi/qmp,server=on,wait=off",
+        "-no-reboot",
+        "-no-shutdown",
+        "-drive",
+        "file=/home/veasnawt/src/myos/build/app-console-20261025T051241Z/attempt-1/disk.img,if=none,id=vs0,format=raw,readonly=on",
+        "-device",
+        "virtio-blk-pci,drive=vs0,disable-legacy=on",
+        "-drive",
+        "if=pflash,format=raw,unit=0,readonly=on,file=/usr/share/OVMF/OVMF_CODE_4M.fd",
+        "-drive",
+        "if=pflash,format=raw,unit=1,file=/home/veasnawt/src/myos/build/n6-pointer-1/motion-continuation-1/uefi/OVMF_VARS_4M.fd"
+      ]
+    },
+    "interactive-uefi": {
+      "input": [
+        {
+          "elapsed": 6.127545773999998,
+          "kind": "requested",
+          "events": [
+            {
+              "type": "rel",
+              "data": {
+                "axis": "x",
+                "value": 12
+              }
+            },
+            {
+              "type": "rel",
+              "data": {
+                "axis": "y",
+                "value": -8
+              }
+            }
+          ],
+          "target_emitted_delta": [
+            12,
+            8
+          ]
+        },
+        {
+          "elapsed": 6.136543173999996,
+          "kind": "guest-read-complete",
+          "emitted_packets": 1,
+          "read_bytes": 3,
+          "emitted_delta": [
+            12,
+            8
+          ],
+          "flushes": 0
+        },
+        {
+          "elapsed": 8.607601815999999,
+          "kind": "requested",
+          "events": [
+            {
+              "type": "btn",
+              "data": {
+                "button": "left",
+                "down": true
+              }
+            }
+          ],
+          "target_emitted_delta": [
+            12,
+            8
+          ]
+        },
+        {
+          "elapsed": 8.617508516000044,
+          "kind": "guest-read-complete",
+          "emitted_packets": 2,
+          "read_bytes": 6,
+          "emitted_delta": [
+            12,
+            8
+          ],
+          "flushes": 0
+        },
+        {
+          "elapsed": 10.76473580999999,
+          "kind": "requested",
+          "events": [
+            {
+              "type": "btn",
+              "data": {
+                "button": "left",
+                "down": false
+              }
+            }
+          ],
+          "target_emitted_delta": [
+            12,
+            8
+          ]
+        },
+        {
+          "elapsed": 10.767369610000003,
+          "kind": "guest-read-complete",
+          "emitted_packets": 3,
+          "read_bytes": 9,
+          "emitted_delta": [
+            12,
+            8
+          ],
+          "flushes": 0
+        },
+        {
+          "elapsed": 13.035950899,
+          "kind": "requested",
+          "events": [
+            {
+              "type": "btn",
+              "data": {
+                "button": "left",
+                "down": true
+              }
+            }
+          ],
+          "target_emitted_delta": [
+            12,
+            8
+          ]
+        },
+        {
+          "elapsed": 13.036172399000009,
+          "kind": "guest-read-complete",
+          "emitted_packets": 4,
+          "read_bytes": 12,
+          "emitted_delta": [
+            12,
+            8
+          ],
+          "flushes": 0
+        },
+        {
+          "elapsed": 14.001501821000033,
+          "events": [
+            {
+              "type": "btn",
+              "data": {
+                "button": "left",
+                "down": false
+              }
+            }
+          ]
+        }
+      ],
+      "serial_sha256": "552a1da9eecf960ca5125746d52ed8e84a90dd0138dca6b87e09b29c8b0f37fe",
+      "trace_sha256": "ed2118dbd9d08b3a0d8c088e4c3cbf905ed8aa5247db57aee0b61d5fada56e6f",
+      "command": [
+        "qemu-system-x86_64",
+        "-machine",
+        "q35",
+        "-accel",
+        "tcg",
+        "-m",
+        "128M",
+        "-cdrom",
+        "/home/veasnawt/src/myos/build/n6-pointer-1/motion-continuation-1/normal-uefi.iso",
+        "-boot",
+        "d",
+        "-display",
+        "none",
+        "-nic",
+        "none",
+        "-vga",
+        "none",
+        "-device",
+        "VGA,edid=on,xres=1024,yres=768",
+        "-serial",
+        "file:/home/veasnawt/src/myos/build/n6-pointer-1/motion-continuation-1/interactive-uefi/serial.log",
+        "-qmp",
+        "unix:/home/veasnawt/src/myos/build/n6-pointer-1/motion-continuation-1/interactive-uefi/qmp,server=on,wait=off",
+        "-no-reboot",
+        "-no-shutdown",
+        "-drive",
+        "file=/home/veasnawt/src/myos/build/app-console-20261025T051241Z/attempt-1/disk.img,if=none,id=vs0,format=raw,readonly=on",
+        "-device",
+        "virtio-blk-pci,drive=vs0,disable-legacy=on",
+        "-drive",
+        "if=pflash,format=raw,unit=0,readonly=on,file=/usr/share/OVMF/OVMF_CODE_4M.fd",
+        "-drive",
+        "if=pflash,format=raw,unit=1,file=/home/veasnawt/src/myos/build/n6-pointer-1/motion-continuation-1/interactive-uefi/OVMF_VARS_4M.fd"
+      ]
+    },
+    "interactive-bios": {
+      "input": [
+        {
+          "elapsed": 2.5606592850000425,
+          "kind": "requested",
+          "events": [
+            {
+              "type": "rel",
+              "data": {
+                "axis": "x",
+                "value": 12
+              }
+            },
+            {
+              "type": "rel",
+              "data": {
+                "axis": "y",
+                "value": -8
+              }
+            }
+          ],
+          "target_emitted_delta": [
+            12,
+            8
+          ]
+        },
+        {
+          "elapsed": 2.5630097850000197,
+          "kind": "guest-read-complete",
+          "emitted_packets": 1,
+          "read_bytes": 3,
+          "emitted_delta": [
+            12,
+            8
+          ],
+          "flushes": 0
+        },
+        {
+          "elapsed": 4.437915078000003,
+          "kind": "requested",
+          "events": [
+            {
+              "type": "btn",
+              "data": {
+                "button": "left",
+                "down": true
+              }
+            }
+          ],
+          "target_emitted_delta": [
+            12,
+            8
+          ]
+        },
+        {
+          "elapsed": 4.442461878000017,
+          "kind": "guest-read-complete",
+          "emitted_packets": 2,
+          "read_bytes": 6,
+          "emitted_delta": [
+            12,
+            8
+          ],
+          "flushes": 0
+        },
+        {
+          "elapsed": 6.265968170000008,
+          "kind": "requested",
+          "events": [
+            {
+              "type": "btn",
+              "data": {
+                "button": "left",
+                "down": false
+              }
+            }
+          ],
+          "target_emitted_delta": [
+            12,
+            8
+          ]
+        },
+        {
+          "elapsed": 6.27282217000004,
+          "kind": "guest-read-complete",
+          "emitted_packets": 3,
+          "read_bytes": 9,
+          "emitted_delta": [
+            12,
+            8
+          ],
+          "flushes": 0
+        },
+        {
+          "elapsed": 8.102462462999995,
+          "kind": "requested",
+          "events": [
+            {
+              "type": "rel",
+              "data": {
+                "axis": "x",
+                "value": -3000
+              }
+            },
+            {
+              "type": "rel",
+              "data": {
+                "axis": "y",
+                "value": -3000
+              }
+            }
+          ],
+          "target_emitted_delta": [
+            -2988,
+            3008
+          ]
+        },
+        {
+          "elapsed": 8.11542446300001,
+          "kind": "zero-relative-sync",
+          "events": [
+            {
+              "type": "rel",
+              "data": {
+                "axis": "x",
+                "value": 0
+              }
+            }
+          ]
+        },
+        {
+          "elapsed": 8.12356906299999,
+          "kind": "zero-relative-sync",
+          "events": [
+            {
+              "type": "rel",
+              "data": {
+                "axis": "x",
+                "value": 0
+              }
+            }
+          ]
+        },
+        {
+          "elapsed": 8.13426576300003,
+          "kind": "zero-relative-sync",
+          "events": [
+            {
+              "type": "rel",
+              "data": {
+                "axis": "x",
+                "value": 0
+              }
+            }
+          ]
+        },
+        {
+          "elapsed": 8.145565963000024,
+          "kind": "zero-relative-sync",
+          "events": [
+            {
+              "type": "rel",
+              "data": {
+                "axis": "x",
+                "value": 0
+              }
+            }
+          ]
+        },
+        {
+          "elapsed": 8.153583463000018,
+          "kind": "guest-read-complete",
+          "emitted_packets": 27,
+          "read_bytes": 81,
+          "emitted_delta": [
+            -2988,
+            3008
+          ],
+          "flushes": 4
+        },
+        {
+          "elapsed": 9.954462777000003,
+          "kind": "requested",
+          "events": [
+            {
+              "type": "rel",
+              "data": {
+                "axis": "x",
+                "value": 3000
+              }
+            }
+          ],
+          "target_emitted_delta": [
+            12,
+            3008
+          ]
+        },
+        {
+          "elapsed": 9.963355976999992,
+          "kind": "zero-relative-sync",
+          "events": [
+            {
+              "type": "rel",
+              "data": {
+                "axis": "x",
+                "value": 0
+              }
+            }
+          ]
+        },
+        {
+          "elapsed": 9.975185277000037,
+          "kind": "zero-relative-sync",
+          "events": [
+            {
+              "type": "rel",
+              "data": {
+                "axis": "x",
+                "value": 0
+              }
+            }
+          ]
+        },
+        {
+          "elapsed": 9.984318177000034,
+          "kind": "zero-relative-sync",
+          "events": [
+            {
+              "type": "rel",
+              "data": {
+                "axis": "x",
+                "value": 0
+              }
+            }
+          ]
+        },
+        {
+          "elapsed": 9.993904676999989,
+          "kind": "zero-relative-sync",
+          "events": [
+            {
+              "type": "rel",
+              "data": {
+                "axis": "x",
+                "value": 0
+              }
+            }
+          ]
+        },
+        {
+          "elapsed": 10.00263137799999,
+          "kind": "guest-read-complete",
+          "emitted_packets": 51,
+          "read_bytes": 153,
+          "emitted_delta": [
+            12,
+            3008
+          ],
+          "flushes": 4
+        },
+        {
+          "elapsed": 11.824916497999993,
+          "kind": "requested",
+          "events": [
+            {
+              "type": "rel",
+              "data": {
+                "axis": "y",
+                "value": 3000
+              }
+            }
+          ],
+          "target_emitted_delta": [
+            12,
+            8
+          ]
+        },
+        {
+          "elapsed": 11.834783399000003,
+          "kind": "zero-relative-sync",
+          "events": [
+            {
+              "type": "rel",
+              "data": {
+                "axis": "x",
+                "value": 0
+              }
+            }
+          ]
+        },
+        {
+          "elapsed": 11.845536399000025,
+          "kind": "zero-relative-sync",
+          "events": [
+            {
+              "type": "rel",
+              "data": {
+                "axis": "x",
+                "value": 0
+              }
+            }
+          ]
+        },
+        {
+          "elapsed": 11.856436899000016,
+          "kind": "zero-relative-sync",
+          "events": [
+            {
+              "type": "rel",
+              "data": {
+                "axis": "x",
+                "value": 0
+              }
+            }
+          ]
+        },
+        {
+          "elapsed": 11.864111599000012,
+          "kind": "zero-relative-sync",
+          "events": [
+            {
+              "type": "rel",
+              "data": {
+                "axis": "x",
+                "value": 0
+              }
+            }
+          ]
+        },
+        {
+          "elapsed": 11.874200899000016,
+          "kind": "guest-read-complete",
+          "emitted_packets": 75,
+          "read_bytes": 225,
+          "emitted_delta": [
+            12,
+            8
+          ],
+          "flushes": 4
+        },
+        {
+          "elapsed": 13.711533120000013,
+          "kind": "requested",
+          "events": [
+            {
+              "type": "rel",
+              "data": {
+                "axis": "x",
+                "value": -3000
+              }
+            }
+          ],
+          "target_emitted_delta": [
+            -2988,
+            8
+          ]
+        },
+        {
+          "elapsed": 13.71662772000002,
+          "kind": "zero-relative-sync",
+          "events": [
+            {
+              "type": "rel",
+              "data": {
+                "axis": "x",
+                "value": 0
+              }
+            }
+          ]
+        },
+        {
+          "elapsed": 13.725101620000032,
+          "kind": "zero-relative-sync",
+          "events": [
+            {
+              "type": "rel",
+              "data": {
+                "axis": "x",
+                "value": 0
+              }
+            }
+          ]
+        },
+        {
+          "elapsed": 13.736889319999989,
+          "kind": "zero-relative-sync",
+          "events": [
+            {
+              "type": "rel",
+              "data": {
+                "axis": "x",
+                "value": 0
+              }
+            }
+          ]
+        },
+        {
+          "elapsed": 13.745860120000032,
+          "kind": "zero-relative-sync",
+          "events": [
+            {
+              "type": "rel",
+              "data": {
+                "axis": "x",
+                "value": 0
+              }
+            }
+          ]
+        },
+        {
+          "elapsed": 13.753944421000028,
+          "kind": "guest-read-complete",
+          "emitted_packets": 99,
+          "read_bytes": 297,
+          "emitted_delta": [
+            -2988,
+            8
+          ],
+          "flushes": 4
+        },
+        {
+          "elapsed": 15.584328442000015,
+          "kind": "requested",
+          "events": [
+            {
+              "type": "rel",
+              "data": {
+                "axis": "x",
+                "value": 512
+              }
+            },
+            {
+              "type": "rel",
+              "data": {
+                "axis": "y",
+                "value": -377
+              }
+            }
+          ],
+          "target_emitted_delta": [
+            -2476,
+            385
+          ]
+        },
+        {
+          "elapsed": 15.596351142000003,
+          "kind": "guest-read-complete",
+          "emitted_packets": 104,
+          "read_bytes": 312,
+          "emitted_delta": [
+            -2476,
+            385
+          ],
+          "flushes": 0
+        },
+        {
+          "elapsed": 15.598588342000028,
+          "kind": "requested",
+          "events": [
+            {
+              "type": "rel",
+              "data": {
+                "axis": "x",
+                "value": 1
+              }
+            }
+          ],
+          "target_emitted_delta": [
+            -2475,
+            385
+          ]
+        },
+        {
+          "elapsed": 15.603471442,
+          "kind": "guest-read-complete",
+          "emitted_packets": 105,
+          "read_bytes": 315,
+          "emitted_delta": [
+            -2475,
+            385
+          ],
+          "flushes": 0
+        },
+        {
+          "elapsed": 15.605725941999992,
+          "kind": "requested",
+          "events": [
+            {
+              "type": "btn",
+              "data": {
+                "button": "left",
+                "down": true
+              }
+            }
+          ],
+          "target_emitted_delta": [
+            -2475,
+            385
+          ]
+        },
+        {
+          "elapsed": 15.614453542000035,
+          "kind": "guest-read-complete",
+          "emitted_packets": 106,
+          "read_bytes": 318,
+          "emitted_delta": [
+            -2475,
+            385
+          ],
+          "flushes": 0
+        },
+        {
+          "elapsed": 15.616618842000037,
+          "kind": "requested",
+          "events": [
+            {
+              "type": "btn",
+              "data": {
+                "button": "left",
+                "down": false
+              }
+            }
+          ],
+          "target_emitted_delta": [
+            -2475,
+            385
+          ]
+        },
+        {
+          "elapsed": 15.624881641999991,
+          "kind": "guest-read-complete",
+          "emitted_packets": 107,
+          "read_bytes": 321,
+          "emitted_delta": [
+            -2475,
+            385
+          ],
+          "flushes": 0
+        },
+        {
+          "elapsed": 15.627070342000025,
+          "kind": "requested",
+          "events": [
+            {
+              "type": "btn",
+              "data": {
+                "button": "left",
+                "down": true
+              }
+            }
+          ],
+          "target_emitted_delta": [
+            -2475,
+            385
+          ]
+        },
+        {
+          "elapsed": 15.635321841999996,
+          "kind": "guest-read-complete",
+          "emitted_packets": 108,
+          "read_bytes": 324,
+          "emitted_delta": [
+            -2475,
+            385
+          ],
+          "flushes": 0
+        },
+        {
+          "elapsed": 15.637516342000026,
+          "kind": "requested",
+          "events": [
+            {
+              "type": "btn",
+              "data": {
+                "button": "left",
+                "down": false
+              }
+            }
+          ],
+          "target_emitted_delta": [
+            -2475,
+            385
+          ]
+        },
+        {
+          "elapsed": 15.646037541999988,
+          "kind": "guest-read-complete",
+          "emitted_packets": 109,
+          "read_bytes": 327,
+          "emitted_delta": [
+            -2475,
+            385
+          ],
+          "flushes": 0
+        },
+        {
+          "elapsed": 15.648211142000036,
+          "kind": "requested",
+          "events": [
+            {
+              "type": "btn",
+              "data": {
+                "button": "left",
+                "down": true
+              }
+            }
+          ],
+          "target_emitted_delta": [
+            -2475,
+            385
+          ]
+        },
+        {
+          "elapsed": 15.65661194200004,
+          "kind": "guest-read-complete",
+          "emitted_packets": 110,
+          "read_bytes": 330,
+          "emitted_delta": [
+            -2475,
+            385
+          ],
+          "flushes": 0
+        },
+        {
+          "elapsed": 15.658901442000001,
+          "kind": "requested",
+          "events": [
+            {
+              "type": "btn",
+              "data": {
+                "button": "left",
+                "down": false
+              }
+            }
+          ],
+          "target_emitted_delta": [
+            -2475,
+            385
+          ]
+        },
+        {
+          "elapsed": 15.66714784300001,
+          "kind": "guest-read-complete",
+          "emitted_packets": 111,
+          "read_bytes": 333,
+          "emitted_delta": [
+            -2475,
+            385
+          ],
+          "flushes": 0
+        },
+        {
+          "elapsed": 15.669415543000014,
+          "kind": "requested",
+          "events": [
+            {
+              "type": "btn",
+              "data": {
+                "button": "left",
+                "down": true
+              }
+            }
+          ],
+          "target_emitted_delta": [
+            -2475,
+            385
+          ]
+        },
+        {
+          "elapsed": 15.674519743000019,
+          "kind": "guest-read-complete",
+          "emitted_packets": 112,
+          "read_bytes": 336,
+          "emitted_delta": [
+            -2475,
+            385
+          ],
+          "flushes": 0
+        },
+        {
+          "elapsed": 15.677006143000028,
+          "kind": "requested",
+          "events": [
+            {
+              "type": "btn",
+              "data": {
+                "button": "left",
+                "down": false
+              }
+            }
+          ],
+          "target_emitted_delta": [
+            -2475,
+            385
+          ]
+        },
+        {
+          "elapsed": 15.685444043000018,
+          "kind": "guest-read-complete",
+          "emitted_packets": 113,
+          "read_bytes": 339,
+          "emitted_delta": [
+            -2475,
+            385
+          ],
+          "flushes": 0
+        },
+        {
+          "elapsed": 15.742784543000027,
+          "kind": "requested",
+          "events": [
+            {
+              "type": "btn",
+              "data": {
+                "button": "left",
+                "down": true
+              }
+            }
+          ],
+          "target_emitted_delta": [
+            -2475,
+            385
+          ]
+        },
+        {
+          "elapsed": 15.755171844000017,
+          "kind": "guest-read-complete",
+          "emitted_packets": 114,
+          "read_bytes": 342,
+          "emitted_delta": [
+            -2475,
+            385
+          ],
+          "flushes": 0
+        },
+        {
+          "elapsed": 16.510672852000027,
+          "events": [
+            {
+              "type": "btn",
+              "data": {
+                "button": "left",
+                "down": false
+              }
+            }
+          ]
+        }
+      ],
+      "serial_sha256": "ef7ba1c2ae5848e33f7339e8de3589037fb4e64ece12778d91cce5eebdd13caa",
+      "trace_sha256": "35561ebd11397e35e1d233fbfef02b4d20ffee06a133d5e30f704a65f12fbbac",
+      "command": [
+        "qemu-system-x86_64",
+        "-machine",
+        "q35",
+        "-accel",
+        "tcg",
+        "-m",
+        "128M",
+        "-cdrom",
+        "/home/veasnawt/src/myos/build/n6-pointer-1/coordinate-log-continuation-1/normal-bios.iso",
+        "-boot",
+        "d",
+        "-display",
+        "none",
+        "-nic",
+        "none",
+        "-vga",
+        "none",
+        "-device",
+        "VGA,edid=on,xres=1024,yres=768",
+        "-serial",
+        "file:/home/veasnawt/src/myos/build/n6-pointer-1/motion-continuation-1/interactive-bios/serial.log",
+        "-qmp",
+        "unix:/home/veasnawt/src/myos/build/n6-pointer-1/motion-continuation-1/interactive-bios/qmp,server=on,wait=off",
+        "-no-reboot",
+        "-no-shutdown",
+        "-drive",
+        "file=/home/veasnawt/src/myos/build/app-console-20261025T051241Z/attempt-1/disk.img,if=none,id=vs0,format=raw,readonly=on",
+        "-device",
+        "virtio-blk-pci,drive=vs0,disable-legacy=on"
+      ]
+    }
+  },
+  "reused_host_assertions": {
+    "pointer_service": 987802,
+    "pointer_renderer": 2156957,
+    "console": 49499,
+    "total": 3194258,
+    "counting": "Final cumulative counters per executable, not sum of baseline and final lines"
+  },
+  "reused_Rust_tests": 3,
+  "logger_boundary_cases": 16,
+  "transport_publisher_rejections_preserved": 11,
+  "shared_GRUB_adapter_cases_preserved": 11,
+  "motion_transport_model": {
+    "passed": true,
+    "vector_cases": [
+      {
+        "vector": [
+          -3000,
+          -3000
+        ],
+        "generated_packets": 24,
+        "all_generated_bytes_read": true
+      },
+      {
+        "vector": [
+          3000,
+          0
+        ],
+        "generated_packets": 24,
+        "all_generated_bytes_read": true
+      },
+      {
+        "vector": [
+          0,
+          3000
+        ],
+        "generated_packets": 24,
+        "all_generated_bytes_read": true
+      },
+      {
+        "vector": [
+          -3000,
+          0
+        ],
+        "generated_packets": 24,
+        "all_generated_bytes_read": true
+      },
+      {
+        "vector": [
+          512,
+          -377
+        ],
+        "generated_packets": 5,
+        "all_generated_bytes_read": true
+      },
+      {
+        "vector": [
+          1,
+          0
+        ],
+        "generated_packets": 1,
+        "all_generated_bytes_read": true
+      }
+    ],
+    "buttons": 2,
+    "corrupt_read_rejected": true,
+    "scope": "host transport model, not native verification"
+  },
+  "bios_evidence_composition": "Original BIOS native cases 0-15, 18 bootstrap failures, process exhaustion and checkerboard regression reused unchanged; remaining pointer/click/corners/held-exit and shell checks passed on normal BIOS with identical kernel/application identities.",
+  "image_recipe": "Shared immutable GRUB private inputs via supported --xorriso hook; fresh UEFI ISO assembly, unchanged geometry and strict validators; no scratch deletion or shrink credit by adapter.",
+  "packing": {
+    "passed": true,
+    "operation": "objcopy --strip-debug into fresh files only",
+    "source": "/home/veasnawt/src/myos/build/n6-pointer-1/coordinate-log-continuation-1/user/pointer-demo.elf",
+    "source_sha256": "be6cacda268f071fc948026b38e41f6a618cc2fd5b296a62e47cb42538ff9849",
+    "source_bytes": 23616,
+    "packed_bytes": 23344,
+    "packed_sha256": "2389d0690177e1de08a6211919e1dc1247d81faaeb5e5c90c196b05fbb7022e2",
+    "objcopy": "/usr/bin/x86_64-linux-gnu-objcopy",
+    "objcopy_sha256": "05f4473d24f7330a9b13f43d007d619a2e792e33de453cd7533a2d97c30da770",
+    "deterministic": true,
+    "loader_memory_view_unchanged": true,
+    "negative_mapped_byte_rejected": true,
+    "original_preserved": true
+  },
+  "limits_MiB": {
+    "execution": 72,
+    "phase": 96,
+    "aggregate": 3360,
+    "historical_reservations": 880,
+    "total_reservations": 976,
+    "source_forecast": 1,
+    "finalization": 16,
+    "metadata": 8
+  },
+  "pre_finalization_accounting": {
+    "attempt_bytes": 57397248,
+    "finalization_bytes": 3276800,
+    "metadata_bytes": 3878912,
+    "source_growth_bytes": 135168,
+    "phase_charged_bytes": 64552960,
+    "aggregate_charged_bytes": 3110105088,
+    "phase_remaining_bytes": 36110336,
+    "aggregate_remaining_bytes": 413110272,
+    "full_reservation_margin_bytes": 1548288,
+    "margin_after_unspent_source_forecast_bytes": 634880,
+    "capacity": {
+      "charged": 2498256896,
+      "remaining": 1024958464,
+      "C": 22371393536,
+      "E": 246122569728,
+      "linux": 1009446744064,
+      "admitted_extra": 1023410176
+    }
+  },
+  "historical_records": [
+    "build/n6-pointer-1/VIOLATION.json",
+    "build/n6-pointer-1/final/atomic-recovery-1",
+    "build/n6-pointer-1/final/signedness-recovery-1",
+    "build/n6-pointer-1/final/compact-link-recovery-1",
+    "build/n6-pointer-1/final/build-peak-recovery-1",
+    "build/n6-pointer-1/final/coordinate-log-recovery-1/STOP-RECEIPT.json"
+  ],
+  "prior_N62_monitoring_disclosure": "Preserved ~87-second unconfirmed query interval; no uninterrupted-isolation claim for that historical interval.",
+  "finalization_receipt": "build/n6-pointer-1/final/motion-recovery-1/FINAL-RECEIPT.json",
+  "files": [
+    "arch/x86_64/app_payload.c",
+    "arch/x86_64/arch.mk",
+    "arch/x86_64/grub-pointer.cfg",
+    "arch/x86_64/gui.c",
+    "arch/x86_64/gui.h",
+    "arch/x86_64/gui_verify.c",
+    "arch/x86_64/gui_verify.h",
+    "arch/x86_64/keyboard.c",
+    "arch/x86_64/keyboard.h",
+    "arch/x86_64/pointer.c",
+    "arch/x86_64/pointer.h",
+    "arch/x86_64/screen.c",
+    "arch/x86_64/screen.h",
+    "arch/x86_64/syscall.c",
+    "arch/x86_64/user_console.c",
+    "arch/x86_64/user_console.h",
+    "docs/abi/pointer-v1.md",
+    "docs/abi/syscall-v5.md",
+    "docs/images/n6/vos-pointer-bios.png",
+    "docs/images/n6/vos-pointer-uefi.png",
+    "docs/results/n6-pointer.md",
+    "docs/results/n6-pointer/bios.serial.txt",
+    "docs/results/n6-pointer/changed-files.txt",
+    "docs/results/n6-pointer/evidence.json",
+    "docs/results/n6-pointer/host.txt",
+    "docs/results/n6-pointer/result.json",
+    "docs/results/n6-pointer/uefi.serial.txt",
+    "scripts/test-pointer.py",
+    "tests/host/gui.c",
+    "tests/host/pointer.c",
+    "tests/rust/pointer.rs",
+    "user/include/vos/gui.h",
+    "user/lib/syscall_v5.S",
+    "user/pointer-demo/main.rs",
+    "user/pointer-probe/main.rs",
+    "user/rust/gui.rs",
+    "user/user.mk"
+  ]
+}
