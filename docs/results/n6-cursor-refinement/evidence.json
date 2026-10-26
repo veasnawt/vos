@@ -1,0 +1,211 @@
+{
+  "schema": 1,
+  "scope": "N6.3 native cursor visual refinement",
+  "base": "78cc80c9ac2b8b9d36ffb411ab06f5a63811bbc3",
+  "result": "result.json",
+  "inventory": "changed-files.txt",
+  "host": "host.txt",
+  "raw_root": "build/n6-pointer-1/cursor-refinement-1",
+  "raw_manifest_sha256": "c1d2901be95087ab175b7346dc6e744b09d801e7594b378620ce3297f4820f6f",
+  "raw_manifest_entries": 75,
+  "source_sha256": {
+    "Makefile": "6912d0beae8476e1a2ac0d114432fd920f057d6910f8ed2d09f3047326a37752",
+    "arch/x86_64/app_payload.c": "10b3322088c69a9484787300eae3ad25a71ea7d5542ca45a6aa190b9647e1d11",
+    "arch/x86_64/arch.mk": "3823b3b416dc6475eda292178127867be1c816eb0c2cd5aebfb9e46f9445cb2e",
+    "arch/x86_64/desktop.c": "183816b5662fb774d9696188d431afd115ae252e8f4ff031b8eda7a081941187",
+    "arch/x86_64/elf.c": "c01cd9b6d606528077819ffa256daf3158056ca9fe89f70c549a32bd26315b3f",
+    "arch/x86_64/exec.c": "0d9664e60bd784e3e114eb0cfac9163f6fadb38f3feac8ca63f8738737f08918",
+    "arch/x86_64/font8x16.c": "1407e6656453950e4f9002a7027b3966baa53d82947300b54401b7a18f7484fc",
+    "arch/x86_64/grub-pointer.cfg": "c49155e86a7e9457e3bb8a335344b6895e260cb780ccc7a5afe92547cc18920a",
+    "arch/x86_64/gui.c": "a66f681a42336a18ad2ac0f6d6dcd0e7ecc058f1adfb1879dbc98a1db4397d9a",
+    "arch/x86_64/gui.h": "71697b09dd553b44c2307b94c006ed85c2b80e46b460b0634cc98347c966b410",
+    "arch/x86_64/gui_verify.c": "e5b691bd9548c874c22a21d6acf769665ea4db0f2df1ad9a70c14e454935126f",
+    "arch/x86_64/gui_verify.h": "dbf9569b2639211f9f898702bc194d7e61293aaed5d5b9dcbb01ef7c95b0b3c3",
+    "arch/x86_64/input_console.c": "0297f0c2a2a053a9af9e5d33ac57e3ebd94b8353a8a5be366024a0c6eb194551",
+    "arch/x86_64/keyboard.c": "fb75b7e97b693d688ae2456b0f129d047e5fec33b33474200a788d4fec8e96eb",
+    "arch/x86_64/keyboard.h": "c6104c37cd72472e32a16471a22c2149e15e68f4baff2c64072a054b088a68b7",
+    "arch/x86_64/pointer.c": "01775a7eb0780d68fdac47eb2a92d5fececb1e93690f40abcd7bf040c29777ff",
+    "arch/x86_64/pointer.h": "7ed1b6597f0155f9cd4720a2c0fe712e08d6b7cf51ad6acc010841e7f8f291b7",
+    "arch/x86_64/process.c": "a59718bcaf8ba3e2bd99f99faeccd5ae31efe93bd49817af5c4ae41e8da6924c",
+    "arch/x86_64/screen.c": "25881848381cfd2708aa64712d1d53e1afc256711e4072c47631a4c697236761",
+    "arch/x86_64/screen.h": "de6ea75d74814d5d830af3a8042b6a3f7bd569b0d5c9a98b60f70eed434232ec",
+    "arch/x86_64/syscall.c": "6f0b4e52214bb407ddc25c6493ab48a362f0408867c9e0f8e664b10ce3ae7282",
+    "arch/x86_64/user_console.c": "dfe1d32f0f2a6c4cf42dd15c8988b50523e23750c630941bc79601bfa142a553",
+    "arch/x86_64/user_console.h": "d8fef1d9b9a651a6a4ec083f58e83527b08a1ef5970697a45a2c49251ceafb4c",
+    "scripts/elfcheck.c": "d99abd95972757c7e456ffd3ab4d7ef53b98b6faaa9df73ab2596cf7670416e0",
+    "scripts/test-app-handoff.py": "4f5b8e4b9e44375b133688a5d9bf50e2c3c9ed459a6483eead00d85bb04c01bd",
+    "scripts/test-cursor-refinement.py": "e3e97cbc65ba9f20ee2281c16b31a51b22b4660ca401cfc3ff72579f65b6b321",
+    "scripts/test-gui.py": "38669a956b249d3bcd8f593168bdc9618df73c4571a9569abb9adda5a9415526",
+    "scripts/test-pointer.py": "3fd5cfbd4fc83872ebd2ba4d4eefb9d61f3177fbc71a55498c67d52eae3699d0",
+    "tests/host/gui.c": "a50218d37f605fa41eb12c1852586ba8c32f320b14a23db9039371501889ba0b",
+    "tests/host/pointer.c": "461b19543f976fb2b37cfe148b82dc7e6d86a4a87e96b60c458e41fb3effeb3b",
+    "tests/rust/pointer.rs": "ab15a557d39c84b04c5714dcfbbe3d659c0c3459825cbb22d2826c24ec8ce4d4",
+    "user/gui-demo/main.rs": "1ffce634e5379da313616c1d4059a853a69c3a5ff4b924f8974ba1cab40bc094",
+    "user/include/vos/gui.h": "4f2adec6c21e06d47b0fed13acb4fe55f99ca8ea45b16a060e28efe0e89318cc",
+    "user/lib/abi_note_v5.S": "73f32c7a43f2207adfb0c31bada80b22512d581a296de90539c0ca16be2099a4",
+    "user/lib/crt0.S": "c12e37d354d12ad898862c7ff30237542b5ae39617b6f2501db15559f999f3f7",
+    "user/lib/syscall.S": "51bbc36e439fab3751954bd59524d1f01da1d9c96291272e399ed8d89b31a967",
+    "user/lib/syscall_v1.S": "856382682d6b0800487e5bb9aef3308c1060e6297626d6a64b6925865a546587",
+    "user/lib/syscall_v2.S": "66f08c0353c6347da369a8a5af54d2ead5444d0a3778b5ac3c8e82949fb34072",
+    "user/lib/syscall_v3.S": "9febe8247a6cadcd9c3f36e9b4e09eabcc28ded4512220498d412aa282125e75",
+    "user/lib/syscall_v4.S": "3ff3609537e0216c5d3b619fad719ccf1527d79234be095c1190c1203fe852ac",
+    "user/lib/syscall_v5.S": "6baad5bdd30737714810abbadb9b20b19438355ad87af1ed91bbc38e48442cc6",
+    "user/lib/user.ld": "dd4fd6c2aafe9a1c2ca49100ef5bbb22458f4175bc690e3dc04de74f573980bb",
+    "user/pointer-demo/main.rs": "6bb889910b4f186cab006b23783b59d0461f9123e5210423982b9e33e9749ee9",
+    "user/pointer-probe/main.rs": "fb91f75ab47afba6f8bbdc4e5176a28f3397c1018ecddb13137b7180c366ba1e",
+    "user/rixie/main.rs": "24d050c21de01e6e4aef8d72edb88676f3fd203a5467a6b3dada006100d0111a",
+    "user/rust/gui.rs": "aff91f42c057644d5d5aea3bd08798de8cf6c70ee6a643f13082345f43942fcb",
+    "user/rust/runtime.c": "5241c00ae9c96eb646ab8e0544a4a05fa9807e9e186c221709142c26d8086afa",
+    "user/rust/vos.rs": "4434372465239c24a806a33debc2f9a74e815bc5afade0ed5b2f2cf72ff8f8c5",
+    "user/user.mk": "3234c42364abffe86ccc90deb05df26318f4c6e74dc25874ca8308b8ef00ada7",
+    "user/vsh/main.rs": "ba248268ae8d5dfc4745435a6e282832db9265bf174f9d1d5feb49705998c03b"
+  },
+  "controller": {
+    "root": "build/n6-pointer-1/final/cursor-refinement-resume-1",
+    "reference_checks": 14,
+    "previous_failed_root": "build/n6-pointer-1/final/cursor-refinement-1",
+    "previous_stop_sha256": "dda330bc6359f5add91fca490dea9c9764d3f402f3b2b5864214731c9780763d",
+    "original_stop_preserved": true
+  },
+  "fresh": {
+    "renderer_assertions": 2179862,
+    "graft_checks": 7,
+    "bios": true,
+    "uefi": true,
+    "geometry_frames_per_firmware": 15
+  },
+  "reused": {
+    "service_assertions": 987802,
+    "console_assertions": 49499,
+    "Rust_tests": 3,
+    "logger_cases": 16,
+    "source_identity": true,
+    "service_test_preprocessed_branch_unchanged": true,
+    "old_runtime_manifest_sha256": "8ab47ecdf43bf4fe088f372d23deb9113bdfb2d7a1ea0cda1c1b5e5542e11699"
+  },
+  "memory": {
+    "old_cursor_record": 400,
+    "new_cursor_record": 4112,
+    "old_underlay": 384,
+    "new_underlay": 4096,
+    "underlay_delta": 3712,
+    "mask_bytes": 256,
+    "dynamic_allocation": false
+  },
+  "images": {
+    "uefi": {
+      "passed": true,
+      "platform": "UEFI",
+      "files": {
+        "/boot/vos.bin": "c2d172c4575f584c68eecf44a2ca79ad9c9d4046d859c1b4453323e007389eda",
+        "/boot/grub/grub.cfg": "7ae7f46b23f439efa433d23a907721cf55e91f8f4d8e90c67bfa84f289889f91",
+        "/boot/gui-demo.elf": "f114dbe666ff479229ce851658847a4b11b5f0e5b61f45b73d8a0ee39fc57faa",
+        "/boot/hello.elf": "c6c6416195a0f18d680d7f8f19be52ce02ff02912ef3bac45324fbe88006cd06",
+        "/boot/pointer-demo.elf": "2389d0690177e1de08a6211919e1dc1247d81faaeb5e5c90c196b05fbb7022e2",
+        "/boot/rixie.elf": "77104da3b33caf809daf5e6674ac4e2fa9edf6a9e2e5dd59828514df76490d32",
+        "/boot/vsh.elf": "e7af3ee56164f587f7ca1338f7ddfcb202b6f4310f10b4dcba6a2576743cb181"
+      },
+      "ISO_sha256": "8f2fbe15b604cb21681f1a23f4a399380caeb4dca540fca381ba3fc2dfb80869",
+      "partitions": [
+        {
+          "index": 1,
+          "start": 64,
+          "end": 215,
+          "type": "ebd0a0a2-b9e5-4433-87c0-68b6b72699c7",
+          "name": "Gap0"
+        },
+        {
+          "index": 2,
+          "start": 216,
+          "end": 5975,
+          "type": "c12a7328-f81f-11d2-ba4b-00a0c93ec93b",
+          "name": "EFI boot partition"
+        },
+        {
+          "index": 3,
+          "start": 5976,
+          "end": 23723,
+          "type": "48465300-0000-11aa-aa11-00306543ecac",
+          "name": "HFSPLUS"
+        },
+        {
+          "index": 4,
+          "start": 23724,
+          "end": 24323,
+          "type": "ebd0a0a2-b9e5-4433-87c0-68b6b72699c7",
+          "name": "Gap1"
+        }
+      ],
+      "GPT_primary_backup_CRC": true,
+      "nonoverlapping_GPT": true,
+      "EFI_PE32_valid": true,
+      "ESP_file_sha256": "ecb1ab6a0d3a00d682480566f4e5736bea9277f8492363ad1fe0d25b86e13e96"
+    },
+    "bios": {
+      "passed": true,
+      "platform": "BIOS",
+      "files": {
+        "/boot/vos.bin": "c2d172c4575f584c68eecf44a2ca79ad9c9d4046d859c1b4453323e007389eda",
+        "/boot/grub/grub.cfg": "c49155e86a7e9457e3bb8a335344b6895e260cb780ccc7a5afe92547cc18920a",
+        "/boot/vsh.elf": "e7af3ee56164f587f7ca1338f7ddfcb202b6f4310f10b4dcba6a2576743cb181",
+        "/boot/hello.elf": "c6c6416195a0f18d680d7f8f19be52ce02ff02912ef3bac45324fbe88006cd06",
+        "/boot/rixie.elf": "77104da3b33caf809daf5e6674ac4e2fa9edf6a9e2e5dd59828514df76490d32",
+        "/boot/gui-demo.elf": "f114dbe666ff479229ce851658847a4b11b5f0e5b61f45b73d8a0ee39fc57faa",
+        "/boot/pointer-demo.elf": "2389d0690177e1de08a6211919e1dc1247d81faaeb5e5c90c196b05fbb7022e2"
+      },
+      "ISO_sha256": "6f07266c40f58b9d593bd7e297945fa7241dbfa9b1f6a2d7e0d3c163880e376e"
+    }
+  },
+  "screenshots": {
+    "bios": {
+      "path": "../../images/n6/vos-cursor-refined-bios.png",
+      "width": 1024,
+      "height": 768,
+      "sha256": "101d2db2871c052602f669c94cdfab0497c252b5508ff5a34e2033ca2a08ebcc",
+      "direct_QMP_PNG": true,
+      "raw_path": "/home/veasnawt/src/myos/build/n6-pointer-1/cursor-refinement-1/interactive-bios/final-pointer.png"
+    },
+    "uefi": {
+      "path": "../../images/n6/vos-cursor-refined-uefi.png",
+      "width": 1024,
+      "height": 768,
+      "sha256": "101d2db2871c052602f669c94cdfab0497c252b5508ff5a34e2033ca2a08ebcc",
+      "direct_QMP_PNG": true,
+      "raw_path": "/home/veasnawt/src/myos/build/n6-pointer-1/cursor-refinement-1/interactive-uefi/final-pointer.png"
+    }
+  },
+  "limits_MiB": {
+    "execution": 97,
+    "phase": 107,
+    "aggregate": 3371,
+    "historical_reservations": 880,
+    "full_reservations": 987
+  },
+  "pre_finalization_accounting": {
+    "attempt_bytes": 80977920,
+    "new_execution_bytes": 23580672,
+    "finalization_bytes": 5066752,
+    "metadata_bytes": 4153344,
+    "source_growth_bytes": 405504,
+    "phase_charged_bytes": 90198016,
+    "aggregate_charged_bytes": 3135750144,
+    "phase_remaining_bytes": 21999616,
+    "aggregate_remaining_bytes": 398999552,
+    "margin_after_source_forecast_bytes": 634880,
+    "capacity": {
+      "charged": 2498527232,
+      "remaining": 1036222464,
+      "C": 22265790464,
+      "E": 246122549248,
+      "linux": 1009420734464,
+      "admitted_extra": 1034944512
+    }
+  },
+  "protected_records_audited": 49,
+  "final_accounting": "See controller APP-ACCOUNTING.json, guard-result.json and additive POST-COMMIT-AUDIT.json; this snapshot precedes documentation/commit charges.",
+  "limitations": [
+    "QEMU-only validation",
+    "PS/2 standard relative mouse and primary button",
+    "No window management or new GUI ABI"
+  ]
+}

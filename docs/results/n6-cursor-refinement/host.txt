@@ -1,0 +1,13 @@
+PASS 562325 assertions: actual refined renderer/console; single header/full captions/no PASS badge, stride/padding/guards, viewport and fallback
+pointer renderer PASS 2179862 assertions; clipping, stride, underlay restoration, surface redraw
+
+Reused by source identity (not rerun):
+{
+  "service_assertions": 987802,
+  "console_assertions": 49499,
+  "Rust_tests": 3,
+  "logger_cases": 16,
+  "source_identity": true,
+  "service_test_preprocessed_branch_unchanged": true,
+  "old_runtime_manifest_sha256": "8ab47ecdf43bf4fe088f372d23deb9113bdfb2d7a1ea0cda1c1b5e5542e11699"
+}

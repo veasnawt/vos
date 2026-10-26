@@ -85,30 +85,52 @@ int screen_choose(uint32_t fb_tags, const char *fb_err, int fb_kind, int efi, ui
 }
 
 
-/* Fixed 8x12 kernel-owned software cursor. Readback is confined to this tile;
- * no framebuffer or underlay address enters an application or the GUI ABI. */
-static struct {int active,drawn;uint32_t x,y,saved[96];} cursor;
+/* Fixed 32x32 kernel-owned cursor canvas; visible arrow is 21x28.
+ * Hotspot (0,0) is the exact tip. No framebuffer/underlay pointer reaches
+ * userspace. Row masks avoid per-motion rasterization or allocation. */
+enum { CURSOR_W=32, CURSOR_H=32 };
+static const uint32_t cursor_shape[CURSOR_H]={
+    0x00000001u,0x00000003u,0x00000007u,0x0000000fu,
+    0x0000001fu,0x0000003fu,0x000000ffu,0x000001ffu,
+    0x000003ffu,0x000007ffu,0x00000fffu,0x00001fffu,
+    0x00007fffu,0x0000ffffu,0x0001ffffu,0x0003ffffu,
+    0x0007ffffu,0x001fffffu,0x00000fffu,0x00001f9fu,
+    0x00001f0fu,0x00003f07u,0x00003e03u,0x00007e01u,
+    0x00007c00u,0x0000fc00u,0x00003800u,0x00000800u,
+    0x00000000u,0x00000000u,0x00000000u,0x00000000u
+};
+static const uint32_t cursor_fill[CURSOR_H]={
+    0x00000000u,0x00000000u,0x00000002u,0x00000006u,
+    0x0000000eu,0x0000001eu,0x0000003eu,0x000000feu,
+    0x000001feu,0x000003feu,0x000007feu,0x00000ffeu,
+    0x00001ffeu,0x00007ffeu,0x0000fffeu,0x0001fffeu,
+    0x0003fffeu,0x00000ffeu,0x0000079eu,0x00000f0eu,
+    0x00000e06u,0x00001e02u,0x00001c00u,0x00003c00u,
+    0x00003800u,0x00003800u,0x00000000u,0x00000000u,
+    0x00000000u,0x00000000u,0x00000000u,0x00000000u
+};
+static struct {int active,drawn;uint32_t x,y,saved[CURSOR_W*CURSOR_H];} cursor;
 static void cursor_hide(void) {
     if(!cursor.drawn)return;
-    for(unsigned y=0;y<12 && y<fb.height-cursor.y;y++)
-        for(unsigned x=0;x<8 && x<fb.width-cursor.x;x++)
-            fb.base[(uint64_t)(cursor.y+y)*fb.pitch_px+cursor.x+x]=cursor.saved[y*8+x];
+    for(unsigned y=0;y<CURSOR_H && y<fb.height-cursor.y;y++)
+        for(unsigned x=0;x<CURSOR_W && x<fb.width-cursor.x;x++)
+            fb.base[(uint64_t)(cursor.y+y)*fb.pitch_px+cursor.x+x]=cursor.saved[y*CURSOR_W+x];
     cursor.drawn=0;
 }
 static void cursor_show(void) {
     if(!cursor.active || cursor.drawn || panicked)return;
-    for(unsigned y=0;y<12 && y<fb.height-cursor.y;y++)
-        for(unsigned x=0;x<8 && x<fb.width-cursor.x;x++) {
+    for(unsigned y=0;y<CURSOR_H && y<fb.height-cursor.y;y++)
+        for(unsigned x=0;x<CURSOR_W && x<fb.width-cursor.x;x++) {
             volatile uint32_t *p=fb.base+(uint64_t)(cursor.y+y)*fb.pitch_px+cursor.x+x;
-            cursor.saved[y*8+x]=*p;
-            /* Temporary geometric arrow, deliberately not identity artwork. */
-            if(x<=y/2 && y<11)*p=(x==0 || x==y/2 || y==10)?0x00101a2au:0x00ffffffu;
+            cursor.saved[y*CURSOR_W+x]=*p;
+            uint32_t bit=1u<<x; /* x<32, including clipped right-edge tiles. */
+            if(cursor_shape[y]&bit)*p=(cursor_fill[y]&bit)?0x00ffffffu:0x00101a2au;
         }
     cursor.drawn=1;
 }
 static int cursor_damage(const struct screen_surface *s,uint32_t x,uint32_t y,uint32_t w,uint32_t h) {
-    int hit=cursor.drawn && s==&fb && x<cursor.x+8 && (uint64_t)x+w>cursor.x &&
-        y<cursor.y+12 && (uint64_t)y+h>cursor.y;
+    int hit=cursor.drawn && s==&fb && (uint64_t)x<(uint64_t)cursor.x+CURSOR_W && (uint64_t)x+w>cursor.x &&
+        (uint64_t)y<(uint64_t)cursor.y+CURSOR_H && (uint64_t)y+h>cursor.y;
     if(hit)cursor_hide();
     return hit;
 }

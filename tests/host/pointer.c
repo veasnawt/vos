@@ -4,6 +4,32 @@
 #define main previous_render_main
 #include "desktop.c"
 #undef main
+/* Independent polygon reference; no duplicate of the renderer's row masks. */
+static int reference_inside(int x,int y) {
+    static const int point[7][2]={{0,0},{0,23},{6,18},{11,27},{15,25},{11,17},{20,17}};
+    int in=0;
+    for(unsigned i=0,j=6;i<7;j=i++) {
+        int ax=point[j][0],ay=point[j][1],bx=point[i][0],by=point[i][1];
+        int cross=(bx-ax)*(y-ay)-(x-ax)*(by-ay);
+        if(!cross && x>=(ax<bx?ax:bx) && x<=(ax>bx?ax:bx) &&
+           y>=(ay<by?ay:by) && y<=(ay>by?ay:by))return 1;
+        if((ay>y)!=(by>y))if((by>ay && cross>0) || (by<ay && cross<0))in=!in;
+    }
+    return in;
+}
+static void cursor_geometry(const uint32_t *before,uint32_t width,uint32_t height) {
+    CHECK(CURSOR_W==32 && CURSOR_H==32 && sizeof(cursor.saved)==4096);
+    CHECK(fb.base[(uint64_t)cursor.y*fb.pitch_px+cursor.x]==0x101a2a);
+    for(unsigned y=0;y<32 && y<height-cursor.y;y++)
+        for(unsigned x=0;x<32 && x<width-cursor.x;x++) {
+            int ink=reference_inside((int)x,(int)y);
+            int inner=ink && reference_inside((int)x-1,(int)y) && reference_inside((int)x+1,(int)y) &&
+                reference_inside((int)x,(int)y-1) && reference_inside((int)x,(int)y+1);
+            size_t at=(size_t)(cursor.y+y)*fb.pitch_px+cursor.x+x;
+            uint32_t expected=ink?(inner?0xffffffu:0x101a2au):before[at];
+            CHECK(fb.base[at]==expected);
+        }
+}
 static void cursor_case(uint32_t width,uint32_t height,unsigned padding) {
     size_t n=(size_t)(width+padding)*height;
     uint32_t *p=malloc((n+32)*4),*copy=malloc(n*4);CHECK(p && copy);
@@ -14,6 +40,7 @@ static void cursor_case(uint32_t width,uint32_t height,unsigned padding) {
     memcpy(copy,(void *)fb.base,n*4);
     uint32_t state=screen_pointer_begin();CHECK((state&0x20000)!=0);
     CHECK(cursor.active && cursor.drawn);
+    cursor_geometry(copy,width,height);
     uint32_t row[256];for(unsigned x=0;x<256;x++)row[x]=0x174680;
     for(unsigned y=0;y<160;y++)screen_gui_row(y,row,256);
     CHECK(cursor.drawn);
@@ -24,10 +51,17 @@ static void cursor_case(uint32_t width,uint32_t height,unsigned padding) {
     }
     memcpy(copy,(void *)fb.base,n*4);
     screen_pointer_begin();
+    struct screen_surface reference={copy,width+padding,width,height};
+    screen_fill(&reference,cursor.x+9,cursor.y+20,12,8,0xfff6de);
+    screen_fill(&fb,cursor.x+9,cursor.y+20,12,8,0xfff6de);
+    screen_glyph(&reference,cursor.x+8,cursor.y+16,'A',0x123456,0xfafafa);
+    screen_glyph(&fb,cursor.x+8,cursor.y+16,'A',0x123456,0xfafafa);
+    cursor_geometry(copy,width,height);
     const int32_t delta[]={INT32_MIN,INT32_MAX,0,-256,256};
     for(unsigned i=0;i<5;i++)for(unsigned j=0;j<5;j++) {
         screen_pointer_move(delta[i],delta[j]);
         CHECK(cursor.x<width && cursor.y<height && cursor.drawn);
+        cursor_geometry(copy,width,height);
     }
     screen_pointer_end();CHECK(!memcmp(copy,(void *)fb.base,n*4));
     for(unsigned i=0;i<16;i++)CHECK(p[i]==0xabcdef && p[n+16+i]==0xabcdef);
@@ -35,6 +69,13 @@ static void cursor_case(uint32_t width,uint32_t height,unsigned padding) {
 }
 int main(void) {
     CHECK(previous_render_main()==0);
+    unsigned max_x=0,max_y=0,count=0;
+    for(unsigned y=0;y<32;y++)for(unsigned x=0;x<32;x++)if(reference_inside((int)x,(int)y)){
+        if(x>max_x)max_x=x;
+        if(y>max_y)max_y=y;
+        count++;
+    }
+    CHECK(max_x==20 && max_y==27 && count>100 && reference_inside(0,0));
     cursor_case(640,480,0);cursor_case(800,600,13);cursor_case(1024,768,17);
     printf("pointer renderer PASS %u assertions; clipping, stride, underlay restoration, surface redraw\n",checks);return 0;
 }
