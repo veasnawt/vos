@@ -299,7 +299,8 @@ test-all:
 	@set -e; for a in $(ARCHS); do $(MAKE) --no-print-directory ARCH=$$a test; done
 
 clean:
-	rm -rf build
+	@printf '%s\n' 'make clean is disabled: build/ contains protected evidence and controller dependencies. Selective cleanup requires separate authorization.' >&2
+	@exit 1
 
 -include $(OBJS:.o=.d)
 
