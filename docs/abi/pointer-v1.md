@@ -1,7 +1,7 @@
 # Pointer extension to GUI ABI v5
 
 N6.3 keeps the published 24-byte create, 32-byte upload and 16-byte event
-structures. Syscalls 16Ã¢â‚¬â€œ20 and the keyboard-only GUI grant (15) retain their
+structures. Syscalls 16-20 and the keyboard-only GUI grant (15) retain their
 existing behavior. Pointer authority is an additional trusted grant bit (16);
 it is never inherited or installed from untrusted ELF metadata or shell text.
 
@@ -31,8 +31,8 @@ contract. Normal interactive sessions have no verification deadline.
 All events remain `{u32 type,u32 code,u64 sequence}`, 16 bytes, naturally aligned.
 Types 1 (text key) and 2 (overflow count) are unchanged for keyboard-only owners.
 Opt-in pointer owners additionally receive type 3 (motion) and type 4 (left-button
-transition). Their code packs local x in bits 0Ã¢â‚¬â€œ7, local y in bits 8Ã¢â‚¬â€œ15, logical
-left-down in bit 16 and inside-surface in bit 17. Bits 18Ã¢â‚¬â€œ31 are zero.
+transition). Their code packs local x in bits 0-7, local y in bits 8-15, logical
+left-down in bit 16 and inside-surface in bit 17. Bits 18-31 are zero.
 
 The single surface is the sole hit-test target. Motion outside it is suppressed
 unless an inside press established capture. A captured drag/release remains

@@ -1,5 +1,70 @@
 # VOS Status
 
+Current accepted baseline: owner-merged
+[PR #15](https://github.com/veasnawt/vos/pull/15),
+[`bf5eb43f2e07478e31be8b4123c5a297add67efe`](https://github.com/veasnawt/vos/commit/bf5eb43f2e07478e31be8b4123c5a297add67efe).
+VOS is pre-alpha. **N0-N5 are accepted; N6 is still in progress.**
+No physical-hardware or complete-desktop acceptance is claimed.
+
+## Current accepted components
+
+| Component | Delivered scope | Accepted integration and evidence |
+| --- | --- | --- |
+| N0-N3 | Boot, protected kernel/userspace, scheduling/IPC and capability-scoped read-only storage | [N3 closure](results/n3-closure.md) |
+| N4 | Keyboard, buffered console, Rust vsh/SDK and deterministic offline Rixie | [N4 closure](results/n4-closure.md) |
+| N5 | Bounded kernel Ethernet/ARP, IPv4/ICMP, UDP and passive TCP data/retry/closure | [N5 closure](results/n5-tcp-close.md), PR #7 at `39b40a9` |
+| Unified applications | Common payload/catalog, ABI v4 execution grants/broker, isolated children and foreground console transfer/restoration | [Payload](results/app-payload.md), [execution](results/app-exec.md), [handoff](results/app-handoff.md); PRs #9-#11, integrated at `e211c738d9f0b98a0ddb717b4d17f0063dfe38f0` |
+| N6.1 | Validated framebuffer scene and bounded console viewport | [Desktop slice](results/n6-desktop.md); PR #12 at `3308cc86cf99d98da4cb353e6678d7782e623d47` |
+| N6.2 | One native process-owned GUI surface, bounded pixel/event ABI v5 and input-worker bootstrap cleanup | [GUI and hardening](results/n6-gui.md); PR #13 at `dfd292ca807370a0ceaf735d319fc1d15bd45370` |
+| N6.3 | PS/2 pointer input, primary-button/capture/loss handling, secure routing and clipped cursor | [Pointer evidence](results/n6-pointer.md); PR #14 at `78cc80c9ac2b8b9d36ffb411ab06f5a63811bbc3` |
+| N6.3 cursor refinement | 21x28 visible arrow on a 32x32 canvas; 4,096-byte underlay and exact tip hotspot | [Refinement](results/n6-cursor-refinement.md); PR #15 at the baseline above |
+
+The shell's `apps`, `hello` and `rixie` commands now use the trusted catalog
+and kernel execution broker. Children receive explicit grants; execution,
+filesystem and network authority are not inherited automatically. Console
+ownership returns only to a live authorized parent after child termination and
+kernel-CR3-safe reclamation. Normal interactive sessions have no verification
+deadline. Arbitrary paths, installed packages, background jobs and general
+external-program launching are not supported.
+
+N6.2's accepted bootstrap hardening verified 18 injected ELF-load failures per
+firmware, with one input worker created and reclaimed per iteration.
+N6.3's original hosted results include 3,194,258 sanitizer assertions, three Rust
+tests and 16 logger cases. The cursor refinement adds 2,179,862 fresh renderer
+assertions; unaffected service/console/Rust/logger evidence is reused by source
+identity. These are per-increment counts, not a single freshly repeated suite.
+Both firmware paths have native movement, primary press/release, exact-corner,
+clipping, keyboard, cancellation and application-restoration evidence.
+
+Authentic current captures: [BIOS](images/n6/vos-cursor-refined-bios.png) and
+[UEFI](images/n6/vos-cursor-refined-uefi.png).
+The owner personally completed the refinement's full manual QEMU checklist;
+all checks passed. See the [evidence index](results/n6-cursor-refinement/evidence.json)
+and [normal preview commands](results/n6-cursor-refinement.md#normal-interactive-preview).
+Automated overflow/timing verification is separate from ordinary manual use.
+
+## Proposed next work, not execution approval
+
+N6 desktop design candidates include surface composition and ownership/focus,
+window interaction, a native Rust **Terminal** using the existing shell,
+and eventually a dock and Settings/Accessibility (including cursor-size options).
+These are incomplete planning topics; their order, contracts and budgets require
+owner approval. The accepted mockup is a design reference, not implemented UI.
+
+Rust-first kernel migration and broader physical-hardware/architecture
+portability are proposals. They require separate compatibility, unsafe/FFI/DMA,
+boot/interrupt/device and resource-management plans with reproducible checks.
+VOS targets real x86_64 computers; QEMU success does not establish firmware,
+GPU, USB, storage or input support on physical systems.
+
+## Historical milestone publication notes
+
+The following N3-N5 publication narrative preserves earlier checkpoints.
+Its local-branch statements, original allocation ceilings and descriptions of
+individual prototypes are historical, not the current baseline or storage
+authorization. Current launch/GUI/pointer behavior is summarized above.
+Original evidence, failures, monitoring gaps and result counts remain unchanged.
+
 **N4 is complete, accepted and integrated into main** at
 `bbca69d850e8c168bfa824ace475a27226b2cdb7`. Its tree matches accepted publication
 `50cbc8bc49bd10d5272647b267ed23895d2f533d`, including Rixie Core v0.
@@ -103,6 +168,9 @@ not a release.
 
 ## Completed milestones
 
+The current table above also records accepted unified application launching and
+N6.1-N6.3 components; it does not mark the entire N6 desktop complete.
+
 N5 networking is formally accepted at `39b40a9`: bounded native Ethernet/ARP,
 IPv4/ICMP, UDP and passive TCP establishment, payload, retransmission and closure.
 Original result records retain their evidence and pre-publication wording.
@@ -141,6 +209,9 @@ On both paths:
 - An audited, supervisor-only device-memory window.
 
 **Execution:**
+- Additive ABI v3 console, [ABI v4 execution](abi/syscall-v4.md) and
+  [ABI v5 GUI](abi/syscall-v5.md), with explicit process-owned authority;
+  earlier ABI behavior remains supported.
 - Kernel threads.
 - Ring-3 programs in separate address spaces, preempted by the timer.
 - IPC channels.
@@ -165,7 +236,13 @@ On both paths:
   hello still requires no disk. No writable operations or authenticated-media claim.
 
 **Display:**
-- Framebuffer console with an original 8×16 font, status bar (PASS/FAIL) and panic banner.
+- Validated 32-bpp BGRX framebuffer, original 8x16 diagnostic font and panic banner.
+- Accepted N6.1 scene: one system bar, bounded console viewport and no normal
+  desktop PASS badge. This panel is not a native graphical Terminal application.
+- N6.2: one <=256x160 process-owned surface, 40 backing frames, 4 KiB uploads
+  and 16 queued events; framebuffer/device addresses remain supervisor-only.
+- N6.3: kernel-owned 32x32 cursor canvas, 21x28 visible arrow and fixed 4 KiB
+  underlay, independent of application pixels and the event ABI.
 - VGA text only when text mode is positively known.
 
 ## N3 final accepted verification (2026-10-24)
@@ -202,7 +279,7 @@ changes documentation only. Historical stage reports and failures remain unchang
 | Cumulative footprint vs `c5f5acb` | +43808 B static of 65536 B; +57344 B reserved image of 131072 B |
 
 See the [closure record](results/n3.5-closure.md) for the evidence review and accepted
-limitations, and [N3.6 preparation](plans/n3-storage.md#11-n36-preparation-planning-only)
+limitations, and [N3.6 preparation](plans/n3-storage.md#11-n36-storage-closure-complete)
 for the historical design questions. Final N3/N3.6 acceptance is recorded above.
 
 The subsequent integration audit retained the completed BIOS/UEFI and static
@@ -288,12 +365,14 @@ On BIOS (SeaBIOS: ELCR `0xc00`), virtio-blk interrupt mode is fully tested: 149 
 - **VGA text fallback:** only unit-tested. GRUB always hands this kernel a framebuffer, because
   the kernel requests one.
 - **BIOS display change:** BIOS boots now switch to VBE graphics.
-- **Input:** PS/2 polling, buffered line input and an explicitly granted ABI v3
-  native text console, with a US layout and 128-byte limit; no USB keyboard or mouse driver.
+- **Input:** bounded polling through one i8042 keyboard/auxiliary owner;
+  US keyboard layout, 128-byte console line limit and standard three-byte PS/2
+  relative mouse/primary button. No USB input, wheel, extra buttons or hotplug.
   Editing appends/deletes at the end; an overlong submission is discarded in full.
-  Boot selects `vos.console=1` for the buffered demo or `vos.vsh=1` for the
-  native shell; normal production boot still halts.
-- **Shell:** first native Rust `vsh` only; no quoting, pipes, history or external-program launch.
+  Boot configuration selects the diagnostic, shell or GUI/pointer session;
+  default production hello boot still halts.
+- **Shell:** native Rust vsh supports trusted catalog launches of hello and Rixie;
+  no quoting, pipes, history, arbitrary executable paths or background jobs.
 - **Missing features:** writable storage, production/userspace networking, SMP and ACPI power management.
 
 ## Unsupported (by design, for now)
