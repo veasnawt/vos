@@ -16,12 +16,16 @@
 #include "cpu.h"
 #include "lib.h"
 #include "panic.h"
+#include "pointer.h"
+#include "keyboard.h"
 
 static struct {
     struct process *owner;
     uint64_t pid,token,epoch;
     uint32_t rights,width,height;
     unsigned pages,head,count,lost;
+    uint32_t pointer_state;
+    int pointer_armed,pointer_capture,pointer_down;
     uint64_t frame[GUI_FRAMES],sequence;
     struct vos_gui_event queue[VOS_GUI_QUEUE];
     struct wait_queue events;
@@ -72,6 +76,8 @@ static void free_surface(void) {
         if(pmm_free_frame(gui.frame[i])!=PMM_OK)panic("GUI surface frame ownership");
         gui.frame[i]=0;
     }
+    if(gui.rights&GUI_POINTER)user_console_pointer_end(gui.owner);
+    screen_pointer_end();gui.pointer_state=0;gui.pointer_armed=gui.pointer_capture=gui.pointer_down=0;
     gui.pages=0;gui.token=0;gui.width=gui.height=0;flush();
     screen_gui_end();
 }
@@ -81,19 +87,52 @@ void gui_revoke(struct process *p) {
     free_surface();gui.owner=0;gui.pid=0;gui.rights=0;
     thread_wake_all(&gui.events);
 }
+static void enqueue(uint32_t type,uint32_t code) {
+    /* Opt-in pointer owners need a snapshot barrier covering dropped events.
+     * Legacy accepted-key sequence semantics remain byte-for-byte unchanged. */
+    int full=gui.count==VOS_GUI_QUEUE;
+    uint64_t sequence=gui.sequence;
+    if(!full || (gui.rights&GUI_POINTER)) {
+        if(gui.sequence==UINT64_MAX)panic("GUI event sequence exhausted");
+        sequence=++gui.sequence;
+    }
+    if(full) {if(gui.lost!=UINT32_MAX)gui.lost++;return;}
+    unsigned at=(gui.head+gui.count)%VOS_GUI_QUEUE;
+    gui.queue[at]=(struct vos_gui_event){type,code,sequence};gui.count++;
+}
 static void pump(void) {
     struct process *p=gui.owner;
     if(!p || !gui_owned(p) || p->state!=PROC_RUNNING)return;
     for(unsigned i=0;i<VOS_GUI_QUEUE*2;i++) {
         char c=user_console_gui_poll(p);
         if(!c)break;
-        if(gui.count==VOS_GUI_QUEUE) {
+        enqueue(VOS_GUI_KEY_TEXT,(uint8_t)c);
+    }
+    if((gui.rights&GUI_POINTER) && gui.pages) {
+        struct pointer_packet packet;
+        for(unsigned i=0;i<KEYBOARD_DRAIN_LIMIT;i++) {
+            if(!user_console_pointer_poll(p,&packet))break;
+            uint32_t before=gui.pointer_state;
+            uint32_t state=screen_pointer_move(packet.dx,-(int32_t)packet.dy);
+            int down=!!(packet.buttons&1),was=!!(before&VOS_GUI_POINTER_LEFT);
+            if(!down)gui.pointer_armed=1;
+            if(down && !gui.pointer_down && gui.pointer_armed && (state&VOS_GUI_POINTER_INSIDE))
+                gui.pointer_capture=1;
+            if(down && gui.pointer_capture)state|=VOS_GUI_POINTER_LEFT;
+            gui.pointer_state=state;
+            if((state&VOS_GUI_POINTER_INSIDE) || gui.pointer_capture) {
+                if(packet.dx || packet.dy)enqueue(VOS_GUI_POINTER_MOVE,state);
+                if(was!=!!(state&VOS_GUI_POINTER_LEFT))enqueue(VOS_GUI_POINTER_BUTTON,state);
+            }
+            gui.pointer_down=down;
+            if(!down)gui.pointer_capture=0;
+        }
+        if(user_console_pointer_lost(p)) {
+            gui.pointer_armed=gui.pointer_capture=gui.pointer_down=0;
+            gui.pointer_state&=~VOS_GUI_POINTER_LEFT;
             if(gui.lost!=UINT32_MAX)gui.lost++;
-        } else {
             if(gui.sequence==UINT64_MAX)panic("GUI event sequence exhausted");
-            unsigned at=(gui.head+gui.count)%VOS_GUI_QUEUE;
-            gui.queue[at]=(struct vos_gui_event){VOS_GUI_KEY_TEXT,(uint8_t)c,++gui.sequence};
-            gui.count++;
+            gui.sequence++;
         }
     }
     if(gui.count || gui.lost)thread_wake_all(&gui.events);
@@ -129,7 +168,7 @@ int gui_service_stop(void) {
 int gui_grant(struct process *p,uint32_t rights) {
     context();
     if(!worker || gui.owner || !p || !proc_file_live(p) || p->state!=PROC_READY ||
-       p->abi!=5 || p->kill_reason || !rights || (rights&~GUI_ALL))return -VOS_EACCES;
+       p->abi!=5 || p->kill_reason || !rights || (rights&~GUI_VALID_RIGHTS))return -VOS_EACCES;
     if(!screen_gui_available())return -VOS_EUNAVAIL;
     if(next_epoch==INT64_MAX)return -VOS_ENOMEM;
     int r=user_console_gui_begin(p);if(r)return r;
@@ -162,9 +201,11 @@ static int64_t create(struct process *p,const struct exc_frame *f) {
         return -VOS_ENOMEM;
     }
     gui.pages=count;gui.width=d.width;gui.height=d.height;
+    if((gui.rights&GUI_POINTER) && user_console_pointer_begin(p)){free_surface();return -VOS_EUNAVAIL;}
     if(!screen_gui_begin(d.width,d.height)){free_surface();return -VOS_EUNAVAIL;}
     if(next_epoch==INT64_MAX){free_surface();return -VOS_ENOMEM;}
     gui.token=next_epoch++;
+    if(gui.rights&GUI_POINTER)gui.pointer_state=screen_pointer_begin();
     return (int64_t)gui.token;
 }
 static int upload(struct process *p,const struct exc_frame *f) {
@@ -188,6 +229,12 @@ int64_t gui_syscall(struct process *p,const struct exc_frame *f) {
     if(!p || p->abi<5)return -VOS_ENOSYS;
     if(!caller(p))return -VOS_EACCES;
     if(f->rax==VOS_GUI_CREATE)return create(p,f);
+    if(f->rax==VOS_GUI_POINTER_STATE) {
+        if(!(gui.rights&GUI_POINTER) || !(gui.rights&GUI_EVENTS))return -VOS_EACCES;
+        if(!gui.pages || f->rsi!=sizeof(struct vos_gui_event) || f->rdx)return -VOS_EINVAL;
+        struct vos_gui_event event={VOS_GUI_POINTER_SNAPSHOT,gui.pointer_state,gui.sequence};
+        return copy_to_user(p->root,f->rdi,&event,sizeof(event))?-VOS_EFAULT:(int64_t)sizeof(event);
+    }
     if(f->rax==VOS_GUI_EVENT) {
         if(!(gui.rights&GUI_EVENTS))return -VOS_EACCES;
         if(f->rsi!=sizeof(struct vos_gui_event) || f->rdx>1)return -VOS_EINVAL;

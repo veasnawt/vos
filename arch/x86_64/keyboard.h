@@ -6,6 +6,7 @@
 #define VOS_X86_64_KEYBOARD_H
 
 #include <stdint.h>
+#include "pointer.h"
 
 #define KEYBOARD_WAIT_LIMIT 100000u
 #define KEYBOARD_DRAIN_LIMIT 32u
@@ -22,7 +23,11 @@ struct keyboard_decoder {
 struct keyboard {
     const struct keyboard_io *io;
     struct keyboard_decoder decoder;
-    int ready;
+    int ready,pointer_ready,pointer_pending;
+    struct pointer_decoder pointer;
+    struct pointer_packet packet;
+    unsigned pointer_lost,key_head,key_count;
+    char keys[KEYBOARD_DRAIN_LIMIT];
 };
 
 /* Pure decoder: returns printable ASCII, Enter ('\n'), Backspace ('\b'), or 0.
@@ -31,7 +36,7 @@ struct keyboard {
 char keyboard_decode(struct keyboard_decoder *d, uint8_t scan);
 /* Configure the first port, explicitly select set 2 + controller translation.
  * Returns 1 on acknowledged initialization; 0 on a bounded timeout/error.
- * The auxiliary port is disabled: there is no mouse consumer in this increment.
+ * Auxiliary reporting remains disabled until an explicit pointer lease.
  */
 int keyboard_init(struct keyboard *k, const struct keyboard_io *io);
 /* Nonblocking, at most KEYBOARD_DRAIN_LIMIT bytes; 0 if no character is ready. */
@@ -41,4 +46,9 @@ char keyboard_poll(struct keyboard *k);
 int keyboard_suspend(struct keyboard *k);
 int keyboard_resume(struct keyboard *k);
 
+int keyboard_pointer_start(struct keyboard *);
+void keyboard_pointer_stop(struct keyboard *);
+/* One pending packet; shared demultiplexer bounds keyboard buffering too. */
+int keyboard_pointer_poll(struct keyboard *,struct pointer_packet *);
+unsigned keyboard_pointer_lost(struct keyboard *);
 #endif

@@ -1,0 +1,88 @@
+N6.3 focused hosted evidence (source-identity reuse; not rerun during motion recovery)
+
+[pointer-service]
+GUI service PASS 978127 assertions; actual GUI+console+keyboard, allocation rollback, ownership, pointers, bounds, overflow/revocation
+pointer driver context=88 decoder=5 bytes; fixed bounds\npointer service PASS 987802 assertions; actual decoder/demux/GUI, failure, bounds, grants, transitions, overflow snapshot, cleanup
+
+[pointer-renderer]
+PASS 562325 assertions: actual refined renderer/console; single header/full captions/no PASS badge, stride/padding/guards, viewport and fallback
+pointer renderer PASS 2156957 assertions; clipping, stride, underlay restoration, surface redraw
+
+[console-regression]
+console-handoff: 49499 assertions PASS; actual console+keyboard+editor; bounded modeled hardware/scheduler; transfers=1007 restored=1003
+
+Total final counters: 3194258 assertions. Baseline lines are included within each final counter.
+
+[Rust]
+
+running 3 tests
+test baseline::abi_sizes_offsets ... ok
+test baseline::limits_and_explicit_formats ... ok
+test pointer::layout_and_pointer_bits ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+[coordinate formatter]
+16 exact-format/boundary cases PASS; zero/max u32 and both boolean states; one complete debug syscall.
+
+[motion transport model]
+{
+  "passed": true,
+  "vector_cases": [
+    {
+      "vector": [
+        -3000,
+        -3000
+      ],
+      "generated_packets": 24,
+      "all_generated_bytes_read": true
+    },
+    {
+      "vector": [
+        3000,
+        0
+      ],
+      "generated_packets": 24,
+      "all_generated_bytes_read": true
+    },
+    {
+      "vector": [
+        0,
+        3000
+      ],
+      "generated_packets": 24,
+      "all_generated_bytes_read": true
+    },
+    {
+      "vector": [
+        -3000,
+        0
+      ],
+      "generated_packets": 24,
+      "all_generated_bytes_read": true
+    },
+    {
+      "vector": [
+        512,
+        -377
+      ],
+      "generated_packets": 5,
+      "all_generated_bytes_read": true
+    },
+    {
+      "vector": [
+        1,
+        0
+      ],
+      "generated_packets": 1,
+      "all_generated_bytes_read": true
+    }
+  ],
+  "buttons": 2,
+  "corrupt_read_rejected": true,
+  "scope": "host transport model, not native verification"
+}
+
+[optimized hosted samples]
+64452516, 64523516, 64318416 ns; includes startup/assertions, separate from sanitizers; no native performance claim.

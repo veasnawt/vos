@@ -136,9 +136,14 @@ graphical Terminal. No mouse, general focus manager, movable/resizable windows,
 GUI application launcher, package installation or production hardware claim is
 made. GUI apps do not currently launch from vsh.
 
-A trusted-bootstrap error-path limitation remains: if initial GUI ELF loading
-fails after starting its input service, the outer boot route can retain one idle
-service worker until reboot. The native exhaustion probes exercise loader
-rollback directly, not that outer branch. Per-application frame/process/thread
-cleanup on the exercised exit, fault, cancellation and revocation paths passed.
-Runtime service restart and complete bootstrap-error rollback are not claimed.
+The original initial-ELF-load worker retention defect was corrected by N6.2
+bootstrap hardening: the outer route stops the service on every post-start
+exit and joins the awakened worker through THREAD_FREE before returning.
+The accepted [hardening evidence](../results/n6-gui/bootstrap-hardening/result.json)
+records 18 actual rejected GUI loads per firmware with one worker created and
+reclaimed per iteration, and unchanged process/frame/thread counts. This is
+QEMU evidence; physical hardware and arbitrary service-restart scenarios are
+not claimed.
+
+N6.3 adds an explicitly granted pointer extension while retaining this ABI's
+existing structures and keyboard-only behavior; see [pointer contract](pointer-v1.md).

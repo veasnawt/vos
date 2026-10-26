@@ -2,6 +2,7 @@
 #define VOS_X86_64_GUI_VERIFY_H
 #include <stdint.h>
 struct boot_info;struct process;struct exc_frame;
+int pointer_boot_requested(const char *);
 int gui_boot_requested(const char *);
 int gui_boot_run(const struct boot_info *);
 #ifdef VOS_GUI_VERIFY

@@ -132,8 +132,11 @@ int keyboard_init(struct keyboard *k, const struct keyboard_io *io)
     return 1;
 }
 
+static char routed_poll(struct keyboard *k);
+
 char keyboard_poll(struct keyboard *k)
 {
+    if(k->pointer_ready)return routed_poll(k);
     if (!k->ready)
         return 0;
     for (unsigned i = 0; i < KEYBOARD_DRAIN_LIMIT; i++) {
@@ -183,4 +186,85 @@ int keyboard_resume(struct keyboard *k)
     if(!command(k,0xF4))return 0;
     k->ready=1;
     return 1;
+}
+
+/* One controller owner, two decoders. Never interpret auxiliary bytes as keys. */
+static void routed_drain(struct keyboard *k) {
+    for(unsigned i=0;i<KEYBOARD_DRAIN_LIMIT;i++) {
+        if(k->pointer_pending || k->key_count==KEYBOARD_DRAIN_LIMIT)break;
+        uint8_t status=k->io->in(STATUS);
+        if(!(status&OBF))break;
+        uint8_t b=k->io->in(DATA);
+        if(status&AUX) {
+            if(status&ERR) {k->pointer=(struct pointer_decoder){0};if(k->pointer_lost!=UINT32_MAX)k->pointer_lost++;continue;}
+            int n=pointer_decode(&k->pointer,b,&k->packet);
+            if(n<0)if(k->pointer_lost!=UINT32_MAX)k->pointer_lost++;
+            if(n>0)k->pointer_pending=1;
+        } else if(status&ERR || b==0 || b==0xff) {
+            k->decoder=(struct keyboard_decoder){0};
+        } else {
+            char c=keyboard_decode(&k->decoder,b);
+            if(c) {k->keys[(k->key_head+k->key_count)%KEYBOARD_DRAIN_LIMIT]=c;k->key_count++;}
+        }
+    }
+}
+static char routed_poll(struct keyboard *k) {
+    if(!k->ready)return 0;
+    routed_drain(k);
+    if(!k->key_count)return 0;
+    char c=k->keys[k->key_head];
+    k->keys[k->key_head]=0;k->key_head=(k->key_head+1)%KEYBOARD_DRAIN_LIMIT;k->key_count--;
+    return c;
+}
+static int read_aux(struct keyboard *k,uint8_t *b) {
+    for(unsigned i=0;i<KEYBOARD_WAIT_LIMIT;i++) {
+        uint8_t s=k->io->in(STATUS);
+        if(!(s&OBF))continue;
+        uint8_t data=k->io->in(DATA);
+        if(s&ERR)return 0;
+        if(s&AUX){*b=data;return 1;}
+    }
+    return 0;
+}
+static int aux_command(struct keyboard *k,uint8_t command_byte) {
+    uint8_t b;
+    return write_port(k,STATUS,0xd4) && write_port(k,DATA,command_byte) &&
+        read_aux(k,&b) && b==0xfa;
+}
+int keyboard_pointer_start(struct keyboard *k) {
+    if(!k || !k->ready || k->pointer_ready)return 0;
+    if(!keyboard_suspend(k))return 0;
+    uint8_t bat=0,id=255;
+    int ok=write_port(k,STATUS,0xad) && write_port(k,STATUS,0xa8) &&
+        aux_command(k,0xff) && read_aux(k,&bat) && bat==0xaa &&
+        read_aux(k,&id) && id==0 && aux_command(k,0xf6) &&
+        aux_command(k,0xe6) && aux_command(k,0xf4);
+    if(!ok)(void)write_port(k,STATUS,0xa7);
+    if(!write_port(k,STATUS,0xae) || !keyboard_resume(k))ok=0;
+    if(!ok){(void)write_port(k,STATUS,0xa7);return 0;}
+    k->pointer=(struct pointer_decoder){0};k->pointer_pending=0;k->pointer_lost=0;
+    k->key_head=k->key_count=0;k->pointer_ready=1;return 1;
+}
+void keyboard_pointer_stop(struct keyboard *k) {
+    if(!k || !k->pointer_ready)return;
+    /* Stop keyboard scan generation while consuming auxiliary acknowledgments.
+     * A final hardware drain is part of the subsequent keyboard_suspend boundary. */
+    (void)write_port(k,STATUS,0xad);
+    (void)aux_command(k,0xf5);
+    (void)write_port(k,STATUS,0xa7);
+    (void)write_port(k,STATUS,0xae);
+    k->pointer_ready=k->pointer_pending=0;k->pointer=(struct pointer_decoder){0};
+    k->pointer_lost=k->key_head=k->key_count=0;
+}
+int keyboard_pointer_poll(struct keyboard *k,struct pointer_packet *p) {
+    if(!k || !p || !k->pointer_ready || !k->ready)return 0;
+    routed_drain(k);
+    if(!k->pointer_pending) {
+        if(pointer_idle(&k->pointer))if(k->pointer_lost!=UINT32_MAX)k->pointer_lost++;
+        return 0;
+    }
+    *p=k->packet;k->pointer_pending=0;return 1;
+}
+unsigned keyboard_pointer_lost(struct keyboard *k) {
+    unsigned n=k->pointer_lost;k->pointer_lost=0;return n;
 }

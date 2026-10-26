@@ -24,4 +24,9 @@ void console_host_out(uint16_t,uint8_t);
 int user_console_gui_begin(struct process *);
 void user_console_gui_end(struct process *);
 char user_console_gui_poll(struct process *);
+struct pointer_packet;
+int user_console_pointer_begin(struct process *);
+void user_console_pointer_end(struct process *);
+int user_console_pointer_poll(struct process *,struct pointer_packet *);
+unsigned user_console_pointer_lost(struct process *);
 #endif

@@ -68,6 +68,7 @@ int64_t syscall_dispatch(struct process *p, struct exc_frame *f)
     case VOS_GUI_PRESENT:
     case VOS_GUI_RELEASE:
     case VOS_GUI_EVENT:
+    case VOS_GUI_POINTER_STATE:
         return gui_syscall(p,f);
 #ifdef VOS_HANDOFF_VERIFY
     case SYS_HANDOFF_VERIFY:return handoff_verify_syscall(p,f);

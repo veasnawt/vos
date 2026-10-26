@@ -260,3 +260,19 @@ user-gui: $(USER_BUILD)/gui-demo.elf $(USER_BUILD)/gui-probe.elf
 $(USER_BUILD)/gui-probe/control.o: user/lib/syscall_v5.S
 	@mkdir -p $(dir $@)
 	printf '.section .text\n.global vos_gui_verify\nvos_gui_verify:\n mov $$0x7e66,%%eax\n int $$0x80\n ret\n.section .note.GNU-stack,"",@progbits\n' | $(CC) $(USER_ASFLAGS) -x assembler -c -o $@ -
+
+
+# N6.3 only: let rustc resolve shared target rlibs while producing native ELF.
+# The pre-existing staticlib recipes above remain unchanged. No runtime copy,
+# host CRT, dynamic library, new entry convention or userspace authority.
+POINTER_NATIVE_RT := $(USER_BUILD)/rust/libvos_gui_native.a
+$(POINTER_NATIVE_RT): $(USER_RT_V5) $(USER_BUILD)/rust/runtime.o
+	@mkdir -p $(dir $@)
+	$(AR) crsD $@ $^
+define POINTER_APPLICATION
+$(USER_BUILD)/$(1).elf: user/$(1)/main.rs $(RUST_SDK) $(USER_BUILD)/rust/libvos_gui.rlib $(POINTER_NATIVE_RT) $(USER_LDS) user/user.mk $(if $(filter pointer-probe,$(1)),$(USER_BUILD)/gui-probe/control.o)
+	$$(RUSTC) $$(VOS_RUST_FLAGS) --crate-name $$(subst -,_,$(1)) --crate-type=bin -L dependency=$(USER_BUILD)/rust --extern vos=$$(RUST_SDK) --extern vos_gui=$(USER_BUILD)/rust/libvos_gui.rlib -L native=$(USER_BUILD)/rust -l static:+whole-archive=vos_gui_native -C linker=$$(LD) -C linker-flavor=ld -C default-linker-libraries=no -C link-arg=--gc-sections $$(foreach flag,$$(USER_LDFLAGS),-C link-arg=$$(flag)) $(if $(filter pointer-probe,$(1)),-C link-arg=$(USER_BUILD)/gui-probe/control.o) -C link-arg=-Map=$$(@:.elf=.map) --emit=link,dep-info=$$(@:.elf=.d) -o $$@ $$<
+endef
+$(foreach app,pointer-demo pointer-probe,$(eval $(call POINTER_APPLICATION,$(app))))
+.PHONY: user-pointer
+user-pointer: $(USER_BUILD)/pointer-demo.elf $(USER_BUILD)/pointer-probe.elf

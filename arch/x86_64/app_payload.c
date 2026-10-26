@@ -8,17 +8,25 @@
 #include "resv.h"
 
 static struct app_catalog catalog;
-static const struct {
-    uint64_t identity;
-    const char *name;
-    uint32_t policy;
-} provisioned[] = {
+struct provision {uint64_t identity;const char *name;uint32_t policy;};
+static const struct provision provisioned[] = {
     { 0x1001, "vsh", APP_POLICY_SHELL },
     { 0x1002, "hello", APP_POLICY_DIAGNOSTIC },
     { 0x1003, "rixie", APP_POLICY_CONSOLE },
     { 0x1004, "gui-demo", APP_POLICY_GUI },
 #ifdef VOS_GUI_VERIFY
     { 0x1005, "gui-probe", APP_POLICY_GUI },
+#endif
+};
+
+/* Separate boot-selected catalog; legacy three/four/five-module routes remain.
+ * Logical identities never expose Multiboot indices or grant launch authority. */
+static const struct provision pointer_provisioned[] = {
+    {0x1001,"vsh",APP_POLICY_SHELL},{0x1002,"hello",APP_POLICY_DIAGNOSTIC},
+    {0x1003,"rixie",APP_POLICY_CONSOLE},{0x1004,"gui-demo",APP_POLICY_GUI},
+    {0x1006,"pointer-demo",APP_POLICY_GUI},
+#ifdef VOS_GUI_VERIFY
+    {0x1005,"gui-probe",APP_POLICY_GUI},{0x1007,"pointer-probe",APP_POLICY_GUI},
 #endif
 };
 
@@ -50,6 +58,15 @@ int app_payload_prepare(const struct boot_info *bi, const struct resv_table *res
 #ifdef VOS_GUI_VERIFY
     if(gui_verify_requested(bi ? bi->cmdline : 0))count=5;
 #endif
+    int pointer=pointer_boot_requested(bi ? bi->cmdline : 0);
+    const struct provision *entries=pointer?pointer_provisioned:provisioned;
+    if(pointer) {
+        if(!gui_boot_requested(bi ? bi->cmdline : 0))return reject();
+        count=5;
+#ifdef VOS_GUI_VERIFY
+        if(gui_verify_requested(bi ? bi->cmdline : 0))count=7;
+#endif
+    }
     memset(&catalog, 0, sizeof(catalog));
     if (!bi || !reserved || reserved->count > RESV_MAX ||
         bi->module_count != count)
@@ -65,7 +82,7 @@ int app_payload_prepare(const struct boot_info *bi, const struct resv_table *res
         if (!n || n > APP_CATALOG_NAME_MAX) return reject();
         unsigned match = count;
         for (unsigned j = 0; j < count; j++)
-            if (strlen(provisioned[j].name) == n && !memcmp(m->cmdline, provisioned[j].name, n))
+            if (strlen(entries[j].name) == n && !memcmp(m->cmdline, entries[j].name, n))
                 match = j;
         if (match == count || (seen & (1U << match)))
             return reject();
@@ -76,9 +93,9 @@ int app_payload_prepare(const struct boot_info *bi, const struct resv_table *res
             if (!resv_overlaps(reserved, p, p + PAGE_SIZE)) return reject();
         struct app_source *s = &sources[match];
         s->version = APP_SOURCE_VERSION;
-        s->identity = provisioned[match].identity;
-        s->policy = provisioned[match].policy;
-        memcpy(s->name, provisioned[match].name, n);
+        s->identity = entries[match].identity;
+        s->policy = entries[match].policy;
+        memcpy(s->name, entries[match].name, n);
         s->image = phys_to_virt(m->start);
         s->length = m->end - m->start;
         seen |= 1U << match;

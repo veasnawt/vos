@@ -14,4 +14,5 @@ gui_call vos_gui_upload,17
 gui_call vos_gui_present,18
 gui_call vos_gui_release,19
 gui_call vos_gui_event,20
+gui_call vos_gui_pointer_state,21
 .section .note.GNU-stack,"",@progbits
