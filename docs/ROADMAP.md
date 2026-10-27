@@ -11,7 +11,8 @@ PR #16 synchronized documentation; accepted main at this planning integration is
 The accepted milestone sequence is preserved below. Proposed desktop,
 Rust-kernel and portability work is **not implementation authorization**.
 VOS is pre-alpha and targets independent physical x86_64 computers; current
-verification is QEMU SeaBIOS/OVMF only. See [STATUS](STATUS.md) for precise limits.
+recorded acceptance verification is QEMU SeaBIOS/OVMF only; the partial physical
+boot observation below is not hardware acceptance. See [STATUS](STATUS.md) for precise limits.
 Historical publication and branch narratives remain in their existing reports.
 
 ## Plan navigation
@@ -178,11 +179,34 @@ boundaries, preserve supported ABIs and capability semantics, and audit unsafe
 Rust, assembly, FFI, interrupt entry and DMA ownership. Existing Rust application
 support is implemented; kernel migration is not.
 
+Rust is intended as the primary language for future kernel development. R0-A is
+the next proposed read-only assessment and is independent of the stopped D1
+transition. Hardware and migration work coordinate when sharing source files;
+neither grants automatic authorization for the other.
+
 Real physical x86_64 operation remains the target. Broader hardware portability
 requires explicit firmware/boot, hardware discovery, APIC/interrupt, memory/DMA,
 storage, input and display resource contracts plus controlled physical testing.
 Other architecture ports are proposals requiring their own feasibility and
 owner authorization. Emulator success alone is not physical-hardware evidence.
+
+## Hardware and USB follow-up
+
+[USB.1](plans/MASTER-PLAN.md#71-usb-discovery-and-proposed-input-sequence) is
+implemented and committed **locally**, not merged or physically verified:
+`bd22803b8b5635b776c848d08d1494f65b49dd21` on `feat/usb-xhci-discovery`.
+It provides bus-0 xHCI discovery/diagnostics, not USB keyboard/mouse input.
+Proposed USB.2–USB.5 cover controller operation, enumeration/keyboard HID,
+unified keyboard routing and mouse HID within the existing H-series scope.
+
+The owner reports DD-mode Rufus media reaching a physical graphical display,
+with GUI/shell startup failures; functional GUI, shell and USB input remain
+undemonstrated. PS/2 initialization is a hypothesis, not a confirmed cause.
+[Rufus ISO-mode compatibility](plans/MASTER-PLAN.md#72-owner-reported-physical-boot-and-rufus-compatibility)
+is a separate proposed boot-media task, preserving DD mode and requiring
+BIOS/UEFI and physical validation before compatibility claims. Publication review,
+USB, boot-media work, R0-A and desktop development are coordinated priorities,
+not mandatory serial gates or permission to begin implementation.
 
 ## Later work
 

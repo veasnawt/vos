@@ -167,7 +167,7 @@ Cursor accepted after PR #15: visible arrow approximately **21×28 pixels on a 3
 
 ### 3.4 Important current platform limitations
 
-Read-only trusted media; QEMU-only validation; limited physical RAM range and framebuffer formats; bounded storage/device mappings; UEFI polling in relevant paths; incomplete full dynamic kernel-stack high-water proof; PS/2 input only; no window manager, multi-window compositor or native graphical Terminal; no persistent settings; no independent EFI loader/Secure Boot; no production networking/TLS; no validated real GPU, USB, NVMe, sound or Wi-Fi drivers. Consult [`docs/STATUS.md`](../STATUS.md) for the exact evidence-backed list.
+Read-only trusted media; formal verification remains QEMU-based, with owner-reported partial physical boot distinguished in section 7.2; limited physical RAM range and framebuffer formats; bounded storage/device mappings; UEFI polling in relevant paths; incomplete full dynamic kernel-stack high-water proof; PS/2 input only; no window manager, multi-window compositor or native graphical Terminal; no persistent settings; no independent EFI loader/Secure Boot; no production networking/TLS; no validated real GPU, USB, NVMe, sound or Wi-Fi drivers. Consult [`docs/STATUS.md`](../STATUS.md) for the exact evidence-backed accepted scope; section 7.1 separately records local-only USB.1 work.
 
 ## 4. Roadmap taxonomy and release gates
 
@@ -301,7 +301,7 @@ Scope: supported physical x86-64 devices, installation media with explicit disk 
 
 ## 6. R-series: Rust-first kernel migration
 
-**Intent:** migration by interoperable increments. Preserve the currently working C/assembly kernel and stable userspace ABIs; use `no_std` Rust appropriately; keep necessary assembly; audit `unsafe`, panic/alloc constraints, linking, interrupts and DMA. Do not rewrite core memory management simply to change GitHub language percentages.
+**Intent:** Rust is the intended primary language for future VOS kernel development, through interoperable increments. Preserve the currently working C/assembly kernel, stable userspace ABIs and cross-language interoperability; use `no_std` Rust appropriately; keep necessary assembly; audit FFI, `unsafe`, panic behavior, allocation constraints, linking, interrupts, DMA ownership and memory lifetimes. Do not rewrite core memory management simply to change GitHub language percentages.
 
 | Stage | Engineering contract | Required gate |
 |---|---|---|
@@ -314,6 +314,10 @@ Scope: supported physical x86-64 devices, installation media with explicit disk 
 | **R5** | Consolidation into predominantly Rust-owned kernel code | Retire C only after all affected tests and ABIs remain valid |
 
 **Scheduling:** the original proposal placed R0-A after the D1 documentation/infrastructure checkpoint. The owner has since stopped the D1 controller transition; completing that transition is not a prerequisite. R0-A and R0-B each still need their own authorization. R1–R5 can span multiple N milestones; N6.4 must not be blocked on finishing the entire R-series. Preserve portable C ABIs so non-Rust language bindings remain viable.
+
+R0-A is the next proposed read-only architectural assessment, not work started
+by this update. Hardware development and Rust migration are independent tracks;
+coordinate scope and source ownership when they touch the same files.
 
 ## 7. H-series: physical hardware and portability
 
@@ -335,6 +339,73 @@ approved H0 design rather than silently renumbering historical records.
 | **Future** | ARM64, RISC-V and other families | Separate ABI, toolchain, boot, MMU and hardware plans |
 
 **Hardware safety:** never issue disk writes, partition operations, firmware flashing, Wi-Fi regulatory transmissions or power-management experiments on an unapproved host. Prefer replaceable hardware and dedicated test media. GPU, USB, ACPI and chipset diversity will be major effort centers.
+
+### 7.1 USB discovery and proposed input sequence
+
+**USB.1 — implemented and committed locally, not merged or physically verified.**
+Branch `feat/usb-xhci-discovery`, commit
+`bd22803b8b5635b776c848d08d1494f65b49dd21`, is retained in the separate
+`/home/veasnawt/src/vos-usb` checkout. Its local report is
+`docs/results/usb1-xhci.md`; that file and implementation are not in this
+planning branch or accepted GitHub main. No unpublished GitHub link is implied.
+
+The implementation supplies opt-in PCI xHCI discovery, BAR validation, bounded
+capability inspection and startup diagnostics. Recorded evidence includes
+**45,713 xHCI sanitizer assertions**, **49,499 console assertions**, keyboard
+regressions, **523 bootstrap assertions** with modeled service/scheduler
+boundaries, and **ten BIOS/UEFI cases**, including expected PS/2-disabled failure
+controls. Independent QMP snapshots confirm controller IDs and BAR addresses.
+This is bus-0 discovery and QEMU verification only: no USB transfers, no
+VOS-initialized xHCI data path, and no operational USB keyboard or mouse support.
+
+The following increments sit within the existing H-series hardware/input scope.
+USB identifiers do not replace H numbers or resolve the historical H2 collision.
+
+| Increment | Scope | State and boundary |
+|---|---|---|
+| USB.1 | Native xHCI discovery and diagnostics described above | Locally implemented/committed; publication review pending, not accepted main or physical input |
+| USB.2 | Controller ownership and initialization; owned DMA allocation; command/event rings; interrupt or bounded polling behavior; errors and teardown | PROPOSED; define bounded hardware ownership and cleanup before enabling a VOS data path |
+| USB.3 | Port/device initialization, descriptor validation, endpoint configuration, HID boot-keyboard input and supported recovery | PROPOSED; builds on controller operation; reject malformed input and bound enumeration/resources |
+| USB.4 | Unified keyboard events through existing PS/2 input architecture, `vsh`, native GUI and process-owned input delivery | PROPOSED; preserve existing keyboard behavior, authority and input ownership rather than duplicate infrastructure |
+| USB.5 | USB mouse HID motion/buttons through the existing pointer/input architecture | PROPOSED; reuse enumeration and shared routing, preserving pointer bounds, button semantics and cleanup |
+
+USB.1 completion does not authorize USB.2–USB.5. Hardware qualification remains
+a separate evidence requirement; neither the proposed sequence nor complete
+hardware support is a prerequisite for all further desktop development.
+
+### 7.2 Owner-reported physical boot and Rufus compatibility
+
+The owner reports that Rufus **DD Image mode** media reached the VOS graphical
+display on a physical x86_64 computer. Boot failures were reported with these
+labels: `native GUI surface/event application`, `native vsh`, and
+`common payload native vsh`. These are owner observations, not a new independently
+reproduced hardware acceptance record or proof of functional application input.
+
+**Partial physical boot demonstrated (owner-reported); functional GUI, shell and
+USB input not yet demonstrated.** Missing or failed PS/2 initialization is a
+plausible explanation, not an established root cause on that machine. USB.1's
+opt-in diagnostics can help distinguish input initialization from ELF loading,
+grants and other startup failures. Its QEMU controls do not prove the physical
+machine has the same fault. No H-series physical acceptance is marked complete.
+
+Rufus **ISO Image mode** previously encountered GRUB errors. The root cause is
+unknown. A **proposed, separate H-series/boot-media compatibility task** should:
+
+- Preserve the owner-reported working DD-mode path and retained boot artifacts.
+- Investigate the exact GRUB bootloader/module versions and configuration using
+  captured errors; do not assume the failure mechanism.
+- Validate extracted ISO layouts, BIOS/UEFI boot paths, the Multiboot2 loader and
+  all required kernel/application modules against their intended payloads.
+- Evaluate FAT32 and applicable NTFS boot configurations independently, with
+  explicit firmware/layout limitations rather than assumed universal support.
+- Support standard Rufus ISO Image mode where technically feasible and check
+  both BIOS and UEFI paths, retaining DD mode as a compatibility control.
+- Require owner-authorized, non-destructive physical validation of each claimed
+  configuration before declaring compatibility complete.
+
+This boot-media task neither replaces USB development nor proves USB HID support.
+Firmware/device identification, raw error capture and qualified test media remain
+necessary inputs to its separately authorized engineering specification.
 
 ## 8. NET-series: network services, HTTP and HTTPS
 
@@ -588,13 +659,27 @@ flowchart TD
   N7 -. "saved profiles only" .-> WIFIUI
   R0["R0: kernel Rust assessment; separate approval"]
   D1["D1: accepted history; controller transition stopped"]
+  USB1["USB.1: local commit; review pending"] --> USBNEXT["USB.2–5: proposed physical input"]
+  BOOT["Boot-media compatibility: proposed independent task"]
 ```
 
 This graph describes *planning dependencies*. Dotted edges apply only to the named optional persistence or online feature, not the whole destination milestone. D1 is historical here and is not a prerequisite for R0 or N6.4. Some designs and non-invasive research can proceed in parallel when explicitly approved. NET/WF/H can be split into independent worktrees only with adequate isolation, resources and owner authorization.
 
+USB, boot-media compatibility, R0-A and N6.4 work require coordination where
+sources overlap; there is no mandatory serial dependency between all tracks or
+requirement to complete physical hardware support before progressing the desktop.
+
 ### 15.2 Practical execution waves (no dates promised)
 
-**Wave A — protect and plan (integration status):** PR #16 is merged; D1-A completed, and actual D1-B1/B2 merged through PRs #17/#18. The later controller-transition project is stopped by owner decision. Review this master-plan/navigation integration as documentation only; publication requires separate authorization. No new kernel feature or D1 work is authorized by the plan.
+**Wave A — protect and plan (integration status):** PR #16 is merged; D1-A completed, and actual D1-B1/B2 merged through PRs #17/#18. The later controller-transition project is stopped by owner decision. Complete publication review of this master plan and the locally committed USB.1 work; publishing either requires separate authorization. No new kernel feature or D1 work is authorized by the plan.
+
+**Near-term owner priorities (not mandatory serial gates):**
+
+1. Complete Master Plan and local USB.1 publication review.
+2. Investigate Rufus ISO-mode compatibility as a separate boot-media feature.
+3. Continue proposed USB.2–USB.5 toward functional physical input when authorized.
+4. Start the independent R0-A Rust-kernel assessment when authorized.
+5. Continue N6.4–N6.8 desktop work in coordination with hardware progress.
 
 **Wave B — foundation work:** R0-A audit; possible separately approved R0-B; N6.4 compositor/window framework; NET0 and W0 design-only investigations; H0 physical-platform audit; WF0 architecture/chipset candidates. Avoid concurrent modifications to common graphics, process or device core.
 
@@ -622,7 +707,10 @@ These priority classes are planning guidance, not scheduling authorization. Comp
 | Work | Strategic priority | Complexity/risk | Why it matters | Cannot honestly claim complete without |
 |---|---|---|---|---|
 | D1-A/B | Historical; controller transition stopped | Medium workflow risk | Preserve accepted B1/B2 protection and interrupted B3 work | Retain accepted evidence; any future tooling change needs new owner authorization |
-| R0-A | Near-term | Low execution/high analysis | Safe Rust integration architecture | Reviewed read-only audit and owner decision |
+| USB.1 publication review | Immediate review | Bounded review/publication risk | Preserve and publish the locally verified discovery increment | Source/evidence review and separate publication approval; no physical-input claim |
+| Rufus boot-media compatibility | Near-term, separate from USB | Firmware/media compatibility risk | Preserve DD boot and investigate ISO mode | Captured cause, qualified BIOS/UEFI layouts and physical validation of claimed configurations |
+| USB.2–USB.5 | Near-term hardware input | High device/DMA/lifecycle risk | Functional USB keyboard/mouse input | Separately approved increments, bounded lifecycle tests and physical qualification before hardware claims |
+| R0-A | Next proposed read-only Rust assessment; independent of D1 | Low execution/high analysis | Safe Rust integration architecture | Reviewed read-only audit and owner decision |
 | N6.4–6.8 | Near-term core | High | First coherent VOS GUI | Real multi-app BIOS/UEFI acceptance |
 | H0 | Early parallel | Medium | Identify real hardware assumptions | Exact device/firmware gaps |
 | NET0/1/2 | Early parallel | High | App-level outbound networking | Genuine client behavior and denied ungranted access |
@@ -705,6 +793,8 @@ For each proposed plan: identifier/title; status and decision authority; goal/us
 | DEC-13 | Supported reference PCs and non-destructive tests | Start with one spare x86-64 UEFI machine | H1–H5 execution |
 | DEC-14 | Release qualification minimums | Defined supported matrix and honest claims | N9 release approval |
 | DEC-15 | Rixie original AI scope and external-data/privacy boundaries | Separate research program, permissions controlled | Assistant/model integration |
+| DEC-16 | Rufus ISO-mode GRUB/module/layout test matrix | Preserve DD compatibility; diagnose captured errors; evaluate FAT32/applicable NTFS on BIOS/UEFI | Boot-media implementation and owner-authorized physical compatibility claims |
+| DEC-17 | USB controller ownership, DMA/ring limits and HID/input contracts | Extend USB.1 through separately scoped USB.2–USB.5; reuse existing input and process-owned authority | Controller activation, transfers and claimed physical USB input |
 
 Review decisions explicitly; do not present provisional preferences as approved specifications. An ADR should include alternatives, tradeoffs, compatibility, reversibility and its accepted owner/date.
 
