@@ -1,0 +1,6 @@
+mkdir -p /home/veasnawt/src/vos-r0b/build/r0b-check-1/i386
+gcc -m32  -MMD -MP -c arch/i386/boot.S -o /home/veasnawt/src/vos-r0b/build/r0b-check-1/i386/boot.o
+gcc -std=gnu11 -ffreestanding -fno-pic -fno-pie -fno-stack-protector -fno-builtin -fno-asynchronous-unwind-tables -mno-sse -mno-mmx -O2 -Wall -Wextra -m32  -MMD -MP -c arch/i386/kernel.c -o /home/veasnawt/src/vos-r0b/build/r0b-check-1/i386/kernel.o
+ld -m elf_i386 -nostdlib -T arch/i386/linker.ld -o /home/veasnawt/src/vos-r0b/build/r0b-check-1/i386/vos.bin /home/veasnawt/src/vos-r0b/build/r0b-check-1/i386/boot.o /home/veasnawt/src/vos-r0b/build/r0b-check-1/i386/kernel.o 
+grub-file --is-x86-multiboot /home/veasnawt/src/vos-r0b/build/r0b-check-1/i386/vos.bin
+i386: Multiboot header OK

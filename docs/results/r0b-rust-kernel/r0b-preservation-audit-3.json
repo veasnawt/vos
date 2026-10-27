@@ -1,0 +1,7 @@
+{
+  "result": "PASS",
+  "previous_audit": "r0b-preservation-audit-2.json",
+  "previous_audit_sha256": "d5bf35b2dec7b1c0c185a427b819339fdc01389a662f29489d599fe17e4c3da7",
+  "explanation": "Only discrepancy was default git status directory collapsing; exact -uall status matches retained inventory. All 3856 historical entries, 1891 source files, refs/index/worktrees/stashes passed the prior byte-level audit.",
+  "exact_draft_status": " M tools/vos_control/v1/README.md\n?? docs/development/accounting-shadow-v1.md\n?? tests/controller/fixtures/shadow_v1.json\n?? tests/controller/test_shadow_ledger.py\n?? tools/vos_control/shadow_v1.py\n"
+}

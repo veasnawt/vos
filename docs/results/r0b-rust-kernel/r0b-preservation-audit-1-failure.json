@@ -1,0 +1,6 @@
+{
+  "operation": "read-only historical audit",
+  "result": "incomplete",
+  "error": "KeyError: sha256 on retained synthetic symlink entry; no source or historical writes",
+  "recovery": "parse the existing symlink record as symlink metadata; verify link itself, never follow or remove it"
+}

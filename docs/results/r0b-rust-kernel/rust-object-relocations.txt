@@ -1,0 +1,5 @@
+
+Relocation section '.rela.text._RNvCsgpO44WCzh3m_7___rustc17rust_begin_unwind' at offset 0x148 contains 2 entries:
+    Offset             Info             Type               Symbol's Value  Symbol's Name + Addend
+0000000000000004  000000020000000b R_X86_64_32S           0000000000000000 .rodata.str1.1 + 0
+0000000000000009  0000000400000004 R_X86_64_PLT32         0000000000000000 panic - 4

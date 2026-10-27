@@ -1,0 +1,102 @@
+{
+  "reproducible": {
+    "vos.bin": "66bf6ee698ab2739ab1ad793cba14c0a0db83178f5bce1821def74bf31838182",
+    "rust/libvos_kernel.a": "c76ef87940e3470a12769c17e9aa3b175a9aab72e6b9ea1917a379c907aae4e1"
+  },
+  "sizes": {
+    "baseline": {
+      "file_bytes": 1021224,
+      "sha256": "4d07658b9b4d0756c77f056d6695184928e206b611bf6603e8018c4f2f0353a4",
+      "size": "text\t   data\t    bss\t    dec\t    hex\tfilename\n 212992\t    220\t 618304\t 831516\t  cb01c\t/home/veasnawt/src/vos-r0b/build/r0b-check-1/baseline/vos.bin"
+    },
+    "rust": {
+      "file_bytes": 1022640,
+      "sha256": "66bf6ee698ab2739ab1ad793cba14c0a0db83178f5bce1821def74bf31838182",
+      "size": "text\t   data\t    bss\t    dec\t    hex\tfilename\n 212992\t    220\t 618304\t 831516\t  cb01c\t/home/veasnawt/src/vos-r0b/build/r0b-check-1/normal/vos.bin"
+    }
+  },
+  "host_abi_pairs": 4134,
+  "binary_inspection": "PASS: static C call, integer-only Rust, no red zone/runtime/TLS/unwind imports",
+  "dependencies": "PASS: unchanged, source change, compiler flags; compiler/sysroot hashes pinned in inputs",
+  "image_hashes": {
+    "hello-bios.iso": {
+      "bytes": 6563840,
+      "sha256": "c43904d06cc2a9ff5500658b9b19df4e557c8dc048ddeb882fa7fb63f7deb338"
+    },
+    "hello-uefi.iso": {
+      "bytes": 11112448,
+      "sha256": "4360f7c70e0e6e6d4a9ae16bc6ed9017d3290ee4ae26c1d967ad9e1c363e9352"
+    },
+    "interactive-bios.iso": {
+      "bytes": 8570880,
+      "sha256": "c9ea66dc74fd9f8fff3fd6fc0bccb4c7470359e1d8ae5a2997bd2a700588e41f"
+    },
+    "interactive-uefi.iso": {
+      "bytes": 13119488,
+      "sha256": "4bec6604d616c21a4525acf4143b20c5d4bb2a095c2d25096d7eaa8981f76703"
+    }
+  },
+  "native": [
+    {
+      "case": "bios-hello",
+      "cpu": "qemu64",
+      "result": "PASS",
+      "serial_sha256": "2aefb6bbd6d4a420f3a9fafe8c2685da91afc99f6a4ea39031ccb0748ecacebd"
+    },
+    {
+      "case": "bios-hello-max",
+      "cpu": "max",
+      "result": "PASS",
+      "serial_sha256": "0e952696aefde89e200869481ddbf54a49a828012591514b7874f4492444601e"
+    },
+    {
+      "case": "bios-rust-panic",
+      "cpu": "qemu64",
+      "result": "PASS",
+      "serial_sha256": "bcd87af84752ffd84801395ef6376274867f423d092f1f128decd403ebc62695"
+    },
+    {
+      "case": "bios-rust-result",
+      "cpu": "qemu64",
+      "result": "PASS",
+      "serial_sha256": "7827f62155209dcfe8a421e73854e88e0e2fb04ea6114a5e1de6165208e4b785"
+    },
+    {
+      "case": "bios-interactive",
+      "cpu": "qemu64",
+      "result": "PASS",
+      "serial_sha256": "ab03d7734b078a6fe1074967989c96285afaf566573e78310e576d79a9ee9039"
+    },
+    {
+      "case": "uefi-hello",
+      "cpu": "qemu64",
+      "result": "PASS",
+      "serial_sha256": "cb01bb7e1557ef23340e40e6261e6deb1cd8600030b649d5b775e336219624ef"
+    },
+    {
+      "case": "uefi-hello-max",
+      "cpu": "max",
+      "result": "PASS",
+      "serial_sha256": "2b495f9cf476d0028d43647fcf7d50d29b7619bde9040a1af8ee28830bc63f7e"
+    },
+    {
+      "case": "uefi-rust-panic",
+      "cpu": "qemu64",
+      "result": "PASS",
+      "serial_sha256": "454172fe01755b1808eae6702c9d672a77823923dd9051b03b2842009220b9c3"
+    },
+    {
+      "case": "uefi-rust-result",
+      "cpu": "qemu64",
+      "result": "PASS",
+      "serial_sha256": "d193c5d324a76eeb63173e06d631ddf824ad7bcfffa3db15393b58997d462680"
+    },
+    {
+      "case": "uefi-interactive",
+      "cpu": "qemu64",
+      "result": "PASS",
+      "serial_sha256": "b8b7611ce8ea37a6337e145b3b0436982a42ca8c92ea25c412fdde8a4491bddc"
+    }
+  ],
+  "status": "PASS"
+}

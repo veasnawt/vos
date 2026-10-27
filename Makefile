@@ -57,6 +57,8 @@ CFLAGS := -std=gnu11 -ffreestanding -fno-pic -fno-pie -fno-stack-protector \
 include $(ARCH_DIR)/arch.mk
 
 OBJS := $(addprefix $(BUILD)/,$(ARCH_OBJS))
+# Architecture libraries are link inputs, never object dependency-file inputs.
+LIBS := $(addprefix $(BUILD)/,$(ARCH_LIBS))
 
 # x86_64 has a user space (runtime and applications), built separately.
 ifeq ($(ARCH),x86_64)
@@ -75,8 +77,8 @@ $(BUILD)/%.o: $(ARCH_DIR)/%.S Makefile $(ARCH_DIR)/arch.mk | $(BUILD)
 $(BUILD)/%.o: $(ARCH_DIR)/%.c Makefile $(ARCH_DIR)/arch.mk | $(BUILD)
 	$(CC) $(CFLAGS) $(ARCH_CFLAGS) $(TEST_DEFS) -MMD -MP -c $< -o $@
 
-$(KERNEL): $(OBJS) $(ARCH_DIR)/linker.ld
-	$(LD) $(ARCH_LDFLAGS) -nostdlib -T $(ARCH_DIR)/linker.ld -o $@ $(OBJS)
+$(KERNEL): $(OBJS) $(LIBS) $(ARCH_DIR)/linker.ld
+	$(LD) $(ARCH_LDFLAGS) -nostdlib -T $(ARCH_DIR)/linker.ld -o $@ $(OBJS) $(LIBS)
 	$(ARCH_LINK_CHECK)
 
 verify: $(KERNEL)

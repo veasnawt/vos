@@ -1,0 +1,31 @@
+{
+  "snapshot_sha256": "12f8b06492377061568af023031939246b16393028b8ba0560e0bc07ecc528e0",
+  "historical_entries_checked": 3856,
+  "historical_roots": 13,
+  "states": {
+    "old": {
+      "head": "cbe9f9202ca9a45aaafa57ec45fc01baeb347bc1",
+      "source_files": 919,
+      "worktrees": 13,
+      "stashes": 2
+    },
+    "usb": {
+      "head": "bd22803b8b5635b776c848d08d1494f65b49dd21",
+      "source_files": 972,
+      "worktrees": 1,
+      "stashes": 0
+    },
+    "vos-r0a": {
+      "head": "689260f6c93c97e9d062e7829f078a13e92350be",
+      "clean": true
+    },
+    "vos-master-plan": {
+      "head": "c6aff9814d5b2f3c544ef9ed201aad0a1232c329",
+      "clean": true
+    }
+  },
+  "differences": [
+    "old:status state difference"
+  ],
+  "result": "FAIL"
+}

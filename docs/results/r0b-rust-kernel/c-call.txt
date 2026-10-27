@@ -1,0 +1,32 @@
+			5d3: R_X86_64_32S	.rodata.str1.1+0x3df
+ 5d7:	e8 00 00 00 00       	call   5dc <kernel_main+0x5dc>
+			5d8: R_X86_64_PLT32	serial_puts-0x4
+ 5dc:	41 0f 20 dd          	mov    %cr3,%r13
+ 5e0:	4d 31 f5             	xor    %r14,%r13
+ 5e3:	4c 89 e7             	mov    %r12,%rdi
+ 5e6:	4c 89 ee             	mov    %r13,%rsi
+ 5e9:	e8 00 00 00 00       	call   5ee <kernel_main+0x5ee>
+			5ea: R_X86_64_PLT32	vos_rust_probe-0x4
+ 5ee:	4c 89 ea             	mov    %r13,%rdx
+ 5f1:	49 89 c6             	mov    %rax,%r14
+ 5f4:	4c 89 e0             	mov    %r12,%rax
+ 5f7:	48 c1 ca 09          	ror    $0x9,%rdx
+ 5fb:	48 c1 c0 11          	rol    $0x11,%rax
+ 5ff:	48 01 d0             	add    %rdx,%rax
+ 602:	48 ba 30 54 53 55 52 	movabs $0x564f535255535430,%rdx
+ 60c:	48 31 d0             	xor    %rdx,%rax
+ 60f:	49 39 c6             	cmp    %rax,%r14
+ 612:	0f 85 ca 07 00 00    	jne    de2 <kernel_main+0xde2>
+ 618:	48 c7 c7 00 00 00 00 	mov    $0x0,%rdi
+			61b: R_X86_64_32S	.rodata.str1.1+0x3f4
+ 61f:	e8 00 00 00 00       	call   624 <kernel_main+0x624>
+			620: R_X86_64_PLT32	serial_puts-0x4
+ 624:	48 c7 c7 00 00 00 00 	mov    $0x0,%rdi
+			627: R_X86_64_32S	vos_rust_probe
+ 62b:	e8 00 00 00 00       	call   630 <kernel_main+0x630>
+			62c: R_X86_64_PLT32	serial_hex-0x4
+ 630:	48 c7 c7 00 00 00 00 	mov    $0x0,%rdi
+			633: R_X86_64_32S	.rodata.str1.1+0x411
+ 637:	e8 00 00 00 00       	call   63c <kernel_main+0x63c>
+			638: R_X86_64_PLT32	serial_puts-0x4
+ 63c:	4c 89 e7             	mov    %r12,%rdi

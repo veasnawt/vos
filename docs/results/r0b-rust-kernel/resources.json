@@ -1,0 +1,12 @@
+{
+  "build_logical_bytes": 298111956,
+  "linux_free_bytes": 1008665907200,
+  "legacy_accounting_changed": false,
+  "new_legacy_funding_applied": false,
+  "cleanup_performed": false,
+  "preserved_build_roots": [
+    "build/r0b-1",
+    "build/r0b-check-1"
+  ],
+  "note": "Normal ordinary development task under owner policy change; values are logical file sizes, not cumulative legacy charges. Historical ceilings/reservations left unchanged."
+}

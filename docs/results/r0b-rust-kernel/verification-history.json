@@ -1,0 +1,10 @@
+{
+  "executed_verifier_sha256": "34211cef2d99f3e5502615962cd5766b382ada85e6c058faa4c5b7bbe6c5a4ae",
+  "final_verifier_sha256": "6abf688d0dc4838e12e89a2b55c407c2d7d669fce163ba325b313482aa832ff0",
+  "changes": [
+    "Fixed baseline archive at accepted 67a525e2 instead of HEAD, which equaled that commit during execution",
+    "Wait for explicit vsh reclamation marker, independently verified in both completed serial logs"
+  ],
+  "implementation_followup": "Explicitly require VOS_TEST=1 as well as rust-panic for the Rust test cfg; rebuilt normal and panic kernels byte-identically to the tested inputs",
+  "complete_verification": "No native/kernel verification failure; retained follow-up helper expectation and read-only audit schema/display errors are not relabeled as passing original operations"
+}

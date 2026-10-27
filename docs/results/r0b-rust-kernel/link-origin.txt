@@ -1,0 +1,50 @@
+Archive member included to satisfy reference by file (symbol)
+
+/home/veasnawt/src/vos-r0b/build/r0b-check-1/normal/rust/libvos_kernel.a(libvos_kernel.vos_kernel.45b20e7284a592af-cgu.0.rcgu.o)
+                              /home/veasnawt/src/vos-r0b/build/r0b-check-1/normal/kernel.o (vos_rust_probe)
+
+
+/home/veasnawt/src/vos-r0b/build/r0b-check-1/normal/rust/libvos_kernel.a(libvos_kernel.vos_kernel.45b20e7284a592af-cgu.0.rcgu.o)
+                              /home/veasnawt/src/vos-r0b/build/r0b-check-1/normal/kernel.o (vos_rust_probe)
+
+Merging object attributes
+ .note.GNU-stack
+                0x0000000000000000        0x0 /home/veasnawt/src/vos-r0b/build/r0b-check-1/normal/net_tcp_close_boot.o
+ .comment       0x0000000000000000       0x36 /home/veasnawt/src/vos-r0b/build/r0b-check-1/normal/rust/libvos_kernel.a(libvos_kernel.vos_kernel.45b20e7284a592af-cgu.0.rcgu.o)
+ .note.GNU-stack
+                0x0000000000000000        0x0 /home/veasnawt/src/vos-r0b/build/r0b-check-1/normal/rust/libvos_kernel.a(libvos_kernel.vos_kernel.45b20e7284a592af-cgu.0.rcgu.o)
+ .comment       0x0000000000000000       0x36 /home/veasnawt/src/vos-r0b/build/r0b-check-1/normal/rust/libvos_kernel.a(libvos_kernel.vos_kernel.45b20e7284a592af-cgu.0.rcgu.o)
+ .note.GNU-stack
+                0x0000000000000000        0x0 /home/veasnawt/src/vos-r0b/build/r0b-check-1/normal/rust/libvos_kernel.a(libvos_kernel.vos_kernel.45b20e7284a592af-cgu.0.rcgu.o)
+
+Memory Configuration
+ .text          0xffffffff8012f0b0      0xdd8 /home/veasnawt/src/vos-r0b/build/r0b-check-1/normal/net_tcp_close_boot.o
+                0xffffffff8012f3f0                net_tcp_close_boot_run
+ .text          0xffffffff8012fe88        0x0 /home/veasnawt/src/vos-r0b/build/r0b-check-1/normal/rust/libvos_kernel.a(libvos_kernel.vos_kernel.45b20e7284a592af-cgu.0.rcgu.o)
+ *fill*         0xffffffff8012fe88        0x8 cccccccc
+ .text._RNvCsgpO44WCzh3m_7___rustc17rust_begin_unwind
+ *fill*         0xffffffff8012fe88        0x8 cccccccc
+ .text._RNvCsgpO44WCzh3m_7___rustc17rust_begin_unwind
+                0xffffffff8012fe90        0xd /home/veasnawt/src/vos-r0b/build/r0b-check-1/normal/rust/libvos_kernel.a(libvos_kernel.vos_kernel.45b20e7284a592af-cgu.0.rcgu.o)
+                0xffffffff8012fe90                __rustc::rust_begin_unwind
+ *fill*         0xffffffff8012fe9d        0x3 cccccccc
+                0xffffffff8012fe90                __rustc::rust_begin_unwind
+ *fill*         0xffffffff8012fe9d        0x3 cccccccc
+ .text.vos_rust_probe
+                0xffffffff8012fea0       0x1a /home/veasnawt/src/vos-r0b/build/r0b-check-1/normal/rust/libvos_kernel.a(libvos_kernel.vos_kernel.45b20e7284a592af-cgu.0.rcgu.o)
+                0xffffffff8012fea0                vos_rust_probe
+ *fill*         0xffffffff8012fe9d        0x3 cccccccc
+ .text.vos_rust_probe
+                0xffffffff8012fea0       0x1a /home/veasnawt/src/vos-r0b/build/r0b-check-1/normal/rust/libvos_kernel.a(libvos_kernel.vos_kernel.45b20e7284a592af-cgu.0.rcgu.o)
+                0xffffffff8012fea0                vos_rust_probe
+                0xffffffff80130000                . = ALIGN (0x1000)
+ .text.vos_rust_probe
+                0xffffffff8012fea0       0x1a /home/veasnawt/src/vos-r0b/build/r0b-check-1/normal/rust/libvos_kernel.a(libvos_kernel.vos_kernel.45b20e7284a592af-cgu.0.rcgu.o)
+                0xffffffff8012fea0                vos_rust_probe
+                0xffffffff80130000                . = ALIGN (0x1000)
+ *fill*         0xffffffff8012feba      0x146 cccccccc
+                                        0x31c (size before relaxing)
+ .rodata.str1.1
+                0xffffffff80139a30        0x0 /home/veasnawt/src/vos-r0b/build/r0b-check-1/normal/rust/libvos_kernel.a(libvos_kernel.vos_kernel.45b20e7284a592af-cgu.0.rcgu.o)
+                                         0x12 (size before relaxing)
+                0xffffffff8013a000                . = ALIGN (0x1000)

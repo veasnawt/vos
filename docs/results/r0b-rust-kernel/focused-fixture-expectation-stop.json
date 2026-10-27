@@ -1,0 +1,9 @@
+{
+  "result": "verification-helper expectation corrected",
+  "error": "negative make invocation raised CalledProcessError because existing Makefile correctly rejects VOS_TEST_CASE without VOS_TEST=1",
+  "kernel_failure": false,
+  "preserved_build_logs": [
+    "normal-explicit-test-guard-build.log",
+    "rust-panic-explicit-test-guard-build.log"
+  ]
+}

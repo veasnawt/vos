@@ -1,0 +1,198 @@
+{
+  "schema": 1,
+  "baseline": "67a525e2cbcb13215c4d17cdfd0e3740ad40ff16",
+  "result": "PASS; local owner review pending",
+  "source_and_evidence_files": {
+    ".github/workflows/build-smoke.yml": {
+      "bytes": 1302,
+      "sha256": "41bad807f896340040afc00f8b63ad053142d7777699bb572294977a08cafabf"
+    },
+    "Makefile": {
+      "bytes": 19417,
+      "sha256": "fda5c0361b7b6a4034b431c1314725e3d2d3ace8691d7b4185bb958e81ca7efb"
+    },
+    "arch/x86_64/arch.mk": {
+      "bytes": 36923,
+      "sha256": "5c4f2037bba7babd6cb16336b62bda439bb82af2b07e0ccff21655cc6b9ab391"
+    },
+    "arch/x86_64/kernel.c": {
+      "bytes": 17036,
+      "sha256": "1d75c715444e5be8b98531d0acb7eb92e6a62d58491fbb3e389a3476b5d5cdf2"
+    },
+    "arch/x86_64/rust/kernel_probe.rs": {
+      "bytes": 1100,
+      "sha256": "c4cfeaf0c9a7555d9d8d1cb5ec621e51787eee3db5ee1499a01edf8dc747ab46"
+    },
+    "arch/x86_64/rust_kernel.h": {
+      "bytes": 628,
+      "sha256": "3e2b7a2fecc313a9b6f9ef41ed450eef8511901b67e6ab6f894e0bdb3353d429"
+    },
+    "docs/results/r0b-rust-kernel-foundation.md": {
+      "bytes": 13381,
+      "sha256": "f504da34f1a39c22f515a785a2f8c745ad59e990ee3cc98e4c27435eec84474e"
+    },
+    "docs/results/r0b-rust-kernel/c-call.txt": {
+      "bytes": 1494,
+      "sha256": "90f76c0c07543a71aaac4e474f008d851fd0cb86ae1af90c82485f93cca94888"
+    },
+    "docs/results/r0b-rust-kernel/changed-files.txt": {
+      "bytes": 2315,
+      "sha256": "7a817e3f94375644fac4661c49b5ba1fbdc67c37020690e97c28c0648695e5b8"
+    },
+    "docs/results/r0b-rust-kernel/final-focused-checks.json": {
+      "bytes": 468,
+      "sha256": "fa8e3bdd3f253893f63e31dd4e618934b3e2cfa239c72a230b71165de5ebfa1d"
+    },
+    "docs/results/r0b-rust-kernel/focused-fixture-expectation-stop.json": {
+      "bytes": 353,
+      "sha256": "44ee68c5ac4b51c0b6fca73d1c3cab18528fd0bc1614d8b7df9ad3bed20293e5"
+    },
+    "docs/results/r0b-rust-kernel/hello-bios-image.txt": {
+      "bytes": 1264,
+      "sha256": "1c223c8d4f0525e70355bb1ff23602cac9fde92507d035c3749750cc2c080414"
+    },
+    "docs/results/r0b-rust-kernel/hello-uefi-image.txt": {
+      "bytes": 2987,
+      "sha256": "4c48d764d2e8bcba873cf89f9324ddcca4c042ae032d99995044d5edbd35588a"
+    },
+    "docs/results/r0b-rust-kernel/host-abi.txt": {
+      "bytes": 89,
+      "sha256": "b8e5fa835272a57c88432fe5a528fc81273c6cc1ed0bb54af4771ab36a52e93e"
+    },
+    "docs/results/r0b-rust-kernel/i386-verify.txt": {
+      "bytes": 746,
+      "sha256": "79c4010ad3298069a84ac905437cae24047c002a192edcfaea5b3d80cea84c02"
+    },
+    "docs/results/r0b-rust-kernel/independent-binary-audit.json": {
+      "bytes": 1131,
+      "sha256": "71f6ea443bb1494ba9a574d460a6788add3a1aeaec4634663bb8ec40e41fe9ff"
+    },
+    "docs/results/r0b-rust-kernel/interactive-bios-image.txt": {
+      "bytes": 1270,
+      "sha256": "c1d69da1da87b25d4e8f65010924e2a24b2f2bc91568478a36ff3009f083ec7c"
+    },
+    "docs/results/r0b-rust-kernel/interactive-uefi-image.txt": {
+      "bytes": 2993,
+      "sha256": "3093b5a7d3aaddfd876cb075878786eeb8e2e6f42ce2e875697af16f6d5d3437"
+    },
+    "docs/results/r0b-rust-kernel/kernel-sections.txt": {
+      "bytes": 2212,
+      "sha256": "dd2625c88754b9bce56a9f057673c684f9675dba67e9d58c026ecfa1f22c360c"
+    },
+    "docs/results/r0b-rust-kernel/kernel-segments.txt": {
+      "bytes": 852,
+      "sha256": "5ebe627f454e9a4874fdd239e2771a45688814ad574cb09f8b850b777c3c5836"
+    },
+    "docs/results/r0b-rust-kernel/link-origin.txt": {
+      "bytes": 3914,
+      "sha256": "08515b3b13e1ee557ea324adbcdec7bdb1e825af381184d35c9a75daaa1c5a4d"
+    },
+    "docs/results/r0b-rust-kernel/normal-rust-linked.txt": {
+      "bytes": 578,
+      "sha256": "d7ef894e4f39579388db052a804e73450e23818a30511ef07977c035e8345f49"
+    },
+    "docs/results/r0b-rust-kernel/r0b-preservation-audit-1-failure.json": {
+      "bytes": 291,
+      "sha256": "b41801b2fbd396527fbd9288ecc6834e0f23557ba0e40c3cabc098a4779898e7"
+    },
+    "docs/results/r0b-rust-kernel/r0b-preservation-audit-2.json": {
+      "bytes": 757,
+      "sha256": "d5bf35b2dec7b1c0c185a427b819339fdc01389a662f29489d599fe17e4c3da7"
+    },
+    "docs/results/r0b-rust-kernel/r0b-preservation-audit-3.json": {
+      "bytes": 643,
+      "sha256": "bf03828b5e5e407bda1707320eb95c93454e48c9a63341ecad784ba37b45af01"
+    },
+    "docs/results/r0b-rust-kernel/resources.json": {
+      "bytes": 444,
+      "sha256": "ccde08ba268bd67e598d60d8fc783cfdef54b36b59e1864441dd828f20fc61ff"
+    },
+    "docs/results/r0b-rust-kernel/results.json": {
+      "bytes": 3528,
+      "sha256": "b3b82cdfd3958d6279b161b91ad2ad93b21ff957f07be68d198b793d8ee8c1a7"
+    },
+    "docs/results/r0b-rust-kernel/rust-object-disassembly.txt": {
+      "bytes": 858,
+      "sha256": "598c0029e8ff43f51f0df0750fc5cd9e94d32b9c4cdf86bf8f651bd1cb7a9ed4"
+    },
+    "docs/results/r0b-rust-kernel/rust-object-relocations.txt": {
+      "bytes": 393,
+      "sha256": "5064894ac91aaaab261f1a7e0dac1986d77653a9707369d9518234e0c2d7d026"
+    },
+    "docs/results/r0b-rust-kernel/rust-object-sections.txt": {
+      "bytes": 1396,
+      "sha256": "f05b87dcf0bb111cbb24472c00001d6c33e4355efc626aab7b9f1bf7c20476f6"
+    },
+    "docs/results/r0b-rust-kernel/rust-panic-final-sections.txt": {
+      "bytes": 2481,
+      "sha256": "09a8d5fced91abd23e0843e51466fd76cd170070206b7cffe8a5fdd11cbacc05"
+    },
+    "docs/results/r0b-rust-kernel/rust-panic-rust-linked.txt": {
+      "bytes": 582,
+      "sha256": "952934796e58e27f8f36920b9bbc74a230bd17d3d89d57110f3a11bda94ed4d8"
+    },
+    "docs/results/r0b-rust-kernel/rust-result-final-sections.txt": {
+      "bytes": 2213,
+      "sha256": "dc39ada58fb571264951ab9e90161161111f159468ae8f11dc78118bd427ae46"
+    },
+    "docs/results/r0b-rust-kernel/serial-bios-hello-max.txt": {
+      "bytes": 2611,
+      "sha256": "0e952696aefde89e200869481ddbf54a49a828012591514b7874f4492444601e"
+    },
+    "docs/results/r0b-rust-kernel/serial-bios-hello.txt": {
+      "bytes": 2634,
+      "sha256": "2aefb6bbd6d4a420f3a9fafe8c2685da91afc99f6a4ea39031ccb0748ecacebd"
+    },
+    "docs/results/r0b-rust-kernel/serial-bios-interactive.txt": {
+      "bytes": 5293,
+      "sha256": "ab03d7734b078a6fe1074967989c96285afaf566573e78310e576d79a9ee9039"
+    },
+    "docs/results/r0b-rust-kernel/serial-bios-rust-panic.txt": {
+      "bytes": 2137,
+      "sha256": "bcd87af84752ffd84801395ef6376274867f423d092f1f128decd403ebc62695"
+    },
+    "docs/results/r0b-rust-kernel/serial-bios-rust-result.txt": {
+      "bytes": 2044,
+      "sha256": "7827f62155209dcfe8a421e73854e88e0e2fb04ea6114a5e1de6165208e4b785"
+    },
+    "docs/results/r0b-rust-kernel/serial-uefi-hello-max.txt": {
+      "bytes": 2941,
+      "sha256": "2b495f9cf476d0028d43647fcf7d50d29b7619bde9040a1af8ee28830bc63f7e"
+    },
+    "docs/results/r0b-rust-kernel/serial-uefi-hello.txt": {
+      "bytes": 2964,
+      "sha256": "cb01bb7e1557ef23340e40e6261e6deb1cd8600030b649d5b775e336219624ef"
+    },
+    "docs/results/r0b-rust-kernel/serial-uefi-interactive.txt": {
+      "bytes": 5619,
+      "sha256": "b8b7611ce8ea37a6337e145b3b0436982a42ca8c92ea25c412fdde8a4491bddc"
+    },
+    "docs/results/r0b-rust-kernel/serial-uefi-rust-panic.txt": {
+      "bytes": 2475,
+      "sha256": "454172fe01755b1808eae6702c9d672a77823923dd9051b03b2842009220b9c3"
+    },
+    "docs/results/r0b-rust-kernel/serial-uefi-rust-result.txt": {
+      "bytes": 2378,
+      "sha256": "d193c5d324a76eeb63173e06d631ddf824ad7bcfffa3db15393b58997d462680"
+    },
+    "docs/results/r0b-rust-kernel/toolchain-inputs.txt": {
+      "bytes": 1196,
+      "sha256": "945bcc2f57fb01304e691bd6d227a6ca6eda5c685f42b9e2fba453993e832daa"
+    },
+    "docs/results/r0b-rust-kernel/verification-history.json": {
+      "bytes": 804,
+      "sha256": "1a7f4453fb009662690338d1aba42fb355c2015a93d88e9663dedb959d2667a4"
+    },
+    "scripts/test-rust-kernel.py": {
+      "bytes": 16474,
+      "sha256": "6abf688d0dc4838e12e89a2b55c407c2d7d669fce163ba325b313482aa832ff0"
+    },
+    "tests/host/rust-kernel.c": {
+      "bytes": 1388,
+      "sha256": "b8a36f733248ecb0c30a9c4dc8acb9df5c095746eb5d69234078db999d191414"
+    }
+  },
+  "self_excluded": "manifest.json has no self-hash; Git commits its identity",
+  "changed_file_count": 48,
+  "report_internal_links_checked": 6
+}

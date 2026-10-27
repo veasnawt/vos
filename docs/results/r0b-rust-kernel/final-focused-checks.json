@@ -1,0 +1,6 @@
+{
+  "normal": "byte-identical to the native-tested kernel after explicit cfg guard",
+  "rust-panic": "byte-identical to the native-tested kernel after explicit cfg guard",
+  "test_selection": "PASS: default omits trigger; production case selection denied by existing guard; explicit test case enables trigger",
+  "verifier_refinements": "PASS: fixed accepted baseline equals executed HEAD; explicit shell reclamation marker exists in both logs; Python syntax valid"
+}
