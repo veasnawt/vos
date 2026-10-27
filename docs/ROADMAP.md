@@ -5,8 +5,9 @@ Unified native application launching and the N6.1-N6.3 graphical components are
 also accepted and merged. **N6 remains in progress.** The owner-accepted
 graphical baseline is [PR #15](https://github.com/veasnawt/vos/pull/15) at
 [`bf5eb43f2e07478e31be8b4123c5a297add67efe`](https://github.com/veasnawt/vos/commit/bf5eb43f2e07478e31be8b4123c5a297add67efe).
-PR #16 synchronized documentation; accepted main at this planning integration is
-`cbe9f9202ca9a45aaafa57ec45fc01baeb347bc1`, after infrastructure PRs #17/#18.
+PR #16 synchronized documentation; PRs #17/#18 added the reviewed infrastructure
+foundation. Accepted main for this review is the owner's Master Plan PR #19
+merge, `67a525e2cbcb13215c4d17cdfd0e3740ad40ff16`.
 
 The accepted milestone sequence is preserved below. Proposed desktop,
 Rust-kernel and portability work is **not implementation authorization**.
@@ -171,23 +172,28 @@ licensing and asset integration. VICons remains a candidate; the GUI architectur
 is icon-library-agnostic and requires no npm/React runtime. These are design
 directions, not implemented desktop features.
 
-## Proposed Rust-first kernel migration and portability
+## Rust kernel foundation and proposed migration/portability
 
-A Rust-first kernel migration remains an incremental planning track. The owner's
-R0-A authorization covers assessment only; no kernel implementation is authorized
-here. A future plan must define small interoperable
-boundaries, preserve supported ABIs and capability semantics, and audit unsafe
-Rust, assembly, FFI, interrupt entry and DMA ownership. Existing Rust application
-support is implemented; kernel migration is not.
+[R0-A](results/r0a-rust-kernel-assessment.md) is complete as a read-only assessment.
+[R0-B](results/r0b-rust-kernel-foundation.md) is implemented and locally verified:
+one freestanding Rust static library, a checked scalar C-ABI call in the
+higher-half kernel, and a minimal panic bridge. Both original commits and their
+evidence are retained in this publication proposal. Neither is yet owner-accepted
+or merged. [Final-tree review](results/r0-publication-review.md) records provenance
+and focused publication verification; the dated reports retain historical status.
 
-Rust is intended as the primary language for future kernel development. R0-A is
-the next authorized read-only assessment, independent of the stopped D1 transition
-and this plan PR's merge. R0-B requires separate review and authorization. Establish
-Rust kernel integration before substantial additional C subsystems where practical;
-USB.2 should evaluate Rust after R0-B is demonstrated. Preserve local USB.1 and
-R1–R5's incremental structure. Unrelated bug fixes, boot-media work and desktop
-planning need not wait for the full migration. Hardware and migration work
-coordinate when sharing files; neither authorizes the other automatically.
+R1-R5 remain future, separately authorized increments under the
+[Master Plan R-series](plans/MASTER-PLAN.md#6-r-series-rust-first-kernel-migration).
+The kernel is still primarily C/assembly. Further migration must define small
+interoperable boundaries, preserve ABIs/capabilities, and audit unsafe Rust,
+assembly, FFI, interrupts and DMA ownership. Rust application support remains
+implemented independently of this kernel proof.
+
+USB.2 should evaluate Rust after owner review of R0-B; USB.1 remains preserved
+in its separate local checkout. No R1 or USB.2 implementation is authorized by
+this update. Unrelated bug fixes, boot-media work and desktop planning need not
+wait for the full migration. Hardware and migration work coordinate when sharing
+files; neither authorizes the other automatically.
 
 Real physical x86_64 operation remains the target. Broader hardware portability
 requires explicit firmware/boot, hardware discovery, APIC/interrupt, memory/DMA,

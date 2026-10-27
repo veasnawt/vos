@@ -1,0 +1,53 @@
+{
+  "five_load_segments_identical_to_native_verified_R0B": true,
+  "segments": [
+    {
+      "flags": 5,
+      "virtual": 1048576,
+      "physical": 1048576,
+      "file_bytes": 4096,
+      "memory_bytes": 4096,
+      "align": 4096,
+      "sha256": "a51f87b7319ff92fe9113999d0bef84153fd2f3ae3cc4c6b6b64ea7e95a5b204"
+    },
+    {
+      "flags": 6,
+      "virtual": 1052672,
+      "physical": 1052672,
+      "file_bytes": 40,
+      "memory_bytes": 24576,
+      "align": 4096,
+      "sha256": "8a47426e96a1316b74be84dda219975ca6c74163287f8042c84699ccd235d58d"
+    },
+    {
+      "flags": 5,
+      "virtual": 18446744071563145216,
+      "physical": 1077248,
+      "file_bytes": 167936,
+      "memory_bytes": 167936,
+      "align": 4096,
+      "sha256": "5d523c2c38e4f1eae2b88ee9e14d942a61ed2c481722b6d5439bfd71d82ab58a"
+    },
+    {
+      "flags": 4,
+      "virtual": 18446744071563313152,
+      "physical": 1245184,
+      "file_bytes": 40960,
+      "memory_bytes": 40960,
+      "align": 4096,
+      "sha256": "d766e31cf5d5ac6cf58ab8caa2210ae287642bfdfdcf5f86fd4183ea7182abe3"
+    },
+    {
+      "flags": 6,
+      "virtual": 18446744071563354112,
+      "physical": 1286144,
+      "file_bytes": 180,
+      "memory_bytes": 598016,
+      "align": 4096,
+      "sha256": "848bbeb9f96f1e4eb4a9a6f0db7449fdec7f65f3c36a029667ab7db693ab0d78"
+    }
+  ],
+  "rust_archive_byte_identical": true,
+  "final_file_sha256": "24a46322834c090a0c1da9d7631bdb8427a608d928f463859bcb44f85293019e",
+  "note": "Different checkout paths alter non-loaded C DWARF, not any PT_LOAD bytes or geometry."
+}

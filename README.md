@@ -14,8 +14,10 @@ No physical-machine installation or production-security claim is made.
 
 ## Architecture and implemented capabilities
 
-The kernel is primarily freestanding C and x86 assembly, with Rust as the
-first-class native application language. VOS is not a Linux distribution and
+The kernel is primarily freestanding C and x86 assembly; the first
+[Rust kernel integration](docs/results/r0b-rust-kernel-foundation.md) is locally
+verified and pending owner acceptance/merge. Rust is the first-class native
+application language. VOS is not a Linux distribution and
 does not use Linux or a hosted C library inside the guest. GRUB supplies a
 Multiboot2 handoff through BIOS or UEFI; a legacy i386 baseline is also retained.
 
@@ -72,8 +74,10 @@ A console panel drawn by the kernel is not the planned graphical Terminal.
 
 Development hosts need GCC/binutils, make, GRUB BIOS/EFI image tools, xorriso and
 QEMU; Python 3, e2fsprogs, mtools and OVMF support the relevant checks and images.
-Native Rust applications additionally require a suitable rustc toolchain and
-the `x86_64-unknown-none` target; see the [SDK build guide](docs/rust-apps.md).
+The x86_64 kernel and native Rust applications require rustc and the
+`x86_64-unknown-none` target. R0-B verifies `nightly-2026-09-03`; select its compiler
+with `RUSTC=/path/to/rustc`. See the [kernel reproduction instructions](docs/results/r0b-rust-kernel-foundation.md#reproduction-and-ordinary-preview)
+and [SDK build guide](docs/rust-apps.md). The legacy i386 build remains C/assembly.
 
 ```sh
 make ARCH=x86_64 verify
@@ -112,8 +116,8 @@ Current limits include QEMU-only BIOS/OVMF validation, RAM tracked below 1 GiB,
 read-only trusted media, bounded single-endpoint networking, polling limitations
 and standard PS/2 keyboard/primary-button mouse input. USB input, production
 networking, writable storage, installation and Secure Boot are not implemented.
-Rust-first kernel migration and broader hardware portability are proposed
-planning tracks, not delivered features or authorized implementation.
+Further Rust kernel migration beyond the local R0-B proof and broader hardware
+portability remain proposed tracks requiring separate authorization.
 
 The separate [Veasna OS React/Electron prototype](https://github.com/veasnawt/veasna-os)
 is not a graphical environment running on this kernel. Design mockups are not

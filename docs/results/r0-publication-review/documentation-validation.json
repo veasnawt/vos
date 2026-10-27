@@ -1,0 +1,16 @@
+{
+  "result": "PASS",
+  "documents": [
+    "README.md",
+    "docs/STATUS.md",
+    "docs/ROADMAP.md",
+    "docs/results/r0a-rust-kernel-assessment.md",
+    "docs/results/r0b-rust-kernel-foundation.md",
+    "docs/results/r0-publication-review.md"
+  ],
+  "internal_links_checked": 163,
+  "broken_links": [],
+  "utf8_and_fences": "PASS",
+  "stale_roadmap_heading_references": 0,
+  "original_R0B_manifest_entries_verified": 47
+}

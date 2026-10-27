@@ -1,0 +1,29 @@
+{
+  "result": "PASS",
+  "historical_entries": 3856,
+  "historical_roots": 13,
+  "states": {
+    "myos": {
+      "commit": "cbe9f9202ca9a45aaafa57ec45fc01baeb347bc1",
+      "source_files_unchanged": 919,
+      "worktrees": 13,
+      "stashes": 2
+    },
+    "vos-usb": {
+      "commit": "bd22803b8b5635b776c848d08d1494f65b49dd21",
+      "source_files_unchanged": 972,
+      "worktrees": 1,
+      "stashes": 0
+    },
+    "vos-r0a": {
+      "commit": "689260f6c93c97e9d062e7829f078a13e92350be",
+      "clean": true
+    },
+    "vos-r0b": {
+      "commit": "8e2f247dacf7a5d2a4f37db7c73df191f6c4cc1b",
+      "clean": true
+    }
+  },
+  "differences": [],
+  "snapshot_sha256": "12f8b06492377061568af023031939246b16393028b8ba0560e0bc07ecc528e0"
+}
