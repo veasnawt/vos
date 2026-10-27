@@ -1,0 +1,54 @@
+{
+  "baseline": "f24b3a803a65324f31cdb4c43fd4f504394a7cdb",
+  "branch": "feat/usb2b-resource-ownership",
+  "scope": "non-device/non-DMA ownership foundation; no operational Backend",
+  "gates": {
+    "A": "PASS",
+    "B": "PASS for named non-access fixture only",
+    "C": "PASS for non-DMA page/fixture worker subset",
+    "D": "PASS",
+    "E": "PASS; ABI1/2 runtime evidence reused by source identity",
+    "F": "PASS final; historical failures retained",
+    "G": "PASS"
+  },
+  "tests": {
+    "sanitizer_assertions": 1016,
+    "Rust_layout_tests": 1,
+    "Rust_ownership_compile_rejections": 3,
+    "original_core_tests": 46,
+    "policy_separation_tests": 4,
+    "original_model_Send_Sync_controls": 2,
+    "stale_ticket_mutation_expected_exit": 101,
+    "USB1_differential_cases": 40110,
+    "R1_bounds_cases": 497127,
+    "retained_ELF_corpus_reference_matches": 140
+  },
+  "native": {
+    "bios": "native/result.json: two BIOS PASS cases; overall receipt false due later UEFI timeout",
+    "uefi": "native-uefi-gop/result.json: both PASS",
+    "worker_cycles_per_firmware": 18,
+    "screenshots": [
+      "docs/images/usb/usb2b/vos-usb2b-bios.png",
+      "docs/images/usb/usb2b/vos-usb2b-uefi.png"
+    ],
+    "kernel_machine_code": "native source call -> vos_rust_resource_cycle -> actual C/PMM/devmap; same archive hash after final comments",
+    "no_controller_activation": true
+  },
+  "limitations": [
+    "No operational PCI BAR acquisition/DMA qualification/live xHCI backend",
+    "No physical hardware tests",
+    "Original 35-second pre-GRUB delay cause INCONCLUSIVE",
+    "Missing-GOP test media FAIL preserved separately; accepted GOP header fixes framebuffer path",
+    "Existing permanent devmap multi-PT failure may retain empty tables; new scoped path does not use it",
+    "No full dynamic stack high-water proof; no hostile-kernel/sandbox claim"
+  ],
+  "preservation": "preservation-final.json",
+  "native_final_equivalence": "comment-clarification-equivalence.json",
+  "raw_host": "host-final/result.json",
+  "portable_commands": "compatibility/continuation-commands.json",
+  "negative_and_differential_commands": "compatibility/negative-differential-commands.json",
+  "performance": "measurements/performance.json",
+  "memory": "measurements/",
+  "storage": "storage.json",
+  "publication": "Authorized for PR review; no merge/auto-merge. Post-commit state recorded locally in build/usb2b-1/publication.json and GitHub."
+}

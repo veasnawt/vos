@@ -1,0 +1,13 @@
+{
+  "passed": true,
+  "errors": [],
+  "historical_snapshot_sha256": "12f8b06492377061568af023031939246b16393028b8ba0560e0bc07ecc528e0",
+  "historical_entries_checked": 5747,
+  "protected_entries": 49,
+  "unique_protected_paths": 45,
+  "original_worktrees": 13,
+  "stashes": 2,
+  "retained_symlink_unchanged": true,
+  "original_references_indexes_and_working_sets": "unchanged",
+  "original_USB1_migration_checkout": "clean at ced31a9faa4bd5618a7a4030df574b2e44028471"
+}

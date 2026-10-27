@@ -1,0 +1,1267 @@
+{
+  "passed": true,
+  "reference_sha256": "7d197f6a2d31c2e033f479750ba323dd2d639d1fc8f5bca15f48152bc32c31d4",
+  "count": 140,
+  "cases": [
+    {
+      "name": "bit-000.elf",
+      "bytes": 13128,
+      "sha256": "9b7349336168c501f887ef4b33332c3a68ba4d7d717104d0480574f98fe4213d",
+      "reference_exit": 0,
+      "Rust_exit": 0,
+      "reference_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-000.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n",
+      "Rust_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-000.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n"
+    },
+    {
+      "name": "bit-001.elf",
+      "bytes": 13128,
+      "sha256": "0cc930a3575354c9d559b0a55e3ccacbc80215c15982897b24533c258d8d6d3d",
+      "reference_exit": 0,
+      "Rust_exit": 0,
+      "reference_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-001.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n",
+      "Rust_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-001.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n"
+    },
+    {
+      "name": "bit-002.elf",
+      "bytes": 13128,
+      "sha256": "25cc45d8826ac5d98d9aecaaa0cc8cb06c7a594d3ab60f7754ba2d871164a5f6",
+      "reference_exit": 0,
+      "Rust_exit": 0,
+      "reference_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-002.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n",
+      "Rust_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-002.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n"
+    },
+    {
+      "name": "bit-003.elf",
+      "bytes": 13128,
+      "sha256": "d6675664931f14944ae9edae6fbf1004e9ad552978c547e6ff5c7cba37e056c0",
+      "reference_exit": 0,
+      "Rust_exit": 0,
+      "reference_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-003.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n",
+      "Rust_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-003.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n"
+    },
+    {
+      "name": "bit-004.elf",
+      "bytes": 13128,
+      "sha256": "ddbcf67c7112d7daf41669f591f24b22f38471e72fa5ce64f9597ae873fcb3ff",
+      "reference_exit": 0,
+      "Rust_exit": 0,
+      "reference_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-004.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n",
+      "Rust_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-004.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n"
+    },
+    {
+      "name": "bit-005.elf",
+      "bytes": 13128,
+      "sha256": "20d6fc55993cd42db805e499c1d43bed7425d929b3a1df0e6f529c2d29176257",
+      "reference_exit": 0,
+      "Rust_exit": 0,
+      "reference_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-005.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n",
+      "Rust_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-005.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n"
+    },
+    {
+      "name": "bit-006.elf",
+      "bytes": 13128,
+      "sha256": "2c29d3c4619dd12006eedec9ea3319d478ed91d07326d0ff80e34295cc3afa3a",
+      "reference_exit": 0,
+      "Rust_exit": 0,
+      "reference_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-006.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n",
+      "Rust_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-006.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n"
+    },
+    {
+      "name": "bit-007.elf",
+      "bytes": 13128,
+      "sha256": "839d3acce8c5ace69b7486c015da36ec2af73d4ad173fa434b67bc3881935483",
+      "reference_exit": 0,
+      "Rust_exit": 0,
+      "reference_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-007.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n",
+      "Rust_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-007.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n"
+    },
+    {
+      "name": "bit-008.elf",
+      "bytes": 13128,
+      "sha256": "bd06c358f067b6e8bd305af987c74ea33f56faba24642596cb7aa66202cd3f62",
+      "reference_exit": 0,
+      "Rust_exit": 0,
+      "reference_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-008.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n",
+      "Rust_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-008.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n"
+    },
+    {
+      "name": "bit-009.elf",
+      "bytes": 13128,
+      "sha256": "91723eedfe8049df707df9c51abe267f276bf2ff96eb77a8bb442a416499c83c",
+      "reference_exit": 0,
+      "Rust_exit": 0,
+      "reference_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-009.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n",
+      "Rust_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-009.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n"
+    },
+    {
+      "name": "bit-010.elf",
+      "bytes": 13128,
+      "sha256": "690849442d45f4580328b04655b4846eb94c917cdd2f85fab9ab960d72489139",
+      "reference_exit": 0,
+      "Rust_exit": 0,
+      "reference_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-010.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n",
+      "Rust_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-010.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n"
+    },
+    {
+      "name": "bit-011.elf",
+      "bytes": 13128,
+      "sha256": "e43087c01bae4443926baf7f4494cf88cad6cc8117860fbfbec50ae0509a175e",
+      "reference_exit": 0,
+      "Rust_exit": 0,
+      "reference_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-011.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n",
+      "Rust_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-011.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n"
+    },
+    {
+      "name": "bit-012.elf",
+      "bytes": 13128,
+      "sha256": "da91b6b1e70f4335e0e1d8421ce25c323a47a96d68c553b5c81a9a95d8b621da",
+      "reference_exit": 0,
+      "Rust_exit": 0,
+      "reference_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-012.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n",
+      "Rust_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-012.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n"
+    },
+    {
+      "name": "bit-013.elf",
+      "bytes": 13128,
+      "sha256": "a1635137a5dde8a134b7ca664b3b3750c733c4492a462068a36cdfee99caefd6",
+      "reference_exit": 0,
+      "Rust_exit": 0,
+      "reference_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-013.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n",
+      "Rust_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-013.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n"
+    },
+    {
+      "name": "bit-014.elf",
+      "bytes": 13128,
+      "sha256": "85df5364b315bfd9641f6df95ecc7b282439515c4ca710811ea4992ad759976f",
+      "reference_exit": 0,
+      "Rust_exit": 0,
+      "reference_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-014.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n",
+      "Rust_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-014.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n"
+    },
+    {
+      "name": "bit-015.elf",
+      "bytes": 13128,
+      "sha256": "cad498a6ceada71ded8105368b4fd53e493f12ecaeaaa24d31df9ce637447fcd",
+      "reference_exit": 0,
+      "Rust_exit": 0,
+      "reference_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-015.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n",
+      "Rust_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-015.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n"
+    },
+    {
+      "name": "bit-016.elf",
+      "bytes": 13128,
+      "sha256": "485be94087435b13ee94c5b9102fc38c988a43bebd169f2b8f4ab5918d9f3f7a",
+      "reference_exit": 0,
+      "Rust_exit": 0,
+      "reference_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-016.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n",
+      "Rust_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-016.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n"
+    },
+    {
+      "name": "bit-017.elf",
+      "bytes": 13128,
+      "sha256": "ebe439d6b71b3b3efb002dd1ef6701d0b5a824863252273a6faf34c2e820fbc5",
+      "reference_exit": 0,
+      "Rust_exit": 0,
+      "reference_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-017.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n",
+      "Rust_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-017.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n"
+    },
+    {
+      "name": "bit-018.elf",
+      "bytes": 13128,
+      "sha256": "3c2ae6c1201051101ddbe480ddd98ab211e24992acdbe7efe4fce1019e12a1e9",
+      "reference_exit": 1,
+      "Rust_exit": 1,
+      "reference_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-018.elf: REJECT: malformed PT_NOTE\n",
+      "Rust_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-018.elf: REJECT: malformed PT_NOTE\n"
+    },
+    {
+      "name": "bit-019.elf",
+      "bytes": 13128,
+      "sha256": "759831dee19fd69ebfa312324f6bbbb9be922a45c1de7fa0eb7d497a2db7c06e",
+      "reference_exit": 0,
+      "Rust_exit": 0,
+      "reference_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-019.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n",
+      "Rust_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-019.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n"
+    },
+    {
+      "name": "bit-020.elf",
+      "bytes": 13128,
+      "sha256": "c0c060fa931a04dde41976552741288b0b51fe4cd1e748caba2824f7611a2639",
+      "reference_exit": 0,
+      "Rust_exit": 0,
+      "reference_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-020.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n",
+      "Rust_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-020.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n"
+    },
+    {
+      "name": "bit-021.elf",
+      "bytes": 13128,
+      "sha256": "f6241730d57bb3a5d79933d00044592e1dbec5da587d7f5c5ddc8af0af825e50",
+      "reference_exit": 0,
+      "Rust_exit": 0,
+      "reference_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-021.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n",
+      "Rust_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-021.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n"
+    },
+    {
+      "name": "bit-022.elf",
+      "bytes": 13128,
+      "sha256": "a1c20c3690b1e1e99183381ec7a3c60de74bad49548e668d0884e4acc6e88c6f",
+      "reference_exit": 0,
+      "Rust_exit": 0,
+      "reference_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-022.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n",
+      "Rust_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-022.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n"
+    },
+    {
+      "name": "bit-023.elf",
+      "bytes": 13128,
+      "sha256": "5adb288f3c0842e99f0bdd6bcb8c34c401835a0fb4af208bbac389048e2e3af2",
+      "reference_exit": 0,
+      "Rust_exit": 0,
+      "reference_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-023.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n",
+      "Rust_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-023.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n"
+    },
+    {
+      "name": "bit-024.elf",
+      "bytes": 13128,
+      "sha256": "0743bc35719c32134fb2b0f70c6149601ca27b0a1d869254409311c0033a05ee",
+      "reference_exit": 0,
+      "Rust_exit": 0,
+      "reference_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-024.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n",
+      "Rust_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-024.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n"
+    },
+    {
+      "name": "bit-025.elf",
+      "bytes": 13128,
+      "sha256": "4dbdf8c641fb1b6fe72cec0c7c516aca0ca103518d33d2497f8af5d4f372ddcf",
+      "reference_exit": 0,
+      "Rust_exit": 0,
+      "reference_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-025.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n",
+      "Rust_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-025.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n"
+    },
+    {
+      "name": "bit-026.elf",
+      "bytes": 13128,
+      "sha256": "9e33d300674aa48ddccabe3ad124f1ec9f6e8e81b9fc63dc60706ea6cdd683aa",
+      "reference_exit": 0,
+      "Rust_exit": 0,
+      "reference_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-026.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n",
+      "Rust_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-026.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n"
+    },
+    {
+      "name": "bit-027.elf",
+      "bytes": 13128,
+      "sha256": "d1f7c6404b591a846ab380d3e787af62dbe53def64293fc9b709c681c7f9d42c",
+      "reference_exit": 0,
+      "Rust_exit": 0,
+      "reference_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-027.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n",
+      "Rust_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-027.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n"
+    },
+    {
+      "name": "bit-028.elf",
+      "bytes": 13128,
+      "sha256": "a2ca4a41c7dd45f5d6929f509ab77f95c2b6b3dd636aebf7e87d95802290fb92",
+      "reference_exit": 0,
+      "Rust_exit": 0,
+      "reference_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-028.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n",
+      "Rust_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-028.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n"
+    },
+    {
+      "name": "bit-029.elf",
+      "bytes": 13128,
+      "sha256": "9cf29da3dad4a475eb1e15f2fc3d34593c3f9dbb00def8d8e1c33d00f3471432",
+      "reference_exit": 0,
+      "Rust_exit": 0,
+      "reference_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-029.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n",
+      "Rust_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-029.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n"
+    },
+    {
+      "name": "bit-030.elf",
+      "bytes": 13128,
+      "sha256": "aa613116aae8b538e5191801538ae4794e81923d89635e08f18596023684fac3",
+      "reference_exit": 0,
+      "Rust_exit": 0,
+      "reference_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-030.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n",
+      "Rust_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-030.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n"
+    },
+    {
+      "name": "bit-031.elf",
+      "bytes": 13128,
+      "sha256": "e9695aa5e4b71537aa459171b9b627b2c6c914bd54a44d6388b3a4671c9e89ea",
+      "reference_exit": 0,
+      "Rust_exit": 0,
+      "reference_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-031.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n",
+      "Rust_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-031.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n"
+    },
+    {
+      "name": "bit-032.elf",
+      "bytes": 13128,
+      "sha256": "4734ae118873276d118e7307b0d3881c7fbb24e60efc97a2cf14a6cd3d5fb254",
+      "reference_exit": 0,
+      "Rust_exit": 0,
+      "reference_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-032.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n",
+      "Rust_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-032.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n"
+    },
+    {
+      "name": "bit-033.elf",
+      "bytes": 13128,
+      "sha256": "aa50a394df6b9eb61b42bcdd7e9df0fb542b5fe87faa8a05c048a0f102d1ec74",
+      "reference_exit": 0,
+      "Rust_exit": 0,
+      "reference_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-033.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n",
+      "Rust_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-033.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n"
+    },
+    {
+      "name": "bit-034.elf",
+      "bytes": 13128,
+      "sha256": "0cec3a353d8f260101cbf0a3b272cd7accfeaedb3471b5889a118a2ecb7091a9",
+      "reference_exit": 0,
+      "Rust_exit": 0,
+      "reference_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-034.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n",
+      "Rust_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-034.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n"
+    },
+    {
+      "name": "bit-035.elf",
+      "bytes": 13128,
+      "sha256": "dca79093767ed48678737ff24c65ba98a66bcdaacd01e599bddb67f5e5c43c37",
+      "reference_exit": 0,
+      "Rust_exit": 0,
+      "reference_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-035.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n",
+      "Rust_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-035.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n"
+    },
+    {
+      "name": "bit-036.elf",
+      "bytes": 13128,
+      "sha256": "6cc86159f5bb1d0638d2351da525e18e0984961474445fd3b494a1594b8b57f2",
+      "reference_exit": 0,
+      "Rust_exit": 0,
+      "reference_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-036.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n",
+      "Rust_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-036.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n"
+    },
+    {
+      "name": "bit-037.elf",
+      "bytes": 13128,
+      "sha256": "4b7f03690f7720c15c2380165a7e5d6cd035f68ac4e9ad488a5f3a90aa481553",
+      "reference_exit": 0,
+      "Rust_exit": 0,
+      "reference_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-037.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n",
+      "Rust_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-037.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n"
+    },
+    {
+      "name": "bit-038.elf",
+      "bytes": 13128,
+      "sha256": "c9948183d8eff3e74739926982cf1c069afd255b90b486c0b47f33c08db1cac7",
+      "reference_exit": 0,
+      "Rust_exit": 0,
+      "reference_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-038.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n",
+      "Rust_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-038.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n"
+    },
+    {
+      "name": "bit-039.elf",
+      "bytes": 13128,
+      "sha256": "ec192977ec3bcf7dc551a16791bfb6f711bded6edda4554405062073f66df424",
+      "reference_exit": 0,
+      "Rust_exit": 0,
+      "reference_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-039.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n",
+      "Rust_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-039.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n"
+    },
+    {
+      "name": "bit-040.elf",
+      "bytes": 13128,
+      "sha256": "4439290473a1f7567b5ce9f2ce6546983c21c0aceac8466e8ce95f4b3a24ebea",
+      "reference_exit": 1,
+      "Rust_exit": 1,
+      "reference_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-040.elf: REJECT: PT_LOAD sizes or file range invalid\n",
+      "Rust_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-040.elf: REJECT: PT_LOAD sizes or file range invalid\n"
+    },
+    {
+      "name": "bit-041.elf",
+      "bytes": 13128,
+      "sha256": "0906a309757554a50733207ae6de06b0b8c62bde7c1dea8468e89c1bc1ba28dd",
+      "reference_exit": 0,
+      "Rust_exit": 0,
+      "reference_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-041.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n",
+      "Rust_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-041.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n"
+    },
+    {
+      "name": "bit-042.elf",
+      "bytes": 13128,
+      "sha256": "c6daa7193040bb815683a60c4d91d8ec049401e043b6806051f3214fb14d4be3",
+      "reference_exit": 0,
+      "Rust_exit": 0,
+      "reference_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-042.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n",
+      "Rust_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-042.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n"
+    },
+    {
+      "name": "bit-043.elf",
+      "bytes": 13128,
+      "sha256": "c65be13ab15511f20a41e05b29b4927b14582fdc1a2e654ad7bfe505696d57ab",
+      "reference_exit": 0,
+      "Rust_exit": 0,
+      "reference_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-043.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n",
+      "Rust_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-043.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n"
+    },
+    {
+      "name": "bit-044.elf",
+      "bytes": 13128,
+      "sha256": "bba53ad71b087ed41391336d7a7a1869e3b88cc078676da47f715d4aad716dbf",
+      "reference_exit": 0,
+      "Rust_exit": 0,
+      "reference_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-044.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n",
+      "Rust_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-044.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n"
+    },
+    {
+      "name": "bit-045.elf",
+      "bytes": 13128,
+      "sha256": "6d7da4635b16439695e4f1b7813bab9b0deec381244ace0b436f70773b3ea611",
+      "reference_exit": 0,
+      "Rust_exit": 0,
+      "reference_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-045.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n",
+      "Rust_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-045.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n"
+    },
+    {
+      "name": "bit-046.elf",
+      "bytes": 13128,
+      "sha256": "c42aeda8b28469f49c18903dd0e68ee8815ad0a24a5dc9d24d2902d1b04dd136",
+      "reference_exit": 0,
+      "Rust_exit": 0,
+      "reference_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-046.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n",
+      "Rust_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-046.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n"
+    },
+    {
+      "name": "bit-047.elf",
+      "bytes": 13128,
+      "sha256": "83c9fa1a0f61ab01c75910c60e8b733e68c541c9f318a390fdbf3c5b2556c203",
+      "reference_exit": 0,
+      "Rust_exit": 0,
+      "reference_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-047.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n",
+      "Rust_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-047.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n"
+    },
+    {
+      "name": "bit-048.elf",
+      "bytes": 13128,
+      "sha256": "63a38a04c4b93e25e634fa6c484c4972b266a31c44ff43f013057b43ca5fffa3",
+      "reference_exit": 0,
+      "Rust_exit": 0,
+      "reference_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-048.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n",
+      "Rust_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-048.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n"
+    },
+    {
+      "name": "bit-049.elf",
+      "bytes": 13128,
+      "sha256": "0c1c3bc9437a9cb38da5144277bd7d9d0603386645c2af16d9b98bb4d5a8e433",
+      "reference_exit": 0,
+      "Rust_exit": 0,
+      "reference_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-049.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n",
+      "Rust_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-049.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n"
+    },
+    {
+      "name": "bit-050.elf",
+      "bytes": 13128,
+      "sha256": "d57865f4e10dd24a7a4d35231dee409c572e9a6efd6803e559f88c6173fcdaa8",
+      "reference_exit": 0,
+      "Rust_exit": 0,
+      "reference_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-050.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n",
+      "Rust_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-050.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n"
+    },
+    {
+      "name": "bit-051.elf",
+      "bytes": 13128,
+      "sha256": "dde2c645988dea39ea7e49259559458386db7eb1595a3917f888ecb6e3e49def",
+      "reference_exit": 0,
+      "Rust_exit": 0,
+      "reference_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-051.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n",
+      "Rust_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-051.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n"
+    },
+    {
+      "name": "bit-052.elf",
+      "bytes": 13128,
+      "sha256": "e36adddd1ddda76edc9ceffdffe57309916b6d643d174df3d9d44eedc115ea5e",
+      "reference_exit": 0,
+      "Rust_exit": 0,
+      "reference_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-052.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n",
+      "Rust_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-052.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n"
+    },
+    {
+      "name": "bit-053.elf",
+      "bytes": 13128,
+      "sha256": "e909d22577ce98858f08d6b05602b98fb50d152a4c798bc019de452ed8442c2d",
+      "reference_exit": 0,
+      "Rust_exit": 0,
+      "reference_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-053.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n",
+      "Rust_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-053.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n"
+    },
+    {
+      "name": "bit-054.elf",
+      "bytes": 13128,
+      "sha256": "a2b0b85f131f16d71d52a039b8994edb1062a6abde2c00f78f230c14c55dec34",
+      "reference_exit": 0,
+      "Rust_exit": 0,
+      "reference_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-054.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n",
+      "Rust_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-054.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n"
+    },
+    {
+      "name": "bit-055.elf",
+      "bytes": 13128,
+      "sha256": "c54c5c8fb3fe6d94d70f77deafbfc106b5c858f450d97fee7fa9409cab3f1590",
+      "reference_exit": 0,
+      "Rust_exit": 0,
+      "reference_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-055.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n",
+      "Rust_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-055.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n"
+    },
+    {
+      "name": "bit-056.elf",
+      "bytes": 13128,
+      "sha256": "276e7e9fa43e532867eeeeb2e86c952bacbfd0ca5f27609538395888d186c936",
+      "reference_exit": 0,
+      "Rust_exit": 0,
+      "reference_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-056.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n",
+      "Rust_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-056.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n"
+    },
+    {
+      "name": "bit-057.elf",
+      "bytes": 13128,
+      "sha256": "ea75e2f68cf115e3742ab7a5f67d58ee874875400e6fe6a175514309d67b2c90",
+      "reference_exit": 0,
+      "Rust_exit": 0,
+      "reference_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-057.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n",
+      "Rust_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-057.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n"
+    },
+    {
+      "name": "bit-058.elf",
+      "bytes": 13128,
+      "sha256": "93db6cfda6d28da1806387aae51e037c3f777483f0e95e2764985b691ffb4973",
+      "reference_exit": 0,
+      "Rust_exit": 0,
+      "reference_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-058.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n",
+      "Rust_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-058.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n"
+    },
+    {
+      "name": "bit-059.elf",
+      "bytes": 13128,
+      "sha256": "a2a4e217b3e3423a91928c21c2df7e0af304a12fef887c5a560b2a4e78ec61e1",
+      "reference_exit": 0,
+      "Rust_exit": 0,
+      "reference_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-059.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n",
+      "Rust_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-059.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n"
+    },
+    {
+      "name": "bit-060.elf",
+      "bytes": 13128,
+      "sha256": "86d320ea77332402ae3d6dfb0167c5c79794c85ee7323ff7ad3153df51761de4",
+      "reference_exit": 0,
+      "Rust_exit": 0,
+      "reference_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-060.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n",
+      "Rust_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-060.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n"
+    },
+    {
+      "name": "bit-061.elf",
+      "bytes": 13128,
+      "sha256": "cfe2b8215f73d4fd9b49be4a877a14efead556b8a700559c60c1afea87c99cdf",
+      "reference_exit": 0,
+      "Rust_exit": 0,
+      "reference_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-061.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n",
+      "Rust_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-061.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n"
+    },
+    {
+      "name": "bit-062.elf",
+      "bytes": 13128,
+      "sha256": "38330b3a4e4529d9e36bfb8c56e529aa36f71018b257cafed1d94bf1563f2726",
+      "reference_exit": 0,
+      "Rust_exit": 0,
+      "reference_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-062.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n",
+      "Rust_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-062.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n"
+    },
+    {
+      "name": "bit-063.elf",
+      "bytes": 13128,
+      "sha256": "89c85e4b96456e3d8ef940a936518a2a8191ae9dc11df0461d217b01e905c8d9",
+      "reference_exit": 0,
+      "Rust_exit": 0,
+      "reference_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-063.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n",
+      "Rust_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-063.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n"
+    },
+    {
+      "name": "bit-064.elf",
+      "bytes": 13128,
+      "sha256": "e11b096c817c78f8e40116738b57c8bfc1014406ec425ff0708f87f5b84f6d22",
+      "reference_exit": 0,
+      "Rust_exit": 0,
+      "reference_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-064.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n",
+      "Rust_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-064.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n"
+    },
+    {
+      "name": "bit-065.elf",
+      "bytes": 13128,
+      "sha256": "b6cddd55b7c64cad2c7cffc402fd294fbad52704e9d1351e489c57cded86cb2b",
+      "reference_exit": 0,
+      "Rust_exit": 0,
+      "reference_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-065.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n",
+      "Rust_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-065.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n"
+    },
+    {
+      "name": "bit-066.elf",
+      "bytes": 13128,
+      "sha256": "0b7f5620e8d4a482f09745e518956e04e10be9340f80fe0cd98cbd44ab8c370b",
+      "reference_exit": 0,
+      "Rust_exit": 0,
+      "reference_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-066.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n",
+      "Rust_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-066.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n"
+    },
+    {
+      "name": "bit-067.elf",
+      "bytes": 13128,
+      "sha256": "eb33eb4e095dc3764b5f3499f2e313af43f2c9366d689d5c40cbc17c74029cda",
+      "reference_exit": 0,
+      "Rust_exit": 0,
+      "reference_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-067.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n",
+      "Rust_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-067.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n"
+    },
+    {
+      "name": "bit-068.elf",
+      "bytes": 13128,
+      "sha256": "6e05334cd92f2c4e2df343a50659133a6c3069f455a671c52a9894f71c9c78a4",
+      "reference_exit": 0,
+      "Rust_exit": 0,
+      "reference_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-068.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n",
+      "Rust_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-068.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n"
+    },
+    {
+      "name": "bit-069.elf",
+      "bytes": 13128,
+      "sha256": "5bcb5679d74a489d307cda493ac5ef0688e621a54bfc8a8c4e722411ba628144",
+      "reference_exit": 0,
+      "Rust_exit": 0,
+      "reference_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-069.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n",
+      "Rust_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-069.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n"
+    },
+    {
+      "name": "bit-070.elf",
+      "bytes": 13128,
+      "sha256": "afd155600ed4a35235ec4c7a784455b88fcc217a10bbcabc2d629db6fb18c7a7",
+      "reference_exit": 0,
+      "Rust_exit": 0,
+      "reference_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-070.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n",
+      "Rust_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-070.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n"
+    },
+    {
+      "name": "bit-071.elf",
+      "bytes": 13128,
+      "sha256": "1787a00018ac5af948561ebe7abd798649fb99df3e3b7bd36dcbfd30de31348e",
+      "reference_exit": 0,
+      "Rust_exit": 0,
+      "reference_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-071.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n",
+      "Rust_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-071.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n"
+    },
+    {
+      "name": "bit-072.elf",
+      "bytes": 13128,
+      "sha256": "4016b27e0c55b726f94a5f9ee16306adbeabedd564b695971821c11d7f188c08",
+      "reference_exit": 0,
+      "Rust_exit": 0,
+      "reference_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-072.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n",
+      "Rust_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-072.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n"
+    },
+    {
+      "name": "bit-073.elf",
+      "bytes": 13128,
+      "sha256": "e04b6053e1960ccc1f73aaf5f762da0736c17a6b29e4c42e4e2831b06cbf570a",
+      "reference_exit": 0,
+      "Rust_exit": 0,
+      "reference_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-073.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n",
+      "Rust_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-073.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n"
+    },
+    {
+      "name": "bit-074.elf",
+      "bytes": 13128,
+      "sha256": "be8e381653c3fd7ab7a875fc5155e3d64092f2e4c5ebe35cd2fe2896f07a930b",
+      "reference_exit": 0,
+      "Rust_exit": 0,
+      "reference_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-074.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n",
+      "Rust_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-074.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n"
+    },
+    {
+      "name": "bit-075.elf",
+      "bytes": 13128,
+      "sha256": "18620a43340aa02de4986200a03a51adbf75211b7ce9de455de4be6c0c9b117e",
+      "reference_exit": 0,
+      "Rust_exit": 0,
+      "reference_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-075.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n",
+      "Rust_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-075.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n"
+    },
+    {
+      "name": "bit-076.elf",
+      "bytes": 13128,
+      "sha256": "d3b898310180d1f3fa11cf3f634dbfb8360459858da2b424767dd00076e17de6",
+      "reference_exit": 0,
+      "Rust_exit": 0,
+      "reference_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-076.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n",
+      "Rust_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-076.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n"
+    },
+    {
+      "name": "bit-077.elf",
+      "bytes": 13128,
+      "sha256": "391073b40111907deb07d358dc9731c296633052f414bcab1e277c6a00194e8d",
+      "reference_exit": 0,
+      "Rust_exit": 0,
+      "reference_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-077.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n",
+      "Rust_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-077.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n"
+    },
+    {
+      "name": "bit-078.elf",
+      "bytes": 13128,
+      "sha256": "f63ebd77f9619765c4df437f89d142cba7c9619be7652691db1ab6a0f132a4c1",
+      "reference_exit": 0,
+      "Rust_exit": 0,
+      "reference_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-078.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n",
+      "Rust_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-078.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n"
+    },
+    {
+      "name": "bit-079.elf",
+      "bytes": 13128,
+      "sha256": "ae1ba576e8568889060357ece4f197d4f624864087c01cb5f501c315c938a20d",
+      "reference_exit": 0,
+      "Rust_exit": 0,
+      "reference_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-079.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n",
+      "Rust_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-079.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n"
+    },
+    {
+      "name": "bit-080.elf",
+      "bytes": 13128,
+      "sha256": "17901db87d7a6819541214673b76fabe055ba13a94531b0fcfe335d12b4cfdce",
+      "reference_exit": 0,
+      "Rust_exit": 0,
+      "reference_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-080.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n",
+      "Rust_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-080.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n"
+    },
+    {
+      "name": "bit-081.elf",
+      "bytes": 13128,
+      "sha256": "82d114875d74a3133c0fe5dd7a6389c0c1d50e33627d14f62b6677648f4c406a",
+      "reference_exit": 0,
+      "Rust_exit": 0,
+      "reference_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-081.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n",
+      "Rust_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-081.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n"
+    },
+    {
+      "name": "bit-082.elf",
+      "bytes": 13128,
+      "sha256": "7069b790676c3cc34342b8689252729b3babe7c0321fe384008915c51a7c2e1a",
+      "reference_exit": 0,
+      "Rust_exit": 0,
+      "reference_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-082.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n",
+      "Rust_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-082.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n"
+    },
+    {
+      "name": "bit-083.elf",
+      "bytes": 13128,
+      "sha256": "987cae1bb36810c47d28c29ecf56aa7af1592bc6b7a1830aaa01825ecfa04c49",
+      "reference_exit": 0,
+      "Rust_exit": 0,
+      "reference_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-083.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n",
+      "Rust_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-083.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n"
+    },
+    {
+      "name": "bit-084.elf",
+      "bytes": 13128,
+      "sha256": "0cf4b75ee9d33cdb6404b1992bf38dec1636b102a0647e5f0b865ff28ba7e54d",
+      "reference_exit": 0,
+      "Rust_exit": 0,
+      "reference_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-084.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n",
+      "Rust_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-084.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n"
+    },
+    {
+      "name": "bit-085.elf",
+      "bytes": 13128,
+      "sha256": "4a7c73731edc0a8f13e6150daa874c82af340c06c098aee6664ec91dc1d59de7",
+      "reference_exit": 0,
+      "Rust_exit": 0,
+      "reference_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-085.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n",
+      "Rust_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-085.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n"
+    },
+    {
+      "name": "bit-086.elf",
+      "bytes": 13128,
+      "sha256": "2e4d23ecfa53f30647c4caab453d5086e015d9cb6a971a8477e70bfd37a18eae",
+      "reference_exit": 0,
+      "Rust_exit": 0,
+      "reference_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-086.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n",
+      "Rust_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-086.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n"
+    },
+    {
+      "name": "bit-087.elf",
+      "bytes": 13128,
+      "sha256": "0655c1744c01734247d90b3cf6c7f27bc81c24509a0ec3a96f4ca180d5f227e6",
+      "reference_exit": 0,
+      "Rust_exit": 0,
+      "reference_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-087.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n",
+      "Rust_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-087.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n"
+    },
+    {
+      "name": "bit-088.elf",
+      "bytes": 13128,
+      "sha256": "b631c94682ecde2d55ee46c20b4469ab2650bdfd3ff94431f45ed138b0127da5",
+      "reference_exit": 0,
+      "Rust_exit": 0,
+      "reference_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-088.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n",
+      "Rust_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-088.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n"
+    },
+    {
+      "name": "bit-089.elf",
+      "bytes": 13128,
+      "sha256": "34c76517b6e733b6991cf4e8c30a1332d92605dcfb2ec0c805304e1222654410",
+      "reference_exit": 0,
+      "Rust_exit": 0,
+      "reference_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-089.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n",
+      "Rust_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-089.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n"
+    },
+    {
+      "name": "bit-090.elf",
+      "bytes": 13128,
+      "sha256": "5f92d7d47ce21f8b605cad9660ba9480846e52d8b0a385e7988952c6ef37c01a",
+      "reference_exit": 0,
+      "Rust_exit": 0,
+      "reference_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-090.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n",
+      "Rust_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-090.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n"
+    },
+    {
+      "name": "bit-091.elf",
+      "bytes": 13128,
+      "sha256": "434c39b563eb73344b31e54a9904382d4d05923dd98ab886c4a28fdb8585a564",
+      "reference_exit": 0,
+      "Rust_exit": 0,
+      "reference_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-091.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n",
+      "Rust_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-091.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n"
+    },
+    {
+      "name": "bit-092.elf",
+      "bytes": 13128,
+      "sha256": "e385d2f70f773191987d637765f25bae7623e2cb524b71eb301d3bdb60251e80",
+      "reference_exit": 0,
+      "Rust_exit": 0,
+      "reference_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-092.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n",
+      "Rust_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-092.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n"
+    },
+    {
+      "name": "bit-093.elf",
+      "bytes": 13128,
+      "sha256": "fc85f94d54b2eb2d41147adb207ff24eef970903591f2d03438c29c034d4a551",
+      "reference_exit": 0,
+      "Rust_exit": 0,
+      "reference_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-093.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n",
+      "Rust_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-093.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n"
+    },
+    {
+      "name": "bit-094.elf",
+      "bytes": 13128,
+      "sha256": "0e1e65ba242a9ed5c832187d4ab194f1e456822f2aa22c7ee8183765782fe9cb",
+      "reference_exit": 0,
+      "Rust_exit": 0,
+      "reference_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-094.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n",
+      "Rust_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-094.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n"
+    },
+    {
+      "name": "bit-095.elf",
+      "bytes": 13128,
+      "sha256": "13e222e1df3bbef9deb9dc9cc2f5dbc78cee9f6a682e0d5a58e3ab1014ab8f97",
+      "reference_exit": 0,
+      "Rust_exit": 0,
+      "reference_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-095.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n",
+      "Rust_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-095.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n"
+    },
+    {
+      "name": "bit-096.elf",
+      "bytes": 13128,
+      "sha256": "bc535ad6958b007a2cbd7ed480d20abed35324aaa0dca1bd853103831053a314",
+      "reference_exit": 0,
+      "Rust_exit": 0,
+      "reference_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-096.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n",
+      "Rust_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-096.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n"
+    },
+    {
+      "name": "bit-097.elf",
+      "bytes": 13128,
+      "sha256": "924d427aec01db834d5d98731ccff027c22246448fd952298547d3f3d3d73fb2",
+      "reference_exit": 0,
+      "Rust_exit": 0,
+      "reference_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-097.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n",
+      "Rust_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-097.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n"
+    },
+    {
+      "name": "bit-098.elf",
+      "bytes": 13128,
+      "sha256": "8864b78955f5b814d877128e95c1f8ce1ad97b91b68e93bbddeb369e31649c9f",
+      "reference_exit": 0,
+      "Rust_exit": 0,
+      "reference_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-098.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n",
+      "Rust_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-098.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n"
+    },
+    {
+      "name": "bit-099.elf",
+      "bytes": 13128,
+      "sha256": "1aa57aea7e337e722b69672383ec4b7adc4b8bdb46e05260b87bee25c15131ea",
+      "reference_exit": 0,
+      "Rust_exit": 0,
+      "reference_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-099.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n",
+      "Rust_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-099.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n"
+    },
+    {
+      "name": "bit-100.elf",
+      "bytes": 13128,
+      "sha256": "c608d8e2dd8eb3c86d1bd7ab8da6896f72470902718fe1268d507b85a6fb5c35",
+      "reference_exit": 0,
+      "Rust_exit": 0,
+      "reference_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-100.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n",
+      "Rust_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-100.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n"
+    },
+    {
+      "name": "bit-101.elf",
+      "bytes": 13128,
+      "sha256": "85e7a09191da656e406ce76921c144dd6b5320c4f59b3cb8f93f3c4438794c74",
+      "reference_exit": 0,
+      "Rust_exit": 0,
+      "reference_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-101.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n",
+      "Rust_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-101.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n"
+    },
+    {
+      "name": "bit-102.elf",
+      "bytes": 13128,
+      "sha256": "26c4fa0dab8bc61107905e406afa0d2752c3fafc0a778e1cf6f1a3a51fa15f11",
+      "reference_exit": 0,
+      "Rust_exit": 0,
+      "reference_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-102.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n",
+      "Rust_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-102.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n"
+    },
+    {
+      "name": "bit-103.elf",
+      "bytes": 13128,
+      "sha256": "9211072839bad159ccd9529350dbe2e05823ea8e083fcc8bb0f998d6798f9949",
+      "reference_exit": 0,
+      "Rust_exit": 0,
+      "reference_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-103.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n",
+      "Rust_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-103.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n"
+    },
+    {
+      "name": "bit-104.elf",
+      "bytes": 13128,
+      "sha256": "126de2b7da762e1524b57ec6ede60c75fc0f8ca05e158dabb577d879aa5b1190",
+      "reference_exit": 0,
+      "Rust_exit": 0,
+      "reference_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-104.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n",
+      "Rust_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-104.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n"
+    },
+    {
+      "name": "bit-105.elf",
+      "bytes": 13128,
+      "sha256": "fa368b3998ed78a107c2b232ff175be5e7ff1b3810eb17372bd6a66102f26990",
+      "reference_exit": 0,
+      "Rust_exit": 0,
+      "reference_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-105.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n",
+      "Rust_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-105.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n"
+    },
+    {
+      "name": "bit-106.elf",
+      "bytes": 13128,
+      "sha256": "de9778b1efb270ba617f008b710f1fdf66030fdc47e207fc51c8502784d31dcf",
+      "reference_exit": 0,
+      "Rust_exit": 0,
+      "reference_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-106.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n",
+      "Rust_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-106.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n"
+    },
+    {
+      "name": "bit-107.elf",
+      "bytes": 13128,
+      "sha256": "f9f156edaa9581eaf817c271e133ae7cdea8fad73455949624ea39a5dfe0f129",
+      "reference_exit": 0,
+      "Rust_exit": 0,
+      "reference_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-107.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n",
+      "Rust_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-107.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n"
+    },
+    {
+      "name": "bit-108.elf",
+      "bytes": 13128,
+      "sha256": "b909f046d10a260c71134883a1cc154b9a5822038d40f7f98bf76e7173afb865",
+      "reference_exit": 0,
+      "Rust_exit": 0,
+      "reference_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-108.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n",
+      "Rust_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-108.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n"
+    },
+    {
+      "name": "bit-109.elf",
+      "bytes": 13128,
+      "sha256": "b8315bc712cd4a65af46107edeee5a9299e6e2d0674706bb7bfea16050fe83df",
+      "reference_exit": 0,
+      "Rust_exit": 0,
+      "reference_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-109.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n",
+      "Rust_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-109.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n"
+    },
+    {
+      "name": "bit-110.elf",
+      "bytes": 13128,
+      "sha256": "fba3fe80af0faa024851c2670b5a50b1e5e7b8887a735860883ecdb7835ef7be",
+      "reference_exit": 0,
+      "Rust_exit": 0,
+      "reference_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-110.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n",
+      "Rust_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-110.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n"
+    },
+    {
+      "name": "bit-111.elf",
+      "bytes": 13128,
+      "sha256": "dcef4d630efced94ba809e62573b296193a409a7f6b52d99384d0adaac255654",
+      "reference_exit": 0,
+      "Rust_exit": 0,
+      "reference_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-111.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n",
+      "Rust_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-111.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n"
+    },
+    {
+      "name": "bit-112.elf",
+      "bytes": 13128,
+      "sha256": "2923cb97468f3a55c5cc77c281cb0f933b3ee5e00cef6674637dd6c5b4877905",
+      "reference_exit": 0,
+      "Rust_exit": 0,
+      "reference_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-112.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n",
+      "Rust_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-112.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n"
+    },
+    {
+      "name": "bit-113.elf",
+      "bytes": 13128,
+      "sha256": "0244eb7b05a1fda0996e7e12d2a6150607724c3ebd0c417249670e721f790e74",
+      "reference_exit": 0,
+      "Rust_exit": 0,
+      "reference_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-113.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n",
+      "Rust_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-113.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n"
+    },
+    {
+      "name": "bit-114.elf",
+      "bytes": 13128,
+      "sha256": "762fa9c3efa840d4719256bc8b1d4f9a8f5a3a36471ed74c3f8e6e012adae579",
+      "reference_exit": 0,
+      "Rust_exit": 0,
+      "reference_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-114.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n",
+      "Rust_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-114.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n"
+    },
+    {
+      "name": "bit-115.elf",
+      "bytes": 13128,
+      "sha256": "ebbb1981b52ac9a52b20aa89c3252f0be049bd70437cd784c26263b0c884414e",
+      "reference_exit": 0,
+      "Rust_exit": 0,
+      "reference_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-115.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n",
+      "Rust_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-115.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n"
+    },
+    {
+      "name": "bit-116.elf",
+      "bytes": 13128,
+      "sha256": "dec5a4ab1760453dd323d71ecf77fe75d6898429e732fc1d98054d873120bc2c",
+      "reference_exit": 0,
+      "Rust_exit": 0,
+      "reference_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-116.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n",
+      "Rust_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-116.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n"
+    },
+    {
+      "name": "bit-117.elf",
+      "bytes": 13128,
+      "sha256": "47e0ccf07dea08778dfa03d9fb2bc352d2f8e72b91dba7a711792ed02fb8f457",
+      "reference_exit": 0,
+      "Rust_exit": 0,
+      "reference_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-117.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n",
+      "Rust_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-117.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n"
+    },
+    {
+      "name": "bit-118.elf",
+      "bytes": 13128,
+      "sha256": "cb2ce85285c4d1f10712fefc1004f88e1387f4c50f1061b10b3baca5b9c576fc",
+      "reference_exit": 0,
+      "Rust_exit": 0,
+      "reference_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-118.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n",
+      "Rust_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-118.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n"
+    },
+    {
+      "name": "bit-119.elf",
+      "bytes": 13128,
+      "sha256": "c3ff14133c6a7ea395861971ee7895498a441bd91e0a85994b5fcd72767c6881",
+      "reference_exit": 0,
+      "Rust_exit": 0,
+      "reference_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-119.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n",
+      "Rust_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-119.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n"
+    },
+    {
+      "name": "bit-120.elf",
+      "bytes": 13128,
+      "sha256": "dc1e12e517ac648548f100e66ce28527c889583704cf837a1cb5cd0210dd07f7",
+      "reference_exit": 0,
+      "Rust_exit": 0,
+      "reference_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-120.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n",
+      "Rust_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-120.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n"
+    },
+    {
+      "name": "bit-121.elf",
+      "bytes": 13128,
+      "sha256": "f458098f39b0c3877dc4a739495a6283d4a27521410b94ffe9d3be0f0e3cf5f6",
+      "reference_exit": 0,
+      "Rust_exit": 0,
+      "reference_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-121.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n",
+      "Rust_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-121.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n"
+    },
+    {
+      "name": "bit-122.elf",
+      "bytes": 13128,
+      "sha256": "241f49a0061eec6f465c6596f25b5d740a05dab5a2afb1d2603b244d88373e64",
+      "reference_exit": 0,
+      "Rust_exit": 0,
+      "reference_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-122.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n",
+      "Rust_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-122.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n"
+    },
+    {
+      "name": "bit-123.elf",
+      "bytes": 13128,
+      "sha256": "fea1df059158de01ae8c212d45d3becabd7fc6da502c0ae4a9e7a65d62c6cc9f",
+      "reference_exit": 0,
+      "Rust_exit": 0,
+      "reference_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-123.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n",
+      "Rust_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-123.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n"
+    },
+    {
+      "name": "bit-124.elf",
+      "bytes": 13128,
+      "sha256": "f6d9a69bd19537c818346dd805b12051c9522179730c375a6b36b0569bbe7fee",
+      "reference_exit": 0,
+      "Rust_exit": 0,
+      "reference_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-124.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n",
+      "Rust_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-124.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n"
+    },
+    {
+      "name": "bit-125.elf",
+      "bytes": 13128,
+      "sha256": "46ed3518d1b79ff80f1fa43ece24789b24b1e085ffb96a8a541c71868bd0c0a6",
+      "reference_exit": 0,
+      "Rust_exit": 0,
+      "reference_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-125.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n",
+      "Rust_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-125.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n"
+    },
+    {
+      "name": "bit-126.elf",
+      "bytes": 13128,
+      "sha256": "cb9d6dae45e51185a262395764478de528b9bc461aca29ea42030c5c3250aa5f",
+      "reference_exit": 0,
+      "Rust_exit": 0,
+      "reference_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-126.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n",
+      "Rust_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-126.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n"
+    },
+    {
+      "name": "bit-127.elf",
+      "bytes": 13128,
+      "sha256": "d35a4d74bf42b5f4e2d37183a5dfccc38e852184705967152b5057b79a1c7211",
+      "reference_exit": 0,
+      "Rust_exit": 0,
+      "reference_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-127.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n",
+      "Rust_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/bit-127.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n"
+    },
+    {
+      "name": "empty.elf",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reference_exit": 1,
+      "Rust_exit": 1,
+      "reference_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/empty.elf: REJECT: file smaller than an ELF header or larger than 1 MiB\n",
+      "Rust_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/empty.elf: REJECT: file smaller than an ELF header or larger than 1 MiB\n"
+    },
+    {
+      "name": "header-only.elf",
+      "bytes": 64,
+      "sha256": "65bb04229724f436dd5e39e4e4cf8d013063ec8a446afccc7a80462b1766c3bf",
+      "reference_exit": 1,
+      "Rust_exit": 1,
+      "reference_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/header-only.elf: REJECT: program-header table outside the file\n",
+      "Rust_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/header-only.elf: REJECT: program-header table outside the file\n"
+    },
+    {
+      "name": "phoff-0.elf",
+      "bytes": 13128,
+      "sha256": "8399dc8fe3509ddd1908916a6d0c377dfc3f3e1f3270eb60366417571ba520a4",
+      "reference_exit": 1,
+      "Rust_exit": 1,
+      "reference_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/phoff-0.elf: REJECT: unsupported ELF header field\n",
+      "Rust_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/phoff-0.elf: REJECT: unsupported ELF header field\n"
+    },
+    {
+      "name": "phoff-1099511627775.elf",
+      "bytes": 13128,
+      "sha256": "205a23dc77d655a4f2c9775ee5e6d1cbe3a5d991ab82062cbb5022143b8d2450",
+      "reference_exit": 1,
+      "Rust_exit": 1,
+      "reference_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/phoff-1099511627775.elf: REJECT: unsupported ELF header field\n",
+      "Rust_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/phoff-1099511627775.elf: REJECT: unsupported ELF header field\n"
+    },
+    {
+      "name": "phoff-1099511627776.elf",
+      "bytes": 13128,
+      "sha256": "55058b9abd266ca7045a2045ec8cb121b419c6babb28eaa91c6f9de289414d36",
+      "reference_exit": 1,
+      "Rust_exit": 1,
+      "reference_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/phoff-1099511627776.elf: REJECT: 64-bit field out of range\n",
+      "Rust_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/phoff-1099511627776.elf: REJECT: 64-bit field out of range\n"
+    },
+    {
+      "name": "phoff-13128.elf",
+      "bytes": 13128,
+      "sha256": "9b9ea9002e59844fa5d32cc77f361fc6c14a3e79acb39d331ff595f031a73cab",
+      "reference_exit": 1,
+      "Rust_exit": 1,
+      "reference_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/phoff-13128.elf: REJECT: program-header table outside the file\n",
+      "Rust_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/phoff-13128.elf: REJECT: program-header table outside the file\n"
+    },
+    {
+      "name": "phoff-13136.elf",
+      "bytes": 13128,
+      "sha256": "f6c95ed769a5c2514f7f5d839a0822f21db00817d2540b453541091e79d96d73",
+      "reference_exit": 1,
+      "Rust_exit": 1,
+      "reference_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/phoff-13136.elf: REJECT: program-header table outside the file\n",
+      "Rust_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/phoff-13136.elf: REJECT: program-header table outside the file\n"
+    },
+    {
+      "name": "phoff-18446744073709551615.elf",
+      "bytes": 13128,
+      "sha256": "e91aa5e58c094470b0b565f61d83bd8c2d073a4401194a1b102aea28e1ff77c8",
+      "reference_exit": 1,
+      "Rust_exit": 1,
+      "reference_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/phoff-18446744073709551615.elf: REJECT: 64-bit field out of range\n",
+      "Rust_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/phoff-18446744073709551615.elf: REJECT: 64-bit field out of range\n"
+    },
+    {
+      "name": "phoff-63.elf",
+      "bytes": 13128,
+      "sha256": "8e0bec7cb4fd44f4a35ff351842da620a3314abf9dd0705f091bcc69b918d926",
+      "reference_exit": 1,
+      "Rust_exit": 1,
+      "reference_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/phoff-63.elf: REJECT: unsupported ELF header field\n",
+      "Rust_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/phoff-63.elf: REJECT: unsupported ELF header field\n"
+    },
+    {
+      "name": "phoff-64.elf",
+      "bytes": 13128,
+      "sha256": "c6c6416195a0f18d680d7f8f19be52ce02ff02912ef3bac45324fbe88006cd06",
+      "reference_exit": 0,
+      "Rust_exit": 0,
+      "reference_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/phoff-64.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n",
+      "Rust_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/phoff-64.elf: OK (3 PT_LOAD, entry 0x400000, 3 pages)\n"
+    },
+    {
+      "name": "phoff-8.elf",
+      "bytes": 13128,
+      "sha256": "947a26cd4d7ee039c9a6b26ac79311f6fa001a265b31112e9d1f6dfc53bbc891",
+      "reference_exit": 1,
+      "Rust_exit": 1,
+      "reference_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/phoff-8.elf: REJECT: unsupported ELF header field\n",
+      "Rust_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/phoff-8.elf: REJECT: unsupported ELF header field\n"
+    },
+    {
+      "name": "truncated-ph.elf",
+      "bytes": 200,
+      "sha256": "f71deb91c0e4f327ea15c00de1c27e32e7ae576ffa68cbe0df2cab76e62b503e",
+      "reference_exit": 1,
+      "Rust_exit": 1,
+      "reference_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/truncated-ph.elf: REJECT: program-header table outside the file\n",
+      "Rust_output": "elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/corpus/truncated-ph.elf: REJECT: program-header table outside the file\n"
+    }
+  ]
+}

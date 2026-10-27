@@ -1,0 +1,6 @@
+arch/x86_64/usb_resources.c:75:13:fixture_worker	16	static
+arch/x86_64/usb_resources.c:83:12:worker_start	48	static
+arch/x86_64/usb_resources.c:27:5:usb_resource_acquire	64	static
+arch/x86_64/usb_resources.c:46:5:usb_resource_release	32	static
+arch/x86_64/usb_resources.c:64:6:usb_resource_retain	8	static
+arch/x86_64/usb_resources.c:116:5:usb_resources_verify	96	static

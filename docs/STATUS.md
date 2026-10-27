@@ -6,11 +6,15 @@ Current accepted graphical baseline: owner-merged
 VOS is pre-alpha. **N0-N5 are accepted; N6 is still in progress.**
 No physical-hardware or complete-desktop acceptance is claimed.
 The accepted main used for this review is
-`86493ff2b2a8f2d84c4ce3ed4d0ccf132d97a072`, following R0/R1,
+`f24b3a803a65324f31cdb4c43fd4f504394a7cdb`, following R0/R1,
 [USB.1 integration PR #22](https://github.com/veasnawt/vos/pull/22) and
-[portable USB.2-A PR #23](https://github.com/veasnawt/vos/pull/23).
-The USB.1 Rust migration in this branch is locally verified for PR review,
-not yet accepted or merged.
+[portable USB.2-A PR #23](https://github.com/veasnawt/vos/pull/23), and
+[USB.1 Rust migration PR #24](https://github.com/veasnawt/vos/pull/24).
+This branch's [USB.2-B ownership foundation](results/usb2b-resource-ownership.md)
+is verified for PR review, not accepted or merged. It executes real non-device
+mapping/PMM and worker-reaping fixtures; live xHCI, DMA qualification and USB
+device operations remain unimplemented. Both firmware paths pass final checks;
+the failed pre-GRUB boot and missing-GOP media attempt remain preserved.
 
 ## Current accepted components
 

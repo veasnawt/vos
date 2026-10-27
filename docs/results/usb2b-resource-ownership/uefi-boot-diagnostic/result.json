@@ -1,0 +1,24 @@
+{
+  "purpose": "bounded pre-GRUB failure diagnosis; not a passing firmware gate",
+  "observations": [
+    {
+      "seconds": 10.166393113002414,
+      "serial_bytes": 0,
+      "GRUB_choice": false,
+      "kernel": false
+    },
+    {
+      "seconds": 20.103590087004704,
+      "serial_bytes": 477,
+      "GRUB_choice": true,
+      "kernel": false
+    },
+    {
+      "seconds": 34.09060428099474,
+      "serial_bytes": 477,
+      "GRUB_choice": true,
+      "kernel": false
+    }
+  ],
+  "exit": "diagnostic completed; no input or deadline extension"
+}

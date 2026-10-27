@@ -8,7 +8,8 @@
  * page directory and its page tables come from the PMM; mappings are 4 KiB
  * pages, present, writable, NX, never user and never global, each followed
  * by an unmapped guard page. At most DEVMAP_MAX mappings and DEVMAP_MAX_BYTES
- * in all; mappings are permanent (there is no unmap outside the self-tests).
+ * in all. Legacy devmap_map mappings are permanent; the non-access fixture
+ * lease below is the sole scoped exception and owns only its fresh tables.
  *
  * What may be mapped. Physical [pa, pa + len) rounded out to pages must
  *   - not overflow, and lie below 2^MAXPHYADDR (CPUID 0x80000008);
@@ -80,6 +81,24 @@ unsigned devmap_table_frames(uint64_t *pa, unsigned max);
 uint64_t devmap_expected_pte(uint64_t va);
 /* Consistency of the registry and the window's page tables; NULL if consistent. */
 const char *devmap_audit(void);
+
+/* USB.2-B non-access fixture: a qualified 16 KiB hole at 4 GiB, never
+ * dereferenced. This is NOT a PCI BAR/aperture or DMA qualification API.
+ * Only this region identifier is accepted; no arbitrary physical input.
+ * One exclusive tail lease; kernel CR3, IF=0, non-IRQ thread context.
+ * All permanent mappings stay unchanged. Errors retain the owning token.
+ * A release succeeds once; stale tokens never authorize another generation.
+ */
+#define DEVMAP_SCOPE_FIXTURE 1u
+int devmap_scope_acquire(unsigned region, uint64_t offset, uint64_t length,
+                         int attr, uint64_t *token, uint64_t *va);
+int devmap_scope_release(uint64_t token);
+uint64_t devmap_scope_token(void);
+unsigned devmap_scope_tables(void);
+
+/* Fault budgets apply only to the explicitly invoked fixture acquisition:
+ * -1 unlimited; 0 fail before the next allocation. No legacy-map effects. */
+void devmap_scope_budget(int allocations);
 
 #ifdef VOS_TEST
 /* Remove every mapping made after the first `keep` (self-tests only). */

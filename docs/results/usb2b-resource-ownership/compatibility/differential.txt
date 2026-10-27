@@ -1,0 +1,1 @@
+xhci differential: 40110 probe/decode cases PASS; fields, reasons, operation traces, unchanged inputs

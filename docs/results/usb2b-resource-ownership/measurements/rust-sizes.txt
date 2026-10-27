@@ -1,0 +1,1 @@
+Owned=32 Lease=24 Controller=424 Usage=8

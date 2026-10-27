@@ -1,0 +1,6 @@
+{
+  "undefined_symbols": false,
+  "SIMD_registers": false,
+  "GOT_PLT_TLS_dynamic": false,
+  "kernel_sha256": "017cbc9eda6144b2c0078e531b6e1808627f5fd1111ebea56bcd262fd5e7c4c8"
+}

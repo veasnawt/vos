@@ -1,0 +1,19 @@
+{
+  "core-build.txt": {
+    "exit": 0,
+    "command": [
+      "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+      "--edition=2024",
+      "-Dwarnings",
+      "-Copt-level=1",
+      "-Coverflow-checks=yes",
+      "-Cstrip=symbols",
+      "--crate-name",
+      "vos_xhci",
+      "--crate-type=rlib",
+      "kernel/rust/usb/xhci/lib.rs",
+      "-o",
+      "/home/veasnawt/src/vos-usb2b/build/usb2b-1/compatibility/libvos_xhci.rlib"
+    ]
+  }
+}

@@ -199,8 +199,11 @@ implemented independently of this kernel proof.
 
 USB.2-A's [portable Rust core](results/usb2a-rust-core.md) is merged through
 PR #23. It models bounded validation, rings and lifecycle without operating a
-controller. USB.2-B/C resource/platform integration requires separate
-authorization. USB.1's original checkout and evidence remain preserved.
+controller. The separately authorized
+[USB.2-B ownership foundation](results/usb2b-resource-ownership.md) is implemented
+and verified in this PR candidate, not yet accepted. It adds non-device scoped
+mapping/PMM ownership and worker fixtures, not a live backend. USB.2-C activation
+remains separately authorized future work. USB.1's original evidence is preserved.
 This status update grants no implementation authority.
 Unrelated bug fixes, boot-media work and desktop planning need not
 wait for the full migration. Hardware and migration work coordinate when sharing
@@ -220,7 +223,8 @@ implemented originally at
 The [Rust-enabled integration](results/usb1-rust-integration.md) preserves that
 provenance and is merged through PR #22; its dated report remains unchanged.
 The [USB.1 discovery migration to Rust](results/usb1-rust-publication-review.md)
-is a separate locally verified PR candidate, not accepted or physically verified.
+is accepted through PR #24 at `f24b3a803a65324f31cdb4c43fd4f504394a7cdb`,
+with physical verification still unperformed.
 It provides opt-in, read-only bus-0 xHCI discovery/diagnostics, not USB
 keyboard/mouse input. USB.2-A is software-only; live controller operations remain
 outside this publication review.

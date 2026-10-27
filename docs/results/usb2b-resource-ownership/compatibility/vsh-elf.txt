@@ -1,0 +1,1 @@
+elfcheck: /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/native/user/vsh.elf: OK (3 PT_LOAD, entry 0x400000, 5 pages)

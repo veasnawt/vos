@@ -1,0 +1,125 @@
+{
+  "send-model-negative.txt": {
+    "exit": 1,
+    "command": [
+      "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+      "--edition=2024",
+      "-Dwarnings",
+      "--extern",
+      "vos_xhci=/home/veasnawt/src/vos-usb2b/build/usb2b-1/compatibility/libvos_xhci.rlib",
+      "/home/veasnawt/src/vos-usb2b/build/usb2b-1/compatibility/send-model.rs",
+      "-o",
+      "/home/veasnawt/src/vos-usb2b/build/usb2b-1/compatibility/Send"
+    ]
+  },
+  "sync-model-negative.txt": {
+    "exit": 1,
+    "command": [
+      "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+      "--edition=2024",
+      "-Dwarnings",
+      "--extern",
+      "vos_xhci=/home/veasnawt/src/vos-usb2b/build/usb2b-1/compatibility/libvos_xhci.rlib",
+      "/home/veasnawt/src/vos-usb2b/build/usb2b-1/compatibility/sync-model.rs",
+      "-o",
+      "/home/veasnawt/src/vos-usb2b/build/usb2b-1/compatibility/Sync"
+    ]
+  },
+  "mutant-build.txt": {
+    "exit": 0,
+    "command": [
+      "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+      "--edition=2024",
+      "-Dwarnings",
+      "-Copt-level=1",
+      "-Cstrip=symbols",
+      "--crate-name",
+      "vos_xhci",
+      "--crate-type=rlib",
+      "/home/veasnawt/src/vos-usb2b/build/usb2b-1/compatibility/mutant/lib.rs",
+      "-o",
+      "/home/veasnawt/src/vos-usb2b/build/usb2b-1/compatibility/libmutant.rlib"
+    ]
+  },
+  "mutant-test-build.txt": {
+    "exit": 0,
+    "command": [
+      "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+      "--edition=2024",
+      "-Dwarnings",
+      "-Copt-level=1",
+      "-Cstrip=symbols",
+      "--test",
+      "--extern",
+      "vos_xhci=/home/veasnawt/src/vos-usb2b/build/usb2b-1/compatibility/libmutant.rlib",
+      "tests/rust/xhci.rs",
+      "-o",
+      "/home/veasnawt/src/vos-usb2b/build/usb2b-1/compatibility/mutant-tests"
+    ]
+  },
+  "mutant-test.txt": {
+    "exit": 101,
+    "command": [
+      "/home/veasnawt/src/vos-usb2b/build/usb2b-1/compatibility/mutant-tests",
+      "--exact",
+      "stale_software_ticket_rejected_after_pointer_reuse"
+    ]
+  },
+  "original-c-build.txt": {
+    "exit": 0,
+    "command": [
+      "gcc",
+      "-std=gnu11",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-Iarch/x86_64",
+      "-ffunction-sections",
+      "-fdata-sections",
+      "-fno-pie",
+      "-O1",
+      "-g",
+      "-fsanitize=address,undefined",
+      "-fno-omit-frame-pointer",
+      "-Dxhci_probe=reference_xhci_probe",
+      "-Dxhci_decode_caps=reference_xhci_decode_caps",
+      "-Dxhci_class_matches=reference_xhci_class_matches",
+      "-c",
+      "tests/reference/xhci-usb1.c",
+      "-o",
+      "/home/veasnawt/src/vos-usb2b/build/usb2b-1/compatibility/original-c.o"
+    ]
+  },
+  "differential-build.txt": {
+    "exit": 0,
+    "command": [
+      "gcc",
+      "-std=gnu11",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-Iarch/x86_64",
+      "-ffunction-sections",
+      "-fdata-sections",
+      "-fno-pie",
+      "-O1",
+      "-g",
+      "-fsanitize=address,undefined",
+      "-fno-omit-frame-pointer",
+      "-no-pie",
+      "-Wl,--gc-sections",
+      "tests/host/xhci-differential.c",
+      "arch/x86_64/xhci.c",
+      "/home/veasnawt/src/vos-usb2b/build/usb2b-1/compatibility/original-c.o",
+      "/home/veasnawt/src/vos-usb2b/build/usb2b-1/kernel-final/rust/libvos_kernel.a",
+      "-o",
+      "/home/veasnawt/src/vos-usb2b/build/usb2b-1/compatibility/differential"
+    ]
+  },
+  "differential.txt": {
+    "exit": 0,
+    "command": [
+      "/home/veasnawt/src/vos-usb2b/build/usb2b-1/compatibility/differential"
+    ]
+  }
+}
