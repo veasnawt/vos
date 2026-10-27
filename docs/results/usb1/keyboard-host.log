@@ -1,0 +1,3 @@
+PASS: decoder modifiers, repeat, release, extended/Pause and unsupported keys
+PASS: acknowledged setup, bounded timeouts/drain, aux/errors and fail-closed readiness
+PASS: exact opt-in token, prompt boundary, 128-cell limit, editing, Enter and overflow rejection

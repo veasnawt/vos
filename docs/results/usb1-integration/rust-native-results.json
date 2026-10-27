@@ -1,0 +1,43 @@
+{
+  "native": [
+    {
+      "firmware": "bios",
+      "case": "existing ELF selftest",
+      "result": "PASS",
+      "elf_cases": 35,
+      "corrupted_images": 69,
+      "qemu_exit": 33,
+      "rust_address": "0xffffffff80160030",
+      "rust_size": 18,
+      "rust_execution_records": 78,
+      "trace_sha256": "440a842ca3bdeec003cfdae1dc9c85c81afe93a51bdfc4db9c884ebed836fbea"
+    },
+    {
+      "firmware": "bios",
+      "case": "normal GUI/apps/hello/Rixie/shell",
+      "result": "PASS",
+      "console_restorations": 2,
+      "serial_sha256": "46022da634cb2d03e2061fd3d8b153d185eca09a13066d3a6a625b8fc4fe8492"
+    },
+    {
+      "firmware": "uefi",
+      "case": "existing ELF selftest",
+      "result": "PASS",
+      "elf_cases": 35,
+      "corrupted_images": 69,
+      "qemu_exit": 33,
+      "rust_address": "0xffffffff80160030",
+      "rust_size": 18,
+      "rust_execution_records": 78,
+      "trace_sha256": "677204cb9b18f887909fb114310498883c8018b295fc61ac9cd18a25ea2e6f9c"
+    },
+    {
+      "firmware": "uefi",
+      "case": "normal GUI/apps/hello/Rixie/shell",
+      "result": "PASS",
+      "console_restorations": 2,
+      "serial_sha256": "d506d31968818a20c035aa55b0fe1576e943a26a7d49fb3c2c9f834a70ddf453"
+    }
+  ],
+  "status": "PASS"
+}

@@ -1,0 +1,1 @@
+bootstrap host PASS 523 assertions; 64 actual ELF rejections, 64 process-admission failures, failed service start; modeled service cleanup

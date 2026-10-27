@@ -1,6 +1,10 @@
 /* Explicit ABI v3/v4 console ownership; kernel-only foreground leases. */
 #ifndef VOS_X86_64_USER_CONSOLE_H
 #define VOS_X86_64_USER_CONSOLE_H
+
+/* Opt-in boot diagnostics only; no input or authority behavior changes. */
+void user_console_set_diagnostics(int enabled);
+void user_console_diagnostic(const char *stage, int ok);
 #include <stdint.h>
 struct process;
 struct exc_frame;

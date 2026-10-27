@@ -1,0 +1,238 @@
+#!/usr/bin/env python3
+"""Focused USB.1 host/BIOS/UEFI verification. No host disks or legacy controllers."""
+import argparse, hashlib, json, os, shutil, socket, subprocess, time
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[1]
+ENV = dict(os.environ, PYTHONDONTWRITEBYTECODE="1")
+def need(ok, why):
+    if not ok:
+        raise RuntimeError(why)
+def sha(p):
+    return hashlib.sha256(Path(p).read_bytes()).hexdigest()
+def record(path, value):
+    with path.open("x") as f:
+        json.dump(value, f, indent=2); f.write("\n")
+def run(argv, log, seconds=180):
+    with log.open("x") as f:
+        p = subprocess.run([str(x) for x in argv], cwd=ROOT, env=ENV,
+                           stdout=f, stderr=subprocess.STDOUT, timeout=seconds)
+    need(p.returncode == 0, "command failed: " + str(log))
+    return log.read_text()
+
+class QMP:
+    def __init__(self, path):
+        self.socket = socket.socket(socket.AF_UNIX)
+        self.socket.settimeout(5)
+        self.socket.connect(str(path))
+        self.file = self.socket.makefile("rwb")
+        need("QMP" in json.loads(self.file.readline()), "QMP greeting")
+        self.number = 0
+        self.command("qmp_capabilities")
+    def command(self, name, args=None):
+        self.number += 1
+        obj = dict(execute=name, id=self.number)
+        if args is not None:
+            obj["arguments"] = args
+        self.file.write((json.dumps(obj)+"\n").encode()); self.file.flush()
+        while True:
+            result = json.loads(self.file.readline())
+            if result.get("id") == self.number:
+                need("error" not in result, "QMP " + str(result))
+                return result.get("return")
+    def key(self, key):
+        self.command("input-send-event", dict(events=[
+            dict(type="key", data=dict(down=down, key=dict(type="qcode", data=key)))
+            for down in (True, False)]))
+    def text(self, text):
+        for c in text:
+            self.key({" ":"spc", "\n":"ret", "-":"minus"}.get(c,c))
+            time.sleep(.04)
+    def close(self):
+        self.file.close(); self.socket.close()
+
+def hosted(out):
+    cc = ["gcc","-std=gnu11","-Wall","-Wextra","-Werror","-Iarch/x86_64",
+          "-ffunction-sections","-fdata-sections","-Wl,--gc-sections",
+          "-O1","-g","-fsanitize=address,undefined","-fno-omit-frame-pointer","-fno-pie","-no-pie"]
+    syscall = (ROOT/"arch/x86_64/syscall.c").read_text()
+    debug = out/"debug.c"
+    debug.write_text("#include <stdint.h>\n"+syscall[syscall.index("void debug_emit("):syscall.index("/* debug_write")])
+    common = ["arch/x86_64/keyboard.c","arch/x86_64/pointer.c","arch/x86_64/input_console.c"]
+    cases = {
+        "xhci":["tests/host/xhci.c","arch/x86_64/xhci.c","arch/x86_64/xhci_boot.c"],
+        "keyboard":["tests/host/keyboard-input.c",*common],
+        "diagnostics":["-DVOS_CONSOLE_HOST","tests/host/input-diagnostics.c","arch/x86_64/user_console.c"],
+        "console":["-DVOS_CONSOLE_HOST","tests/host/user-console-handoff.c",
+                   "arch/x86_64/user_console.c",*common,str(debug)],
+    }
+    results = {}
+    for name, sources in cases.items():
+        binary = out/(name+"-host")
+        run(cc+sources+["-o",binary], out/(name+"-build.log"),60)
+        text = run([binary], out/(name+"-host.log"),60)
+        need("PASS" in text, name+" positive result")
+        results[name] = text
+    return results
+
+def images(out, rustc, efi):
+    kernel, user = out/"kernel", out/"user"
+    kernel.mkdir(); user.mkdir()
+    base = ["make","--no-print-directory","ARCH=x86_64","BUILD="+str(kernel),
+            "USER_BUILD="+str(user),"RUSTC="+rustc,"GRUB_EFI_DIR="+str(efi)]
+    run(base+["user-vsh","user-rust","user-gui","RUST_APP=rixie"], out/"apps-build.log",240)
+    run(base+["-j2","all"], out/"kernel-build.log",180)
+    need(subprocess.run(["grub-file","--is-x86-multiboot2",str(kernel/"vos.bin")]).returncode == 0,
+         "Multiboot kernel")
+    profile = {}
+    for name, options in {
+        "control":"vos.apps=1 vos.desktop=1 vos.gui=1",
+        "probe":"vos.apps=1 vos.desktop=1 vos.gui=1 vos.usb_probe=1 vos.input_diag=1",
+        "text":"vos.apps=1 vos.usb_probe=1 vos.input_diag=1",
+    }.items():
+        cfg = out/(name+".cfg")
+        cfg.write_text('set timeout=0\nset default=0\nmenuentry "VOS USB.1 '+name+'" {\n'
+                       ' set gfxpayload=1024x768x32,auto\n multiboot2 /boot/vos.bin '+options+'\n'
+                       + "".join(" module2 /boot/"+n+".elf "+n+"\n" for n in
+                                 (("vsh","hello","rixie") if name=="text" else ("vsh","hello","rixie","gui-demo")))
+                       + " boot\n}\n")
+        extra = "ISO_FILES="+" ".join(str(user/(n+".elf"))+":boot/"+n+".elf" for n in ("vsh","rixie","gui-demo"))
+        run(base+["GRUB_CFG="+str(cfg),extra,"uefi-iso"],out/(name+"-media.log"),120)
+        profile[name] = {}
+        for fw, filename in (("bios","vos.iso"),("uefi","vos-uefi.iso")):
+            iso = out/(name+"-"+fw+".iso")
+            shutil.copyfile(kernel/filename, iso)
+            catalog = run(["xorriso","-indev",iso,"-report_el_torito","plain"],out/(name+"-"+fw+"-catalog.log"),30)
+            need(("UEFI" if fw=="uefi" else "BIOS") in catalog, "firmware boot entry")
+            # Re-read the actual image payloads, retaining the extraction for reproduction.
+            check = out/(name+"-"+fw+"-payloads")
+            check.mkdir()
+            for n in ("vos.bin","vsh.elf","hello.elf","rixie.elf","gui-demo.elf"):
+                expected = kernel/n if n=="vos.bin" else user/n
+                run(["xorriso","-osirrox","on","-indev",iso,"-extract","/boot/"+n,check/n],
+                    out/(name+"-"+fw+"-"+n+"-extract.log"),30)
+                need(sha(check/n)==sha(expected), "identical image payload "+n)
+            profile[name][fw] = str(iso)
+    return profile
+
+def boot(out, fw, case, iso):
+    folder = out/(fw+"-"+case); folder.mkdir()
+    serial = folder/"serial.log"; qmp = folder/"qmp"
+    machine = "q35,i8042=off" if case=="no-ps2" else "q35"
+    argv = ["qemu-system-x86_64","-machine",machine,"-accel","tcg","-m","128M",
+            "-cdrom",iso,"-boot","d","-display","none","-nic","none",
+            "-serial","file:"+str(serial),"-qmp","unix:"+str(qmp)+",server=on,wait=off",
+            "-no-reboot","-no-shutdown"]
+    if case in ("usb","no-ps2"):
+        argv += ["-device","qemu-xhci,id=xhci","-device","usb-kbd,bus=xhci.0"]
+    if fw=="uefi":
+        variables = folder/"OVMF_VARS_4M.fd"
+        shutil.copyfile("/usr/share/OVMF/OVMF_VARS_4M.fd", variables)
+        argv += ["-drive","if=pflash,format=raw,unit=0,readonly=on,file=/usr/share/OVMF/OVMF_CODE_4M.fd",
+                 "-drive","if=pflash,format=raw,unit=1,file="+str(variables)]
+    record(folder/"command.json",argv)
+    q = None
+    with (folder/"qemu.log").open("x") as log:
+        p = subprocess.Popen(argv, cwd=ROOT, env=ENV, stdout=log, stderr=subprocess.STDOUT)
+        try:
+            def data():
+                need(p.poll() is None,"QEMU exited: "+str(folder))
+                text = serial.read_text(errors="replace") if serial.exists() else ""
+                need("panic:" not in text,"unexpected kernel panic")
+                if case!="no-ps2":
+                    need("boot: check failed" not in text and "gui: FAIL" not in text,"guest failure")
+                return text
+            def wait(marker, seconds=35, start=0):
+                end = time.monotonic()+seconds
+                while time.monotonic()<end:
+                    text = data()
+                    if marker in text[start:]:
+                        return text
+                    time.sleep(.025)
+                raise RuntimeError("native marker timeout "+marker+" in "+str(folder))
+            if case=="no-ps2":
+                text = wait("native: vsh FAIL")
+                for marker in ("input-diag: native boot module present ok","input-diag: native ELF load ok",
+                               "input-diag: text PS/2 keyboard initialization failed",
+                               "input-diag: native console grant failed","usb: summary inspected=1"):
+                    need(marker in text, "expected negative control "+marker)
+            else:
+                text = wait("gui-demo: PRESENTED;")
+                if case=="control":
+                    need("usb: " not in text and "input-diag:" not in text,"ordinary option-off boot unchanged")
+                elif case=="absent":
+                    need("not found on bus 0" in text and "inspected=0 unsupported=0 invalid=0" in text,"bus-0 absence")
+                else:
+                    need("usb: summary inspected=1 unsupported=0 invalid=0" in text and
+                         "usb: PCI command and BAR unchanged" in text,"actual xHCI discovery")
+                q = QMP(qmp)
+                record(folder/"pci.json",q.command("query-pci"))
+                if case!="usb":  # usb-kbd is intentionally unsupported by VOS USB.1.
+                    q.key("a");wait("gui-demo: KEY a PRESENTED")
+                    q.key("b");wait("gui-demo: KEY b PRESENTED")
+                    q.key("q");wait("user[vsh]: VOS>")
+                    need("gui: PASS; kernel-CR3 reclamation, all resources restored" in data(),
+                         "GUI resources reclaimed before shell")
+                    def command(line, expected, prompt="user[vsh]: VOS>"):
+                        start = len(data())
+                        q.text(line+"\n")
+                        after = wait(prompt, start=start)
+                        need(expected in after[start:], "command response "+line)
+                    command("echo usb-one", "user[vsh]: usb-one")
+                    command("apps", "rixie")
+                    command("hello", "Hello from VOS!")
+                    command("rixie", "deterministic", "user[rixie]: Rixie>")
+                    command("hello", "Hello! I'm Rixie", "user[rixie]: Rixie>")
+                    command("exit", "Goodbye from Rixie.")
+                    # A fresh marker proves the shell is usable after the child.
+                    command("echo restored", "user[vsh]: restored")
+            text = data()
+            need("WARNING PCI" not in text,"unexpected PCI configuration change")
+            record(folder/"result.json",dict(passed=True,firmware=fw,case=case,
+                    expected_ps2_failure=case=="no-ps2",usb_keyboard_supported=False,
+                    serial_sha256=sha(serial)))
+            return dict(passed=True,serial=str(serial.relative_to(out)),case=case)
+        finally:
+            if q is not None:
+                q.close()
+            p.terminate()
+            try:p.wait(timeout=5)
+            except subprocess.TimeoutExpired:p.kill();p.wait()
+
+def main():
+    ap=argparse.ArgumentParser(description=__doc__)
+    ap.add_argument("--output",type=Path,required=True)
+    ap.add_argument("--host-only",action="store_true")
+    ap.add_argument("--rustc",default=os.environ.get("RUSTC"))
+    ap.add_argument("--grub-efi-dir",type=Path,default=Path("/usr/lib/grub/x86_64-efi"))
+    args=ap.parse_args()
+    out=args.output.resolve()
+    need(out.is_relative_to(ROOT/"build") and not out.exists(),"fresh output below this checkout's build/")
+    out.mkdir(parents=True)
+    result=dict(passed=False,physical_hardware_tested=False)
+    try:
+        result["host"]=hosted(out)
+        if not args.host_only:
+            rustc=args.rustc or str(Path.home()/".rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc")
+            need(Path(rustc).is_file(),"supply --rustc for the installed native Rust toolchain")
+            efi=args.grub_efi_dir.resolve()
+            need((efi/"kernel.img").is_file() and (efi/"multiboot2.mod").is_file(),
+                 "supply --grub-efi-dir for installed or unpacked GRUB x86_64-efi modules")
+            result["grub_efi_inputs"]={str(p):sha(p) for p in sorted(efi.iterdir()) if p.is_file()}
+            media=images(out,rustc,efi);result["media"]=media
+            result["native"]={}
+            for fw in ("bios","uefi"):
+                for case,profile in (("control","control"),("usb","probe"),("absent","probe"),("no-ps2","text")):
+                    result["native"][fw+"-"+case]=boot(out,fw,case,media[profile][fw])
+        result["passed"]=True
+    except Exception as e:
+        result["error"]=str(e)
+        raise
+    finally:
+        result["source_sha256"]={str(p.relative_to(ROOT)):sha(p) for p in [
+            ROOT/"arch/x86_64/xhci.c",ROOT/"arch/x86_64/xhci_boot.c",ROOT/"arch/x86_64/user_console.c",
+            ROOT/"arch/x86_64/kernel.c",Path(__file__).resolve()]}
+        record(out/"result.json",result)
+        print(json.dumps(result,indent=2),flush=True)
+if __name__=="__main__":
+    main()

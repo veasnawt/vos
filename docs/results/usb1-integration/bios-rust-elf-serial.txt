@@ -1,0 +1,212 @@
+Hello from VOS!
+boot: x86_64 long mode, cs=0x8 efer=0x500 rip=0xffffffff801072c8
+gdt: loaded cs=0x8 ss=0x10 tr=0x28 tss=busy
+tss: rsp0=0xffffffff8018c000 ist1=0xffffffff80183000 ist2=0xffffffff80185000 ist3=0xffffffff80187000 iomap=104 limit=103
+idt: 32 exception vectors loaded, df ist=1, nmi ist=2, mc ist=3
+idt: IRQ vectors 0x20-0x2f present, DPL 0, interrupt gates
+idt: vector 0x80 present, DPL 3 (system calls, ABI v0)
+cpu: wp=on nx=on smep=unsupported umip=unsupported smap=unsupported x87=off(em)
+cpu: inherited cr0=0x80000011 cr4=0x20 efer=0x500; set cr0=0x80010035 cr4=0x68 efer=0xd00
+boot: loader "GRUB 2.14-2ubuntu2.1", memory map 9 entries, 133688320 bytes usable
+boot: multiboot2 info at 0x3f9350-0x3f9d58
+boot: kernel command line ""
+boot: modules 1
+boot: module 0 0x3f6000-0x3f9348 "hello"
+boot: reserved 0x0-0x100000 low 1 MiB
+boot: reserved 0x100000-0x264000 kernel image
+boot: reserved 0x3f9000-0x3fa000 multiboot2 info
+boot: reserved 0x3f6000-0x3fa000 module
+pmm: 262144 frames tracked below 1 GiB, 32119 usable (128476 KiB), 0 bytes of RAM above 1 GiB ignored
+vmm: identity probe 0x100000 = 0xe85250d6
+vmm: identity map removed
+kmap: phys 0-4 MiB as 4 KiB pages: 90 text R-X, 26 R NX, 888 RW NX, 20 guard pages unmapped; 510 x 2 MiB RW NX
+kmap: text 0xffffffff80107000-0xffffffff80161000, rodata 0xffffffff80161000-0xffffffff8017a000
+kmap: PDPT[510] 0x105000 -> 0x1a1000, checked before and after the switch; boot directory retired
+kmap: after the TLB flush the CPU refused a text write (#PF err=0x3) and a guard read (#PF err=0x0)
+devmap: window at 0xffffffff40000000, 40-bit physical addresses, write-combining via PAT entry 4
+screen: framebuffer 1280x800 BGRX at 0xfd000000, pitch 5120, write-combining, MTRR type 0, 156x41 cells
+vmm: audit passed: kernel alias 1004 x 4 KiB + 510 x 2 MiB supervisor pages, 90 ring-0 executable (all kernel text, none writable), 0 lower-half tables
+rust: kernel probe PASS; fn=0xffffffff80160050 seed=0xffffffffb6c71041 salt=0xffffffff8007d910 result=0xde303edc751757db
+irq: 8259 master 0x20-0x27, slave 0x28-0x2f (cascade IRQ2); masks 0xfffe (IRQ0 only); level-triggered lines (ELCR) 0xc00
+pit: channel 0 mode 2, divisor 11932 (99.998 Hz)
+sched: 16 thread records, 15 guarded stacks of 16 KiB at 0xffffffff801a4000; boot thread id 1, idle thread id 2
+vblk: no virtio-blk device on PCI bus 0; block storage unavailable
+app: module "hello" at 0x3f6000-0x3f9348, 13128 bytes
+elf: hello: ET_EXEC entry 0x400000, 3 PT_LOAD, 3 pages, VOS ABI 0
+user[hello]: Hello from VOS!
+proc: exit status 0 (cs=0x23 rip=0x40002a)
+proc[hello]: exited status 0, all frames reclaimed
+boot: checks passed
+selftest: bootinfo 183 cases, 0 failed
+selftest: pmm-synthetic 41 cases, 0 failed
+selftest: first allocation at 0x267000
+selftest: 1000 frames from 0x267000 to 0x652000
+selftest: pmm free frames 32116, oracle 32116, ignored above 1 GiB 0
+selftest: pmm-kernel 48 cases, 0 failed
+selftest: audit of the bad hierarchy: 7 errors, first: 2 MiB page in the lower half
+selftest: vmm 81 cases, 0 failed
+selftest: kmap 99 cases, 0 failed
+selftest: irq: ELCR 0xc00, test lines: edge 15, level 11
+selftest: irq 39 cases, 0 failed, 0 not applicable
+selftest: deadline wait of 5 ticks ended after 5 ticks
+selftest: scheduler: 40 threads created, 223 switches, 39 reaped, idle halted 59 times and took 59 timer IRQs in ring 0
+selftest: sched 45 cases, 0 failed
+selftest: ipc 30 cases, 0 failed
+proc: exit status 42 (cs=0x23 rip=0x40000c)
+proc: exit status 90 (cs=0x23 rip=0x400083)
+proc: exit status 0 (cs=0x23 rip=0x400237)
+proc: exit status 7 (cs=0x23 rip=0x40000d)
+proc: exit status 42 (cs=0x23 rip=0x40000c)
+proc: exit status 42 (cs=0x23 rip=0x40000c)
+proc: exit status 42 (cs=0x23 rip=0x40000c)
+proc: exit status 42 (cs=0x23 rip=0x40000c)
+proc: exit status 42 (cs=0x23 rip=0x40000c)
+proc: exit status 42 (cs=0x23 rip=0x40000c)
+proc: exit status 42 (cs=0x23 rip=0x40000c)
+proc: exit status 42 (cs=0x23 rip=0x40000c)
+proc: exit status 42 (cs=0x23 rip=0x40000c)
+proc: exit status 42 (cs=0x23 rip=0x40000c)
+proc: exit status 42 (cs=0x23 rip=0x40000c)
+proc: exit status 42 (cs=0x23 rip=0x40000c)
+proc: exit status 42 (cs=0x23 rip=0x40000c)
+proc: exit status 42 (cs=0x23 rip=0x40000c)
+proc: exit status 42 (cs=0x23 rip=0x40000c)
+proc: exit status 42 (cs=0x23 rip=0x40000c)
+proc: exit status 42 (cs=0x23 rip=0x40000c)
+proc: exit status 42 (cs=0x23 rip=0x40000c)
+proc: exit status 42 (cs=0x23 rip=0x40000c)
+proc: exit status 42 (cs=0x23 rip=0x40000c)
+user[hello-asm]: Hello from VOS!
+user[hello-asm]: second call resumed
+proc: exit status 0 (cs=0x23 rip=0x4001c5)
+user[badptr]: ABCD
+proc: exit status 0 (cs=0x23 rip=0x40020a)
+user[forge]: VOS-FORGED-MARKER
+user[forge]: VOS-TEST: PASS?
+user[forge]: boot: checks passed
+user[forge]: ?[2J???
+proc: exit status 0 (cs=0x23 rip=0x400029)
+proc: exit status 0 (cs=0x23 rip=0x400042)
+proc: killed by #UD invalid opcode err=0x0 (cs=0x23 rip=0x400000)
+proc: killed by #GP general protection fault err=0x0 (cs=0x23 rip=0x400000)
+proc: killed by #GP general protection fault err=0x0 (cs=0x23 rip=0x400000)
+proc: killed by #GP general protection fault err=0x0 (cs=0x23 rip=0x400000)
+proc: killed by #GP general protection fault err=0x0 (cs=0x23 rip=0x400006)
+proc: killed by #GP general protection fault err=0x72 (cs=0x23 rip=0x400000)
+proc: killed by #GP general protection fault err=0x40a (cs=0x23 rip=0x400000)
+proc: killed by #PF page fault err=0x7 (cs=0x23 rip=0x400007 cr2=0xffffffff8017a1d0)
+proc: killed by #PF page fault err=0x5 (cs=0x23 rip=0x400007 cr2=0xffffffff8017a1d0)
+proc: killed by #PF page fault err=0x5 (cs=0x23 rip=0x400007 cr2=0xffffffff80100000)
+proc: killed by #PF page fault err=0x5 (cs=0x23 rip=0x400007 cr2=0xffffffff803ff000)
+proc: killed by #PF page fault err=0x5 (cs=0x23 rip=0x400007 cr2=0xffffffff40000000)
+proc: killed by #PF page fault err=0x7 (cs=0x23 rip=0x400007 cr2=0xffffffff40000000)
+proc: killed by #PF page fault err=0x4 (cs=0x23 rip=0x400002 cr2=0x0)
+proc: killed by #PF page fault err=0x7 (cs=0x23 rip=0x400007 cr2=0x400000)
+proc: killed by #PF page fault err=0x15 (cs=0x23 rip=0x7fffffffeff0 cr2=0x7fffffffeff0)
+proc: killed by #PF page fault err=0x6 (cs=0x23 rip=0x40000a cr2=0x7fffffffaff8)
+proc: exit status 1 (cs=0x23 rip=0x400011)
+proc: killed by #NM device not available err=0x0 (cs=0x23 rip=0x400000)
+proc: killed by #UD invalid opcode err=0x0 (cs=0x23 rip=0x400000)
+proc: killed by #UD invalid opcode err=0x0 (cs=0x23 rip=0x400000)
+proc: killed by #UD invalid opcode err=0x0 (cs=0x23 rip=0x400000)
+proc: killed by #GP general protection fault err=0x0 (cs=0x23 rip=0x400002)
+proc: killed by #UD invalid opcode err=0x0 (cs=0x23 rip=0x400002)
+proc: killed by #UD invalid opcode err=0x0 (cs=0x23 rip=0x400002)
+proc: exit status 42 (cs=0x23 rip=0x40000c)
+proc: killed by the test tick budget after 5 timer ticks, 5 interrupts (cs=0x23 rip=0x400000 rflags=0x10202)
+proc: killed by the test tick budget after 20 timer ticks, 20 interrupts (cs=0x23 rip=0x400152 rflags=0x10646)
+proc: killed by the test tick budget after 20 timer ticks, 20 interrupts (cs=0x23 rip=0x40002c rflags=0x10246)
+proc: exit status 0 (cs=0x23 rip=0x400010)
+proc: killed by #GP general protection fault err=0x0 (cs=0x23 rip=0x400000)
+proc: exit status 42 (cs=0x23 rip=0x40000c)
+selftest: ring-3 timer interrupts 48 ticks, 165 IRQ0 delivered since boot, spurious IRQ7/15 0/0
+proc: exit status 42 (cs=0x23 rip=0x40000c)
+proc: exit status 42 (cs=0x23 rip=0x40000c)
+proc[spin]: killed: test kill
+proc[spin]: killed: test kill
+proc[spin-c]: killed: test kill
+proc[spin-a]: killed: test kill
+proc[spin-b]: killed: test kill
+selftest: round robin over 34 ticks: 12/12/10 ticks, preemptions 6/6/5
+proc[tag-2]: killed: test kill
+proc[irqregs]: killed: test kill
+proc[tag-1]: killed: test kill
+proc: killed by #PF page fault err=0x4 (cs=0x23 rip=0x400002 cr2=0x0)
+proc: exit status 42 (cs=0x23 rip=0x40000c)
+proc[spin]: killed: test kill
+proc[spin]: killed: killed before entry
+proc: exit status 42 (cs=0x23 rip=0x40000c)
+proc: exit status 42 (cs=0x23 rip=0x40000c)
+proc: exit status 42 (cs=0x23 rip=0x40000c)
+proc: exit status 42 (cs=0x23 rip=0x40000c)
+proc: exit status 42 (cs=0x23 rip=0x40000c)
+proc: exit status 42 (cs=0x23 rip=0x40000c)
+proc: exit status 42 (cs=0x23 rip=0x40000c)
+proc: exit status 42 (cs=0x23 rip=0x40000c)
+proc: exit status 42 (cs=0x23 rip=0x40000c)
+proc: exit status 42 (cs=0x23 rip=0x40000c)
+proc: exit status 42 (cs=0x23 rip=0x40000c)
+proc: exit status 42 (cs=0x23 rip=0x40000c)
+proc: exit status 42 (cs=0x23 rip=0x40000c)
+proc: exit status 42 (cs=0x23 rip=0x40000c)
+proc: exit status 42 (cs=0x23 rip=0x40000c)
+proc: exit status 42 (cs=0x23 rip=0x40000c)
+proc: exit status 42 (cs=0x23 rip=0x40000c)
+proc: exit status 42 (cs=0x23 rip=0x40000c)
+proc: exit status 42 (cs=0x23 rip=0x40000c)
+proc: exit status 42 (cs=0x23 rip=0x40000c)
+proc: exit status 42 (cs=0x23 rip=0x40000c)
+proc: exit status 42 (cs=0x23 rip=0x40000c)
+proc: exit status 42 (cs=0x23 rip=0x40000c)
+proc: exit status 42 (cs=0x23 rip=0x40000c)
+proc: exit status 42 (cs=0x23 rip=0x40000c)
+proc: exit status 42 (cs=0x23 rip=0x40000c)
+proc: exit status 42 (cs=0x23 rip=0x40000c)
+proc: exit status 42 (cs=0x23 rip=0x40000c)
+proc: exit status 42 (cs=0x23 rip=0x40000c)
+proc: exit status 42 (cs=0x23 rip=0x40000c)
+proc: exit status 42 (cs=0x23 rip=0x40000c)
+proc: exit status 0 (cs=0x23 rip=0x400075)
+proc: exit status 0 (cs=0x23 rip=0x400021)
+proc: exit status 5 (cs=0x23 rip=0x400184)
+proc[ipcrecv]: killed: test kill
+proc: exit status 0 (cs=0x23 rip=0x400021)
+proc: exit status 5 (cs=0x23 rip=0x400184)
+selftest: user 198 cases, 0 failed
+user[hello]: Hello from VOS!
+proc: exit status 0 (cs=0x23 rip=0x40002a)
+user[hello]: Hello from VOS!
+proc: exit status 0 (cs=0x23 rip=0x40002a)
+user[hello]: Hello from VOS!
+proc: exit status 0 (cs=0x23 rip=0x40002a)
+user[hello]: Hello from VOS!
+proc: exit status 0 (cs=0x23 rip=0x40002a)
+user[hello]: Hello from VOS!
+proc: exit status 0 (cs=0x23 rip=0x40002a)
+user[hello]: Hello from VOS!
+proc: exit status 0 (cs=0x23 rip=0x40002a)
+user[hello]: Hello from VOS!
+proc: exit status 0 (cs=0x23 rip=0x40002a)
+user[hello]: Hello from VOS!
+proc: exit status 0 (cs=0x23 rip=0x40002a)
+user[hello]: Hello from VOS!
+proc: exit status 0 (cs=0x23 rip=0x40002a)
+user[hello]: Hello from VOS!
+proc: exit status 0 (cs=0x23 rip=0x40002a)
+user[hello]: Hello from VOS!
+proc: exit status 0 (cs=0x23 rip=0x40002a)
+user[hello]: Hello from VOS!
+proc: exit status 0 (cs=0x23 rip=0x40002a)
+selftest: 69/69 corrupted executables rejected for the intended reason
+selftest: elf 35 cases, 0 failed
+selftest: vblk 41 cases, 0 failed, 0 not applicable
+blk: 147 requests, 53 hits, 113 misses, 112 device reads, 3 evictions, 6 load errors, 7 fallback reads, 2 stale, 1 corrupt, 1 load waits, 1 busy, 38 refused
+selftest: blk 55 cases, 0 failed
+selftest: ext2 4 cases, 0 failed, 0 not applicable
+file: fixture tests not applicable (no ext2 test modules)
+selftest: file 4 cases, 0 failed
+selftest: screen: framebuffer (framebuffer)
+selftest: NOT APPLICABLE: VGA text memory check (a framebuffer console is active)
+selftest: screen 13 cases, 0 failed, 1 not applicable
+selftest: io-scope 18 cases, 0 failed
+VOS-TEST: PASS

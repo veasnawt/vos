@@ -1,0 +1,1474 @@
+{
+  "rust-host/corpus/bit-000.elf": {
+    "bytes": 13128,
+    "sha256": "9b7349336168c501f887ef4b33332c3a68ba4d7d717104d0480574f98fe4213d"
+  },
+  "rust-host/corpus/bit-001.elf": {
+    "bytes": 13128,
+    "sha256": "0cc930a3575354c9d559b0a55e3ccacbc80215c15982897b24533c258d8d6d3d"
+  },
+  "rust-host/corpus/bit-002.elf": {
+    "bytes": 13128,
+    "sha256": "25cc45d8826ac5d98d9aecaaa0cc8cb06c7a594d3ab60f7754ba2d871164a5f6"
+  },
+  "rust-host/corpus/bit-003.elf": {
+    "bytes": 13128,
+    "sha256": "d6675664931f14944ae9edae6fbf1004e9ad552978c547e6ff5c7cba37e056c0"
+  },
+  "rust-host/corpus/bit-004.elf": {
+    "bytes": 13128,
+    "sha256": "ddbcf67c7112d7daf41669f591f24b22f38471e72fa5ce64f9597ae873fcb3ff"
+  },
+  "rust-host/corpus/bit-005.elf": {
+    "bytes": 13128,
+    "sha256": "20d6fc55993cd42db805e499c1d43bed7425d929b3a1df0e6f529c2d29176257"
+  },
+  "rust-host/corpus/bit-006.elf": {
+    "bytes": 13128,
+    "sha256": "2c29d3c4619dd12006eedec9ea3319d478ed91d07326d0ff80e34295cc3afa3a"
+  },
+  "rust-host/corpus/bit-007.elf": {
+    "bytes": 13128,
+    "sha256": "839d3acce8c5ace69b7486c015da36ec2af73d4ad173fa434b67bc3881935483"
+  },
+  "rust-host/corpus/bit-008.elf": {
+    "bytes": 13128,
+    "sha256": "bd06c358f067b6e8bd305af987c74ea33f56faba24642596cb7aa66202cd3f62"
+  },
+  "rust-host/corpus/bit-009.elf": {
+    "bytes": 13128,
+    "sha256": "91723eedfe8049df707df9c51abe267f276bf2ff96eb77a8bb442a416499c83c"
+  },
+  "rust-host/corpus/bit-010.elf": {
+    "bytes": 13128,
+    "sha256": "690849442d45f4580328b04655b4846eb94c917cdd2f85fab9ab960d72489139"
+  },
+  "rust-host/corpus/bit-011.elf": {
+    "bytes": 13128,
+    "sha256": "e43087c01bae4443926baf7f4494cf88cad6cc8117860fbfbec50ae0509a175e"
+  },
+  "rust-host/corpus/bit-012.elf": {
+    "bytes": 13128,
+    "sha256": "da91b6b1e70f4335e0e1d8421ce25c323a47a96d68c553b5c81a9a95d8b621da"
+  },
+  "rust-host/corpus/bit-013.elf": {
+    "bytes": 13128,
+    "sha256": "a1635137a5dde8a134b7ca664b3b3750c733c4492a462068a36cdfee99caefd6"
+  },
+  "rust-host/corpus/bit-014.elf": {
+    "bytes": 13128,
+    "sha256": "85df5364b315bfd9641f6df95ecc7b282439515c4ca710811ea4992ad759976f"
+  },
+  "rust-host/corpus/bit-015.elf": {
+    "bytes": 13128,
+    "sha256": "cad498a6ceada71ded8105368b4fd53e493f12ecaeaaa24d31df9ce637447fcd"
+  },
+  "rust-host/corpus/bit-016.elf": {
+    "bytes": 13128,
+    "sha256": "485be94087435b13ee94c5b9102fc38c988a43bebd169f2b8f4ab5918d9f3f7a"
+  },
+  "rust-host/corpus/bit-017.elf": {
+    "bytes": 13128,
+    "sha256": "ebe439d6b71b3b3efb002dd1ef6701d0b5a824863252273a6faf34c2e820fbc5"
+  },
+  "rust-host/corpus/bit-018.elf": {
+    "bytes": 13128,
+    "sha256": "3c2ae6c1201051101ddbe480ddd98ab211e24992acdbe7efe4fce1019e12a1e9"
+  },
+  "rust-host/corpus/bit-019.elf": {
+    "bytes": 13128,
+    "sha256": "759831dee19fd69ebfa312324f6bbbb9be922a45c1de7fa0eb7d497a2db7c06e"
+  },
+  "rust-host/corpus/bit-020.elf": {
+    "bytes": 13128,
+    "sha256": "c0c060fa931a04dde41976552741288b0b51fe4cd1e748caba2824f7611a2639"
+  },
+  "rust-host/corpus/bit-021.elf": {
+    "bytes": 13128,
+    "sha256": "f6241730d57bb3a5d79933d00044592e1dbec5da587d7f5c5ddc8af0af825e50"
+  },
+  "rust-host/corpus/bit-022.elf": {
+    "bytes": 13128,
+    "sha256": "a1c20c3690b1e1e99183381ec7a3c60de74bad49548e668d0884e4acc6e88c6f"
+  },
+  "rust-host/corpus/bit-023.elf": {
+    "bytes": 13128,
+    "sha256": "5adb288f3c0842e99f0bdd6bcb8c34c401835a0fb4af208bbac389048e2e3af2"
+  },
+  "rust-host/corpus/bit-024.elf": {
+    "bytes": 13128,
+    "sha256": "0743bc35719c32134fb2b0f70c6149601ca27b0a1d869254409311c0033a05ee"
+  },
+  "rust-host/corpus/bit-025.elf": {
+    "bytes": 13128,
+    "sha256": "4dbdf8c641fb1b6fe72cec0c7c516aca0ca103518d33d2497f8af5d4f372ddcf"
+  },
+  "rust-host/corpus/bit-026.elf": {
+    "bytes": 13128,
+    "sha256": "9e33d300674aa48ddccabe3ad124f1ec9f6e8e81b9fc63dc60706ea6cdd683aa"
+  },
+  "rust-host/corpus/bit-027.elf": {
+    "bytes": 13128,
+    "sha256": "d1f7c6404b591a846ab380d3e787af62dbe53def64293fc9b709c681c7f9d42c"
+  },
+  "rust-host/corpus/bit-028.elf": {
+    "bytes": 13128,
+    "sha256": "a2ca4a41c7dd45f5d6929f509ab77f95c2b6b3dd636aebf7e87d95802290fb92"
+  },
+  "rust-host/corpus/bit-029.elf": {
+    "bytes": 13128,
+    "sha256": "9cf29da3dad4a475eb1e15f2fc3d34593c3f9dbb00def8d8e1c33d00f3471432"
+  },
+  "rust-host/corpus/bit-030.elf": {
+    "bytes": 13128,
+    "sha256": "aa613116aae8b538e5191801538ae4794e81923d89635e08f18596023684fac3"
+  },
+  "rust-host/corpus/bit-031.elf": {
+    "bytes": 13128,
+    "sha256": "e9695aa5e4b71537aa459171b9b627b2c6c914bd54a44d6388b3a4671c9e89ea"
+  },
+  "rust-host/corpus/bit-032.elf": {
+    "bytes": 13128,
+    "sha256": "4734ae118873276d118e7307b0d3881c7fbb24e60efc97a2cf14a6cd3d5fb254"
+  },
+  "rust-host/corpus/bit-033.elf": {
+    "bytes": 13128,
+    "sha256": "aa50a394df6b9eb61b42bcdd7e9df0fb542b5fe87faa8a05c048a0f102d1ec74"
+  },
+  "rust-host/corpus/bit-034.elf": {
+    "bytes": 13128,
+    "sha256": "0cec3a353d8f260101cbf0a3b272cd7accfeaedb3471b5889a118a2ecb7091a9"
+  },
+  "rust-host/corpus/bit-035.elf": {
+    "bytes": 13128,
+    "sha256": "dca79093767ed48678737ff24c65ba98a66bcdaacd01e599bddb67f5e5c43c37"
+  },
+  "rust-host/corpus/bit-036.elf": {
+    "bytes": 13128,
+    "sha256": "6cc86159f5bb1d0638d2351da525e18e0984961474445fd3b494a1594b8b57f2"
+  },
+  "rust-host/corpus/bit-037.elf": {
+    "bytes": 13128,
+    "sha256": "4b7f03690f7720c15c2380165a7e5d6cd035f68ac4e9ad488a5f3a90aa481553"
+  },
+  "rust-host/corpus/bit-038.elf": {
+    "bytes": 13128,
+    "sha256": "c9948183d8eff3e74739926982cf1c069afd255b90b486c0b47f33c08db1cac7"
+  },
+  "rust-host/corpus/bit-039.elf": {
+    "bytes": 13128,
+    "sha256": "ec192977ec3bcf7dc551a16791bfb6f711bded6edda4554405062073f66df424"
+  },
+  "rust-host/corpus/bit-040.elf": {
+    "bytes": 13128,
+    "sha256": "4439290473a1f7567b5ce9f2ce6546983c21c0aceac8466e8ce95f4b3a24ebea"
+  },
+  "rust-host/corpus/bit-041.elf": {
+    "bytes": 13128,
+    "sha256": "0906a309757554a50733207ae6de06b0b8c62bde7c1dea8468e89c1bc1ba28dd"
+  },
+  "rust-host/corpus/bit-042.elf": {
+    "bytes": 13128,
+    "sha256": "c6daa7193040bb815683a60c4d91d8ec049401e043b6806051f3214fb14d4be3"
+  },
+  "rust-host/corpus/bit-043.elf": {
+    "bytes": 13128,
+    "sha256": "c65be13ab15511f20a41e05b29b4927b14582fdc1a2e654ad7bfe505696d57ab"
+  },
+  "rust-host/corpus/bit-044.elf": {
+    "bytes": 13128,
+    "sha256": "bba53ad71b087ed41391336d7a7a1869e3b88cc078676da47f715d4aad716dbf"
+  },
+  "rust-host/corpus/bit-045.elf": {
+    "bytes": 13128,
+    "sha256": "6d7da4635b16439695e4f1b7813bab9b0deec381244ace0b436f70773b3ea611"
+  },
+  "rust-host/corpus/bit-046.elf": {
+    "bytes": 13128,
+    "sha256": "c42aeda8b28469f49c18903dd0e68ee8815ad0a24a5dc9d24d2902d1b04dd136"
+  },
+  "rust-host/corpus/bit-047.elf": {
+    "bytes": 13128,
+    "sha256": "83c9fa1a0f61ab01c75910c60e8b733e68c541c9f318a390fdbf3c5b2556c203"
+  },
+  "rust-host/corpus/bit-048.elf": {
+    "bytes": 13128,
+    "sha256": "63a38a04c4b93e25e634fa6c484c4972b266a31c44ff43f013057b43ca5fffa3"
+  },
+  "rust-host/corpus/bit-049.elf": {
+    "bytes": 13128,
+    "sha256": "0c1c3bc9437a9cb38da5144277bd7d9d0603386645c2af16d9b98bb4d5a8e433"
+  },
+  "rust-host/corpus/bit-050.elf": {
+    "bytes": 13128,
+    "sha256": "d57865f4e10dd24a7a4d35231dee409c572e9a6efd6803e559f88c6173fcdaa8"
+  },
+  "rust-host/corpus/bit-051.elf": {
+    "bytes": 13128,
+    "sha256": "dde2c645988dea39ea7e49259559458386db7eb1595a3917f888ecb6e3e49def"
+  },
+  "rust-host/corpus/bit-052.elf": {
+    "bytes": 13128,
+    "sha256": "e36adddd1ddda76edc9ceffdffe57309916b6d643d174df3d9d44eedc115ea5e"
+  },
+  "rust-host/corpus/bit-053.elf": {
+    "bytes": 13128,
+    "sha256": "e909d22577ce98858f08d6b05602b98fb50d152a4c798bc019de452ed8442c2d"
+  },
+  "rust-host/corpus/bit-054.elf": {
+    "bytes": 13128,
+    "sha256": "a2b0b85f131f16d71d52a039b8994edb1062a6abde2c00f78f230c14c55dec34"
+  },
+  "rust-host/corpus/bit-055.elf": {
+    "bytes": 13128,
+    "sha256": "c54c5c8fb3fe6d94d70f77deafbfc106b5c858f450d97fee7fa9409cab3f1590"
+  },
+  "rust-host/corpus/bit-056.elf": {
+    "bytes": 13128,
+    "sha256": "276e7e9fa43e532867eeeeb2e86c952bacbfd0ca5f27609538395888d186c936"
+  },
+  "rust-host/corpus/bit-057.elf": {
+    "bytes": 13128,
+    "sha256": "ea75e2f68cf115e3742ab7a5f67d58ee874875400e6fe6a175514309d67b2c90"
+  },
+  "rust-host/corpus/bit-058.elf": {
+    "bytes": 13128,
+    "sha256": "93db6cfda6d28da1806387aae51e037c3f777483f0e95e2764985b691ffb4973"
+  },
+  "rust-host/corpus/bit-059.elf": {
+    "bytes": 13128,
+    "sha256": "a2a4e217b3e3423a91928c21c2df7e0af304a12fef887c5a560b2a4e78ec61e1"
+  },
+  "rust-host/corpus/bit-060.elf": {
+    "bytes": 13128,
+    "sha256": "86d320ea77332402ae3d6dfb0167c5c79794c85ee7323ff7ad3153df51761de4"
+  },
+  "rust-host/corpus/bit-061.elf": {
+    "bytes": 13128,
+    "sha256": "cfe2b8215f73d4fd9b49be4a877a14efead556b8a700559c60c1afea87c99cdf"
+  },
+  "rust-host/corpus/bit-062.elf": {
+    "bytes": 13128,
+    "sha256": "38330b3a4e4529d9e36bfb8c56e529aa36f71018b257cafed1d94bf1563f2726"
+  },
+  "rust-host/corpus/bit-063.elf": {
+    "bytes": 13128,
+    "sha256": "89c85e4b96456e3d8ef940a936518a2a8191ae9dc11df0461d217b01e905c8d9"
+  },
+  "rust-host/corpus/bit-064.elf": {
+    "bytes": 13128,
+    "sha256": "e11b096c817c78f8e40116738b57c8bfc1014406ec425ff0708f87f5b84f6d22"
+  },
+  "rust-host/corpus/bit-065.elf": {
+    "bytes": 13128,
+    "sha256": "b6cddd55b7c64cad2c7cffc402fd294fbad52704e9d1351e489c57cded86cb2b"
+  },
+  "rust-host/corpus/bit-066.elf": {
+    "bytes": 13128,
+    "sha256": "0b7f5620e8d4a482f09745e518956e04e10be9340f80fe0cd98cbd44ab8c370b"
+  },
+  "rust-host/corpus/bit-067.elf": {
+    "bytes": 13128,
+    "sha256": "eb33eb4e095dc3764b5f3499f2e313af43f2c9366d689d5c40cbc17c74029cda"
+  },
+  "rust-host/corpus/bit-068.elf": {
+    "bytes": 13128,
+    "sha256": "6e05334cd92f2c4e2df343a50659133a6c3069f455a671c52a9894f71c9c78a4"
+  },
+  "rust-host/corpus/bit-069.elf": {
+    "bytes": 13128,
+    "sha256": "5bcb5679d74a489d307cda493ac5ef0688e621a54bfc8a8c4e722411ba628144"
+  },
+  "rust-host/corpus/bit-070.elf": {
+    "bytes": 13128,
+    "sha256": "afd155600ed4a35235ec4c7a784455b88fcc217a10bbcabc2d629db6fb18c7a7"
+  },
+  "rust-host/corpus/bit-071.elf": {
+    "bytes": 13128,
+    "sha256": "1787a00018ac5af948561ebe7abd798649fb99df3e3b7bd36dcbfd30de31348e"
+  },
+  "rust-host/corpus/bit-072.elf": {
+    "bytes": 13128,
+    "sha256": "4016b27e0c55b726f94a5f9ee16306adbeabedd564b695971821c11d7f188c08"
+  },
+  "rust-host/corpus/bit-073.elf": {
+    "bytes": 13128,
+    "sha256": "e04b6053e1960ccc1f73aaf5f762da0736c17a6b29e4c42e4e2831b06cbf570a"
+  },
+  "rust-host/corpus/bit-074.elf": {
+    "bytes": 13128,
+    "sha256": "be8e381653c3fd7ab7a875fc5155e3d64092f2e4c5ebe35cd2fe2896f07a930b"
+  },
+  "rust-host/corpus/bit-075.elf": {
+    "bytes": 13128,
+    "sha256": "18620a43340aa02de4986200a03a51adbf75211b7ce9de455de4be6c0c9b117e"
+  },
+  "rust-host/corpus/bit-076.elf": {
+    "bytes": 13128,
+    "sha256": "d3b898310180d1f3fa11cf3f634dbfb8360459858da2b424767dd00076e17de6"
+  },
+  "rust-host/corpus/bit-077.elf": {
+    "bytes": 13128,
+    "sha256": "391073b40111907deb07d358dc9731c296633052f414bcab1e277c6a00194e8d"
+  },
+  "rust-host/corpus/bit-078.elf": {
+    "bytes": 13128,
+    "sha256": "f63ebd77f9619765c4df437f89d142cba7c9619be7652691db1ab6a0f132a4c1"
+  },
+  "rust-host/corpus/bit-079.elf": {
+    "bytes": 13128,
+    "sha256": "ae1ba576e8568889060357ece4f197d4f624864087c01cb5f501c315c938a20d"
+  },
+  "rust-host/corpus/bit-080.elf": {
+    "bytes": 13128,
+    "sha256": "17901db87d7a6819541214673b76fabe055ba13a94531b0fcfe335d12b4cfdce"
+  },
+  "rust-host/corpus/bit-081.elf": {
+    "bytes": 13128,
+    "sha256": "82d114875d74a3133c0fe5dd7a6389c0c1d50e33627d14f62b6677648f4c406a"
+  },
+  "rust-host/corpus/bit-082.elf": {
+    "bytes": 13128,
+    "sha256": "7069b790676c3cc34342b8689252729b3babe7c0321fe384008915c51a7c2e1a"
+  },
+  "rust-host/corpus/bit-083.elf": {
+    "bytes": 13128,
+    "sha256": "987cae1bb36810c47d28c29ecf56aa7af1592bc6b7a1830aaa01825ecfa04c49"
+  },
+  "rust-host/corpus/bit-084.elf": {
+    "bytes": 13128,
+    "sha256": "0cf4b75ee9d33cdb6404b1992bf38dec1636b102a0647e5f0b865ff28ba7e54d"
+  },
+  "rust-host/corpus/bit-085.elf": {
+    "bytes": 13128,
+    "sha256": "4a7c73731edc0a8f13e6150daa874c82af340c06c098aee6664ec91dc1d59de7"
+  },
+  "rust-host/corpus/bit-086.elf": {
+    "bytes": 13128,
+    "sha256": "2e4d23ecfa53f30647c4caab453d5086e015d9cb6a971a8477e70bfd37a18eae"
+  },
+  "rust-host/corpus/bit-087.elf": {
+    "bytes": 13128,
+    "sha256": "0655c1744c01734247d90b3cf6c7f27bc81c24509a0ec3a96f4ca180d5f227e6"
+  },
+  "rust-host/corpus/bit-088.elf": {
+    "bytes": 13128,
+    "sha256": "b631c94682ecde2d55ee46c20b4469ab2650bdfd3ff94431f45ed138b0127da5"
+  },
+  "rust-host/corpus/bit-089.elf": {
+    "bytes": 13128,
+    "sha256": "34c76517b6e733b6991cf4e8c30a1332d92605dcfb2ec0c805304e1222654410"
+  },
+  "rust-host/corpus/bit-090.elf": {
+    "bytes": 13128,
+    "sha256": "5f92d7d47ce21f8b605cad9660ba9480846e52d8b0a385e7988952c6ef37c01a"
+  },
+  "rust-host/corpus/bit-091.elf": {
+    "bytes": 13128,
+    "sha256": "434c39b563eb73344b31e54a9904382d4d05923dd98ab886c4a28fdb8585a564"
+  },
+  "rust-host/corpus/bit-092.elf": {
+    "bytes": 13128,
+    "sha256": "e385d2f70f773191987d637765f25bae7623e2cb524b71eb301d3bdb60251e80"
+  },
+  "rust-host/corpus/bit-093.elf": {
+    "bytes": 13128,
+    "sha256": "fc85f94d54b2eb2d41147adb207ff24eef970903591f2d03438c29c034d4a551"
+  },
+  "rust-host/corpus/bit-094.elf": {
+    "bytes": 13128,
+    "sha256": "0e1e65ba242a9ed5c832187d4ab194f1e456822f2aa22c7ee8183765782fe9cb"
+  },
+  "rust-host/corpus/bit-095.elf": {
+    "bytes": 13128,
+    "sha256": "13e222e1df3bbef9deb9dc9cc2f5dbc78cee9f6a682e0d5a58e3ab1014ab8f97"
+  },
+  "rust-host/corpus/bit-096.elf": {
+    "bytes": 13128,
+    "sha256": "bc535ad6958b007a2cbd7ed480d20abed35324aaa0dca1bd853103831053a314"
+  },
+  "rust-host/corpus/bit-097.elf": {
+    "bytes": 13128,
+    "sha256": "924d427aec01db834d5d98731ccff027c22246448fd952298547d3f3d3d73fb2"
+  },
+  "rust-host/corpus/bit-098.elf": {
+    "bytes": 13128,
+    "sha256": "8864b78955f5b814d877128e95c1f8ce1ad97b91b68e93bbddeb369e31649c9f"
+  },
+  "rust-host/corpus/bit-099.elf": {
+    "bytes": 13128,
+    "sha256": "1aa57aea7e337e722b69672383ec4b7adc4b8bdb46e05260b87bee25c15131ea"
+  },
+  "rust-host/corpus/bit-100.elf": {
+    "bytes": 13128,
+    "sha256": "c608d8e2dd8eb3c86d1bd7ab8da6896f72470902718fe1268d507b85a6fb5c35"
+  },
+  "rust-host/corpus/bit-101.elf": {
+    "bytes": 13128,
+    "sha256": "85e7a09191da656e406ce76921c144dd6b5320c4f59b3cb8f93f3c4438794c74"
+  },
+  "rust-host/corpus/bit-102.elf": {
+    "bytes": 13128,
+    "sha256": "26c4fa0dab8bc61107905e406afa0d2752c3fafc0a778e1cf6f1a3a51fa15f11"
+  },
+  "rust-host/corpus/bit-103.elf": {
+    "bytes": 13128,
+    "sha256": "9211072839bad159ccd9529350dbe2e05823ea8e083fcc8bb0f998d6798f9949"
+  },
+  "rust-host/corpus/bit-104.elf": {
+    "bytes": 13128,
+    "sha256": "126de2b7da762e1524b57ec6ede60c75fc0f8ca05e158dabb577d879aa5b1190"
+  },
+  "rust-host/corpus/bit-105.elf": {
+    "bytes": 13128,
+    "sha256": "fa368b3998ed78a107c2b232ff175be5e7ff1b3810eb17372bd6a66102f26990"
+  },
+  "rust-host/corpus/bit-106.elf": {
+    "bytes": 13128,
+    "sha256": "de9778b1efb270ba617f008b710f1fdf66030fdc47e207fc51c8502784d31dcf"
+  },
+  "rust-host/corpus/bit-107.elf": {
+    "bytes": 13128,
+    "sha256": "f9f156edaa9581eaf817c271e133ae7cdea8fad73455949624ea39a5dfe0f129"
+  },
+  "rust-host/corpus/bit-108.elf": {
+    "bytes": 13128,
+    "sha256": "b909f046d10a260c71134883a1cc154b9a5822038d40f7f98bf76e7173afb865"
+  },
+  "rust-host/corpus/bit-109.elf": {
+    "bytes": 13128,
+    "sha256": "b8315bc712cd4a65af46107edeee5a9299e6e2d0674706bb7bfea16050fe83df"
+  },
+  "rust-host/corpus/bit-110.elf": {
+    "bytes": 13128,
+    "sha256": "fba3fe80af0faa024851c2670b5a50b1e5e7b8887a735860883ecdb7835ef7be"
+  },
+  "rust-host/corpus/bit-111.elf": {
+    "bytes": 13128,
+    "sha256": "dcef4d630efced94ba809e62573b296193a409a7f6b52d99384d0adaac255654"
+  },
+  "rust-host/corpus/bit-112.elf": {
+    "bytes": 13128,
+    "sha256": "2923cb97468f3a55c5cc77c281cb0f933b3ee5e00cef6674637dd6c5b4877905"
+  },
+  "rust-host/corpus/bit-113.elf": {
+    "bytes": 13128,
+    "sha256": "0244eb7b05a1fda0996e7e12d2a6150607724c3ebd0c417249670e721f790e74"
+  },
+  "rust-host/corpus/bit-114.elf": {
+    "bytes": 13128,
+    "sha256": "762fa9c3efa840d4719256bc8b1d4f9a8f5a3a36471ed74c3f8e6e012adae579"
+  },
+  "rust-host/corpus/bit-115.elf": {
+    "bytes": 13128,
+    "sha256": "ebbb1981b52ac9a52b20aa89c3252f0be049bd70437cd784c26263b0c884414e"
+  },
+  "rust-host/corpus/bit-116.elf": {
+    "bytes": 13128,
+    "sha256": "dec5a4ab1760453dd323d71ecf77fe75d6898429e732fc1d98054d873120bc2c"
+  },
+  "rust-host/corpus/bit-117.elf": {
+    "bytes": 13128,
+    "sha256": "47e0ccf07dea08778dfa03d9fb2bc352d2f8e72b91dba7a711792ed02fb8f457"
+  },
+  "rust-host/corpus/bit-118.elf": {
+    "bytes": 13128,
+    "sha256": "cb2ce85285c4d1f10712fefc1004f88e1387f4c50f1061b10b3baca5b9c576fc"
+  },
+  "rust-host/corpus/bit-119.elf": {
+    "bytes": 13128,
+    "sha256": "c3ff14133c6a7ea395861971ee7895498a441bd91e0a85994b5fcd72767c6881"
+  },
+  "rust-host/corpus/bit-120.elf": {
+    "bytes": 13128,
+    "sha256": "dc1e12e517ac648548f100e66ce28527c889583704cf837a1cb5cd0210dd07f7"
+  },
+  "rust-host/corpus/bit-121.elf": {
+    "bytes": 13128,
+    "sha256": "f458098f39b0c3877dc4a739495a6283d4a27521410b94ffe9d3be0f0e3cf5f6"
+  },
+  "rust-host/corpus/bit-122.elf": {
+    "bytes": 13128,
+    "sha256": "241f49a0061eec6f465c6596f25b5d740a05dab5a2afb1d2603b244d88373e64"
+  },
+  "rust-host/corpus/bit-123.elf": {
+    "bytes": 13128,
+    "sha256": "fea1df059158de01ae8c212d45d3becabd7fc6da502c0ae4a9e7a65d62c6cc9f"
+  },
+  "rust-host/corpus/bit-124.elf": {
+    "bytes": 13128,
+    "sha256": "f6d9a69bd19537c818346dd805b12051c9522179730c375a6b36b0569bbe7fee"
+  },
+  "rust-host/corpus/bit-125.elf": {
+    "bytes": 13128,
+    "sha256": "46ed3518d1b79ff80f1fa43ece24789b24b1e085ffb96a8a541c71868bd0c0a6"
+  },
+  "rust-host/corpus/bit-126.elf": {
+    "bytes": 13128,
+    "sha256": "cb9d6dae45e51185a262395764478de528b9bc461aca29ea42030c5c3250aa5f"
+  },
+  "rust-host/corpus/bit-127.elf": {
+    "bytes": 13128,
+    "sha256": "d35a4d74bf42b5f4e2d37183a5dfccc38e852184705967152b5057b79a1c7211"
+  },
+  "rust-host/corpus/empty.elf": {
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "rust-host/corpus/header-only.elf": {
+    "bytes": 64,
+    "sha256": "65bb04229724f436dd5e39e4e4cf8d013063ec8a446afccc7a80462b1766c3bf"
+  },
+  "rust-host/corpus/phoff-0.elf": {
+    "bytes": 13128,
+    "sha256": "8399dc8fe3509ddd1908916a6d0c377dfc3f3e1f3270eb60366417571ba520a4"
+  },
+  "rust-host/corpus/phoff-1099511627775.elf": {
+    "bytes": 13128,
+    "sha256": "205a23dc77d655a4f2c9775ee5e6d1cbe3a5d991ab82062cbb5022143b8d2450"
+  },
+  "rust-host/corpus/phoff-1099511627776.elf": {
+    "bytes": 13128,
+    "sha256": "55058b9abd266ca7045a2045ec8cb121b419c6babb28eaa91c6f9de289414d36"
+  },
+  "rust-host/corpus/phoff-13128.elf": {
+    "bytes": 13128,
+    "sha256": "9b9ea9002e59844fa5d32cc77f361fc6c14a3e79acb39d331ff595f031a73cab"
+  },
+  "rust-host/corpus/phoff-13136.elf": {
+    "bytes": 13128,
+    "sha256": "f6c95ed769a5c2514f7f5d839a0822f21db00817d2540b453541091e79d96d73"
+  },
+  "rust-host/corpus/phoff-18446744073709551615.elf": {
+    "bytes": 13128,
+    "sha256": "e91aa5e58c094470b0b565f61d83bd8c2d073a4401194a1b102aea28e1ff77c8"
+  },
+  "rust-host/corpus/phoff-63.elf": {
+    "bytes": 13128,
+    "sha256": "8e0bec7cb4fd44f4a35ff351842da620a3314abf9dd0705f091bcc69b918d926"
+  },
+  "rust-host/corpus/phoff-64.elf": {
+    "bytes": 13128,
+    "sha256": "c6c6416195a0f18d680d7f8f19be52ce02ff02912ef3bac45324fbe88006cd06"
+  },
+  "rust-host/corpus/phoff-8.elf": {
+    "bytes": 13128,
+    "sha256": "947a26cd4d7ee039c9a6b26ac79311f6fa001a265b31112e9d1f6dfc53bbc891"
+  },
+  "rust-host/corpus/truncated-ph.elf": {
+    "bytes": 200,
+    "sha256": "f71deb91c0e4f327ea15c00de1c27e32e7ae576ffa68cbe0df2cab76e62b503e"
+  },
+  "rust-native/normal/isodir/boot/gui-demo.elf": {
+    "bytes": 14448,
+    "sha256": "a21bab23c7183c7534d4b6beabd35b4222cd9faf65b0ad8ea868fd153e112bd2"
+  },
+  "rust-native/normal/isodir/boot/hello.elf": {
+    "bytes": 13128,
+    "sha256": "c6c6416195a0f18d680d7f8f19be52ce02ff02912ef3bac45324fbe88006cd06"
+  },
+  "rust-native/normal/isodir/boot/pointer-demo.elf": {
+    "bytes": 662976,
+    "sha256": "0c94f7ce121025d93e9d7b062a1df498dd9229343bca25bfe34f1ae447d846cc"
+  },
+  "rust-native/normal/isodir/boot/rixie.elf": {
+    "bytes": 662376,
+    "sha256": "77104da3b33caf809daf5e6674ac4e2fa9edf6a9e2e5dd59828514df76490d32"
+  },
+  "rust-native/normal/isodir/boot/vos.bin": {
+    "bytes": 1045888,
+    "sha256": "9eb4c2039734a785274eaad2d5e556dd1e84260bc01cb3832ba67738a5053988"
+  },
+  "rust-native/normal/isodir/boot/vsh.elf": {
+    "bytes": 662984,
+    "sha256": "e7af3ee56164f587f7ca1338f7ddfcb202b6f4310f10b4dcba6a2576743cb181"
+  },
+  "rust-native/normal/isodir-uefi/boot/gui-demo.elf": {
+    "bytes": 14448,
+    "sha256": "a21bab23c7183c7534d4b6beabd35b4222cd9faf65b0ad8ea868fd153e112bd2"
+  },
+  "rust-native/normal/isodir-uefi/boot/hello.elf": {
+    "bytes": 13128,
+    "sha256": "c6c6416195a0f18d680d7f8f19be52ce02ff02912ef3bac45324fbe88006cd06"
+  },
+  "rust-native/normal/isodir-uefi/boot/pointer-demo.elf": {
+    "bytes": 662976,
+    "sha256": "0c94f7ce121025d93e9d7b062a1df498dd9229343bca25bfe34f1ae447d846cc"
+  },
+  "rust-native/normal/isodir-uefi/boot/rixie.elf": {
+    "bytes": 662376,
+    "sha256": "77104da3b33caf809daf5e6674ac4e2fa9edf6a9e2e5dd59828514df76490d32"
+  },
+  "rust-native/normal/isodir-uefi/boot/vos.bin": {
+    "bytes": 1045888,
+    "sha256": "9eb4c2039734a785274eaad2d5e556dd1e84260bc01cb3832ba67738a5053988"
+  },
+  "rust-native/normal/isodir-uefi/boot/vsh.elf": {
+    "bytes": 662984,
+    "sha256": "e7af3ee56164f587f7ca1338f7ddfcb202b6f4310f10b4dcba6a2576743cb181"
+  },
+  "rust-native/normal/rust/libvos_kernel.a": {
+    "bytes": 11100590,
+    "sha256": "abb3773f1b21e291a2eb1943f9a5a7e697f151f1ca79bcf2113ae9bfbfeb692b"
+  },
+  "rust-native/normal/vos-uefi.iso": {
+    "bytes": 13142016,
+    "sha256": "0822dcf88fd003b65c25d851b1dd9eff473920c8ed4a9f997ff9e541160a7dfb"
+  },
+  "rust-native/normal/vos.bin": {
+    "bytes": 1045888,
+    "sha256": "9eb4c2039734a785274eaad2d5e556dd1e84260bc01cb3832ba67738a5053988"
+  },
+  "rust-native/normal/vos.iso": {
+    "bytes": 8593408,
+    "sha256": "bb53e7eab512f382bca31383c3b797b32c0fa9783925f81592487aaa8a5a1dbe"
+  },
+  "rust-native/selftest/isodir/boot/hello.elf": {
+    "bytes": 13128,
+    "sha256": "c6c6416195a0f18d680d7f8f19be52ce02ff02912ef3bac45324fbe88006cd06"
+  },
+  "rust-native/selftest/isodir/boot/vos.bin": {
+    "bytes": 2131384,
+    "sha256": "baf84211d3fb2397dc6db45e1e231a5834368899ea725499d75a017c5113a0ef"
+  },
+  "rust-native/selftest/isodir-uefi/boot/hello.elf": {
+    "bytes": 13128,
+    "sha256": "c6c6416195a0f18d680d7f8f19be52ce02ff02912ef3bac45324fbe88006cd06"
+  },
+  "rust-native/selftest/isodir-uefi/boot/vos.bin": {
+    "bytes": 2131384,
+    "sha256": "baf84211d3fb2397dc6db45e1e231a5834368899ea725499d75a017c5113a0ef"
+  },
+  "rust-native/selftest/rust/libvos_kernel.a": {
+    "bytes": 11100590,
+    "sha256": "abb3773f1b21e291a2eb1943f9a5a7e697f151f1ca79bcf2113ae9bfbfeb692b"
+  },
+  "rust-native/selftest/vos-uefi.iso": {
+    "bytes": 12220416,
+    "sha256": "9b7710e046a53ab06221049299a1a9facf168e948615e99898be6746844290c0"
+  },
+  "rust-native/selftest/vos.bin": {
+    "bytes": 2131384,
+    "sha256": "baf84211d3fb2397dc6db45e1e231a5834368899ea725499d75a017c5113a0ef"
+  },
+  "rust-native/selftest/vos.iso": {
+    "bytes": 7671808,
+    "sha256": "b49ee5fe10c327b69d1af3960791cb0950723fbb016ea6c82b5404937e37b764"
+  },
+  "rust-native/user/gui-demo.elf": {
+    "bytes": 14448,
+    "sha256": "a21bab23c7183c7534d4b6beabd35b4222cd9faf65b0ad8ea868fd153e112bd2"
+  },
+  "rust-native/user/gui-probe.elf": {
+    "bytes": 13736,
+    "sha256": "4e593767143e7d067fb5acf4c05bb1d20b2efa6230bd5161bda82f75ce4adec1"
+  },
+  "rust-native/user/hello.elf": {
+    "bytes": 13128,
+    "sha256": "c6c6416195a0f18d680d7f8f19be52ce02ff02912ef3bac45324fbe88006cd06"
+  },
+  "rust-native/user/pointer-demo.elf": {
+    "bytes": 662976,
+    "sha256": "0c94f7ce121025d93e9d7b062a1df498dd9229343bca25bfe34f1ae447d846cc"
+  },
+  "rust-native/user/pointer-probe.elf": {
+    "bytes": 13944,
+    "sha256": "f871f8889a75c401b5674394d3041335ea0e099e9f22f0b5913d429a18475427"
+  },
+  "rust-native/user/rixie.elf": {
+    "bytes": 662376,
+    "sha256": "77104da3b33caf809daf5e6674ac4e2fa9edf6a9e2e5dd59828514df76490d32"
+  },
+  "rust-native/user/vsh.elf": {
+    "bytes": 662984,
+    "sha256": "e7af3ee56164f587f7ca1338f7ddfcb202b6f4310f10b4dcba6a2576743cb181"
+  },
+  "usb/control-bios-payloads/gui-demo.elf": {
+    "bytes": 14448,
+    "sha256": "a21bab23c7183c7534d4b6beabd35b4222cd9faf65b0ad8ea868fd153e112bd2"
+  },
+  "usb/control-bios-payloads/hello.elf": {
+    "bytes": 13128,
+    "sha256": "c6c6416195a0f18d680d7f8f19be52ce02ff02912ef3bac45324fbe88006cd06"
+  },
+  "usb/control-bios-payloads/rixie.elf": {
+    "bytes": 662376,
+    "sha256": "77104da3b33caf809daf5e6674ac4e2fa9edf6a9e2e5dd59828514df76490d32"
+  },
+  "usb/control-bios-payloads/vos.bin": {
+    "bytes": 1045888,
+    "sha256": "9eb4c2039734a785274eaad2d5e556dd1e84260bc01cb3832ba67738a5053988"
+  },
+  "usb/control-bios-payloads/vsh.elf": {
+    "bytes": 662984,
+    "sha256": "e7af3ee56164f587f7ca1338f7ddfcb202b6f4310f10b4dcba6a2576743cb181"
+  },
+  "usb/control-bios.iso": {
+    "bytes": 7929856,
+    "sha256": "403b14208a5c90728e5151b580ee088df3b6e53f85b00b997aba566658b71cac"
+  },
+  "usb/control-uefi-payloads/gui-demo.elf": {
+    "bytes": 14448,
+    "sha256": "a21bab23c7183c7534d4b6beabd35b4222cd9faf65b0ad8ea868fd153e112bd2"
+  },
+  "usb/control-uefi-payloads/hello.elf": {
+    "bytes": 13128,
+    "sha256": "c6c6416195a0f18d680d7f8f19be52ce02ff02912ef3bac45324fbe88006cd06"
+  },
+  "usb/control-uefi-payloads/rixie.elf": {
+    "bytes": 662376,
+    "sha256": "77104da3b33caf809daf5e6674ac4e2fa9edf6a9e2e5dd59828514df76490d32"
+  },
+  "usb/control-uefi-payloads/vos.bin": {
+    "bytes": 1045888,
+    "sha256": "9eb4c2039734a785274eaad2d5e556dd1e84260bc01cb3832ba67738a5053988"
+  },
+  "usb/control-uefi-payloads/vsh.elf": {
+    "bytes": 662984,
+    "sha256": "e7af3ee56164f587f7ca1338f7ddfcb202b6f4310f10b4dcba6a2576743cb181"
+  },
+  "usb/control-uefi.iso": {
+    "bytes": 12478464,
+    "sha256": "19675a593267cc80f2107788209b47c2b18d1d49fadd43a8d21eb40fcb719e9d"
+  },
+  "usb/kernel/isodir/boot/gui-demo.elf": {
+    "bytes": 14448,
+    "sha256": "a21bab23c7183c7534d4b6beabd35b4222cd9faf65b0ad8ea868fd153e112bd2"
+  },
+  "usb/kernel/isodir/boot/hello.elf": {
+    "bytes": 13128,
+    "sha256": "c6c6416195a0f18d680d7f8f19be52ce02ff02912ef3bac45324fbe88006cd06"
+  },
+  "usb/kernel/isodir/boot/rixie.elf": {
+    "bytes": 662376,
+    "sha256": "77104da3b33caf809daf5e6674ac4e2fa9edf6a9e2e5dd59828514df76490d32"
+  },
+  "usb/kernel/isodir/boot/vos.bin": {
+    "bytes": 1045888,
+    "sha256": "9eb4c2039734a785274eaad2d5e556dd1e84260bc01cb3832ba67738a5053988"
+  },
+  "usb/kernel/isodir/boot/vsh.elf": {
+    "bytes": 662984,
+    "sha256": "e7af3ee56164f587f7ca1338f7ddfcb202b6f4310f10b4dcba6a2576743cb181"
+  },
+  "usb/kernel/isodir-uefi/boot/gui-demo.elf": {
+    "bytes": 14448,
+    "sha256": "a21bab23c7183c7534d4b6beabd35b4222cd9faf65b0ad8ea868fd153e112bd2"
+  },
+  "usb/kernel/isodir-uefi/boot/hello.elf": {
+    "bytes": 13128,
+    "sha256": "c6c6416195a0f18d680d7f8f19be52ce02ff02912ef3bac45324fbe88006cd06"
+  },
+  "usb/kernel/isodir-uefi/boot/rixie.elf": {
+    "bytes": 662376,
+    "sha256": "77104da3b33caf809daf5e6674ac4e2fa9edf6a9e2e5dd59828514df76490d32"
+  },
+  "usb/kernel/isodir-uefi/boot/vos.bin": {
+    "bytes": 1045888,
+    "sha256": "9eb4c2039734a785274eaad2d5e556dd1e84260bc01cb3832ba67738a5053988"
+  },
+  "usb/kernel/isodir-uefi/boot/vsh.elf": {
+    "bytes": 662984,
+    "sha256": "e7af3ee56164f587f7ca1338f7ddfcb202b6f4310f10b4dcba6a2576743cb181"
+  },
+  "usb/kernel/rust/libvos_kernel.a": {
+    "bytes": 11100590,
+    "sha256": "abb3773f1b21e291a2eb1943f9a5a7e697f151f1ca79bcf2113ae9bfbfeb692b"
+  },
+  "usb/kernel/vos-uefi.iso": {
+    "bytes": 12478464,
+    "sha256": "9a5c4b6922c89f44511050b24aade3b34c24b443d73d9c509ebc23362f3c1b6a"
+  },
+  "usb/kernel/vos.bin": {
+    "bytes": 1045888,
+    "sha256": "9eb4c2039734a785274eaad2d5e556dd1e84260bc01cb3832ba67738a5053988"
+  },
+  "usb/kernel/vos.iso": {
+    "bytes": 7929856,
+    "sha256": "02ca19de516ae9b2d41bcfb116becb2a0f2ce6d84d7d7b4ba14428c045defea0"
+  },
+  "usb/probe-bios-payloads/gui-demo.elf": {
+    "bytes": 14448,
+    "sha256": "a21bab23c7183c7534d4b6beabd35b4222cd9faf65b0ad8ea868fd153e112bd2"
+  },
+  "usb/probe-bios-payloads/hello.elf": {
+    "bytes": 13128,
+    "sha256": "c6c6416195a0f18d680d7f8f19be52ce02ff02912ef3bac45324fbe88006cd06"
+  },
+  "usb/probe-bios-payloads/rixie.elf": {
+    "bytes": 662376,
+    "sha256": "77104da3b33caf809daf5e6674ac4e2fa9edf6a9e2e5dd59828514df76490d32"
+  },
+  "usb/probe-bios-payloads/vos.bin": {
+    "bytes": 1045888,
+    "sha256": "9eb4c2039734a785274eaad2d5e556dd1e84260bc01cb3832ba67738a5053988"
+  },
+  "usb/probe-bios-payloads/vsh.elf": {
+    "bytes": 662984,
+    "sha256": "e7af3ee56164f587f7ca1338f7ddfcb202b6f4310f10b4dcba6a2576743cb181"
+  },
+  "usb/probe-bios.iso": {
+    "bytes": 7929856,
+    "sha256": "f0c4f62c8c9b85a0ca74f5ddd866a0cbe4af5b8ba8ff9b03b687c637d227d6db"
+  },
+  "usb/probe-uefi-payloads/gui-demo.elf": {
+    "bytes": 14448,
+    "sha256": "a21bab23c7183c7534d4b6beabd35b4222cd9faf65b0ad8ea868fd153e112bd2"
+  },
+  "usb/probe-uefi-payloads/hello.elf": {
+    "bytes": 13128,
+    "sha256": "c6c6416195a0f18d680d7f8f19be52ce02ff02912ef3bac45324fbe88006cd06"
+  },
+  "usb/probe-uefi-payloads/rixie.elf": {
+    "bytes": 662376,
+    "sha256": "77104da3b33caf809daf5e6674ac4e2fa9edf6a9e2e5dd59828514df76490d32"
+  },
+  "usb/probe-uefi-payloads/vos.bin": {
+    "bytes": 1045888,
+    "sha256": "9eb4c2039734a785274eaad2d5e556dd1e84260bc01cb3832ba67738a5053988"
+  },
+  "usb/probe-uefi-payloads/vsh.elf": {
+    "bytes": 662984,
+    "sha256": "e7af3ee56164f587f7ca1338f7ddfcb202b6f4310f10b4dcba6a2576743cb181"
+  },
+  "usb/probe-uefi.iso": {
+    "bytes": 12478464,
+    "sha256": "1058d6021c18027fe1fd099df3cd6b79c020be5a8c152e26299ec215697def05"
+  },
+  "usb/text-bios-payloads/gui-demo.elf": {
+    "bytes": 14448,
+    "sha256": "a21bab23c7183c7534d4b6beabd35b4222cd9faf65b0ad8ea868fd153e112bd2"
+  },
+  "usb/text-bios-payloads/hello.elf": {
+    "bytes": 13128,
+    "sha256": "c6c6416195a0f18d680d7f8f19be52ce02ff02912ef3bac45324fbe88006cd06"
+  },
+  "usb/text-bios-payloads/rixie.elf": {
+    "bytes": 662376,
+    "sha256": "77104da3b33caf809daf5e6674ac4e2fa9edf6a9e2e5dd59828514df76490d32"
+  },
+  "usb/text-bios-payloads/vos.bin": {
+    "bytes": 1045888,
+    "sha256": "9eb4c2039734a785274eaad2d5e556dd1e84260bc01cb3832ba67738a5053988"
+  },
+  "usb/text-bios-payloads/vsh.elf": {
+    "bytes": 662984,
+    "sha256": "e7af3ee56164f587f7ca1338f7ddfcb202b6f4310f10b4dcba6a2576743cb181"
+  },
+  "usb/text-bios.iso": {
+    "bytes": 7929856,
+    "sha256": "02ca19de516ae9b2d41bcfb116becb2a0f2ce6d84d7d7b4ba14428c045defea0"
+  },
+  "usb/text-uefi-payloads/gui-demo.elf": {
+    "bytes": 14448,
+    "sha256": "a21bab23c7183c7534d4b6beabd35b4222cd9faf65b0ad8ea868fd153e112bd2"
+  },
+  "usb/text-uefi-payloads/hello.elf": {
+    "bytes": 13128,
+    "sha256": "c6c6416195a0f18d680d7f8f19be52ce02ff02912ef3bac45324fbe88006cd06"
+  },
+  "usb/text-uefi-payloads/rixie.elf": {
+    "bytes": 662376,
+    "sha256": "77104da3b33caf809daf5e6674ac4e2fa9edf6a9e2e5dd59828514df76490d32"
+  },
+  "usb/text-uefi-payloads/vos.bin": {
+    "bytes": 1045888,
+    "sha256": "9eb4c2039734a785274eaad2d5e556dd1e84260bc01cb3832ba67738a5053988"
+  },
+  "usb/text-uefi-payloads/vsh.elf": {
+    "bytes": 662984,
+    "sha256": "e7af3ee56164f587f7ca1338f7ddfcb202b6f4310f10b4dcba6a2576743cb181"
+  },
+  "usb/text-uefi.iso": {
+    "bytes": 12478464,
+    "sha256": "9a5c4b6922c89f44511050b24aade3b34c24b443d73d9c509ebc23362f3c1b6a"
+  },
+  "usb/user/filetests/adversary.elf": {
+    "bytes": 17752,
+    "sha256": "65a029a17308ddc967576a3049f89d9d900080a9a7663f4178b0a2188f1da50b"
+  },
+  "usb/user/filetests/boundary.elf": {
+    "bytes": 13464,
+    "sha256": "41def6bad3248e58710cd93e6ef3e3c1c4e41244fd96838be881f8feadb23181"
+  },
+  "usb/user/filetests/cookie.elf": {
+    "bytes": 13488,
+    "sha256": "2bdba22129d57f18965d25ff440a7b82389af64519c045628ca20098531700a6"
+  },
+  "usb/user/filetests/error.elf": {
+    "bytes": 13560,
+    "sha256": "7286f66d7f2ef649df043f191adb29d60bdda0c485aba1e8206860fbce4d2a77"
+  },
+  "usb/user/filetests/gate0.elf": {
+    "bytes": 13384,
+    "sha256": "03417f8760e583ba087eca0b061f5090039adc3f45abbc7664d9c1c8d3fcaf38"
+  },
+  "usb/user/filetests/gate1.elf": {
+    "bytes": 13384,
+    "sha256": "7a5d974b74d23adeb97dbaab56d2c86a6de518c6465c7f2c5567cf4160b631eb"
+  },
+  "usb/user/filetests/nogrant.elf": {
+    "bytes": 13464,
+    "sha256": "ca6d802c45aae2a864a6fccd8ebc85c4f942e156502650b820f781f9d1f980ec"
+  },
+  "usb/user/filetests/probe.elf": {
+    "bytes": 17744,
+    "sha256": "8ef0569f9d3887677511fc69435f70b80a6f839e214983a4a54701c1461014fa"
+  },
+  "usb/user/filetests/reader.elf": {
+    "bytes": 13560,
+    "sha256": "4dc5cd258a01a26f4e21211d22c813eda57d0e867271a45b4009c88a7d82fae9"
+  },
+  "usb/user/filetests/reader_y.elf": {
+    "bytes": 13560,
+    "sha256": "a6cfaf0d6f73ca7a289c608d9638ff6c6d723deeba9020e6769b24f90fda4ae9"
+  },
+  "usb/user/filetests/regs.elf": {
+    "bytes": 13688,
+    "sha256": "5a524a8a342214b4c63ec86259a4e4ce2077ba77e2069047b56586e6e3559989"
+  },
+  "usb/user/gui-demo.elf": {
+    "bytes": 14448,
+    "sha256": "a21bab23c7183c7534d4b6beabd35b4222cd9faf65b0ad8ea868fd153e112bd2"
+  },
+  "usb/user/gui-probe.elf": {
+    "bytes": 13736,
+    "sha256": "4e593767143e7d067fb5acf4c05bb1d20b2efa6230bd5161bda82f75ce4adec1"
+  },
+  "usb/user/hello.elf": {
+    "bytes": 13128,
+    "sha256": "c6c6416195a0f18d680d7f8f19be52ce02ff02912ef3bac45324fbe88006cd06"
+  },
+  "usb/user/neg/abiversion.elf": {
+    "bytes": 13128,
+    "sha256": "888fc8cc7d6af9fb0e8a45d6d77aece5bf388f0b66aa910795b1c82f5486cfac"
+  },
+  "usb/user/neg/bigendian.elf": {
+    "bytes": 13128,
+    "sha256": "453c387cb488670c01a384120076294573dfd79ce55a8361d4b92d1544fdb4de"
+  },
+  "usb/user/neg/class32.elf": {
+    "bytes": 13128,
+    "sha256": "07e38868db0d035d2462b81058457ee17cef38a7808835f50c1e5d83ad52f851"
+  },
+  "usb/user/neg/dynamic.elf": {
+    "bytes": 13128,
+    "sha256": "dd17617349a2aff73c45bc740d7023cd651f361a830d2b7b6656df43abb5e1c5"
+  },
+  "usb/user/neg/e-flags.elf": {
+    "bytes": 13128,
+    "sha256": "6b2452b5f279c42b94f6781290bd80f31de9e5651d6e87a5967233d143b05ca9"
+  },
+  "usb/user/neg/e-version.elf": {
+    "bytes": 13128,
+    "sha256": "458d954fe82a3c5330ddf9e9fcd993eeb626afa8c0f1a2bf536372e3b81f7197"
+  },
+  "usb/user/neg/eh-frame.elf": {
+    "bytes": 13128,
+    "sha256": "750e55b0cf73e71b45851df4c64aa0bbda96613092026bc79c7037958927fdc2"
+  },
+  "usb/user/neg/ehsize.elf": {
+    "bytes": 13128,
+    "sha256": "14b098f8b9fd55f775234aa90c1ff444ba70b3627d1f6a905ed7a8d9151c2fa2"
+  },
+  "usb/user/neg/ei-version.elf": {
+    "bytes": 13128,
+    "sha256": "2e63a95f881bb334b392d1ca5b330838111820f13678ddbda8fdac5c0ec133cb"
+  },
+  "usb/user/neg/entry-past.elf": {
+    "bytes": 13128,
+    "sha256": "aff5a2e4c5df226bbde60c9e184c1ff263658e39c412f24fce78ba18eaf5f6be"
+  },
+  "usb/user/neg/entry-rodata.elf": {
+    "bytes": 13128,
+    "sha256": "c102be9ac02fcfe3449753c7dff451f24a58f55a2b65dac8be7f67068d6bd24d"
+  },
+  "usb/user/neg/entry-zero.elf": {
+    "bytes": 13128,
+    "sha256": "c8ab7a75014a3b40b2ba58d2b9686b1d4bbb1ae69d9dac68bc0b3e0b2ba949c1"
+  },
+  "usb/user/neg/et-dyn.elf": {
+    "bytes": 13128,
+    "sha256": "65205555a1e6552287987868710009eceed74206097e20ad1f4b76836676f876"
+  },
+  "usb/user/neg/et-rel.elf": {
+    "bytes": 13128,
+    "sha256": "0fe3ee20b2632620ec5f9bb390fa3617bbae75eb2a804ee1dfa95181c9d13e80"
+  },
+  "usb/user/neg/file-range.elf": {
+    "bytes": 13128,
+    "sha256": "0cf042c0a6cb543a1b3879fab61a55c735e5fc1dfd914f8289999ce57a369339"
+  },
+  "usb/user/neg/filesz-gt-mem.elf": {
+    "bytes": 13128,
+    "sha256": "68289377a4d7b282ace0d56c4b043ec512e2994f5ad74b7a7d415474024ccf1e"
+  },
+  "usb/user/neg/five-loads.elf": {
+    "bytes": 13128,
+    "sha256": "c18650073a4afa4e848eb9dd320eb8893ded246e4a294875cd3aa0e9f0f00795"
+  },
+  "usb/user/neg/image-1mib.elf": {
+    "bytes": 13128,
+    "sha256": "f6bd31306712eaea68f5fd1cc3d0e01f638163036e518f079e6e7c9bc6a57da9"
+  },
+  "usb/user/neg/interp.elf": {
+    "bytes": 13128,
+    "sha256": "dfd11b8ec1e9617cdeb285ada100552a510cd97488f94c315d88e8236193d190"
+  },
+  "usb/user/neg/large.elf": {
+    "bytes": 1048577,
+    "sha256": "d33240db7dbcacb5fde8eab3b4713270c160ff6ab6b0e3005909df0e4d8f2e37"
+  },
+  "usb/user/neg/load-align.elf": {
+    "bytes": 13128,
+    "sha256": "50b30718961ba911e8e12ceb12288ecbbae67049c6297b201f9a0fe88622e3f1"
+  },
+  "usb/user/neg/machine.elf": {
+    "bytes": 13128,
+    "sha256": "70ebec35551b001fb4546734dba4990424a9004c7d155329864c853888377d6b"
+  },
+  "usb/user/neg/magic.elf": {
+    "bytes": 13128,
+    "sha256": "f3ab4ee0e3761f48c9ba81b3e23adf70ddabb9754e406cc50d49b419972bb8c4"
+  },
+  "usb/user/neg/memsz-huge.elf": {
+    "bytes": 13128,
+    "sha256": "cf362f7568791ba8f7f8652c555538371ceedb4493dd4b6cf8afb584359c748b"
+  },
+  "usb/user/neg/memsz-zero.elf": {
+    "bytes": 13128,
+    "sha256": "b03cddebc128a735e7243c6bfa767aae44f526a4864094d668dd071ca27889ac"
+  },
+  "usb/user/neg/no-exec.elf": {
+    "bytes": 13128,
+    "sha256": "626a055c569ef4dd978840aaebad9b48d5fd13266742378339e968b41b8eca31"
+  },
+  "usb/user/neg/note-align.elf": {
+    "bytes": 13128,
+    "sha256": "708d26ad37b20e9dfef86f98b2fd58639d8e2019fc82a8c1eef70f32dbcabf4e"
+  },
+  "usb/user/neg/note-descsz.elf": {
+    "bytes": 13128,
+    "sha256": "08029fbb234205e2a765d4efb4600a3053058be8b7768294d05cc0cf8e75b688"
+  },
+  "usb/user/neg/note-future.elf": {
+    "bytes": 13128,
+    "sha256": "fe6192a1410a3d0a224a93a57b7e420a3402e3d2c1033f487e9e130994616a1f"
+  },
+  "usb/user/neg/note-name.elf": {
+    "bytes": 13128,
+    "sha256": "31898f270dd756200b2d4c8eac664508d2aa993511625ab3291857eda1f80f2f"
+  },
+  "usb/user/neg/note-namesz.elf": {
+    "bytes": 13128,
+    "sha256": "d52f8560f351ec338e5325a52e8747f095715d3eecafb2ee617ae624a0c4bead"
+  },
+  "usb/user/neg/note-outside.elf": {
+    "bytes": 13128,
+    "sha256": "c54ff9c62e4d5198757733e225546f08d4edfc228c9277f028a8a67dbe63dcc0"
+  },
+  "usb/user/neg/note-trailing.elf": {
+    "bytes": 13128,
+    "sha256": "2867ca0fcfb837b3aab343218be8a55ce957323039f6c293cf18a5ace16b2e90"
+  },
+  "usb/user/neg/note-type.elf": {
+    "bytes": 13128,
+    "sha256": "d2ae70f10e7d7afd1662e5163787296c3c6351e96b03e9b332a2ba4c24635f2f"
+  },
+  "usb/user/neg/note-version.elf": {
+    "bytes": 13128,
+    "sha256": "862dd70fce2ae0ef873e76ccb434b026bf701fe838b9ef7c036b1d8870ea17e0"
+  },
+  "usb/user/neg/null-phdr.elf": {
+    "bytes": 13128,
+    "sha256": "d9daea52a9145f5bfee7965e2179e9036c96e4bcc7803eda1b1493950d1ea348"
+  },
+  "usb/user/neg/offset-unal.elf": {
+    "bytes": 13128,
+    "sha256": "50fa27eb110b01525212f209de11225c1b428f6b36d83aea6715fab9c228e30f"
+  },
+  "usb/user/neg/osabi.elf": {
+    "bytes": 13128,
+    "sha256": "b200506b8eee86b84c1644878d956e3dae0aea6a6d12a18d5a2b1f46736c30e2"
+  },
+  "usb/user/neg/overlap.elf": {
+    "bytes": 13128,
+    "sha256": "66ba341c39f4a0b228b4d331389d5af2e917de3ef11af2493b1f08e1790f6cdb"
+  },
+  "usb/user/neg/pad.elf": {
+    "bytes": 13128,
+    "sha256": "177310a1b910c06d78fa23865f3da1683db615780ac35741b4858fe998c005f3"
+  },
+  "usb/user/neg/phdr.elf": {
+    "bytes": 13128,
+    "sha256": "8c4f5e7a54a473c6a5f4b58b8fdfb2f6549424a8d4f9d3f0b3e25b4632e978b7"
+  },
+  "usb/user/neg/phentsize.elf": {
+    "bytes": 13128,
+    "sha256": "10ff91b440ea32ce913b6c2ef8c051c9c72c74d23ed3899559a1efc261e55b9a"
+  },
+  "usb/user/neg/phnum0.elf": {
+    "bytes": 13128,
+    "sha256": "8f3d247d5e0bb64afea1837b8aa66af50dd1f2cb3b177fc9cbe02dfec9c7ffa2"
+  },
+  "usb/user/neg/phnum9.elf": {
+    "bytes": 13128,
+    "sha256": "ec01d322be9a012f23e60a51bcf18fd5cc05f6d9b62a78299fd1cd1630af25f2"
+  },
+  "usb/user/neg/phoff-header.elf": {
+    "bytes": 13128,
+    "sha256": "947a26cd4d7ee039c9a6b26ac79311f6fa001a265b31112e9d1f6dfc53bbc891"
+  },
+  "usb/user/neg/phoff-huge.elf": {
+    "bytes": 13128,
+    "sha256": "e2204472891ef7b133ca4a938e91545683b6481894224a2bb5c69a658c8d55ea"
+  },
+  "usb/user/neg/phoff-outside.elf": {
+    "bytes": 13128,
+    "sha256": "9b9ea9002e59844fa5d32cc77f361fc6c14a3e79acb39d331ff595f031a73cab"
+  },
+  "usb/user/neg/property.elf": {
+    "bytes": 13128,
+    "sha256": "efc3d810f99a0930090bb4fd0ea03e40b08e1ace5c630a25c070bfe3c4d3909c"
+  },
+  "usb/user/neg/relro.elf": {
+    "bytes": 13128,
+    "sha256": "4f082a692086fd44407796c274f7df9e790575895eea4a70da90b12c8bb7bc6f"
+  },
+  "usb/user/neg/shlib.elf": {
+    "bytes": 13128,
+    "sha256": "ef08779f0e045f12acb100632eba0bec0c2692eee8f1b08d19900d6fea9bf62a"
+  },
+  "usb/user/neg/stack-exec.elf": {
+    "bytes": 13128,
+    "sha256": "e33ffc824527c9ac12e8e4dfa46d07a2894f7e11814600c1014e98de8149c7f2"
+  },
+  "usb/user/neg/tc-no-note-raw.elf": {
+    "bytes": 13056,
+    "sha256": "aa9c15889e15d07a53565efbd23b840fa15fbb44be1de4709c37d0ea9121e1ab"
+  },
+  "usb/user/neg/tc-pie.elf": {
+    "bytes": 13752,
+    "sha256": "c6307586825962e02e3953101601d97449681db3a7b2a206312d3212d91e0d98"
+  },
+  "usb/user/neg/tc-relocs.elf": {
+    "bytes": 13616,
+    "sha256": "47842932b20028455f41b58cab893bb1d00a5b6fa2f533f1950d0727d788d09e"
+  },
+  "usb/user/neg/tc-sse.elf": {
+    "bytes": 12992,
+    "sha256": "62d650485e43b4b43038bbc10066cdfca73bfaaf5b17fe5e1d3f81c3f39a3065"
+  },
+  "usb/user/neg/tc-tls-noassert.elf": {
+    "bytes": 13128,
+    "sha256": "b42d08227f99835120be43fd91a17abe89e0c3be207dafa8369d4301ff945ee6"
+  },
+  "usb/user/neg/tc-two-notes-raw.elf": {
+    "bytes": 13128,
+    "sha256": "882926dc2afeadf147ccf7507dfd14e9326646bc4f74c0c951ddf31fc8a8dbaa"
+  },
+  "usb/user/neg/tc-wx.elf": {
+    "bytes": 13128,
+    "sha256": "033bf185704867da0269f06ab09cdd2ce08336ceef4ec2214d30532885d77ce8"
+  },
+  "usb/user/neg/tc-x87.elf": {
+    "bytes": 12992,
+    "sha256": "78db5948d80bc9224e0f84c182c6cb1d5af9d047ad00513085f19e134d0196c3"
+  },
+  "usb/user/neg/tc-xstack.elf": {
+    "bytes": 13128,
+    "sha256": "e33ffc824527c9ac12e8e4dfa46d07a2894f7e11814600c1014e98de8149c7f2"
+  },
+  "usb/user/neg/text-flags.elf": {
+    "bytes": 13128,
+    "sha256": "e1e5ac20a7f14612af085d832127d8bbc93d1a8b1ea8e1da6aa2d3e5fde987ef"
+  },
+  "usb/user/neg/text-noread.elf": {
+    "bytes": 13128,
+    "sha256": "d5c2a893cb6ecf7f4f9b20b30837b2ad8975fc40a81ce3fe3e3c4028eccdfea1"
+  },
+  "usb/user/neg/text-wx.elf": {
+    "bytes": 13128,
+    "sha256": "033bf185704867da0269f06ab09cdd2ce08336ceef4ec2214d30532885d77ce8"
+  },
+  "usb/user/neg/tiny.elf": {
+    "bytes": 40,
+    "sha256": "b76ff091714c6f0022c1274a81e2ec70306d5bfb3f1e74d6d2a67b9bc87ab1ee"
+  },
+  "usb/user/neg/tls.elf": {
+    "bytes": 13128,
+    "sha256": "9dda69a845c3c4337840fccc8c7cf41e405caf231bf2d5ebdc34d45dbd18c758"
+  },
+  "usb/user/neg/truncated.elf": {
+    "bytes": 200,
+    "sha256": "f71deb91c0e4f327ea15c00de1c27e32e7ae576ffa68cbe0df2cab76e62b503e"
+  },
+  "usb/user/neg/unknown-phdr.elf": {
+    "bytes": 13128,
+    "sha256": "8069fda5bdfe0dda2e1660a5605d45b33d23a13f6fc9240c25a09ed3ad2f3d93"
+  },
+  "usb/user/neg/unsorted.elf": {
+    "bytes": 13128,
+    "sha256": "c36be69d01d851abfd8c34f65db70716c5d6324a45935c3189555c9f170bdaf8"
+  },
+  "usb/user/neg/vaddr-high.elf": {
+    "bytes": 13128,
+    "sha256": "7f1e9a146d0652e4b88cdd6a20146f65d53b935a0ca4f8db965d6eaff3beb882"
+  },
+  "usb/user/neg/vaddr-low.elf": {
+    "bytes": 13128,
+    "sha256": "a433526f8266c9c8bbb5dafc2031cbd3d94648206c18c6e37c028299d2c51d85"
+  },
+  "usb/user/neg/vaddr-unal.elf": {
+    "bytes": 13128,
+    "sha256": "498dc1a6d41ab5d3a1e40d9529531a255eff4d30b8d7dbbcbc73b1a42baf1dff"
+  },
+  "usb/user/rixie.elf": {
+    "bytes": 662376,
+    "sha256": "77104da3b33caf809daf5e6674ac4e2fa9edf6a9e2e5dd59828514df76490d32"
+  },
+  "usb/user/suite/acflag.elf": {
+    "bytes": 13128,
+    "sha256": "ade66d5a3c40e3762834e60ff940e2777589faca57eae48c476095e6a7fde943"
+  },
+  "usb/user/suite/align.elf": {
+    "bytes": 13056,
+    "sha256": "e0f1bb23db00e12ad52ebee21f2bf8a9cf5a10177085fcfc6b3941b02d209fb3"
+  },
+  "usb/user/suite/bad-abi.elf": {
+    "bytes": 13128,
+    "sha256": "862dd70fce2ae0ef873e76ccb434b026bf701fe838b9ef7c036b1d8870ea17e0"
+  },
+  "usb/user/suite/bad-dyn.elf": {
+    "bytes": 13128,
+    "sha256": "65205555a1e6552287987868710009eceed74206097e20ad1f4b76836676f876"
+  },
+  "usb/user/suite/bad-entry.elf": {
+    "bytes": 13128,
+    "sha256": "c102be9ac02fcfe3449753c7dff451f24a58f55a2b65dac8be7f67068d6bd24d"
+  },
+  "usb/user/suite/bad-interp.elf": {
+    "bytes": 13128,
+    "sha256": "dfd11b8ec1e9617cdeb285ada100552a510cd97488f94c315d88e8236193d190"
+  },
+  "usb/user/suite/bad-magic.elf": {
+    "bytes": 13128,
+    "sha256": "f3ab4ee0e3761f48c9ba81b3e23adf70ddabb9754e406cc50d49b419972bb8c4"
+  },
+  "usb/user/suite/bad-overlap.elf": {
+    "bytes": 13128,
+    "sha256": "66ba341c39f4a0b228b4d331389d5af2e917de3ef11af2493b1f08e1790f6cdb"
+  },
+  "usb/user/suite/bad-trunc.elf": {
+    "bytes": 200,
+    "sha256": "f71deb91c0e4f327ea15c00de1c27e32e7ae576ffa68cbe0df2cab76e62b503e"
+  },
+  "usb/user/suite/bad-wx.elf": {
+    "bytes": 13128,
+    "sha256": "033bf185704867da0269f06ab09cdd2ce08336ceef4ec2214d30532885d77ce8"
+  },
+  "usb/user/suite/clean.elf": {
+    "bytes": 13120,
+    "sha256": "7c11615d12304378fc82302ca46b96b6bd671721962267b9269a6b197934ef6a"
+  },
+  "usb/user/suite/cli.elf": {
+    "bytes": 13096,
+    "sha256": "c398d4c383cf59656b5b42a76eeb37d0670b5b736bcd3320af7c6a194b17fc78"
+  },
+  "usb/user/suite/codewrite.elf": {
+    "bytes": 13104,
+    "sha256": "90cd17bd64ad5b350f3f431e0149674bdd9970a7693e386c8b1d43575f7e797b"
+  },
+  "usb/user/suite/df.elf": {
+    "bytes": 13120,
+    "sha256": "3a9db50a968baba9f46ca54e2c8c22696df5f55991fc519b3e788788603ac6e9"
+  },
+  "usb/user/suite/dirty.elf": {
+    "bytes": 13120,
+    "sha256": "db81c0c7580672c8658d26b54b49c7b63089c9de5caf953259f975a593774a29"
+  },
+  "usb/user/suite/execdata.elf": {
+    "bytes": 13152,
+    "sha256": "6f6d37139b5cdca8c929348b3fdc920320d22743f0c3ae858368f76cd4e85fd2"
+  },
+  "usb/user/suite/execrodata.elf": {
+    "bytes": 13136,
+    "sha256": "6a687af4e1cec5737d51cbb7d056d8e8d2bdc0c5042f68dd6a067eaa41f876c7"
+  },
+  "usb/user/suite/execstack.elf": {
+    "bytes": 13104,
+    "sha256": "83ecdb67db2db3032f1d219b7f5abf069e8cb4ad614428bd1e54b0898b06d39f"
+  },
+  "usb/user/suite/forge.elf": {
+    "bytes": 13128,
+    "sha256": "64fce0465ac0b9ce2ad38cc90d8ac2de4144e5a4229c24316ceafdbb6cfae64a"
+  },
+  "usb/user/suite/guard.elf": {
+    "bytes": 13176,
+    "sha256": "efab49ddc13aec051974b1e90c6812553b498c7b00de4dd8b265199b46454a42"
+  },
+  "usb/user/suite/hlt.elf": {
+    "bytes": 13096,
+    "sha256": "694eff5cfdf3b7db5e8bf679a20407642cfd4c79ab48e9f58e51dee859628501"
+  },
+  "usb/user/suite/iflock.elf": {
+    "bytes": 13024,
+    "sha256": "6526992529aca5f116e68c617b071be31ff3bd92b31290a97a7ad0ffba4f188a"
+  },
+  "usb/user/suite/inb.elf": {
+    "bytes": 13096,
+    "sha256": "34de8563ee33c5f5c40101550cbb05e07c994b37fc75a01deb016e104795dc84"
+  },
+  "usb/user/suite/int14.elf": {
+    "bytes": 13096,
+    "sha256": "598f7d5b3bb0757a5d88db0890de62781d3c9c80478de87bfaab341d7d81c520"
+  },
+  "usb/user/suite/int3.elf": {
+    "bytes": 13096,
+    "sha256": "3d5d88187e6ef98b2e4a9865bec00c5a9f06950664bde0d546e91dc0b4993efd"
+  },
+  "usb/user/suite/int81.elf": {
+    "bytes": 13096,
+    "sha256": "5f54722fdaba41a3805f6e97bfa5ced149dddc1dde8b3fd72e2b3cf5560da766"
+  },
+  "usb/user/suite/ipc_abi1.elf": {
+    "bytes": 13184,
+    "sha256": "be6fd8ca556fecd8192b2883d39b7328c760c134c79fcc2ec9054d499b13ada6"
+  },
+  "usb/user/suite/ipc_chat.elf": {
+    "bytes": 13184,
+    "sha256": "d80b8c6b4b4fd58fcd4f6a7e036eb3d8dcb6c0815f12e74442e47368e6d7bcbe"
+  },
+  "usb/user/suite/ipc_drain.elf": {
+    "bytes": 13184,
+    "sha256": "1b7e6e7f983c9b05cd2fe2243c2d504053696681755d44da882cf66a5f3c9f9c"
+  },
+  "usb/user/suite/ipc_echo.elf": {
+    "bytes": 13280,
+    "sha256": "c8ce3daa1064e2dace62a64cd29be9f0c44340cf9702f8aaecb2ed41a0836626"
+  },
+  "usb/user/suite/ipc_flood.elf": {
+    "bytes": 13184,
+    "sha256": "0681762f727263ad1f3d334b6abf8b594b1a9bee4ee025987133fba0f63a9358"
+  },
+  "usb/user/suite/ipc_forge.elf": {
+    "bytes": 13288,
+    "sha256": "b2884bd6f79d0c79b7e6357d1e796605d3a093ac17873b975a8f30773b93bf74"
+  },
+  "usb/user/suite/ipc_ping.elf": {
+    "bytes": 13344,
+    "sha256": "46044d57622ed365eede2fbff7c67fe84f258d375694417c4b6f4f312fcb44ed"
+  },
+  "usb/user/suite/ipc_regs.elf": {
+    "bytes": 13152,
+    "sha256": "d8813859ce71f3220ab6d94c2d74f9b13265eed6df5d2472f3566be606715683"
+  },
+  "usb/user/suite/ipc_rights.elf": {
+    "bytes": 13192,
+    "sha256": "879ef0ae25fb9ad382f3aa60495439dc72e8b20de32f403435866cb59831788e"
+  },
+  "usb/user/suite/ipc_sendfault.elf": {
+    "bytes": 13192,
+    "sha256": "38c9ed11cca33375382ebcb884865004032667c6ca2a82fe4f925a1307857d51"
+  },
+  "usb/user/suite/ipc_wait.elf": {
+    "bytes": 13280,
+    "sha256": "68d115185132080e0d1a0ed58cbd7b9efc7599adcf6493f7fc218c597b8e82c8"
+  },
+  "usb/user/suite/irqregs.elf": {
+    "bytes": 12992,
+    "sha256": "b314ceba9929f7a8a6977b99e0213202d6babcf0618fdb0f3be6997a9504e26e"
+  },
+  "usb/user/suite/kernelif.elf": {
+    "bytes": 13032,
+    "sha256": "249aa3adfc7859dfd96ba8a9ea8082d7ce90c7f6a48e88c8f40fad9c4e7e25c8"
+  },
+  "usb/user/suite/kread.elf": {
+    "bytes": 13096,
+    "sha256": "a7aac16e3825d11f9dc57cdb558ddbf7a492c3cb2d84248026c649af1339cc7e"
+  },
+  "usb/user/suite/kwrite.elf": {
+    "bytes": 13096,
+    "sha256": "c4f630163f183f5229a144016ab823482af677c69e43239682bca7649b865deb"
+  },
+  "usb/user/suite/memtag1.elf": {
+    "bytes": 13128,
+    "sha256": "5ac97cf3c9efe36d6578b3fce12cbd27a2dcbc3041ad08ed9cb16fd18133b783"
+  },
+  "usb/user/suite/memtag2.elf": {
+    "bytes": 13128,
+    "sha256": "f2e2957564fe6a1081f7f643deb81a5449ba1785e304815aec05f78d62affa89"
+  },
+  "usb/user/suite/movcr3.elf": {
+    "bytes": 13096,
+    "sha256": "917616dac11836ee18016c66bb1b087a5b890b29d531788768c170f9320ed459"
+  },
+  "usb/user/suite/null.elf": {
+    "bytes": 13096,
+    "sha256": "6b860c5358f354cc469b79c22e5a49ee8d8253522d7e9f7156491c4debdfe2aa"
+  },
+  "usb/user/suite/outb.elf": {
+    "bytes": 13096,
+    "sha256": "3faf90b1d7a29f01ca64150b5244b49bad00cbdee96b79e846be875400b3666d"
+  },
+  "usb/user/suite/regs.elf": {
+    "bytes": 12856,
+    "sha256": "50f798ef1114e9f4bb5912addf935ca79ea88c7177556e43985cb4b5497895da"
+  },
+  "usb/user/suite/sgdt.elf": {
+    "bytes": 13024,
+    "sha256": "f468c005668a33c696d6cf1cd2ebfac770966ab8bcc79ccbe00c2a19c9232059"
+  },
+  "usb/user/suite/sidt.elf": {
+    "bytes": 13024,
+    "sha256": "5a0f3657c8a71dd9f87397b79706efa1d7a60d72f6f2ff637ad53d9eb1e02c12"
+  },
+  "usb/user/suite/smsw.elf": {
+    "bytes": 13024,
+    "sha256": "f983807906eb06f3355f42f6056131a8c39c828db993f7f93798bf68d0e3cddf"
+  },
+  "usb/user/suite/spin.elf": {
+    "bytes": 13024,
+    "sha256": "83b91169e8f1239695431f53b2ed26dcfdcc93510f4711fa57df05a565e7dfdb"
+  },
+  "usb/user/suite/sse.elf": {
+    "bytes": 13096,
+    "sha256": "b6a51f57cace21fb513bf8c634657f2e2c70c62f70112a331064062ba1a39075"
+  },
+  "usb/user/suite/sti.elf": {
+    "bytes": 13096,
+    "sha256": "4c53e248ffe5bf7f239c821aef7898de76f7dd6d33bbdd67ef43291de874dbec"
+  },
+  "usb/user/suite/str.elf": {
+    "bytes": 13024,
+    "sha256": "66f824a6b80d7a198f33fe43648d8d235303a946fa1a01851e3d52a5eab1adb6"
+  },
+  "usb/user/suite/syscalls.elf": {
+    "bytes": 13128,
+    "sha256": "6090673be6ff312cb1d506e9a050fc99f5afcf462c7c97a75d4dace7f7117d98"
+  },
+  "usb/user/suite/ud2.elf": {
+    "bytes": 13096,
+    "sha256": "e4617bc7a31d2d9ea7ae2b3441d47917badf4b1817d35e6f18a2fb356a4f8230"
+  },
+  "usb/user/suite/v1calls.elf": {
+    "bytes": 13032,
+    "sha256": "0efaacc7da59be525290e63fcd6fd6366499de6502ca64f5c88afaff6b6c518f"
+  },
+  "usb/user/suite/vga.elf": {
+    "bytes": 13096,
+    "sha256": "dbb6ba2fe6238e19059b43bdfc86f239968baad70c51a51b3366a5bf24c45d19"
+  },
+  "usb/user/suite/wrmsr.elf": {
+    "bytes": 13096,
+    "sha256": "7a7dcc1dfd06df28d0a33931ba1b088469602cc4248390951238b2cf58859f38"
+  },
+  "usb/user/suite/x87.elf": {
+    "bytes": 13096,
+    "sha256": "3ae017405377c981e947a181943e77410fc75e7b59b034c067e48987e168c3f1"
+  },
+  "usb/user/vsh.elf": {
+    "bytes": 662984,
+    "sha256": "e7af3ee56164f587f7ca1338f7ddfcb202b6f4310f10b4dcba6a2576743cb181"
+  }
+}

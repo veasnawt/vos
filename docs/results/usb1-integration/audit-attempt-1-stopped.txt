@@ -1,0 +1,1 @@
+Independent source/binary audit invocation stopped at assertion line 16 before writing its summary. No kernel or tests changed; native results remain PASS. Diagnostic output retained in audit-diagnostic.txt.

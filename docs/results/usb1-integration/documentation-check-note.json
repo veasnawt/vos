@@ -1,0 +1,7 @@
+{
+  "initial_diff_check_exit": 2,
+  "cause": "Preserved raw UART CRLF and intentional prompt-ending spaces in historical USB.1 serial records. A CRLF-aware check still reports the prompt spaces.",
+  "resolution": "Whitespace checks cover source, scripts, workflow and Markdown; raw serial evidence is instead verified byte-for-byte by hashes. No logs changed and no Git configuration changed.",
+  "source_and_Markdown_diff_check_exit": 0,
+  "initial_diagnostic_retained": "build/usb1-integration-1/documentation-diff-check-1.txt"
+}

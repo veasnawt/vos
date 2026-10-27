@@ -1,0 +1,8 @@
+{
+  "gcc": "gcc (Ubuntu 15.2.0-16ubuntu1) 15.2.0\nCopyright (C) 2025 Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.",
+  "ld": "GNU ld (GNU Binutils for Ubuntu) 2.46\nCopyright (C) 2026 Free Software Foundation, Inc.\nThis program is free software; you may redistribute it under the terms of\nthe GNU General Public License version 3 or (at your option) a later version.\nThis program has absolutely no warranty.",
+  "QEMU": "QEMU emulator version 10.2.1 (Debian 1:10.2.1+ds-1ubuntu3.2)\nCopyright (c) 2003-2025 Fabrice Bellard and the QEMU Project developers",
+  "GRUB": "grub-mkrescue (GRUB) 2.14-2ubuntu2.1",
+  "xorriso": "xorriso 1.5.6\nISO 9660 Rock Ridge filesystem manipulator and CD/DVD/BD burn program\nCopyright (C) 2023, Thomas Schmitt <scdbackup@gmx.net>, libburnia project.\nxorriso version   :  1.5.6\nVersion timestamp :  2023.06.07.180001\nBuild timestamp   :  -none-given-\nlibisofs   in use :  1.5.6  (min. 1.5.6)\nlibburn    in use :  1.5.6  (min. 1.5.6)\nlibburn OS adapter:  internal GNU/Linux SG_IO adapter sg-linux\nlibisoburn in use :  1.5.6  (min. 1.5.6)\nProvided under GNU GPL version 3 or later, due to libreadline license.\nThere is NO WARRANTY, to the extent permitted by law.\nxorriso 1.5.6 : RockRidge filesystem manipulator, libburnia project.",
+  "rustc": "rustc 1.100.0-nightly (2e2b193f8 2026-09-02)\nbinary: rustc\ncommit-hash: 2e2b193f8ada105f27608b7be81c293e0d7292cb\ncommit-date: 2026-09-02\nhost: x86_64-unknown-linux-gnu\nrelease: 1.100.0-nightly\nLLVM version: 23.1.1"
+}

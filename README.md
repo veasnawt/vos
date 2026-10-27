@@ -17,7 +17,7 @@ No physical-machine installation or production-security claim is made.
 The kernel is primarily freestanding C and x86 assembly; the first
 [Rust kernel integration](docs/results/r0b-rust-kernel-foundation.md) is merged
 through PR #20. The first [real bounds-helper migration](docs/results/r1-performance.md)
-is locally verified and proposed for review. Rust is the first-class native
+is merged through PR #21. Rust is the first-class native
 application language. VOS is not a Linux distribution and
 does not use Linux or a hosted C library inside the guest. GRUB supplies a
 Multiboot2 handoff through BIOS or UEFI; a legacy i386 baseline is also retained.
@@ -40,6 +40,9 @@ Multiboot2 handoff through BIOS or UEFI; a legacy i386 baseline is also retained
 - Bounded kernel-controlled virtio-net, Ethernet/ARP, IPv4/ICMP, UDP and passive
   TCP payload/retransmission/closure. No application network authority is granted
   automatically. [Accepted N5 scope and limits](docs/networking.md).
+- Opt-in, read-only PCI bus-0 xHCI discovery and capability diagnostics are
+  integrated for review on the Rust-enabled kernel. This is not USB device
+  enumeration or USB keyboard/mouse support. [Integration evidence and preview](docs/results/usb1-rust-integration.md).
 
 Existing ABI v0-v3 behavior is preserved by the additive ABI v4 launch and ABI v5
 GUI interfaces. Capability boundaries, input validation, fixed resource limits
@@ -117,7 +120,7 @@ Current limits include QEMU-only BIOS/OVMF validation, RAM tracked below 1 GiB,
 read-only trusted media, bounded single-endpoint networking, polling limitations
 and standard PS/2 keyboard/primary-button mouse input. USB input, production
 networking, writable storage, installation and Secure Boot are not implemented.
-Further Rust kernel migration beyond this bounded R1 candidate and broader hardware
+Further Rust kernel migration beyond the merged R1 helper and broader hardware
 portability remain proposed tracks requiring separate authorization.
 
 The separate [Veasna OS React/Electron prototype](https://github.com/veasnawt/veasna-os)

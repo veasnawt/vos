@@ -1,0 +1,13 @@
+{
+  "main": "7c8082b98751f65ab0bcdf884339a6bf8298e2ce",
+  "USB1": "bd22803b8b5635b776c848d08d1494f65b49dd21",
+  "USB1_inventory": 64,
+  "original_manifest_entries_verified": 63,
+  "manual_conflicts": 0,
+  "automatic_combination": [
+    "arch/x86_64/arch.mk",
+    "arch/x86_64/kernel.c"
+  ],
+  "other_USB1_files_exactly_preserved": 62,
+  "Rust_ELF_host_build_sources_unchanged": true
+}

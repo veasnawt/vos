@@ -1,0 +1,656 @@
+{
+  "algorithm": "SHA-256",
+  "baseline": "7c8082b98751f65ab0bcdf884339a6bf8298e2ce",
+  "original_USB_commit": "bd22803b8b5635b776c848d08d1494f65b49dd21",
+  "files": {
+    ".github/workflows/build-smoke.yml": {
+      "bytes": 1775,
+      "sha256": "8ed408d03880df3144ae43de3cbe0c9bad55f84be89bd4e00987cba2998580f4"
+    },
+    "README.md": {
+      "bytes": 8658,
+      "sha256": "fca90da729e1bd539bcd3b7857e9f783484a6e36e3396e4c87b705a543912bdb"
+    },
+    "arch/x86_64/arch.mk": {
+      "bytes": 36942,
+      "sha256": "2b0911db8c82ae5f7b6def29062c29f1039cf7fa529a3b12402349493dbca077"
+    },
+    "arch/x86_64/boot_option.h": {
+      "bytes": 521,
+      "sha256": "06eadff1c57ecc2d75efe80b75fe45a4d457b8a489bc5fd70b901d3eb70f862c"
+    },
+    "arch/x86_64/gui_verify.c": {
+      "bytes": 7567,
+      "sha256": "df36e48f710c86c4f4a232479dd9fca521c1768e17582f033c60eb476dd00ff7"
+    },
+    "arch/x86_64/kernel.c": {
+      "bytes": 17217,
+      "sha256": "fd85a71c1f761a1d00909eb909bf937d54f803281895c503d9ca97e516956408"
+    },
+    "arch/x86_64/user_console.c": {
+      "bytes": 9981,
+      "sha256": "c5a35faa2bc290c9224b3dfa7dbe8835f3178f68714aa4c7d515825ea675949a"
+    },
+    "arch/x86_64/user_console.h": {
+      "bytes": 1640,
+      "sha256": "072c072f5ad03de09a86a2ce0c1f3f430e5a7fa1da971cc39fe728b5d552b237"
+    },
+    "arch/x86_64/vsh_boot.c": {
+      "bytes": 3485,
+      "sha256": "e8ff54893b70a28f69d61b17fb2fc6d4c5b9a1d97547cf13c313cb7f2a4e92a3"
+    },
+    "arch/x86_64/xhci.c": {
+      "bytes": 5609,
+      "sha256": "db5c0d6c01df786fc0588bcdb5a032dc57cd22731e447d3bfc2927e223b60866"
+    },
+    "arch/x86_64/xhci.h": {
+      "bytes": 1327,
+      "sha256": "78343853abfa6bf228fe5cdb39e05486d65edeb9e5966ace621811caa602d8ad"
+    },
+    "arch/x86_64/xhci_boot.c": {
+      "bytes": 3664,
+      "sha256": "a5a6ef01df6817eb780d094582ba288dca37efba5efbdb0a0862e3f625c83ff9"
+    },
+    "docs/ROADMAP.md": {
+      "bytes": 16589,
+      "sha256": "05d49b7a1486719d3e5a79e6ee638fb23a2cceb2ef084d878aabb1643f5bcc21"
+    },
+    "docs/STATUS.md": {
+      "bytes": 27537,
+      "sha256": "0852eaf67b72752d7d15487449e896d5e296eba8d4611988ad6e0755a9fd0bf4"
+    },
+    "docs/images/usb1/vos-usb1-integrated-bios.png": {
+      "bytes": 10429,
+      "sha256": "73840158e18185e0b3638bfd29ccec73ed6a8cc50cfaf5f4982cb60ca6e56a9c"
+    },
+    "docs/images/usb1/vos-usb1-integrated-uefi.png": {
+      "bytes": 10429,
+      "sha256": "73840158e18185e0b3638bfd29ccec73ed6a8cc50cfaf5f4982cb60ca6e56a9c"
+    },
+    "docs/results/usb1-integration/audit-attempt-1-stopped.txt": {
+      "bytes": 208,
+      "sha256": "855c74d73161c62bf7879e9cdff197f0661bff1c947b770d94cd9265bd4eaf40"
+    },
+    "docs/results/usb1-integration/audit-diagnostic.txt": {
+      "bytes": 2462,
+      "sha256": "45ff459334129f9c1c9aaec7e0f1b3db2a034398f4d45845a50011fb5d9682f5"
+    },
+    "docs/results/usb1-integration/bios-absent-command.json": {
+      "bytes": 525,
+      "sha256": "e5eab9d096e0a282c71cdeec3d819f727d3c71e7081f9074956d01582e54e4d9"
+    },
+    "docs/results/usb1-integration/bios-absent-pci.json": {
+      "bytes": 3069,
+      "sha256": "a6ad6a51b53281b3ba5ddce4db6700ed7a9a52fb0273dd96826e5945c91b6284"
+    },
+    "docs/results/usb1-integration/bios-absent-result.json": {
+      "bytes": 218,
+      "sha256": "eba1869e6c723d27857c30a9b380f769b88eb75d6808ffed288d7337e730950a"
+    },
+    "docs/results/usb1-integration/bios-absent-serial.log": {
+      "bytes": 5249,
+      "sha256": "5a01a9bd04c51325bd222e7ba6c30b3a0bb726a673dc96301ad8e57efd0a0af3"
+    },
+    "docs/results/usb1-integration/bios-capture-command.json": {
+      "bytes": 539,
+      "sha256": "4d554bf600cbd93c03b80754f63dcbebd794c7acbf46489dfa6faeaba9eccbe8"
+    },
+    "docs/results/usb1-integration/bios-capture-pci-after.json": {
+      "bytes": 3682,
+      "sha256": "6347f2d9abd57722eab35f04f58bdfef128dce08e7292d1d32767872def5d6b1"
+    },
+    "docs/results/usb1-integration/bios-capture-pci-before.json": {
+      "bytes": 3682,
+      "sha256": "6347f2d9abd57722eab35f04f58bdfef128dce08e7292d1d32767872def5d6b1"
+    },
+    "docs/results/usb1-integration/bios-capture-serial.txt": {
+      "bytes": 5643,
+      "sha256": "a11fb56554c86e688e1187727b087db160c3f1936791fba53c5b64229171db5b"
+    },
+    "docs/results/usb1-integration/bios-control-command.json": {
+      "bytes": 529,
+      "sha256": "67e3c741ca82126a3b1d5972b7a7ac5276e3ff2caa8bda0d5c1b66394171c7ab"
+    },
+    "docs/results/usb1-integration/bios-control-pci.json": {
+      "bytes": 3069,
+      "sha256": "a6ad6a51b53281b3ba5ddce4db6700ed7a9a52fb0273dd96826e5945c91b6284"
+    },
+    "docs/results/usb1-integration/bios-control-result.json": {
+      "bytes": 219,
+      "sha256": "a46e79227872fbf72689b0608d3200082fefc5946f92f20b0de354f38bc434d3"
+    },
+    "docs/results/usb1-integration/bios-control-serial.log": {
+      "bytes": 4631,
+      "sha256": "f5568e0a4d45e1bcdf07686aa99666ad4cb97db1c0e12ae18fccfca814fac51a"
+    },
+    "docs/results/usb1-integration/bios-no-ps2-command.json": {
+      "bytes": 607,
+      "sha256": "83b678c81ad598e4d68f2e73b02055f34da5da6fe95e4a133a668c6853b3277b"
+    },
+    "docs/results/usb1-integration/bios-no-ps2-gui-command.json": {
+      "bytes": 616,
+      "sha256": "074be8eab4f3b77ca5d2740981f6de028947f7fede41c2a42b3ccf5360c614dc"
+    },
+    "docs/results/usb1-integration/bios-no-ps2-gui-result.json": {
+      "bytes": 221,
+      "sha256": "5a00018bf2210944588853791488b07ce5f1e2d760e0f329bef935f155155138"
+    },
+    "docs/results/usb1-integration/bios-no-ps2-gui-serial.log": {
+      "bytes": 4256,
+      "sha256": "c3582a8857fa9e7b5663cbbbc639a79383a0faa3fec1d31a3e49c8ddf543c054"
+    },
+    "docs/results/usb1-integration/bios-no-ps2-result.json": {
+      "bytes": 217,
+      "sha256": "7f261aedfe8097fd0a7429a56547ebdb4365cf4a8ec0b328e845ad36f03e644d"
+    },
+    "docs/results/usb1-integration/bios-no-ps2-serial.log": {
+      "bytes": 3797,
+      "sha256": "97d9ab89b60f4a0e3af03cdd5cc2a71a1ae8f13569dbadffd50d8da1cf824b9f"
+    },
+    "docs/results/usb1-integration/bios-rust-elf-command.json": {
+      "bytes": 661,
+      "sha256": "293b4e475058b2946cf8c28a708329ee29be6721b5a655f1807d9c0457526d93"
+    },
+    "docs/results/usb1-integration/bios-rust-elf-rust-execution.txt": {
+      "bytes": 5538,
+      "sha256": "440a842ca3bdeec003cfdae1dc9c85c81afe93a51bdfc4db9c884ebed836fbea"
+    },
+    "docs/results/usb1-integration/bios-rust-elf-serial.txt": {
+      "bytes": 11389,
+      "sha256": "4bb98b13f08f57a9c8b7315712cd9bb9f59e8f9364e5a5dbc669e8df785d48e5"
+    },
+    "docs/results/usb1-integration/bios-rust-interactive-command.json": {
+      "bytes": 607,
+      "sha256": "5640fc9030426b38866ebfff157a7e295fe2d5cb42d016427c28b2c8c41a793b"
+    },
+    "docs/results/usb1-integration/bios-rust-interactive-serial.log": {
+      "bytes": 5016,
+      "sha256": "46022da634cb2d03e2061fd3d8b153d185eca09a13066d3a6a625b8fc4fe8492"
+    },
+    "docs/results/usb1-integration/bios-usb-command.json": {
+      "bytes": 592,
+      "sha256": "6454ac9b894f63b02e76dd7e3f4c680526b66eb9d356bd21f0f2d6178a22668b"
+    },
+    "docs/results/usb1-integration/bios-usb-pci.json": {
+      "bytes": 3682,
+      "sha256": "6347f2d9abd57722eab35f04f58bdfef128dce08e7292d1d32767872def5d6b1"
+    },
+    "docs/results/usb1-integration/bios-usb-result.json": {
+      "bytes": 215,
+      "sha256": "1202022e4699037b7e7135645706a727726d9366ab497a172cc1183fbfd7380f"
+    },
+    "docs/results/usb1-integration/bios-usb-serial.log": {
+      "bytes": 4122,
+      "sha256": "f93da4a912c52d7195ab28d3efded6cc6b3bd1cb88696a7d72fba5afd91ac78e"
+    },
+    "docs/results/usb1-integration/bootstrap-host.log": {
+      "bytes": 139,
+      "sha256": "3f9ed12bfbfc4198b3a34d568639fb422c40cc2d4f548d55cb8b5e36f569aee8"
+    },
+    "docs/results/usb1-integration/build-identities.json": {
+      "bytes": 52463,
+      "sha256": "f79c776d37849760f69c60ec1309f17a1c98c65c31182e6b259ed07e3fee50c2"
+    },
+    "docs/results/usb1-integration/capture-results.json": {
+      "bytes": 819,
+      "sha256": "b22f50dcbc459f7fa6a88b8748b7e47d72ac3b5ad1787f476847162287a66793"
+    },
+    "docs/results/usb1-integration/changed-files.txt": {
+      "bytes": 7508,
+      "sha256": "77c1535774cbe5d241f39a13e5a68366e9d6bbda1a943e04e71e6889c2e6e0ae"
+    },
+    "docs/results/usb1-integration/commands.json": {
+      "bytes": 1405,
+      "sha256": "12ffb937c4f8d20e3ad79f08f2cf738f65714e2bbe2e57f3222bd041b0fecba5"
+    },
+    "docs/results/usb1-integration/console-host.log": {
+      "bytes": 137,
+      "sha256": "08517bef747eb35a75a06203343d12cb652202e01a235d98a8ab82d0d69064f3"
+    },
+    "docs/results/usb1-integration/control-bios-catalog.log": {
+      "bytes": 954,
+      "sha256": "fa82f6ca67eed4b539ccb5d3994e96838fdacadf7e5b0a97337559e98abc366c"
+    },
+    "docs/results/usb1-integration/control-uefi-catalog.log": {
+      "bytes": 873,
+      "sha256": "bbfc362713040b677f0752b4fa92d01bccc232c69ab24e39bfe193250ef65029"
+    },
+    "docs/results/usb1-integration/diagnostics-host.log": {
+      "bytes": 83,
+      "sha256": "0baca4278b3bb316cdfb09f7f718ab746dbc832fc0c199896158e3eec11dc499"
+    },
+    "docs/results/usb1-integration/documentation-check-note.json": {
+      "bytes": 532,
+      "sha256": "f47f5e395a0bc8127be49d64bcc6d68eb08448a730c81c42004d0a0afa5a5f45"
+    },
+    "docs/results/usb1-integration/documentation-validation.json": {
+      "bytes": 596,
+      "sha256": "257b71d2150842c5520c4b9423faeb00145f0e79d9d5017d2e3bf9aa7afdb56f"
+    },
+    "docs/results/usb1-integration/keyboard-host.log": {
+      "bytes": 262,
+      "sha256": "f651cc5a4ef7bc48cfa4a8ee09ac111569e742df2ac5620d4d47cf4bf2062e4c"
+    },
+    "docs/results/usb1-integration/media-validation.json": {
+      "bytes": 3277,
+      "sha256": "7caa02b94f4fb921bd0fed15988fa76bffd4275a6be8e6585c222830c5720809"
+    },
+    "docs/results/usb1-integration/merge-review.json": {
+      "bytes": 385,
+      "sha256": "7f20c4985ba359fbf1e5d4e81e56a732d6a0e43d0d32046b8955ba28dbf0b6cd"
+    },
+    "docs/results/usb1-integration/preservation.json": {
+      "bytes": 937,
+      "sha256": "870ec2e4eedec526d0447ade169e93429466bc7603698cfca0ac741f888e610f"
+    },
+    "docs/results/usb1-integration/probe-bios-catalog.log": {
+      "bytes": 952,
+      "sha256": "6bc87cf02308e7db3bdc4e10bf789c2435cf83abd6f6700d76df504be863dff2"
+    },
+    "docs/results/usb1-integration/probe-uefi-catalog.log": {
+      "bytes": 871,
+      "sha256": "f221095a79d07c297e65c734a9b7ca6e8daa02058658bf79dc75462b6bc86b60"
+    },
+    "docs/results/usb1-integration/resources.json": {
+      "bytes": 707,
+      "sha256": "0f56a044d346bb1e743cda5ea433f13b8d80011149a6fc2499f2bbfebf3b0c5f"
+    },
+    "docs/results/usb1-integration/rust-bounds.txt": {
+      "bytes": 74,
+      "sha256": "88f2b3b25f1f8d2ab51a671cd3ba76204873a19123c9a38ebf2c4896fe4c18b3"
+    },
+    "docs/results/usb1-integration/rust-compare.txt": {
+      "bytes": 104,
+      "sha256": "8dede1cf93c340a568513788d5b70b67ac8156099ebbb651d0196e3958e2b61f"
+    },
+    "docs/results/usb1-integration/rust-deny-bounds.txt": {
+      "bytes": 54,
+      "sha256": "d83fdfd4f4d9b997840909cea4a5ab10df59152d76a39ce8e759ed60423e196c"
+    },
+    "docs/results/usb1-integration/rust-deny-checker.txt": {
+      "bytes": 141,
+      "sha256": "028f1faef61161f000ed96fe9381c5ca7b4f92f5166cbc70a94d1af6207b6f3b"
+    },
+    "docs/results/usb1-integration/rust-host-results.json": {
+      "bytes": 37264,
+      "sha256": "29259ed28b05bb47ce47e05216aa23390e921cdbac5852f0cee7d194eaaff8f4"
+    },
+    "docs/results/usb1-integration/rust-native-results.json": {
+      "bytes": 1255,
+      "sha256": "caf333083719514153cbf23166af08625da2d82d4b66cf31bf366ab30e02e3f0"
+    },
+    "docs/results/usb1-integration/selftest-kernel-program-headers.txt": {
+      "bytes": 852,
+      "sha256": "55ae7596fbe16086b77b7d452e40beca7d6882b44f7d974a3971181d94a51fa7"
+    },
+    "docs/results/usb1-integration/source-binary-review.json": {
+      "bytes": 2951,
+      "sha256": "f8cc00118940f26a3392f016641199a1a99019d978ef16555106b0c8eb3ed1ad"
+    },
+    "docs/results/usb1-integration/text-bios-catalog.log": {
+      "bytes": 951,
+      "sha256": "da573e24021fc8232bacc35707a297d94deca88f635593b72238a42369d052c8"
+    },
+    "docs/results/usb1-integration/text-uefi-catalog.log": {
+      "bytes": 870,
+      "sha256": "fcd36e5ea42f79d43fb172d29e34286c357fcde68cd2026096bd18b2f91c8145"
+    },
+    "docs/results/usb1-integration/toolchain.json": {
+      "bytes": 1650,
+      "sha256": "89807fc2c417a11ade326fe9f7f4c6122f039da7ead9d5df237f69cdae2326e8"
+    },
+    "docs/results/usb1-integration/uefi-absent-command.json": {
+      "bytes": 766,
+      "sha256": "45b17d8cc2366b2694c7851bc1c9b047cea2485a05c30d5c7966f2998b1ffd7c"
+    },
+    "docs/results/usb1-integration/uefi-absent-pci.json": {
+      "bytes": 3070,
+      "sha256": "29d49700517e7d171f3187229897261b08cc2028af0e082385ae91ec2b6d74ed"
+    },
+    "docs/results/usb1-integration/uefi-absent-result.json": {
+      "bytes": 218,
+      "sha256": "e667c5d93a01e61a46ae83719c4268ebd593558ab6b2ff3c48ea0b749e0be241"
+    },
+    "docs/results/usb1-integration/uefi-absent-serial.log": {
+      "bytes": 5575,
+      "sha256": "736f01250a55e70a87d6131689dd60f0fb9b6d12d38e8eaf1623dcdf18d95737"
+    },
+    "docs/results/usb1-integration/uefi-capture-command.json": {
+      "bytes": 761,
+      "sha256": "23db82089dbe4f398cd51426672e9f0b7d3ab763f6d9330683710c782e4a1c81"
+    },
+    "docs/results/usb1-integration/uefi-capture-pci-after.json": {
+      "bytes": 3685,
+      "sha256": "f551d43d2a52efc13d9f273d188b64ac6a9274ea42086682c52d1200e592137f"
+    },
+    "docs/results/usb1-integration/uefi-capture-pci-before.json": {
+      "bytes": 3685,
+      "sha256": "f551d43d2a52efc13d9f273d188b64ac6a9274ea42086682c52d1200e592137f"
+    },
+    "docs/results/usb1-integration/uefi-capture-serial.txt": {
+      "bytes": 5969,
+      "sha256": "37969f2fce872ee59bbceac26a930bc225f1c2160679230b277c2b0a653a7b1f"
+    },
+    "docs/results/usb1-integration/uefi-control-command.json": {
+      "bytes": 771,
+      "sha256": "3d9860b108596bf46ccf1b206d21cb4776622c5f929f887cd59a1a9928c8998c"
+    },
+    "docs/results/usb1-integration/uefi-control-pci.json": {
+      "bytes": 3070,
+      "sha256": "29d49700517e7d171f3187229897261b08cc2028af0e082385ae91ec2b6d74ed"
+    },
+    "docs/results/usb1-integration/uefi-control-result.json": {
+      "bytes": 219,
+      "sha256": "4463b69ed3ebadd0ff87b2c0a39cba909c4330fe04683d23b759083fa146da60"
+    },
+    "docs/results/usb1-integration/uefi-control-serial.log": {
+      "bytes": 4957,
+      "sha256": "3a784d2d823f416069de4d9cf7eed71059bd9dd9fe7569511202848b9b6ac0b8"
+    },
+    "docs/results/usb1-integration/uefi-no-ps2-command.json": {
+      "bytes": 848,
+      "sha256": "2aa95193829b61a46c4c73f29f3755ccfe441b015452f0703671b0b7117f4e92"
+    },
+    "docs/results/usb1-integration/uefi-no-ps2-gui-command.json": {
+      "bytes": 861,
+      "sha256": "a7cc899d6dfbfd62304b2150b26dd44b2daca686f464b8b14f4d14a9d4064bf5"
+    },
+    "docs/results/usb1-integration/uefi-no-ps2-gui-result.json": {
+      "bytes": 221,
+      "sha256": "fb2901221bf2a1c71a723ca537a16dca5511031ff2669e5beafdbb6dd278035d"
+    },
+    "docs/results/usb1-integration/uefi-no-ps2-gui-serial.log": {
+      "bytes": 4582,
+      "sha256": "fc0e812a99d0bc4b24f1f51b32eedff49f316255ab47d5ff783e6d6a254658da"
+    },
+    "docs/results/usb1-integration/uefi-no-ps2-result.json": {
+      "bytes": 217,
+      "sha256": "63963740a66ce6b70fcbd4f2745a47651c34fcd0f81561441d274cb6abeb7c3e"
+    },
+    "docs/results/usb1-integration/uefi-no-ps2-serial.log": {
+      "bytes": 4127,
+      "sha256": "77c80c2d68a145a66410d035f176024cb9d569286bd7b3284ad43c89ea24f809"
+    },
+    "docs/results/usb1-integration/uefi-rust-elf-command.json": {
+      "bytes": 895,
+      "sha256": "a1df422ebe9c38dd7de229c1fc1a64713239175fe9ebe512c4e038dfd1f9f99e"
+    },
+    "docs/results/usb1-integration/uefi-rust-elf-rust-execution.txt": {
+      "bytes": 5538,
+      "sha256": "677204cb9b18f887909fb114310498883c8018b295fc61ac9cd18a25ea2e6f9c"
+    },
+    "docs/results/usb1-integration/uefi-rust-elf-serial.txt": {
+      "bytes": 11861,
+      "sha256": "e61e006a02e865a75ea15de4d05bf927dd98c721bef63ae3553c580a89929d90"
+    },
+    "docs/results/usb1-integration/uefi-rust-interactive-command.json": {
+      "bytes": 849,
+      "sha256": "1d24e93f6d741a5e0e282612b43602a886e1553cb9e4d7907307179973789651"
+    },
+    "docs/results/usb1-integration/uefi-rust-interactive-serial.log": {
+      "bytes": 5342,
+      "sha256": "d506d31968818a20c035aa55b0fe1576e943a26a7d49fb3c2c9f834a70ddf453"
+    },
+    "docs/results/usb1-integration/uefi-usb-command.json": {
+      "bytes": 830,
+      "sha256": "c06c2143a087ce48823eb3e6468bdd1415f02c9a4e46859ffdb39798df601e5b"
+    },
+    "docs/results/usb1-integration/uefi-usb-pci.json": {
+      "bytes": 3685,
+      "sha256": "f551d43d2a52efc13d9f273d188b64ac6a9274ea42086682c52d1200e592137f"
+    },
+    "docs/results/usb1-integration/uefi-usb-result.json": {
+      "bytes": 215,
+      "sha256": "85dcb5ed051a659d85a780a2edd185666b8a26f25c4145eadfe0b4a86aacce79"
+    },
+    "docs/results/usb1-integration/uefi-usb-serial.log": {
+      "bytes": 4448,
+      "sha256": "4b25afe4e91100c55c187ad36bec8f7c0f10d9adb089d22834607d960998c27b"
+    },
+    "docs/results/usb1-integration/usb-kernel-program-headers.txt": {
+      "bytes": 852,
+      "sha256": "e4e4dcbd3e1369ef22ef616f5bf003d896164eb1ee5be01cdd088f9ef088751c"
+    },
+    "docs/results/usb1-integration/usb-results.json": {
+      "bytes": 60794,
+      "sha256": "37a1c439d71c6606d18f84754ba4fc4453ef0dd1e3dbd418ae5702ff3ad8d3e2"
+    },
+    "docs/results/usb1-integration/usb-vos_rust_elf_inside.asm.txt": {
+      "bytes": 595,
+      "sha256": "f7fcba5ffbf5f49afc2e862f40aad25c7a30018713ebbcbb37df48fe19fd86d1"
+    },
+    "docs/results/usb1-integration/usb-vos_rust_probe.asm.txt": {
+      "bytes": 602,
+      "sha256": "6bdde218c08be4ac7c2255039e7c2fb235657d6679fe5ac318362e13959fac7b"
+    },
+    "docs/results/usb1-integration/xhci-host.log": {
+      "bytes": 106,
+      "sha256": "e5c816254e732e0281cced11e636e33376c94a84317a3050f382ec6a5f7981a2"
+    },
+    "docs/results/usb1-rust-integration.md": {
+      "bytes": 11693,
+      "sha256": "e25fb9a793d7130950e38c22d86dd4a654659884d281dc61d32d39fd19fc857f"
+    },
+    "docs/results/usb1-xhci.md": {
+      "bytes": 9611,
+      "sha256": "55293a30dfa088f12e5f88bdaef94a9cc126de15e05315afde3d9301bd784177"
+    },
+    "docs/results/usb1/README.md": {
+      "bytes": 3027,
+      "sha256": "a9df51f4a8a31318d202d677fb4d23294392b16282e6bdb313a20bf61bb92626"
+    },
+    "docs/results/usb1/bios-absent.command.json": {
+      "bytes": 471,
+      "sha256": "509c84e7e24df134ff58e76425b4512807c1c0f95d94e9b6ef72df3c4e1eba13"
+    },
+    "docs/results/usb1/bios-absent.result.json": {
+      "bytes": 218,
+      "sha256": "d6d6ea43c39ba73b20bd1a2b75d7e74265bffc38073f2dfffcb98b7dadec13e6"
+    },
+    "docs/results/usb1/bios-absent.serial.log": {
+      "bytes": 5127,
+      "sha256": "c536f2de89c80fa4f825ce133a2603c3cb0e80d86866f14e82af08f3afb3d471"
+    },
+    "docs/results/usb1/bios-control.command.json": {
+      "bytes": 475,
+      "sha256": "ace9f0e243724165d9a0b126216fc348865351249dd0a7600feb2f4b3a4d21ed"
+    },
+    "docs/results/usb1/bios-control.result.json": {
+      "bytes": 219,
+      "sha256": "b2bd5148684950464ab837790c56f041d2ab2e9542fce83f9db278344a870419"
+    },
+    "docs/results/usb1/bios-control.serial.log": {
+      "bytes": 4509,
+      "sha256": "fe3f8afc87ff158f35bef759613cd28bd0efb75aae09a072487b436a2c17f028"
+    },
+    "docs/results/usb1/bios-no-ps2-gui.command.json": {
+      "bytes": 574,
+      "sha256": "3e16d04bdfeee89160c90e4c60cbf177cb77063c2a50fc4d4c4d8bdf82da9087"
+    },
+    "docs/results/usb1/bios-no-ps2-gui.result.json": {
+      "bytes": 221,
+      "sha256": "a1b82b3349adc42a77bba7d543aa258f2e54d362d25dae3b7d40f777d0ee7629"
+    },
+    "docs/results/usb1/bios-no-ps2-gui.serial.log": {
+      "bytes": 4134,
+      "sha256": "bb5de1a67946262428ef34b9303324289e80f1c1d58ba2cfc04f32c932681d44"
+    },
+    "docs/results/usb1/bios-no-ps2.command.json": {
+      "bytes": 553,
+      "sha256": "119ac412523a5baf6a5b98a74da08378ec6d8f9937277c96260d9f61b7510375"
+    },
+    "docs/results/usb1/bios-no-ps2.result.json": {
+      "bytes": 217,
+      "sha256": "8744d737c91c399ded0183be507d8671c54cd6a0e8080fca94760c14c41d15bb"
+    },
+    "docs/results/usb1/bios-no-ps2.serial.log": {
+      "bytes": 3675,
+      "sha256": "d04bdc31748ea3059a51b5e8545ce3f4ef2267f6d22dd428b764553121e477ef"
+    },
+    "docs/results/usb1/bios-usb.command.json": {
+      "bytes": 538,
+      "sha256": "4582bca1ecc6fa52ffb3e455bef313e73f45efe2e1c6eda8cb8886b093a9dccd"
+    },
+    "docs/results/usb1/bios-usb.pci.json": {
+      "bytes": 3682,
+      "sha256": "6347f2d9abd57722eab35f04f58bdfef128dce08e7292d1d32767872def5d6b1"
+    },
+    "docs/results/usb1/bios-usb.result.json": {
+      "bytes": 215,
+      "sha256": "066e87ad664f306b5dd365f23012148c5f2ffd9263a3ab13f308e75352b3363e"
+    },
+    "docs/results/usb1/bios-usb.serial.log": {
+      "bytes": 4000,
+      "sha256": "48d929bfe63fc348b557bc09e0bc2444ddff29dd56d00eef865422acec6347af"
+    },
+    "docs/results/usb1/bootstrap-host.log": {
+      "bytes": 139,
+      "sha256": "3f9ed12bfbfc4198b3a34d568639fb422c40cc2d4f548d55cb8b5e36f569aee8"
+    },
+    "docs/results/usb1/changed-files.txt": {
+      "bytes": 2355,
+      "sha256": "1753cf6176330d908b66d732df7608b160f9147ac6fcfcbd2ff6275810abb998"
+    },
+    "docs/results/usb1/console-host.log": {
+      "bytes": 137,
+      "sha256": "08517bef747eb35a75a06203343d12cb652202e01a235d98a8ab82d0d69064f3"
+    },
+    "docs/results/usb1/diagnostics-host.log": {
+      "bytes": 83,
+      "sha256": "0baca4278b3bb316cdfb09f7f718ab746dbc832fc0c199896158e3eec11dc499"
+    },
+    "docs/results/usb1/executed-eight-case-verifier.py.txt": {
+      "bytes": 12779,
+      "sha256": "fc343a8bccb0c4a573f7a2bf7c4b66f3785e208d7313b29c5cc0856e8c88e0d3"
+    },
+    "docs/results/usb1/execution.json": {
+      "bytes": 60268,
+      "sha256": "b08542bb0d6d6c13a56440f1418a7b577d759fc01cc9f5a2030db3cc0edd0077"
+    },
+    "docs/results/usb1/failed-console-invocation.log": {
+      "bytes": 8887,
+      "sha256": "50121dd8c6280f1e5f314f3b641ebeced987551e59339696fb169ac5389338d5"
+    },
+    "docs/results/usb1/failed-diagnostics-link.log": {
+      "bytes": 433,
+      "sha256": "b40a9c586e5c16c7877d9a2187179b78039d7760b57c0286d076c78b525f72ad"
+    },
+    "docs/results/usb1/failed-negative-catalog.serial.log": {
+      "bytes": 3152,
+      "sha256": "2d4f1420ae95ab748cba10289b97ecf5f896d33270e36ec1c38704ababcfdd32"
+    },
+    "docs/results/usb1/failed-uefi-prerequisite.log": {
+      "bytes": 3142,
+      "sha256": "00ac97e59d8b5f6de05e053bbb65abbae65eafd69d0776c2640b3c6790b9bc23"
+    },
+    "docs/results/usb1/gui-negative.json": {
+      "bytes": 454,
+      "sha256": "672b1c2e22e1f038dbb80d64c95daf0cc97f0c7ce3ee88858e08320fdf311821"
+    },
+    "docs/results/usb1/inputs.json": {
+      "bytes": 2236,
+      "sha256": "3ec305271ba495e629285964b42daa6b632249e69fd36aba11d489acf37d728d"
+    },
+    "docs/results/usb1/keyboard-host.log": {
+      "bytes": 262,
+      "sha256": "f651cc5a4ef7bc48cfa4a8ee09ac111569e742df2ac5620d4d47cf4bf2062e4c"
+    },
+    "docs/results/usb1/manifest.json": {
+      "bytes": 9841,
+      "sha256": "6980644a95d3a911bbeb7f9f3f2fc88d807a7ac25b1d3141d486975be2fbb606"
+    },
+    "docs/results/usb1/review.json": {
+      "bytes": 1107,
+      "sha256": "ada1f2588582c9e94eeb82bde967e1d96beb875377789aeb75c23a88f9bd6f76"
+    },
+    "docs/results/usb1/uefi-absent.command.json": {
+      "bytes": 694,
+      "sha256": "a08da824e0a22e78cd076e60f4b53ebca67354549e3799acde14d82eb314ebd6"
+    },
+    "docs/results/usb1/uefi-absent.result.json": {
+      "bytes": 218,
+      "sha256": "43bc2a4f95d009e1f9dcd265617cff9f19de5935b8d50da0ba2f902c0b8bd729"
+    },
+    "docs/results/usb1/uefi-absent.serial.log": {
+      "bytes": 5453,
+      "sha256": "b0801279b6102a0f15a0e69f9776ba1b4f618c5675418ef05c751cf6e0c2c753"
+    },
+    "docs/results/usb1/uefi-control.command.json": {
+      "bytes": 699,
+      "sha256": "b01a52c4639a758c552d9c4f3857ffe8a415612b746a1707fc0013fe63029840"
+    },
+    "docs/results/usb1/uefi-control.result.json": {
+      "bytes": 219,
+      "sha256": "4661e926d1c705caba9b436448f793508c92bc6dd949a4cd4a3d1666c654dc51"
+    },
+    "docs/results/usb1/uefi-control.serial.log": {
+      "bytes": 4835,
+      "sha256": "e67a07b0acd744cf25152b0ab0165691742e927b5c737cbf5017fa25c161fa18"
+    },
+    "docs/results/usb1/uefi-no-ps2-gui.command.json": {
+      "bytes": 807,
+      "sha256": "026de90b169bd82ecbac4478628a613ca9fcf88dc018f560909dc5db6b05ea3b"
+    },
+    "docs/results/usb1/uefi-no-ps2-gui.result.json": {
+      "bytes": 221,
+      "sha256": "61a0f66384ff18bc6976c69e84692afb6065d573b5465d0439243d07bf1d0dca"
+    },
+    "docs/results/usb1/uefi-no-ps2-gui.serial.log": {
+      "bytes": 4460,
+      "sha256": "ff13875373b8a2d7eccc1244f7dedc81970628cf69d2aafa8b89da66468020fa"
+    },
+    "docs/results/usb1/uefi-no-ps2.command.json": {
+      "bytes": 776,
+      "sha256": "4a3765d6feefaef21db693849d5103f86b2b1561099f943d0c517b88c08d63dc"
+    },
+    "docs/results/usb1/uefi-no-ps2.result.json": {
+      "bytes": 217,
+      "sha256": "a49272b3cf82cdaae5af7e471bd95ffdfaf48493dbdcb6a78816e5c3ed633048"
+    },
+    "docs/results/usb1/uefi-no-ps2.serial.log": {
+      "bytes": 4005,
+      "sha256": "6da9fdc62dd9c87cae26dc47e43b510b7ef8d393245dcb87efea64982204aec0"
+    },
+    "docs/results/usb1/uefi-usb.command.json": {
+      "bytes": 758,
+      "sha256": "8b93f0fb1202b1324548f38f66df436cce55e632c47928f178e871f94738cdbd"
+    },
+    "docs/results/usb1/uefi-usb.pci.json": {
+      "bytes": 3685,
+      "sha256": "f551d43d2a52efc13d9f273d188b64ac6a9274ea42086682c52d1200e592137f"
+    },
+    "docs/results/usb1/uefi-usb.result.json": {
+      "bytes": 215,
+      "sha256": "170533bc8c169d0831efe0cf719f66c63328b8bffc261fdfd3d643e7c4b1e61d"
+    },
+    "docs/results/usb1/uefi-usb.serial.log": {
+      "bytes": 4326,
+      "sha256": "320cb8cf05b90e0e324ff77c919b500b98056ddd721e999b210a7348e634981e"
+    },
+    "docs/results/usb1/xhci-host.log": {
+      "bytes": 106,
+      "sha256": "e5c816254e732e0281cced11e636e33376c94a84317a3050f382ec6a5f7981a2"
+    },
+    "scripts/capture-usb1-integration.py": {
+      "bytes": 5469,
+      "sha256": "e8fe6c1b9181de811e30afdc0af44cc65cbd9da893758e11014d1485a1835705"
+    },
+    "scripts/test-usb-probe.py": {
+      "bytes": 14074,
+      "sha256": "2a91be7621425a332fe75d739176cb30da03f4065d4e31b74769f4910ef70473"
+    },
+    "tests/host/gui-bootstrap.c": {
+      "bytes": 3108,
+      "sha256": "3e2652b8bf8d4c3ebc0e72e65984b35ea40b49aa72dd14631dd3767593fe3e17"
+    },
+    "tests/host/input-diagnostics.c": {
+      "bytes": 923,
+      "sha256": "271e20582e4d2f022f4d0a714fb5c6cc1ddc941dd7c79f3d06802d403275e845"
+    },
+    "tests/host/xhci.c": {
+      "bytes": 5966,
+      "sha256": "9ccb8ace637585e33441a0861bf0e18e6c425d528fdd5b6685b253f8956badbc"
+    }
+  },
+  "self_excluded": true
+}

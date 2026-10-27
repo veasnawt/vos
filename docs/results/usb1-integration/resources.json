@@ -1,0 +1,12 @@
+{
+  "measured_utc": "2026-10-27T05:53:00.285959+00:00",
+  "new_checkout": "/home/veasnawt/src/vos-usb1-integration",
+  "build_logical_bytes": 304137383,
+  "new_checkout_logical_bytes_at_measurement": 314224274,
+  "Linux_free_bytes": 1007909298176,
+  "C_free_bytes": 22013333504,
+  "E_free_bytes": 245609693184,
+  "legacy_accounting_and_reservations": "unchanged; no controller invoked, funding applied or reservation retired",
+  "storage_policy": "Owner withdrew legacy maintainer-controller requirement; independent checkout with ordinary disk checks, focused tests, preserved backups. No historical artifact or checkout overwritten. No broad cleanup performed.",
+  "native_QEMU_processes_remaining": ""
+}
