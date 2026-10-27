@@ -3,6 +3,8 @@
 
 pub mod capabilities;
 pub mod controller;
+pub mod discovery;
+pub mod header;
 pub mod resources;
 pub mod ring;
 

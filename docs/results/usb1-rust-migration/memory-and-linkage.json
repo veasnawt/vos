@@ -1,0 +1,235 @@
+{
+  "baseline": {
+    "file_bytes": 1045864,
+    "sha256": "8e448e356ca6d53e999bb8f2f57baa0aaf75e5d7958a061f355617f49576f3d9",
+    "load_segments": [
+      {
+        "offset": 4096,
+        "virtual": 1048576,
+        "physical": 1048576,
+        "file_bytes": 4096,
+        "memory_bytes": 4096,
+        "flags": 5
+      },
+      {
+        "offset": 8192,
+        "virtual": 1052672,
+        "physical": 1052672,
+        "file_bytes": 40,
+        "memory_bytes": 24576,
+        "flags": 6
+      },
+      {
+        "offset": 12288,
+        "virtual": 18446744071563145216,
+        "physical": 1077248,
+        "file_bytes": 172032,
+        "memory_bytes": 172032,
+        "flags": 5
+      },
+      {
+        "offset": 184320,
+        "virtual": 18446744071563317248,
+        "physical": 1249280,
+        "file_bytes": 45056,
+        "memory_bytes": 45056,
+        "flags": 4
+      },
+      {
+        "offset": 229376,
+        "virtual": 18446744071563362304,
+        "physical": 1294336,
+        "file_bytes": 180,
+        "memory_bytes": 598016,
+        "flags": 6
+      }
+    ],
+    "physical_rounded_bytes": 843776,
+    "sections": "/home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/vos.bin  :\nsection              size                   addr\n.boot.text           4096                1048576\n.boot.data             40                1052672\n.boot.bss           20480                1056768\n.text              172032   18446744071563145216\n.rodata             45056   18446744071563317248\n.data                 180   18446744071563362304\n.bss               597824   18446744071563362496\n.debug_line        164096                      0\n.debug_line_str      2146                      0\n.debug_info        336485                      0\n.debug_abbrev       49307                      0\n.debug_aranges       3072                      0\n.debug_str          18433                      0\n.debug_rnglists     17120                      0\n.debug_loclists    158952                      0\n.debug_frame        31664                      0\nTotal             1620983\n\n\n",
+    "symbols": {
+      "vos_rust_elf_inside": {
+        "address": 18446744071563316640,
+        "bytes": 18,
+        "sha256": "c12bab4d83fdbecfd7c12d01f3cc8f994da48afd21566a2b88bb44c8bb67506c"
+      },
+      "vos_rust_probe": {
+        "address": 18446744071563316672,
+        "bytes": 26,
+        "sha256": "7a28f35141a9f19fce75b3ce2963bea2434fcbeb69af053d58186f4a8545f3b0"
+      },
+      "xhci_class_matches": {
+        "address": 18446744071563202848,
+        "bytes": 15,
+        "sha256": "1729b06f5a87862c23418677be66b20af2ad490863d9cac0c30ea2ffc05452a0"
+      },
+      "xhci_decode_caps": {
+        "address": 18446744071563202864,
+        "bytes": 446,
+        "sha256": "9e9548d7a89737c4bf1086c92b0027b126b76b405004230c3702bb726d39f96b"
+      },
+      "xhci_probe": {
+        "address": 18446744071563203312,
+        "bytes": 1024,
+        "sha256": "fdaee777a6d907cedd881afb6fddfbec56dc015f07dc377e54cd2278a61e87f1"
+      }
+    }
+  },
+  "migration": {
+    "file_bytes": 1047320,
+    "sha256": "7c7a64d98aa94551112c66360e0849e4c2580e30d8b632f07d43cb3789697573",
+    "load_segments": [
+      {
+        "offset": 4096,
+        "virtual": 1048576,
+        "physical": 1048576,
+        "file_bytes": 4096,
+        "memory_bytes": 4096,
+        "flags": 5
+      },
+      {
+        "offset": 8192,
+        "virtual": 1052672,
+        "physical": 1052672,
+        "file_bytes": 40,
+        "memory_bytes": 24576,
+        "flags": 6
+      },
+      {
+        "offset": 12288,
+        "virtual": 18446744071563145216,
+        "physical": 1077248,
+        "file_bytes": 176128,
+        "memory_bytes": 176128,
+        "flags": 5
+      },
+      {
+        "offset": 188416,
+        "virtual": 18446744071563321344,
+        "physical": 1253376,
+        "file_bytes": 45056,
+        "memory_bytes": 45056,
+        "flags": 4
+      },
+      {
+        "offset": 233472,
+        "virtual": 18446744071563366400,
+        "physical": 1298432,
+        "file_bytes": 180,
+        "memory_bytes": 598016,
+        "flags": 6
+      }
+    ],
+    "physical_rounded_bytes": 847872,
+    "sections": "/home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/vos.bin  :\nsection              size                   addr\n.boot.text           4096                1048576\n.boot.data             40                1052672\n.boot.bss           20480                1056768\n.text              176128   18446744071563145216\n.rodata             45056   18446744071563321344\n.data                 180   18446744071563366400\n.bss               597824   18446744071563366592\n.debug_line        163188                      0\n.debug_line_str      2150                      0\n.debug_info        335308                      0\n.debug_abbrev       49005                      0\n.debug_aranges       3072                      0\n.debug_str          18414                      0\n.debug_rnglists     17053                      0\n.debug_loclists    158460                      0\n.debug_frame        31608                      0\nTotal             1622062\n\n\n",
+    "symbols": {
+      "vos_rust_elf_inside": {
+        "address": 18446744071563316624,
+        "bytes": 18,
+        "sha256": "c12bab4d83fdbecfd7c12d01f3cc8f994da48afd21566a2b88bb44c8bb67506c"
+      },
+      "vos_rust_probe": {
+        "address": 18446744071563316656,
+        "bytes": 26,
+        "sha256": "7a28f35141a9f19fce75b3ce2963bea2434fcbeb69af053d58186f4a8545f3b0"
+      },
+      "xhci_class_matches": {
+        "address": 18446744071563316688,
+        "bytes": 18,
+        "sha256": "dd2b8ce1c07738823570e3d658bfe9c897e90c4c6a8685fe079b49d9b4e4a65a"
+      },
+      "xhci_decode_caps": {
+        "address": 18446744071563316720,
+        "bytes": 370,
+        "sha256": "c2e9bffaf37870e641cb319981e2d2a2fa38e82ad94d3ca3a857d525785fd958"
+      },
+      "xhci_probe": {
+        "address": 18446744071563317104,
+        "bytes": 1085,
+        "sha256": "f167ba3f047ea9d27ebbb5bd102e8e8d38a7f873156358d8bd563ea916688db6"
+      }
+    }
+  },
+  "native_image": {
+    "file_bytes": 1047320,
+    "sha256": "7c7a64d98aa94551112c66360e0849e4c2580e30d8b632f07d43cb3789697573",
+    "load_segments": [
+      {
+        "offset": 4096,
+        "virtual": 1048576,
+        "physical": 1048576,
+        "file_bytes": 4096,
+        "memory_bytes": 4096,
+        "flags": 5
+      },
+      {
+        "offset": 8192,
+        "virtual": 1052672,
+        "physical": 1052672,
+        "file_bytes": 40,
+        "memory_bytes": 24576,
+        "flags": 6
+      },
+      {
+        "offset": 12288,
+        "virtual": 18446744071563145216,
+        "physical": 1077248,
+        "file_bytes": 176128,
+        "memory_bytes": 176128,
+        "flags": 5
+      },
+      {
+        "offset": 188416,
+        "virtual": 18446744071563321344,
+        "physical": 1253376,
+        "file_bytes": 45056,
+        "memory_bytes": 45056,
+        "flags": 4
+      },
+      {
+        "offset": 233472,
+        "virtual": 18446744071563366400,
+        "physical": 1298432,
+        "file_bytes": 180,
+        "memory_bytes": 598016,
+        "flags": 6
+      }
+    ],
+    "physical_rounded_bytes": 847872,
+    "sections": "/home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/native/kernel/vos.bin  :\nsection              size                   addr\n.boot.text           4096                1048576\n.boot.data             40                1052672\n.boot.bss           20480                1056768\n.text              176128   18446744071563145216\n.rodata             45056   18446744071563321344\n.data                 180   18446744071563366400\n.bss               597824   18446744071563366592\n.debug_line        163188                      0\n.debug_line_str      2150                      0\n.debug_info        335308                      0\n.debug_abbrev       49005                      0\n.debug_aranges       3072                      0\n.debug_str          18414                      0\n.debug_rnglists     17053                      0\n.debug_loclists    158460                      0\n.debug_frame        31608                      0\nTotal             1622062\n\n\n",
+    "symbols": {
+      "vos_rust_elf_inside": {
+        "address": 18446744071563316624,
+        "bytes": 18,
+        "sha256": "c12bab4d83fdbecfd7c12d01f3cc8f994da48afd21566a2b88bb44c8bb67506c"
+      },
+      "vos_rust_probe": {
+        "address": 18446744071563316656,
+        "bytes": 26,
+        "sha256": "7a28f35141a9f19fce75b3ce2963bea2434fcbeb69af053d58186f4a8545f3b0"
+      },
+      "xhci_class_matches": {
+        "address": 18446744071563316688,
+        "bytes": 18,
+        "sha256": "dd2b8ce1c07738823570e3d658bfe9c897e90c4c6a8685fe079b49d9b4e4a65a"
+      },
+      "xhci_decode_caps": {
+        "address": 18446744071563316720,
+        "bytes": 370,
+        "sha256": "c2e9bffaf37870e641cb319981e2d2a2fa38e82ad94d3ca3a857d525785fd958"
+      },
+      "xhci_probe": {
+        "address": 18446744071563317104,
+        "bytes": 1085,
+        "sha256": "f167ba3f047ea9d27ebbb5bd102e8e8d38a7f873156358d8bd563ea916688db6"
+      }
+    }
+  },
+  "R0_R1_scalar_code_byte_identical": true,
+  "additional_device_mappings_or_allocations": 0,
+  "new_static_writable_storage": 0,
+  "Info_bytes": 104,
+  "Ops_bytes": 40,
+  "Report_bytes": 88,
+  "Header_bytes": 40,
+  "USB2_controller_not_linked": true
+}

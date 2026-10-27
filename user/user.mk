@@ -118,7 +118,7 @@ user-check: $(USER_ELFS)
 ELFCHECK := build/$(ARCH)/tools/elfcheck
 $(ELFCHECK): scripts/elfcheck.c arch/x86_64/elf.c arch/x86_64/elf.h arch/x86_64/rust_kernel.h $(LIBS) user/user.mk
 	@mkdir -p $(dir $@)
-	$(CC) -std=gnu11 -O2 -Wall -Wextra -Werror -DVOS_ELF_USE_RUST -fno-pie -no-pie -Iarch/x86_64 -o $@ scripts/elfcheck.c arch/x86_64/elf.c $(LIBS)
+	$(CC) -std=gnu11 -O2 -Wall -Wextra -Werror -DVOS_ELF_USE_RUST -fno-pie -no-pie -Wl,--gc-sections -Iarch/x86_64 -o $@ scripts/elfcheck.c arch/x86_64/elf.c $(LIBS)
 
 # Validation, profile and separation checks, and negative tests. Static only:
 # nothing is loaded or run. The kernel images are checked not to contain the

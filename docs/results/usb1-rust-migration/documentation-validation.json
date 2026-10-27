@@ -1,0 +1,14 @@
+{
+  "passed": true,
+  "internal_links": 29,
+  "UTF8_and_Markdown": true,
+  "source_whitespace": true,
+  "python_syntax": true,
+  "rustfmt": true,
+  "candidate_files": 97,
+  "original_reference_C_byte_identical": true,
+  "ABI_source_unchanged": true,
+  "report_discloses_original_native_failure_and_cost_regression": true,
+  "unchanged_ABI_and_application_source_files": 118,
+  "no_platform_authority_changes": true
+}

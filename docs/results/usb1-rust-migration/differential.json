@@ -1,0 +1,185 @@
+{
+  "passed": true,
+  "hardware_operations": false,
+  "commands": [
+    [
+      "make",
+      "--no-print-directory",
+      "ARCH=x86_64",
+      "BUILD=/home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/final-differential/kernel",
+      "RUSTC=/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+      "/home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/final-differential/kernel/rust/libvos_kernel.a"
+    ],
+    [
+      "gcc",
+      "-std=gnu11",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-Iarch/x86_64",
+      "-ffunction-sections",
+      "-fdata-sections",
+      "-fno-pie",
+      "-O1",
+      "-g",
+      "-fsanitize=address,undefined",
+      "-fno-omit-frame-pointer",
+      "-Dxhci_probe=reference_xhci_probe",
+      "-Dxhci_decode_caps=reference_xhci_decode_caps",
+      "-Dxhci_class_matches=reference_xhci_class_matches",
+      "-c",
+      "/home/veasnawt/src/vos-usb1-rust/tests/reference/xhci-usb1.c",
+      "-o",
+      "/home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/final-differential/checked-reference.o"
+    ],
+    [
+      "gcc",
+      "-std=gnu11",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-Iarch/x86_64",
+      "-ffunction-sections",
+      "-fdata-sections",
+      "-fno-pie",
+      "-O1",
+      "-g",
+      "-fsanitize=address,undefined",
+      "-fno-omit-frame-pointer",
+      "-no-pie",
+      "-Wl,--gc-sections",
+      "tests/host/xhci-differential.c",
+      "arch/x86_64/xhci.c",
+      "/home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/final-differential/checked-reference.o",
+      "/home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/final-differential/kernel/rust/libvos_kernel.a",
+      "-o",
+      "/home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/final-differential/checked"
+    ],
+    [
+      "/home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/final-differential/checked"
+    ],
+    [
+      "gcc",
+      "-std=gnu11",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-Iarch/x86_64",
+      "-ffunction-sections",
+      "-fdata-sections",
+      "-fno-pie",
+      "-O2",
+      "-ffreestanding",
+      "-fno-builtin",
+      "-mcmodel=kernel",
+      "-mno-red-zone",
+      "-mgeneral-regs-only",
+      "-fcf-protection=none",
+      "-fno-stack-protector",
+      "-fno-asynchronous-unwind-tables",
+      "-Dxhci_probe=reference_xhci_probe",
+      "-Dxhci_decode_caps=reference_xhci_decode_caps",
+      "-Dxhci_class_matches=reference_xhci_class_matches",
+      "-c",
+      "/home/veasnawt/src/vos-usb1-rust/tests/reference/xhci-usb1.c",
+      "-o",
+      "/home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/final-differential/release-reference.o"
+    ],
+    [
+      "gcc",
+      "-std=gnu11",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-Iarch/x86_64",
+      "-ffunction-sections",
+      "-fdata-sections",
+      "-fno-pie",
+      "-O2",
+      "-no-pie",
+      "-Wl,--gc-sections",
+      "tests/host/xhci-differential.c",
+      "arch/x86_64/xhci.c",
+      "/home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/final-differential/release-reference.o",
+      "/home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/final-differential/kernel/rust/libvos_kernel.a",
+      "-o",
+      "/home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/final-differential/release"
+    ],
+    [
+      "/home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/final-differential/release"
+    ],
+    [
+      "/home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/final-differential/release",
+      "--bench"
+    ]
+  ],
+  "reference_sha256": "db5c0d6c01df786fc0588bcdb5a032dc57cd22731e447d3bfc2927e223b60866",
+  "library_sha256": "89b998151f64f850952d7ff2ef023638b77dba10ddd2b41caab2c3252ecf1c4f",
+  "checked_differential": "xhci differential: 40110 probe/decode cases PASS; fields, reasons, operation traces, unchanged inputs",
+  "release_differential": "xhci differential: 40110 probe/decode cases PASS; fields, reasons, operation traces, unchanged inputs",
+  "benchmark": {
+    "iterations": 200000,
+    "samples": [
+      {
+        "C_ns": 15712400,
+        "Rust_ns": 42190100,
+        "C_cpu_ns": 10417900,
+        "Rust_cpu_ns": 42180800
+      },
+      {
+        "C_ns": 31792100,
+        "Rust_ns": 32834000,
+        "C_cpu_ns": 31790400,
+        "Rust_cpu_ns": 32831900
+      },
+      {
+        "C_ns": 19236500,
+        "Rust_ns": 44908200,
+        "C_cpu_ns": 19234800,
+        "Rust_cpu_ns": 44904600
+      },
+      {
+        "C_ns": 31115900,
+        "Rust_ns": 32523500,
+        "C_cpu_ns": 31112700,
+        "Rust_cpu_ns": 32521500
+      },
+      {
+        "C_ns": 20110300,
+        "Rust_ns": 39169600,
+        "C_cpu_ns": 20105700,
+        "Rust_cpu_ns": 39167900
+      },
+      {
+        "C_ns": 11004300,
+        "Rust_ns": 14325400,
+        "C_cpu_ns": 10999200,
+        "Rust_cpu_ns": 14324300
+      },
+      {
+        "C_ns": 10435200,
+        "Rust_ns": 14675600,
+        "C_cpu_ns": 10433500,
+        "Rust_cpu_ns": 14673300
+      }
+    ],
+    "sink": 11274289188400000
+  },
+  "source_sha256": {
+    "kernel/rust/usb/xhci/capabilities.rs": "1c729ba60cc942ab931a6e17c5c84a5fc8e7842f35b487cd3ff0abdcdff73292",
+    "kernel/rust/usb/xhci/controller.rs": "86217a6d2502830ff22b30393338ad5910f8133123aee4e1167390fd06c468a2",
+    "kernel/rust/usb/xhci/discovery.rs": "f3e50289da2afb22900dcd630651ce0ac2690489d22262d963fa962d16661c43",
+    "kernel/rust/usb/xhci/discovery_core.rs": "6871c11ce3e9972a385a7cf1875aa74e0aaf7b4b47f3ee722136e22eb5234f19",
+    "kernel/rust/usb/xhci/header.rs": "4d78fc16c6a52806b3b001e50a28d85b6ba98eecf715b4ac86cb8e415b2a0a3e",
+    "kernel/rust/usb/xhci/lib.rs": "15a8982e2ee49e0e4d9198b061382d3e27549a5867872202148b9bdd7aa232ba",
+    "kernel/rust/usb/xhci/mod.rs": "7cc4376d4dabc0ee8b59d2b14fd001b40244130ce401d1c8974dfb026c9c900d",
+    "kernel/rust/usb/xhci/resources.rs": "a46ff4fed32b775e6d03e0fcb85594de6224b484c21183bb2a13a4b83502f372",
+    "kernel/rust/usb/xhci/ring.rs": "87b575a4a9e4353a00eeb1bbe23ec7452e978c413566d8b2cff98d71ba2fd3c2",
+    "arch/x86_64/rust/xhci_discovery.rs": "fe03683a25b9788ef2e52c0c68fccf4ec64bb16348a270228712d94f811721ab",
+    "arch/x86_64/rust/kernel_probe.rs": "6202b26a0de53cdecf309b926c67cd9d6092607a6bdf03c670abf9670ca15d30",
+    "arch/x86_64/xhci.c": "38ddad82c88517d4271c460ffca8a4eb8c0984aad12f6ff459a8fb5cbb7cea44",
+    "tests/reference/xhci-usb1.c": "db5c0d6c01df786fc0588bcdb5a032dc57cd22731e447d3bfc2927e223b60866",
+    "tests/host/xhci-differential.c": "45fb0d5e1bb8d9b6aad1412ea8403ed6d9918d2e8470a0dbc2ed9b026c947d2d",
+    "scripts/test-xhci-migration.py": "fa358f2d7ea6fbef698f87c802ee15072a55d419d7f5fc79de4db900a9f5846b"
+  }
+}

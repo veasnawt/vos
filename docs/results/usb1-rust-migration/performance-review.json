@@ -1,0 +1,17 @@
+{
+  "C_ns": 96.1825,
+  "Rust_ns": 164.17,
+  "C_cpu_ns": 96.174,
+  "Rust_cpu_ns": 164.1595,
+  "host_mock_callback_cost_only": true,
+  "production_hardware_latency_measured": false,
+  "release_C_matches_scalar_kernel_flags": true,
+  "sampling": "seven alternating-order pairs, 200000 calls per sample",
+  "variability": "large; preserve all samples; do not infer production boot or USB latency",
+  "analysis": "Rust performs typed snapshot/report conversion and an additional C copy boundary; retained safe bounds and representation checks. In-place report reduced initial code footprint; no unsafe shortcut taken.",
+  "paired_CPU_ratio_median": 1.406364115589208,
+  "paired_CPU_ratio_range": [
+    1.0327614625798984,
+    4.048877412914311
+  ]
+}

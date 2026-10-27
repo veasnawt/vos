@@ -7,6 +7,7 @@ import json
 import os
 from pathlib import Path
 import re
+import resource
 import shutil
 import struct
 import subprocess
@@ -19,10 +20,21 @@ def main():
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--usb-result',type=Path,required=True)
     parser.add_argument('--out',type=Path,required=True)
+    parser.add_argument('--trace-discovery',action='store_true',
+                        help='Bounded execution trace at the linked Rust xhci_probe')
+    parser.add_argument('--kernel',type=Path,
+                        help='Exact image kernel for tracing a separately preserved continuation')
     a=parser.parse_args();out=a.out.resolve();result_path=a.usb_result.resolve()
     if out.exists() or not out.is_relative_to(ROOT/'build'):parser.error('fresh output below this checkout build/ required')
     verified=json.loads(result_path.read_text())
     if not verified.get('passed'):parser.error('USB.1 verification must have passed')
+    probe_range=None
+    if a.trace_discovery:
+        kernel=a.kernel.resolve() if a.kernel else result_path.parent/'kernel/vos.bin'
+        symbols=subprocess.check_output(['nm','-S',str(kernel)],text=True)
+        match=re.search(r'^([0-9a-f]+) ([0-9a-f]+) T xhci_probe$',symbols,re.M)
+        if not match:parser.error('linked Rust xhci_probe symbol missing')
+        probe_range=tuple(int(x,16) for x in match.groups())
     spec=importlib.util.spec_from_file_location('usb_qmp',ROOT/'scripts/test-usb-probe.py')
     module=importlib.util.module_from_spec(spec);spec.loader.exec_module(module)
     out.mkdir(parents=True);results=[]
@@ -33,13 +45,19 @@ def main():
               '-cdrom',str(iso),'-boot','d','-display','none','-nic','none',
               '-device','qemu-xhci,id=xhci','-serial',f'file:{serial}',
               '-qmp',f'unix:{sock},server=on,wait=off','-no-reboot']
+        trace=folder/'rust-probe-execution.txt'
+        if probe_range:
+            address,size=probe_range
+            args+=['-d','exec,nochain','-dfilter',f'{address:#x}..{address+size-1:#x}','-D',str(trace)]
         if fw=='uefi':
             variables=folder/'OVMF_VARS.fd';shutil.copyfile('/usr/share/OVMF/OVMF_VARS_4M.fd',variables)
             args+=['-drive','if=pflash,format=raw,readonly=on,file=/usr/share/OVMF/OVMF_CODE_4M.fd',
                    '-drive',f'if=pflash,format=raw,file={variables}']
         (folder/'command.json').write_text(json.dumps(args,indent=2)+'\n');q=None
         with (folder/'qemu.txt').open('xb') as stream:
-            process=subprocess.Popen(args,cwd=ROOT,stdout=stream,stderr=stream)
+            def trace_bound():resource.setrlimit(resource.RLIMIT_FSIZE,(4*1024**2,4*1024**2))
+            process=subprocess.Popen(args,cwd=ROOT,stdout=stream,stderr=stream,
+                                     preexec_fn=trace_bound if probe_range else None)
             try:
                 def text():
                     if process.poll() is not None:raise RuntimeError('owned QEMU exited')
@@ -76,10 +94,13 @@ def main():
                 (folder/'pci-before.json').write_text(json.dumps(before,indent=2)+'\n')
                 (folder/'pci-after.json').write_text(json.dumps(after,indent=2)+'\n')
                 q.text('exit\n');wait('native: vsh PASS, process reclaimed')
+                executed=trace.read_text().count(f'/{probe_range[0]:x}/') if probe_range else None
+                if probe_range:assert executed>0,'actual Rust probe was not executed'
                 results.append({'firmware':fw,'passed':True,'screenshot':str(image.relative_to(out)),
                                 'width':width,'height':height,'screenshot_sha256':hashlib.sha256(raw).hexdigest(),
                                 'serial_sha256':hashlib.sha256(serial.read_bytes()).hexdigest(),
-                                'USB_keyboard_attached':False,'input':'existing PS/2','pci_metadata_unchanged':True})
+                                'USB_keyboard_attached':False,'input':'existing PS/2','pci_metadata_unchanged':True,
+                                'Rust_xhci_probe_execution_records':executed})
             finally:
                 if q:q.close()
                 if process.poll() is None:

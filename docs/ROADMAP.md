@@ -7,7 +7,8 @@ graphical baseline is [PR #15](https://github.com/veasnawt/vos/pull/15) at
 [`bf5eb43f2e07478e31be8b4123c5a297add67efe`](https://github.com/veasnawt/vos/commit/bf5eb43f2e07478e31be8b4123c5a297add67efe).
 PR #16 synchronized documentation; PRs #17/#18 added the reviewed infrastructure
 foundation. Master Plan PR #19 is merged. Accepted main for this review is the
-owner's R1 PR #21 merge, `7c8082b98751f65ab0bcdf884339a6bf8298e2ce`.
+owner's USB.2-A PR #23 merge, `86493ff2b2a8f2d84c4ce3ed4d0ccf132d97a072`,
+following R0/R1 and USB.1 integration PR #22.
 
 The accepted milestone sequence is preserved below. Proposed desktop,
 Rust-kernel and portability work is **not implementation authorization**.
@@ -187,7 +188,8 @@ The first [R1 helper](results/r1-elf-bounds.md) is implemented and locally verif
 at `f67ebd968169560979fc1d5eefbc7ca6402a6910`: the existing ELF bounds predicate
 now calls Rust. Its [performance/publication review](results/r1-performance.md)
 preserves the candidate and compares the original C and real Rust-backed paths.
-It is merged through PR #21 at the accepted main above; further R1 helpers and R2-R5 remain
+It is merged through PR #21 at `7c8082b98751f65ab0bcdf884339a6bf8298e2ce`;
+further R1 helpers and R2-R5 remain
 future, separately authorized increments under the
 [Master Plan R-series](plans/MASTER-PLAN.md#6-r-series-rust-first-kernel-migration).
 The kernel is still primarily C/assembly. Further migration must define small
@@ -195,10 +197,11 @@ interoperable boundaries, preserve ABIs/capabilities, and audit unsafe Rust,
 assembly, FFI, interrupts and DMA ownership. Rust application support remains
 implemented independently of this kernel proof.
 
-USB.2 should evaluate the established Rust foundation after separate owner
-authorization; USB.1's separate checkout and original evidence remain preserved,
-with the integration candidate linked below.
-No additional helper or USB.2 implementation is authorized by this update.
+USB.2-A's [portable Rust core](results/usb2a-rust-core.md) is merged through
+PR #23. It models bounded validation, rings and lifecycle without operating a
+controller. USB.2-B/C resource/platform integration requires separate
+authorization. USB.1's original checkout and evidence remain preserved.
+This status update grants no implementation authority.
 Unrelated bug fixes, boot-media work and desktop planning need not
 wait for the full migration. Hardware and migration work coordinate when sharing
 files; neither authorizes the other automatically.
@@ -214,11 +217,13 @@ owner authorization. Emulator success alone is not physical-hardware evidence.
 [USB.1](plans/MASTER-PLAN.md#71-usb-discovery-and-proposed-input-sequence) is
 implemented originally at
 `bd22803b8b5635b776c848d08d1494f65b49dd21` on `feat/usb-xhci-discovery`.
-The [Rust-enabled integration candidate](results/usb1-rust-integration.md)
-preserves that provenance and adds fresh verification against current accepted
-main. It is pending integration review, not merged or physically verified.
+The [Rust-enabled integration](results/usb1-rust-integration.md) preserves that
+provenance and is merged through PR #22; its dated report remains unchanged.
+The [USB.1 discovery migration to Rust](results/usb1-rust-publication-review.md)
+is a separate locally verified PR candidate, not accepted or physically verified.
 It provides opt-in, read-only bus-0 xHCI discovery/diagnostics, not USB
-keyboard/mouse input. No USB.2 implementation is included or authorized here.
+keyboard/mouse input. USB.2-A is software-only; live controller operations remain
+outside this publication review.
 Proposed USB.2–USB.5 cover controller operation, enumeration/keyboard HID,
 unified keyboard routing and mouse HID within the existing H-series scope.
 

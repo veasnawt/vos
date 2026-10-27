@@ -1,0 +1,308 @@
+
+.rodata         0xffffffff80131000     0xb000 load address 0x0000000000131000
+                0xffffffff80131000                __rodata_start = .
+ *(.rodata .rodata.*)
+ .rodata        0xffffffff80131000      0x180 /home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/entry.o
+                0xffffffff80131000                exc_stub_table
+                0xffffffff80131100                irq_stub_table
+ .rodata.str1.1
+                0xffffffff80131180     0x2fe2 /home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/kernel.o
+                                        0x4ad (size before relaxing)
+ *fill*         0xffffffff80134162        0x6 
+ .rodata.str1.8
+                0xffffffff80134168     0x5c7c /home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/kernel.o
+                                        0x2dd (size before relaxing)
+ .rodata.str1.1
+                0xffffffff80139de4        0x0 /home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/bootinfo.o
+                                        0x21f (size before relaxing)
+ .rodata.str1.8
+                0xffffffff80139de4        0x0 /home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/bootinfo.o
+                                        0x3ba (size before relaxing)
+ *fill*         0xffffffff80139de4        0x4 
+ .rodata        0xffffffff80139de8       0x68 /home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/bootinfo.o
+ .rodata.str1.1
+                0xffffffff80139e50        0x0 /home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/console.o
+                                         0x15 (size before relaxing)
+ .rodata.str1.1
+                0xffffffff80139e50        0x0 /home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/cpu.o
+                                         0xe3 (size before relaxing)
+ .rodata.str1.8
+                0xffffffff80139e50        0x0 /home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/cpu.o
+                                         0xe8 (size before relaxing)
+ .rodata.str1.1
+                0xffffffff80139e50        0x0 /home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/exception.o
+                                        0x33a (size before relaxing)
+ .rodata.str1.8
+                0xffffffff80139e50        0x0 /home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/exception.o
+                                        0x1b0 (size before relaxing)
+ *fill*         0xffffffff80139e50       0x10 
+ .rodata        0xffffffff80139e60      0x200 /home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/exception.o
+ .rodata.str1.1
+                0xffffffff8013a060        0x0 /home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/gdt.o
+                                         0x84 (size before relaxing)
+ .rodata.str1.8
+                0xffffffff8013a060        0x0 /home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/gdt.o
+                                         0x21 (size before relaxing)
+ .rodata        0xffffffff8013a060       0x18 /home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/gdt.o
+ .rodata.str1.1
+                0xffffffff8013a078        0x0 /home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/idt.o
+                                         0x1b (size before relaxing)
+ .rodata.str1.8
+                0xffffffff8013a078        0x0 /home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/idt.o
+                                         0xa1 (size before relaxing)
+ .rodata.cst2   0xffffffff8013a078        0x4 /home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/idt.o
+                                          0x2 (size before relaxing)
+ .rodata.str1.1
+                0xffffffff8013a07c        0x0 /home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/panic.o
+                                          0xb (size before relaxing)
+ .rodata.str1.1
+                0xffffffff8013a07c        0x0 /home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/pmm.o
+                                         0xc5 (size before relaxing)
+ *fill*         0xffffffff8013a07c        0x4 
+ .rodata        0xffffffff8013a080       0x50 /home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/pmm.o
+ .rodata.str1.1
+                0xffffffff8013a0d0        0x0 /home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/process.o
+                                        0x10d (size before relaxing)
+ .rodata.str1.8
+                0xffffffff8013a0d0        0x0 /home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/process.o
+                                        0x4e7 (size before relaxing)
+ .rodata.str1.1
+                0xffffffff8013a0d0        0x0 /home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/syscall.o
+                                          0x6 (size before relaxing)
+ .rodata        0xffffffff8013a0d0       0xb0 /home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/syscall.o
+ .rodata.str1.8
+                0xffffffff8013a180        0x0 /home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/usercopy.o
+                                         0x60 (size before relaxing)
+ .rodata.str1.1
+                0xffffffff8013a180        0x0 /home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/vmm.o
+                                        0x1e8 (size before relaxing)
+ .rodata.str1.8
+                0xffffffff8013a180        0x0 /home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/vmm.o
+                                        0x529 (size before relaxing)
+ .rodata        0xffffffff8013a180       0x70 /home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/vmm.o
+ .rodata.str1.1
+                0xffffffff8013a1f0        0x0 /home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/kmap.o
+                                        0x366 (size before relaxing)
+ .rodata.str1.8
+                0xffffffff8013a1f0        0x0 /home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/kmap.o
+                                        0x236 (size before relaxing)
+ .rodata.str1.8
+                0xffffffff8013a1f0        0x0 /home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/irq.o
+                                        0x38d (size before relaxing)
+ .rodata.str1.1
+                0xffffffff8013a1f0        0x0 /home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/irq.o
+                                         0x2c (size before relaxing)
+ *fill*         0xffffffff8013a1f0       0x10 
+ .rodata        0xffffffff8013a200       0x48 /home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/irq.o
+ *fill*         0xffffffff8013a248        0x8 
+ .rodata        0xffffffff8013a250       0x10 /home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/pic.o
+                0xffffffff8013a250                pic_port_io
+ .rodata.str1.8
+                0xffffffff8013a260        0x0 /home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/thread.o
+                                        0x926 (size before relaxing)
+ .rodata.str1.1
+                0xffffffff8013a260        0x0 /home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/thread.o
+                                        0x111 (size before relaxing)
+ .rodata        0xffffffff8013a260       0x50 /home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/thread.o
+ .rodata.str1.8
+                0xffffffff8013a2b0        0x0 /home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/channel.o
+                                        0x2dc (size before relaxing)
+ .rodata.str1.1
+                0xffffffff8013a2b0        0x0 /home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/elf.o
+                                        0x13a (size before relaxing)
+ .rodata.str1.8
+                0xffffffff8013a2b0        0x0 /home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/elf.o
+                                        0x228 (size before relaxing)
+ *fill*         0xffffffff8013a2b0       0x10 
+ .rodata        0xffffffff8013a2c0       0xd0 /home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/elf.o
+ .rodata.str1.1
+                0xffffffff8013a390        0x0 /home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/app.o
+                                         0xdd (size before relaxing)
+ .rodata.str1.8
+                0xffffffff8013a390        0x0 /home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/app.o
+                                         0x8a (size before relaxing)
+ .rodata.str1.1
+                0xffffffff8013a390        0x0 /home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/app_catalog.o
+                                         0x28 (size before relaxing)
+ *fill*         0xffffffff8013a390       0x10 
+ .rodata        0xffffffff8013a3a0       0x48 /home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/app_catalog.o
+ .rodata.str1.8
+                0xffffffff8013a3e8        0x0 /home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/app_payload.o
+                                         0x67 (size before relaxing)
+ .rodata.str1.1
+                0xffffffff8013a3e8        0x0 /home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/app_payload.o
+                                         0x69 (size before relaxing)
+ *fill*         0xffffffff8013a3e8       0x18 
+ .rodata        0xffffffff8013a400      0x100 /home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/app_payload.o
+ .rodata.str1.8
+                0xffffffff8013a500        0x0 /home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/exec.o
+                                         0xb2 (size before relaxing)
+ .rodata.str1.1
+                0xffffffff8013a500        0x0 /home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/exec.o
+                                         0x5a (size before relaxing)
+ .rodata        0xffffffff8013a500       0x20 /home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/exec.o
+ .rodata.str1.1
+                0xffffffff8013a520        0x0 /home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/xhci.o
+                                        0x181 (size before relaxing)
+ .rodata.str1.8
+                0xffffffff8013a520        0x0 /home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/xhci.o
+                                        0x11d (size before relaxing)
+ .rodata.str1.1
+                0xffffffff8013a520        0x0 /home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/xhci_boot.o
+                                        0x14f (size before relaxing)
+ .rodata.str1.8
+                0xffffffff8013a520        0x0 /home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/xhci_boot.o
+                                        0x166 (size before relaxing)
+ .rodata.str1.1
+                0xffffffff8013a520        0x0 /home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/blockdev.o
+                                        0x14a (size before relaxing)
+ .rodata.str1.8
+                0xffffffff8013a520        0x0 /home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/blockdev.o
+                                        0x142 (size before relaxing)
+ .rodata        0xffffffff8013a520       0x50 /home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/blockdev.o
+ .rodata.str1.1
+                0xffffffff8013a570        0x0 /home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/virtio_blk.o
+                                        0x40a (size before relaxing)
+ .rodata.str1.8
+                0xffffffff8013a570        0x0 /home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/virtio_blk.o
+                                        0x983 (size before relaxing)
+ *fill*         0xffffffff8013a570       0x10 
+ .rodata        0xffffffff8013a580       0xa0 /home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/virtio_blk.o
+ .rodata.str1.1
+                0xffffffff8013a620        0x0 /home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/ext2.o
+                                        0x3df (size before relaxing)
+ .rodata.str1.8
+                0xffffffff8013a620        0x0 /home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/ext2.o
+                                        0xa2b (size before relaxing)
+ .rodata        0xffffffff8013a620       0x90 /home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/ext2.o
+ .rodata.str1.8
+                0xffffffff8013a6b0        0x0 /home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/io_scope.o
+                                        0x14a (size before relaxing)
+ .rodata.str1.1
+                0xffffffff8013a6b0        0x0 /home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/io_scope.o
+                                         0x35 (size before relaxing)
+ .rodata.str1.8
+                0xffffffff8013a6b0        0x0 /home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/file.o
+                                        0x1cf (size before relaxing)
+ .rodata.str1.1
+                0xffffffff8013a6b0        0x0 /home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/file.o
+                                         0x62 (size before relaxing)
+ *fill*         0xffffffff8013a6b0       0x10 
+ .rodata        0xffffffff8013a6c0       0x88 /home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/file.o
+ .rodata.str1.1
+                0xffffffff8013a748        0x0 /home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/devmap.o
+                                         0xf0 (size before relaxing)
+ .rodata.str1.8
+                0xffffffff8013a748        0x0 /home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/devmap.o
+                                        0x108 (size before relaxing)
+ *fill*         0xffffffff8013a748       0x18 
+ .rodata        0xffffffff8013a760       0x48 /home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/devmap.o
+ .rodata.str1.8
+                0xffffffff8013a7a8        0x0 /home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/screen.o
+                                        0x119 (size before relaxing)
+ .rodata.str1.1
+                0xffffffff8013a7a8        0x0 /home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/screen.o
+                                        0x11f (size before relaxing)
+ *fill*         0xffffffff8013a7a8       0x18 
+ .rodata        0xffffffff8013a7c0      0x140 /home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/screen.o
+ .rodata.str1.1
+                0xffffffff8013a900        0x0 /home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/desktop.o
+                                         0x50 (size before relaxing)
+ .rodata.str1.8
+                0xffffffff8013a900        0x0 /home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/desktop.o
+                                         0x2e (size before relaxing)
+ .rodata.str1.1
+                0xffffffff8013a900        0x0 /home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/gui.o
+                                         0x5b (size before relaxing)
+ .rodata.str1.8
+                0xffffffff8013a900        0x0 /home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/gui.o
+                                         0x25 (size before relaxing)
+ .rodata.str1.1
+                0xffffffff8013a900        0x0 /home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/gui_verify.o
+                                         0x5e (size before relaxing)
+ .rodata.str1.8
+                0xffffffff8013a900        0x0 /home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/gui_verify.o
+                                         0x99 (size before relaxing)
+ .rodata        0xffffffff8013a900      0x5f0 /home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/font8x16.o
+                0xffffffff8013a900                font8x16
+ *fill*         0xffffffff8013aef0       0x10 
+ .rodata        0xffffffff8013af00      0x100 /home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/keyboard.o
+ .rodata.str1.1
+                0xffffffff8013b000        0x0 /home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/input_console.o
+                                         0x49 (size before relaxing)
+ .rodata.str1.8
+                0xffffffff8013b000        0x0 /home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/input_console.o
+                                        0x14f (size before relaxing)
+ .rodata        0xffffffff8013b000       0x20 /home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/input_console.o
+ .rodata.str1.8
+                0xffffffff8013b020        0x0 /home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/user_console.o
+                                         0xc9 (size before relaxing)
+ .rodata.str1.1
+                0xffffffff8013b020        0x0 /home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/user_console.o
+                                         0x6b (size before relaxing)
+ .rodata        0xffffffff8013b020       0x10 /home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/user_console.o
+ .rodata.str1.1
+                0xffffffff8013b030        0x0 /home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/vsh_boot.o
+                                         0xfb (size before relaxing)
+ .rodata.str1.1
+                0xffffffff8013b030        0x0 /home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/virtio_net.o
+                                        0x177 (size before relaxing)
+ .rodata.str1.1
+                0xffffffff8013b030        0x0 /home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/net_boot.o
+                                        0x132 (size before relaxing)
+ .rodata.str1.8
+                0xffffffff8013b030        0x0 /home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/net_boot.o
+                                        0x24a (size before relaxing)
+ .rodata.cst2   0xffffffff8013b030        0x0 /home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/net_boot.o
+                                          0x2 (size before relaxing)
+ .rodata        0xffffffff8013b030        0xc /home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/net_arp.o
+ .rodata.str1.1
+                0xffffffff8013b03c        0x0 /home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/net_arp_boot.o
+                                         0xda (size before relaxing)
+ .rodata.str1.8
+                0xffffffff8013b03c        0x0 /home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/net_arp_boot.o
+                                        0x1a3 (size before relaxing)
+ .rodata.str1.1
+                0xffffffff8013b03c        0x0 /home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/net_ipv4_boot.o
+                                         0xe6 (size before relaxing)
+ .rodata.str1.8
+                0xffffffff8013b03c        0x0 /home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/net_ipv4_boot.o
+                                        0x1da (size before relaxing)
+ .rodata.str1.1
+                0xffffffff8013b03c        0x0 /home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/net_udp_boot.o
+                                        0x215 (size before relaxing)
+ .rodata.str1.8
+                0xffffffff8013b03c        0x0 /home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/net_udp_boot.o
+                                        0x20c (size before relaxing)
+ .rodata.str1.1
+                0xffffffff8013b03c        0x0 /home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/net_tcp_boot.o
+                                        0x119 (size before relaxing)
+ .rodata.str1.8
+                0xffffffff8013b03c        0x0 /home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/net_tcp_boot.o
+                                        0x257 (size before relaxing)
+ .rodata.str1.1
+                0xffffffff8013b03c        0x0 /home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/net_tcp_data_boot.o
+                                        0x206 (size before relaxing)
+ *fill*         0xffffffff8013b03c        0x4 
+ .rodata        0xffffffff8013b040       0x30 /home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/net_tcp_data_boot.o
+ .rodata.str1.8
+                0xffffffff8013b070        0x0 /home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/net_tcp_data_boot.o
+                                        0x282 (size before relaxing)
+ .rodata.str1.1
+                0xffffffff8013b070        0x0 /home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/net_tcp_retry_boot.o
+                                        0x16a (size before relaxing)
+ .rodata.str1.8
+                0xffffffff8013b070        0x0 /home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/net_tcp_retry_boot.o
+                                        0x281 (size before relaxing)
+ .rodata.str1.1
+                0xffffffff8013b070        0x0 /home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/net_tcp_close_boot.o
+                                        0x194 (size before relaxing)
+ .rodata.str1.8
+                0xffffffff8013b070        0x0 /home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/net_tcp_close_boot.o
+                                        0x31c (size before relaxing)
+ .rodata.str1.1
+                0xffffffff8013b070        0x0 /home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/rust/libvos_kernel.a(libvos_kernel.vos_kernel.45b20e7284a592af-cgu.0.rcgu.o)
+                                         0x12 (size before relaxing)
+                0xffffffff8013c000                . = ALIGN (0x1000)
+ *fill*         0xffffffff8013b070      0xf90 
+                0xffffffff8013c000                __rodata_end = ALIGN (0x1000)

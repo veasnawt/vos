@@ -1,0 +1,18 @@
+{
+  "passed": true,
+  "loaded_images_match_footprint_inputs": true,
+  "all_four_application_payloads_and_GRUB_cfg_byte_identical_between_C_and_Rust": true,
+  "baseline_and_migration_attempts": {
+    "C": 8,
+    "Rust": 8
+  },
+  "UEFI_each": 7,
+  "BIOS_each": 1,
+  "all_16_pass": true,
+  "original_failure": "unchanged, not relabeled",
+  "classification": "Not reproduced under documented conditions; historical causality INCONCLUSIVE",
+  "timing_caveat": "20 ms serial observation; not actual USB execution latency",
+  "production_code_changes_this_review": false,
+  "source_parent": "4abe69f4ffb12997f3c9ede9ecb20f20f39a610b",
+  "test_tools_commit": "e7e657495c3773d6f6150bad9639e6913fd48eb4"
+}

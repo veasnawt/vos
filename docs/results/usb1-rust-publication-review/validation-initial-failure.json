@@ -1,0 +1,8 @@
+{
+  "operation": "initial documentation link validation",
+  "status": "FAIL",
+  "cause": "validator incorrectly required all local link destinations to be files; existing plans/ and results/ directory links are valid",
+  "correction": "accept existing directories; preserve file/anchor checks",
+  "repository_link_changes_for_this_failure": 0,
+  "kernel_or_test_result_changes": 0
+}

@@ -1,4 +1,16 @@
 //! xHCI 1.2b sections 5.3, 7.1, 7.2; initial operational profile is xHCI 1.0.
+use super::header::{Header, end, overlaps};
+impl From<super::header::LayoutError> for Error {
+    fn from(error: super::header::LayoutError) -> Self {
+        use super::header::LayoutError;
+        match error {
+            LayoutError::Alignment => Self::Alignment,
+            LayoutError::Overflow => Self::Overflow,
+            LayoutError::Bounds => Self::Bounds,
+            LayoutError::InvalidCapability => Self::InvalidCapability,
+        }
+    }
+}
 use super::{BAR_BYTES, Error, PAGE};
 
 /// Inputs from a future trusted platform qualifier, not application authority.
@@ -41,18 +53,6 @@ fn word(bytes: &[u8], offset: u32) -> Result<u32, Error> {
     Ok(u32::from_le_bytes([s[0], s[1], s[2], s[3]]))
 }
 
-fn end(first: u32, size: u32, bound: u32) -> Result<u32, Error> {
-    let last = first.checked_add(size).ok_or(Error::Overflow)?;
-    if last > bound {
-        return Err(Error::Bounds);
-    }
-    Ok(last)
-}
-
-fn overlaps(a: u32, ae: u32, b: u32, be: u32) -> bool {
-    a < be && b < ae
-}
-
 impl Capabilities {
     /// Parse copied bytes only. This function cannot access MMIO.
     pub fn parse(bytes: &[u8], facts: Facts) -> Result<Self, Error> {
@@ -89,25 +89,29 @@ impl Capabilities {
             return Err(Error::Truncated);
         }
         let bytes = &bytes[..BAR_BYTES as usize];
-        let first = word(bytes, 0)?;
-        let operational = first & 0xff;
-        if first >> 16 != 0x100 {
+        let header = Header::from_words([
+            word(bytes, 0)?,
+            word(bytes, 4)?,
+            word(bytes, 8)?,
+            word(bytes, 12)?,
+            word(bytes, 16)?,
+            word(bytes, 20)?,
+            word(bytes, 24)?,
+        ]);
+        let operational = header.operational;
+        if header.version != 0x100 {
             return Err(Error::Unsupported);
         }
-        if first & 0xff00 != 0 || operational < 0x20 || operational % 8 != 0 {
+        if !header.valid_structure(8) {
             return Err(Error::InvalidCapability);
         }
-        let hcs1 = word(bytes, 4)?;
-        let slots = (hcs1 & 0xff) as u8;
-        let interrupters = ((hcs1 >> 8) & 0x7ff) as u16;
-        let ports = (hcs1 >> 24) as u8;
-        if slots == 0 || interrupters == 0 || ports == 0 {
-            return Err(Error::InvalidCapability);
-        }
+        let slots = header.slots;
+        let interrupters = header.interrupters;
+        let ports = header.ports;
         if ports > 16 {
             return Err(Error::Unsupported);
         }
-        let hcs2 = word(bytes, 8)?;
+        let hcs2 = header.hcs2;
         let scratchpads = ((hcs2 >> 27) & 31) | (((hcs2 >> 21) & 31) << 5);
         if scratchpads != 0 {
             return Err(Error::Unsupported);
@@ -115,18 +119,13 @@ impl Capabilities {
         if word(bytes, operational.checked_add(8).ok_or(Error::Overflow)?)? & 1 == 0 {
             return Err(Error::Unsupported);
         }
-        let hcc = word(bytes, 16)?;
-        let doorbell = word(bytes, 20)?;
-        let runtime = word(bytes, 24)?;
-        if doorbell % 4 != 0 || runtime % 32 != 0 {
-            return Err(Error::Alignment);
-        }
+        let hcc = header.hcc1;
+        let doorbell = header.doorbell;
+        let runtime = header.runtime;
+        header.layout_end(BAR_BYTES)?;
         let oe = end(operational, 0x400 + u32::from(ports) * 16, BAR_BYTES)?;
         let de = end(doorbell, (u32::from(slots) + 1) * 4, BAR_BYTES)?;
         let re = end(runtime, 0x20 + u32::from(interrupters) * 0x20, BAR_BYTES)?;
-        if doorbell < oe || runtime < oe || overlaps(doorbell, de, runtime, re) {
-            return Err(Error::InvalidCapability);
-        }
         let mut offset = (hcc >> 16) * 4;
         let mut legacy = None;
         let mut protocol_ports = 0u32;

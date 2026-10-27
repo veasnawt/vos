@@ -1,0 +1,15 @@
+{
+  "passed": true,
+  "checked_original_files_and_historical_entries": 5747,
+  "protected_entries": 49,
+  "unique_protected_paths": 45,
+  "historical_phase_files": 2203,
+  "original_worktrees": 13,
+  "stashes": 2,
+  "old_HEAD_index_refs_status": "unchanged",
+  "retained_D1_draft_symlink_and_unfinished_evidence": "unchanged",
+  "seven_pinned_controller_modules": "unchanged within original source inventory; no controller executed",
+  "original_migration_commit_and_96_manifest_entries": "intact",
+  "accounting_reservations_funding": "unchanged",
+  "verified_utc": "2026-10-27T12:14:50.788031+00:00"
+}

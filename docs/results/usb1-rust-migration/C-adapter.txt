@@ -1,0 +1,58 @@
+
+/home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/xhci.o:     file format elf64-x86-64
+
+
+Disassembly of section .text:
+
+0000000000000000 <vos_xhci_copy_caps>:
+   0:	55                   	push   %rbp
+   1:	48 89 f8             	mov    %rdi,%rax
+   4:	48 89 cd             	mov    %rcx,%rbp
+   7:	53                   	push   %rbx
+   8:	48 89 d3             	mov    %rdx,%rbx
+   b:	ba 1c 00 00 00       	mov    $0x1c,%edx
+  10:	48 83 ec 18          	sub    $0x18,%rsp
+  14:	48 8b 3f             	mov    (%rdi),%rdi
+  17:	48 c7 04 24 00 00 00 	movq   $0x0,(%rsp)
+  1e:	00 
+  1f:	48 89 e1             	mov    %rsp,%rcx
+  22:	4c 8d 44 24 08       	lea    0x8(%rsp),%r8
+  27:	48 c7 44 24 08 00 00 	movq   $0x0,0x8(%rsp)
+  2e:	00 00 
+  30:	ff 50 20             	call   *0x20(%rax)
+  33:	89 45 00             	mov    %eax,0x0(%rbp)
+  36:	85 c0                	test   %eax,%eax
+  38:	75 56                	jne    90 <vos_xhci_copy_caps+0x90>
+  3a:	48 8b 34 24          	mov    (%rsp),%rsi
+  3e:	48 85 f6             	test   %rsi,%rsi
+  41:	74 3d                	je     80 <vos_xhci_copy_caps+0x80>
+  43:	48 89 f2             	mov    %rsi,%rdx
+  46:	83 e2 03             	and    $0x3,%edx
+  49:	75 35                	jne    80 <vos_xhci_copy_caps+0x80>
+  4b:	48 83 7c 24 08 1b    	cmpq   $0x1b,0x8(%rsp)
+  51:	76 2d                	jbe    80 <vos_xhci_copy_caps+0x80>
+  53:	66 90                	xchg   %ax,%ax
+  55:	66 66 2e 0f 1f 84 00 	data16 cs nopw 0x0(%rax,%rax,1)
+  5c:	00 00 00 00 
+  60:	48 8d 0c 16          	lea    (%rsi,%rdx,1),%rcx
+  64:	8b 09                	mov    (%rcx),%ecx
+  66:	89 0c 13             	mov    %ecx,(%rbx,%rdx,1)
+  69:	48 83 c2 04          	add    $0x4,%rdx
+  6d:	48 83 fa 1c          	cmp    $0x1c,%rdx
+  71:	75 ed                	jne    60 <vos_xhci_copy_caps+0x60>
+  73:	48 83 c4 18          	add    $0x18,%rsp
+  77:	5b                   	pop    %rbx
+  78:	5d                   	pop    %rbp
+  79:	c3                   	ret
+  7a:	66 0f 1f 44 00 00    	nopw   0x0(%rax,%rax,1)
+  80:	48 83 c4 18          	add    $0x18,%rsp
+  84:	b8 02 00 00 00       	mov    $0x2,%eax
+  89:	5b                   	pop    %rbx
+  8a:	5d                   	pop    %rbp
+  8b:	c3                   	ret
+  8c:	0f 1f 40 00          	nopl   0x0(%rax)
+  90:	48 83 c4 18          	add    $0x18,%rsp
+  94:	b8 01 00 00 00       	mov    $0x1,%eax
+  99:	5b                   	pop    %rbx
+  9a:	5d                   	pop    %rbp
+  9b:	c3                   	ret

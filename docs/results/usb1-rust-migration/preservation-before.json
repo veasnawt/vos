@@ -1,0 +1,8 @@
+{
+  "passed": true,
+  "checked_entries": 5747,
+  "snapshot_reference": "vos-master-plan/build/master-plan-integration/preservation-before.json",
+  "stashes": 2,
+  "worktrees": 13,
+  "errors": []
+}

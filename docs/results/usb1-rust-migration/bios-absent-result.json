@@ -1,0 +1,8 @@
+{
+  "passed": true,
+  "firmware": "bios",
+  "case": "absent",
+  "expected_ps2_failure": false,
+  "usb_keyboard_supported": false,
+  "serial_sha256": "695058b81a272383f99e51c8c1d517d579b5c0566a8ebedc0ffb4b84ad836cd8"
+}

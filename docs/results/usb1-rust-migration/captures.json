@@ -1,0 +1,28 @@
+[
+  {
+    "firmware": "bios",
+    "passed": true,
+    "screenshot": "bios/gui.png",
+    "width": 1280,
+    "height": 800,
+    "screenshot_sha256": "73840158e18185e0b3638bfd29ccec73ed6a8cc50cfaf5f4982cb60ca6e56a9c",
+    "serial_sha256": "126e8930de68d8d6345f379176eb4f7c00aba042ad1628433d38399dc17aee32",
+    "USB_keyboard_attached": false,
+    "input": "existing PS/2",
+    "pci_metadata_unchanged": true,
+    "Rust_xhci_probe_execution_records": 1
+  },
+  {
+    "firmware": "uefi",
+    "passed": true,
+    "screenshot": "uefi/gui.png",
+    "width": 1280,
+    "height": 800,
+    "screenshot_sha256": "73840158e18185e0b3638bfd29ccec73ed6a8cc50cfaf5f4982cb60ca6e56a9c",
+    "serial_sha256": "da0baae54b2b7f8ddc2f02581ea80d017f01f61f4e5290da0cfe45a750175d88",
+    "USB_keyboard_attached": false,
+    "input": "existing PS/2",
+    "pci_metadata_unchanged": true,
+    "Rust_xhci_probe_execution_records": 1
+  }
+]

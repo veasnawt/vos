@@ -1,6 +1,10 @@
 //! Scalar kernel helpers and the R0-B proof; no device or allocator authority.
 #![no_std]
 
+#[path = "../../../kernel/rust/usb/xhci/discovery_core.rs"]
+mod xhci;
+mod xhci_discovery;
+
 // SAFETY: this private kernel symbol is defined exactly once, with the scalar
 // System V C ABI declared in rust_kernel.h. It does not accept pointers.
 #[unsafe(no_mangle)]

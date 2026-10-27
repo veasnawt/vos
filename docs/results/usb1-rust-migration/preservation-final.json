@@ -1,0 +1,14 @@
+{
+  "passed": true,
+  "historical_entries_and_original_files": 5747,
+  "original_HEAD_index_refs_status": "unchanged",
+  "original_worktrees": 13,
+  "stashes": 2,
+  "D1_draft_and_retained_symlink": "unchanged",
+  "protected_entries": 49,
+  "protected_unique_paths": 45,
+  "additional_protected_audit": "protected-audit.json",
+  "publication_checkout": "clean, unchanged reviewed commit",
+  "accounting_and_reservations": "unchanged; no legacy controller execution or funding",
+  "time_utc": "2026-10-27T11:16:19.795870+00:00"
+}

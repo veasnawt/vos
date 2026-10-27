@@ -1,0 +1,70 @@
+{
+  "all_96_original_nonself_manifest_entries_unchanged": true,
+  "fresh_executions": {
+    "USB1-sanitizers": {
+      "exit": 0,
+      "expected_exit": 0,
+      "binary_sha256": "e8d842cbbd512f56accc82f22405f0fc63d0b4384d0b4ce3464b0437bce27e70",
+      "command": [
+        "/home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/native/xhci-host"
+      ],
+      "output_sha256": "e5c816254e732e0281cced11e636e33376c94a84317a3050f382ec6a5f7981a2"
+    },
+    "USB2-core": {
+      "exit": 0,
+      "expected_exit": 0,
+      "binary_sha256": "8132d65775211bcbb8d4d9b45e4a68a02ceb0c989b89b6b0bd34c251048ec163",
+      "command": [
+        "/home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/final-portable/tests",
+        "--test-threads=1"
+      ],
+      "output_sha256": "12ed6330c35399ec8635443a330faedad309471c382e6ae7463aeaba7070fe4d"
+    },
+    "R0": {
+      "exit": 0,
+      "expected_exit": 0,
+      "binary_sha256": "315eb5a9edb6c7608be2219f6a96abde4490cd6a13326536f7cee5a63c94b49e",
+      "command": [
+        "/home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r0-host"
+      ],
+      "output_sha256": "b8e5fa835272a57c88432fe5a528fc81273c6cc1ed0bb54af4771ab36a52e93e"
+    },
+    "R1": {
+      "exit": 0,
+      "expected_exit": 0,
+      "binary_sha256": "bba36bf4749ea70cbeeb46253dfed36a0053c6bc5f449e784340a0aff8858f09",
+      "command": [
+        "/home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/r1-host/bounds"
+      ],
+      "output_sha256": "88f2b3b25f1f8d2ab51a671cd3ba76204873a19123c9a38ebf2c4896fe4c18b3"
+    },
+    "differential": {
+      "exit": 0,
+      "expected_exit": 0,
+      "binary_sha256": "17fca6a69c670daacb42c08a4015dcb695349a102320871dfc2b149063a95601",
+      "command": [
+        "/home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/final-differential/checked"
+      ],
+      "output_sha256": "2a972bddd0ac2b1a8ecd69fe8724f3cebeb13aeef80d77b0d33189b6245eeab7"
+    },
+    "mutation-control": {
+      "exit": 101,
+      "expected_exit": 101,
+      "binary_sha256": "131b980dde197257d7cef8baddd06b9e3b719f13552fbcab38985a90f8eca03e",
+      "command": [
+        "/home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/final-portable/mutant-tests",
+        "--exact",
+        "stale_software_ticket_rejected_after_pointer_reuse"
+      ],
+      "output_sha256": "1d2e73ca98dfaa9aaa6361fe339603f28147104d99bb37a137bb33e652579f6e"
+    }
+  },
+  "reused": {
+    "ownership_compile_negatives": "2 expected E0277 rejections; same core source identity",
+    "R1_validator_and_host_tool": "283/283 status/field/output comparisons; unchanged source/archive/app inputs",
+    "legacy_native_cases": "10 positive/negative case outcomes reconciled as 7 original +3 continuation; original run remains FAIL",
+    "interactive_captures": "BIOS/UEFI vsh/hello/Rixie/keyboard/reclamation and actual Rust execution traces; unchanged image/source identities",
+    "freestanding_compile_and_object_audit": "unchanged no_std archive, target flags and production object; no new production source"
+  },
+  "production_changes_this_review": []
+}

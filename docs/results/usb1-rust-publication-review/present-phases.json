@@ -1,0 +1,161 @@
+{
+  "passed": true,
+  "cases": [
+    {
+      "case": "01-C-uefi-present",
+      "firmware": "uefi",
+      "implementation": "C",
+      "controller_present": true,
+      "events": {
+        "firmware_handoff": 3.3877,
+        "kernel": 3.8346,
+        "USB_begin": 3.8753,
+        "USB_end": 3.8753,
+        "boot_checks": 3.8956,
+        "desktop": 3.8956,
+        "worker": 3.8957,
+        "ELF": 3.916,
+        "keyboard": 3.916,
+        "grant": 3.916,
+        "GUI": 3.916
+      },
+      "passed": true,
+      "elapsed_seconds": 3.916,
+      "pretermination_exit": null,
+      "supervised_exit_code": 0,
+      "serial_sha256": "93c8b267d630c8e2fe2a034e3596db84000b7fd62b0b98df77aee4d34bb5194d"
+    },
+    {
+      "case": "02-Rust-uefi-present",
+      "firmware": "uefi",
+      "implementation": "Rust",
+      "controller_present": true,
+      "events": {
+        "firmware_handoff": 4.6492,
+        "kernel": 5.0758,
+        "USB_begin": 5.096,
+        "USB_end": 5.1164,
+        "boot_checks": 5.1367,
+        "desktop": 5.1367,
+        "worker": 5.1367,
+        "ELF": 5.1367,
+        "keyboard": 5.1367,
+        "grant": 5.1367,
+        "GUI": 5.1571
+      },
+      "passed": true,
+      "screenshot_sha256": "3246d84b90438b5fb77740d65f33448cf6056c21d4ee52eb3d3fa95d601c5ec8",
+      "elapsed_seconds": 5.1974,
+      "pretermination_exit": null,
+      "supervised_exit_code": 0,
+      "serial_sha256": "6bec2b3e27e032f704f8048b9328eea3a2769c4ca94c30d6b72d2b53e5e0a09e"
+    },
+    {
+      "case": "03-Rust-uefi-present",
+      "firmware": "uefi",
+      "implementation": "Rust",
+      "controller_present": true,
+      "events": {
+        "firmware_handoff": 3.7351,
+        "kernel": 4.2018,
+        "USB_begin": 4.2221,
+        "USB_end": 4.2221,
+        "boot_checks": 4.2628,
+        "desktop": 4.2628,
+        "worker": 4.2628,
+        "ELF": 4.2628,
+        "keyboard": 4.2628,
+        "grant": 4.2628,
+        "GUI": 4.2831
+      },
+      "passed": true,
+      "screenshot_sha256": "3246d84b90438b5fb77740d65f33448cf6056c21d4ee52eb3d3fa95d601c5ec8",
+      "elapsed_seconds": 4.3235,
+      "pretermination_exit": null,
+      "supervised_exit_code": 0,
+      "serial_sha256": "6bec2b3e27e032f704f8048b9328eea3a2769c4ca94c30d6b72d2b53e5e0a09e"
+    },
+    {
+      "case": "04-C-uefi-present",
+      "firmware": "uefi",
+      "implementation": "C",
+      "controller_present": true,
+      "events": {
+        "firmware_handoff": 3.2664,
+        "kernel": 3.6925,
+        "USB_begin": 3.7128,
+        "USB_end": 3.7332,
+        "boot_checks": 3.7535,
+        "desktop": 3.7535,
+        "worker": 3.7535,
+        "ELF": 3.7535,
+        "keyboard": 3.7535,
+        "grant": 3.7535,
+        "GUI": 3.7738
+      },
+      "passed": true,
+      "elapsed_seconds": 3.7738,
+      "pretermination_exit": null,
+      "supervised_exit_code": 0,
+      "serial_sha256": "93c8b267d630c8e2fe2a034e3596db84000b7fd62b0b98df77aee4d34bb5194d"
+    }
+  ],
+  "timeout_seconds": 35,
+  "retry_policy": "none; all starts predefined",
+  "tool_sha256": "c56bb37e7dba2b4f8abfe9e73867b8ff48d65cd2051c4dbd52be19270113cd38",
+  "phase_resolution": "host serial observation every 20 ms, not guest CPU latency",
+  "firmware_sha256": {
+    "OVMF_CODE_4M.fd": "874f15a7c9110e78a89db159f0f68fc97e9076b74777520de1c235426f758aa7",
+    "OVMF_VARS_4M.fd": "5d2ac383371b408398accee7ec27c8c09ea5b74a0de0ceea6513388b15be5d1e"
+  },
+  "image_sha256": {
+    "C": {
+      "bios": "f0c4f62c8c9b85a0ca74f5ddd866a0cbe4af5b8ba8ff9b03b687c637d227d6db",
+      "uefi": "1058d6021c18027fe1fd099df3cd6b79c020be5a8c152e26299ec215697def05"
+    },
+    "Rust": {
+      "bios": "d14ce14c287e6745bd641739df44b046773ce2558a897d307cadbc58e2fcf045",
+      "uefi": "713f5638c6ddf9e7502c08777eb8287eb6c8b1720c69f59af74ec0c74d6b37a3"
+    }
+  },
+  "plan": [
+    {
+      "firmware": "uefi",
+      "controller_present": true,
+      "implementation": "C"
+    },
+    {
+      "firmware": "uefi",
+      "controller_present": true,
+      "implementation": "Rust"
+    },
+    {
+      "firmware": "uefi",
+      "controller_present": true,
+      "implementation": "Rust"
+    },
+    {
+      "firmware": "uefi",
+      "controller_present": true,
+      "implementation": "C"
+    }
+  ],
+  "payloads": {
+    "C": {
+      "vos.bin": "9eb4c2039734a785274eaad2d5e556dd1e84260bc01cb3832ba67738a5053988",
+      "vsh.elf": "e7af3ee56164f587f7ca1338f7ddfcb202b6f4310f10b4dcba6a2576743cb181",
+      "hello.elf": "c6c6416195a0f18d680d7f8f19be52ce02ff02912ef3bac45324fbe88006cd06",
+      "rixie.elf": "77104da3b33caf809daf5e6674ac4e2fa9edf6a9e2e5dd59828514df76490d32",
+      "gui-demo.elf": "a21bab23c7183c7534d4b6beabd35b4222cd9faf65b0ad8ea868fd153e112bd2",
+      "grub/grub.cfg": "7cbe9a63fb15ef95de837f43715df01613b88c2ac5cdfef10bd7641ac490b1ae"
+    },
+    "Rust": {
+      "vos.bin": "7c7a64d98aa94551112c66360e0849e4c2580e30d8b632f07d43cb3789697573",
+      "vsh.elf": "e7af3ee56164f587f7ca1338f7ddfcb202b6f4310f10b4dcba6a2576743cb181",
+      "hello.elf": "c6c6416195a0f18d680d7f8f19be52ce02ff02912ef3bac45324fbe88006cd06",
+      "rixie.elf": "77104da3b33caf809daf5e6674ac4e2fa9edf6a9e2e5dd59828514df76490d32",
+      "gui-demo.elf": "a21bab23c7183c7534d4b6beabd35b4222cd9faf65b0ad8ea868fd153e112bd2",
+      "grub/grub.cfg": "7cbe9a63fb15ef95de837f43715df01613b88c2ac5cdfef10bd7641ac490b1ae"
+    }
+  }
+}

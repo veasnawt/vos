@@ -1,0 +1,52 @@
+{
+  "version": 1,
+  "branch": "feat/usb1-rust-migration",
+  "original_commit": "4abe69f4ffb12997f3c9ede9ecb20f20f39a610b",
+  "current_HEAD": "e7e657495c3773d6f6150bad9639e6913fd48eb4",
+  "accepted_main": "86493ff2b2a8f2d84c4ce3ed4d0ccf132d97a072",
+  "completed": [
+    "read-only recovery",
+    "original 96-entry non-self manifest verified",
+    "49 protected entries verified",
+    "no existing migration PR",
+    "ordinary disk checks",
+    "independent C/Rust and FFI source review",
+    "3-process pinned-CPU benchmark; synthetic +20 ns per positive mocked probe observed",
+    "exact map accounting: raw code +1440 B, alignment +51 B, tail padding +2605 B",
+    "fixed 12-boot comparison: 12 PASS, original timeout not reproduced",
+    "16 fixed boots PASS; original timeout not reproduced",
+    "4 explicit policy distinction tests PASS",
+    "fresh existing core/USB1/R0/R1/differential binaries PASS; mutation exits 101 as expected",
+    "test tools committed e7e657495c3773d6f6150bad9639e6913fd48eb4",
+    "separate report/evidence complete; production unchanged",
+    "preservation PASS: 49 entries, 13 original worktrees, 2 stashes",
+    "gate recommendation: READY FOR PR WITH DOCUMENTED LIMITATIONS"
+  ],
+  "pending": [
+    "documentation commit",
+    "normal push and PR creation",
+    "required CI results"
+  ],
+  "source_changes": [
+    "test tools and explicit policy regressions",
+    "README/STATUS/ROADMAP publication synchronization",
+    "new review report and evidence only"
+  ],
+  "publication": "not yet pushed at this tracked checkpoint",
+  "next_safe_operation": "validate and commit documentation; then publish reviewed branch",
+  "blockers": [],
+  "storage_plan": {
+    "new_peak_provision_MiB": 80,
+    "reuse": "existing accepted C and migration kernels/images/archives; no broad builds or media duplication",
+    "Linux_free_bytes": 1007333101568,
+    "C_free_bytes": 21682884608,
+    "E_free_bytes": 245600403456,
+    "historical_accounting": "unchanged; no controller/funding/retirement"
+  },
+  "updated_utc": "2026-10-27T12:16:32.515758+00:00",
+  "findings": {
+    "production_optimization": "not justified: cold bounded path, no validation removed",
+    "boot_comparison": "one Rust GUI timestamp ~2 s after USB summary; isolate phases, not a proven USB cost",
+    "original_timeout": "pre-first-kernel-output, not reproduced; causality remains unproven"
+  }
+}

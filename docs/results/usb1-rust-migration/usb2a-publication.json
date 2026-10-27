@@ -1,0 +1,21 @@
+{
+  "source_commit": "8a7df0e1f2d1534df0fc5ef64ef8088e81a3c9a0",
+  "design_commit": "2cd3bf3e7b7132fdfe6f5b643919916f39b465b3",
+  "main": "95eb0e0c944277a4ed9f3ad0e8671e25d2d9f6cd",
+  "PR": "https://github.com/veasnawt/vos/pull/23",
+  "Build_smoke": "success",
+  "Secret_history_audit": "success",
+  "bare_x86_64_unknown_none_size_assertions": {
+    "Controller": 424,
+    "PermanentSnapshot": 144
+  },
+  "new_verification": "46 tests, 2 ownership compile-negative controls, mutation control, no_std/concrete codegen, kernel Multiboot/layout; PASS",
+  "runtime_memory_excluded_from_state_size": "16 KiB modeled DMA +4 KiB control +up to8 KiB PT, future existing worker slot; no backend installed",
+  "publication_branch_modified": false,
+  "migration_branch_published": false,
+  "merged_externally": true,
+  "merge_commit": "86493ff2b2a8f2d84c4ce3ed4d0ccf132d97a072",
+  "merge_and_reviewed_source_tree": "8ef943c676fb0e0f6fbb6fcba773493d36c27439",
+  "main_rechecked": true,
+  "merge_performed_by_this_agent": false
+}

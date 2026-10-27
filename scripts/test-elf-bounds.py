@@ -45,13 +45,13 @@ def main():
     cc=['gcc','-std=gnu11','-Wall','-Wextra','-Werror','-fno-pie','-no-pie','-Iarch/x86_64']
     san=['-O1','-g','-fsanitize=address,undefined','-fno-omit-frame-pointer']
     try:
-        run(cc+san+['tests/host/elf-bounds.c',archive,'-o',out/'bounds'],'bounds-build.txt')
+        run(cc+san+['-Wl,--gc-sections','tests/host/elf-bounds.c',archive,'-o',out/'bounds'],'bounds-build.txt')
         result['bounds']=run([out/'bounds'],'bounds.txt').strip()
         # Compile the same validator twice, changing only its selected predicate.
         run(cc+san+['-DVOS_ELF_USE_RUST','-c','arch/x86_64/elf.c','-o',out/'rust.o'],'rust-validator-build.txt')
         run(cc+san+['-Delf_validate=elf_validate_reference','-Delf_strerror=elf_strerror_reference',
                     '-c','arch/x86_64/elf.c','-o',out/'reference.o'],'reference-build.txt')
-        run(cc+san+['tests/host/elf-compare.c',out/'rust.o',out/'reference.o',archive,
+        run(cc+san+['-Wl,--gc-sections','tests/host/elf-compare.c',out/'rust.o',out/'reference.o',archive,
                     '-o',out/'compare'],'compare-build.txt')
         # Keep the pre-existing standalone C-only compiler invocation supported.
         run(cc+['-O2','scripts/elfcheck.c','arch/x86_64/elf.c','-o',out/'elfcheck-reference'],'reference-tool-build.txt')

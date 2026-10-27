@@ -1,0 +1,12 @@
+{
+  "measured_utc": "2026-10-27T11:16:19.795870+00:00",
+  "build_logical_bytes": 360843895,
+  "Linux_free_bytes": 1007333986304,
+  "historical_funding_applied": false,
+  "new_persistent_device_mappings_allocations_workers": 0,
+  "kernel_footprint_delta_bytes": 4096,
+  "original_reservations": "unchanged",
+  "C_free_bytes": 21635506176,
+  "E_free_bytes": 245600403456,
+  "physical_checks": "ordinary disk checks, no legacy funding or admission controller"
+}
