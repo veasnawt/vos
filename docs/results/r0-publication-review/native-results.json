@@ -1,0 +1,30 @@
+[
+  {
+    "firmware": "bios",
+    "case": "interactive",
+    "result": "PASS",
+    "serial_sha256": "3d0808c2a3ff66e2480c2f56416ce018c3d3fc6c891b77b90f4f7ba4af09b08e",
+    "expected_qemu_exit": "owned process stopped after final reclamation marker"
+  },
+  {
+    "firmware": "bios",
+    "case": "panic",
+    "result": "PASS",
+    "serial_sha256": "872755c9a5c2b8115528e70e5320bc0c47d5f7fdc2d360fd104f582e2ebd6bc6",
+    "expected_qemu_exit": 35
+  },
+  {
+    "firmware": "uefi",
+    "case": "interactive",
+    "result": "PASS",
+    "serial_sha256": "b8b7611ce8ea37a6337e145b3b0436982a42ca8c92ea25c412fdde8a4491bddc",
+    "expected_qemu_exit": "owned process stopped after final reclamation marker"
+  },
+  {
+    "firmware": "uefi",
+    "case": "panic",
+    "result": "PASS",
+    "serial_sha256": "454172fe01755b1808eae6702c9d672a77823923dd9051b03b2842009220b9c3",
+    "expected_qemu_exit": 35
+  }
+]

@@ -29,6 +29,7 @@
 #include "panic.h"
 #include "pmm.h"
 #include "resv.h"
+#include "rust_kernel.h"
 #include "screen.h"
 #include "desktop.h"
 #include "gui_verify.h"
@@ -260,6 +261,25 @@ void kernel_main(uint32_t mb2_magic, uint32_t mb2_info)
     serial_puts(" ring-0 executable (all kernel text, none writable), ");
     serial_dec(audit.tables_lower);
     serial_puts(" lower-half tables\r\n");
+
+    /* R0-B: CPU protections, W^X, diagnostics and the kernel CR3 are established.
+     * Runtime inputs and a separate unsigned-C oracle keep this a real ABI call. */
+    uint64_t rust_seed = (uint64_t)mb2_magic ^ rip;
+    uint64_t rust_salt = rsp ^ read_cr3();
+    uint64_t rust_result = vos_rust_probe(rust_seed, rust_salt);
+#ifdef VOS_TEST_CASE_rust_result
+    serial_puts("rust: test-only result corruption after Rust return\r\n");
+    rust_result ^= 1;
+#endif
+    if (rust_result != rust_probe_expected(rust_seed, rust_salt))
+        panic("Rust kernel probe result mismatch");
+    serial_puts("rust: kernel probe PASS; fn="); serial_hex((uint64_t)vos_rust_probe);
+    serial_puts(" seed="); serial_hex(rust_seed); serial_puts(" salt="); serial_hex(rust_salt);
+    serial_puts(" result="); serial_hex(rust_result); serial_puts("\r\n");
+#ifdef VOS_TEST_CASE_rust_panic
+    serial_puts("rust: invoking controlled Rust panic\r\n");
+    vos_rust_panic_test();
+#endif
 
     /* 8259 + PIT, IRQ0 unmasked. IF stays 0 in the kernel; ring 3 runs with IF = 1. */
     irq_init();

@@ -1,0 +1,1 @@
+Rust kernel C ABI: 4132 pairs + 2 fixed vectors PASS; same archive, no host Rust runtime

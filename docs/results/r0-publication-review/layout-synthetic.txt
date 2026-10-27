@@ -1,0 +1,9 @@
+.kernel layout FAIL [/tmp/tmpnutde6fu/bad]: rodata segment [0x11f000, 0x125fb0) is not page-aligned
+usage: check-kernel-layout.py KERNEL...   (exit 0 if every kernel passes)
+.....................
+----------------------------------------------------------------------
+Ran 22 tests in 0.066s
+
+OK
+kernel layout OK [/tmp/tmpnutde6fu/good]: 0x100000-0x101000/5 0x101000-0x107000/6 0x107000-0x11f000/5 0x11f000-0x126000/4 0x126000-0x1b2000/6
+kernel layout OK [/tmp/tmpnutde6fu/good]: 0x100000-0x101000/5 0x101000-0x107000/6 0x107000-0x11f000/5 0x11f000-0x126000/4 0x126000-0x1b2000/6

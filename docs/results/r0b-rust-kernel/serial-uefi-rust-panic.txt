@@ -1,0 +1,34 @@
+[2J[001;001H[=3h[2J[001;001H[2J[001;001H[8;042;160t[2J[001;001H[2J[001;001H[8;056;240t[2J[001;001HBdsDxe: loading Boot0002 "UEFI QEMU DVD-ROM QM00005 " from PciRoot(0x0)/Pci(0x1F,0x2)/Sata(0x2,0xFFFF,0x0)
+BdsDxe: starting Boot0002 "UEFI QEMU DVD-ROM QM00005 " from PciRoot(0x0)/Pci(0x1F,0x2)/Sata(0x2,0xFFFF,0x0)
+[H[J[1;1HHello from VOS!
+boot: x86_64 long mode, cs=0x8 efer=0xd00 rip=0xffffffff80107304
+gdt: loaded cs=0x8 ss=0x10 tr=0x28 tss=busy
+tss: rsp0=0xffffffff801b6000 ist1=0xffffffff801ad000 ist2=0xffffffff801af000 ist3=0xffffffff801b1000 iomap=104 limit=103
+idt: 32 exception vectors loaded, df ist=1, nmi ist=2, mc ist=3
+idt: IRQ vectors 0x20-0x2f present, DPL 0, interrupt gates
+idt: vector 0x80 present, DPL 3 (system calls, ABI v0)
+cpu: wp=on nx=on smep=unsupported umip=unsupported smap=unsupported x87=off(em)
+cpu: inherited cr0=0x80010033 cr4=0x668 efer=0xd00; set cr0=0x80010035 cr4=0x68 efer=0xd00
+boot: loader "GRUB 2.14-2ubuntu1", memory map 21 entries, 127713280 bytes usable
+boot: multiboot2 info at 0x44c000-0x44df70
+boot: kernel command line ""
+boot: modules 1
+boot: module 0 0x80000-0x83348 "hello"
+boot: reserved 0x0-0x100000 low 1 MiB
+boot: reserved 0x100000-0x28e000 kernel image
+boot: reserved 0x44c000-0x44e000 multiboot2 info
+boot: reserved 0x80000-0x84000 module
+pmm: 262144 frames tracked below 1 GiB, 30620 usable (122480 KiB), 0 bytes of RAM above 1 GiB ignored
+vmm: identity probe 0x100000 = 0xe85250d6
+vmm: identity map removed
+kmap: phys 0-4 MiB as 4 KiB pages: 122 text R-X, 35 R NX, 847 RW NX, 20 guard pages unmapped; 510 x 2 MiB RW NX
+kmap: text 0xffffffff80107000-0xffffffff80181000, rodata 0xffffffff80181000-0xffffffff801a3000
+kmap: PDPT[510] 0x105000 -> 0x1cb000, checked before and after the switch; boot directory retired
+kmap: after the TLB flush the CPU refused a text write (#PF err=0x3) and a guard read (#PF err=0x0)
+devmap: window at 0xffffffff40000000, 40-bit physical addresses, write-combining via PAT entry 4
+screen: framebuffer 1280x800 BGRX at 0x80000000, pitch 5120, write-combining, MTRR type 0, 156x41 cells
+vmm: audit passed: kernel alias 1004 x 4 KiB + 510 x 2 MiB supervisor pages, 122 ring-0 executable (all kernel text, none writable), 0 lower-half tables
+rust: kernel probe PASS; fn=0xffffffff8015e9d0 seed=0xffffffffb6c7118d salt=0xffffffff800ab910 result=0xde303edc778f516b
+rust: invoking controlled Rust panic
+panic: Rust kernel panic
+VOS-TEST: FAIL

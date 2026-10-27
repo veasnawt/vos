@@ -1,0 +1,21 @@
+{
+  "normal": {
+    "undefined_symbols": 0,
+    "allocator_symbols": 0,
+    "tls_or_dynamic_or_loadable_unwind_sections": 0,
+    "fp_or_simd_matches": 0,
+    "runtime_relocations": 0,
+    "static_got": false,
+    "loaded_bytes_match_original_verification": true
+  },
+  "panic": {
+    "undefined_symbols": 0,
+    "allocator_symbols": 0,
+    "tls_or_dynamic_or_loadable_unwind_sections": 0,
+    "fp_or_simd_matches": 0,
+    "runtime_relocations": 0,
+    "static_got": true,
+    "loaded_bytes_match_original_verification": true
+  },
+  "frozen_user_and_abi_files_checked": 119
+}

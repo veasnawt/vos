@@ -1,0 +1,29 @@
+{
+  "original_R0A_report_unchanged": true,
+  "original_R0B_48_files_unchanged": true,
+  "R0A_input_identities_match_assessed_and_accepted_baselines": 30,
+  "original_R0B_manifest_entries_verified": 47,
+  "user_and_abi_files_unchanged": 119,
+  "original_R0B_checks_reused": [
+    "two-build byte reproducibility",
+    "incremental source/flag/no-op behavior",
+    "qemu64/max CPU normal boot",
+    "incorrect-result control",
+    "i386 build/header",
+    "original BIOS/UEFI GUI/pointer/application and panic checks"
+  ],
+  "fresh_checks": [
+    "x86_64 verify/Multiboot/layout build",
+    "22 unchanged layout-validator synthetic tests",
+    "4134 same-archive C ABI checks under ASan/UBSan",
+    "four native BIOS/UEFI interactive and Rust-panic cases",
+    "final loaded-segment byte identities",
+    "static symbols, sections, allocator/runtime and FP/SIMD scan"
+  ],
+  "preserved_failure_notes": [
+    "R0-A PATH/rustup query failure and PIC cfg limitation",
+    "R0-B read-only preservation audit symlink-schema error and status-format discrepancy",
+    "R0-B negative make fixture expectation correction"
+  ],
+  "no_original_evidence_rewritten": true
+}

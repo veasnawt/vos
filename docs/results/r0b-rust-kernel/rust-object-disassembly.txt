@@ -1,0 +1,23 @@
+
+/home/veasnawt/src/vos-r0b/build/r0b-check-1/kernel-rust.o:     file format elf64-x86-64
+
+
+Disassembly of section .text._RNvCsgpO44WCzh3m_7___rustc17rust_begin_unwind:
+
+0000000000000000 <_RNvCsgpO44WCzh3m_7___rustc17rust_begin_unwind>:
+   0:	50                   	push   %rax
+   1:	48 c7 c7 00 00 00 00 	mov    $0x0,%rdi
+			4: R_X86_64_32S	.rodata.str1.1
+   8:	e8 00 00 00 00       	call   d <_RNvCsgpO44WCzh3m_7___rustc17rust_begin_unwind+0xd>
+			9: R_X86_64_PLT32	panic-0x4
+
+Disassembly of section .text.vos_rust_probe:
+
+0000000000000000 <vos_rust_probe>:
+   0:	48 c1 c7 11          	rol    $0x11,%rdi
+   4:	48 c1 c6 37          	rol    $0x37,%rsi
+   8:	48 8d 0c 3e          	lea    (%rsi,%rdi,1),%rcx
+   c:	48 b8 30 54 53 55 52 	movabs $0x564f535255535430,%rax
+  13:	53 4f 56 
+  16:	48 31 c8             	xor    %rcx,%rax
+  19:	c3                   	ret

@@ -1,0 +1,16 @@
+
+/home/veasnawt/src/vos-r0b/build/r0b-check-1/normal/vos.bin:     file format elf64-x86-64
+
+
+Disassembly of section .boot.text:
+
+Disassembly of section .text:
+
+ffffffff8012fea0 <vos_rust_probe>:
+ffffffff8012fea0:	48 c1 c7 11          	rol    $0x11,%rdi
+ffffffff8012fea4:	48 c1 c6 37          	rol    $0x37,%rsi
+ffffffff8012fea8:	48 8d 0c 3e          	lea    (%rsi,%rdi,1),%rcx
+ffffffff8012feac:	48 b8 30 54 53 55 52 	movabs $0x564f535255535430,%rax
+ffffffff8012feb3:	53 4f 56 
+ffffffff8012feb6:	48 31 c8             	xor    %rcx,%rax
+ffffffff8012feb9:	c3                   	ret

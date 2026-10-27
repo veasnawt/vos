@@ -1,10 +1,13 @@
 # VOS Status
 
-Current accepted baseline: owner-merged
+Current accepted graphical baseline: owner-merged
 [PR #15](https://github.com/veasnawt/vos/pull/15),
 [`bf5eb43f2e07478e31be8b4123c5a297add67efe`](https://github.com/veasnawt/vos/commit/bf5eb43f2e07478e31be8b4123c5a297add67efe).
 VOS is pre-alpha. **N0-N5 are accepted; N6 is still in progress.**
 No physical-hardware or complete-desktop acceptance is claimed.
+The accepted main used for this Rust-foundation review is
+`67a525e2cbcb13215c4d17cdfd0e3740ad40ff16`, the owner's merged
+[Master Plan PR #19](https://github.com/veasnawt/vos/pull/19).
 
 ## Current accepted components
 
@@ -43,6 +46,24 @@ all checks passed. See the [evidence index](results/n6-cursor-refinement/evidenc
 and [normal preview commands](results/n6-cursor-refinement.md#normal-interactive-preview).
 Automated overflow/timing verification is separate from ordinary manual use.
 
+## R0-A/R0-B: locally verified, pending acceptance
+
+The [R0-A assessment](results/r0a-rust-kernel-assessment.md) is complete at
+`689260f6c93c97e9d062e7829f078a13e92350be`. Its dated read-only findings and
+then-proposed R0-B work are preserved unchanged. The assessment is included in
+this publication tree, not available only in a private checkout.
+
+[R0-B](results/r0b-rust-kernel-foundation.md), implemented at
+`8e2f247dacf7a5d2a4f37db7c73df191f6c4cc1b`, executes one scalar `no_std` Rust
+function inside the higher-half C/assembly kernel and forwards Rust panic to the
+existing C handler. Local evidence records 4,134 C/Rust ABI checks and ten
+BIOS/UEFI cases, including actual panic and incorrect-result controls. The
+five-segment layout, 4 MiB image limit and application ABIs v0-v5 are preserved.
+Both R0-A and R0-B are proposed for publication/review, not yet owner-accepted or
+merged. This is a kernel integration proof, not a migrated subsystem or physical
+hardware qualification. See the [publication review](results/r0-publication-review.md)
+for final-tree checks and the exact provenance.
+
 ## Proposed next work, not execution approval
 
 N6 desktop design candidates include surface composition and ownership/focus,
@@ -51,8 +72,8 @@ and eventually a dock and Settings/Accessibility (including cursor-size options)
 These are incomplete planning topics; their order, contracts and budgets require
 owner approval. The accepted mockup is a design reference, not implemented UI.
 
-Rust-first kernel migration and broader physical-hardware/architecture
-portability are proposals. They require separate compatibility, unsafe/FFI/DMA,
+Rust-first kernel migration beyond the locally verified R0-B proof and broader
+physical-hardware/architecture portability remain proposals. They require separate compatibility, unsafe/FFI/DMA,
 boot/interrupt/device and resource-management plans with reproducible checks.
 VOS targets real x86_64 computers; QEMU success does not establish firmware,
 GPU, USB, storage or input support on physical systems.

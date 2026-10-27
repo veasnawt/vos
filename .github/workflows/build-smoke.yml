@@ -31,6 +31,12 @@ jobs:
       - name: Verify legacy i386 Multiboot kernel
         run: make ARCH=i386 verify
 
+      - name: Prepare the existing bare-metal Rust toolchain
+        shell: bash
+        run: |
+          rustup toolchain install nightly-2026-09-03 --profile minimal --target x86_64-unknown-none
+          echo "RUSTC=$(rustup which --toolchain nightly-2026-09-03 rustc)" >> "$GITHUB_ENV"
+
       - name: Build x86_64 BIOS and UEFI ISOs
         run: |
           make ARCH=x86_64 iso

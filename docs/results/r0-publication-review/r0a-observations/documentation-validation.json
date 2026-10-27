@@ -1,0 +1,15 @@
+{
+  "passed": true,
+  "report_sha256": "f661172e4f2b8bd9d79216ff4db03c276e90a02c5f8fc4d3bc504d9593fe2572",
+  "local_links": 22,
+  "external_primary_source_links": 6,
+  "headings": 13,
+  "tables": 3,
+  "fences": 2,
+  "all_existing_tracked_files_unchanged": 915,
+  "inspected_inputs_unchanged": 30,
+  "compiler_queries_only": true,
+  "R0B_implemented": false,
+  "kernel_QEMU_tests_run": false,
+  "linux_free_bytes": 1008981794816
+}

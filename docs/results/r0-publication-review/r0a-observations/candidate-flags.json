@@ -1,0 +1,29 @@
+{
+  "flags": [
+    "--edition=2024",
+    "--target=x86_64-unknown-none",
+    "-C",
+    "panic=abort",
+    "-C",
+    "code-model=kernel",
+    "-C",
+    "relocation-model=static",
+    "-C",
+    "no-redzone=yes",
+    "-C",
+    "target-cpu=x86-64",
+    "-C",
+    "force-unwind-tables=no",
+    "-C",
+    "lto=off",
+    "-C",
+    "embed-bitcode=no",
+    "-C",
+    "codegen-units=1",
+    "-C",
+    "opt-level=2"
+  ],
+  "read_only_print_cfg_exit": 0,
+  "compiled": false,
+  "relocation_static": false
+}

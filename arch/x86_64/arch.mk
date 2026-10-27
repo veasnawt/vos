@@ -7,7 +7,7 @@
 ARCH_CFLAGS     := -g -m64 -mcmodel=kernel -mno-red-zone -mgeneral-regs-only \
                    -fcf-protection=none -fno-stack-clash-protection
 ARCH_ASFLAGS    := -g -m64
-ARCH_LDFLAGS    := -m elf_x86_64 -z max-page-size=0x1000
+ARCH_LDFLAGS    := -m elf_x86_64 -z max-page-size=0x1000 -Map=$(BUILD)/kernel.map
 # After every link (N3.6): the PT_LOAD segments must tile the page-rounded kernel
 # reservation, leaving no page tail a loader may use; a failing kernel is removed.
 ARCH_LINK_CHECK  = python3 -I -B scripts/check-kernel-layout.py $@ || { rm -f $@; exit 1; }
@@ -40,6 +40,34 @@ ARCH_OBJS += storage_stress_d.o storage_stress.o
 endif
 endif
 QEMU            := qemu-system-x86_64
+
+# R0-B: one freestanding Rust archive, separate from userspace and ARCH_OBJS.
+# Retain GNU ld, the existing five-segment script and the post-link validator.
+RUSTC ?= rustc
+ARCH_LIBS := rust/libvos_kernel.a
+KERNEL_RUST_SOURCE ?= arch/x86_64/rust/kernel_probe.rs
+KERNEL_RUST_FLAGS = --edition=2024 --target=x86_64-unknown-none --crate-name vos_kernel \
+                    --crate-type=staticlib -D warnings -C panic=abort -C opt-level=2 \
+                    -C target-cpu=x86-64 -C code-model=kernel -C relocation-model=static \
+                    -C no-redzone=yes -C force-unwind-tables=no -C lto=off \
+                    -C embed-bitcode=no -C codegen-units=1 -C debuginfo=0 \
+                    --remap-path-prefix=$(CURDIR)=. $(KERNEL_RUST_EXTRA_FLAGS) \
+                    $(if $(and $(filter 1,$(VOS_TEST)),$(filter rust-panic,$(VOS_TEST_CASE))),--cfg vos_rust_panic_test)
+.PHONY: kernel-rust-inputs
+kernel-rust-inputs:
+$(BUILD)/rust/inputs: kernel-rust-inputs
+	@mkdir -p $(dir $@)
+	@set -eu; tmp=$$(mktemp "$@.XXXXXX"); trap 'rm -f "$$tmp"' 0 1 2 15; \
+	  { printf '%s\n' '$(KERNEL_RUST_SOURCE)' '$(KERNEL_RUST_FLAGS)'; \
+	    "$(RUSTC)" -vV; sha256sum "$$(command -v "$(RUSTC)")"; \
+	    libdir=$$("$(RUSTC)" --print target-libdir --target x86_64-unknown-none); \
+	    sha256sum "$$libdir"/libcore-*.rlib "$$libdir"/libcompiler_builtins-*.rlib; \
+	  } > "$$tmp"; \
+	  if ! cmp -s "$$tmp" "$@"; then mv "$$tmp" "$@"; fi
+$(BUILD)/rust/libvos_kernel.a: $(KERNEL_RUST_SOURCE) $(BUILD)/rust/inputs Makefile arch/x86_64/arch.mk
+	$(RUSTC) $(KERNEL_RUST_FLAGS) --emit=link,dep-info=$(BUILD)/rust/kernel.d -o $@ $(KERNEL_RUST_SOURCE)
+-include $(BUILD)/rust/kernel.d
+
 # The boot application, delivered by GRUB as a Multiboot2 module (grub.cfg).
 ARCH_ISO_FILES   = $(USER_BUILD)/hello.elf:boot/hello.elf
 MULTIBOOT_CHECK := --is-x86-multiboot2

@@ -1,0 +1,35 @@
+{
+  "normal": {
+    "no_fp_simd": true,
+    "no_final_relocations": true,
+    "no_tls_dynamic_unwind_sections": true,
+    "static_got_in_test_only": false,
+    "sha256": "66bf6ee698ab2739ab1ad793cba14c0a0db83178f5bce1821def74bf31838182"
+  },
+  "rust-panic": {
+    "no_fp_simd": true,
+    "no_final_relocations": true,
+    "no_tls_dynamic_unwind_sections": true,
+    "static_got_in_test_only": true,
+    "sha256": "c8c61169e8c926f42e3d31634fb057f40ba3e46ed439939ca93de594b04b0ee4"
+  },
+  "rust-result": {
+    "no_fp_simd": true,
+    "no_final_relocations": true,
+    "no_tls_dynamic_unwind_sections": true,
+    "static_got_in_test_only": false,
+    "sha256": "fb17b535187236d148c38fd4ef1a4b093f297b0502bdfae35d5a378ddb2f0bc9"
+  },
+  "bios-interactive": {
+    "shell_reclaimed": true,
+    "hello_and_rixie_console_restorations": 2,
+    "pointer_released": true
+  },
+  "bios-payloads": "5/5 exact ELF identities match source build",
+  "uefi-interactive": {
+    "shell_reclaimed": true,
+    "hello_and_rixie_console_restorations": 2,
+    "pointer_released": true
+  },
+  "uefi-payloads": "5/5 exact ELF identities match source build"
+}
