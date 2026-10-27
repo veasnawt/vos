@@ -1,0 +1,205 @@
+{
+  "hardware_operations": false,
+  "production_kernel_inputs_changed": false,
+  "commands": [
+    [
+      "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+      "-vV"
+    ],
+    [
+      "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+      "--edition=2024",
+      "-Dwarnings",
+      "--crate-name",
+      "vos_xhci",
+      "--crate-type=rlib",
+      "-Copt-level=1",
+      "-Coverflow-checks=yes",
+      "-Cdebug-assertions=yes",
+      "kernel/rust/usb/xhci/lib.rs",
+      "-o",
+      "/home/veasnawt/src/vos-usb2a/build/usb2a-1/verified-5/libvos_xhci.rlib"
+    ],
+    [
+      "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+      "--edition=2024",
+      "-Dwarnings",
+      "--test",
+      "-Copt-level=1",
+      "-Coverflow-checks=yes",
+      "--extern",
+      "vos_xhci=/home/veasnawt/src/vos-usb2a/build/usb2a-1/verified-5/libvos_xhci.rlib",
+      "tests/rust/xhci.rs",
+      "-o",
+      "/home/veasnawt/src/vos-usb2a/build/usb2a-1/verified-5/tests"
+    ],
+    [
+      "/home/veasnawt/src/vos-usb2a/build/usb2a-1/verified-5/tests",
+      "--nocapture",
+      "--test-threads=1"
+    ],
+    [
+      "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+      "--edition=2024",
+      "-Dwarnings",
+      "--crate-name",
+      "ownership_negative",
+      "--extern",
+      "vos_xhci=/home/veasnawt/src/vos-usb2a/build/usb2a-1/verified-5/libvos_xhci.rlib",
+      "/home/veasnawt/src/vos-usb2a/build/usb2a-1/verified-5/send-must-fail.rs",
+      "-o",
+      "/home/veasnawt/src/vos-usb2a/build/usb2a-1/verified-5/send"
+    ],
+    [
+      "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+      "--edition=2024",
+      "-Dwarnings",
+      "--crate-name",
+      "ownership_negative",
+      "--extern",
+      "vos_xhci=/home/veasnawt/src/vos-usb2a/build/usb2a-1/verified-5/libvos_xhci.rlib",
+      "/home/veasnawt/src/vos-usb2a/build/usb2a-1/verified-5/sync-must-fail.rs",
+      "-o",
+      "/home/veasnawt/src/vos-usb2a/build/usb2a-1/verified-5/sync"
+    ],
+    [
+      "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+      "--edition=2024",
+      "-Dwarnings",
+      "--crate-name",
+      "vos_xhci",
+      "--crate-type=rlib",
+      "--target=x86_64-unknown-none",
+      "-Cpanic=abort",
+      "-Copt-level=2",
+      "-Ctarget-cpu=x86-64",
+      "-Ccode-model=kernel",
+      "-Crelocation-model=static",
+      "-Cno-redzone=yes",
+      "-Cforce-unwind-tables=no",
+      "-Clto=off",
+      "-Cembed-bitcode=no",
+      "-Ccodegen-units=1",
+      "-Cdebuginfo=0",
+      "kernel/rust/usb/xhci/lib.rs",
+      "-o",
+      "/home/veasnawt/src/vos-usb2a/build/usb2a-1/verified-5/libfreestanding.rlib"
+    ],
+    [
+      "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+      "--edition=2024",
+      "-Dwarnings",
+      "--crate-name",
+      "vos_xhci_smoke",
+      "--crate-type=rlib",
+      "--target=x86_64-unknown-none",
+      "-Cpanic=abort",
+      "-Copt-level=2",
+      "-Ctarget-cpu=x86-64",
+      "-Ccode-model=kernel",
+      "-Crelocation-model=static",
+      "-Cno-redzone=yes",
+      "-Cforce-unwind-tables=no",
+      "-Clto=off",
+      "-Cembed-bitcode=no",
+      "-Ccodegen-units=1",
+      "-Cdebuginfo=0",
+      "--extern",
+      "vos_xhci=/home/veasnawt/src/vos-usb2a/build/usb2a-1/verified-5/libfreestanding.rlib",
+      "tests/rust/xhci_freestanding.rs",
+      "-o",
+      "/home/veasnawt/src/vos-usb2a/build/usb2a-1/verified-5/libfreestanding_smoke.rlib"
+    ],
+    [
+      "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+      "--edition=2024",
+      "-Dwarnings",
+      "--crate-name",
+      "vos_xhci",
+      "--crate-type=rlib",
+      "/home/veasnawt/src/vos-usb2a/build/usb2a-1/verified-5/mutant/lib.rs",
+      "-o",
+      "/home/veasnawt/src/vos-usb2a/build/usb2a-1/verified-5/libmutant.rlib"
+    ],
+    [
+      "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+      "--edition=2024",
+      "-Dwarnings",
+      "--test",
+      "--extern",
+      "vos_xhci=/home/veasnawt/src/vos-usb2a/build/usb2a-1/verified-5/libmutant.rlib",
+      "tests/rust/xhci.rs",
+      "-o",
+      "/home/veasnawt/src/vos-usb2a/build/usb2a-1/verified-5/mutant-tests"
+    ],
+    [
+      "/home/veasnawt/src/vos-usb2a/build/usb2a-1/verified-5/mutant-tests",
+      "--exact",
+      "stale_software_ticket_rejected_after_pointer_reuse"
+    ],
+    [
+      "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+      "--edition=2024",
+      "-Dwarnings",
+      "--crate-name",
+      "vos_xhci",
+      "--crate-type=rlib",
+      "-Copt-level=2",
+      "kernel/rust/usb/xhci/lib.rs",
+      "-o",
+      "/home/veasnawt/src/vos-usb2a/build/usb2a-1/verified-5/librelease.rlib"
+    ],
+    [
+      "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+      "--edition=2024",
+      "-Dwarnings",
+      "-Copt-level=2",
+      "--extern",
+      "vos_xhci=/home/veasnawt/src/vos-usb2a/build/usb2a-1/verified-5/librelease.rlib",
+      "tests/bench/xhci-core.rs",
+      "-o",
+      "/home/veasnawt/src/vos-usb2a/build/usb2a-1/verified-5/bench"
+    ],
+    [
+      "/home/veasnawt/src/vos-usb2a/build/usb2a-1/verified-5/bench"
+    ]
+  ],
+  "source_sha256": {
+    "kernel/rust/usb/xhci/capabilities.rs": "4f4dc74a227bb099af9e0fe9a9d1a0a427e0cb524cdf07cf9cc06f5260e4e488",
+    "kernel/rust/usb/xhci/controller.rs": "86217a6d2502830ff22b30393338ad5910f8133123aee4e1167390fd06c468a2",
+    "kernel/rust/usb/xhci/lib.rs": "15a8982e2ee49e0e4d9198b061382d3e27549a5867872202148b9bdd7aa232ba",
+    "kernel/rust/usb/xhci/mod.rs": "9f570026723944f16d54f8a19944293d71829c3d5a7b4813b257eecce0ff77be",
+    "kernel/rust/usb/xhci/resources.rs": "a46ff4fed32b775e6d03e0fcb85594de6224b484c21183bb2a13a4b83502f372",
+    "kernel/rust/usb/xhci/ring.rs": "87b575a4a9e4353a00eeb1bbe23ec7452e978c413566d8b2cff98d71ba2fd3c2"
+  },
+  "compiler": "rustc 1.100.0-nightly (2e2b193f8 2026-09-02)\nbinary: rustc\ncommit-hash: 2e2b193f8ada105f27608b7be81c293e0d7292cb\ncommit-date: 2026-09-02\nhost: x86_64-unknown-linux-gnu\nrelease: 1.100.0-nightly\nLLVM version: 23.1.1",
+  "host_tests_passed": 46,
+  "non_Send_non_Sync_compile_controls": "2/2 expected compile rejections; Controller and Lease",
+  "freestanding_no_std": true,
+  "freestanding_concrete_controller_codegen": true,
+  "stale_handle_mutation_detected": true,
+  "host_release_benchmark": {
+    "host_simulation_only": true,
+    "iterations_per_sample": 200000,
+    "sample_total_ns": [
+      3740300,
+      3759200,
+      3382300,
+      1597301,
+      1303800
+    ],
+    "checksum": 200000,
+    "sizes": {
+      "Controller": 424,
+      "PermanentSnapshot": 144,
+      "Capabilities": 40,
+      "CommandRing": 64,
+      "EventRing": 24,
+      "Usage": 8,
+      "Trb": 16
+    }
+  },
+  "unsafe_blocks": 0,
+  "status": "PASS",
+  "elapsed_seconds": 13.176
+}

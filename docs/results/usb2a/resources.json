@@ -1,0 +1,13 @@
+{
+  "measured_utc": "2026-10-27T10:24:38.691058+00:00",
+  "build_logical_bytes": 114435067,
+  "checkout_logical_bytes": 124772369,
+  "Linux_free_bytes": 1007734706176,
+  "new_PMMDMA_or_MMIO_allocations": 0,
+  "real_controller_operations": 0,
+  "real_kernel_workers_created": 0,
+  "historical_ledgers": "unchanged; ordinary separate-checkout disk checks under owner replacement policy",
+  "native_tests": "NOT RUN: portable-only scope, production loaded-code/source/archive identities match accepted evidence",
+  "C_free_bytes": 22000611328,
+  "E_free_bytes": 245609693184
+}

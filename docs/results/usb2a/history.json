@@ -1,0 +1,35 @@
+{
+  "initial_compile": {
+    "record": "failed-unused-import.txt",
+    "outcome": "FAIL: unused BAR_BYTES import under -Dwarnings, removed without changing flags"
+  },
+  "harness_stop": {
+    "record": "failed-rlib-name.txt",
+    "outcome": "FAIL after 43 host tests and bare-metal crate compile; mutant.rlib was not an accepted lib*.rlib filename. Renamed only build outputs; no suppressed compiler check."
+  },
+  "intermediate_valid_runs": [
+    {
+      "root": "build/usb2a-1/host-2",
+      "tests": 36
+    },
+    {
+      "root": "build/usb2a-1/verified-2",
+      "tests": 44,
+      "mutation_detected": true
+    },
+    {
+      "root": "build/usb2a-1/verified-3",
+      "tests": 46,
+      "mutation_detected": true
+    },
+    {
+      "root": "build/usb2a-1/verified-4",
+      "tests": 46,
+      "concrete_baremetal_codegen": true
+    }
+  ],
+  "final_run": "build/usb2a-1/verified-5",
+  "final_tests": 46,
+  "final_additional_coverage": "2/2 compile-negative controls enforce non-Send/non-Sync Controller and Lease with zero-size local markers; resource limits unchanged.",
+  "all_old_roots_preserved": true
+}

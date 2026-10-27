@@ -1,0 +1,160 @@
+{
+  "algorithm": "SHA-256",
+  "baseline_design_commit": "2cd3bf3e7b7132fdfe6f5b643919916f39b465b3",
+  "accepted_main": "95eb0e0c944277a4ed9f3ad0e8671e25d2d9f6cd",
+  "files": {
+    "docs/results/usb2a-rust-core.md": {
+      "bytes": 15318,
+      "sha256": "2d42d0ae7e56d600273b596fa9b3a9782820832571c7e2fe086cc8c7e21d8b72"
+    },
+    "docs/results/usb2a/ELF-differences.json": {
+      "bytes": 141,
+      "sha256": "5f3daca614950df96dbfd825ad7172d0e2cb848e76f5df0797dbdee510a5936d"
+    },
+    "docs/results/usb2a/changed-files.txt": {
+      "bytes": 1388,
+      "sha256": "8979681b949c6a287d95847e0da43ae3b45b61244c0e29cce89b0535999a79d6"
+    },
+    "docs/results/usb2a/compatibility.json": {
+      "bytes": 662,
+      "sha256": "6e0777ad3534e5637dcc754ed2f4109d181e9a9bcdc7414bfc5d835b94b9c153"
+    },
+    "docs/results/usb2a/concrete-undefined.txt": {
+      "bytes": 470,
+      "sha256": "49a6015f2d0f7445cb6de7512a8e27f810c3de726b2e63889a573d4be5b72777"
+    },
+    "docs/results/usb2a/core-undefined.txt": {
+      "bytes": 26,
+      "sha256": "d892aaf102102f3819f38ee8dc4cb76e2a30d67a64bf7da206e94c7b8f41d267"
+    },
+    "docs/results/usb2a/documentation-validation.json": {
+      "bytes": 523,
+      "sha256": "4b69983da82dd07592d17204ccdf6ad0dfa8e7334156ca819426219bb302cfa4"
+    },
+    "docs/results/usb2a/failed-rlib-name.txt": {
+      "bytes": 650,
+      "sha256": "40713b203820e8fefbf66f7457cb44dc32a90d48b1003ea4c96c066954577e27"
+    },
+    "docs/results/usb2a/failed-unused-import.txt": {
+      "bytes": 318,
+      "sha256": "7569e2d0becac13cd4aa030849db7ad9fe3b18256cb4f6545b1c8bdade5f2a67"
+    },
+    "docs/results/usb2a/history.json": {
+      "bytes": 1112,
+      "sha256": "15d93b3fbb2a352af236cfc52d686e458e6a3ccc2a4b2f593a7e56b81ce03fdb"
+    },
+    "docs/results/usb2a/host-benchmark.json": {
+      "bytes": 263,
+      "sha256": "a5cfee16aff714e900a21521a68265bab2b041d66d639fe679609042bc40d588"
+    },
+    "docs/results/usb2a/kernel-program-headers.txt": {
+      "bytes": 852,
+      "sha256": "e4e4dcbd3e1369ef22ef616f5bf003d896164eb1ee5be01cdd088f9ef088751c"
+    },
+    "docs/results/usb2a/kernel-verification-tail.txt": {
+      "bytes": 477,
+      "sha256": "801f2282bab4c32a2d43430cfe3582b51001ad78438428ced2dd41f1b9ab40f5"
+    },
+    "docs/results/usb2a/mutation-control.txt": {
+      "bytes": 583,
+      "sha256": "d31960337296b1dbb6ca2c3857b3e1f0698f51401b23cfd6d4360090856541a3"
+    },
+    "docs/results/usb2a/object-review.json": {
+      "bytes": 1938,
+      "sha256": "038d66d8db8ea8da154972f74fb2021e7c5071cc42133ecb8d3d8dd4413f01e4"
+    },
+    "docs/results/usb2a/performance-comparison.json": {
+      "bytes": 1248,
+      "sha256": "a9dc3e718d1855e99adc9185310f7b3686a9b7898b1665ce5c9949306574d2b2"
+    },
+    "docs/results/usb2a/preservation.json": {
+      "bytes": 566,
+      "sha256": "844f000d22af94b5af1a4cf989ed20531e6dd2eb37f6622ad729284ee8d53949"
+    },
+    "docs/results/usb2a/r0-host.txt": {
+      "bytes": 89,
+      "sha256": "b8e5fa835272a57c88432fe5a528fc81273c6cc1ed0bb54af4771ab36a52e93e"
+    },
+    "docs/results/usb2a/r1-host.txt": {
+      "bytes": 74,
+      "sha256": "88f2b3b25f1f8d2ab51a671cd3ba76204873a19123c9a38ebf2c4896fe4c18b3"
+    },
+    "docs/results/usb2a/resources.json": {
+      "bytes": 574,
+      "sha256": "f92cf120228a30150782634518d6021e715a9ec09c76995e93373a4b2a9d8304"
+    },
+    "docs/results/usb2a/rust-tests.txt": {
+      "bytes": 3046,
+      "sha256": "854d7f8818fb9471795d6dd5efbfc22589a7dd5d19983d7d97f10fba0a720ced"
+    },
+    "docs/results/usb2a/rustc.txt": {
+      "bytes": 214,
+      "sha256": "5303827d15ecae377665b10948e5d62e32b5b214eee39c7421baf91252b9df59"
+    },
+    "docs/results/usb2a/send-negative.txt": {
+      "bytes": 2268,
+      "sha256": "0fdcc7205c644718a83d032d2241f4bd6603d32aafedb270271f5f0975a89b90"
+    },
+    "docs/results/usb2a/stopped-harness-result.json": {
+      "bytes": 3727,
+      "sha256": "55fe6e9ca275497334e8d5ff7a50936f1242febd199eaf93b6a12f057aad1004"
+    },
+    "docs/results/usb2a/sync-negative.txt": {
+      "bytes": 2276,
+      "sha256": "639110b8d6fff6edf7c95982247b565ed66c4e0ce4cbfaa9145bb882a2c90964"
+    },
+    "docs/results/usb2a/usb1-host.json": {
+      "bytes": 1263,
+      "sha256": "2f2b434ebf8ef7f601c4d3016bde75ec9e4e98b9acb5c7c334f981971dbdf6ad"
+    },
+    "docs/results/usb2a/verification.json": {
+      "bytes": 7103,
+      "sha256": "4ca708409ca08a44c664daee2f39a2d59e39b1e497425a889a4b2a4763b95e26"
+    },
+    "kernel/rust/usb/xhci/capabilities.rs": {
+      "bytes": 8126,
+      "sha256": "4f4dc74a227bb099af9e0fe9a9d1a0a427e0cb524cdf07cf9cc06f5260e4e488"
+    },
+    "kernel/rust/usb/xhci/controller.rs": {
+      "bytes": 20342,
+      "sha256": "86217a6d2502830ff22b30393338ad5910f8133123aee4e1167390fd06c468a2"
+    },
+    "kernel/rust/usb/xhci/lib.rs": {
+      "bytes": 144,
+      "sha256": "15a8982e2ee49e0e4d9198b061382d3e27549a5867872202148b9bdd7aa232ba"
+    },
+    "kernel/rust/usb/xhci/mod.rs": {
+      "bytes": 590,
+      "sha256": "9f570026723944f16d54f8a19944293d71829c3d5a7b4813b257eecce0ff77be"
+    },
+    "kernel/rust/usb/xhci/resources.rs": {
+      "bytes": 5834,
+      "sha256": "a46ff4fed32b775e6d03e0fcb85594de6224b484c21183bb2a13a4b83502f372"
+    },
+    "kernel/rust/usb/xhci/ring.rs": {
+      "bytes": 6057,
+      "sha256": "87b575a4a9e4353a00eeb1bbe23ec7452e978c413566d8b2cff98d71ba2fd3c2"
+    },
+    "scripts/test-xhci-core.py": {
+      "bytes": 7221,
+      "sha256": "1798d38ff96dd5f859d6aeb59daaf63aaee5a2e6f9650740db91cbb34f84f73f"
+    },
+    "tests/bench/xhci-core.rs": {
+      "bytes": 1980,
+      "sha256": "fcd96b98bc6b9ce44bd821bd0adc1bf7893296f6a07399d2f5ea8d4f05279039"
+    },
+    "tests/rust/xhci.rs": {
+      "bytes": 31322,
+      "sha256": "81d7d39299cb46bdb7b571c1bf0549dbf4615c0f68924afbf3e081cde63f06c0"
+    },
+    "tests/rust/xhci_fake.rs": {
+      "bytes": 15580,
+      "sha256": "4afb802bd1faa988d806b01bcb5724ef5ec27a08a8f9d0160a1eed157ffeba44"
+    },
+    "tests/rust/xhci_freestanding.rs": {
+      "bytes": 1053,
+      "sha256": "8fee3a81616a55e5b45631c57682ccf0e321d44761a6d848a74a7c562d44ac70"
+    }
+  },
+  "self_excluded": true
+}

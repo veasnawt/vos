@@ -1,0 +1,35 @@
+{
+  "libfreestanding.rlib": {
+    "sha256": "eaa7a985356e4ce8c33933d3957f57de2777025b760e142bb2985e3bec0c910e",
+    "archive_bytes": 322658,
+    "size_summary": "text\t   data\t    bss\t    dec\t    hex\tfilename\n   3264\t      0\t      0\t   3264\t    cc0\t/home/veasnawt/src/vos-usb2a/build/usb2a-1/audit-ownership/libfreestanding.rlib.o",
+    "BSS_symbols": 0,
+    "FP_SIMD_matches": 0,
+    "allocator_OS_unwind_dependencies": [],
+    "undefined_symbols": [
+      "                 U memset"
+    ],
+    "TLS_dynamic_unwind_sections": false
+  },
+  "libfreestanding_smoke.rlib": {
+    "sha256": "61eae328bdbd165c68e922ce4c201a737d702959a6b6b27dc5dd8dc2aed86c88",
+    "archive_bytes": 66566,
+    "size_summary": "text\t   data\t    bss\t    dec\t    hex\tfilename\n   9164\t      0\t      0\t   9164\t   23cc\t/home/veasnawt/src/vos-usb2a/build/usb2a-1/audit-ownership/libfreestanding_smoke.rlib.o",
+    "BSS_symbols": 0,
+    "FP_SIMD_matches": 0,
+    "allocator_OS_unwind_dependencies": [],
+    "undefined_symbols": [
+      "                 U _RNvMNtNtCsap0DzxSBLVY_8vos_xhci4xhci9resourcesNtB2_5Usage3add",
+      "                 U _RNvMNtNtCsap0DzxSBLVY_8vos_xhci4xhci9resourcesNtB2_5Usage8subtract",
+      "                 U _RNvMs0_NtNtCsap0DzxSBLVY_8vos_xhci4xhci10controllerNtB5_10Controller7qualify",
+      "                 U _RNvNtCs5DY3uuhqWn8_4core9panicking18panic_bounds_check",
+      "                 U _RNvNtNtCs5DY3uuhqWn8_4core5slice5index16slice_index_fail",
+      "                 U memcmp",
+      "                 U memset"
+    ],
+    "TLS_dynamic_unwind_sections": false
+  },
+  "note": "Generic metadata plus concrete Controller<Fake> code generation, no link or execution in VOS. Fake storage remains a host fixture, not a kernel stack allocation. Rust core/memory intrinsic and companion-crate references require final linkage later.",
+  "production_kernel_growth_bytes": 0,
+  "explicit_unsafe_blocks": 0
+}

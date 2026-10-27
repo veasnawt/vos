@@ -1,0 +1,11 @@
+error: unused import: `BAR_BYTES`
+ --> kernel/rust/usb/xhci/controller.rs:5:13
+  |
+5 | use super::{BAR_BYTES, Error, PAGE};
+  |             ^^^^^^^^^
+  |
+  = note: `-D unused-imports` implied by `-D warnings`
+  = help: to override `-D warnings` add `#[allow(unused_imports)]`
+
+error: aborting due to 1 previous error
+

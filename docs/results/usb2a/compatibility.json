@@ -1,0 +1,11 @@
+{
+  "production_kernel_source_files_unchanged": 311,
+  "Rust_archive_byte_identical": true,
+  "Rust_archive_sha256": "abb3773f1b21e291a2eb1943f9a5a7e697f151f1ca79bcf2113ae9bfbfeb692b",
+  "all_five_loaded_segments_byte_identical_to_USB1_integrated_verification": true,
+  "normal_kernel_full_sha256": "8e448e356ca6d53e999bb8f2f57baa0aaf75e5d7958a061f355617f49576f3d9",
+  "USB2_core_registered_or_linked_in_production": false,
+  "hardware_operations_executed": false,
+  "ABI_files_unchanged": true,
+  "native_regression_evidence": "Reuse accepted USB1/R0/R1 native evidence by exact loaded-code/archive/source identity; no new QEMU run or controller activation."
+}

@@ -1,0 +1,9 @@
+{
+  "changed_sections": [
+    ".debug_line_str",
+    ".debug_line",
+    ".debug_info",
+    ".debug_str"
+  ],
+  "only_debug_sections": true
+}

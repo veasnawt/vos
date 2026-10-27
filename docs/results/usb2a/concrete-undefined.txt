@@ -1,0 +1,7 @@
+                 U _RNvMNtNtCsap0DzxSBLVY_8vos_xhci4xhci9resourcesNtB2_5Usage3add
+                 U _RNvMNtNtCsap0DzxSBLVY_8vos_xhci4xhci9resourcesNtB2_5Usage8subtract
+                 U _RNvMs0_NtNtCsap0DzxSBLVY_8vos_xhci4xhci10controllerNtB5_10Controller7qualify
+                 U _RNvNtCs5DY3uuhqWn8_4core9panicking18panic_bounds_check
+                 U _RNvNtNtCs5DY3uuhqWn8_4core5slice5index16slice_index_fail
+                 U memcmp
+                 U memset
