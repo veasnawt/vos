@@ -1,0 +1,409 @@
+
+/home/veasnawt/src/vos-usb1-rust/build/usb1-publication-review-1/performance/reference.o:     file format elf64-x86-64
+
+
+Disassembly of section .text:
+
+0000000000000000 <reference_xhci_class_matches>:
+   0:	c1 ef 08             	shr    $0x8,%edi
+   3:	31 c0                	xor    %eax,%eax
+   5:	81 ff 30 03 0c 00    	cmp    $0xc0330,%edi
+   b:	0f 94 c0             	sete   %al
+   e:	c3                   	ret
+   f:	90                   	nop
+
+0000000000000010 <reference_xhci_decode_caps>:
+  10:	48 85 ff             	test   %rdi,%rdi
+  13:	0f 84 6f 01 00 00    	je     188 <reference_xhci_decode_caps+0x178>
+  19:	48 83 fe 1b          	cmp    $0x1b,%rsi
+  1d:	0f 86 65 01 00 00    	jbe    188 <reference_xhci_decode_caps+0x178>
+  23:	55                   	push   %rbp
+  24:	53                   	push   %rbx
+  25:	8b 0f                	mov    (%rdi),%ecx
+  27:	0f b6 d9             	movzbl %cl,%ebx
+  2a:	89 5a 50             	mov    %ebx,0x50(%rdx)
+  2d:	8b 47 04             	mov    0x4(%rdi),%eax
+  30:	44 8b 07             	mov    (%rdi),%r8d
+  33:	89 42 28             	mov    %eax,0x28(%rdx)
+  36:	8b 47 08             	mov    0x8(%rdi),%eax
+  39:	41 c1 e8 10          	shr    $0x10,%r8d
+  3d:	89 42 2c             	mov    %eax,0x2c(%rdx)
+  40:	8b 47 0c             	mov    0xc(%rdi),%eax
+  43:	66 44 89 42 18       	mov    %r8w,0x18(%rdx)
+  48:	89 42 30             	mov    %eax,0x30(%rdx)
+  4b:	8b 47 10             	mov    0x10(%rdi),%eax
+  4e:	89 42 34             	mov    %eax,0x34(%rdx)
+  51:	44 0f b6 5f 04       	movzbl 0x4(%rdi),%r11d
+  56:	44 89 5a 54          	mov    %r11d,0x54(%rdx)
+  5a:	8b 47 04             	mov    0x4(%rdi),%eax
+  5d:	c1 e8 08             	shr    $0x8,%eax
+  60:	25 ff 07 00 00       	and    $0x7ff,%eax
+  65:	89 42 58             	mov    %eax,0x58(%rdx)
+  68:	44 0f b6 4f 07       	movzbl 0x7(%rdi),%r9d
+  6d:	44 89 4a 5c          	mov    %r9d,0x5c(%rdx)
+  71:	44 8b 57 14          	mov    0x14(%rdi),%r10d
+  75:	44 89 52 38          	mov    %r10d,0x38(%rdx)
+  79:	8b 6f 18             	mov    0x18(%rdi),%ebp
+  7c:	89 6a 3c             	mov    %ebp,0x3c(%rdx)
+  7f:	8b 37                	mov    (%rdi),%esi
+  81:	83 fe ff             	cmp    $0xffffffff,%esi
+  84:	0f 84 e6 00 00 00    	je     170 <reference_xhci_decode_caps+0x160>
+  8a:	f6 c1 e0             	test   $0xe0,%cl
+  8d:	0f 84 dd 00 00 00    	je     170 <reference_xhci_decode_caps+0x160>
+  93:	81 e6 00 ff 00 00    	and    $0xff00,%esi
+  99:	83 e1 03             	and    $0x3,%ecx
+  9c:	09 ce                	or     %ecx,%esi
+  9e:	0f 95 c1             	setne  %cl
+  a1:	45 85 db             	test   %r11d,%r11d
+  a4:	40 0f 94 c6          	sete   %sil
+  a8:	09 f1                	or     %esi,%ecx
+  aa:	45 85 c9             	test   %r9d,%r9d
+  ad:	40 0f 94 c6          	sete   %sil
+  b1:	40 08 f1             	or     %sil,%cl
+  b4:	0f 85 b6 00 00 00    	jne    170 <reference_xhci_decode_caps+0x160>
+  ba:	85 c0                	test   %eax,%eax
+  bc:	0f 84 ae 00 00 00    	je     170 <reference_xhci_decode_caps+0x160>
+  c2:	44 89 c1             	mov    %r8d,%ecx
+  c5:	83 e1 ef             	and    $0xffffffef,%ecx
+  c8:	81 f9 00 01 00 00    	cmp    $0x100,%ecx
+  ce:	74 0d                	je     dd <reference_xhci_decode_caps+0xcd>
+  d0:	41 81 f8 20 01 00 00 	cmp    $0x120,%r8d
+  d7:	0f 85 e3 00 00 00    	jne    1c0 <reference_xhci_decode_caps+0x1b0>
+  dd:	44 89 d1             	mov    %r10d,%ecx
+  e0:	89 ee                	mov    %ebp,%esi
+  e2:	83 e1 03             	and    $0x3,%ecx
+  e5:	83 e6 1f             	and    $0x1f,%esi
+  e8:	09 f1                	or     %esi,%ecx
+  ea:	0f 85 c0 00 00 00    	jne    1b0 <reference_xhci_decode_caps+0x1a0>
+  f0:	41 c1 e1 04          	shl    $0x4,%r9d
+  f4:	89 ee                	mov    %ebp,%esi
+  f6:	41 39 ea             	cmp    %ebp,%r10d
+  f9:	41 0f 46 f2          	cmovbe %r10d,%esi
+  fd:	42 8d 8c 0b 00 04 00 	lea    0x400(%rbx,%r9,1),%ecx
+ 104:	00 
+ 105:	39 ce                	cmp    %ecx,%esi
+ 107:	0f 82 93 00 00 00    	jb     1a0 <reference_xhci_decode_caps+0x190>
+ 10d:	b9 00 00 00 04       	mov    $0x4000000,%ecx
+ 112:	42 8d 34 9d 04 00 00 	lea    0x4(,%r11,4),%esi
+ 119:	00 
+ 11a:	89 cf                	mov    %ecx,%edi
+ 11c:	29 f7                	sub    %esi,%edi
+ 11e:	44 39 d7             	cmp    %r10d,%edi
+ 121:	72 7d                	jb     1a0 <reference_xhci_decode_caps+0x190>
+ 123:	83 c0 01             	add    $0x1,%eax
+ 126:	c1 e0 05             	shl    $0x5,%eax
+ 129:	29 c1                	sub    %eax,%ecx
+ 12b:	39 e9                	cmp    %ebp,%ecx
+ 12d:	72 71                	jb     1a0 <reference_xhci_decode_caps+0x190>
+ 12f:	89 ef                	mov    %ebp,%edi
+ 131:	89 c1                	mov    %eax,%ecx
+ 133:	45 89 d0             	mov    %r10d,%r8d
+ 136:	48 01 f9             	add    %rdi,%rcx
+ 139:	49 39 c8             	cmp    %rcx,%r8
+ 13c:	73 0a                	jae    148 <reference_xhci_decode_caps+0x138>
+ 13e:	89 f1                	mov    %esi,%ecx
+ 140:	4c 01 c1             	add    %r8,%rcx
+ 143:	48 39 cf             	cmp    %rcx,%rdi
+ 146:	72 58                	jb     1a0 <reference_xhci_decode_caps+0x190>
+ 148:	01 c5                	add    %eax,%ebp
+ 14a:	41 01 f2             	add    %esi,%r10d
+ 14d:	48 c7 c1 00 00 00 00 	mov    $0x0,%rcx
+			150: R_X86_64_32S	.rodata.str1.8
+ 154:	b8 01 00 00 00       	mov    $0x1,%eax
+ 159:	41 39 ea             	cmp    %ebp,%r10d
+ 15c:	44 0f 42 d5          	cmovb  %ebp,%r10d
+ 160:	44 89 52 40          	mov    %r10d,0x40(%rdx)
+ 164:	eb 16                	jmp    17c <reference_xhci_decode_caps+0x16c>
+ 166:	66 2e 0f 1f 84 00 00 	cs nopw 0x0(%rax,%rax,1)
+ 16d:	00 00 00 
+ 170:	48 c7 c1 00 00 00 00 	mov    $0x0,%rcx
+			173: R_X86_64_32S	.rodata.str1.1
+ 177:	b8 03 00 00 00       	mov    $0x3,%eax
+ 17c:	5b                   	pop    %rbx
+ 17d:	5d                   	pop    %rbp
+ 17e:	89 02                	mov    %eax,(%rdx)
+ 180:	48 89 4a 08          	mov    %rcx,0x8(%rdx)
+ 184:	c3                   	ret
+ 185:	0f 1f 00             	nopl   (%rax)
+ 188:	48 c7 c1 00 00 00 00 	mov    $0x0,%rcx
+			18b: R_X86_64_32S	.rodata.str1.1+0x1d
+ 18f:	b8 03 00 00 00       	mov    $0x3,%eax
+ 194:	89 02                	mov    %eax,(%rdx)
+ 196:	48 89 4a 08          	mov    %rcx,0x8(%rdx)
+ 19a:	c3                   	ret
+ 19b:	0f 1f 44 00 00       	nopl   0x0(%rax,%rax,1)
+ 1a0:	48 c7 c1 00 00 00 00 	mov    $0x0,%rcx
+			1a3: R_X86_64_32S	.rodata.str1.8+0x58
+ 1a7:	b8 03 00 00 00       	mov    $0x3,%eax
+ 1ac:	eb ce                	jmp    17c <reference_xhci_decode_caps+0x16c>
+ 1ae:	66 90                	xchg   %ax,%ax
+ 1b0:	48 c7 c1 00 00 00 00 	mov    $0x0,%rcx
+			1b3: R_X86_64_32S	.rodata.str1.1+0x39
+ 1b7:	b8 03 00 00 00       	mov    $0x3,%eax
+ 1bc:	eb be                	jmp    17c <reference_xhci_decode_caps+0x16c>
+ 1be:	66 90                	xchg   %ax,%ax
+ 1c0:	48 c7 c1 00 00 00 00 	mov    $0x0,%rcx
+			1c3: R_X86_64_32S	.rodata.str1.8+0x30
+ 1c7:	b8 02 00 00 00       	mov    $0x2,%eax
+ 1cc:	eb ae                	jmp    17c <reference_xhci_decode_caps+0x16c>
+ 1ce:	66 90                	xchg   %ax,%ax
+
+00000000000001d0 <reference_xhci_probe>:
+ 1d0:	55                   	push   %rbp
+ 1d1:	b9 0d 00 00 00       	mov    $0xd,%ecx
+ 1d6:	31 c0                	xor    %eax,%eax
+ 1d8:	53                   	push   %rbx
+ 1d9:	48 89 d3             	mov    %rdx,%rbx
+ 1dc:	48 83 ec 48          	sub    $0x48,%rsp
+ 1e0:	48 89 7c 24 08       	mov    %rdi,0x8(%rsp)
+ 1e5:	48 89 d7             	mov    %rdx,%rdi
+ 1e8:	f3 48 ab             	rep stos %rax,(%rdi)
+ 1eb:	48 85 f6             	test   %rsi,%rsi
+ 1ee:	0f 84 b4 02 00 00    	je     4a8 <reference_xhci_probe+0x2d8>
+ 1f4:	48 8b 4e 10          	mov    0x10(%rsi),%rcx
+ 1f8:	48 85 c9             	test   %rcx,%rcx
+ 1fb:	0f 84 a7 02 00 00    	je     4a8 <reference_xhci_probe+0x2d8>
+ 201:	48 83 7e 18 00       	cmpq   $0x0,0x18(%rsi)
+ 206:	0f 84 9c 02 00 00    	je     4a8 <reference_xhci_probe+0x2d8>
+ 20c:	48 83 7e 20 00       	cmpq   $0x0,0x20(%rsi)
+ 211:	0f 84 91 02 00 00    	je     4a8 <reference_xhci_probe+0x2d8>
+ 217:	8b 46 08             	mov    0x8(%rsi),%eax
+ 21a:	83 e8 20             	sub    $0x20,%eax
+ 21d:	83 f8 14             	cmp    $0x14,%eax
+ 220:	0f 87 82 02 00 00    	ja     4a8 <reference_xhci_probe+0x2d8>
+ 226:	0f b6 44 24 09       	movzbl 0x9(%rsp),%eax
+ 22b:	48 8b 3e             	mov    (%rsi),%rdi
+ 22e:	48 89 f5             	mov    %rsi,%rbp
+ 231:	31 d2                	xor    %edx,%edx
+ 233:	0f b6 74 24 08       	movzbl 0x8(%rsp),%esi
+ 238:	48 c1 e0 08          	shl    $0x8,%rax
+ 23c:	48 09 f0             	or     %rsi,%rax
+ 23f:	0f b6 74 24 0a       	movzbl 0xa(%rsp),%esi
+ 244:	48 c1 e6 10          	shl    $0x10,%rsi
+ 248:	48 09 c6             	or     %rax,%rsi
+ 24b:	ff d1                	call   *%rcx
+ 24d:	89 43 10             	mov    %eax,0x10(%rbx)
+ 250:	66 83 f8 ff          	cmp    $0xffff,%ax
+ 254:	0f 84 86 02 00 00    	je     4e0 <reference_xhci_probe+0x310>
+ 25a:	0f b6 44 24 09       	movzbl 0x9(%rsp),%eax
+ 25f:	0f b6 4c 24 08       	movzbl 0x8(%rsp),%ecx
+ 264:	ba 08 00 00 00       	mov    $0x8,%edx
+ 269:	0f b6 74 24 0a       	movzbl 0xa(%rsp),%esi
+ 26e:	48 8b 7d 00          	mov    0x0(%rbp),%rdi
+ 272:	48 c1 e0 08          	shl    $0x8,%rax
+ 276:	48 09 c8             	or     %rcx,%rax
+ 279:	48 c1 e6 10          	shl    $0x10,%rsi
+ 27d:	48 09 c6             	or     %rax,%rsi
+ 280:	ff 55 10             	call   *0x10(%rbp)
+ 283:	89 43 1c             	mov    %eax,0x1c(%rbx)
+ 286:	c1 e8 08             	shr    $0x8,%eax
+ 289:	3d 30 03 0c 00       	cmp    $0xc0330,%eax
+ 28e:	0f 85 34 02 00 00    	jne    4c8 <reference_xhci_probe+0x2f8>
+ 294:	66 83 7b 10 00       	cmpw   $0x0,0x10(%rbx)
+ 299:	0f 84 51 02 00 00    	je     4f0 <reference_xhci_probe+0x320>
+ 29f:	0f b6 44 24 09       	movzbl 0x9(%rsp),%eax
+ 2a4:	0f b6 4c 24 08       	movzbl 0x8(%rsp),%ecx
+ 2a9:	ba 0c 00 00 00       	mov    $0xc,%edx
+ 2ae:	0f b6 74 24 0a       	movzbl 0xa(%rsp),%esi
+ 2b3:	48 8b 7d 00          	mov    0x0(%rbp),%rdi
+ 2b7:	48 c1 e0 08          	shl    $0x8,%rax
+ 2bb:	48 09 c8             	or     %rcx,%rax
+ 2be:	48 c1 e6 10          	shl    $0x10,%rsi
+ 2c2:	48 09 c6             	or     %rax,%rsi
+ 2c5:	ff 55 10             	call   *0x10(%rbp)
+ 2c8:	a9 00 00 7f 00       	test   $0x7f0000,%eax
+ 2cd:	0f 85 1d 02 00 00    	jne    4f0 <reference_xhci_probe+0x320>
+ 2d3:	0f b6 44 24 09       	movzbl 0x9(%rsp),%eax
+ 2d8:	0f b6 4c 24 08       	movzbl 0x8(%rsp),%ecx
+ 2dd:	ba 04 00 00 00       	mov    $0x4,%edx
+ 2e2:	0f b6 74 24 0a       	movzbl 0xa(%rsp),%esi
+ 2e7:	48 8b 7d 00          	mov    0x0(%rbp),%rdi
+ 2eb:	48 c1 e0 08          	shl    $0x8,%rax
+ 2ef:	48 09 c8             	or     %rcx,%rax
+ 2f2:	48 c1 e6 10          	shl    $0x10,%rsi
+ 2f6:	48 09 c6             	or     %rax,%rsi
+ 2f9:	ff 55 10             	call   *0x10(%rbp)
+ 2fc:	0f b6 4c 24 08       	movzbl 0x8(%rsp),%ecx
+ 301:	0f b6 74 24 0a       	movzbl 0xa(%rsp),%esi
+ 306:	ba 10 00 00 00       	mov    $0x10,%edx
+ 30b:	89 43 14             	mov    %eax,0x14(%rbx)
+ 30e:	0f b6 44 24 09       	movzbl 0x9(%rsp),%eax
+ 313:	48 c1 e6 10          	shl    $0x10,%rsi
+ 317:	48 8b 7d 00          	mov    0x0(%rbp),%rdi
+ 31b:	48 c1 e0 08          	shl    $0x8,%rax
+ 31f:	48 09 c8             	or     %rcx,%rax
+ 322:	48 09 c6             	or     %rax,%rsi
+ 325:	ff 55 10             	call   *0x10(%rbp)
+ 328:	89 c1                	mov    %eax,%ecx
+ 32a:	89 43 20             	mov    %eax,0x20(%rbx)
+ 32d:	83 e1 01             	and    $0x1,%ecx
+ 330:	0f 85 12 02 00 00    	jne    548 <reference_xhci_probe+0x378>
+ 336:	89 c2                	mov    %eax,%edx
+ 338:	d1 ea                	shr    $1,%edx
+ 33a:	83 e2 03             	and    $0x3,%edx
+ 33d:	83 fa 01             	cmp    $0x1,%edx
+ 340:	0f 84 2a 02 00 00    	je     570 <reference_xhci_probe+0x3a0>
+ 346:	83 fa 03             	cmp    $0x3,%edx
+ 349:	0f 84 2d 02 00 00    	je     57c <reference_xhci_probe+0x3ac>
+ 34f:	83 fa 02             	cmp    $0x2,%edx
+ 352:	0f 84 a8 01 00 00    	je     500 <reference_xhci_probe+0x330>
+ 358:	c7 43 60 20 00 00 00 	movl   $0x20,0x60(%rbx)
+ 35f:	31 d2                	xor    %edx,%edx
+ 361:	83 e0 f0             	and    $0xfffffff0,%eax
+ 364:	89 4b 24             	mov    %ecx,0x24(%rbx)
+ 367:	48 09 d0             	or     %rdx,%rax
+ 36a:	48 89 43 48          	mov    %rax,0x48(%rbx)
+ 36e:	48 89 c6             	mov    %rax,%rsi
+ 371:	0f 84 e1 01 00 00    	je     558 <reference_xhci_probe+0x388>
+ 377:	a9 f0 0f 00 00       	test   $0xff0,%eax
+ 37c:	0f 85 e2 01 00 00    	jne    564 <reference_xhci_probe+0x394>
+ 382:	8b 4d 08             	mov    0x8(%rbp),%ecx
+ 385:	48 8d 50 1c          	lea    0x1c(%rax),%rdx
+ 389:	b8 01 00 00 00       	mov    $0x1,%eax
+ 38e:	48 d3 e0             	shl    %cl,%rax
+ 391:	48 39 d0             	cmp    %rdx,%rax
+ 394:	0f 82 ee 01 00 00    	jb     588 <reference_xhci_probe+0x3b8>
+ 39a:	f6 43 14 02          	testb  $0x2,0x14(%rbx)
+ 39e:	0f 84 f0 01 00 00    	je     594 <reference_xhci_probe+0x3c4>
+ 3a4:	48 8b 7d 00          	mov    0x0(%rbp),%rdi
+ 3a8:	ba 1c 00 00 00       	mov    $0x1c,%edx
+ 3ad:	ff 55 18             	call   *0x18(%rbp)
+ 3b0:	89 43 64             	mov    %eax,0x64(%rbx)
+ 3b3:	85 c0                	test   %eax,%eax
+ 3b5:	0f 85 f1 01 00 00    	jne    5ac <reference_xhci_probe+0x3dc>
+ 3bb:	48 8b 73 48          	mov    0x48(%rbx),%rsi
+ 3bf:	48 8b 7d 00          	mov    0x0(%rbp),%rdi
+ 3c3:	48 8d 4c 24 10       	lea    0x10(%rsp),%rcx
+ 3c8:	48 c7 44 24 10 00 00 	movq   $0x0,0x10(%rsp)
+ 3cf:	00 00 
+ 3d1:	48 c7 44 24 18 00 00 	movq   $0x0,0x18(%rsp)
+ 3d8:	00 00 
+ 3da:	4c 8d 44 24 18       	lea    0x18(%rsp),%r8
+ 3df:	ba 1c 00 00 00       	mov    $0x1c,%edx
+ 3e4:	ff 55 20             	call   *0x20(%rbp)
+ 3e7:	89 43 64             	mov    %eax,0x64(%rbx)
+ 3ea:	85 c0                	test   %eax,%eax
+ 3ec:	0f 85 c6 01 00 00    	jne    5b8 <reference_xhci_probe+0x3e8>
+ 3f2:	48 8b 44 24 10       	mov    0x10(%rsp),%rax
+ 3f7:	48 85 c0             	test   %rax,%rax
+ 3fa:	0f 84 a0 01 00 00    	je     5a0 <reference_xhci_probe+0x3d0>
+ 400:	a8 03                	test   $0x3,%al
+ 402:	0f 85 98 01 00 00    	jne    5a0 <reference_xhci_probe+0x3d0>
+ 408:	48 83 7c 24 18 1b    	cmpq   $0x1b,0x18(%rsp)
+ 40e:	0f 86 8c 01 00 00    	jbe    5a0 <reference_xhci_probe+0x3d0>
+ 414:	48 8d 7c 24 24       	lea    0x24(%rsp),%rdi
+ 419:	48 89 fa             	mov    %rdi,%rdx
+ 41c:	0f 1f 40 00          	nopl   0x0(%rax)
+ 420:	8b 08                	mov    (%rax),%ecx
+ 422:	48 83 c2 04          	add    $0x4,%rdx
+ 426:	48 83 c0 04          	add    $0x4,%rax
+ 42a:	89 4a fc             	mov    %ecx,-0x4(%rdx)
+ 42d:	48 8d 4c 24 40       	lea    0x40(%rsp),%rcx
+ 432:	48 39 d1             	cmp    %rdx,%rcx
+ 435:	75 e9                	jne    420 <reference_xhci_probe+0x250>
+ 437:	48 89 da             	mov    %rbx,%rdx
+ 43a:	be 1c 00 00 00       	mov    $0x1c,%esi
+ 43f:	e8 00 00 00 00       	call   444 <reference_xhci_probe+0x274>
+			440: R_X86_64_PLT32	reference_xhci_decode_caps-0x4
+ 444:	83 f8 01             	cmp    $0x1,%eax
+ 447:	75 75                	jne    4be <reference_xhci_probe+0x2ee>
+ 449:	8b 53 40             	mov    0x40(%rbx),%edx
+ 44c:	48 03 53 48          	add    0x48(%rbx),%rdx
+ 450:	0f 82 6e 01 00 00    	jb     5c4 <reference_xhci_probe+0x3f4>
+ 456:	8b 4d 08             	mov    0x8(%rbp),%ecx
+ 459:	be 01 00 00 00       	mov    $0x1,%esi
+ 45e:	48 d3 e6             	shl    %cl,%rsi
+ 461:	48 39 d6             	cmp    %rdx,%rsi
+ 464:	72 15                	jb     47b <reference_xhci_probe+0x2ab>
+ 466:	83 7b 60 20          	cmpl   $0x20,0x60(%rbx)
+ 46a:	75 52                	jne    4be <reference_xhci_probe+0x2ee>
+ 46c:	48 b9 00 00 00 00 01 	movabs $0x100000000,%rcx
+ 473:	00 00 00 
+ 476:	48 39 d1             	cmp    %rdx,%rcx
+ 479:	73 43                	jae    4be <reference_xhci_probe+0x2ee>
+ 47b:	48 c7 c0 00 00 00 00 	mov    $0x0,%rax
+			47e: R_X86_64_32S	.rodata.str1.8+0xa8
+ 482:	0f 1f 00             	nopl   (%rax)
+ 485:	66 66 2e 0f 1f 84 00 	data16 cs nopw 0x0(%rax,%rax,1)
+ 48c:	00 00 00 00 
+ 490:	48 89 43 08          	mov    %rax,0x8(%rbx)
+ 494:	b8 02 00 00 00       	mov    $0x2,%eax
+ 499:	c7 03 02 00 00 00    	movl   $0x2,(%rbx)
+ 49f:	eb 1d                	jmp    4be <reference_xhci_probe+0x2ee>
+ 4a1:	0f 1f 80 00 00 00 00 	nopl   0x0(%rax)
+ 4a8:	48 c7 c0 00 00 00 00 	mov    $0x0,%rax
+			4ab: R_X86_64_32S	.rodata.str1.1+0xb8
+ 4af:	c7 03 03 00 00 00    	movl   $0x3,(%rbx)
+ 4b5:	48 89 43 08          	mov    %rax,0x8(%rbx)
+ 4b9:	b8 03 00 00 00       	mov    $0x3,%eax
+ 4be:	48 83 c4 48          	add    $0x48,%rsp
+ 4c2:	5b                   	pop    %rbx
+ 4c3:	5d                   	pop    %rbp
+ 4c4:	c3                   	ret
+ 4c5:	0f 1f 00             	nopl   (%rax)
+ 4c8:	48 c7 c0 00 00 00 00 	mov    $0x0,%rax
+			4cb: R_X86_64_32S	.rodata.str1.1+0x55
+ 4cf:	48 89 43 08          	mov    %rax,0x8(%rbx)
+ 4d3:	31 c0                	xor    %eax,%eax
+ 4d5:	c7 03 00 00 00 00    	movl   $0x0,(%rbx)
+ 4db:	eb e1                	jmp    4be <reference_xhci_probe+0x2ee>
+ 4dd:	0f 1f 00             	nopl   (%rax)
+ 4e0:	48 c7 c0 00 00 00 00 	mov    $0x0,%rax
+			4e3: R_X86_64_32S	.rodata.str1.1+0x6f
+ 4e7:	eb e6                	jmp    4cf <reference_xhci_probe+0x2ff>
+ 4e9:	0f 1f 80 00 00 00 00 	nopl   0x0(%rax)
+ 4f0:	48 c7 c0 00 00 00 00 	mov    $0x0,%rax
+			4f3: R_X86_64_32S	.rodata.str1.1+0x83
+ 4f7:	eb b6                	jmp    4af <reference_xhci_probe+0x2df>
+ 4f9:	0f 1f 80 00 00 00 00 	nopl   0x0(%rax)
+ 500:	0f b6 44 24 09       	movzbl 0x9(%rsp),%eax
+ 505:	0f b6 4c 24 08       	movzbl 0x8(%rsp),%ecx
+ 50a:	ba 14 00 00 00       	mov    $0x14,%edx
+ 50f:	c7 43 60 40 00 00 00 	movl   $0x40,0x60(%rbx)
+ 516:	0f b6 74 24 0a       	movzbl 0xa(%rsp),%esi
+ 51b:	48 8b 7d 00          	mov    0x0(%rbp),%rdi
+ 51f:	48 c1 e0 08          	shl    $0x8,%rax
+ 523:	48 09 c8             	or     %rcx,%rax
+ 526:	48 c1 e6 10          	shl    $0x10,%rsi
+ 52a:	48 09 c6             	or     %rax,%rsi
+ 52d:	ff 55 10             	call   *0x10(%rbp)
+ 530:	89 c1                	mov    %eax,%ecx
+ 532:	8b 43 20             	mov    0x20(%rbx),%eax
+ 535:	48 89 ca             	mov    %rcx,%rdx
+ 538:	48 c1 e2 20          	shl    $0x20,%rdx
+ 53c:	e9 20 fe ff ff       	jmp    361 <reference_xhci_probe+0x191>
+ 541:	0f 1f 80 00 00 00 00 	nopl   0x0(%rax)
+ 548:	48 c7 c0 00 00 00 00 	mov    $0x0,%rax
+			54b: R_X86_64_32S	.rodata.str1.1+0x11b
+ 54f:	e9 3c ff ff ff       	jmp    490 <reference_xhci_probe+0x2c0>
+ 554:	0f 1f 40 00          	nopl   0x0(%rax)
+ 558:	48 c7 c0 00 00 00 00 	mov    $0x0,%rax
+			55b: R_X86_64_32S	.rodata.str1.1+0x105
+ 55f:	e9 4b ff ff ff       	jmp    4af <reference_xhci_probe+0x2df>
+ 564:	48 c7 c0 00 00 00 00 	mov    $0x0,%rax
+			567: R_X86_64_32S	.rodata.str1.1+0x169
+ 56b:	e9 20 ff ff ff       	jmp    490 <reference_xhci_probe+0x2c0>
+ 570:	48 c7 c0 00 00 00 00 	mov    $0x0,%rax
+			573: R_X86_64_32S	.rodata.str1.8+0x80
+ 577:	e9 14 ff ff ff       	jmp    490 <reference_xhci_probe+0x2c0>
+ 57c:	48 c7 c0 00 00 00 00 	mov    $0x0,%rax
+			57f: R_X86_64_32S	.rodata.str1.1+0x9f
+ 583:	e9 27 ff ff ff       	jmp    4af <reference_xhci_probe+0x2df>
+ 588:	48 c7 c0 00 00 00 00 	mov    $0x0,%rax
+			58b: R_X86_64_32S	.rodata.str1.8+0xf8
+ 58f:	e9 fc fe ff ff       	jmp    490 <reference_xhci_probe+0x2c0>
+ 594:	48 c7 c0 00 00 00 00 	mov    $0x0,%rax
+			597: R_X86_64_32S	.rodata.str1.8+0xd0
+ 59b:	e9 f0 fe ff ff       	jmp    490 <reference_xhci_probe+0x2c0>
+ 5a0:	48 c7 c0 00 00 00 00 	mov    $0x0,%rax
+			5a3: R_X86_64_32S	.rodata.str1.1+0xea
+ 5a7:	e9 03 ff ff ff       	jmp    4af <reference_xhci_probe+0x2df>
+ 5ac:	48 c7 c0 00 00 00 00 	mov    $0x0,%rax
+			5af: R_X86_64_32S	.rodata.str1.1+0x14c
+ 5b3:	e9 d8 fe ff ff       	jmp    490 <reference_xhci_probe+0x2c0>
+ 5b8:	48 c7 c0 00 00 00 00 	mov    $0x0,%rax
+			5bb: R_X86_64_32S	.rodata.str1.1+0x12f
+ 5bf:	e9 cc fe ff ff       	jmp    490 <reference_xhci_probe+0x2c0>
+ 5c4:	48 c7 c0 00 00 00 00 	mov    $0x0,%rax
+			5c7: R_X86_64_32S	.rodata.str1.1+0xd0
+ 5cb:	e9 df fe ff ff       	jmp    4af <reference_xhci_probe+0x2df>

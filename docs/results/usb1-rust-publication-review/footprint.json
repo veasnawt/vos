@@ -1,0 +1,1723 @@
+{
+  "passed": true,
+  "images": {
+    "C": {
+      "path": "/home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/vos.bin",
+      "sha256": "8e448e356ca6d53e999bb8f2f57baa0aaf75e5d7958a061f355617f49576f3d9",
+      "ELF_file_bytes": 1045864,
+      "map_sha256": "863dd158f5cc9de715b80b07b4554316447b3c10b566850373b18bb9d60eb490",
+      "sections": {
+        ".boot.text": {
+          "type": 1,
+          "flags": 6,
+          "address": 1048576,
+          "offset": 4096,
+          "size": 4096,
+          "alignment": 8
+        },
+        ".boot.data": {
+          "type": 1,
+          "flags": 3,
+          "address": 1052672,
+          "offset": 8192,
+          "size": 40,
+          "alignment": 8
+        },
+        ".boot.bss": {
+          "type": 8,
+          "flags": 3,
+          "address": 1056768,
+          "offset": 8232,
+          "size": 20480,
+          "alignment": 4096
+        },
+        ".text": {
+          "type": 1,
+          "flags": 6,
+          "address": 18446744071563145216,
+          "offset": 12288,
+          "size": 172032,
+          "alignment": 64
+        },
+        ".rodata": {
+          "type": 1,
+          "flags": 2,
+          "address": 18446744071563317248,
+          "offset": 184320,
+          "size": 45056,
+          "alignment": 32
+        },
+        ".data": {
+          "type": 1,
+          "flags": 3,
+          "address": 18446744071563362304,
+          "offset": 229376,
+          "size": 180,
+          "alignment": 16
+        },
+        ".bss": {
+          "type": 8,
+          "flags": 3,
+          "address": 18446744071563362496,
+          "offset": 229556,
+          "size": 597824,
+          "alignment": 64
+        },
+        ".debug_line": {
+          "type": 1,
+          "flags": 0,
+          "address": 0,
+          "offset": 229556,
+          "size": 164096,
+          "alignment": 1
+        },
+        ".debug_line_str": {
+          "type": 1,
+          "flags": 48,
+          "address": 0,
+          "offset": 393652,
+          "size": 2146,
+          "alignment": 1
+        },
+        ".debug_info": {
+          "type": 1,
+          "flags": 0,
+          "address": 0,
+          "offset": 395798,
+          "size": 336485,
+          "alignment": 1
+        },
+        ".debug_abbrev": {
+          "type": 1,
+          "flags": 0,
+          "address": 0,
+          "offset": 732283,
+          "size": 49307,
+          "alignment": 1
+        },
+        ".debug_aranges": {
+          "type": 1,
+          "flags": 0,
+          "address": 0,
+          "offset": 781600,
+          "size": 3072,
+          "alignment": 16
+        },
+        ".debug_str": {
+          "type": 1,
+          "flags": 48,
+          "address": 0,
+          "offset": 784672,
+          "size": 18433,
+          "alignment": 1
+        },
+        ".debug_rnglists": {
+          "type": 1,
+          "flags": 0,
+          "address": 0,
+          "offset": 803105,
+          "size": 17120,
+          "alignment": 1
+        },
+        ".debug_loclists": {
+          "type": 1,
+          "flags": 0,
+          "address": 0,
+          "offset": 820225,
+          "size": 158952,
+          "alignment": 1
+        },
+        ".debug_frame": {
+          "type": 1,
+          "flags": 0,
+          "address": 0,
+          "offset": 979184,
+          "size": 31664,
+          "alignment": 8
+        },
+        ".symtab": {
+          "type": 2,
+          "flags": 0,
+          "address": 0,
+          "offset": 1010848,
+          "size": 22632,
+          "alignment": 8
+        },
+        ".strtab": {
+          "type": 3,
+          "flags": 0,
+          "address": 0,
+          "offset": 1033480,
+          "size": 10909,
+          "alignment": 1
+        },
+        ".shstrtab": {
+          "type": 3,
+          "flags": 0,
+          "address": 0,
+          "offset": 1044389,
+          "size": 192,
+          "alignment": 1
+        }
+      },
+      "loads": [
+        {
+          "flags": 5,
+          "offset": 4096,
+          "virtual": 1048576,
+          "physical": 1048576,
+          "file_bytes": 4096,
+          "memory_bytes": 4096,
+          "alignment": 4096
+        },
+        {
+          "flags": 6,
+          "offset": 8192,
+          "virtual": 1052672,
+          "physical": 1052672,
+          "file_bytes": 40,
+          "memory_bytes": 24576,
+          "alignment": 4096
+        },
+        {
+          "flags": 5,
+          "offset": 12288,
+          "virtual": 18446744071563145216,
+          "physical": 1077248,
+          "file_bytes": 172032,
+          "memory_bytes": 172032,
+          "alignment": 4096
+        },
+        {
+          "flags": 4,
+          "offset": 184320,
+          "virtual": 18446744071563317248,
+          "physical": 1249280,
+          "file_bytes": 45056,
+          "memory_bytes": 45056,
+          "alignment": 4096
+        },
+        {
+          "flags": 6,
+          "offset": 229376,
+          "virtual": 18446744071563362304,
+          "physical": 1294336,
+          "file_bytes": 180,
+          "memory_bytes": 598016,
+          "alignment": 4096
+        }
+      ],
+      "inputs": {
+        ".text": {
+          "sections": [
+            {
+              "section": ".text",
+              "address": 18446744071563145216,
+              "size": 67,
+              "owner": "/home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/boot.o"
+            },
+            {
+              "section": ".text",
+              "address": 18446744071563145283,
+              "size": 452,
+              "owner": "/home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/entry.o"
+            },
+            {
+              "section": ".text",
+              "address": 18446744071563145735,
+              "size": 59,
+              "owner": "/home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/usermode.o"
+            },
+            {
+              "section": ".text",
+              "address": 18446744071563145824,
+              "size": 4081,
+              "owner": "/home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/kernel.o"
+            },
+            {
+              "section": ".text",
+              "address": 18446744071563149920,
+              "size": 2346,
+              "owner": "/home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/bootinfo.o"
+            },
+            {
+              "section": ".text",
+              "address": 18446744071563152320,
+              "size": 813,
+              "owner": "/home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/console.o"
+            },
+            {
+              "section": ".text",
+              "address": 18446744071563153136,
+              "size": 913,
+              "owner": "/home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/cpu.o"
+            },
+            {
+              "section": ".text",
+              "address": 18446744071563154064,
+              "size": 806,
+              "owner": "/home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/exception.o"
+            },
+            {
+              "section": ".text",
+              "address": 18446744071563154880,
+              "size": 1080,
+              "owner": "/home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/gdt.o"
+            },
+            {
+              "section": ".text",
+              "address": 18446744071563155968,
+              "size": 563,
+              "owner": "/home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/idt.o"
+            },
+            {
+              "section": ".text",
+              "address": 18446744071563156544,
+              "size": 145,
+              "owner": "/home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/lib.o"
+            },
+            {
+              "section": ".text",
+              "address": 18446744071563156704,
+              "size": 350,
+              "owner": "/home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/loader.o"
+            },
+            {
+              "section": ".text",
+              "address": 18446744071563157056,
+              "size": 83,
+              "owner": "/home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/panic.o"
+            },
+            {
+              "section": ".text",
+              "address": 18446744071563157184,
+              "size": 2392,
+              "owner": "/home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/pmm.o"
+            },
+            {
+              "section": ".text",
+              "address": 18446744071563159584,
+              "size": 5430,
+              "owner": "/home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/process.o"
+            },
+            {
+              "section": ".text",
+              "address": 18446744071563165024,
+              "size": 198,
+              "owner": "/home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/resv.o"
+            },
+            {
+              "section": ".text",
+              "address": 18446744071563165232,
+              "size": 748,
+              "owner": "/home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/syscall.o"
+            },
+            {
+              "section": ".text",
+              "address": 18446744071563165984,
+              "size": 841,
+              "owner": "/home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/usercopy.o"
+            },
+            {
+              "section": ".text",
+              "address": 18446744071563166832,
+              "size": 6504,
+              "owner": "/home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/vmm.o"
+            },
+            {
+              "section": ".text",
+              "address": 18446744071563173344,
+              "size": 6023,
+              "owner": "/home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/kmap.o"
+            },
+            {
+              "section": ".text",
+              "address": 18446744071563179376,
+              "size": 2312,
+              "owner": "/home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/irq.o"
+            },
+            {
+              "section": ".text",
+              "address": 18446744071563181696,
+              "size": 720,
+              "owner": "/home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/pic.o"
+            },
+            {
+              "section": ".text",
+              "address": 18446744071563182416,
+              "size": 59,
+              "owner": "/home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/pit.o"
+            },
+            {
+              "section": ".text",
+              "address": 18446744071563182496,
+              "size": 6508,
+              "owner": "/home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/thread.o"
+            },
+            {
+              "section": ".text.unlikely",
+              "address": 18446744071563189004,
+              "size": 24,
+              "owner": "/home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/thread.o"
+            },
+            {
+              "section": ".text",
+              "address": 18446744071563189028,
+              "size": 47,
+              "owner": "/home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/thread_switch.o"
+            },
+            {
+              "section": ".text",
+              "address": 18446744071563189088,
+              "size": 2864,
+              "owner": "/home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/channel.o"
+            },
+            {
+              "section": ".text",
+              "address": 18446744071563191968,
+              "size": 1976,
+              "owner": "/home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/elf.o"
+            },
+            {
+              "section": ".text",
+              "address": 18446744071563193952,
+              "size": 1228,
+              "owner": "/home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/app.o"
+            },
+            {
+              "section": ".text",
+              "address": 18446744071563195200,
+              "size": 1003,
+              "owner": "/home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/app_catalog.o"
+            },
+            {
+              "section": ".text",
+              "address": 18446744071563196224,
+              "size": 1224,
+              "owner": "/home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/app_payload.o"
+            },
+            {
+              "section": ".text",
+              "address": 18446744071563197504,
+              "size": 4527,
+              "owner": "/home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/exec.o"
+            },
+            {
+              "section": ".text",
+              "address": 18446744071563202032,
+              "size": 796,
+              "owner": "/home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/pci.o"
+            },
+            {
+              "section": ".text",
+              "address": 18446744071563202848,
+              "size": 1488,
+              "owner": "/home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/xhci.o"
+            },
+            {
+              "section": ".text",
+              "address": 18446744071563204352,
+              "size": 1476,
+              "owner": "/home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/xhci_boot.o"
+            },
+            {
+              "section": ".text",
+              "address": 18446744071563205888,
+              "size": 5731,
+              "owner": "/home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/blockdev.o"
+            },
+            {
+              "section": ".text",
+              "address": 18446744071563211648,
+              "size": 13461,
+              "owner": "/home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/virtio_blk.o"
+            },
+            {
+              "section": ".text",
+              "address": 18446744071563225152,
+              "size": 10576,
+              "owner": "/home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/ext2.o"
+            },
+            {
+              "section": ".text",
+              "address": 18446744071563235728,
+              "size": 2639,
+              "owner": "/home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/io_scope.o"
+            },
+            {
+              "section": ".text",
+              "address": 18446744071563238368,
+              "size": 8767,
+              "owner": "/home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/file.o"
+            },
+            {
+              "section": ".text.unlikely",
+              "address": 18446744071563247135,
+              "size": 12,
+              "owner": "/home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/file.o"
+            },
+            {
+              "section": ".text",
+              "address": 18446744071563247152,
+              "size": 2742,
+              "owner": "/home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/devmap.o"
+            },
+            {
+              "section": ".text.unlikely",
+              "address": 18446744071563249894,
+              "size": 12,
+              "owner": "/home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/devmap.o"
+            },
+            {
+              "section": ".text",
+              "address": 18446744071563249920,
+              "size": 7450,
+              "owner": "/home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/screen.o"
+            },
+            {
+              "section": ".text",
+              "address": 18446744071563257376,
+              "size": 1212,
+              "owner": "/home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/desktop.o"
+            },
+            {
+              "section": ".text",
+              "address": 18446744071563258592,
+              "size": 4009,
+              "owner": "/home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/gui.o"
+            },
+            {
+              "section": ".text",
+              "address": 18446744071563262624,
+              "size": 870,
+              "owner": "/home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/gui_verify.o"
+            },
+            {
+              "section": ".text",
+              "address": 18446744071563263504,
+              "size": 3211,
+              "owner": "/home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/keyboard.o"
+            },
+            {
+              "section": ".text",
+              "address": 18446744071563266720,
+              "size": 172,
+              "owner": "/home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/pointer.o"
+            },
+            {
+              "section": ".text",
+              "address": 18446744071563266912,
+              "size": 1181,
+              "owner": "/home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/input_console.o"
+            },
+            {
+              "section": ".text",
+              "address": 18446744071563268096,
+              "size": 4384,
+              "owner": "/home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/user_console.o"
+            },
+            {
+              "section": ".text",
+              "address": 18446744071563272480,
+              "size": 1603,
+              "owner": "/home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/vsh_boot.o"
+            },
+            {
+              "section": ".text",
+              "address": 18446744071563274096,
+              "size": 5304,
+              "owner": "/home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/virtio_net.o"
+            },
+            {
+              "section": ".text",
+              "address": 18446744071563279424,
+              "size": 2410,
+              "owner": "/home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/net_boot.o"
+            },
+            {
+              "section": ".text",
+              "address": 18446744071563281840,
+              "size": 2538,
+              "owner": "/home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/net_arp.o"
+            },
+            {
+              "section": ".text",
+              "address": 18446744071563284384,
+              "size": 1907,
+              "owner": "/home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/net_arp_boot.o"
+            },
+            {
+              "section": ".text",
+              "address": 18446744071563286304,
+              "size": 3188,
+              "owner": "/home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/net_ipv4.o"
+            },
+            {
+              "section": ".text",
+              "address": 18446744071563289504,
+              "size": 1873,
+              "owner": "/home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/net_ipv4_boot.o"
+            },
+            {
+              "section": ".text",
+              "address": 18446744071563291392,
+              "size": 1513,
+              "owner": "/home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/net_udp.o"
+            },
+            {
+              "section": ".text",
+              "address": 18446744071563292928,
+              "size": 2947,
+              "owner": "/home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/net_udp_boot.o"
+            },
+            {
+              "section": ".text",
+              "address": 18446744071563295904,
+              "size": 8201,
+              "owner": "/home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/net_tcp.o"
+            },
+            {
+              "section": ".text",
+              "address": 18446744071563304112,
+              "size": 2092,
+              "owner": "/home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/net_tcp_boot.o"
+            },
+            {
+              "section": ".text",
+              "address": 18446744071563306208,
+              "size": 4173,
+              "owner": "/home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/net_tcp_data_boot.o"
+            },
+            {
+              "section": ".text",
+              "address": 18446744071563310384,
+              "size": 2686,
+              "owner": "/home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/net_tcp_retry_boot.o"
+            },
+            {
+              "section": ".text",
+              "address": 18446744071563313072,
+              "size": 3544,
+              "owner": "/home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/net_tcp_close_boot.o"
+            },
+            {
+              "section": ".text._RNvCsgpO44WCzh3m_7___rustc17rust_begin_unwind",
+              "address": 18446744071563316624,
+              "size": 13,
+              "owner": "/home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/rust/libvos_kernel.a(libvos_kernel.vos_kernel.45b20e7284a592af-cgu.0.rcgu.o)"
+            },
+            {
+              "section": ".text.vos_rust_elf_inside",
+              "address": 18446744071563316640,
+              "size": 18,
+              "owner": "/home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/rust/libvos_kernel.a(libvos_kernel.vos_kernel.45b20e7284a592af-cgu.0.rcgu.o)"
+            },
+            {
+              "section": ".text.vos_rust_probe",
+              "address": 18446744071563316672,
+              "size": 26,
+              "owner": "/home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/rust/libvos_kernel.a(libvos_kernel.vos_kernel.45b20e7284a592af-cgu.0.rcgu.o)"
+            }
+          ],
+          "allocated_input_bytes": 170611,
+          "used_extent_with_internal_alignment": 171482,
+          "internal_alignment_bytes": 871,
+          "tail_padding_bytes": 550
+        },
+        ".rodata": {
+          "sections": [
+            {
+              "section": ".rodata",
+              "address": 18446744071563317248,
+              "size": 384,
+              "owner": "/home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/entry.o"
+            },
+            {
+              "section": ".rodata.str1.1",
+              "address": 18446744071563317632,
+              "size": 12258,
+              "owner": "/home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/kernel.o"
+            },
+            {
+              "section": ".rodata.str1.8",
+              "address": 18446744071563329896,
+              "size": 23676,
+              "owner": "/home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/kernel.o"
+            },
+            {
+              "section": ".rodata",
+              "address": 18446744071563353576,
+              "size": 104,
+              "owner": "/home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/bootinfo.o"
+            },
+            {
+              "section": ".rodata",
+              "address": 18446744071563353696,
+              "size": 512,
+              "owner": "/home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/exception.o"
+            },
+            {
+              "section": ".rodata",
+              "address": 18446744071563354208,
+              "size": 24,
+              "owner": "/home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/gdt.o"
+            },
+            {
+              "section": ".rodata.cst2",
+              "address": 18446744071563354232,
+              "size": 4,
+              "owner": "/home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/idt.o"
+            },
+            {
+              "section": ".rodata",
+              "address": 18446744071563354240,
+              "size": 80,
+              "owner": "/home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/pmm.o"
+            },
+            {
+              "section": ".rodata",
+              "address": 18446744071563354320,
+              "size": 176,
+              "owner": "/home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/syscall.o"
+            },
+            {
+              "section": ".rodata",
+              "address": 18446744071563354496,
+              "size": 112,
+              "owner": "/home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/vmm.o"
+            },
+            {
+              "section": ".rodata",
+              "address": 18446744071563354624,
+              "size": 72,
+              "owner": "/home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/irq.o"
+            },
+            {
+              "section": ".rodata",
+              "address": 18446744071563354704,
+              "size": 16,
+              "owner": "/home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/pic.o"
+            },
+            {
+              "section": ".rodata",
+              "address": 18446744071563354720,
+              "size": 80,
+              "owner": "/home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/thread.o"
+            },
+            {
+              "section": ".rodata",
+              "address": 18446744071563354816,
+              "size": 208,
+              "owner": "/home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/elf.o"
+            },
+            {
+              "section": ".rodata",
+              "address": 18446744071563355040,
+              "size": 72,
+              "owner": "/home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/app_catalog.o"
+            },
+            {
+              "section": ".rodata",
+              "address": 18446744071563355136,
+              "size": 256,
+              "owner": "/home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/app_payload.o"
+            },
+            {
+              "section": ".rodata",
+              "address": 18446744071563355392,
+              "size": 32,
+              "owner": "/home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/exec.o"
+            },
+            {
+              "section": ".rodata",
+              "address": 18446744071563355424,
+              "size": 80,
+              "owner": "/home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/blockdev.o"
+            },
+            {
+              "section": ".rodata",
+              "address": 18446744071563355520,
+              "size": 160,
+              "owner": "/home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/virtio_blk.o"
+            },
+            {
+              "section": ".rodata",
+              "address": 18446744071563355680,
+              "size": 144,
+              "owner": "/home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/ext2.o"
+            },
+            {
+              "section": ".rodata",
+              "address": 18446744071563355840,
+              "size": 136,
+              "owner": "/home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/file.o"
+            },
+            {
+              "section": ".rodata",
+              "address": 18446744071563356000,
+              "size": 72,
+              "owner": "/home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/devmap.o"
+            },
+            {
+              "section": ".rodata",
+              "address": 18446744071563356096,
+              "size": 320,
+              "owner": "/home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/screen.o"
+            },
+            {
+              "section": ".rodata",
+              "address": 18446744071563356416,
+              "size": 1520,
+              "owner": "/home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/font8x16.o"
+            },
+            {
+              "section": ".rodata",
+              "address": 18446744071563357952,
+              "size": 256,
+              "owner": "/home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/keyboard.o"
+            },
+            {
+              "section": ".rodata",
+              "address": 18446744071563358208,
+              "size": 32,
+              "owner": "/home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/input_console.o"
+            },
+            {
+              "section": ".rodata",
+              "address": 18446744071563358240,
+              "size": 16,
+              "owner": "/home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/user_console.o"
+            },
+            {
+              "section": ".rodata",
+              "address": 18446744071563358256,
+              "size": 12,
+              "owner": "/home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/net_arp.o"
+            },
+            {
+              "section": ".rodata",
+              "address": 18446744071563358272,
+              "size": 48,
+              "owner": "/home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/net_tcp_data_boot.o"
+            }
+          ],
+          "allocated_input_bytes": 40862,
+          "used_extent_with_internal_alignment": 41072,
+          "internal_alignment_bytes": 210,
+          "tail_padding_bytes": 3984
+        }
+      },
+      "PT_LOAD_file_bytes": 221404,
+      "PT_LOAD_memory_bytes": 843776,
+      "physical_reserved_bytes": 843776
+    },
+    "Rust": {
+      "path": "/home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/vos.bin",
+      "sha256": "7c7a64d98aa94551112c66360e0849e4c2580e30d8b632f07d43cb3789697573",
+      "ELF_file_bytes": 1047320,
+      "map_sha256": "3b5ce17232795a11b17ac2fb4a3fbb19eeab290b57d1b5512e5e51de648673a9",
+      "sections": {
+        ".boot.text": {
+          "type": 1,
+          "flags": 6,
+          "address": 1048576,
+          "offset": 4096,
+          "size": 4096,
+          "alignment": 8
+        },
+        ".boot.data": {
+          "type": 1,
+          "flags": 3,
+          "address": 1052672,
+          "offset": 8192,
+          "size": 40,
+          "alignment": 8
+        },
+        ".boot.bss": {
+          "type": 8,
+          "flags": 3,
+          "address": 1056768,
+          "offset": 8232,
+          "size": 20480,
+          "alignment": 4096
+        },
+        ".text": {
+          "type": 1,
+          "flags": 6,
+          "address": 18446744071563145216,
+          "offset": 12288,
+          "size": 176128,
+          "alignment": 64
+        },
+        ".rodata": {
+          "type": 1,
+          "flags": 2,
+          "address": 18446744071563321344,
+          "offset": 188416,
+          "size": 45056,
+          "alignment": 32
+        },
+        ".data": {
+          "type": 1,
+          "flags": 3,
+          "address": 18446744071563366400,
+          "offset": 233472,
+          "size": 180,
+          "alignment": 16
+        },
+        ".bss": {
+          "type": 8,
+          "flags": 3,
+          "address": 18446744071563366592,
+          "offset": 233652,
+          "size": 597824,
+          "alignment": 64
+        },
+        ".debug_line": {
+          "type": 1,
+          "flags": 0,
+          "address": 0,
+          "offset": 233652,
+          "size": 163188,
+          "alignment": 1
+        },
+        ".debug_line_str": {
+          "type": 1,
+          "flags": 48,
+          "address": 0,
+          "offset": 396840,
+          "size": 2150,
+          "alignment": 1
+        },
+        ".debug_info": {
+          "type": 1,
+          "flags": 0,
+          "address": 0,
+          "offset": 398990,
+          "size": 335308,
+          "alignment": 1
+        },
+        ".debug_abbrev": {
+          "type": 1,
+          "flags": 0,
+          "address": 0,
+          "offset": 734298,
+          "size": 49005,
+          "alignment": 1
+        },
+        ".debug_aranges": {
+          "type": 1,
+          "flags": 0,
+          "address": 0,
+          "offset": 783312,
+          "size": 3072,
+          "alignment": 16
+        },
+        ".debug_str": {
+          "type": 1,
+          "flags": 48,
+          "address": 0,
+          "offset": 786384,
+          "size": 18414,
+          "alignment": 1
+        },
+        ".debug_rnglists": {
+          "type": 1,
+          "flags": 0,
+          "address": 0,
+          "offset": 804798,
+          "size": 17053,
+          "alignment": 1
+        },
+        ".debug_loclists": {
+          "type": 1,
+          "flags": 0,
+          "address": 0,
+          "offset": 821851,
+          "size": 158460,
+          "alignment": 1
+        },
+        ".debug_frame": {
+          "type": 1,
+          "flags": 0,
+          "address": 0,
+          "offset": 980312,
+          "size": 31608,
+          "alignment": 8
+        },
+        ".symtab": {
+          "type": 2,
+          "flags": 0,
+          "address": 0,
+          "offset": 1011920,
+          "size": 22728,
+          "alignment": 8
+        },
+        ".strtab": {
+          "type": 3,
+          "flags": 0,
+          "address": 0,
+          "offset": 1034648,
+          "size": 11193,
+          "alignment": 1
+        },
+        ".shstrtab": {
+          "type": 3,
+          "flags": 0,
+          "address": 0,
+          "offset": 1045841,
+          "size": 192,
+          "alignment": 1
+        }
+      },
+      "loads": [
+        {
+          "flags": 5,
+          "offset": 4096,
+          "virtual": 1048576,
+          "physical": 1048576,
+          "file_bytes": 4096,
+          "memory_bytes": 4096,
+          "alignment": 4096
+        },
+        {
+          "flags": 6,
+          "offset": 8192,
+          "virtual": 1052672,
+          "physical": 1052672,
+          "file_bytes": 40,
+          "memory_bytes": 24576,
+          "alignment": 4096
+        },
+        {
+          "flags": 5,
+          "offset": 12288,
+          "virtual": 18446744071563145216,
+          "physical": 1077248,
+          "file_bytes": 176128,
+          "memory_bytes": 176128,
+          "alignment": 4096
+        },
+        {
+          "flags": 4,
+          "offset": 188416,
+          "virtual": 18446744071563321344,
+          "physical": 1253376,
+          "file_bytes": 45056,
+          "memory_bytes": 45056,
+          "alignment": 4096
+        },
+        {
+          "flags": 6,
+          "offset": 233472,
+          "virtual": 18446744071563366400,
+          "physical": 1298432,
+          "file_bytes": 180,
+          "memory_bytes": 598016,
+          "alignment": 4096
+        }
+      ],
+      "inputs": {
+        ".text": {
+          "sections": [
+            {
+              "section": ".text",
+              "address": 18446744071563145216,
+              "size": 67,
+              "owner": "/home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/boot.o"
+            },
+            {
+              "section": ".text",
+              "address": 18446744071563145283,
+              "size": 452,
+              "owner": "/home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/entry.o"
+            },
+            {
+              "section": ".text",
+              "address": 18446744071563145735,
+              "size": 59,
+              "owner": "/home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/usermode.o"
+            },
+            {
+              "section": ".text",
+              "address": 18446744071563145824,
+              "size": 4081,
+              "owner": "/home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/kernel.o"
+            },
+            {
+              "section": ".text",
+              "address": 18446744071563149920,
+              "size": 2346,
+              "owner": "/home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/bootinfo.o"
+            },
+            {
+              "section": ".text",
+              "address": 18446744071563152320,
+              "size": 813,
+              "owner": "/home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/console.o"
+            },
+            {
+              "section": ".text",
+              "address": 18446744071563153136,
+              "size": 913,
+              "owner": "/home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/cpu.o"
+            },
+            {
+              "section": ".text",
+              "address": 18446744071563154064,
+              "size": 806,
+              "owner": "/home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/exception.o"
+            },
+            {
+              "section": ".text",
+              "address": 18446744071563154880,
+              "size": 1080,
+              "owner": "/home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/gdt.o"
+            },
+            {
+              "section": ".text",
+              "address": 18446744071563155968,
+              "size": 563,
+              "owner": "/home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/idt.o"
+            },
+            {
+              "section": ".text",
+              "address": 18446744071563156544,
+              "size": 145,
+              "owner": "/home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/lib.o"
+            },
+            {
+              "section": ".text",
+              "address": 18446744071563156704,
+              "size": 350,
+              "owner": "/home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/loader.o"
+            },
+            {
+              "section": ".text",
+              "address": 18446744071563157056,
+              "size": 83,
+              "owner": "/home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/panic.o"
+            },
+            {
+              "section": ".text",
+              "address": 18446744071563157184,
+              "size": 2392,
+              "owner": "/home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/pmm.o"
+            },
+            {
+              "section": ".text",
+              "address": 18446744071563159584,
+              "size": 5430,
+              "owner": "/home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/process.o"
+            },
+            {
+              "section": ".text",
+              "address": 18446744071563165024,
+              "size": 198,
+              "owner": "/home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/resv.o"
+            },
+            {
+              "section": ".text",
+              "address": 18446744071563165232,
+              "size": 748,
+              "owner": "/home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/syscall.o"
+            },
+            {
+              "section": ".text",
+              "address": 18446744071563165984,
+              "size": 841,
+              "owner": "/home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/usercopy.o"
+            },
+            {
+              "section": ".text",
+              "address": 18446744071563166832,
+              "size": 6504,
+              "owner": "/home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/vmm.o"
+            },
+            {
+              "section": ".text",
+              "address": 18446744071563173344,
+              "size": 6023,
+              "owner": "/home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/kmap.o"
+            },
+            {
+              "section": ".text",
+              "address": 18446744071563179376,
+              "size": 2312,
+              "owner": "/home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/irq.o"
+            },
+            {
+              "section": ".text",
+              "address": 18446744071563181696,
+              "size": 720,
+              "owner": "/home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/pic.o"
+            },
+            {
+              "section": ".text",
+              "address": 18446744071563182416,
+              "size": 59,
+              "owner": "/home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/pit.o"
+            },
+            {
+              "section": ".text",
+              "address": 18446744071563182496,
+              "size": 6508,
+              "owner": "/home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/thread.o"
+            },
+            {
+              "section": ".text.unlikely",
+              "address": 18446744071563189004,
+              "size": 24,
+              "owner": "/home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/thread.o"
+            },
+            {
+              "section": ".text",
+              "address": 18446744071563189028,
+              "size": 47,
+              "owner": "/home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/thread_switch.o"
+            },
+            {
+              "section": ".text",
+              "address": 18446744071563189088,
+              "size": 2864,
+              "owner": "/home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/channel.o"
+            },
+            {
+              "section": ".text",
+              "address": 18446744071563191968,
+              "size": 1976,
+              "owner": "/home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/elf.o"
+            },
+            {
+              "section": ".text",
+              "address": 18446744071563193952,
+              "size": 1228,
+              "owner": "/home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/app.o"
+            },
+            {
+              "section": ".text",
+              "address": 18446744071563195200,
+              "size": 1003,
+              "owner": "/home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/app_catalog.o"
+            },
+            {
+              "section": ".text",
+              "address": 18446744071563196224,
+              "size": 1224,
+              "owner": "/home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/app_payload.o"
+            },
+            {
+              "section": ".text",
+              "address": 18446744071563197504,
+              "size": 4527,
+              "owner": "/home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/exec.o"
+            },
+            {
+              "section": ".text",
+              "address": 18446744071563202032,
+              "size": 796,
+              "owner": "/home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/pci.o"
+            },
+            {
+              "section": ".text",
+              "address": 18446744071563202848,
+              "size": 156,
+              "owner": "/home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/xhci.o"
+            },
+            {
+              "section": ".text",
+              "address": 18446744071563203008,
+              "size": 1476,
+              "owner": "/home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/xhci_boot.o"
+            },
+            {
+              "section": ".text",
+              "address": 18446744071563204544,
+              "size": 5731,
+              "owner": "/home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/blockdev.o"
+            },
+            {
+              "section": ".text",
+              "address": 18446744071563210304,
+              "size": 13461,
+              "owner": "/home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/virtio_blk.o"
+            },
+            {
+              "section": ".text",
+              "address": 18446744071563223808,
+              "size": 10576,
+              "owner": "/home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/ext2.o"
+            },
+            {
+              "section": ".text",
+              "address": 18446744071563234384,
+              "size": 2639,
+              "owner": "/home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/io_scope.o"
+            },
+            {
+              "section": ".text",
+              "address": 18446744071563237024,
+              "size": 8767,
+              "owner": "/home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/file.o"
+            },
+            {
+              "section": ".text.unlikely",
+              "address": 18446744071563245791,
+              "size": 12,
+              "owner": "/home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/file.o"
+            },
+            {
+              "section": ".text",
+              "address": 18446744071563245808,
+              "size": 2742,
+              "owner": "/home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/devmap.o"
+            },
+            {
+              "section": ".text.unlikely",
+              "address": 18446744071563248550,
+              "size": 12,
+              "owner": "/home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/devmap.o"
+            },
+            {
+              "section": ".text",
+              "address": 18446744071563248576,
+              "size": 7450,
+              "owner": "/home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/screen.o"
+            },
+            {
+              "section": ".text",
+              "address": 18446744071563256032,
+              "size": 1212,
+              "owner": "/home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/desktop.o"
+            },
+            {
+              "section": ".text",
+              "address": 18446744071563257248,
+              "size": 4009,
+              "owner": "/home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/gui.o"
+            },
+            {
+              "section": ".text",
+              "address": 18446744071563261280,
+              "size": 870,
+              "owner": "/home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/gui_verify.o"
+            },
+            {
+              "section": ".text",
+              "address": 18446744071563262160,
+              "size": 3211,
+              "owner": "/home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/keyboard.o"
+            },
+            {
+              "section": ".text",
+              "address": 18446744071563265376,
+              "size": 172,
+              "owner": "/home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/pointer.o"
+            },
+            {
+              "section": ".text",
+              "address": 18446744071563265568,
+              "size": 1181,
+              "owner": "/home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/input_console.o"
+            },
+            {
+              "section": ".text",
+              "address": 18446744071563266752,
+              "size": 4384,
+              "owner": "/home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/user_console.o"
+            },
+            {
+              "section": ".text",
+              "address": 18446744071563271136,
+              "size": 1603,
+              "owner": "/home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/vsh_boot.o"
+            },
+            {
+              "section": ".text",
+              "address": 18446744071563272752,
+              "size": 5304,
+              "owner": "/home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/virtio_net.o"
+            },
+            {
+              "section": ".text",
+              "address": 18446744071563278080,
+              "size": 2410,
+              "owner": "/home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/net_boot.o"
+            },
+            {
+              "section": ".text",
+              "address": 18446744071563280496,
+              "size": 2538,
+              "owner": "/home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/net_arp.o"
+            },
+            {
+              "section": ".text",
+              "address": 18446744071563283040,
+              "size": 1907,
+              "owner": "/home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/net_arp_boot.o"
+            },
+            {
+              "section": ".text",
+              "address": 18446744071563284960,
+              "size": 3188,
+              "owner": "/home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/net_ipv4.o"
+            },
+            {
+              "section": ".text",
+              "address": 18446744071563288160,
+              "size": 1873,
+              "owner": "/home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/net_ipv4_boot.o"
+            },
+            {
+              "section": ".text",
+              "address": 18446744071563290048,
+              "size": 1513,
+              "owner": "/home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/net_udp.o"
+            },
+            {
+              "section": ".text",
+              "address": 18446744071563291584,
+              "size": 2947,
+              "owner": "/home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/net_udp_boot.o"
+            },
+            {
+              "section": ".text",
+              "address": 18446744071563294560,
+              "size": 8201,
+              "owner": "/home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/net_tcp.o"
+            },
+            {
+              "section": ".text",
+              "address": 18446744071563302768,
+              "size": 2092,
+              "owner": "/home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/net_tcp_boot.o"
+            },
+            {
+              "section": ".text",
+              "address": 18446744071563304864,
+              "size": 4173,
+              "owner": "/home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/net_tcp_data_boot.o"
+            },
+            {
+              "section": ".text",
+              "address": 18446744071563309040,
+              "size": 2686,
+              "owner": "/home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/net_tcp_retry_boot.o"
+            },
+            {
+              "section": ".text",
+              "address": 18446744071563311728,
+              "size": 3544,
+              "owner": "/home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/net_tcp_close_boot.o"
+            },
+            {
+              "section": ".text._RINvNtNtCs5YZeFliBs6N_10vos_kernel4xhci9discovery5probeNtNtB6_14xhci_discovery9CallbacksEB6_",
+              "address": 18446744071563315280,
+              "size": 757,
+              "owner": "/home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/rust/libvos_kernel.a(libvos_kernel.vos_kernel.45b20e7284a592af-cgu.0.rcgu.o)"
+            },
+            {
+              "section": ".text._RNvCsgpO44WCzh3m_7___rustc17rust_begin_unwind",
+              "address": 18446744071563316048,
+              "size": 13,
+              "owner": "/home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/rust/libvos_kernel.a(libvos_kernel.vos_kernel.45b20e7284a592af-cgu.0.rcgu.o)"
+            },
+            {
+              "section": ".text._RNvNtNtCs5YZeFliBs6N_10vos_kernel4xhci9discovery11decode_caps",
+              "address": 18446744071563316064,
+              "size": 381,
+              "owner": "/home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/rust/libvos_kernel.a(libvos_kernel.vos_kernel.45b20e7284a592af-cgu.0.rcgu.o)"
+            },
+            {
+              "section": ".text._RNvXs_NtCs5YZeFliBs6N_10vos_kernel14xhci_discoveryNtB4_9CallbacksNtNtNtB6_4xhci9discovery7ProbeIo8snapshot",
+              "address": 18446744071563316448,
+              "size": 161,
+              "owner": "/home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/rust/libvos_kernel.a(libvos_kernel.vos_kernel.45b20e7284a592af-cgu.0.rcgu.o)"
+            },
+            {
+              "section": ".text.vos_rust_elf_inside",
+              "address": 18446744071563316624,
+              "size": 18,
+              "owner": "/home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/rust/libvos_kernel.a(libvos_kernel.vos_kernel.45b20e7284a592af-cgu.0.rcgu.o)"
+            },
+            {
+              "section": ".text.vos_rust_probe",
+              "address": 18446744071563316656,
+              "size": 26,
+              "owner": "/home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/rust/libvos_kernel.a(libvos_kernel.vos_kernel.45b20e7284a592af-cgu.0.rcgu.o)"
+            },
+            {
+              "section": ".text.xhci_class_matches",
+              "address": 18446744071563316688,
+              "size": 18,
+              "owner": "/home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/rust/libvos_kernel.a(libvos_kernel.vos_kernel.45b20e7284a592af-cgu.0.rcgu.o)"
+            },
+            {
+              "section": ".text.xhci_decode_caps",
+              "address": 18446744071563316720,
+              "size": 370,
+              "owner": "/home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/rust/libvos_kernel.a(libvos_kernel.vos_kernel.45b20e7284a592af-cgu.0.rcgu.o)"
+            },
+            {
+              "section": ".text.xhci_probe",
+              "address": 18446744071563317104,
+              "size": 1085,
+              "owner": "/home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/rust/libvos_kernel.a(libvos_kernel.vos_kernel.45b20e7284a592af-cgu.0.rcgu.o)"
+            }
+          ],
+          "allocated_input_bytes": 172051,
+          "used_extent_with_internal_alignment": 172973,
+          "internal_alignment_bytes": 922,
+          "tail_padding_bytes": 3155
+        },
+        ".rodata": {
+          "sections": [
+            {
+              "section": ".rodata",
+              "address": 18446744071563321344,
+              "size": 384,
+              "owner": "/home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/entry.o"
+            },
+            {
+              "section": ".rodata.str1.1",
+              "address": 18446744071563321728,
+              "size": 12547,
+              "owner": "/home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/kernel.o"
+            },
+            {
+              "section": ".rodata.str1.8",
+              "address": 18446744071563334280,
+              "size": 23388,
+              "owner": "/home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/kernel.o"
+            },
+            {
+              "section": ".rodata",
+              "address": 18446744071563357672,
+              "size": 104,
+              "owner": "/home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/bootinfo.o"
+            },
+            {
+              "section": ".rodata",
+              "address": 18446744071563357792,
+              "size": 512,
+              "owner": "/home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/exception.o"
+            },
+            {
+              "section": ".rodata",
+              "address": 18446744071563358304,
+              "size": 24,
+              "owner": "/home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/gdt.o"
+            },
+            {
+              "section": ".rodata.cst2",
+              "address": 18446744071563358328,
+              "size": 4,
+              "owner": "/home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/idt.o"
+            },
+            {
+              "section": ".rodata",
+              "address": 18446744071563358336,
+              "size": 80,
+              "owner": "/home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/pmm.o"
+            },
+            {
+              "section": ".rodata",
+              "address": 18446744071563358416,
+              "size": 176,
+              "owner": "/home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/syscall.o"
+            },
+            {
+              "section": ".rodata",
+              "address": 18446744071563358592,
+              "size": 112,
+              "owner": "/home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/vmm.o"
+            },
+            {
+              "section": ".rodata",
+              "address": 18446744071563358720,
+              "size": 72,
+              "owner": "/home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/irq.o"
+            },
+            {
+              "section": ".rodata",
+              "address": 18446744071563358800,
+              "size": 16,
+              "owner": "/home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/pic.o"
+            },
+            {
+              "section": ".rodata",
+              "address": 18446744071563358816,
+              "size": 80,
+              "owner": "/home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/thread.o"
+            },
+            {
+              "section": ".rodata",
+              "address": 18446744071563358912,
+              "size": 208,
+              "owner": "/home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/elf.o"
+            },
+            {
+              "section": ".rodata",
+              "address": 18446744071563359136,
+              "size": 72,
+              "owner": "/home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/app_catalog.o"
+            },
+            {
+              "section": ".rodata",
+              "address": 18446744071563359232,
+              "size": 256,
+              "owner": "/home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/app_payload.o"
+            },
+            {
+              "section": ".rodata",
+              "address": 18446744071563359488,
+              "size": 32,
+              "owner": "/home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/exec.o"
+            },
+            {
+              "section": ".rodata",
+              "address": 18446744071563359520,
+              "size": 80,
+              "owner": "/home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/blockdev.o"
+            },
+            {
+              "section": ".rodata",
+              "address": 18446744071563359616,
+              "size": 160,
+              "owner": "/home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/virtio_blk.o"
+            },
+            {
+              "section": ".rodata",
+              "address": 18446744071563359776,
+              "size": 144,
+              "owner": "/home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/ext2.o"
+            },
+            {
+              "section": ".rodata",
+              "address": 18446744071563359936,
+              "size": 136,
+              "owner": "/home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/file.o"
+            },
+            {
+              "section": ".rodata",
+              "address": 18446744071563360096,
+              "size": 72,
+              "owner": "/home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/devmap.o"
+            },
+            {
+              "section": ".rodata",
+              "address": 18446744071563360192,
+              "size": 320,
+              "owner": "/home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/screen.o"
+            },
+            {
+              "section": ".rodata",
+              "address": 18446744071563360512,
+              "size": 1520,
+              "owner": "/home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/font8x16.o"
+            },
+            {
+              "section": ".rodata",
+              "address": 18446744071563362048,
+              "size": 256,
+              "owner": "/home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/keyboard.o"
+            },
+            {
+              "section": ".rodata",
+              "address": 18446744071563362304,
+              "size": 32,
+              "owner": "/home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/input_console.o"
+            },
+            {
+              "section": ".rodata",
+              "address": 18446744071563362336,
+              "size": 16,
+              "owner": "/home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/user_console.o"
+            },
+            {
+              "section": ".rodata",
+              "address": 18446744071563362352,
+              "size": 12,
+              "owner": "/home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/net_arp.o"
+            },
+            {
+              "section": ".rodata",
+              "address": 18446744071563362368,
+              "size": 48,
+              "owner": "/home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/net_tcp_data_boot.o"
+            },
+            {
+              "section": ".rodata.xhci_probe",
+              "address": 18446744071563362416,
+              "size": 184,
+              "owner": "/home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/rust/libvos_kernel.a(libvos_kernel.vos_kernel.45b20e7284a592af-cgu.0.rcgu.o)"
+            },
+            {
+              "section": ".rodata..Lswitch.table.xhci_decode_caps",
+              "address": 18446744071563362600,
+              "size": 184,
+              "owner": "/home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/rust/libvos_kernel.a(libvos_kernel.vos_kernel.45b20e7284a592af-cgu.0.rcgu.o)"
+            }
+          ],
+          "allocated_input_bytes": 41231,
+          "used_extent_with_internal_alignment": 41440,
+          "internal_alignment_bytes": 209,
+          "tail_padding_bytes": 3616
+        }
+      },
+      "PT_LOAD_file_bytes": 225500,
+      "PT_LOAD_memory_bytes": 847872,
+      "physical_reserved_bytes": 847872
+    }
+  },
+  "deltas": {
+    "ELF_file_bytes": 1456,
+    "PT_LOAD_file_bytes": 4096,
+    "PT_LOAD_memory_bytes": 4096,
+    "physical_reserved_bytes": 4096
+  },
+  "section_deltas": {
+    ".boot.bss": 0,
+    ".boot.data": 0,
+    ".boot.text": 0,
+    ".bss": 0,
+    ".data": 0,
+    ".debug_abbrev": -302,
+    ".debug_aranges": 0,
+    ".debug_frame": -56,
+    ".debug_info": -1177,
+    ".debug_line": -908,
+    ".debug_line_str": 4,
+    ".debug_loclists": -492,
+    ".debug_rnglists": -67,
+    ".debug_str": -19,
+    ".rodata": 0,
+    ".shstrtab": 0,
+    ".strtab": 284,
+    ".symtab": 96,
+    ".text": 4096
+  },
+  "text_padding_reconciliation": {
+    "allocated_input_bytes": 1440,
+    "used_extent_with_internal_alignment": 1491,
+    "internal_alignment_bytes": 51,
+    "tail_padding_bytes": 2605
+  },
+  "generated_switch_tables": {
+    "bytes_each": [
+      184,
+      184
+    ],
+    "byte_identical": false,
+    "target_regions": [
+      [
+        ".text"
+      ],
+      [
+        ".rodata"
+      ]
+    ],
+    "physical_page_saving_from_removing_either_alone": 0,
+    "policy": "different purposes: code dispatch versus string lookup; no blind deduplication"
+  }
+}

@@ -6,10 +6,11 @@ Current accepted graphical baseline: owner-merged
 VOS is pre-alpha. **N0-N5 are accepted; N6 is still in progress.**
 No physical-hardware or complete-desktop acceptance is claimed.
 The accepted main used for this review is
-`7c8082b98751f65ab0bcdf884339a6bf8298e2ce`, the owner's merged
-[R1 PR #21](https://github.com/veasnawt/vos/pull/21), following Rust foundation
-PR #20 and Master Plan PR #19. USB.1 integration below is a review candidate,
-not a new accepted main checkpoint.
+`86493ff2b2a8f2d84c4ce3ed4d0ccf132d97a072`, following R0/R1,
+[USB.1 integration PR #22](https://github.com/veasnawt/vos/pull/22) and
+[portable USB.2-A PR #23](https://github.com/veasnawt/vos/pull/23).
+The USB.1 Rust migration in this branch is locally verified for PR review,
+not yet accepted or merged.
 
 ## Current accepted components
 
@@ -72,10 +73,11 @@ The [first R1 candidate](results/r1-elf-bounds.md), commit
 predicate to the same Rust kernel archive. Local boundary, host-tool and native
 loader checks pass. The [performance/publication review](results/r1-performance.md)
 compares actual original C and Rust-backed paths, including call overhead and
-timing variation. R1 is merged through PR #21 at the accepted main above. Dated R0/R1
+timing variation. R1 is merged through PR #21 at
+`7c8082b98751f65ab0bcdf884339a6bf8298e2ce`. Dated R0/R1
 reports and original evidence retain their historical status wording.
 
-## USB.1 integration candidate
+## USB.1 accepted discovery and Rust migration candidate
 
 The original USB.1 commit `bd22803b8b5635b776c848d08d1494f65b49dd21`
 is integrated without rewriting its history or evidence. The
@@ -84,7 +86,19 @@ host, Rust-backed ELF and BIOS/UEFI checks on the accepted R1 baseline.
 `vos.usb_probe=1` enables bounded PCI bus-0 discovery, assigned-BAR validation
 and capability-header reads. No reset, DMA, bus-master enablement, ownership
 handoff, USB transfers, device enumeration or USB HID driver is implemented.
-Normal input remains PS/2. Physical hardware is NOT TESTED; USB.2 is not started.
+Normal input remains PS/2. Physical hardware is NOT TESTED. USB.1 is merged
+through PR #22. Its original integration report retains its dated status.
+
+USB.2-A's [portable Rust core](results/usb2a-rust-core.md) is merged through
+PR #23. It is a tested software lifecycle/ring/resource model without a live
+MMIO/DMA/reset backend. USB.2-B/C remain unimplemented.
+
+The [USB.1 Rust publication review](results/usb1-rust-publication-review.md)
+records the candidate production migration, preserved read-only behavior,
+shared header validation, explicit FFI contracts and real Rust execution traces.
+It retains one extra 4 KiB kernel page and higher synthetic software cost.
+The original pre-kernel UEFI timeout remains failed evidence; a bounded paired
+comparison did not reproduce it. Cause and hardware reliability remain unproven.
 
 ## Proposed next work, not execution approval
 

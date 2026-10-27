@@ -1,0 +1,51 @@
+
+running 46 tests
+test accounting_limits_and_underflow_are_transactional ... ok
+test argument_storage_precedes_worker_and_no_worker_failure_releases_it ... ok
+test backend_action_failures_propagate_and_preserve_ownership ... ok
+test bar_overflow_alignment_and_width ... ok
+test cancellation_in_every_active_state_and_idempotent_shutdown ... ok
+test command_timeout_and_exact_boundary_no_late_retirement ... ok
+test deadlines_boundaries_wrap_and_clock_regression ... ok
+test dequeue_error_and_clock_regression_enter_cleanup ... ok
+test dma_width_is_independent_of_bar_width ... ok
+test event_cycle_precedes_decoding_and_no_link_in_event_ring ... ok
+test every_truncated_bar_rejected ... ok
+test exactly_64_extended_headers_are_bounded ... ok
+test extended_capability_boundaries_and_duplicate_legacy ... ok
+test failed_allocation_at_every_stage_rolls_back ... ok
+test failed_qualification_and_duplicate_start_have_no_backend_effect ... ok
+test fake_event_queue_full_and_bounded_service ... ok
+test fake_rejects_operations_without_modeled_ownership ... ok
+test foreign_backend_cannot_take_over_an_active_controller ... ok
+test generated_budget_vectors ... ok
+test generated_capability_mutations_never_escape_bar ... ok
+test join_timeout_retains_control_and_worker ... ok
+test layout_sizes_and_no_global_allocation_requirement ... ok
+test lease_constructor_rejects_invalid_identity_and_ranges ... ok
+test lease_intervals_reject_partial_overlap_not_just_equal_bases ... ok
+test lifecycle_positive_delay_and_ordered_publication ... ok
+test malformed_and_unsupported_capability_values ... ok
+test malformed_port_and_reserved_event_fields_rejected ... ok
+test modeled_260_noops_wrap_both_fake_rings ... ok
+test no_control_storage_release_before_worker_reaped ... ok
+test no_effects_after_termination_or_illegal_transition ... ok
+test observation_and_submission_error_propagation ... ok
+test observation_errors_during_stop_or_join_preserve_remaining_leases ... ok
+test one_command_credit_and_260_round_trips ... ok
+test ownership_and_other_observation_timeouts_are_bounded ... ok
+test protocol_capability_body_and_port_range_are_checked ... ok
+test release_failure_is_not_silently_forgotten ... ok
+test repeated_clean_initialization_requires_fresh_epoch_and_no_leaks ... ok
+test required_protocol_and_disjoint_port_groups ... ok
+test ring_region_rejects_bad_indices_sizes_and_arithmetic ... ok
+test stale_and_unexpected_backend_events_fail_with_cleanup ... ok
+test stale_software_ticket_rejected_after_pointer_reuse ... ok
+test stop_and_worker_finish_failures_do_not_release_unknown_ownership ... ok
+test unconfirmed_quiescence_quarantines_dma_and_mapping_only ... ok
+test unexpected_pointer_epoch_duplicate_and_status_rejected ... ok
+test unsupported_platform_facts_rejected ... ok
+test valid_capabilities_and_optional_legacy ... ok
+
+test result: ok. 46 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+

@@ -1,0 +1,661 @@
+{
+  "algorithm": "SHA-256",
+  "original_migration": "4abe69f4ffb12997f3c9ede9ecb20f20f39a610b",
+  "accepted_main": "86493ff2b2a8f2d84c4ce3ed4d0ccf132d97a072",
+  "reviewed_tools_commit": "e7e657495c3773d6f6150bad9639e6913fd48eb4",
+  "self_excluded": true,
+  "files": {
+    "README.md": {
+      "bytes": 8978,
+      "sha256": "76de8dd2b2571adbe58edc2807a058f502f2f4b565bb6d93ae02629691cf71ee"
+    },
+    "arch/x86_64/rust/kernel_probe.rs": {
+      "bytes": 1493,
+      "sha256": "6202b26a0de53cdecf309b926c67cd9d6092607a6bdf03c670abf9670ca15d30"
+    },
+    "arch/x86_64/rust/xhci_discovery.rs": {
+      "bytes": 7380,
+      "sha256": "fe03683a25b9788ef2e52c0c68fccf4ec64bb16348a270228712d94f811721ab"
+    },
+    "arch/x86_64/xhci.c": {
+      "bytes": 1837,
+      "sha256": "38ddad82c88517d4271c460ffca8a4eb8c0984aad12f6ff459a8fb5cbb7cea44"
+    },
+    "arch/x86_64/xhci.h": {
+      "bytes": 1634,
+      "sha256": "786087f5a1b097fb9a1ad1ab619911cf3ab81028a046dba499fc488528959042"
+    },
+    "docs/ROADMAP.md": {
+      "bytes": 16863,
+      "sha256": "085d8810c3fa64added27c94f1c4367fa54d606e39270b551a1ceefea370ac1c"
+    },
+    "docs/STATUS.md": {
+      "bytes": 28376,
+      "sha256": "ce7d6407f09bff0e89ad8be349dc0627eb960688459db9839386626e65ed0492"
+    },
+    "docs/images/usb/review/vos-usb1-review-bios.png": {
+      "bytes": 10429,
+      "sha256": "3246d84b90438b5fb77740d65f33448cf6056c21d4ee52eb3d3fa95d601c5ec8"
+    },
+    "docs/images/usb/review/vos-usb1-review-uefi.png": {
+      "bytes": 10429,
+      "sha256": "3246d84b90438b5fb77740d65f33448cf6056c21d4ee52eb3d3fa95d601c5ec8"
+    },
+    "docs/images/usb/vos-usb1-rust-bios.png": {
+      "bytes": 10429,
+      "sha256": "73840158e18185e0b3638bfd29ccec73ed6a8cc50cfaf5f4982cb60ca6e56a9c"
+    },
+    "docs/images/usb/vos-usb1-rust-uefi.png": {
+      "bytes": 10429,
+      "sha256": "73840158e18185e0b3638bfd29ccec73ed6a8cc50cfaf5f4982cb60ca6e56a9c"
+    },
+    "docs/results/usb1-rust-migration.md": {
+      "bytes": 17157,
+      "sha256": "7108e11c2cb8c76d4ee7968815fdbcbefa9372af813243b382d75f62774cd7c0"
+    },
+    "docs/results/usb1-rust-migration/C-adapter.txt": {
+      "bytes": 2469,
+      "sha256": "d730ac743ab2e81cdd0fa6740cf24bd2847fde1eb48f5eba8211df98809f387f"
+    },
+    "docs/results/usb1-rust-migration/C-boot-call.txt": {
+      "bytes": 21777,
+      "sha256": "a5e5fe4d66248b9d4bee639de777b7ff5fba15711d37d91d347580c570405109"
+    },
+    "docs/results/usb1-rust-migration/bios-absent-command.json": {
+      "bytes": 492,
+      "sha256": "416aa73ce23ab3911d68c93e85054d048374c8ec4ec4c5b55cce77b0ecc4af4e"
+    },
+    "docs/results/usb1-rust-migration/bios-absent-result.json": {
+      "bytes": 218,
+      "sha256": "d6139c78f5b532a64af201f0dd0029d88de42fd368b9785e7d261a8a90767e12"
+    },
+    "docs/results/usb1-rust-migration/bios-absent-serial.txt": {
+      "bytes": 5249,
+      "sha256": "695058b81a272383f99e51c8c1d517d579b5c0566a8ebedc0ffb4b84ad836cd8"
+    },
+    "docs/results/usb1-rust-migration/bios-command.json": {
+      "bytes": 687,
+      "sha256": "922f3f7f9502565880be4fb38caef93120bebb7c99df0a5ab25f700eac2289c4"
+    },
+    "docs/results/usb1-rust-migration/bios-control-command.json": {
+      "bytes": 496,
+      "sha256": "5f2aacbea623e61d4586868bd9cf16c7b4b87a1125cd72c7335dc2e8a47309b9"
+    },
+    "docs/results/usb1-rust-migration/bios-control-result.json": {
+      "bytes": 219,
+      "sha256": "ba5a36793b0a62914d51a3a1d97a2bd07d9733978859227d01652046cef0ef3a"
+    },
+    "docs/results/usb1-rust-migration/bios-control-serial.txt": {
+      "bytes": 4631,
+      "sha256": "6e3342866e46d288f93d717e5ef4d4869c3cf32a78001ee678e1ff304f92df45"
+    },
+    "docs/results/usb1-rust-migration/bios-no-ps2-command.json": {
+      "bytes": 574,
+      "sha256": "b360f88ae61fbe98019a4ef78d44cf0835dc427e96b623d4734fb783664a2fee"
+    },
+    "docs/results/usb1-rust-migration/bios-no-ps2-gui-command.json": {
+      "bytes": 583,
+      "sha256": "976d57944359d15d7d190108a21b07bb8843dd947897ac70d11be33801cd7b97"
+    },
+    "docs/results/usb1-rust-migration/bios-no-ps2-gui-result.json": {
+      "bytes": 221,
+      "sha256": "61d4d70dd74f06643221914feb9235fe6af712aed87b8177a3c1909f46b7b961"
+    },
+    "docs/results/usb1-rust-migration/bios-no-ps2-gui-serial.txt": {
+      "bytes": 4256,
+      "sha256": "aee433d97404c6a315313194fb856ab59ac35206bed2e92014c7e88eb31d94dd"
+    },
+    "docs/results/usb1-rust-migration/bios-no-ps2-result.json": {
+      "bytes": 217,
+      "sha256": "6592a13f32d803a6cea01dfcab43dd4faaa4ccc1cfb4b547868c7af5175da055"
+    },
+    "docs/results/usb1-rust-migration/bios-no-ps2-serial.txt": {
+      "bytes": 3797,
+      "sha256": "3a4a94bf03bf4e2738b10c3cda3f05dc90af420536f44520d1f98fbcdd21badf"
+    },
+    "docs/results/usb1-rust-migration/bios-pci-after.json": {
+      "bytes": 3682,
+      "sha256": "6347f2d9abd57722eab35f04f58bdfef128dce08e7292d1d32767872def5d6b1"
+    },
+    "docs/results/usb1-rust-migration/bios-pci-before.json": {
+      "bytes": 3682,
+      "sha256": "6347f2d9abd57722eab35f04f58bdfef128dce08e7292d1d32767872def5d6b1"
+    },
+    "docs/results/usb1-rust-migration/bios-rust-probe-execution.txt": {
+      "bytes": 781,
+      "sha256": "dcc5d7a1295eae445f43cd488f663cd89154367918a79ff3fd22e139928709ca"
+    },
+    "docs/results/usb1-rust-migration/bios-serial.txt": {
+      "bytes": 5643,
+      "sha256": "126e8930de68d8d6345f379176eb4f7c00aba042ad1628433d38399dc17aee32"
+    },
+    "docs/results/usb1-rust-migration/bios-usb-command.json": {
+      "bytes": 559,
+      "sha256": "922a9f110ea8fe6111c656e3873e278a1db67ec77813fab268b0cc577915fd73"
+    },
+    "docs/results/usb1-rust-migration/bios-usb-result.json": {
+      "bytes": 215,
+      "sha256": "92c875c2470cae936cd986331a24621475ba0b2eb8c047edd9d65a6ada110161"
+    },
+    "docs/results/usb1-rust-migration/bios-usb-serial.txt": {
+      "bytes": 4122,
+      "sha256": "fb83384c44d691371e19aea09a4bb1352381748793f0ad42f8b211600314c732"
+    },
+    "docs/results/usb1-rust-migration/boot-diagnostic-serial.txt": {
+      "bytes": 4220,
+      "sha256": "d317628af38539522b7b51dabf4c8dce1fc15876c439b040fe7d37f94171292e"
+    },
+    "docs/results/usb1-rust-migration/boot-diagnostic.json": {
+      "bytes": 566,
+      "sha256": "1bf724880e06d0268c879838817fffe02d8746d7aa28f9b3945927dacf368359"
+    },
+    "docs/results/usb1-rust-migration/captures.json": {
+      "bytes": 907,
+      "sha256": "febfe90807c1cd049a3ead1858b79df847de2942b1047023c1ef25bdb8ac3b9c"
+    },
+    "docs/results/usb1-rust-migration/changed-files.txt": {
+      "bytes": 4869,
+      "sha256": "292c4ca9a1c0c7f6c937601f3e970a073fcdfa478c5ceb5e3c436acc962f8831"
+    },
+    "docs/results/usb1-rust-migration/differential-checked.txt": {
+      "bytes": 102,
+      "sha256": "2a972bddd0ac2b1a8ecd69fe8724f3cebeb13aeef80d77b0d33189b6245eeab7"
+    },
+    "docs/results/usb1-rust-migration/differential-release.txt": {
+      "bytes": 102,
+      "sha256": "2a972bddd0ac2b1a8ecd69fe8724f3cebeb13aeef80d77b0d33189b6245eeab7"
+    },
+    "docs/results/usb1-rust-migration/differential.json": {
+      "bytes": 6599,
+      "sha256": "92462ff7bda527052bec11f5a994163d790efe9e38cc7fb76eecce93ef3825d2"
+    },
+    "docs/results/usb1-rust-migration/documentation-validation.json": {
+      "bytes": 417,
+      "sha256": "9f668b625562ddb54c5b52483fe2d3d602a401e67dd7a511474a5c68b6ea8af0"
+    },
+    "docs/results/usb1-rust-migration/failed-boot-serial.txt": {
+      "bytes": 330,
+      "sha256": "1c8f30d2cfc1bcff0510c4712d11cb8c76a4d9aa937a5e248d51855c7261b669"
+    },
+    "docs/results/usb1-rust-migration/kernel-sections.txt": {
+      "bytes": 2212,
+      "sha256": "c2114a3b922f23b5aa0459904f20f6cd7ec0d29cee1e8fe9bc89bc6b5b66f328"
+    },
+    "docs/results/usb1-rust-migration/kernel-segments.txt": {
+      "bytes": 852,
+      "sha256": "b5bb560a650ca467b6d1c84298321794e7e9d4676104884426596a18bf424037"
+    },
+    "docs/results/usb1-rust-migration/manifest.json": {
+      "bytes": 16432,
+      "sha256": "e625ebdc80165bddfca2d9e43c82958d17a56fa1a1bb271723fcf0008c6517dc"
+    },
+    "docs/results/usb1-rust-migration/memory-and-linkage.json": {
+      "bytes": 9373,
+      "sha256": "12a60d3b3392142dae261fa3b0d8c0db09da1731d6fe4a2a960898880e3c9433"
+    },
+    "docs/results/usb1-rust-migration/module-dependency.json": {
+      "bytes": 226,
+      "sha256": "26e14cecc8618f75da5579455ad2e4b5dc2ceb100fe268375a381174e12784ed"
+    },
+    "docs/results/usb1-rust-migration/mutation-control.txt": {
+      "bytes": 583,
+      "sha256": "8f61f0a54d70784a0587765a670fafc8139a45786e3740fe7364b8376677a22f"
+    },
+    "docs/results/usb1-rust-migration/native-continuation.json": {
+      "bytes": 2362,
+      "sha256": "5c39540330789da993214732cbf55a01f0ec6a44e6bf9e1ed476991677837779"
+    },
+    "docs/results/usb1-rust-migration/native-coverage.json": {
+      "bytes": 647,
+      "sha256": "8fcec29d385f692172f438c40d7a0051abd05661102ead3560c1fad3c48a39b6"
+    },
+    "docs/results/usb1-rust-migration/native-original-failed.json": {
+      "bytes": 60502,
+      "sha256": "4fea7198bfdf7d2386e04565fb119c6ed927f96dbeea444438afab787511dc35"
+    },
+    "docs/results/usb1-rust-migration/performance-review.json": {
+      "bytes": 745,
+      "sha256": "dc854d71a689bac8226fe611997c7353975d27883d4066f80cb3b7f2689490c5"
+    },
+    "docs/results/usb1-rust-migration/portable-tests.txt": {
+      "bytes": 3046,
+      "sha256": "854d7f8818fb9471795d6dd5efbfc22589a7dd5d19983d7d97f10fba0a720ced"
+    },
+    "docs/results/usb1-rust-migration/portable.json": {
+      "bytes": 7696,
+      "sha256": "9889d019f6330574f65d245d9a6a7ed9835960a425051ecbeb503c686317d69e"
+    },
+    "docs/results/usb1-rust-migration/pre-correction-benchmark.json": {
+      "bytes": 316,
+      "sha256": "af3499d250bfc4ac9a1ebfecea15e8983433631f67f5d3e6d5853c9e434b9aa0"
+    },
+    "docs/results/usb1-rust-migration/pre-correction-differential.json": {
+      "bytes": 5854,
+      "sha256": "114267883314ebb68f4eb7ae5db9dd2fdf95569e714650ac459defb15b2f1168"
+    },
+    "docs/results/usb1-rust-migration/preservation-before.json": {
+      "bytes": 197,
+      "sha256": "99e773fcce2c4554cc2bb9454408aef9447844956b284bd55fbc414142276d9b"
+    },
+    "docs/results/usb1-rust-migration/preservation-final.json": {
+      "bytes": 528,
+      "sha256": "f3d330f300ec2b03ee8b2fb1020abeb6e0a3ea22634565bbf9c477920fa242ce"
+    },
+    "docs/results/usb1-rust-migration/protected-audit.json": {
+      "bytes": 288,
+      "sha256": "ef800b2fd19c6e97e4e5fd2e308064e9a2a8c8a39b23e0ff0bbe9fc674f6c1ef"
+    },
+    "docs/results/usb1-rust-migration/r0-host.txt": {
+      "bytes": 89,
+      "sha256": "b8e5fa835272a57c88432fe5a528fc81273c6cc1ed0bb54af4771ab36a52e93e"
+    },
+    "docs/results/usb1-rust-migration/r1-host.json": {
+      "bytes": 33950,
+      "sha256": "19808a398646a0944e42ca44034cc62b7b5c32159077afa21c112a494da99155"
+    },
+    "docs/results/usb1-rust-migration/release-benchmark.json": {
+      "bytes": 619,
+      "sha256": "2492027acbc11cc44b0038a83a0040dc5984f0f05c43bb0cce49bec5f34b2cec"
+    },
+    "docs/results/usb1-rust-migration/resources.json": {
+      "bytes": 459,
+      "sha256": "708ab6d7896f55cf74386959ed9d12022bfc9a5fd0c87484ae064046b19fd9d3"
+    },
+    "docs/results/usb1-rust-migration/rust-relocations.txt": {
+      "bytes": 9503,
+      "sha256": "aa139007856a12021d3405a847f65e8b41de1c5e4e836c815fbfa5e0facf2608"
+    },
+    "docs/results/usb1-rust-migration/rust-symbols.txt": {
+      "bytes": 781,
+      "sha256": "4a7d37171cfd8786216fbae6ef60d4e9625bbcd1f276dbb12540d242347f504c"
+    },
+    "docs/results/usb1-rust-migration/send-negative.txt": {
+      "bytes": 2316,
+      "sha256": "cdeed8e0fba5f487c593f062a936bede55b351d627272fe03ac5466b58b7fee7"
+    },
+    "docs/results/usb1-rust-migration/sync-negative.txt": {
+      "bytes": 2324,
+      "sha256": "1c75bfff47962a2cb37db5533fb5eb358f6091153248eb552aca2187491ce5c9"
+    },
+    "docs/results/usb1-rust-migration/uefi-absent-command.json": {
+      "bytes": 761,
+      "sha256": "be98620aa8e0ffc15a4067ddec1fe3449ba5fc9e58bc880e686d472fb92eb8f0"
+    },
+    "docs/results/usb1-rust-migration/uefi-absent-result.json": {
+      "bytes": 218,
+      "sha256": "d40daeba282905ed9f430b6adfc9f3008a75304599e0afcfe91c80732ed265a0"
+    },
+    "docs/results/usb1-rust-migration/uefi-absent-serial.txt": {
+      "bytes": 5575,
+      "sha256": "8c8433e90f563fc0b4451057e024d18d1503de22d0c01b4a9b098b35f64974c7"
+    },
+    "docs/results/usb1-rust-migration/uefi-command.json": {
+      "bytes": 895,
+      "sha256": "b1f496ed306f53aea406cdae2c03ca8ba7f3e01df207f6e4dd8d1277b5469d53"
+    },
+    "docs/results/usb1-rust-migration/uefi-control-command.json": {
+      "bytes": 727,
+      "sha256": "fb2d34e2df4bb87a7ec1d1963b9bea85568f19bf7316cc115ae8a29bb659ee7f"
+    },
+    "docs/results/usb1-rust-migration/uefi-control-result.json": {
+      "bytes": 219,
+      "sha256": "d3a6d9acf6eaf1f35392de3bc0f09753f777003e4e7db9601dfb48d4c4c10c0d"
+    },
+    "docs/results/usb1-rust-migration/uefi-control-serial.txt": {
+      "bytes": 4957,
+      "sha256": "f59c65ab695b6f9d4f8b82be65dfb8a9ed0d62e572abf1f5193e54d770c8e5bd"
+    },
+    "docs/results/usb1-rust-migration/uefi-no-ps2-command.json": {
+      "bytes": 843,
+      "sha256": "d238ceb61dd4705416a3a71339e173a0350d029d8b2c34be78ed3dd698b30ba8"
+    },
+    "docs/results/usb1-rust-migration/uefi-no-ps2-gui-command.json": {
+      "bytes": 856,
+      "sha256": "7f0f64d20797ae21799c9d01188b3cc33087da990dec5e8a2469f9cbe2a5bb20"
+    },
+    "docs/results/usb1-rust-migration/uefi-no-ps2-gui-result.json": {
+      "bytes": 221,
+      "sha256": "357aa8ac4d2a41db44ced85f2da773aaaf64f030e525f1cdcd1b23a553ff9372"
+    },
+    "docs/results/usb1-rust-migration/uefi-no-ps2-gui-serial.txt": {
+      "bytes": 4582,
+      "sha256": "5ed36dd2a587d2c643c0d45e87a7c7abbb395ec83262488fc1afc69d1a348063"
+    },
+    "docs/results/usb1-rust-migration/uefi-no-ps2-result.json": {
+      "bytes": 217,
+      "sha256": "fdac953a48511ea5544c8a84ddca385f37f6766da06eeb279e062d9c8c5e8104"
+    },
+    "docs/results/usb1-rust-migration/uefi-no-ps2-serial.txt": {
+      "bytes": 4127,
+      "sha256": "ab119806e084f41f1e73036a7d4d5885b7b108a665dbb3b6c77e7707a49f451c"
+    },
+    "docs/results/usb1-rust-migration/uefi-pci-after.json": {
+      "bytes": 3685,
+      "sha256": "f551d43d2a52efc13d9f273d188b64ac6a9274ea42086682c52d1200e592137f"
+    },
+    "docs/results/usb1-rust-migration/uefi-pci-before.json": {
+      "bytes": 3685,
+      "sha256": "f551d43d2a52efc13d9f273d188b64ac6a9274ea42086682c52d1200e592137f"
+    },
+    "docs/results/usb1-rust-migration/uefi-rust-probe-execution.txt": {
+      "bytes": 781,
+      "sha256": "77c0e54be97e4f9b9173c891ebfdc25794402c140628af56289454c8bec4d12e"
+    },
+    "docs/results/usb1-rust-migration/uefi-serial.txt": {
+      "bytes": 5969,
+      "sha256": "da0baae54b2b7f8ddc2f02581ea80d017f01f61f4e5290da0cfe45a750175d88"
+    },
+    "docs/results/usb1-rust-migration/uefi-usb-command.json": {
+      "bytes": 786,
+      "sha256": "3d431c7e6570a9c8bbf78d6d1ddfef528884126add24398e8e046991c14c8d30"
+    },
+    "docs/results/usb1-rust-migration/uefi-usb-result.json": {
+      "bytes": 215,
+      "sha256": "2036e7b8079be37ec5a96a6740b92958907f64a3c6b54527bbac71cb3580f1f0"
+    },
+    "docs/results/usb1-rust-migration/uefi-usb-serial.txt": {
+      "bytes": 4448,
+      "sha256": "704aba4e0d541b48a4261586caa1a7b95185d1eaea2304d3a35b3df79a409c19"
+    },
+    "docs/results/usb1-rust-migration/usb2a-publication.json": {
+      "bytes": 1017,
+      "sha256": "649ea19674acfd632c00a0092bedeecc649898c6fd26b29901089afe6b21a1bd"
+    },
+    "docs/results/usb1-rust-publication-review.md": {
+      "bytes": 21288,
+      "sha256": "82202aecb47b03d30b8e097bafc6e9018246c077b792f3a6537ab2c2299241b3"
+    },
+    "docs/results/usb1-rust-publication-review/C-loads.txt": {
+      "bytes": 852,
+      "sha256": "e4e4dcbd3e1369ef22ef616f5bf003d896164eb1ee5be01cdd088f9ef088751c"
+    },
+    "docs/results/usb1-rust-publication-review/C-rodata-map.txt": {
+      "bytes": 20601,
+      "sha256": "b8102f154c17c376a7e25ba0ed06533b102e39397708cb6f17ebb2f9eac89619"
+    },
+    "docs/results/usb1-rust-publication-review/C-sections.txt": {
+      "bytes": 2212,
+      "sha256": "2089f083a7b035f2c997c2679a7b38510a12aac07a6eb0d0e5907132a969f092"
+    },
+    "docs/results/usb1-rust-publication-review/C-symbols.txt": {
+      "bytes": 40689,
+      "sha256": "5eb6079e3651d89b535c6681eb93599cc7b722b5c0f24412a31eb28233b30a6d"
+    },
+    "docs/results/usb1-rust-publication-review/C-text-map.txt": {
+      "bytes": 37418,
+      "sha256": "f2d3f0c52fc03fa97969d9c30c743a6b4dd92fa3db146d7bedb12156ca11f6cf"
+    },
+    "docs/results/usb1-rust-publication-review/R0.txt": {
+      "bytes": 89,
+      "sha256": "b8e5fa835272a57c88432fe5a528fc81273c6cc1ed0bb54af4771ab36a52e93e"
+    },
+    "docs/results/usb1-rust-publication-review/R1.txt": {
+      "bytes": 74,
+      "sha256": "88f2b3b25f1f8d2ab51a671cd3ba76204873a19123c9a38ebf2c4896fe4c18b3"
+    },
+    "docs/results/usb1-rust-publication-review/Rust-loads.txt": {
+      "bytes": 852,
+      "sha256": "b5bb560a650ca467b6d1c84298321794e7e9d4676104884426596a18bf424037"
+    },
+    "docs/results/usb1-rust-publication-review/Rust-rodata-map.txt": {
+      "bytes": 22536,
+      "sha256": "bee812cbf3005f7d1f0420fba6dc5016229b93b66ddce338ab4cfb8966cd6350"
+    },
+    "docs/results/usb1-rust-publication-review/Rust-sections.txt": {
+      "bytes": 2212,
+      "sha256": "c2114a3b922f23b5aa0459904f20f6cd7ec0d29cee1e8fe9bc89bc6b5b66f328"
+    },
+    "docs/results/usb1-rust-publication-review/Rust-symbols.txt": {
+      "bytes": 41117,
+      "sha256": "bb15c8cf681e8ccc13e9300b07e8e64dbca9b477044950f5e35a9aed34fc6db3"
+    },
+    "docs/results/usb1-rust-publication-review/Rust-text-map.txt": {
+      "bytes": 40501,
+      "sha256": "44f2c8037786e528b69f5a3e13b683ce16094bcf91aacc5d6b6164c8f7091de2"
+    },
+    "docs/results/usb1-rust-publication-review/USB1-sanitizers.txt": {
+      "bytes": 106,
+      "sha256": "e5c816254e732e0281cced11e636e33376c94a84317a3050f382ec6a5f7981a2"
+    },
+    "docs/results/usb1-rust-publication-review/USB2-core.txt": {
+      "bytes": 2922,
+      "sha256": "12ed6330c35399ec8635443a330faedad309471c382e6ae7463aeaba7070fe4d"
+    },
+    "docs/results/usb1-rust-publication-review/boot-commands.json": {
+      "bytes": 26750,
+      "sha256": "8ac08cf3ce942903fc805770a1ea3a6686a9a6234217b5d218e2d43243502606"
+    },
+    "docs/results/usb1-rust-publication-review/boot-comparison.json": {
+      "bytes": 9517,
+      "sha256": "a59077fee74583eaf489578852654bff77cb214569e7720bc4de21d07517432a"
+    },
+    "docs/results/usb1-rust-publication-review/changed-files.txt": {
+      "bytes": 8954,
+      "sha256": "433c51876f2741f90ba721987c33e378e787db601f8781f4d00d55aaf69d85ca"
+    },
+    "docs/results/usb1-rust-publication-review/comparison-01-C-uefi-absent-serial.txt": {
+      "bytes": 4220,
+      "sha256": "7774130f2b00c5cfad00f23151ebfd7259d7b42a51c97e5bf27d6a9426ad81fb"
+    },
+    "docs/results/usb1-rust-publication-review/comparison-02-Rust-uefi-absent-serial.txt": {
+      "bytes": 4220,
+      "sha256": "d317628af38539522b7b51dabf4c8dce1fc15876c439b040fe7d37f94171292e"
+    },
+    "docs/results/usb1-rust-publication-review/comparison-03-Rust-uefi-absent-serial.txt": {
+      "bytes": 4220,
+      "sha256": "d317628af38539522b7b51dabf4c8dce1fc15876c439b040fe7d37f94171292e"
+    },
+    "docs/results/usb1-rust-publication-review/comparison-04-C-uefi-absent-serial.txt": {
+      "bytes": 4220,
+      "sha256": "7774130f2b00c5cfad00f23151ebfd7259d7b42a51c97e5bf27d6a9426ad81fb"
+    },
+    "docs/results/usb1-rust-publication-review/comparison-05-C-uefi-absent-serial.txt": {
+      "bytes": 4220,
+      "sha256": "7774130f2b00c5cfad00f23151ebfd7259d7b42a51c97e5bf27d6a9426ad81fb"
+    },
+    "docs/results/usb1-rust-publication-review/comparison-06-Rust-uefi-absent-serial.txt": {
+      "bytes": 4220,
+      "sha256": "d317628af38539522b7b51dabf4c8dce1fc15876c439b040fe7d37f94171292e"
+    },
+    "docs/results/usb1-rust-publication-review/comparison-07-Rust-uefi-absent-serial.txt": {
+      "bytes": 4220,
+      "sha256": "d317628af38539522b7b51dabf4c8dce1fc15876c439b040fe7d37f94171292e"
+    },
+    "docs/results/usb1-rust-publication-review/comparison-08-C-uefi-absent-serial.txt": {
+      "bytes": 4220,
+      "sha256": "7774130f2b00c5cfad00f23151ebfd7259d7b42a51c97e5bf27d6a9426ad81fb"
+    },
+    "docs/results/usb1-rust-publication-review/comparison-09-C-bios-present-serial.txt": {
+      "bytes": 4122,
+      "sha256": "ef287b854654e3da194fe6f5deed0b5c8c0a4acf4bca19dcb1207d61b8d3436d"
+    },
+    "docs/results/usb1-rust-publication-review/comparison-10-Rust-bios-present-serial.txt": {
+      "bytes": 4122,
+      "sha256": "32543aaf3fbd526bc4418e7e33e6a1fb451ba1c87235a82ca435ee2c183d90a2"
+    },
+    "docs/results/usb1-rust-publication-review/comparison-11-Rust-uefi-present-serial.txt": {
+      "bytes": 4448,
+      "sha256": "6bec2b3e27e032f704f8048b9328eea3a2769c4ca94c30d6b72d2b53e5e0a09e"
+    },
+    "docs/results/usb1-rust-publication-review/comparison-12-C-uefi-present-serial.txt": {
+      "bytes": 4448,
+      "sha256": "93c8b267d630c8e2fe2a034e3596db84000b7fd62b0b98df77aee4d34bb5194d"
+    },
+    "docs/results/usb1-rust-publication-review/differential.txt": {
+      "bytes": 102,
+      "sha256": "2a972bddd0ac2b1a8ecd69fe8724f3cebeb13aeef80d77b0d33189b6245eeab7"
+    },
+    "docs/results/usb1-rust-publication-review/footprint.json": {
+      "bytes": 60864,
+      "sha256": "1df55da2d59e7d876d82f02ec36a683961375c27745c4a987fdfbed6f9d3e235"
+    },
+    "docs/results/usb1-rust-publication-review/investigation-summary.json": {
+      "bytes": 696,
+      "sha256": "ee2416c3d2cb8b456fd80a02c26cd758b56211115824803f37194f78f44e6920"
+    },
+    "docs/results/usb1-rust-publication-review/mutation-control.txt": {
+      "bytes": 583,
+      "sha256": "1d2e73ca98dfaa9aaa6361fe339603f28147104d99bb37a137bb33e652579f6e"
+    },
+    "docs/results/usb1-rust-publication-review/performance-C-assembly.txt": {
+      "bytes": 19954,
+      "sha256": "8dc57740ef0975b2acd9ed78d963a13809175529c5f1a2c57f8ec8213dbd0a65"
+    },
+    "docs/results/usb1-rust-publication-review/performance-CPU.txt": {
+      "bytes": 3021,
+      "sha256": "6364641863ca81bee369226a1046e268d675e038f63843e96a72b203b203386f"
+    },
+    "docs/results/usb1-rust-publication-review/performance-Rust-FFI-assembly.txt": {
+      "bytes": 12870,
+      "sha256": "6b47fb259f23579eba8511e1ac9dba9384f161465444e2e05b95623f423639ef"
+    },
+    "docs/results/usb1-rust-publication-review/performance-gcc.txt": {
+      "bytes": 239,
+      "sha256": "6e876a25bb7fdb71ab2914e8f1eeaa00cc61d20a36a6c2981ab7d4d7ceab42f8"
+    },
+    "docs/results/usb1-rust-publication-review/performance-ld.txt": {
+      "bytes": 281,
+      "sha256": "90619b44f5e33d31b24e5eaefa374736e4db86d56a01e8b1f6ceb0b4c2cab821"
+    },
+    "docs/results/usb1-rust-publication-review/performance-trial-1.jsonl": {
+      "bytes": 16174,
+      "sha256": "2c468d75e85928e93c5393349d857ea1d6eddfa7efa4f120be0f451a10d118c7"
+    },
+    "docs/results/usb1-rust-publication-review/performance-trial-2.jsonl": {
+      "bytes": 16178,
+      "sha256": "e974d8aa59eb76a701691409432539eec7c2eb06351245a68fc473254eeca588"
+    },
+    "docs/results/usb1-rust-publication-review/performance-trial-3.jsonl": {
+      "bytes": 16170,
+      "sha256": "fe51ff4c94eb396b38b5509f24f295a2aff82b9771027dc1f24759942eadd2cf"
+    },
+    "docs/results/usb1-rust-publication-review/performance.json": {
+      "bytes": 84598,
+      "sha256": "33e253a6b56260cbf1050ddb2316cb2ac362dc63d3c59c67a60e23ab687a8b91"
+    },
+    "docs/results/usb1-rust-publication-review/phases-01-C-uefi-present-serial.txt": {
+      "bytes": 4448,
+      "sha256": "93c8b267d630c8e2fe2a034e3596db84000b7fd62b0b98df77aee4d34bb5194d"
+    },
+    "docs/results/usb1-rust-publication-review/phases-02-Rust-uefi-present-serial.txt": {
+      "bytes": 4448,
+      "sha256": "6bec2b3e27e032f704f8048b9328eea3a2769c4ca94c30d6b72d2b53e5e0a09e"
+    },
+    "docs/results/usb1-rust-publication-review/phases-03-Rust-uefi-present-serial.txt": {
+      "bytes": 4448,
+      "sha256": "6bec2b3e27e032f704f8048b9328eea3a2769c4ca94c30d6b72d2b53e5e0a09e"
+    },
+    "docs/results/usb1-rust-publication-review/phases-04-C-uefi-present-serial.txt": {
+      "bytes": 4448,
+      "sha256": "93c8b267d630c8e2fe2a034e3596db84000b7fd62b0b98df77aee4d34bb5194d"
+    },
+    "docs/results/usb1-rust-publication-review/policy-tests.txt": {
+      "bytes": 380,
+      "sha256": "0044ae7f301615623021259e0eb593d25e863ea65ac6d3e1e0b05dc1a0212c23"
+    },
+    "docs/results/usb1-rust-publication-review/present-phases.json": {
+      "bytes": 5316,
+      "sha256": "c61f0b2ae83c8a3f1228e795da5c380baccc086cbcadfa19c0fb652d2cdae264"
+    },
+    "docs/results/usb1-rust-publication-review/preservation.json": {
+      "bytes": 604,
+      "sha256": "0787b5d0f732cee83bb07e9ceba6cd295d81484fe5a36578ce1134930616b99d"
+    },
+    "docs/results/usb1-rust-publication-review/progress.json": {
+      "bytes": 2398,
+      "sha256": "a06418358917db43de791c7b9f850b43949f0ea5fb86b32f0c89048a76d1adbe"
+    },
+    "docs/results/usb1-rust-publication-review/regressions.json": {
+      "bytes": 3037,
+      "sha256": "31825f25d039dacae48bba504a6a6eab41f931b70de77f83e0b406bd1a327a8f"
+    },
+    "docs/results/usb1-rust-publication-review/resources.json": {
+      "bytes": 491,
+      "sha256": "ad632b07bc1f464065b43beac8d2dea82a0de2445e408c8ff3e57033500e3f06"
+    },
+    "docs/results/usb1-rust-publication-review/review-changed-files.txt": {
+      "bytes": 4085,
+      "sha256": "7c38881c196dd38057c10ae7e20375775d87018e3b5f37dd37da081bba76ddb9"
+    },
+    "docs/results/usb1-rust-publication-review/validation-initial-failure.json": {
+      "bytes": 383,
+      "sha256": "9d9ed0c541e14da50c92725bfc47b450f330f14d39ca6fceddb8b86ca43524b6"
+    },
+    "docs/results/usb1-rust-publication-review/validation.json": {
+      "bytes": 339,
+      "sha256": "77a0a1adb7ef4e8a8228a3af5460fdc65b587f8c4bbc8fe45c8dd21291e3b8eb"
+    },
+    "kernel/rust/usb/xhci/capabilities.rs": {
+      "bytes": 8094,
+      "sha256": "1c729ba60cc942ab931a6e17c5c84a5fc8e7842f35b487cd3ff0abdcdff73292"
+    },
+    "kernel/rust/usb/xhci/discovery.rs": {
+      "bytes": 7966,
+      "sha256": "f3e50289da2afb22900dcd630651ce0ac2690489d22262d963fa962d16661c43"
+    },
+    "kernel/rust/usb/xhci/discovery_core.rs": {
+      "bytes": 140,
+      "sha256": "6871c11ce3e9972a385a7cf1875aa74e0aaf7b4b47f3ee722136e22eb5234f19"
+    },
+    "kernel/rust/usb/xhci/header.rs": {
+      "bytes": 2447,
+      "sha256": "4d78fc16c6a52806b3b001e50a28d85b6ba98eecf715b4ac86cb8e415b2a0a3e"
+    },
+    "kernel/rust/usb/xhci/mod.rs": {
+      "bytes": 625,
+      "sha256": "7cc4376d4dabc0ee8b59d2b14fd001b40244130ce401d1c8974dfb026c9c900d"
+    },
+    "scripts/capture-usb1-integration.py": {
+      "bytes": 6862,
+      "sha256": "f43cff27864b8cc0073274dc4eb0d29b491c68b9fde32b0d1c0c6e8e7e8e6f3e"
+    },
+    "scripts/review-usb1-boot.py": {
+      "bytes": 8004,
+      "sha256": "c56bb37e7dba2b4f8abfe9e73867b8ff48d65cd2051c4dbd52be19270113cd38"
+    },
+    "scripts/review-usb1-footprint.py": {
+      "bytes": 6020,
+      "sha256": "4376c3b1ed1d23bbd737212f1bd9e229f51e2427c64d3ed57b712f91d62cc83c"
+    },
+    "scripts/review-usb1-performance.py": {
+      "bytes": 5420,
+      "sha256": "6b8bea96e210bb3921c92e45563d18778feb694f2f78c60d81a1928206d294d3"
+    },
+    "scripts/test-elf-bounds.py": {
+      "bytes": 5696,
+      "sha256": "e5273ae21c7cbca56bc0550e41078fe724f30613432c17c8c9665f93a42b2e16"
+    },
+    "scripts/test-rust-kernel.py": {
+      "bytes": 16833,
+      "sha256": "2fa994a3959e595bd22a60032f4fc5e55936bdbb6ef8dd32c4e4e05400dd792f"
+    },
+    "scripts/test-usb-probe.py": {
+      "bytes": 15029,
+      "sha256": "2b093bb83a6ea2641b9cdbc95150f08298c8da6acab89eacb304fc2b133b17d5"
+    },
+    "scripts/test-xhci-migration.py": {
+      "bytes": 4636,
+      "sha256": "fa358f2d7ea6fbef698f87c802ee15072a55d419d7f5fc79de4db900a9f5846b"
+    },
+    "tests/bench/xhci-discovery.c": {
+      "bytes": 4446,
+      "sha256": "13c79e52ef00ba58241c1f26f693b744ed68f4e5f80332564a082e31cdeef5d9"
+    },
+    "tests/host/xhci-differential.c": {
+      "bytes": 6432,
+      "sha256": "45fb0d5e1bb8d9b6aad1412ea8403ed6d9918d2e8470a0dbc2ed9b026c947d2d"
+    },
+    "tests/reference/xhci-usb1.c": {
+      "bytes": 5609,
+      "sha256": "db5c0d6c01df786fc0588bcdb5a032dc57cd22731e447d3bfc2927e223b60866"
+    },
+    "tests/rust/xhci-discovery-review.rs": {
+      "bytes": 1887,
+      "sha256": "dee05758dee2a63314847503b0d03d09642e0326b6cb7be6626701808af750d3"
+    },
+    "user/user.mk": {
+      "bytes": 17891,
+      "sha256": "b72fd5be6f733fd0024468fb844bdbc66c9c6914e199bd9d5399a01bdcaf96a2"
+    }
+  }
+}

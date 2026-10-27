@@ -1,0 +1,559 @@
+
+.text           0xffffffff80107000    0x2b000 load address 0x0000000000107000
+                0xffffffff80107000                __text_start = .
+ *(.text .text.*)
+ .text          0xffffffff80107000       0x43 /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/boot.o
+ .text          0xffffffff80107043      0x1c4 /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/entry.o
+                0xffffffff801071a0                exc_stub_128
+ .text          0xffffffff80107207       0x3b /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/usermode.o
+                0xffffffff80107207                user_enter
+ *fill*         0xffffffff80107242       0x1e cccccccc
+ .text          0xffffffff80107260      0xff1 /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/kernel.o
+                0xffffffff80107260                kernel_main
+ *fill*         0xffffffff80108251        0xf cccccccc
+ .text          0xffffffff80108260      0x92a /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/bootinfo.o
+                0xffffffff80108480                mb2_parse
+                0xffffffff801087a0                boot_framebuffer
+                0xffffffff801089b0                boot_mmap_entry
+                0xffffffff801089d0                boot_reserve
+ *fill*         0xffffffff80108b8a       0x36 cccccccc
+ .text          0xffffffff80108bc0      0x32d /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/console.o
+                0xffffffff80108bc0                serial_init
+                0xffffffff80108c10                serial_putc
+                0xffffffff80108c40                serial_log_putc
+                0xffffffff80108c60                console_erase_previous
+                0xffffffff80108cd0                serial_puts
+                0xffffffff80108d20                serial_puts_safe
+                0xffffffff80108dc0                serial_hex
+                0xffffffff80108e50                serial_dec
+ *fill*         0xffffffff80108eed        0x3 cccccccc
+ .text          0xffffffff80108ef0      0x391 /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/cpu.o
+                0xffffffff80108ef0                cpu_control_audit
+                0xffffffff80108f80                cpu_init_protections
+ *fill*         0xffffffff80109281        0xf cccccccc
+ .text          0xffffffff80109290      0x326 /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/exception.o
+                0xffffffff80109290                exception_name
+                0xffffffff801092d0                exception_handler
+ *fill*         0xffffffff801095b6        0xa cccccccc
+ .text          0xffffffff801095c0      0x438 /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/gdt.o
+                0xffffffff801095c0                gdt_tss_base
+                0xffffffff801095d0                gdt_tss_rsp0
+                0xffffffff801095e0                gdt_entry_stack_top
+                0xffffffff801095f0                gdt_set_rsp0
+                0xffffffff80109620                gdt_tss_ist1
+                0xffffffff80109630                gdt_tss_ist
+                0xffffffff80109650                gdt_guard_pages
+                0xffffffff801096b0                gdt_stack_name
+                0xffffffff80109730                gdt_stack_canaries_intact
+                0xffffffff80109790                gdt_in_ist1_stack
+                0xffffffff801097b0                gdt_init
+ *fill*         0xffffffff801099f8        0x8 cccccccc
+ .text          0xffffffff80109a00      0x233 /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/idt.o
+                0xffffffff80109a00                idt_init
+                0xffffffff80109bc0                idt_gate_ist
+                0xffffffff80109be0                idt_gate_type
+                0xffffffff80109c00                idt_gate_handler
+ *fill*         0xffffffff80109c33        0xd cccccccc
+ .text          0xffffffff80109c40       0x91 /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/lib.o
+                0xffffffff80109c40                memset
+                0xffffffff80109c50                memcpy
+                0xffffffff80109c60                memcmp
+                0xffffffff80109cb0                strlen
+ *fill*         0xffffffff80109cd1        0xf cccccccc
+ .text          0xffffffff80109ce0      0x15e /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/loader.o
+                0xffffffff80109ce0                load_elf
+ *fill*         0xffffffff80109e3e        0x2 cccccccc
+ .text          0xffffffff80109e40       0x53 /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/panic.o
+                0xffffffff80109e40                panic
+ *fill*         0xffffffff80109e93       0x2d cccccccc
+ .text          0xffffffff80109ec0      0x958 /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/pmm.o
+                0xffffffff80109f70                pmm_init_in
+                0xffffffff8010a3e0                pmm_alloc_in
+                0xffffffff8010a400                pmm_free_check_in
+                0xffffffff8010a470                pmm_free_in
+                0xffffffff8010a500                pmm_frame_state_in
+                0xffffffff8010a540                pmm_check_in
+                0xffffffff8010a650                pmm_init
+                0xffffffff8010a690                pmm_alloc_frame
+                0xffffffff8010a710                pmm_free_frame
+                0xffffffff8010a7e0                pmm_free_count
+                0xffffffff8010a7f0                pmm_kernel
+                0xffffffff8010a800                pmm_strerror
+ *fill*         0xffffffff8010a818        0x8 cccccccc
+ .text          0xffffffff8010a820     0x1536 /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/process.o
+                0xffffffff8010ae50                proc_file_live
+                0xffffffff8010aea0                proc_audit
+                0xffffffff8010afe0                proc_count
+                0xffffffff8010b020                proc_begin
+                0xffffffff8010b160                proc_add_page
+                0xffffffff8010b1e0                proc_finish
+                0xffffffff8010b2d0                proc_destroy
+                0xffffffff8010b520                proc_create
+                0xffffffff8010b620                proc_start
+                0xffffffff8010b6e0                proc_wait
+                0xffffffff8010b790                proc_run
+                0xffffffff8010b7b0                proc_kill
+                0xffffffff8010b840                proc_user_trap
+ *fill*         0xffffffff8010bd56        0xa cccccccc
+ .text          0xffffffff8010bd60       0xc6 /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/resv.o
+                0xffffffff8010bd60                resv_init
+                0xffffffff8010bd70                resv_add
+                0xffffffff8010bde0                resv_overlaps
+ *fill*         0xffffffff8010be26        0xa cccccccc
+ .text          0xffffffff8010be30      0x2ec /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/syscall.o
+                0xffffffff8010be30                debug_emit
+                0xffffffff8010bf30                syscall_dispatch
+ *fill*         0xffffffff8010c11c        0x4 cccccccc
+ .text          0xffffffff8010c120      0x349 /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/usercopy.o
+                0xffffffff8010c120                user_writable
+                0xffffffff8010c1f0                copy_to_user
+                0xffffffff8010c2f0                copy_from_user
+ *fill*         0xffffffff8010c469        0x7 cccccccc
+ .text          0xffffffff8010c470     0x1968 /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/vmm.o
+                0xffffffff8010c810                vmm_map
+                0xffffffff8010cbd0                vmm_unmap
+                0xffffffff8010cf00                vmm_lookup
+                0xffffffff8010d080                vmm_audit_space
+                0xffffffff8010da90                vmm_init
+                0xffffffff8010db90                vmm_remove_identity
+                0xffffffff8010dda0                vmm_kernel_root
+                0xffffffff8010ddb0                vmm_diagnostic
+                0xffffffff8010ddc0                vmm_strerror
+ *fill*         0xffffffff8010ddd8        0x8 cccccccc
+ .text          0xffffffff8010dde0     0x1787 /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/kmap.o
+                0xffffffff8010def0                kmap_guard_pages
+                0xffffffff8010df40                kmap_is_guard
+                0xffffffff8010e1d0                kmap_is_text
+                0xffffffff8010e200                kmap_text_overlaps
+                0xffffffff8010e230                kmap_expected_pte
+                0xffffffff8010e5d0                kmap_expected_pde
+                0xffffffff8010e600                kmap_check_running
+                0xffffffff8010ed10                kmap_check
+                0xffffffff8010ed90                kmap_probe_fault
+                0xffffffff8010ee00                kmap_init
+                0xffffffff8010f550                kmap_failure
+                0xffffffff8010f560                kmap_active
+ *fill*         0xffffffff8010f567        0x9 cccccccc
+ .text          0xffffffff8010f570      0x908 /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/irq.o
+                0xffffffff8010f620                irq_expected_masks
+                0xffffffff8010f6f0                irq_register
+                0xffffffff8010f870                irq_unregister
+                0xffffffff8010f8f0                irq_run_deferred
+                0xffffffff8010f950                irq_line_disabled
+                0xffffffff8010f970                irq_init
+                0xffffffff8010fa80                irq_handle
+                0xffffffff8010fd40                irq_in_handler
+                0xffffffff8010fd50                irq_ticks
+                0xffffffff8010fd60                irq_stats
+                0xffffffff8010fd70                irq_chip
+                0xffffffff8010fd80                irq_audit
+ *fill*         0xffffffff8010fe78        0x8 cccccccc
+ .text          0xffffffff8010fe80      0x2d0 /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/pic.o
+                0xffffffff8010fee0                pic_init
+                0xffffffff8010ffa0                pic_set_mask
+                0xffffffff80110000                pic_masks
+                0xffffffff80110030                pic_isr
+                0xffffffff80110040                pic_irr
+                0xffffffff80110050                pic_elcr
+                0xffffffff80110080                pic_begin
+                0xffffffff80110100                pic_eoi
+ .text          0xffffffff80110150       0x3b /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/pit.o
+                0xffffffff80110150                pit_init
+                0xffffffff80110170                pit_readback
+ *fill*         0xffffffff8011018b       0x15 cccccccc
+ .text          0xffffffff801101a0     0x196c /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/thread.o
+                0xffffffff80110c90                thread_guard_pages
+                0xffffffff80110cd0                thread_canaries_intact
+                0xffffffff80110d50                thread_current
+                0xffffffff80110d60                thread_is_boot
+                0xffffffff80110d80                thread_count
+                0xffffffff80110dc0                thread_state
+                0xffffffff80110df0                thread_stack_top
+                0xffffffff80110e30                sched_stats
+                0xffffffff80110e40                thread_create
+                0xffffffff80110e80                thread_create_user
+                0xffffffff80110ef0                thread_leave_user_space
+                0xffffffff80110f60                sched_preempt_due
+                0xffffffff80110fc0                sched_tick
+                0xffffffff80111000                thread_block_until
+                0xffffffff801110c0                thread_block
+                0xffffffff801110d0                thread_wake_one
+                0xffffffff801111c0                thread_wake_all
+                0xffffffff801112a0                thread_interrupt
+                0xffffffff801113d0                thread_sleep
+                0xffffffff80111430                sched_idle_irq
+                0xffffffff801114c0                thread_yield
+                0xffffffff80111500                thread_exit
+                0xffffffff80111560                thread_first_run
+                0xffffffff80111590                sched_init
+                0xffffffff80111710                sched_audit
+ .text.unlikely
+                0xffffffff80111b0c       0x18 /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/thread.o
+ .text          0xffffffff80111b24       0x2f /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/thread_switch.o
+                0xffffffff80111b24                context_switch
+                0xffffffff80111b46                idle_halt
+                0xffffffff80111b48                idle_after_hlt
+                0xffffffff80111b4a                thread_start
+ *fill*         0xffffffff80111b53        0xd cccccccc
+ .text          0xffffffff80111b60      0xb30 /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/channel.o
+                0xffffffff80111bc0                channel_count
+                0xffffffff80111bf0                handle_endpoint
+                0xffffffff80111c60                channel_create
+                0xffffffff80111ef0                handle_close
+                0xffffffff80112020                handles_close_all
+                0xffffffff80112070                channel_send
+                0xffffffff801121d0                channel_recv
+                0xffffffff80112450                channel_audit
+                0xffffffff80112640                handles_audit
+ *fill*         0xffffffff80112690       0x10 cccccccc
+ .text          0xffffffff801126a0      0x7b8 /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/elf.o
+                0xffffffff801126a0                elf_validate
+                0xffffffff80112e40                elf_strerror
+ *fill*         0xffffffff80112e58        0x8 cccccccc
+ .text          0xffffffff80112e60      0x4cc /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/app.o
+                0xffffffff80112e60                app_last
+                0xffffffff80112e70                app_find_module
+                0xffffffff80112f30                app_run_boot_module
+ *fill*         0xffffffff8011332c       0x14 cccccccc
+ .text          0xffffffff80113340      0x3eb /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/app_catalog.o
+                0xffffffff80113340                app_catalog_build
+                0xffffffff80113680                app_catalog_at
+                0xffffffff801136c0                app_catalog_find
+ *fill*         0xffffffff8011372b       0x15 cccccccc
+ .text          0xffffffff80113740      0x4c8 /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/app_payload.o
+                0xffffffff80113740                app_payload_requested
+                0xffffffff80113800                app_payload_prepare
+                0xffffffff80113c00                app_payload_catalog
+ *fill*         0xffffffff80113c08       0x38 cccccccc
+ .text          0xffffffff80113c40     0x11af /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/exec.o
+                0xffffffff80114150                exec_request_busy
+                0xffffffff80114160                exec_statistics
+                0xffffffff80114170                exec_cancel_request
+                0xffffffff801142b0                exec_grant_revoke
+                0xffffffff801142d0                exec_process_cancel
+                0xffffffff801142f0                exec_process_end
+                0xffffffff80114340                exec_grant_install
+                0xffffffff801146b0                exec_service_init
+                0xffffffff801147e0                exec_service_stop
+                0xffffffff801148c0                exec_syscall
+ *fill*         0xffffffff80114def        0x1 cccccccc
+ .text          0xffffffff80114df0      0x31c /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/pci.o
+                0xffffffff80114df0                pci_read8
+                0xffffffff80114e40                pci_read16
+                0xffffffff80114e90                pci_read32
+                0xffffffff80114ee0                pci_write8
+                0xffffffff80114f40                pci_write16
+                0xffffffff80114fa0                pci_write32
+                0xffffffff80115000                pci_scan_bus0
+ *fill*         0xffffffff8011510c       0x14 cccccccc
+ .text          0xffffffff80115120       0x9c /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/xhci.o
+                0xffffffff80115120                vos_xhci_copy_caps
+ *fill*         0xffffffff801151bc        0x4 cccccccc
+ .text          0xffffffff801151c0      0x5c4 /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/xhci_boot.o
+                0xffffffff80115600                xhci_boot_probe
+ *fill*         0xffffffff80115784       0x3c cccccccc
+ .text          0xffffffff801157c0     0x1663 /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/blockdev.o
+                0xffffffff80115850                blk_strerror
+                0xffffffff80115870                blk_stats
+                0xffffffff80115880                blk_register
+                0xffffffff80115ac0                blk_unregister
+                0xffffffff80115be0                blk_count
+                0xffffffff80115bf0                blk_nth
+                0xffffffff80115c40                blk_describe
+                0xffffffff80115d30                blk_note_reset
+                0xffffffff80115d90                blk_read
+                0xffffffff801166b0                blk_read_block
+                0xffffffff80116780                blk_write
+                0xffffffff801167e0                blk_invalidate
+                0xffffffff80116a00                blk_cache_frames
+                0xffffffff80116a80                blk_audit
+ *fill*         0xffffffff80116e23       0x1d cccccccc
+ .text          0xffffffff80116e40     0x3495 /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/virtio_blk.o
+                0xffffffff80117580                vblk_state_name
+                0xffffffff801175a0                vblk_window_ok
+                0xffffffff80118d70                vpci_parse_caps
+                0xffffffff801191c0                vblk_choose_features
+                0xffffffff80119200                vblk_choose_queue_size
+                0xffffffff80119250                vblk_dma_ok
+                0xffffffff801192c0                vblk_buffer_ok
+                0xffffffff801193a0                vblk_to_blk
+                0xffffffff801193c0                vblk_init
+                0xffffffff80119530                vblk_reinit
+                0xffffffff801195e0                vblk_shutdown
+                0xffffffff801196d0                vblk_info
+                0xffffffff801196e0                vblk_submit
+                0xffffffff801196f0                vblk_service
+                0xffffffff80119740                vblk_wait
+                0xffffffff80119bd0                vblk_read
+                0xffffffff80119c80                vblk_inflight
+                0xffffffff80119ca0                vblk_abandoned
+                0xffffffff80119cc0                vblk_audit
+ *fill*         0xffffffff8011a2d5       0x2b cccccccc
+ .text          0xffffffff8011a300     0x2950 /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/ext2.o
+                0xffffffff8011b190                ext2_problem
+                0xffffffff8011b1a0                ext2_strerror
+                0xffffffff8011b1c0                ext2_open
+                0xffffffff8011b950                ext2_close
+                0xffffffff8011ba00                ext2_open_count
+                0xffffffff8011ba20                ext2_info
+                0xffffffff8011bb00                ext2_stat
+                0xffffffff8011bc40                ext2_lookup
+                0xffffffff8011bdc0                ext2_resolve
+                0xffffffff8011c1f0                ext2_readdir
+                0xffffffff8011c500                ext2_read
+                0xffffffff8011c860                ext2_readlink
+                0xffffffff8011cba0                ext2_audit
+ .text          0xffffffff8011cc50      0xa4f /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/io_scope.o
+                0xffffffff8011ccc0                io_scope_current
+                0xffffffff8011cce0                io_scope_begin
+                0xffffffff8011ce70                io_scope_end
+                0xffffffff8011cf00                io_scope_stop
+                0xffffffff8011cf30                io_scope_check
+                0xffffffff8011cfe0                io_scope_set_guard
+                0xffffffff8011d010                io_scope_logical
+                0xffffffff8011d080                io_scope_read
+                0xffffffff8011d0f0                io_scope_deadline
+                0xffffffff8011d130                io_scope_wait
+                0xffffffff8011d2b0                io_scope_cancel
+                0xffffffff8011d310                io_scope_request_begin
+                0xffffffff8011d380                io_scope_request_abandon
+                0xffffffff8011d3e0                io_scope_request_end
+                0xffffffff8011d460                io_scope_request_valid
+                0xffffffff8011d4e0                io_scope_count
+                0xffffffff8011d500                io_scope_audit
+                0xffffffff8011d680                io_scope_thread_exit
+ *fill*         0xffffffff8011d69f        0x1 cccccccc
+ .text          0xffffffff8011d6a0     0x223f /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/file.o
+                0xffffffff8011e840                file_volume_attach
+                0xffffffff8011ebe0                file_volume_detach
+                0xffffffff8011ec50                file_grants_install
+                0xffffffff8011f030                file_initial
+                0xffffffff8011f0e0                file_open_at
+                0xffffffff8011f0f0                file_close
+                0xffffffff8011f160                file_stat
+                0xffffffff8011f170                file_read_at
+                0xffffffff8011f180                file_next
+                0xffffffff8011f190                file_syscall
+                0xffffffff8011f230                file_close_all
+                0xffffffff8011f300                file_process_busy
+                0xffffffff8011f370                file_handle_count
+                0xffffffff8011f3d0                file_session_count
+                0xffffffff8011f400                file_audit
+ .text.unlikely
+                0xffffffff8011f8df        0xc /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/file.o
+ *fill*         0xffffffff8011f8eb        0x5 cccccccc
+ .text          0xffffffff8011f8f0      0xab6 /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/devmap.o
+                0xffffffff8011f8f0                devmap_strerror
+                0xffffffff8011f910                devmap_maxphys
+                0xffffffff8011f920                devmap_wc_available
+                0xffffffff8011f930                devmap_count
+                0xffffffff8011f940                devmap_table_frames
+                0xffffffff8011f9c0                devmap_init
+                0xffffffff8011fb30                devmap_check
+                0xffffffff8011fc80                devmap_map
+                0xffffffff8011ff70                devmap_expected_pte
+                0xffffffff8011fff0                devmap_audit
+                0xffffffff80120280                devmap_mtrr_type
+ .text.unlikely
+                0xffffffff801203a6        0xc /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/devmap.o
+ *fill*         0xffffffff801203b2        0xe cccccccc
+ .text          0xffffffff801203c0     0x1d1a /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/screen.o
+                0xffffffff80120580                screen_kind
+                0xffffffff80120590                screen_describe
+                0xffffffff801205a0                screen_choose
+                0xffffffff80120670                screen_fill
+                0xffffffff801208e0                screen_glyph
+                0xffffffff80121140                screen_putc
+                0xffffffff801212a0                screen_erase_previous
+                0xffffffff801213b0                screen_begin_input
+                0xffffffff80121510                screen_status
+                0xffffffff80121570                screen_panic
+                0xffffffff801217b0                screen_init
+                0xffffffff80121b10                screen_desktop_begin
+                0xffffffff80121c10                screen_gui_available
+                0xffffffff80121c80                screen_gui_begin
+                0xffffffff80121d60                screen_gui_row
+                0xffffffff80121ee0                screen_gui_end
+                0xffffffff80121f20                screen_pointer_move
+                0xffffffff80122060                screen_pointer_begin
+                0xffffffff801220c0                screen_pointer_end
+ *fill*         0xffffffff801220da        0x6 cccccccc
+ .text          0xffffffff801220e0      0x4bc /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/desktop.o
+                0xffffffff801220e0                desktop_requested
+                0xffffffff801221a0                desktop_compute
+                0xffffffff80122210                desktop_bar
+                0xffffffff80122310                desktop_paint
+ *fill*         0xffffffff8012259c        0x4 cccccccc
+ .text          0xffffffff801225a0      0xfa9 /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/gui.o
+                0xffffffff80122aa0                gui_owned
+                0xffffffff80122b00                gui_frames
+                0xffffffff80122b10                gui_revoke
+                0xffffffff80122b70                gui_service_start
+                0xffffffff80122c00                gui_service_stop
+                0xffffffff80122ca0                gui_grant
+                0xffffffff80122e10                gui_syscall
+ *fill*         0xffffffff80123549       0x17 cccccccc
+ .text          0xffffffff80123560      0x366 /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/gui_verify.o
+                0xffffffff80123620                gui_boot_requested
+                0xffffffff80123640                pointer_boot_requested
+                0xffffffff80123660                gui_boot_run
+ .text          0xffffffff801238c6        0x0 /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/font8x16.o
+ *fill*         0xffffffff801238c6        0xa cccccccc
+ .text          0xffffffff801238d0      0xc8b /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/keyboard.o
+                0xffffffff80123b60                keyboard_decode
+                0xffffffff80123de0                keyboard_init
+                0xffffffff80124010                keyboard_poll
+                0xffffffff801240e0                keyboard_suspend
+                0xffffffff801241d0                keyboard_resume
+                0xffffffff80124270                keyboard_pointer_start
+                0xffffffff80124440                keyboard_pointer_stop
+                0xffffffff801244c0                keyboard_pointer_poll
+                0xffffffff80124550                keyboard_pointer_lost
+ *fill*         0xffffffff8012455b        0x5 cccccccc
+ .text          0xffffffff80124560       0xac /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/pointer.o
+                0xffffffff80124560                pointer_decode
+                0xffffffff801245e0                pointer_idle
+ *fill*         0xffffffff8012460c       0x14 cccccccc
+ .text          0xffffffff80124620      0x49d /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/input_console.o
+                0xffffffff80124640                input_console_requested
+                0xffffffff80124700                input_console_accept
+                0xffffffff801247c0                input_console_take_line
+                0xffffffff80124880                input_console_read_line_for
+                0xffffffff801249d0                input_console_read_line
+                0xffffffff801249f0                input_console_run
+ *fill*         0xffffffff80124abd        0x3 cccccccc
+ .text          0xffffffff80124ac0     0x1120 /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/user_console.o
+                0xffffffff80124be0                user_console_set_diagnostics
+                0xffffffff80124bf0                user_console_diagnostic
+                0xffffffff80124c50                user_console_owned
+                0xffffffff80124cb0                user_console_reader_active
+                0xffffffff80124ce0                user_console_debug_visible
+                0xffffffff80124d60                user_console_lease_active
+                0xffffffff80124d70                user_console_exec_active
+                0xffffffff80124dc0                user_console_lease_stats
+                0xffffffff80124dd0                user_console_grant
+                0xffffffff80124f70                user_console_revoke
+                0xffffffff80124ff0                user_console_begin_exec
+                0xffffffff801251e0                user_console_finish_exec
+                0xffffffff80125440                user_console_syscall
+                0xffffffff801257d0                user_console_gui_begin
+                0xffffffff80125950                user_console_gui_end
+                0xffffffff80125a10                user_console_gui_poll
+                0xffffffff80125a80                user_console_pointer_begin
+                0xffffffff80125ad0                user_console_pointer_poll
+                0xffffffff80125b40                user_console_pointer_lost
+                0xffffffff80125b80                user_console_pointer_end
+ .text          0xffffffff80125be0      0x643 /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/vsh_boot.o
+                0xffffffff80126040                vsh_requested
+                0xffffffff80126060                rust_demo_requested
+                0xffffffff80126080                rixie_requested
+                0xffffffff801260a0                vsh_run
+                0xffffffff801261e0                rust_demo_run
+                0xffffffff80126210                rixie_run
+ *fill*         0xffffffff80126223        0xd cccccccc
+ .text          0xffffffff80126230     0x14b8 /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/virtio_net.o
+                0xffffffff80126ad0                vnet_init
+                0xffffffff80127150                vnet_send
+                0xffffffff801273e0                vnet_receive
+                0xffffffff80127680                vnet_stop
+                0xffffffff801276e0                vnet_info
+ *fill*         0xffffffff801276e8       0x18 cccccccc
+ .text          0xffffffff80127700      0x96a /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/net_boot.o
+                0xffffffff801278b0                net_requested
+                0xffffffff80127960                net_boot_run
+ *fill*         0xffffffff8012806a        0x6 cccccccc
+ .text          0xffffffff80128070      0x9ea /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/net_arp.o
+                0xffffffff80128220                net_arp_init
+                0xffffffff80128300                net_neighbor_get
+                0xffffffff801283b0                net_arp_query
+                0xffffffff801285c0                net_ethernet_type
+                0xffffffff801286d0                net_ethernet_input
+ *fill*         0xffffffff80128a5a        0x6 cccccccc
+ .text          0xffffffff80128a60      0x773 /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/net_arp_boot.o
+                0xffffffff80128ac0                net_arp_boot_run
+ *fill*         0xffffffff801291d3        0xd cccccccc
+ .text          0xffffffff801291e0      0xc74 /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/net_ipv4.o
+                0xffffffff801291e0                net_checksum
+                0xffffffff80129290                net_ipv4_transport_checksum
+                0xffffffff80129330                net_ipv4_init
+                0xffffffff801293a0                net_ipv4_begin
+                0xffffffff80129580                net_ipv4_echo_request
+                0xffffffff80129890                net_ipv4_payload
+                0xffffffff80129a30                net_ipv4_input
+ *fill*         0xffffffff80129e54        0xc cccccccc
+ .text          0xffffffff80129e60      0x751 /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/net_ipv4_boot.o
+                0xffffffff80129ec0                net_ipv4_boot_run
+ *fill*         0xffffffff8012a5b1        0xf cccccccc
+ .text          0xffffffff8012a5c0      0x5e9 /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/net_udp.o
+                0xffffffff8012a5c0                net_udp_init
+                0xffffffff8012a630                net_udp_send
+                0xffffffff8012a8a0                net_udp_input
+                0xffffffff8012aae0                net_udp_receive
+                0xffffffff8012ab90                net_udp_close
+ *fill*         0xffffffff8012aba9       0x17 cccccccc
+ .text          0xffffffff8012abc0      0xb83 /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/net_udp_boot.o
+                0xffffffff8012ad00                net_udp_boot_run
+ *fill*         0xffffffff8012b743       0x1d cccccccc
+ .text          0xffffffff8012b760     0x2009 /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/net_tcp.o
+                0xffffffff8012bbc0                net_tcp_init
+                0xffffffff8012bc50                net_tcp_abort
+                0xffffffff8012bd30                net_tcp_expire
+                0xffffffff8012be30                net_tcp_enable_payload
+                0xffffffff8012be70                net_tcp_enable_retransmission
+                0xffffffff8012bec0                net_tcp_enable_closure
+                0xffffffff8012bf10                net_tcp_ack
+                0xffffffff8012bfd0                net_tcp_send
+                0xffffffff8012c180                net_tcp_retransmit
+                0xffffffff8012c3e0                net_tcp_receive
+                0xffffffff8012c540                net_tcp_finish
+                0xffffffff8012c630                net_tcp_input
+                0xffffffff8012d750                net_tcp_close
+ *fill*         0xffffffff8012d769        0x7 cccccccc
+ .text          0xffffffff8012d770      0x82c /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/net_tcp_boot.o
+                0xffffffff8012d8e0                net_tcp_boot_run
+ *fill*         0xffffffff8012df9c        0x4 cccccccc
+ .text          0xffffffff8012dfa0     0x104d /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/net_tcp_data_boot.o
+                0xffffffff8012e220                net_tcp_data_boot_run
+ *fill*         0xffffffff8012efed        0x3 cccccccc
+ .text          0xffffffff8012eff0      0xa7e /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/net_tcp_retry_boot.o
+                0xffffffff8012f200                net_tcp_retry_boot_run
+ *fill*         0xffffffff8012fa6e        0x2 cccccccc
+ .text          0xffffffff8012fa70      0xdd8 /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/net_tcp_close_boot.o
+                0xffffffff8012fdb0                net_tcp_close_boot_run
+ .text          0xffffffff80130848        0x0 /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/rust/libvos_kernel.a(libvos_kernel.vos_kernel.45b20e7284a592af-cgu.0.rcgu.o)
+ *fill*         0xffffffff80130848        0x8 cccccccc
+ .text._RINvNtNtCs5YZeFliBs6N_10vos_kernel4xhci9discovery5probeNtNtB6_14xhci_discovery9CallbacksEB6_
+                0xffffffff80130850      0x2f5 /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/rust/libvos_kernel.a(libvos_kernel.vos_kernel.45b20e7284a592af-cgu.0.rcgu.o)
+ *fill*         0xffffffff80130b45        0xb cccccccc
+ .text._RNvCsgpO44WCzh3m_7___rustc17rust_begin_unwind
+                0xffffffff80130b50        0xd /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/rust/libvos_kernel.a(libvos_kernel.vos_kernel.45b20e7284a592af-cgu.0.rcgu.o)
+                0xffffffff80130b50                __rustc::rust_begin_unwind
+ *fill*         0xffffffff80130b5d        0x3 cccccccc
+ .text._RNvNtNtCs5YZeFliBs6N_10vos_kernel4xhci9discovery11decode_caps
+                0xffffffff80130b60      0x17d /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/rust/libvos_kernel.a(libvos_kernel.vos_kernel.45b20e7284a592af-cgu.0.rcgu.o)
+ *fill*         0xffffffff80130cdd        0x3 cccccccc
+ .text._RNvXs_NtCs5YZeFliBs6N_10vos_kernel14xhci_discoveryNtB4_9CallbacksNtNtNtB6_4xhci9discovery7ProbeIo8snapshot
+                0xffffffff80130ce0       0xa1 /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/rust/libvos_kernel.a(libvos_kernel.vos_kernel.45b20e7284a592af-cgu.0.rcgu.o)
+ *fill*         0xffffffff80130d81        0xf cccccccc
+ .text.vos_rust_elf_inside
+                0xffffffff80130d90       0x12 /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/rust/libvos_kernel.a(libvos_kernel.vos_kernel.45b20e7284a592af-cgu.0.rcgu.o)
+                0xffffffff80130d90                vos_rust_elf_inside
+ *fill*         0xffffffff80130da2        0xe cccccccc
+ .text.vos_rust_probe
+                0xffffffff80130db0       0x1a /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/rust/libvos_kernel.a(libvos_kernel.vos_kernel.45b20e7284a592af-cgu.0.rcgu.o)
+                0xffffffff80130db0                vos_rust_probe
+ *fill*         0xffffffff80130dca        0x6 cccccccc
+ .text.xhci_class_matches
+                0xffffffff80130dd0       0x12 /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/rust/libvos_kernel.a(libvos_kernel.vos_kernel.45b20e7284a592af-cgu.0.rcgu.o)
+                0xffffffff80130dd0                xhci_class_matches
+ *fill*         0xffffffff80130de2        0xe cccccccc
+ .text.xhci_decode_caps
+                0xffffffff80130df0      0x172 /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/rust/libvos_kernel.a(libvos_kernel.vos_kernel.45b20e7284a592af-cgu.0.rcgu.o)
+                0xffffffff80130df0                xhci_decode_caps
+ *fill*         0xffffffff80130f62        0xe cccccccc
+ .text.xhci_probe
+                0xffffffff80130f70      0x43d /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/rust/libvos_kernel.a(libvos_kernel.vos_kernel.45b20e7284a592af-cgu.0.rcgu.o)
+                0xffffffff80130f70                xhci_probe
+                0xffffffff80132000                . = ALIGN (0x1000)
+ *fill*         0xffffffff801313ad      0xc53 cccccccc
+                0xffffffff80132000                __text_end = .

@@ -41,8 +41,13 @@ Multiboot2 handoff through BIOS or UEFI; a legacy i386 baseline is also retained
   TCP payload/retransmission/closure. No application network authority is granted
   automatically. [Accepted N5 scope and limits](docs/networking.md).
 - Opt-in, read-only PCI bus-0 xHCI discovery and capability diagnostics are
-  integrated for review on the Rust-enabled kernel. This is not USB device
-  enumeration or USB keyboard/mouse support. [Integration evidence and preview](docs/results/usb1-rust-integration.md).
+  merged through PR #22. USB.2-A's portable Rust controller model is merged
+  through PR #23; it enables no live controller operations. This branch's
+  [USB.1 Rust migration review](docs/results/usb1-rust-publication-review.md)
+  covers production discovery decisions, shared validation, measured costs and
+  firmware evidence; migration acceptance is pending. There is no USB device
+  enumeration or USB keyboard/mouse support.
+  [Original integration evidence and preview](docs/results/usb1-rust-integration.md).
 
 Existing ABI v0-v3 behavior is preserved by the additive ABI v4 launch and ABI v5
 GUI interfaces. Capability boundaries, input validation, fixed resource limits

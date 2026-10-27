@@ -1,0 +1,12 @@
+{
+  "new_review_output_bytes": 25274899,
+  "planned_maximum_new_MiB": 80,
+  "Linux_free_bytes": 1007306383360,
+  "C_last_measured_free_bytes": 21682884608,
+  "E_last_measured_free_bytes": 245600403456,
+  "new_full_builds_or_ISO_duplicates": 0,
+  "historical_funding_or_reservation_changes": 0,
+  "new_output_root": "/home/veasnawt/src/vos-usb1-rust/build/usb1-publication-review-1",
+  "owner": "this Codex task; all subprocesses owned and terminated",
+  "historical_cleanup_operations": 0
+}
