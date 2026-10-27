@@ -1,0 +1,49 @@
+error[E0277]: `*mut ()` cannot be sent between threads safely
+   --> /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/final-portable/send-must-fail.rs:3:21
+    |
+  3 | fn main(){require::<Controller>();require::<Lease>();}
+    |                     ^^^^^^^^^^ `*mut ()` cannot be sent between threads safely
+    |
+    = help: within `Controller`, the trait `Send` is not implemented for `*mut ()`
+note: required because it appears within the type `PhantomData<*mut ()>`
+   --> /home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/marker.rs:811:12
+    |
+811 | pub struct PhantomData<T: PointeeSized>;
+    |            ^^^^^^^^^^^
+note: required because it appears within the type `Controller`
+   --> kernel/rust/usb/xhci/controller.rs:141:12
+    |
+141 | pub struct Controller {
+    |            ^^^^^^^^^^
+note: required by a bound in `require`
+   --> /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/final-portable/send-must-fail.rs:2:15
+    |
+  2 | fn require<T: Send>() {}
+    |               ^^^^ required by this bound in `require`
+
+error[E0277]: `*mut ()` cannot be sent between threads safely
+   --> /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/final-portable/send-must-fail.rs:3:45
+    |
+  3 | fn main(){require::<Controller>();require::<Lease>();}
+    |                                             ^^^^^ `*mut ()` cannot be sent between threads safely
+    |
+    = help: within `Lease`, the trait `Send` is not implemented for `*mut ()`
+note: required because it appears within the type `PhantomData<*mut ()>`
+   --> /home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/marker.rs:811:12
+    |
+811 | pub struct PhantomData<T: PointeeSized>;
+    |            ^^^^^^^^^^^
+note: required because it appears within the type `Lease`
+   --> kernel/rust/usb/xhci/resources.rs:136:12
+    |
+136 | pub struct Lease {
+    |            ^^^^^
+note: required by a bound in `require`
+   --> /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/final-portable/send-must-fail.rs:2:15
+    |
+  2 | fn require<T: Send>() {}
+    |               ^^^^ required by this bound in `require`
+
+error: aborting due to 2 previous errors
+
+For more information about this error, try `rustc --explain E0277`.

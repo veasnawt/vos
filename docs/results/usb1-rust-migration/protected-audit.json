@@ -1,0 +1,10 @@
+{
+  "passed": true,
+  "protected_inventory_entries": 49,
+  "unique_paths": 45,
+  "bytes_read": 482516639,
+  "historical_phase_files": 2203,
+  "inventory_source": "myos/build/n6-pointer-1/PRESERVATION.json",
+  "historical_records_executed": false,
+  "historical_records_modified": false
+}

@@ -1,0 +1,76 @@
+{
+  "passed": true,
+  "original_failed_run": "/home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/native/result.json",
+  "original_result_sha256": "4fea7198bfdf7d2386e04565fb119c6ed927f96dbeea444438afab787511dc35",
+  "original_failure": "native marker timeout gui-demo: PRESENTED; in /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/native/uefi-absent",
+  "reused_seven_passes": {
+    "bios-control": {
+      "passed": true,
+      "serial": "bios-control/serial.log",
+      "case": "control"
+    },
+    "bios-usb": {
+      "passed": true,
+      "serial": "bios-usb/serial.log",
+      "case": "usb"
+    },
+    "bios-absent": {
+      "passed": true,
+      "serial": "bios-absent/serial.log",
+      "case": "absent"
+    },
+    "bios-no-ps2": {
+      "passed": true,
+      "serial": "bios-no-ps2/serial.log",
+      "case": "no-ps2"
+    },
+    "bios-no-ps2-gui": {
+      "passed": true,
+      "serial": "bios-no-ps2-gui/serial.log",
+      "case": "no-ps2-gui"
+    },
+    "uefi-control": {
+      "passed": true,
+      "serial": "uefi-control/serial.log",
+      "case": "control"
+    },
+    "uefi-usb": {
+      "passed": true,
+      "serial": "uefi-usb/serial.log",
+      "case": "usb"
+    }
+  },
+  "native": {
+    "uefi-absent": {
+      "passed": true,
+      "serial": "uefi-absent/serial.log",
+      "case": "absent"
+    },
+    "uefi-no-ps2": {
+      "passed": true,
+      "serial": "uefi-no-ps2/serial.log",
+      "case": "no-ps2"
+    },
+    "uefi-no-ps2-gui": {
+      "passed": true,
+      "serial": "uefi-no-ps2-gui/serial.log",
+      "case": "no-ps2-gui"
+    }
+  },
+  "media": {
+    "control": {
+      "bios": "/home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/native/control-bios.iso",
+      "uefi": "/home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/native/control-uefi.iso"
+    },
+    "probe": {
+      "bios": "/home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/native/probe-bios.iso",
+      "uefi": "/home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/native/probe-uefi.iso"
+    },
+    "text": {
+      "bios": "/home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/native/text-bios.iso",
+      "uefi": "/home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/native/text-uefi.iso"
+    }
+  },
+  "assertions_and_timeouts": "unchanged",
+  "pre_kernel_timeout_cause": "unresolved; diagnostic identical input reached GUI in 13.853 s; not proof of a timing root cause"
+}

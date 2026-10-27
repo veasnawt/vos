@@ -1,0 +1,11 @@
+0000000000000000 00000000000002f5 t _RINvNtNtCs5YZeFliBs6N_10vos_kernel4xhci9discovery5probeNtNtB6_14xhci_discovery9CallbacksEB6_
+0000000000000000 000000000000000d T _RNvCsgpO44WCzh3m_7___rustc17rust_begin_unwind
+0000000000000000 000000000000017d t _RNvNtNtCs5YZeFliBs6N_10vos_kernel4xhci9discovery11decode_caps
+0000000000000000 00000000000000a1 t _RNvXs_NtCs5YZeFliBs6N_10vos_kernel14xhci_discoveryNtB4_9CallbacksNtNtNtB6_4xhci9discovery7ProbeIo8snapshot
+                 U panic
+0000000000000000 0000000000000012 T vos_rust_elf_inside
+0000000000000000 000000000000001a T vos_rust_probe
+                 U vos_xhci_copy_caps
+0000000000000000 0000000000000012 T xhci_class_matches
+0000000000000000 0000000000000172 T xhci_decode_caps
+0000000000000000 000000000000043d T xhci_probe

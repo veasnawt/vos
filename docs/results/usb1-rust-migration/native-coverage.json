@@ -1,0 +1,21 @@
+{
+  "all_ten_case_outcomes_observed_pass": true,
+  "original_full_run_status": "FAIL, immutable",
+  "original_failure": "native marker timeout gui-demo: PRESENTED; in /home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/native/uefi-absent",
+  "original_passes": [
+    "bios-control",
+    "bios-usb",
+    "bios-absent",
+    "bios-no-ps2",
+    "bios-no-ps2-gui",
+    "uefi-control",
+    "uefi-usb"
+  ],
+  "continuation_passes": [
+    "uefi-absent",
+    "uefi-no-ps2",
+    "uefi-no-ps2-gui"
+  ],
+  "timeout_cause": "unresolved pre-kernel incident; no timing claim or assertion change",
+  "captures": "2/2 pass, each with actual Rust execution trace"
+}

@@ -1,0 +1,8 @@
+{
+  "passed": true,
+  "firmware": "uefi",
+  "case": "control",
+  "expected_ps2_failure": false,
+  "usb_keyboard_supported": false,
+  "serial_sha256": "f59c65ab695b6f9d4f8b82be65dfb8a9ed0d62e572abf1f5193e54d770c8e5bd"
+}

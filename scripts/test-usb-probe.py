@@ -51,7 +51,19 @@ class QMP:
     def close(self):
         self.file.close(); self.socket.close()
 
-def hosted(out):
+def hosted(out, rustc):
+    # Use the same bare-metal Rust crate as the linked kernel, not a C fallback.
+    library = out/"libvos_kernel.a"
+    run([rustc,"--edition=2024","--target=x86_64-unknown-none","--crate-name=vos_kernel",
+         "--crate-type=staticlib","-Dwarnings","-Cpanic=abort","-Copt-level=2",
+         "-Ctarget-cpu=x86-64","-Ccode-model=kernel","-Crelocation-model=static",
+         "-Cno-redzone=yes","-Cforce-unwind-tables=no","-Clto=off",
+         "-Cembed-bitcode=no","-Ccodegen-units=1","-Cdebuginfo=0",
+         "arch/x86_64/rust/kernel_probe.rs","-o",library],out/"rust-build.log")
+    panic = out/"panic.c"
+    panic.write_text('#include <stdio.h>\n#include <stdlib.h>\n'
+                     '__attribute__((noreturn)) void panic(const char *s) {'
+                     'fprintf(stderr,"unexpected Rust panic: %s\\n",s);abort();}\n')
     cc = ["gcc","-std=gnu11","-Wall","-Wextra","-Werror","-Iarch/x86_64",
           "-ffunction-sections","-fdata-sections","-Wl,--gc-sections",
           "-O1","-g","-fsanitize=address,undefined","-fno-omit-frame-pointer","-fno-pie","-no-pie"]
@@ -60,7 +72,7 @@ def hosted(out):
     debug.write_text("#include <stdint.h>\n"+syscall[syscall.index("void debug_emit("):syscall.index("/* debug_write")])
     common = ["arch/x86_64/keyboard.c","arch/x86_64/pointer.c","arch/x86_64/input_console.c"]
     cases = {
-        "xhci":["tests/host/xhci.c","arch/x86_64/xhci.c","arch/x86_64/xhci_boot.c"],
+        "xhci":["tests/host/xhci.c","arch/x86_64/xhci.c","arch/x86_64/xhci_boot.c",str(panic),str(library)],
         "keyboard":["tests/host/keyboard-input.c",*common],
         "diagnostics":["-DVOS_CONSOLE_HOST","tests/host/input-diagnostics.c","arch/x86_64/user_console.c"],
         "console":["-DVOS_CONSOLE_HOST","tests/host/user-console-handoff.c",
@@ -219,9 +231,10 @@ def main():
     out.mkdir(parents=True)
     result=dict(passed=False,physical_hardware_tested=False)
     try:
-        result["host"]=hosted(out)
+        pinned=Path.home()/".rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc"
+        rustc=args.rustc or os.environ.get("RUSTC") or (str(pinned) if pinned.is_file() else "rustc")
+        result["host"]=hosted(out, rustc)
         if not args.host_only:
-            rustc=args.rustc or str(Path.home()/".rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc")
             need(Path(rustc).is_file(),"supply --rustc for the installed native Rust toolchain")
             efi=args.grub_efi_dir.resolve()
             need((efi/"kernel.img").is_file() and (efi/"multiboot2.mod").is_file(),

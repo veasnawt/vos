@@ -1,0 +1,26 @@
+{
+  "purpose": "preserved pre-kernel UEFI timeout diagnosis; not automatic replacement of failed test",
+  "elapsed_seconds": 13.853,
+  "events": [
+    {
+      "elapsed_seconds": 10.478,
+      "marker": "BdsDxe: starting"
+    },
+    {
+      "elapsed_seconds": 13.702,
+      "marker": "Hello from VOS!"
+    },
+    {
+      "elapsed_seconds": 13.702,
+      "marker": "usb: summary"
+    },
+    {
+      "elapsed_seconds": 13.853,
+      "marker": "gui-demo: PRESENTED;"
+    }
+  ],
+  "gui_reached": true,
+  "kernel_reached": true,
+  "panic": false,
+  "process_exit": null
+}

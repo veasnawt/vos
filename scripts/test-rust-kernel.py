@@ -186,7 +186,7 @@ def main():
         assert re.search(r'R_X86_64_\w+\s+vos_rust_probe', (out / 'rust-call-site.txt').read_text())
         probe_address = int(re.search(r'([0-9a-f]+) T vos_rust_probe\n', capture(['nm', normal / 'vos.bin'])).group(1), 16)
         run(['gcc', '-O1', '-g', '-Wall', '-Wextra', '-Werror', '-fno-pie', '-no-pie',
-             '-fsanitize=address,undefined', '-fno-omit-frame-pointer', '-Iarch/x86_64',
+             '-fsanitize=address,undefined', '-fno-omit-frame-pointer', '-Wl,--gc-sections', '-Iarch/x86_64',
              'tests/host/rust-kernel.c', library, '-o', out / 'host-abi'], out / 'host-build.log')
         run([out / 'host-abi'], out / 'host-abi.log')
         results['host_abi_pairs'] = 4134
@@ -194,7 +194,11 @@ def main():
         save()
 
         # A fixture copy exercises source and flag dependencies without editing source.
-        fixture = out / 'fixture.rs'
+        # Preserve relative Rust module paths in the isolated source fixture.
+        fixture_root = out / 'dependency-source'
+        shutil.copytree(ROOT / 'arch/x86_64/rust', fixture_root / 'arch/x86_64/rust')
+        shutil.copytree(ROOT / 'kernel/rust/usb/xhci', fixture_root / 'kernel/rust/usb/xhci')
+        fixture = fixture_root / 'arch/x86_64/rust/kernel_probe.rs'
         shutil.copyfile(ROOT / 'arch/x86_64/rust/kernel_probe.rs', fixture)
         dep = out / 'dependency'
         target = str(dep / 'rust/libvos_kernel.a')

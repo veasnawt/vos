@@ -29,6 +29,10 @@ struct xhci_probe_ops {
     int (*map)(void *, uint64_t, size_t, const volatile uint32_t **, size_t *);
 };
 int xhci_class_matches(uint32_t class_revision);
+/* Private Rust exports. Decode requires initialized exclusive output and
+ * aligned ordinary copied input RAM (>=28 bytes), no MMIO/output aliases.
+ * Probe initializes its output. Ops/context/callbacks remain live and may not
+ * mutate/alias borrowed ops/output. Not an application-facing pointer API. */
 enum xhci_status xhci_decode_caps(const uint32_t *, size_t, struct xhci_info *);
 enum xhci_status xhci_probe(struct pci_addr, const struct xhci_probe_ops *, struct xhci_info *);
 void xhci_boot_probe(const char *cmdline);

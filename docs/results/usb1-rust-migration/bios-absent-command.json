@@ -1,0 +1,23 @@
+[
+  "qemu-system-x86_64",
+  "-machine",
+  "q35",
+  "-accel",
+  "tcg",
+  "-m",
+  "128M",
+  "-cdrom",
+  "/home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/native/probe-bios.iso",
+  "-boot",
+  "d",
+  "-display",
+  "none",
+  "-nic",
+  "none",
+  "-serial",
+  "file:/home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/native/bios-absent/serial.log",
+  "-qmp",
+  "unix:/home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/native/bios-absent/qmp,server=on,wait=off",
+  "-no-reboot",
+  "-no-shutdown"
+]
