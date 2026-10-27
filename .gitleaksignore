@@ -8,3 +8,14 @@ bd22803b8b5635b776c848d08d1494f65b49dd21:docs/results/usb1/execution.json:generi
 bd22803b8b5635b776c848d08d1494f65b49dd21:docs/results/usb1/execution.json:generic-api-key:220
 bd22803b8b5635b776c848d08d1494f65b49dd21:docs/results/usb1/execution.json:generic-api-key:221
 bd22803b8b5635b776c848d08d1494f65b49dd21:docs/results/usb1/execution.json:generic-api-key:278
+
+# Same public GRUB EFI digests in the preserved migration failure record.
+# Review: docs/results/usb1-rust-publication-review/ci-secret-review.json
+# Exact immutable commit/file/rule/line only; new commits remain scanned.
+4abe69f4ffb12997f3c9ede9ecb20f20f39a610b:docs/results/usb1-rust-migration/native-original-failed.json:generic-api-key:150
+4abe69f4ffb12997f3c9ede9ecb20f20f39a610b:docs/results/usb1-rust-migration/native-original-failed.json:generic-api-key:151
+4abe69f4ffb12997f3c9ede9ecb20f20f39a610b:docs/results/usb1-rust-migration/native-original-failed.json:generic-api-key:152
+4abe69f4ffb12997f3c9ede9ecb20f20f39a610b:docs/results/usb1-rust-migration/native-original-failed.json:generic-api-key:154
+4abe69f4ffb12997f3c9ede9ecb20f20f39a610b:docs/results/usb1-rust-migration/native-original-failed.json:generic-api-key:220
+4abe69f4ffb12997f3c9ede9ecb20f20f39a610b:docs/results/usb1-rust-migration/native-original-failed.json:generic-api-key:221
+4abe69f4ffb12997f3c9ede9ecb20f20f39a610b:docs/results/usb1-rust-migration/native-original-failed.json:generic-api-key:278

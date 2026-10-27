@@ -1,11 +1,13 @@
 {
   "passed": true,
-  "internal_links_checked": 160,
+  "internal_links_checked": 161,
   "valid_directory_links": 2,
   "Markdown_fences_UTF8_and_encoding": true,
   "source_whitespace_python_syntax": true,
   "original_validation_failure_retained": "validation-initial-failure.json",
-  "PR_changed_files": 164,
-  "followup_files": 67,
-  "production_changes_this_review": 0
+  "PR_changed_files": 166,
+  "followup_files": 69,
+  "production_changes_this_review": 0,
+  "CI_correction": "seven reviewed immutable fingerprints, full-history exit 0 and new-commit canary exit 1",
+  "additional_internal_link": "ci-secret-review.json exists and parses"
 }

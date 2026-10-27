@@ -1,3 +1,4 @@
+.gitleaksignore
 README.md
 docs/ROADMAP.md
 docs/STATUS.md
@@ -21,6 +22,7 @@ docs/results/usb1-rust-publication-review/USB2-core.txt
 docs/results/usb1-rust-publication-review/boot-commands.json
 docs/results/usb1-rust-publication-review/boot-comparison.json
 docs/results/usb1-rust-publication-review/changed-files.txt
+docs/results/usb1-rust-publication-review/ci-secret-review.json
 docs/results/usb1-rust-publication-review/comparison-01-C-uefi-absent-serial.txt
 docs/results/usb1-rust-publication-review/comparison-02-Rust-uefi-absent-serial.txt
 docs/results/usb1-rust-publication-review/comparison-03-Rust-uefi-absent-serial.txt

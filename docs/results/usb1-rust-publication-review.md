@@ -260,6 +260,27 @@ within these measurement limits, not that Rust is faster or that boot impact has
 been precisely quantified. GitHub CI is separate publication evidence, not a
 replacement for the controller-specific tests.
 
+## CI publication correction
+
+Initial PR head `73fafe1dcff15e03944af6ef0e41d1934c99ad55` triggered a failed
+[Secret history audit](https://github.com/veasnawt/vos/actions/runs/40502867276):
+seven generic-api-key findings in the immutable original migration's failed-run
+JSON. Independent inspection identifies the same public GRUB EFI module SHA-256
+values already reviewed in the accepted USB.1 integration. Each was freshly
+compared to the retained module bytes and prior review; none is a credential.
+
+The [CI correction receipt](usb1-rust-publication-review/ci-secret-review.json)
+preserves the failure and classification. Following the existing repository
+convention, `.gitleaksignore` adds only seven exact original-commit/file/rule/line
+fingerprints. There is no path, rule, global or future-commit exemption, no
+historical edit, and no change to the pinned scanner/workflow or `--all` scan.
+The retained checksum-verified Gitleaks 8.30.1 reports zero remaining findings.
+A new independent synthetic commit with the same harmless digest at the same
+path/rule/line still produces one finding (exit 1), verifying that the exception
+does not cover future commits. No kernel/native test rerun is warranted by this
+scanner-metadata correction. Required CI outcomes for the corrected head remain
+separate publication evidence.
+
 ## Authentic visual evidence
 
 ![Migrated BIOS boot and existing native GUI](../images/usb/review/vos-usb1-review-bios.png)
