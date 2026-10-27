@@ -17,6 +17,9 @@
 #include "console.h"
 #include "cpu.h"
 #include "devmap.h"
+#include "boot_option.h"
+#include "xhci.h"
+#include "user_console.h"
 #include "gdt.h"
 #include "idt.h"
 #include "irq.h"
@@ -241,6 +244,8 @@ void kernel_main(uint32_t mb2_magic, uint32_t mb2_info)
     serial_puts("\r\n");
     /* U1: the screen console (framebuffer, VGA text when positively known, or none). */
     screen_init(&bi);
+    user_console_set_diagnostics(boot_option(bi.cmdline, "vos.input_diag=1"));
+    xhci_boot_probe(bi.cmdline);
 
     struct vmm_audit audit;
     if (vmm_audit_space(vmm_kernel_root(), 1, &audit) != VMM_OK) {

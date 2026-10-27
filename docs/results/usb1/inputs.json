@@ -1,0 +1,70 @@
+{
+  "baseline": "cbe9f9202ca9a45aaafa57ec45fc01baeb347bc1",
+  "versions": {
+    "gcc": "gcc (Ubuntu 15.2.0-16ubuntu1) 15.2.0",
+    "ld": "GNU ld (GNU Binutils for Ubuntu) 2.46",
+    "qemu": "QEMU emulator version 10.2.1 (Debian 1:10.2.1+ds-1ubuntu3.2)",
+    "grub": "grub-mkrescue (GRUB) 2.14-2ubuntu2.1",
+    "xorriso": "xorriso 1.5.6",
+    "rustc": "rustc 1.100.0-nightly (2e2b193f8 2026-09-02)"
+  },
+  "artifacts": {
+    "control-bios.iso": {
+      "size": 7929856,
+      "sha256": "4f90c44f1c025df7ee43178a94e62ec285da5458e1affabcb78e9045497c3c56"
+    },
+    "control-uefi.iso": {
+      "size": 12478464,
+      "sha256": "6a6f7b9d22bed0a2207af709b366d40e3b65f0f64b4a0fc8c97da1ad3d46536b"
+    },
+    "probe-bios.iso": {
+      "size": 7929856,
+      "sha256": "cf1b67b742fec7088d745e47d6ff4f95b87c6118d7dbabf5ca3d9b41556b0401"
+    },
+    "probe-uefi.iso": {
+      "size": 12478464,
+      "sha256": "414427e521b75a6235ee31b35cd4a1edb1da6296befd4e73bf3699e1fc27fc27"
+    },
+    "text-bios.iso": {
+      "size": 7929856,
+      "sha256": "62bce74edb860ca308d42a820a62ff2d467d782ffeb832b9f4ae035bd8b31fae"
+    },
+    "text-uefi.iso": {
+      "size": 12478464,
+      "sha256": "5baa98099ed68798fff3907dd1068a4bac06153620dced91153e9e17cac78539"
+    },
+    "kernel/vos.bin": {
+      "size": 1044968,
+      "sha256": "fbb73be21d78ca6d200905e9705d67bcea0cffec887b37e565a4d0db18872450"
+    },
+    "user/vsh.elf": {
+      "size": 662984,
+      "sha256": "e7af3ee56164f587f7ca1338f7ddfcb202b6f4310f10b4dcba6a2576743cb181"
+    },
+    "user/hello.elf": {
+      "size": 13128,
+      "sha256": "c6c6416195a0f18d680d7f8f19be52ce02ff02912ef3bac45324fbe88006cd06"
+    },
+    "user/rixie.elf": {
+      "size": 662376,
+      "sha256": "77104da3b33caf809daf5e6674ac4e2fa9edf6a9e2e5dd59828514df76490d32"
+    },
+    "user/gui-demo.elf": {
+      "size": 14448,
+      "sha256": "a21bab23c7183c7534d4b6beabd35b4222cd9faf65b0ad8ea868fd153e112bd2"
+    }
+  },
+  "qmp_cross_check": {
+    "bios": {
+      "qmp_pci_matches_guest": true,
+      "bar": "0xfebf0000",
+      "aperture_qemu_only": 16384
+    },
+    "uefi": {
+      "qmp_pci_matches_guest": true,
+      "bar": "0xc000000000",
+      "aperture_qemu_only": 16384
+    }
+  },
+  "physical_hardware_tested": false
+}

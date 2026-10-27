@@ -1,0 +1,22 @@
+{
+  "passed": true,
+  "baseline": "cbe9f9202ca9a45aaafa57ec45fc01baeb347bc1",
+  "native_cases": 10,
+  "source_hashes_match_prior_native_execution": true,
+  "original_index_sha256": "57d4a06801fd5f35929b8eb4d200af747120d36cf81019712e458abc575567e7",
+  "original_worktrees": 13,
+  "original_stashes": [
+    "ef6e749f44371b339602d3cfa76b8698979d75ba",
+    "948956eac50607435008a0e5a472c6a012637521"
+  ],
+  "original_draft_sha256": {
+    "tools/vos_control/v1/README.md": "ee53091e42018aa0ba10064d5629558c585297e7258427916310e80841372051",
+    "docs/development/accounting-shadow-v1.md": "e8f8d690542c28d646664c37ab97722e7bd3b58af72fcb12d5f17c066f17760a",
+    "tests/controller/fixtures/shadow_v1.json": "eac7ec038741ae51332c1900fd5434f41faef08fb6ce7c77b84fc640272beb50",
+    "tests/controller/test_shadow_ledger.py": "8574d0f442a3f77327e29a08ae8eb86b7129aa48b1f588991ec4d9c9e08cb403",
+    "tools/vos_control/shadow_v1.py": "60ff9d8f86b9ad48a8fe9a4d9da3f32242c3040b301da15077801504c462a41b"
+  },
+  "no_original_workspace_writes": true,
+  "legacy_admission_claimed": false,
+  "physical_hardware_tested": false
+}
