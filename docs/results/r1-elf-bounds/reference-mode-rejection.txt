@@ -1,0 +1,3 @@
+usage: test-elf-bounds.py [-h] --archive ARCHIVE --elfcheck ELFCHECK
+                          --user USER --out OUT
+test-elf-bounds.py: error: --elfcheck must be the Make-built Rust-backed checker, not the C reference

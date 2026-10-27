@@ -112,12 +112,13 @@ user-suite: $(SUITE_ELFS)
 user-check: $(USER_ELFS)
 	@set -e; for f in $(USER_ELFS); do scripts/check-user-elf.sh $$f; done
 
-# The kernel's ELF validator (arch/x86_64/elf.c, unchanged) built for the host,
-# so the tests can compare it with scripts/check-user-elf.sh file by file.
+# Same ELF validator and Rust archive as the kernel. Non-PIE host linking is
+# required by the archive's kernel/static relocations (including the panic bridge).
+# Standalone C-only test builds remain available through elf.c's hosted reference.
 ELFCHECK := build/$(ARCH)/tools/elfcheck
-$(ELFCHECK): scripts/elfcheck.c arch/x86_64/elf.c arch/x86_64/elf.h
+$(ELFCHECK): scripts/elfcheck.c arch/x86_64/elf.c arch/x86_64/elf.h arch/x86_64/rust_kernel.h $(LIBS) user/user.mk
 	@mkdir -p $(dir $@)
-	$(CC) -std=gnu11 -O2 -Wall -Wextra -Werror -Iarch/x86_64 -o $@ scripts/elfcheck.c arch/x86_64/elf.c
+	$(CC) -std=gnu11 -O2 -Wall -Wextra -Werror -DVOS_ELF_USE_RUST -fno-pie -no-pie -Iarch/x86_64 -o $@ scripts/elfcheck.c arch/x86_64/elf.c $(LIBS)
 
 # Validation, profile and separation checks, and negative tests. Static only:
 # nothing is loaded or run. The kernel images are checked not to contain the

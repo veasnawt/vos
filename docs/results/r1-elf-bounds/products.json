@@ -1,0 +1,58 @@
+{
+  "kernel/vos.bin": {
+    "bytes": 1022040,
+    "sha256": "335ba8da65f1170a016eb50f132f693b2074f8b5b4d33f1a5bfa9f04692fce4c"
+  },
+  "kernel/rust/libvos_kernel.a": {
+    "bytes": 11100590,
+    "sha256": "abb3773f1b21e291a2eb1943f9a5a7e697f151f1ca79bcf2113ae9bfbfeb692b"
+  },
+  "elfcheck": {
+    "bytes": 16800,
+    "sha256": "1a495e7d25e2e704daf2ee94715b4bae5f98b8047b74dea9898fef03962a0d6f"
+  },
+  "native/normal/vos.bin": {
+    "bytes": 1022040,
+    "sha256": "335ba8da65f1170a016eb50f132f693b2074f8b5b4d33f1a5bfa9f04692fce4c"
+  },
+  "native/normal/vos.iso": {
+    "bytes": 8570880,
+    "sha256": "37e0000df7a618c0d6b059e717f6f49e84fe58b6343ff11bda59d7d9c5c04e9a"
+  },
+  "native/normal/vos-uefi.iso": {
+    "bytes": 13119488,
+    "sha256": "3ed8dd5e67ec7faf9308be9db86e53763271e8d978ee04a90f3e13186a2174cd"
+  },
+  "native/selftest/vos.bin": {
+    "bytes": 2111632,
+    "sha256": "d971909335ec545b2258a9c35405ae2c85873e0dd57f41a0e2be9c7f4be7770f"
+  },
+  "native/selftest/vos.iso": {
+    "bytes": 7653376,
+    "sha256": "3df6642ce5b6ce342ba21a3e1d30f8265b31850da0e0bae06cd8bae6aed768ee"
+  },
+  "native/selftest/vos-uefi.iso": {
+    "bytes": 12201984,
+    "sha256": "1952e68eb2be8befa6840da0584be7a5aebe8a94a50c7031eac33d1e3ad33cee"
+  },
+  "native/user/vsh.elf": {
+    "bytes": 662984,
+    "sha256": "e7af3ee56164f587f7ca1338f7ddfcb202b6f4310f10b4dcba6a2576743cb181"
+  },
+  "native/user/hello.elf": {
+    "bytes": 13128,
+    "sha256": "c6c6416195a0f18d680d7f8f19be52ce02ff02912ef3bac45324fbe88006cd06"
+  },
+  "native/user/rixie.elf": {
+    "bytes": 662376,
+    "sha256": "77104da3b33caf809daf5e6674ac4e2fa9edf6a9e2e5dd59828514df76490d32"
+  },
+  "native/user/gui-demo.elf": {
+    "bytes": 14448,
+    "sha256": "a21bab23c7183c7534d4b6beabd35b4222cd9faf65b0ad8ea868fd153e112bd2"
+  },
+  "native/user/pointer-demo.elf": {
+    "bytes": 662976,
+    "sha256": "0c94f7ce121025d93e9d7b062a1df498dd9229343bca25bfe34f1ae447d846cc"
+  }
+}

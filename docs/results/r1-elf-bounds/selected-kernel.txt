@@ -1,0 +1,4 @@
+static int inside(uint64_t size, uint64_t off, uint64_t len)
+{
+    return vos_rust_elf_inside(size, off, len);
+}

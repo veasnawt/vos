@@ -1,9 +1,14 @@
 /*
- * VOS ABI v0 executable validation. Freestanding and dependency-free so the
- * same file builds into the kernel and into the host tool used by the tests.
+ * VOS executable validation, shared by the kernel and hosted test tools.
+ * The kernel and Make-built elfcheck use the R1 Rust bounds predicate.
+ * Standalone hosted C builds retain the original reference for compatibility;
+ * tests/host/elf-bounds.c and scripts/test-elf-bounds.py check both paths.
  * Rules and their order follow scripts/check-user-elf.sh (part 1).
  */
 #include "elf.h"
+#if !__STDC_HOSTED__ || defined(VOS_ELF_USE_RUST)
+#include "rust_kernel.h"
+#endif
 
 #include <stddef.h>
 
@@ -32,7 +37,13 @@ static uint64_t le(const uint8_t *img, uint64_t off, unsigned n)
 
 static int inside(uint64_t size, uint64_t off, uint64_t len)
 {
+#if __STDC_HOSTED__ && !defined(VOS_ELF_USE_RUST)
+    /* Explicit hosted-only reference for existing direct C test builds.
+     * The -ffreestanding kernel cannot select this implementation. */
     return off <= size && len <= size - off;
+#else
+    return vos_rust_elf_inside(size, off, len);
+#endif
 }
 
 int elf_validate(const uint8_t *img, uint64_t size, struct elf_image *out)

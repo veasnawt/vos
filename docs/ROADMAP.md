@@ -6,8 +6,8 @@ also accepted and merged. **N6 remains in progress.** The owner-accepted
 graphical baseline is [PR #15](https://github.com/veasnawt/vos/pull/15) at
 [`bf5eb43f2e07478e31be8b4123c5a297add67efe`](https://github.com/veasnawt/vos/commit/bf5eb43f2e07478e31be8b4123c5a297add67efe).
 PR #16 synchronized documentation; PRs #17/#18 added the reviewed infrastructure
-foundation. Accepted main for this review is the owner's Master Plan PR #19
-merge, `67a525e2cbcb13215c4d17cdfd0e3740ad40ff16`.
+foundation. Master Plan PR #19 is merged. Accepted main for this review is the
+owner's Rust foundation PR #20 merge, `0291b1ab8f7d7d491bd2f276efa59a46b638d400`.
 
 The accepted milestone sequence is preserved below. Proposed desktop,
 Rust-kernel and portability work is **not implementation authorization**.
@@ -178,20 +178,26 @@ directions, not implemented desktop features.
 [R0-B](results/r0b-rust-kernel-foundation.md) is implemented and locally verified:
 one freestanding Rust static library, a checked scalar C-ABI call in the
 higher-half kernel, and a minimal panic bridge. Both original commits and their
-evidence are retained in this publication proposal. Neither is yet owner-accepted
-or merged. [Final-tree review](results/r0-publication-review.md) records provenance
+evidence were integrated through PR #20 at the accepted main above.
+[Final-tree review](results/r0-publication-review.md) records provenance
 and focused publication verification; the dated reports retain historical status.
 
-R1-R5 remain future, separately authorized increments under the
+The first [R1 helper](results/r1-elf-bounds.md) is implemented and locally verified
+at `f67ebd968169560979fc1d5eefbc7ca6402a6910`: the existing ELF bounds predicate
+now calls Rust. Its [performance/publication review](results/r1-performance.md)
+preserves the candidate and compares the original C and real Rust-backed paths.
+It is pending owner acceptance and merge; further R1 helpers and R2-R5 remain
+future, separately authorized increments under the
 [Master Plan R-series](plans/MASTER-PLAN.md#6-r-series-rust-first-kernel-migration).
 The kernel is still primarily C/assembly. Further migration must define small
 interoperable boundaries, preserve ABIs/capabilities, and audit unsafe Rust,
 assembly, FFI, interrupts and DMA ownership. Rust application support remains
 implemented independently of this kernel proof.
 
-USB.2 should evaluate Rust after owner review of R0-B; USB.1 remains preserved
-in its separate local checkout. No R1 or USB.2 implementation is authorized by
-this update. Unrelated bug fixes, boot-media work and desktop planning need not
+USB.2 should evaluate the established Rust foundation after separate owner
+authorization; USB.1 remains preserved in its separate local checkout.
+No additional helper or USB.2 implementation is authorized by this update.
+Unrelated bug fixes, boot-media work and desktop planning need not
 wait for the full migration. Hardware and migration work coordinate when sharing
 files; neither authorizes the other automatically.
 

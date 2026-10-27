@@ -15,8 +15,9 @@ No physical-machine installation or production-security claim is made.
 ## Architecture and implemented capabilities
 
 The kernel is primarily freestanding C and x86 assembly; the first
-[Rust kernel integration](docs/results/r0b-rust-kernel-foundation.md) is locally
-verified and pending owner acceptance/merge. Rust is the first-class native
+[Rust kernel integration](docs/results/r0b-rust-kernel-foundation.md) is merged
+through PR #20. The first [real bounds-helper migration](docs/results/r1-performance.md)
+is locally verified and proposed for review. Rust is the first-class native
 application language. VOS is not a Linux distribution and
 does not use Linux or a hosted C library inside the guest. GRUB supplies a
 Multiboot2 handoff through BIOS or UEFI; a legacy i386 baseline is also retained.
@@ -116,7 +117,7 @@ Current limits include QEMU-only BIOS/OVMF validation, RAM tracked below 1 GiB,
 read-only trusted media, bounded single-endpoint networking, polling limitations
 and standard PS/2 keyboard/primary-button mouse input. USB input, production
 networking, writable storage, installation and Secure Boot are not implemented.
-Further Rust kernel migration beyond the local R0-B proof and broader hardware
+Further Rust kernel migration beyond this bounded R1 candidate and broader hardware
 portability remain proposed tracks requiring separate authorization.
 
 The separate [Veasna OS React/Electron prototype](https://github.com/veasnawt/veasna-os)

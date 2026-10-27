@@ -1,0 +1,5 @@
+tests/host/elf-bounds-bench.c: In function ‘main’:
+tests/host/elf-bounds-bench.c:32:34: error: comparison of integer expressions of different signedness: ‘long int’ and ‘long long unsigned int’ [-Werror=sign-compare]
+   32 |     long n=ftell(f);if (n<64 || n>ELF_MAX_FILE || fseek(f,0,SEEK_SET)) return 2;
+      |                                  ^
+cc1: all warnings being treated as errors

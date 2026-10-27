@@ -1,0 +1,12 @@
+arch/x86_64/rust/kernel_probe.rs
+--edition=2024 --target=x86_64-unknown-none --crate-name vos_kernel --crate-type=staticlib -D warnings -C panic=abort -C opt-level=2 -C target-cpu=x86-64 -C code-model=kernel -C relocation-model=static -C no-redzone=yes -C force-unwind-tables=no -C lto=off -C embed-bitcode=no -C codegen-units=1 -C debuginfo=0 --remap-path-prefix=/home/veasnawt/src/vos-r1-review=.  
+rustc 1.100.0-nightly (2e2b193f8 2026-09-02)
+binary: rustc
+commit-hash: 2e2b193f8ada105f27608b7be81c293e0d7292cb
+commit-date: 2026-09-02
+host: x86_64-unknown-linux-gnu
+release: 1.100.0-nightly
+LLVM version: 23.1.1
+369640757edac99bfa1358946cfc2861be80ec39785416a46c06a990840facfb  /home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc
+39a4793ea97ae36360733c197c00d55044da7e3c9404e1d55edd95f44f07cf9c  /home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/lib/rustlib/x86_64-unknown-none/lib/libcore-41cea3d940a8abf0.rlib
+a4c78cd4cd9b9ee46aacdbce544a32b20d9b0187fd5af7c96f7cbfa0ce025fc8  /home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/lib/rustlib/x86_64-unknown-none/lib/libcompiler_builtins-1670e0eec149624a.rlib

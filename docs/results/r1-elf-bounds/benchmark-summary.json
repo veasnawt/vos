@@ -1,0 +1,6 @@
+{
+  "C_reference_median_ns_per_validation": 267.952245,
+  "Rust_backed_median_ns_per_validation": 250.82023,
+  "relative_percent": -6.3936822025880025,
+  "interpretation": "No measured slowdown in this hosted sample; not a kernel speedup claim. Includes existing C parser and the new scalar FFI call; no sanitizer instrumentation."
+}

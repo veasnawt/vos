@@ -1,0 +1,170 @@
+{
+  "valid": [
+    {
+      "path": "/home/veasnawt/src/vos-r1-review/build/r1-review-1/user/hello.elf",
+      "bytes": 13128,
+      "sha256": "c6c6416195a0f18d680d7f8f19be52ce02ff02912ef3bac45324fbe88006cd06"
+    },
+    {
+      "path": "/home/veasnawt/src/vos-r1-review/build/r1-review-1/user/vsh.elf",
+      "bytes": 662984,
+      "sha256": "e7af3ee56164f587f7ca1338f7ddfcb202b6f4310f10b4dcba6a2576743cb181"
+    },
+    {
+      "path": "/home/veasnawt/src/vos-r1-review/build/r1-review-1/user/rixie.elf",
+      "bytes": 662376,
+      "sha256": "77104da3b33caf809daf5e6674ac4e2fa9edf6a9e2e5dd59828514df76490d32"
+    },
+    {
+      "path": "/home/veasnawt/src/vos-r1-review/build/r1-review-1/user/gui-demo.elf",
+      "bytes": 14448,
+      "sha256": "a21bab23c7183c7534d4b6beabd35b4222cd9faf65b0ad8ea868fd153e112bd2"
+    },
+    {
+      "path": "/home/veasnawt/src/vos-r1-review/build/r1-review-1/user/pointer-demo.elf",
+      "bytes": 662976,
+      "sha256": "0c94f7ce121025d93e9d7b062a1df498dd9229343bca25bfe34f1ae447d846cc"
+    },
+    {
+      "path": "/home/veasnawt/src/vos-r1-review/build/r1-review-1/user/hello.elf",
+      "bytes": 13128,
+      "sha256": "c6c6416195a0f18d680d7f8f19be52ce02ff02912ef3bac45324fbe88006cd06"
+    },
+    {
+      "path": "/home/veasnawt/src/vos-r1-review/build/r1-review-1/user/vsh.elf",
+      "bytes": 662984,
+      "sha256": "e7af3ee56164f587f7ca1338f7ddfcb202b6f4310f10b4dcba6a2576743cb181"
+    },
+    {
+      "path": "/home/veasnawt/src/vos-r1-review/build/r1-review-1/user/rixie.elf",
+      "bytes": 662376,
+      "sha256": "77104da3b33caf809daf5e6674ac4e2fa9edf6a9e2e5dd59828514df76490d32"
+    }
+  ],
+  "bounds_reject": [
+    {
+      "path": "/home/veasnawt/src/vos-r1-review/build/r1-review-1/comparison-2/corpus/truncated-0.elf",
+      "bytes": 64,
+      "sha256": "65bb04229724f436dd5e39e4e4cf8d013063ec8a446afccc7a80462b1766c3bf"
+    },
+    {
+      "path": "/home/veasnawt/src/vos-r1-review/build/r1-review-1/comparison-2/corpus/truncated-1.elf",
+      "bytes": 128,
+      "sha256": "8e6c044fcad2927303634eddfade27e3921769e06d7c3c37af7346caeb0be6cc"
+    },
+    {
+      "path": "/home/veasnawt/src/vos-r1-review/build/r1-review-1/comparison-2/corpus/truncated-2.elf",
+      "bytes": 200,
+      "sha256": "f71deb91c0e4f327ea15c00de1c27e32e7ae576ffa68cbe0df2cab76e62b503e"
+    },
+    {
+      "path": "/home/veasnawt/src/vos-r1-review/build/r1-review-1/comparison-2/corpus/truncated-3.elf",
+      "bytes": 280,
+      "sha256": "c07e45cfd188d8738eb9f0d7bc23b25773b2b6800fbc4b91c2dce93f84845c25"
+    },
+    {
+      "path": "/home/veasnawt/src/vos-r1-review/build/r1-review-1/comparison-2/corpus/phoff-13120.elf",
+      "bytes": 13128,
+      "sha256": "a93fa62a32f133157e27512ff5cadaaf4d56e2b6216848446720a01b7b94986c"
+    },
+    {
+      "path": "/home/veasnawt/src/vos-r1-review/build/r1-review-1/comparison-2/corpus/phoff-13128.elf",
+      "bytes": 13128,
+      "sha256": "9b9ea9002e59844fa5d32cc77f361fc6c14a3e79acb39d331ff595f031a73cab"
+    },
+    {
+      "path": "/home/veasnawt/src/vos-r1-review/build/r1-review-1/comparison-2/corpus/phoff-13136.elf",
+      "bytes": 13128,
+      "sha256": "f6c95ed769a5c2514f7f5d839a0822f21db00817d2540b453541091e79d96d73"
+    },
+    {
+      "path": "/home/veasnawt/src/vos-r1-review/build/r1-review-1/comparison-2/corpus/phoff-1048576.elf",
+      "bytes": 13128,
+      "sha256": "fc1104308b628b95102b3417e8073cf6847fd4264c941c70213469d45fba7475"
+    }
+  ],
+  "other_reject": [
+    {
+      "path": "/home/veasnawt/src/vos-r1-review/build/r1-review-1/comparison-2/corpus/other-0.elf",
+      "bytes": 13128,
+      "sha256": "447a0d1bd061c9be7cea16a7a14bdece347a14696f68ede48d66bb3b9229ea5b"
+    },
+    {
+      "path": "/home/veasnawt/src/vos-r1-review/build/r1-review-1/comparison-2/corpus/other-1.elf",
+      "bytes": 13128,
+      "sha256": "07e38868db0d035d2462b81058457ee17cef38a7808835f50c1e5d83ad52f851"
+    },
+    {
+      "path": "/home/veasnawt/src/vos-r1-review/build/r1-review-1/comparison-2/corpus/other-2.elf",
+      "bytes": 13128,
+      "sha256": "4d4cf1f2323831e3f68a0ae2fb135fe1b63262305086bde8dc571ad5cac211b0"
+    },
+    {
+      "path": "/home/veasnawt/src/vos-r1-review/build/r1-review-1/comparison-2/corpus/other-3.elf",
+      "bytes": 13128,
+      "sha256": "65205555a1e6552287987868710009eceed74206097e20ad1f4b76836676f876"
+    },
+    {
+      "path": "/home/veasnawt/src/vos-r1-review/build/r1-review-1/comparison-2/corpus/other-4.elf",
+      "bytes": 13128,
+      "sha256": "fe6192a1410a3d0a224a93a57b7e420a3402e3d2c1033f487e9e130994616a1f"
+    },
+    {
+      "path": "/home/veasnawt/src/vos-r1-review/build/r1-review-1/comparison-2/corpus/other-5.elf",
+      "bytes": 13128,
+      "sha256": "033bf185704867da0269f06ab09cdd2ce08336ceef4ec2214d30532885d77ce8"
+    },
+    {
+      "path": "/home/veasnawt/src/vos-r1-review/build/r1-review-1/comparison-2/corpus/other-6.elf",
+      "bytes": 13128,
+      "sha256": "c8ab7a75014a3b40b2ba58d2b9686b1d4bbb1ae69d9dac68bc0b3e0b2ba949c1"
+    },
+    {
+      "path": "/home/veasnawt/src/vos-r1-review/build/r1-review-1/comparison-2/corpus/other-7.elf",
+      "bytes": 13128,
+      "sha256": "14812a6e707ffabde8607714809ab2e2ba8e6a5a9486601f38f89a38a3b7d308"
+    }
+  ],
+  "mixed": [
+    {
+      "path": "/home/veasnawt/src/vos-r1-review/build/r1-review-1/user/hello.elf",
+      "bytes": 13128,
+      "sha256": "c6c6416195a0f18d680d7f8f19be52ce02ff02912ef3bac45324fbe88006cd06"
+    },
+    {
+      "path": "/home/veasnawt/src/vos-r1-review/build/r1-review-1/user/vsh.elf",
+      "bytes": 662984,
+      "sha256": "e7af3ee56164f587f7ca1338f7ddfcb202b6f4310f10b4dcba6a2576743cb181"
+    },
+    {
+      "path": "/home/veasnawt/src/vos-r1-review/build/r1-review-1/user/rixie.elf",
+      "bytes": 662376,
+      "sha256": "77104da3b33caf809daf5e6674ac4e2fa9edf6a9e2e5dd59828514df76490d32"
+    },
+    {
+      "path": "/home/veasnawt/src/vos-r1-review/build/r1-review-1/user/gui-demo.elf",
+      "bytes": 14448,
+      "sha256": "a21bab23c7183c7534d4b6beabd35b4222cd9faf65b0ad8ea868fd153e112bd2"
+    },
+    {
+      "path": "/home/veasnawt/src/vos-r1-review/build/r1-review-1/comparison-2/corpus/truncated-0.elf",
+      "bytes": 64,
+      "sha256": "65bb04229724f436dd5e39e4e4cf8d013063ec8a446afccc7a80462b1766c3bf"
+    },
+    {
+      "path": "/home/veasnawt/src/vos-r1-review/build/r1-review-1/comparison-2/corpus/truncated-1.elf",
+      "bytes": 128,
+      "sha256": "8e6c044fcad2927303634eddfade27e3921769e06d7c3c37af7346caeb0be6cc"
+    },
+    {
+      "path": "/home/veasnawt/src/vos-r1-review/build/r1-review-1/comparison-2/corpus/other-0.elf",
+      "bytes": 13128,
+      "sha256": "447a0d1bd061c9be7cea16a7a14bdece347a14696f68ede48d66bb3b9229ea5b"
+    },
+    {
+      "path": "/home/veasnawt/src/vos-r1-review/build/r1-review-1/comparison-2/corpus/other-1.elf",
+      "bytes": 13128,
+      "sha256": "07e38868db0d035d2462b81058457ee17cef38a7808835f50c1e5d83ad52f851"
+    }
+  ]
+}

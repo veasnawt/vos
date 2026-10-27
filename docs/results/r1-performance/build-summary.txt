@@ -1,0 +1,4 @@
+kernel layout OK [/home/veasnawt/src/vos-r1-review/build/r1-review-1/kernel/vos.bin]: 0x100000-0x101000/5 0x101000-0x107000/6 0x107000-0x130000/5 0x130000-0x13a000/4 0x13a000-0x1cc000/6
+test-user-elf: kernel validator agrees on 68 of 72 files (4 build-time-only differences expected)
+test-user-elf: 220 passed, 0 failed
+test-file-abi: 20 independent constant comparisons passed

@@ -1,0 +1,16 @@
+
+/home/veasnawt/src/vos-r1-elf-bounds/build/r1-1/kernel/vos.bin:     file format elf64-x86-64
+
+
+Disassembly of section .boot.text:
+
+Disassembly of section .text:
+
+ffffffff8012fee0 <vos_rust_elf_inside>:
+ffffffff8012fee0:	48 29 f7             	sub    %rsi,%rdi
+ffffffff8012fee3:	0f 93 c0             	setae  %al
+ffffffff8012fee6:	48 39 fa             	cmp    %rdi,%rdx
+ffffffff8012fee9:	0f 96 c1             	setbe  %cl
+ffffffff8012feec:	20 c1                	and    %al,%cl
+ffffffff8012feee:	0f b6 c1             	movzbl %cl,%eax
+ffffffff8012fef1:	c3                   	ret

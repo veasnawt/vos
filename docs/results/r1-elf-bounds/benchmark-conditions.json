@@ -1,0 +1,27 @@
+{
+  "flags": [
+    "gcc",
+    "-std=gnu11",
+    "-O2",
+    "-Wall",
+    "-Wextra",
+    "-Werror",
+    "-fno-pie",
+    "-no-pie",
+    "-Iarch/x86_64"
+  ],
+  "sanitizers": false,
+  "input": "hello.elf",
+  "load_before": [
+    3.2607421875,
+    3.33642578125,
+    3.18212890625
+  ],
+  "load_after": [
+    3.2607421875,
+    3.33642578125,
+    3.18212890625
+  ],
+  "scope": "same optimized hosted validator, same input, alternating order; not QEMU/kernel latency or production throughput",
+  "fixture_correction": "original build stopped at -Werror sign-compare; after n<64 rejection, a nonnegative long is safely converted to unsigned long; failed build.txt preserved"
+}

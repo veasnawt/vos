@@ -1,5 +1,7 @@
 /*
- * Host build of the kernel's ELF validator (arch/x86_64/elf.c, unchanged).
+ * Host build of the kernel's ELF validator (arch/x86_64/elf.c).
+ * Make selects VOS_ELF_USE_RUST and links the actual kernel Rust archive.
+ * Direct C-only builds use its documented, equivalence-tested hosted reference.
  * usage: elfcheck FILE
  * Exit 0: accepted; 1: rejected (reason printed); 2: usage or I/O error.
  * The tests compare its verdicts with scripts/check-user-elf.sh.
@@ -8,6 +10,16 @@
 #include <stdlib.h>
 
 #include "elf.h"
+
+#ifdef VOS_ELF_USE_RUST
+/* The bare-metal archive's panic bridge must fail closed on a host too.
+ * A pure scalar bounds check cannot normally panic; never fake a result here. */
+__attribute__((noreturn)) void panic(const char *message)
+{
+    fprintf(stderr, "elfcheck: unexpected Rust panic: %s\n", message);
+    exit(2);
+}
+#endif
 
 int main(int argc, char **argv)
 {

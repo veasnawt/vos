@@ -1,0 +1,18 @@
+
+/home/veasnawt/src/vos-r1-review/build/r1-review-1/comparison-2/bench:     file format elf64-x86-64
+
+
+Disassembly of section .init:
+
+Disassembly of section .plt:
+
+Disassembly of section .text:
+
+0000000000401f70 <bench_call_control>:
+  401f70:	31 d6                	xor    %edx,%esi
+  401f72:	31 fe                	xor    %edi,%esi
+  401f74:	89 f0                	mov    %esi,%eax
+  401f76:	83 e0 01             	and    $0x1,%eax
+  401f79:	c3                   	ret
+
+Disassembly of section .fini:

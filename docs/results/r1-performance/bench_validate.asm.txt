@@ -1,0 +1,59 @@
+
+/home/veasnawt/src/vos-r1-review/build/r1-review-1/comparison-2/bench:     file format elf64-x86-64
+
+
+Disassembly of section .init:
+
+Disassembly of section .plt:
+
+Disassembly of section .text:
+
+0000000000401ec0 <bench_validate>:
+  401ec0:	41 56                	push   %r14
+  401ec2:	41 55                	push   %r13
+  401ec4:	41 54                	push   %r12
+  401ec6:	55                   	push   %rbp
+  401ec7:	53                   	push   %rbx
+  401ec8:	48 81 ec c0 00 00 00 	sub    $0xc0,%rsp
+  401ecf:	48 85 d2             	test   %rdx,%rdx
+  401ed2:	74 74                	je     401f48 <bench_validate+0x88>
+  401ed4:	48 89 d5             	mov    %rdx,%rbp
+  401ed7:	49 89 f5             	mov    %rsi,%r13
+  401eda:	49 89 fc             	mov    %rdi,%r12
+  401edd:	45 31 f6             	xor    %r14d,%r14d
+  401ee0:	31 db                	xor    %ebx,%ebx
+  401ee2:	0f 1f 00             	nopl   (%rax)
+  401ee5:	66 66 2e 0f 1f 84 00 	data16 cs nopw 0x0(%rax,%rax,1)
+  401eec:	00 00 00 00 
+  401ef0:	4c 89 f0             	mov    %r14,%rax
+  401ef3:	48 89 e2             	mov    %rsp,%rdx
+  401ef6:	49 83 c6 01          	add    $0x1,%r14
+  401efa:	83 e0 07             	and    $0x7,%eax
+  401efd:	48 c1 e0 04          	shl    $0x4,%rax
+  401f01:	4c 01 e8             	add    %r13,%rax
+  401f04:	48 8b 70 08          	mov    0x8(%rax),%rsi
+  401f08:	48 8b 38             	mov    (%rax),%rdi
+  401f0b:	41 ff d4             	call   *%r12
+  401f0e:	8b 8c 24 b8 00 00 00 	mov    0xb8(%rsp),%ecx
+  401f15:	48 8b 94 24 b0 00 00 	mov    0xb0(%rsp),%rdx
+  401f1c:	00 
+  401f1d:	48 03 14 24          	add    (%rsp),%rdx
+  401f21:	89 c0                	mov    %eax,%eax
+  401f23:	48 01 ca             	add    %rcx,%rdx
+  401f26:	48 01 c2             	add    %rax,%rdx
+  401f29:	48 01 d3             	add    %rdx,%rbx
+  401f2c:	4c 39 f5             	cmp    %r14,%rbp
+  401f2f:	75 bf                	jne    401ef0 <bench_validate+0x30>
+  401f31:	48 81 c4 c0 00 00 00 	add    $0xc0,%rsp
+  401f38:	48 89 d8             	mov    %rbx,%rax
+  401f3b:	5b                   	pop    %rbx
+  401f3c:	5d                   	pop    %rbp
+  401f3d:	41 5c                	pop    %r12
+  401f3f:	41 5d                	pop    %r13
+  401f41:	41 5e                	pop    %r14
+  401f43:	c3                   	ret
+  401f44:	0f 1f 40 00          	nopl   0x0(%rax)
+  401f48:	31 db                	xor    %ebx,%ebx
+  401f4a:	eb e5                	jmp    401f31 <bench_validate+0x71>
+
+Disassembly of section .fini:

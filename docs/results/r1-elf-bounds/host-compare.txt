@@ -1,0 +1,1 @@
+R1 validator differential: 283 files PASS (197 accepted, 86 rejected); codes and all image fields agree

@@ -44,3 +44,10 @@ jobs:
 
       - name: Validate separately built user ELF profiles
         run: make ARCH=x86_64 user-test
+
+      - name: Verify migrated ELF bounds and hosted compatibility
+        run: |
+          python3 -I -B scripts/test-elf-bounds.py \
+            --archive build/x86_64/rust/libvos_kernel.a \
+            --elfcheck build/x86_64/tools/elfcheck \
+            --user build/x86_64/user --out build/r1-elf-bounds-ci

@@ -1,0 +1,16 @@
+ 22e:	48 89 ce             	mov    %rcx,%rsi
+ 231:	4c 89 7c 24 38       	mov    %r15,0x38(%rsp)
+ 236:	48 89 4c 24 08       	mov    %rcx,0x8(%rsp)
+ 23b:	4d 89 de             	mov    %r11,%r14
+ 23e:	4c 89 dd             	mov    %r11,%rbp
+ 241:	4c 89 44 24 30       	mov    %r8,0x30(%rsp)
+ 246:	4c 89 54 24 40       	mov    %r10,0x40(%rsp)
+ 24b:	e8 00 00 00 00       	call   250 <elf_validate+0x250>
+			24c: R_X86_64_PLT32	vos_rust_elf_inside-0x4
+ 250:	85 c0                	test   %eax,%eax
+ 252:	0f 84 b6 04 00 00    	je     70e <elf_validate+0x70e>
+ 258:	31 d2                	xor    %edx,%edx
+ 25a:	31 c0                	xor    %eax,%eax
+ 25c:	31 f6                	xor    %esi,%esi
+ 25e:	48 8b 4c 24 08       	mov    0x8(%rsp),%rcx
+ 263:	4c 8b 44 24 30       	mov    0x30(%rsp),%r8

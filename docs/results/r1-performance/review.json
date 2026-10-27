@@ -1,0 +1,18 @@
+{
+  "original_commit": "f67ebd968169560979fc1d5eefbc7ca6402a6910",
+  "baseline": "0291b1ab8f7d7d491bd2f276efa59a46b638d400",
+  "original_47_files_unchanged": true,
+  "benchmark_executables_identical_across_runs": true,
+  "benchmark_executable_sha256": "b7d7a14d7ccd814fd3d1ce59312b4af4fda9ce8dce5fea96279740bdfe9545d2",
+  "scalar_preflight": {
+    "vectors": 256,
+    "valid": 108,
+    "invalid": 148
+  },
+  "ELF_preflight_positions": 32,
+  "samples_per_series": 30,
+  "new_kernel_features": false,
+  "original_performance_limit": "earlier five-pair valid-hello-only sample is preserved, not evidence of language superiority or physical VOS performance",
+  "correctness_findings": "No production correctness discrepancy found; hosted C fallback remains explicitly separate and equivalence-tested",
+  "timing_conclusion": "Small whole-validator differences are inconclusive in this nonexclusive WSL environment; directions change between runs; no arbitrary acceptance threshold"
+}

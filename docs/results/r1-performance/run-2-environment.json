@@ -1,0 +1,73 @@
+{
+  "uname": {
+    "system": "Linux",
+    "node": "DESKTOP-PIO5PTF",
+    "release": "6.18.54.1-microsoft-standard-WSL2",
+    "version": "#1 SMP PREEMPT_DYNAMIC Tue Oct  6 19:13:07 UTC 2026",
+    "machine": "x86_64",
+    "processor": ""
+  },
+  "cpuinfo": "processor\t: 0\nvendor_id\t: GenuineIntel\ncpu family\t: 6\nmodel\t\t: 60\nmodel name\t: Intel(R) Core(TM) i5-4570 CPU @ 3.20GHz\nstepping\t: 3\nmicrocode\t: 0xffffffff\ncpu MHz\t\t: 3192.606\ncache size\t: 6144 KB\nphysical id\t: 0\nsiblings\t: 4\ncore id\t\t: 0\ncpu cores\t: 4\napicid\t\t: 0\ninitial apicid\t: 0\nfpu\t\t: yes\nfpu_exception\t: yes\ncpuid level\t: 13\nwp\t\t: yes\nflags\t\t: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 ss ht syscall nx pdpe1gb rdtscp lm arch_perfmon rep_good nopl xtopology cpuid tsc_known_freq pni pclmulqdq ssse3 fma cx16 pdcm pcid sse4_1 sse4_2 movbe popcnt aes xsave avx f16c rdrand hypervisor lahf_lm abm pti ssbd ibrs ibpb stibp fsgsbase bmi1 avx2 smep bmi2 erms invpcid xsaveopt md_clear flush_l1d arch_capabilities\nbugs\t\t: cpu_meltdown spectre_v1 spectre_v2 spec_store_bypass l1tf mds swapgs itlb_multihit srbds bhi spectre_v2_user its\nbogomips\t: 6385.21\nclflush size\t: 64\ncache_alignment\t: 64\naddress sizes\t: 39 bits physical, 48 bits virtual\npower management:\n\nprocessor\t: 1\nvendor_id\t: GenuineIntel\ncpu family\t: 6\nmodel\t\t: 60\nmodel name\t: Intel(R) Core(TM) i5-4570 CPU @ 3.20GHz\nstepping\t: 3\nmicrocode\t: 0xffffffff\ncpu MHz\t\t: 3192.606\ncache size\t: 6144 KB\nphysical id\t: 0\nsiblings\t: 4\ncore id\t\t: 1\ncpu cores\t: 4\napicid\t\t: 1\ninitial apicid\t: 1\nfpu\t\t: yes\nfpu_exception\t: yes\ncpuid level\t: 13\nwp\t\t: yes\nflags\t\t: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 ss ht syscall nx pdpe1gb rdtscp lm arch_perfmon rep_good nopl xtopology cpuid tsc_known_freq pni pclmulqdq ssse3 fma cx16 pdcm pcid sse4_1 sse4_2 movbe popcnt aes xsave avx f16c rdrand hypervisor lahf_lm abm pti ssbd ibrs ibpb stibp fsgsbase bmi1 avx2 smep bmi2 erms invpcid xsaveopt md_clear flush_l1d arch_capabilities\nbugs\t\t: cpu_meltdown spectre_v1 spectre_v2 spec_store_bypass l1tf mds swapgs itlb_multihit srbds bhi spectre_v2_user its\nbogomips\t: 6453.56\nclflush size\t: 64\ncache_alignment\t: 64\naddress sizes\t: 39 bits physical, 48 bits virtual\npower management:\n\nprocessor\t: 2\nvendor_id\t: GenuineIntel\ncpu family\t: 6\nmodel\t\t: 60\nmodel name\t: Intel(R) Core(TM) i5-4570 CPU @ 3.20GHz\nstepping\t: 3\nmicrocode\t: 0xffffffff\ncpu MHz\t\t: 3192.606\ncache size\t: 6144 KB\nphysical id\t: 0\nsiblings\t: 4\ncore id\t\t: 2\ncpu cores\t: 4\napicid\t\t: 2\ninitial apicid\t: 2\nfpu\t\t: yes\nfpu_exception\t: yes\ncpuid level\t: 13\nwp\t\t: yes\nflags\t\t: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 ss ht syscall nx pdpe1gb rdtscp lm arch_perfmon rep_good nopl xtopology cpuid tsc_known_freq pni pclmulqdq ssse3 fma cx16 pdcm pcid sse4_1 sse4_2 movbe popcnt aes xsave avx f16c rdrand hypervisor lahf_lm abm pti ssbd ibrs ibpb stibp fsgsbase bmi1 avx2 smep bmi2 erms invpcid xsaveopt md_clear flush_l1d arch_capabilities\nbugs\t\t: cpu_meltdown spectre_v1 spectre_v2 spec_store_bypass l1tf mds swapgs itlb_multihit srbds bhi spectre_v2_user its\nbogomips\t: 6458.73\nclflush size\t: 64\ncache_alignment\t: 64\naddress sizes\t: 39 bits physical, 48 bits virtual\npower management:\n\nprocessor\t: 3\nvendor_id\t: GenuineIntel\ncpu family\t: 6\nmodel\t\t: 60\nmodel name\t: Intel(R) Core(TM) i5-4570 CPU @ 3.20GHz\nstepping\t: 3\nmicrocode\t: 0xffffffff\ncpu MHz\t\t: 3192.606\ncache size\t: 6144 KB\nphysical id\t: 0\nsiblings\t: 4\ncore id\t\t: 3\ncpu cores\t: 4\napicid\t\t: 3\ninitial apicid\t: 3\nfpu\t\t: yes\nfpu_exception\t: yes\ncpuid level\t: 13\nwp\t\t: yes\nflags\t\t: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 ss ht syscall nx pdpe1gb rdtscp lm arch_perfmon rep_good nopl xtopology cpuid tsc_known_freq pni pclmulqdq ssse3 fma cx16 pdcm pcid sse4_1 sse4_2 movbe popcnt aes xsave avx f16c rdrand hypervisor lahf_lm abm pti ssbd ibrs ibpb stibp fsgsbase bmi1 avx2 smep bmi2 erms invpcid xsaveopt md_clear flush_l1d arch_capabilities\nbugs\t\t: cpu_meltdown spectre_v1 spectre_v2 spec_store_bypass l1tf mds swapgs itlb_multihit srbds bhi spectre_v2_user its\nbogomips\t: 6460.86\nclflush size\t: 64\ncache_alignment\t: 64\naddress sizes\t: 39 bits physical, 48 bits virtual\npower management:\n\n",
+  "allowed_cpus_before": [
+    0,
+    1,
+    2,
+    3
+  ],
+  "pinned_cpu": 3,
+  "exclusive_cpu": false,
+  "load_before": [
+    3.03271484375,
+    3.08642578125,
+    3.03564453125
+  ],
+  "C_version": "gcc (Ubuntu 15.2.0-16ubuntu1) 15.2.0\nCopyright (C) 2025 Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\n",
+  "linker_version": "GNU ld (GNU Binutils for Ubuntu) 2.46\nCopyright (C) 2026 Free Software Foundation, Inc.\nThis program is free software; you may redistribute it under the terms of\nthe GNU General Public License version 3 or (at your option) a later version.\nThis program has absolutely no warranty.\n",
+  "C_flags": [
+    "-std=gnu11",
+    "-O2",
+    "-Wall",
+    "-Wextra",
+    "-Werror",
+    "-ffreestanding",
+    "-fno-builtin",
+    "-fno-pic",
+    "-fno-pie",
+    "-fno-stack-protector",
+    "-fno-asynchronous-unwind-tables",
+    "-mno-sse",
+    "-mno-mmx",
+    "-m64",
+    "-mcmodel=kernel",
+    "-mno-red-zone",
+    "-mgeneral-regs-only",
+    "-fcf-protection=none",
+    "-fno-stack-clash-protection",
+    "-fno-lto",
+    "-Iarch/x86_64"
+  ],
+  "link_flags": [
+    "-fno-pie",
+    "-no-pie",
+    "-fno-lto"
+  ],
+  "Rust_archive_sha256": "abb3773f1b21e291a2eb1943f9a5a7e697f151f1ca79bcf2113ae9bfbfeb692b",
+  "baseline_source_sha256": "c01cd9b6d606528077819ffa256daf3158056ca9fe89f70c549a32bd26315b3f",
+  "baseline_commit": "0291b1ab8f7d7d491bd2f276efa59a46b638d400",
+  "samples": 15,
+  "scalar_operations_per_sample": 4194304,
+  "ELF_operations_per_sample": 65536,
+  "vector_positions": 256,
+  "vector_bytes": 6144,
+  "sanitizers": false,
+  "power_frequency_policy": "unchanged/uncontrolled",
+  "method": "WSL2 hosted; no QEMU timing; no physical VOS performance claim",
+  "Rust_compiler_flags_and_sysroot_record": "arch/x86_64/rust/kernel_probe.rs\n--edition=2024 --target=x86_64-unknown-none --crate-name vos_kernel --crate-type=staticlib -D warnings -C panic=abort -C opt-level=2 -C target-cpu=x86-64 -C code-model=kernel -C relocation-model=static -C no-redzone=yes -C force-unwind-tables=no -C lto=off -C embed-bitcode=no -C codegen-units=1 -C debuginfo=0 --remap-path-prefix=/home/veasnawt/src/vos-r1-review=.  \nrustc 1.100.0-nightly (2e2b193f8 2026-09-02)\nbinary: rustc\ncommit-hash: 2e2b193f8ada105f27608b7be81c293e0d7292cb\ncommit-date: 2026-09-02\nhost: x86_64-unknown-linux-gnu\nrelease: 1.100.0-nightly\nLLVM version: 23.1.1\n369640757edac99bfa1358946cfc2861be80ec39785416a46c06a990840facfb  /home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc\n39a4793ea97ae36360733c197c00d55044da7e3c9404e1d55edd95f44f07cf9c  /home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/lib/rustlib/x86_64-unknown-none/lib/libcore-41cea3d940a8abf0.rlib\na4c78cd4cd9b9ee46aacdbce544a32b20d9b0187fd5af7c96f7cbfa0ce025fc8  /home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/lib/rustlib/x86_64-unknown-none/lib/libcompiler_builtins-1670e0eec149624a.rlib\n",
+  "Rust_input_record_sha256": "d7de6116e27818ff67540dc648459ffcd95e4f304653b3b1dc09c25c64e5cb72",
+  "load_after": [
+    3.03271484375,
+    3.08642578125,
+    3.03564453125
+  ],
+  "exit_status": 0
+}

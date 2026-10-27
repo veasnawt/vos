@@ -1,0 +1,45 @@
+
+/home/veasnawt/src/vos-r1-review/build/r1-review-1/comparison-2/bench:     file format elf64-x86-64
+
+
+Disassembly of section .init:
+
+Disassembly of section .plt:
+
+Disassembly of section .text:
+
+0000000000401e50 <bench_predicate_inline>:
+  401e50:	49 89 f9             	mov    %rdi,%r9
+  401e53:	48 89 f7             	mov    %rsi,%rdi
+  401e56:	48 85 f6             	test   %rsi,%rsi
+  401e59:	74 5d                	je     401eb8 <bench_predicate_inline+0x68>
+  401e5b:	31 c0                	xor    %eax,%eax
+  401e5d:	45 31 c0             	xor    %r8d,%r8d
+  401e60:	66 2e 0f 1f 84 00 00 	cs nopw 0x0(%rax,%rax,1)
+  401e67:	00 00 00 
+  401e6a:	66 66 2e 0f 1f 84 00 	data16 cs nopw 0x0(%rax,%rax,1)
+  401e71:	00 00 00 00 
+  401e75:	66 66 2e 0f 1f 84 00 	data16 cs nopw 0x0(%rax,%rax,1)
+  401e7c:	00 00 00 00 
+  401e80:	0f b6 d0             	movzbl %al,%edx
+  401e83:	48 8d 14 52          	lea    (%rdx,%rdx,2),%rdx
+  401e87:	49 8d 14 d1          	lea    (%r9,%rdx,8),%rdx
+  401e8b:	48 8b 0a             	mov    (%rdx),%rcx
+  401e8e:	48 8b 72 08          	mov    0x8(%rdx),%rsi
+  401e92:	48 8b 52 10          	mov    0x10(%rdx),%rdx
+  401e96:	48 39 f1             	cmp    %rsi,%rcx
+  401e99:	72 0a                	jb     401ea5 <bench_predicate_inline+0x55>
+  401e9b:	48 29 f1             	sub    %rsi,%rcx
+  401e9e:	48 39 d1             	cmp    %rdx,%rcx
+  401ea1:	49 83 d8 ff          	sbb    $0xffffffffffffffff,%r8
+  401ea5:	48 83 c0 01          	add    $0x1,%rax
+  401ea9:	48 39 c7             	cmp    %rax,%rdi
+  401eac:	75 d2                	jne    401e80 <bench_predicate_inline+0x30>
+  401eae:	4c 89 c0             	mov    %r8,%rax
+  401eb1:	c3                   	ret
+  401eb2:	66 0f 1f 44 00 00    	nopw   0x0(%rax,%rax,1)
+  401eb8:	45 31 c0             	xor    %r8d,%r8d
+  401ebb:	4c 89 c0             	mov    %r8,%rax
+  401ebe:	c3                   	ret
+
+Disassembly of section .fini:

@@ -1,0 +1,30 @@
+{
+  "production": {
+    "file_bytes": 1022040,
+    "sha256": "335ba8da65f1170a016eb50f132f693b2074f8b5b4d33f1a5bfa9f04692fce4c",
+    "no_runtime_imports_TLS_FP_SIMD_dynamic_or_loadable_unwind": true,
+    "five_segment_validation": "passed unchanged post-link validator"
+  },
+  "native-production": {
+    "file_bytes": 1022040,
+    "sha256": "335ba8da65f1170a016eb50f132f693b2074f8b5b4d33f1a5bfa9f04692fce4c",
+    "no_runtime_imports_TLS_FP_SIMD_dynamic_or_loadable_unwind": true,
+    "five_segment_validation": "passed unchanged post-link validator"
+  },
+  "native-selftest": {
+    "file_bytes": 2111632,
+    "sha256": "d971909335ec545b2258a9c35405ae2c85873e0dd57f41a0e2be9c7f4be7770f",
+    "no_runtime_imports_TLS_FP_SIMD_dynamic_or_loadable_unwind": true,
+    "five_segment_validation": "passed unchanged post-link validator"
+  },
+  "size": {
+    "R0B": "text\t   data\t    bss\t    dec\t    hex\tfilename\n 212992\t    220\t 618304\t 831516\t  cb01c\t/home/veasnawt/src/vos-r0b/build/r0b-check-1/normal/vos.bin",
+    "R1": "text\t   data\t    bss\t    dec\t    hex\tfilename\n 212992\t    220\t 618304\t 831516\t  cb01c\t/home/veasnawt/src/vos-r1-elf-bounds/build/r1-1/kernel/vos.bin",
+    "R0B_file_bytes": 1022640,
+    "R1_file_bytes": 1022040,
+    "R0B_elf_validate_symbol": "ffffffff801125a0 000000000000076f T elf_validate",
+    "R1_elf_validate_symbol": "ffffffff801125a0 000000000000079a T elf_validate",
+    "R1_Rust_predicate_bytes": 18
+  },
+  "unchanged_application_and_public_ABI_files": 118
+}
