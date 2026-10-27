@@ -1,0 +1,4 @@
+python3 -I -B scripts/check-kernel-layout.py /home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/vos.bin || { rm -f /home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/vos.bin; exit 1; }
+kernel layout OK [/home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/vos.bin]: 0x100000-0x101000/5 0x101000-0x107000/6 0x107000-0x131000/5 0x131000-0x13c000/4 0x13c000-0x1ce000/6
+grub-file --is-x86-multiboot2 /home/veasnawt/src/vos-usb2a/build/usb2a-1/kernel/vos.bin
+x86_64: Multiboot header OK

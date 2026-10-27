@@ -1,0 +1,47 @@
+{
+  "before_and_after_benchmark_binary_identical": true,
+  "benchmark_sha256": "3a7254a5df780d35fc55dd79dcd676eb71f9fec9c44aa2575e8b71835aacd3c8",
+  "before_zero_sized_local_markers": {
+    "host_simulation_only": true,
+    "iterations_per_sample": 200000,
+    "sample_total_ns": [
+      1198000,
+      1170600,
+      1413700,
+      1515999,
+      1306900
+    ],
+    "checksum": 200000,
+    "sizes": {
+      "Controller": 424,
+      "PermanentSnapshot": 144,
+      "Capabilities": 40,
+      "CommandRing": 64,
+      "EventRing": 24,
+      "Usage": 8,
+      "Trb": 16
+    }
+  },
+  "after_zero_sized_local_markers": {
+    "host_simulation_only": true,
+    "iterations_per_sample": 200000,
+    "sample_total_ns": [
+      3740300,
+      3759200,
+      3382300,
+      1597301,
+      1303800
+    ],
+    "checksum": 200000,
+    "sizes": {
+      "Controller": 424,
+      "PermanentSnapshot": 144,
+      "Capabilities": 40,
+      "CommandRing": 64,
+      "EventRing": 24,
+      "Usage": 8,
+      "Trb": 16
+    }
+  },
+  "conclusion": "Different host timings with byte-identical benchmark executables. No executable-code regression evidenced; host runtime variation, not physical USB performance. Do not optimize or select faster reruns to conceal spread."
+}

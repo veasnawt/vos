@@ -1,0 +1,21 @@
+error: extern location for vos_xhci is of an unknown type: /home/veasnawt/src/vos-usb2a/build/usb2a-1/verified/mutant.rlib
+ --> tests/rust/xhci.rs:3:5
+  |
+3 | use vos_xhci::xhci::capabilities::Capabilities;
+  |     ^^^^^^^^
+
+error: file name should be lib*.rlib or lib*.so
+ --> tests/rust/xhci.rs:3:5
+  |
+3 | use vos_xhci::xhci::capabilities::Capabilities;
+  |     ^^^^^^^^
+
+error[E0463]: can't find crate for `vos_xhci`
+ --> tests/rust/xhci.rs:3:5
+  |
+3 | use vos_xhci::xhci::capabilities::Capabilities;
+  |     ^^^^^^^^ can't find crate
+
+error: aborting due to 3 previous errors
+
+For more information about this error, try `rustc --explain E0463`.

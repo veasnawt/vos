@@ -1,0 +1,16 @@
+{
+  "passed": true,
+  "report": "docs/results/usb2a-rust-core.md",
+  "internal_links": 30,
+  "UTF8": true,
+  "Markdown_fences": true,
+  "source_whitespace": true,
+  "rustfmt_check": true,
+  "python_syntax": true,
+  "existing_tracked_files_unchanged": true,
+  "verified_core_source_hashes": 6,
+  "candidate_files": 39,
+  "baseline": "2cd3bf3e7b7132fdfe6f5b643919916f39b465b3",
+  "no_new_application_ABI_or_hardware_backend": true,
+  "raw_tool_output": "preserved byte-for-byte; whitespace checks apply to source/Markdown"
+}

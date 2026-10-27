@@ -1,0 +1,16 @@
+{
+  "passed": true,
+  "old_workspace_files": 919,
+  "old_USB_files": 972,
+  "historical_roots": 13,
+  "historical_entries": 3856,
+  "original_HEAD_index_refs": "unchanged",
+  "worktrees": 13,
+  "stashes": 2,
+  "retained_D1_draft_and_symlink": "unchanged",
+  "original_design_and_USB1_and_R1_checkouts": "clean, unchanged",
+  "original_design_sha256": "83b0ac8d43982dc855c7628062d053d157ae4b2dfecc9eb541ad350950d48926",
+  "accounting_and_reservations": "unchanged; no legacy controller invoked",
+  "errors": [],
+  "measured_utc": "2026-10-27T10:25:49.737497+00:00"
+}

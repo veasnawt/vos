@@ -1,0 +1,226 @@
+//! xHCI 1.2b sections 5.3, 7.1, 7.2; initial operational profile is xHCI 1.0.
+use super::{BAR_BYTES, Error, PAGE};
+
+/// Inputs from a future trusted platform qualifier, not application authority.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub struct Facts {
+    pub bdf: u32,
+    pub vendor: u16,
+    pub device: u16,
+    pub bar_base: u64,
+    pub bar_bytes: u32,
+    pub bar_address_bits: u8,
+    pub physical_bits: u8,
+    pub candidates: u8,
+    pub complete_scan: bool,
+    pub memory_enabled: bool,
+    pub d0: bool,
+    pub identity_dma: bool,
+    pub coherent_dma: bool,
+    pub qualified_resource: bool,
+    pub ram_disjoint: bool,
+}
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub struct Capabilities {
+    pub bar_base: u64,
+    pub operational: u32,
+    pub doorbell: u32,
+    pub runtime: u32,
+    pub legacy: Option<u32>,
+    pub slots: u8,
+    pub ports: u8,
+    pub interrupters: u16,
+    pub ac64: bool,
+}
+
+fn word(bytes: &[u8], offset: u32) -> Result<u32, Error> {
+    let first = usize::try_from(offset).map_err(|_| Error::Bounds)?;
+    let last = first.checked_add(4).ok_or(Error::Overflow)?;
+    let s = bytes.get(first..last).ok_or(Error::Truncated)?;
+    Ok(u32::from_le_bytes([s[0], s[1], s[2], s[3]]))
+}
+
+fn end(first: u32, size: u32, bound: u32) -> Result<u32, Error> {
+    let last = first.checked_add(size).ok_or(Error::Overflow)?;
+    if last > bound {
+        return Err(Error::Bounds);
+    }
+    Ok(last)
+}
+
+fn overlaps(a: u32, ae: u32, b: u32, be: u32) -> bool {
+    a < be && b < ae
+}
+
+impl Capabilities {
+    /// Parse copied bytes only. This function cannot access MMIO.
+    pub fn parse(bytes: &[u8], facts: Facts) -> Result<Self, Error> {
+        if facts.bdf & !0xff != 0
+            || facts.vendor != 0x1b36
+            || facts.device != 0x000d
+            || facts.candidates != 1
+            || !facts.complete_scan
+            || !facts.memory_enabled
+            || !facts.d0
+            || !facts.identity_dma
+            || !facts.coherent_dma
+            || !facts.qualified_resource
+            || !facts.ram_disjoint
+            || facts.bar_bytes != BAR_BYTES
+            || !(32..=52).contains(&facts.physical_bits)
+            || !matches!(facts.bar_address_bits, 32 | 64)
+        {
+            return Err(Error::Unsupported);
+        }
+        if facts.bar_base == 0 || facts.bar_base % PAGE != 0 {
+            return Err(Error::Alignment);
+        }
+        let bar_end = facts
+            .bar_base
+            .checked_add(u64::from(facts.bar_bytes))
+            .ok_or(Error::Overflow)?;
+        if bar_end > (1u64 << facts.physical_bits)
+            || (facts.bar_address_bits == 32 && bar_end > (1u64 << 32))
+        {
+            return Err(Error::Bounds);
+        }
+        if bytes.len() < BAR_BYTES as usize {
+            return Err(Error::Truncated);
+        }
+        let bytes = &bytes[..BAR_BYTES as usize];
+        let first = word(bytes, 0)?;
+        let operational = first & 0xff;
+        if first >> 16 != 0x100 {
+            return Err(Error::Unsupported);
+        }
+        if first & 0xff00 != 0 || operational < 0x20 || operational % 8 != 0 {
+            return Err(Error::InvalidCapability);
+        }
+        let hcs1 = word(bytes, 4)?;
+        let slots = (hcs1 & 0xff) as u8;
+        let interrupters = ((hcs1 >> 8) & 0x7ff) as u16;
+        let ports = (hcs1 >> 24) as u8;
+        if slots == 0 || interrupters == 0 || ports == 0 {
+            return Err(Error::InvalidCapability);
+        }
+        if ports > 16 {
+            return Err(Error::Unsupported);
+        }
+        let hcs2 = word(bytes, 8)?;
+        let scratchpads = ((hcs2 >> 27) & 31) | (((hcs2 >> 21) & 31) << 5);
+        if scratchpads != 0 {
+            return Err(Error::Unsupported);
+        }
+        if word(bytes, operational.checked_add(8).ok_or(Error::Overflow)?)? & 1 == 0 {
+            return Err(Error::Unsupported);
+        }
+        let hcc = word(bytes, 16)?;
+        let doorbell = word(bytes, 20)?;
+        let runtime = word(bytes, 24)?;
+        if doorbell % 4 != 0 || runtime % 32 != 0 {
+            return Err(Error::Alignment);
+        }
+        let oe = end(operational, 0x400 + u32::from(ports) * 16, BAR_BYTES)?;
+        let de = end(doorbell, (u32::from(slots) + 1) * 4, BAR_BYTES)?;
+        let re = end(runtime, 0x20 + u32::from(interrupters) * 0x20, BAR_BYTES)?;
+        if doorbell < oe || runtime < oe || overlaps(doorbell, de, runtime, re) {
+            return Err(Error::InvalidCapability);
+        }
+        let mut offset = (hcc >> 16) * 4;
+        let mut legacy = None;
+        let mut protocol_ports = 0u32;
+        for _ in 0..64 {
+            if offset == 0 {
+                if protocol_ports == 0 {
+                    return Err(Error::InvalidCapability);
+                }
+                return Ok(Self {
+                    bar_base: facts.bar_base,
+                    operational,
+                    doorbell,
+                    runtime,
+                    legacy,
+                    slots,
+                    ports,
+                    interrupters,
+                    ac64: hcc & 1 != 0,
+                });
+            }
+            if offset < 0x20 {
+                return Err(Error::InvalidCapability);
+            }
+            let header = word(bytes, offset)?;
+            let id = header & 0xff;
+            if id == 0 {
+                return Err(Error::InvalidCapability);
+            }
+            let next = ((header >> 8) & 0xff) * 4;
+            let size = match id {
+                1 => {
+                    if legacy.is_some() {
+                        return Err(Error::InvalidCapability);
+                    }
+                    legacy = Some(offset);
+                    8
+                }
+                2 => {
+                    let major = header >> 24;
+                    let minor = (header >> 16) & 0xff;
+                    if !matches!(major, 2 | 3)
+                        || minor & 15 > 9
+                        || minor >> 4 > 9
+                        || word(bytes, offset.checked_add(4).ok_or(Error::Overflow)?)?
+                            != 0x2042_5355
+                    {
+                        return Err(Error::Unsupported);
+                    }
+                    let port = word(bytes, offset.checked_add(8).ok_or(Error::Overflow)?)?;
+                    let count = (port >> 8) & 0xff;
+                    let first_port = port & 0xff;
+                    if count == 0 || first_port == 0 || first_port + count - 1 > u32::from(ports) {
+                        return Err(Error::InvalidCapability);
+                    }
+                    // Above bounds prove count <= 16 and shift/end representability.
+                    let mask = ((1u32 << count) - 1) << (first_port - 1);
+                    if protocol_ports & mask != 0 {
+                        return Err(Error::InvalidCapability);
+                    }
+                    protocol_ports |= mask;
+                    16 + ((port >> 28) & 15) * 4
+                }
+                // Unknown capability bodies are not interpreted or dereferenced.
+                _ => 4,
+            };
+            let last = end(offset, size, BAR_BYTES)?;
+            if overlaps(offset, last, operational, oe)
+                || overlaps(offset, last, doorbell, de)
+                || overlaps(offset, last, runtime, re)
+                || (next != 0 && next < size)
+            {
+                return Err(Error::InvalidCapability);
+            }
+            if next == 0 {
+                offset = 0;
+            } else {
+                offset = offset.checked_add(next).ok_or(Error::Overflow)?;
+            }
+        }
+        // A 64th terminal entry is valid; a 65th traversal is not.
+        if offset == 0 && protocol_ports != 0 {
+            Ok(Self {
+                bar_base: facts.bar_base,
+                operational,
+                doorbell,
+                runtime,
+                legacy,
+                slots,
+                ports,
+                interrupters,
+                ac64: hcc & 1 != 0,
+            })
+        } else {
+            Err(Error::InvalidCapability)
+        }
+    }
+}
