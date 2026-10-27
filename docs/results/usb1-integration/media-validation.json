@@ -1,0 +1,68 @@
+{
+  "control-bios": {
+    "payloads": {
+      "vsh.elf": "e7af3ee56164f587f7ca1338f7ddfcb202b6f4310f10b4dcba6a2576743cb181",
+      "gui-demo.elf": "a21bab23c7183c7534d4b6beabd35b4222cd9faf65b0ad8ea868fd153e112bd2",
+      "hello.elf": "c6c6416195a0f18d680d7f8f19be52ce02ff02912ef3bac45324fbe88006cd06",
+      "vos.bin": "9eb4c2039734a785274eaad2d5e556dd1e84260bc01cb3832ba67738a5053988",
+      "rixie.elf": "77104da3b33caf809daf5e6674ac4e2fa9edf6a9e2e5dd59828514df76490d32"
+    },
+    "catalog_log": "control-bios-catalog.log",
+    "passed": true
+  },
+  "control-uefi": {
+    "payloads": {
+      "vsh.elf": "e7af3ee56164f587f7ca1338f7ddfcb202b6f4310f10b4dcba6a2576743cb181",
+      "gui-demo.elf": "a21bab23c7183c7534d4b6beabd35b4222cd9faf65b0ad8ea868fd153e112bd2",
+      "hello.elf": "c6c6416195a0f18d680d7f8f19be52ce02ff02912ef3bac45324fbe88006cd06",
+      "vos.bin": "9eb4c2039734a785274eaad2d5e556dd1e84260bc01cb3832ba67738a5053988",
+      "rixie.elf": "77104da3b33caf809daf5e6674ac4e2fa9edf6a9e2e5dd59828514df76490d32"
+    },
+    "catalog_log": "control-uefi-catalog.log",
+    "passed": true
+  },
+  "probe-bios": {
+    "payloads": {
+      "vsh.elf": "e7af3ee56164f587f7ca1338f7ddfcb202b6f4310f10b4dcba6a2576743cb181",
+      "gui-demo.elf": "a21bab23c7183c7534d4b6beabd35b4222cd9faf65b0ad8ea868fd153e112bd2",
+      "hello.elf": "c6c6416195a0f18d680d7f8f19be52ce02ff02912ef3bac45324fbe88006cd06",
+      "vos.bin": "9eb4c2039734a785274eaad2d5e556dd1e84260bc01cb3832ba67738a5053988",
+      "rixie.elf": "77104da3b33caf809daf5e6674ac4e2fa9edf6a9e2e5dd59828514df76490d32"
+    },
+    "catalog_log": "probe-bios-catalog.log",
+    "passed": true
+  },
+  "probe-uefi": {
+    "payloads": {
+      "vsh.elf": "e7af3ee56164f587f7ca1338f7ddfcb202b6f4310f10b4dcba6a2576743cb181",
+      "gui-demo.elf": "a21bab23c7183c7534d4b6beabd35b4222cd9faf65b0ad8ea868fd153e112bd2",
+      "hello.elf": "c6c6416195a0f18d680d7f8f19be52ce02ff02912ef3bac45324fbe88006cd06",
+      "vos.bin": "9eb4c2039734a785274eaad2d5e556dd1e84260bc01cb3832ba67738a5053988",
+      "rixie.elf": "77104da3b33caf809daf5e6674ac4e2fa9edf6a9e2e5dd59828514df76490d32"
+    },
+    "catalog_log": "probe-uefi-catalog.log",
+    "passed": true
+  },
+  "text-bios": {
+    "payloads": {
+      "vsh.elf": "e7af3ee56164f587f7ca1338f7ddfcb202b6f4310f10b4dcba6a2576743cb181",
+      "gui-demo.elf": "a21bab23c7183c7534d4b6beabd35b4222cd9faf65b0ad8ea868fd153e112bd2",
+      "hello.elf": "c6c6416195a0f18d680d7f8f19be52ce02ff02912ef3bac45324fbe88006cd06",
+      "vos.bin": "9eb4c2039734a785274eaad2d5e556dd1e84260bc01cb3832ba67738a5053988",
+      "rixie.elf": "77104da3b33caf809daf5e6674ac4e2fa9edf6a9e2e5dd59828514df76490d32"
+    },
+    "catalog_log": "text-bios-catalog.log",
+    "passed": true
+  },
+  "text-uefi": {
+    "payloads": {
+      "vsh.elf": "e7af3ee56164f587f7ca1338f7ddfcb202b6f4310f10b4dcba6a2576743cb181",
+      "gui-demo.elf": "a21bab23c7183c7534d4b6beabd35b4222cd9faf65b0ad8ea868fd153e112bd2",
+      "hello.elf": "c6c6416195a0f18d680d7f8f19be52ce02ff02912ef3bac45324fbe88006cd06",
+      "vos.bin": "9eb4c2039734a785274eaad2d5e556dd1e84260bc01cb3832ba67738a5053988",
+      "rixie.elf": "77104da3b33caf809daf5e6674ac4e2fa9edf6a9e2e5dd59828514df76490d32"
+    },
+    "catalog_log": "text-uefi-catalog.log",
+    "passed": true
+  }
+}

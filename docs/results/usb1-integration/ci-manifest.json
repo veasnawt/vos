@@ -1,0 +1,20 @@
+{
+  "algorithm": "SHA-256",
+  "integration_commit": "7d926b6b617feb302dda4e67ddca1d9f650036a7",
+  "files": {
+    ".gitleaksignore": {
+      "bytes": 902,
+      "sha256": "59fd178db6ac792a1388ed8e3b913864a8e57b53a02c71b91a7d25db86c148a7"
+    },
+    "docs/results/usb1-integration/ci-secret-review.json": {
+      "bytes": 5463,
+      "sha256": "3e5b08447dd2924210fca2178a3bffb001e37c7d7786c29a6ee9d517e82e6aec"
+    },
+    "docs/results/usb1-integration/publication-changed-files.txt": {
+      "bytes": 7683,
+      "sha256": "0e6dcb8365151534ff0c1cfb7b9bdba768e6b88d737c1bd75a0b917f492a9cc9"
+    }
+  },
+  "self_excluded": true,
+  "original_integration_manifest_unchanged": "76cc17f4f80d0cee27d84f2d63a4d48c68e024d5ee79baa609c3501353ad6758"
+}

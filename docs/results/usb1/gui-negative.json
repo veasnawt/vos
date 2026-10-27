@@ -1,0 +1,18 @@
+{
+  "passed": true,
+  "reused_result": "build/usb1-native-final/result.json",
+  "implementation_unchanged": true,
+  "native": {
+    "bios": {
+      "passed": true,
+      "serial": "bios-no-ps2-gui/serial.log",
+      "case": "no-ps2-gui"
+    },
+    "uefi": {
+      "passed": true,
+      "serial": "uefi-no-ps2-gui/serial.log",
+      "case": "no-ps2-gui"
+    }
+  },
+  "verifier_sha256": "2a91be7621425a332fe75d739176cb30da03f4065d4e31b74769f4910ef70473"
+}

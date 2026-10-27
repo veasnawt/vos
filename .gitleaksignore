@@ -1,0 +1,10 @@
+# Reviewed public GRUB EFI module SHA-256 values, not credentials.
+# Bound to the immutable original USB.1 commit, file, detector and line.
+# No path, rule or future-commit exemption. Review: docs/results/usb1-integration/ci-secret-review.json
+bd22803b8b5635b776c848d08d1494f65b49dd21:docs/results/usb1/execution.json:generic-api-key:150
+bd22803b8b5635b776c848d08d1494f65b49dd21:docs/results/usb1/execution.json:generic-api-key:151
+bd22803b8b5635b776c848d08d1494f65b49dd21:docs/results/usb1/execution.json:generic-api-key:152
+bd22803b8b5635b776c848d08d1494f65b49dd21:docs/results/usb1/execution.json:generic-api-key:154
+bd22803b8b5635b776c848d08d1494f65b49dd21:docs/results/usb1/execution.json:generic-api-key:220
+bd22803b8b5635b776c848d08d1494f65b49dd21:docs/results/usb1/execution.json:generic-api-key:221
+bd22803b8b5635b776c848d08d1494f65b49dd21:docs/results/usb1/execution.json:generic-api-key:278

@@ -1,0 +1,26 @@
+[
+  {
+    "firmware": "bios",
+    "passed": true,
+    "screenshot": "bios/gui.png",
+    "width": 1280,
+    "height": 800,
+    "screenshot_sha256": "73840158e18185e0b3638bfd29ccec73ed6a8cc50cfaf5f4982cb60ca6e56a9c",
+    "serial_sha256": "a11fb56554c86e688e1187727b087db160c3f1936791fba53c5b64229171db5b",
+    "USB_keyboard_attached": false,
+    "input": "existing PS/2",
+    "pci_metadata_unchanged": true
+  },
+  {
+    "firmware": "uefi",
+    "passed": true,
+    "screenshot": "uefi/gui.png",
+    "width": 1280,
+    "height": 800,
+    "screenshot_sha256": "73840158e18185e0b3638bfd29ccec73ed6a8cc50cfaf5f4982cb60ca6e56a9c",
+    "serial_sha256": "37969f2fce872ee59bbceac26a930bc225f1c2160679230b277c2b0a653a7b1f",
+    "USB_keyboard_attached": false,
+    "input": "existing PS/2",
+    "pci_metadata_unchanged": true
+  }
+]

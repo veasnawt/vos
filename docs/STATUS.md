@@ -6,9 +6,10 @@ Current accepted graphical baseline: owner-merged
 VOS is pre-alpha. **N0-N5 are accepted; N6 is still in progress.**
 No physical-hardware or complete-desktop acceptance is claimed.
 The accepted main used for this review is
-`0291b1ab8f7d7d491bd2f276efa59a46b638d400`, the owner's merged
-[Rust foundation PR #20](https://github.com/veasnawt/vos/pull/20), following
-Master Plan PR #19.
+`7c8082b98751f65ab0bcdf884339a6bf8298e2ce`, the owner's merged
+[R1 PR #21](https://github.com/veasnawt/vos/pull/21), following Rust foundation
+PR #20 and Master Plan PR #19. USB.1 integration below is a review candidate,
+not a new accepted main checkpoint.
 
 ## Current accepted components
 
@@ -47,7 +48,7 @@ all checks passed. See the [evidence index](results/n6-cursor-refinement/evidenc
 and [normal preview commands](results/n6-cursor-refinement.md#normal-interactive-preview).
 Automated overflow/timing verification is separate from ordinary manual use.
 
-## R0 merged; first R1 helper locally verified
+## R0 and first R1 helper merged
 
 The [R0-A assessment](results/r0a-rust-kernel-assessment.md) is complete at
 `689260f6c93c97e9d062e7829f078a13e92350be`. Its dated read-only findings and
@@ -60,7 +61,8 @@ function inside the higher-half C/assembly kernel and forwards Rust panic to the
 existing C handler. Local evidence records 4,134 C/Rust ABI checks and ten
 BIOS/UEFI cases, including actual panic and incorrect-result controls. The
 five-segment layout, 4 MiB image limit and application ABIs v0-v5 are preserved.
-Both R0-A and R0-B are merged through PR #20 at the accepted main above.
+Both R0-A and R0-B are merged through PR #20 at
+`0291b1ab8f7d7d491bd2f276efa59a46b638d400`.
 This is a kernel integration proof, not a migrated subsystem or physical
 hardware qualification. See the [publication review](results/r0-publication-review.md)
 for final-tree checks and the exact provenance.
@@ -70,8 +72,19 @@ The [first R1 candidate](results/r1-elf-bounds.md), commit
 predicate to the same Rust kernel archive. Local boundary, host-tool and native
 loader checks pass. The [performance/publication review](results/r1-performance.md)
 compares actual original C and Rust-backed paths, including call overhead and
-timing variation. R1 remains pending owner acceptance and merge. Dated R0/R1
+timing variation. R1 is merged through PR #21 at the accepted main above. Dated R0/R1
 reports and original evidence retain their historical status wording.
+
+## USB.1 integration candidate
+
+The original USB.1 commit `bd22803b8b5635b776c848d08d1494f65b49dd21`
+is integrated without rewriting its history or evidence. The
+[separate integration report](results/usb1-rust-integration.md) records fresh
+host, Rust-backed ELF and BIOS/UEFI checks on the accepted R1 baseline.
+`vos.usb_probe=1` enables bounded PCI bus-0 discovery, assigned-BAR validation
+and capability-header reads. No reset, DMA, bus-master enablement, ownership
+handoff, USB transfers, device enumeration or USB HID driver is implemented.
+Normal input remains PS/2. Physical hardware is NOT TESTED; USB.2 is not started.
 
 ## Proposed next work, not execution approval
 
@@ -81,7 +94,7 @@ and eventually a dock and Settings/Accessibility (including cursor-size options)
 These are incomplete planning topics; their order, contracts and budgets require
 owner approval. The accepted mockup is a design reference, not implemented UI.
 
-Rust-first kernel migration beyond this bounded R1 candidate and broader
+Rust-first kernel migration beyond the merged R1 helper and broader
 physical-hardware/architecture portability remain proposals. They require separate compatibility, unsafe/FFI/DMA,
 boot/interrupt/device and resource-management plans with reproducible checks.
 VOS targets real x86_64 computers; QEMU success does not establish firmware,

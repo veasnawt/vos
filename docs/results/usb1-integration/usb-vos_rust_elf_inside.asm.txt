@@ -1,0 +1,16 @@
+
+/home/veasnawt/src/vos-usb1-integration/build/usb1-integration-1/usb/kernel/vos.bin:     file format elf64-x86-64
+
+
+Disassembly of section .boot.text:
+
+Disassembly of section .text:
+
+ffffffff80130da0 <vos_rust_elf_inside>:
+ffffffff80130da0:	48 29 f7             	sub    %rsi,%rdi
+ffffffff80130da3:	0f 93 c0             	setae  %al
+ffffffff80130da6:	48 39 fa             	cmp    %rdi,%rdx
+ffffffff80130da9:	0f 96 c1             	setbe  %cl
+ffffffff80130dac:	20 c1                	and    %al,%cl
+ffffffff80130dae:	0f b6 c1             	movzbl %cl,%eax
+ffffffff80130db1:	c3                   	ret

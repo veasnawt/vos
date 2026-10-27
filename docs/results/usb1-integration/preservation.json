@@ -1,0 +1,35 @@
+{
+  "snapshot_sha256": "12f8b06492377061568af023031939246b16393028b8ba0560e0bc07ecc528e0",
+  "original_source_files": 919,
+  "original_USB_files": 972,
+  "historical_roots": 13,
+  "historical_entries": 3856,
+  "original_worktrees": 13,
+  "original_stashes": 2,
+  "unchanged_original_HEAD_index_refs": true,
+  "retained_symlink_checked": true,
+  "other_checkouts": {
+    "vos-r1-review": {
+      "HEAD": "df4ad8d3164d27e1254e4514341726b7b18955d3",
+      "status": ""
+    },
+    "vos-r1-elf-bounds": {
+      "HEAD": "f67ebd968169560979fc1d5eefbc7ca6402a6910",
+      "status": ""
+    },
+    "vos-r0a": {
+      "HEAD": "689260f6c93c97e9d062e7829f078a13e92350be",
+      "status": ""
+    },
+    "vos-r0b": {
+      "HEAD": "8e2f247dacf7a5d2a4f37db7c73df191f6c4cc1b",
+      "status": ""
+    },
+    "vos-r0-publication": {
+      "HEAD": "5be1f09bfa5ec2376d6308ac78c4d7370cb06075",
+      "status": ""
+    }
+  },
+  "errors": [],
+  "passed": true
+}

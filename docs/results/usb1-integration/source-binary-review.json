@@ -1,0 +1,61 @@
+{
+  "baseline": "7c8082b98751f65ab0bcdf884339a6bf8298e2ce",
+  "original_USB": "bd22803b8b5635b776c848d08d1494f65b49dd21",
+  "manual_merge_conflicts": 0,
+  "kernels": {
+    "usb": {
+      "sha256": "9eb4c2039734a785274eaad2d5e556dd1e84260bc01cb3832ba67738a5053988",
+      "bytes": 1045888,
+      "layout": "kernel layout OK [/home/veasnawt/src/vos-usb1-integration/build/usb1-integration-1/usb/kernel/vos.bin]: 0x100000-0x101000/5 0x101000-0x107000/6 0x107000-0x131000/5 0x131000-0x13c000/4 0x13c000-0x1ce000/6",
+      "PT_LOADs": 5,
+      "undefined_symbols": 0,
+      "allocator_symbols": 0,
+      "runtime_relocations": 0,
+      "FP_SIMD_matches": 0,
+      "dynamic_TLS_unwind_sections": 0
+    },
+    "normal": {
+      "sha256": "9eb4c2039734a785274eaad2d5e556dd1e84260bc01cb3832ba67738a5053988",
+      "bytes": 1045888,
+      "layout": "kernel layout OK [/home/veasnawt/src/vos-usb1-integration/build/usb1-integration-1/rust-native/normal/vos.bin]: 0x100000-0x101000/5 0x101000-0x107000/6 0x107000-0x131000/5 0x131000-0x13c000/4 0x13c000-0x1ce000/6",
+      "PT_LOADs": 5,
+      "undefined_symbols": 0,
+      "allocator_symbols": 0,
+      "runtime_relocations": 0,
+      "FP_SIMD_matches": 0,
+      "dynamic_TLS_unwind_sections": 0
+    },
+    "selftest": {
+      "sha256": "baf84211d3fb2397dc6db45e1e231a5834368899ea725499d75a017c5113a0ef",
+      "bytes": 2131384,
+      "layout": "kernel layout OK [/home/veasnawt/src/vos-usb1-integration/build/usb1-integration-1/rust-native/selftest/vos.bin]: 0x100000-0x101000/5 0x101000-0x107000/6 0x107000-0x161000/5 0x161000-0x17a000/4 0x17a000-0x264000/6",
+      "PT_LOADs": 5,
+      "undefined_symbols": 0,
+      "allocator_symbols": 0,
+      "runtime_relocations": 0,
+      "FP_SIMD_matches": 0,
+      "dynamic_TLS_unwind_sections": 0
+    }
+  },
+  "audit_invocation_correction": "The first audit expected the nonexistent symbol vos_rust_kernel_probe; the existing accepted C ABI exports vos_rust_probe. Corrected audit predicate only; no source or native rerun.",
+  "Rust_archive_sha256": "abb3773f1b21e291a2eb1943f9a5a7e697f151f1ca79bcf2113ae9bfbfeb692b",
+  "Rust_archive_byte_identical_to_R1": true,
+  "frozen_userspace_and_ABI_files_unchanged": 119,
+  "original_USB_inventory_files": 64,
+  "original_USB_files_byte_identical": 62,
+  "automatic_combination_files": [
+    "arch/x86_64/arch.mk",
+    "arch/x86_64/kernel.c"
+  ],
+  "R0_R1_implementation_unchanged": [
+    "Makefile",
+    "arch/x86_64/elf.c",
+    "arch/x86_64/rust_kernel.h",
+    "arch/x86_64/rust/kernel_probe.rs"
+  ],
+  "review_findings": [
+    "No correctness discrepancy found in the integration. Opt-in probe has read-only capability/config-data interfaces and bounded four-function bus-0 scan.",
+    "Firmware PCI command state is preserved, not forced to disable pre-existing bus mastering. BAR aperture is not sized in the guest.",
+    "No USB transfer, reset, DMA, ownership handoff, device enumeration or HID implementation."
+  ]
+}

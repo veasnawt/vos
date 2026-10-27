@@ -35,9 +35,12 @@ static int run_module(const struct boot_info *bi,const char *name,int console,in
             if(module)return 0;
             module=&bi->modules[i];
         }
+    user_console_diagnostic("native boot module present", module != 0);
     if(!module)return 0;
     struct elf_image image;int error;
-    if(load_elf(&app,name,phys_to_virt(module->start),module->end-module->start,&image,&error)!=PROC_OK)
+    int loaded=load_elf(&app,name,phys_to_virt(module->start),module->end-module->start,&image,&error);
+    user_console_diagnostic("native ELF load", loaded==PROC_OK);
+    if(loaded!=PROC_OK)
         return 0;
     int attached=0,execution=0,ok=0;
     const struct app_catalog *catalog=app_payload_catalog();
@@ -47,7 +50,11 @@ static int run_module(const struct boot_info *bi,const char *name,int console,in
         execution=1;
         if(exec_grant_install(&app,EXEC_ALL,whitelist,2))goto done;
     }
-    if(console && user_console_grant(&app))goto done;
+    if(console) {
+        int granted=user_console_grant(&app);
+        user_console_diagnostic("native console grant", granted==0);
+        if(granted)goto done;
+    }
     if(filesystem && vblk_info()->state==VBLK_READY) {
         struct file_grant grant={.index=0,.rights=FILE_RIGHTS,.path="shell",.length=5};
         if(file_volume_attach(&app,vblk_info()->blk_id))goto done;

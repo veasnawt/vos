@@ -51,3 +51,6 @@ jobs:
             --archive build/x86_64/rust/libvos_kernel.a \
             --elfcheck build/x86_64/tools/elfcheck \
             --user build/x86_64/user --out build/r1-elf-bounds-ci
+
+      - name: Verify read-only USB.1 probing and input diagnostics
+        run: python3 -I -B scripts/test-usb-probe.py --host-only --output build/usb1-host-ci

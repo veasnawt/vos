@@ -1,0 +1,30 @@
+grub-file --is-x86-multiboot2 /home/veasnawt/src/vos-usb/build/usb1-native-1/kernel/vos.bin
+x86_64: Multiboot header OK
+gcc -m64 -Iuser/include -MMD -MP -c user/lib/abi_note.S -o /home/veasnawt/src/vos-usb/build/usb1-native-1/user/lib/abi_note.o
+gcc -std=gnu11 -O2 -Wall -Wextra -m64 -mcmodel=small -ffreestanding -fno-builtin -nostdinc -isystem /usr/lib/gcc/x86_64-linux-gnu/15/include -Iuser/include -fno-pic -fno-pie -fno-stack-protector -fno-stack-clash-protection -fcf-protection=none -fno-asynchronous-unwind-tables -fno-unwind-tables -mgeneral-regs-only -MMD -MP -c user/hello/hello.c -o /home/veasnawt/src/vos-usb/build/usb1-native-1/user/hello/hello.o
+ld -m elf_x86_64 -nostdlib -static -z noexecstack -z max-page-size=0x1000 -z norelro --build-id=none -T user/lib/user.ld -o /home/veasnawt/src/vos-usb/build/usb1-native-1/user/hello.elf /home/veasnawt/src/vos-usb/build/usb1-native-1/user/lib/crt0.o /home/veasnawt/src/vos-usb/build/usb1-native-1/user/lib/syscall.o /home/veasnawt/src/vos-usb/build/usb1-native-1/user/lib/abi_note.o /home/veasnawt/src/vos-usb/build/usb1-native-1/user/hello/hello.o
+rm -rf /home/veasnawt/src/vos-usb/build/usb1-native-1/kernel/isodir
+mkdir -p /home/veasnawt/src/vos-usb/build/usb1-native-1/kernel/isodir/boot/grub
+cp /home/veasnawt/src/vos-usb/build/usb1-native-1/kernel/vos.bin /home/veasnawt/src/vos-usb/build/usb1-native-1/kernel/isodir/boot/vos.bin
+cp /home/veasnawt/src/vos-usb/build/usb1-native-1/control.cfg /home/veasnawt/src/vos-usb/build/usb1-native-1/kernel/isodir/boot/grub/grub.cfg
+for f in /home/veasnawt/src/vos-usb/build/usb1-native-1/user/hello.elf:boot/hello.elf /home/veasnawt/src/vos-usb/build/usb1-native-1/user/vsh.elf:boot/vsh.elf /home/veasnawt/src/vos-usb/build/usb1-native-1/user/rixie.elf:boot/rixie.elf /home/veasnawt/src/vos-usb/build/usb1-native-1/user/gui-demo.elf:boot/gui-demo.elf; do \
+    mkdir -p /home/veasnawt/src/vos-usb/build/usb1-native-1/kernel/isodir/$(dirname ${f#*:}); cp ${f%%:*} /home/veasnawt/src/vos-usb/build/usb1-native-1/kernel/isodir/${f#*:}; \
+done
+grub-mkrescue -o /home/veasnawt/src/vos-usb/build/usb1-native-1/kernel/vos.iso /home/veasnawt/src/vos-usb/build/usb1-native-1/kernel/isodir
+xorriso 1.5.6 : RockRidge filesystem manipulator, libburnia project.
+
+Drive current: -outdev 'stdio:/home/veasnawt/src/vos-usb/build/usb1-native-1/kernel/vos.iso'
+Media current: stdio file, overwriteable
+Media status : is blank
+Media summary: 0 sessions, 0 data blocks, 0 data,  940g free
+Added to ISO image: directory '/'='/tmp/grub.6i58x4'
+xorriso : UPDATE :     316 files added in 1 seconds
+Added to ISO image: directory '/'='/home/veasnawt/src/vos-usb/build/usb1-native-1/kernel/isodir'
+xorriso : UPDATE :     324 files added in 1 seconds
+xorriso : NOTE : Copying to System Area: 512 bytes from file '/usr/lib/grub/i386-pc/boot_hybrid.img'
+ISO image produced: 3872 sectors
+Written to medium : 3872 sectors at LBA 0
+Writing to 'stdio:/home/veasnawt/src/vos-usb/build/usb1-native-1/kernel/vos.iso' completed successfully.
+
+uefi-iso: no GRUB x86_64-efi files in /usr/lib/grub/x86_64-efi (see docs/plans/uefi.md)
+make: *** [Makefile:107: uefi-iso] Error 1

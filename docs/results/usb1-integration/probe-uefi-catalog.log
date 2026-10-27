@@ -1,0 +1,16 @@
+xorriso 1.5.6 : RockRidge filesystem manipulator, libburnia project.
+
+xorriso : NOTE : Loading ISO image tree from LBA 0
+xorriso : UPDATE :     330 nodes read in 1 seconds
+xorriso : NOTE : Detected El-Torito boot information which currently is set to be discarded
+Drive current: -indev '/home/veasnawt/src/vos-usb1-integration/build/usb1-integration-1/usb/probe-uefi.iso'
+Media current: stdio file, overwriteable
+Media status : is written , is appendable
+Boot record  : El Torito , MBR protective-msdos-label cyl-align-off GPT APM
+Media summary: 1 session, 6093 data blocks, 11.9m data,  939g free
+Volume id    : 'ISOIMAGE'
+El Torito catalog  : 1555  1
+El Torito cat path : /boot.catalog
+El Torito images   :   N  Pltf  B   Emul  Ld_seg  Hdpt  Ldsiz         LBA
+El Torito boot img :   1  UEFI  y   none  0x0000  0x00   5760          54
+El Torito img path :   1  /efi.img

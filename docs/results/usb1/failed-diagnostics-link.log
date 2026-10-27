@@ -1,0 +1,5 @@
+/usr/bin/x86_64-linux-gnu-ld.bfd: /tmp/ccHozRaL.o: in function `port_out':
+/home/veasnawt/src/vos-usb/arch/x86_64/user_console.c:33:(.text.port_out+0x10): undefined reference to `console_host_out'
+/usr/bin/x86_64-linux-gnu-ld.bfd: /tmp/ccHozRaL.o: in function `port_in':
+/home/veasnawt/src/vos-usb/arch/x86_64/user_console.c:32:(.text.port_in+0xc): undefined reference to `console_host_in'
+collect2: error: ld returned 1 exit status

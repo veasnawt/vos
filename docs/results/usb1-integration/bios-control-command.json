@@ -1,0 +1,23 @@
+[
+  "qemu-system-x86_64",
+  "-machine",
+  "q35",
+  "-accel",
+  "tcg",
+  "-m",
+  "128M",
+  "-cdrom",
+  "/home/veasnawt/src/vos-usb1-integration/build/usb1-integration-1/usb/control-bios.iso",
+  "-boot",
+  "d",
+  "-display",
+  "none",
+  "-nic",
+  "none",
+  "-serial",
+  "file:/home/veasnawt/src/vos-usb1-integration/build/usb1-integration-1/usb/bios-control/serial.log",
+  "-qmp",
+  "unix:/home/veasnawt/src/vos-usb1-integration/build/usb1-integration-1/usb/bios-control/qmp,server=on,wait=off",
+  "-no-reboot",
+  "-no-shutdown"
+]

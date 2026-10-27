@@ -1,0 +1,20 @@
+{
+  "passed": true,
+  "documents": [
+    "README.md",
+    "docs/STATUS.md",
+    "docs/ROADMAP.md",
+    "docs/results/usb1-rust-integration.md"
+  ],
+  "internal_destinations": 144,
+  "anchors": 7,
+  "UTF8": true,
+  "balanced_Markdown_fences": true,
+  "source_Markdown_diff_check": true,
+  "raw_serial_whitespace": "intentional CRLF/prompt spaces retained, hash-verified",
+  "historical_USB_manifest_entries": 63,
+  "original_manifest_verified_against": "bd22803b8b5635b776c848d08d1494f65b49dd21",
+  "files_in_integration_inventory": 163,
+  "errors": [],
+  "raw_serial_included_explicitly": true
+}

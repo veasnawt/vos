@@ -13,6 +13,7 @@
 #include "process.h"
 #include "loader.h"
 #include "thread.h"
+void user_console_diagnostic(const char *stage,int ok){(void)stage;(void)ok;}
 static unsigned checks,starts,stops,begins,worker,start_failure;
 #define CHECK(x) do {checks++;if(!(x)){fprintf(stderr,"bootstrap FAIL line %d: %s\n",__LINE__,#x);exit(1);}}while(0)
 static struct app_catalog catalog;

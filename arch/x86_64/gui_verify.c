@@ -14,6 +14,7 @@
 #include "lib.h"
 #include "syscall.h"
 #include "exception.h"
+#include "user_console.h"
 static struct process application;
 #ifdef VOS_GUI_VERIFY
 static int bootstrap_testing,bootstrap_rejected;
@@ -132,7 +133,9 @@ int gui_boot_run(const struct boot_info *bi) {
     pointer_verify=pointer;
 #endif
     int ok=0,ran=0;
-    if(gui_service_start())return 0;
+    int service=gui_service_start();
+    user_console_diagnostic("GUI input worker startup", service==0);
+    if(service)return 0;
 #ifdef VOS_GUI_VERIFY
     if(!bootstrap_testing && gui_verify_requested(bi->cmdline) && !verify()) {
         /* Verification can fail with a READY probe or allocated table fillers.
@@ -149,8 +152,12 @@ int gui_boot_run(const struct boot_info *bi) {
 #ifdef VOS_GUI_VERIFY
     if(bootstrap_testing)identity=0x1004;
 #endif
-    if(load(&application,identity)!=PROC_OK)goto stop;
-    if(gui_grant(&application,GUI_ALL|(pointer?GUI_POINTER:0))) {proc_destroy(&application);goto stop;}
+    int loaded=load(&application,identity);
+    user_console_diagnostic("GUI ELF load", loaded==PROC_OK);
+    if(loaded!=PROC_OK)goto stop;
+    int granted=gui_grant(&application,GUI_ALL|(pointer?GUI_POINTER:0));
+    user_console_diagnostic("GUI authority grant", granted==0);
+    if(granted) {proc_destroy(&application);goto stop;}
     serial_puts("gui: native ABI5 demo; one surface <=163840 bytes; upload <=4096 bytes; event queue=16\r\n");
     int state=proc_run(&application);
     ran=1;ok=state==PROC_EXITED && application.exit_status==0;

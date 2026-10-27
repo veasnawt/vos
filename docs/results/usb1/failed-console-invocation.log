@@ -1,0 +1,63 @@
+/usr/bin/x86_64-linux-gnu-ld.bfd: /tmp/cckwuiB4.o: in function `user_console_set_diagnostics':
+/home/veasnawt/src/vos-usb/arch/x86_64/user_console.c:22: multiple definition of `user_console_set_diagnostics'; /tmp/cctTVoP5.o:/home/veasnawt/src/vos-usb/tests/host/../../arch/x86_64/user_console.c:22: first defined here
+/usr/bin/x86_64-linux-gnu-ld.bfd: /tmp/cckwuiB4.o: in function `user_console_diagnostic':
+/home/veasnawt/src/vos-usb/arch/x86_64/user_console.c:24: multiple definition of `user_console_diagnostic'; /tmp/cctTVoP5.o:/home/veasnawt/src/vos-usb/tests/host/../../arch/x86_64/user_console.c:24: first defined here
+/usr/bin/x86_64-linux-gnu-ld.bfd: /tmp/cckwuiB4.o: in function `user_console_owned':
+/home/veasnawt/src/vos-usb/arch/x86_64/user_console.c:76: multiple definition of `user_console_owned'; /tmp/cctTVoP5.o:/home/veasnawt/src/vos-usb/tests/host/../../arch/x86_64/user_console.c:76: first defined here
+/usr/bin/x86_64-linux-gnu-ld.bfd: /tmp/cckwuiB4.o: in function `user_console_reader_active':
+/home/veasnawt/src/vos-usb/arch/x86_64/user_console.c:79: multiple definition of `user_console_reader_active'; /tmp/cctTVoP5.o:/home/veasnawt/src/vos-usb/tests/host/../../arch/x86_64/user_console.c:79: first defined here
+/usr/bin/x86_64-linux-gnu-ld.bfd: /tmp/cckwuiB4.o: in function `user_console_debug_visible':
+/home/veasnawt/src/vos-usb/arch/x86_64/user_console.c:81: multiple definition of `user_console_debug_visible'; /tmp/cctTVoP5.o:/home/veasnawt/src/vos-usb/tests/host/../../arch/x86_64/user_console.c:81: first defined here
+/usr/bin/x86_64-linux-gnu-ld.bfd: /tmp/cckwuiB4.o: in function `user_console_lease_active':
+/home/veasnawt/src/vos-usb/arch/x86_64/user_console.c:84: multiple definition of `user_console_lease_active'; /tmp/cctTVoP5.o:/home/veasnawt/src/vos-usb/tests/host/../../arch/x86_64/user_console.c:84: first defined here
+/usr/bin/x86_64-linux-gnu-ld.bfd: /tmp/cckwuiB4.o: in function `user_console_exec_active':
+/home/veasnawt/src/vos-usb/arch/x86_64/user_console.c:86: multiple definition of `user_console_exec_active'; /tmp/cctTVoP5.o:/home/veasnawt/src/vos-usb/tests/host/../../arch/x86_64/user_console.c:86: first defined here
+/usr/bin/x86_64-linux-gnu-ld.bfd: /tmp/cckwuiB4.o: in function `user_console_lease_stats':
+/home/veasnawt/src/vos-usb/arch/x86_64/user_console.c:90: multiple definition of `user_console_lease_stats'; /tmp/cctTVoP5.o:/home/veasnawt/src/vos-usb/tests/host/../../arch/x86_64/user_console.c:90: first defined here
+/usr/bin/x86_64-linux-gnu-ld.bfd: /tmp/cckwuiB4.o: in function `user_console_grant':
+/home/veasnawt/src/vos-usb/arch/x86_64/user_console.c:93: multiple definition of `user_console_grant'; /tmp/cctTVoP5.o:/home/veasnawt/src/vos-usb/tests/host/../../arch/x86_64/user_console.c:93: first defined here
+/usr/bin/x86_64-linux-gnu-ld.bfd: /tmp/cckwuiB4.o: in function `user_console_revoke':
+/home/veasnawt/src/vos-usb/arch/x86_64/user_console.c:110: multiple definition of `user_console_revoke'; /tmp/cctTVoP5.o:/home/veasnawt/src/vos-usb/tests/host/../../arch/x86_64/user_console.c:110: first defined here
+/usr/bin/x86_64-linux-gnu-ld.bfd: /tmp/cckwuiB4.o: in function `user_console_begin_exec':
+/home/veasnawt/src/vos-usb/arch/x86_64/user_console.c:120: multiple definition of `user_console_begin_exec'; /tmp/cctTVoP5.o:/home/veasnawt/src/vos-usb/tests/host/../../arch/x86_64/user_console.c:120: first defined here
+/usr/bin/x86_64-linux-gnu-ld.bfd: /tmp/cckwuiB4.o: in function `user_console_finish_exec':
+/home/veasnawt/src/vos-usb/arch/x86_64/user_console.c:135: multiple definition of `user_console_finish_exec'; /tmp/cctTVoP5.o:/home/veasnawt/src/vos-usb/tests/host/../../arch/x86_64/user_console.c:135: first defined here
+/usr/bin/x86_64-linux-gnu-ld.bfd: /tmp/cckwuiB4.o: in function `user_console_syscall':
+/home/veasnawt/src/vos-usb/arch/x86_64/user_console.c:160: multiple definition of `user_console_syscall'; /tmp/cctTVoP5.o:/home/veasnawt/src/vos-usb/tests/host/../../arch/x86_64/user_console.c:160: first defined here
+/usr/bin/x86_64-linux-gnu-ld.bfd: /tmp/cckwuiB4.o: in function `user_console_gui_begin':
+/home/veasnawt/src/vos-usb/arch/x86_64/user_console.c:211: multiple definition of `user_console_gui_begin'; /tmp/cctTVoP5.o:/home/veasnawt/src/vos-usb/tests/host/../../arch/x86_64/user_console.c:211: first defined here
+/usr/bin/x86_64-linux-gnu-ld.bfd: /tmp/cckwuiB4.o: in function `user_console_gui_end':
+/home/veasnawt/src/vos-usb/arch/x86_64/user_console.c:218: multiple definition of `user_console_gui_end'; /tmp/cctTVoP5.o:/home/veasnawt/src/vos-usb/tests/host/../../arch/x86_64/user_console.c:218: first defined here
+/usr/bin/x86_64-linux-gnu-ld.bfd: /tmp/cckwuiB4.o: in function `user_console_gui_poll':
+/home/veasnawt/src/vos-usb/arch/x86_64/user_console.c:225: multiple definition of `user_console_gui_poll'; /tmp/cctTVoP5.o:/home/veasnawt/src/vos-usb/tests/host/../../arch/x86_64/user_console.c:225: first defined here
+/usr/bin/x86_64-linux-gnu-ld.bfd: /tmp/cckwuiB4.o: in function `user_console_pointer_begin':
+/home/veasnawt/src/vos-usb/arch/x86_64/user_console.c:231: multiple definition of `user_console_pointer_begin'; /tmp/cctTVoP5.o:/home/veasnawt/src/vos-usb/tests/host/../../arch/x86_64/user_console.c:231: first defined here
+/usr/bin/x86_64-linux-gnu-ld.bfd: /tmp/cckwuiB4.o: in function `user_console_pointer_poll':
+/home/veasnawt/src/vos-usb/arch/x86_64/user_console.c:235: multiple definition of `user_console_pointer_poll'; /tmp/cctTVoP5.o:/home/veasnawt/src/vos-usb/tests/host/../../arch/x86_64/user_console.c:235: first defined here
+/usr/bin/x86_64-linux-gnu-ld.bfd: /tmp/cckwuiB4.o: in function `user_console_pointer_lost':
+/home/veasnawt/src/vos-usb/arch/x86_64/user_console.c:240: multiple definition of `user_console_pointer_lost'; /tmp/cctTVoP5.o:/home/veasnawt/src/vos-usb/tests/host/../../arch/x86_64/user_console.c:240: first defined here
+/usr/bin/x86_64-linux-gnu-ld.bfd: /tmp/cckwuiB4.o: in function `user_console_pointer_end':
+/home/veasnawt/src/vos-usb/arch/x86_64/user_console.c:244: multiple definition of `user_console_pointer_end'; /tmp/cctTVoP5.o:/home/veasnawt/src/vos-usb/tests/host/../../arch/x86_64/user_console.c:244: first defined here
+/usr/bin/x86_64-linux-gnu-ld.bfd: /tmp/ccSwupvE.o: in function `keyboard_init':
+/home/veasnawt/src/vos-usb/arch/x86_64/keyboard.c:109: multiple definition of `keyboard_init'; /tmp/cctTVoP5.o:/home/veasnawt/src/vos-usb/tests/host/user-console.c:15: first defined here
+/usr/bin/x86_64-linux-gnu-ld.bfd: /tmp/ccOydb2S.o: in function `input_console_read_line_for':
+/home/veasnawt/src/vos-usb/arch/x86_64/input_console.c:79: multiple definition of `input_console_read_line_for'; /tmp/cctTVoP5.o:/home/veasnawt/src/vos-usb/tests/host/user-console.c:25: first defined here
+/usr/bin/x86_64-linux-gnu-ld.bfd: /tmp/cctTVoP5.o: in function `port_out':
+/home/veasnawt/src/vos-usb/tests/host/../../arch/x86_64/user_console.c:33:(.text.port_out+0x10): undefined reference to `console_host_out'
+/usr/bin/x86_64-linux-gnu-ld.bfd: /tmp/cctTVoP5.o: in function `port_in':
+/home/veasnawt/src/vos-usb/tests/host/../../arch/x86_64/user_console.c:32:(.text.port_in+0xc): undefined reference to `console_host_in'
+/usr/bin/x86_64-linux-gnu-ld.bfd: /tmp/cctTVoP5.o: in function `advance':
+/home/veasnawt/src/vos-usb/tests/host/../../arch/x86_64/user_console.c:58:(.text.advance+0x28): undefined reference to `panic'
+/usr/bin/x86_64-linux-gnu-ld.bfd: /tmp/cctTVoP5.o: in function `user_console_diagnostic':
+/home/veasnawt/src/vos-usb/tests/host/../../arch/x86_64/user_console.c:26:(.text.user_console_diagnostic+0x20): undefined reference to `serial_puts'
+/usr/bin/x86_64-linux-gnu-ld.bfd: /home/veasnawt/src/vos-usb/tests/host/../../arch/x86_64/user_console.c:26:(.text.user_console_diagnostic+0x28): undefined reference to `serial_puts'
+/usr/bin/x86_64-linux-gnu-ld.bfd: /home/veasnawt/src/vos-usb/tests/host/../../arch/x86_64/user_console.c:27:(.text.user_console_diagnostic+0x3d): undefined reference to `serial_puts'
+/usr/bin/x86_64-linux-gnu-ld.bfd: /tmp/cctTVoP5.o: in function `user_console_revoke':
+/home/veasnawt/src/vos-usb/tests/host/../../arch/x86_64/user_console.c:114:(.text.user_console_revoke+0x8f): undefined reference to `exec_cancel_request'
+/usr/bin/x86_64-linux-gnu-ld.bfd: /tmp/cctTVoP5.o: in function `user_console_syscall':
+/home/veasnawt/src/vos-usb/tests/host/../../arch/x86_64/user_console.c:178:(.text.user_console_syscall+0x8af): undefined reference to `debug_emit'
+/usr/bin/x86_64-linux-gnu-ld.bfd: /tmp/cckwuiB4.o: in function `port_out':
+/home/veasnawt/src/vos-usb/arch/x86_64/user_console.c:33:(.text.port_out+0x10): undefined reference to `console_host_out'
+/usr/bin/x86_64-linux-gnu-ld.bfd: /tmp/cckwuiB4.o: in function `port_in':
+/home/veasnawt/src/vos-usb/arch/x86_64/user_console.c:32:(.text.port_in+0xc): undefined reference to `console_host_in'
+collect2: error: ld returned 1 exit status

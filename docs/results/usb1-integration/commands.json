@@ -1,0 +1,13 @@
+{
+  "working_directory": "/home/veasnawt/src/vos-usb1-integration",
+  "rustc": "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+  "GRUB_EFI_DIR": "/home/veasnawt/vos-evidence/n36-stage3-gatea-cont-20261021T220119Z/efi-tools/usr/lib/grub/x86_64-efi",
+  "commands": [
+    "python3 -I -B scripts/test-usb-probe.py --output build/usb1-integration-1/usb --rustc \"$RUSTC\" --grub-efi-dir \"$GRUB_EFI_DIR\"",
+    "make --no-print-directory ARCH=x86_64 BUILD=build/usb1-integration-1/usb/kernel USER_BUILD=build/usb1-integration-1/usb/user ELFCHECK=build/usb1-integration-1/elfcheck RUSTC=\"$RUSTC\" user-test",
+    "python3 -I -B scripts/test-elf-bounds.py --archive build/usb1-integration-1/usb/kernel/rust/libvos_kernel.a --elfcheck build/usb1-integration-1/elfcheck --user build/usb1-integration-1/usb/user --out build/usb1-integration-1/rust-host",
+    "python3 -I -B scripts/test-elf-bounds-native.py --out build/usb1-integration-1/rust-native --rustc \"$RUSTC\" --grub-efi-dir \"$GRUB_EFI_DIR\"",
+    "python3 -I -B scripts/capture-usb1-integration.py --usb-result build/usb1-integration-1/usb/result.json --out build/usb1-integration-1/captures"
+  ],
+  "note": "Scripts resolve output paths to absolute paths. Each verification/capture output must be fresh. Commands for native cases retained separately; no host disks/network. No new dependencies installed."
+}

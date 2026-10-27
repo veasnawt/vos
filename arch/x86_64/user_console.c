@@ -18,6 +18,14 @@ static uint64_t owner_pid;
 static struct process *gui_owner;
 static uint64_t gui_pid;
 static struct keyboard keyboard;
+static int input_diagnostics;
+void user_console_set_diagnostics(int enabled) { input_diagnostics = !!enabled; }
+void user_console_diagnostic(const char *stage, int ok)
+{
+    if (!input_diagnostics) return;
+    serial_puts("input-diag: "); serial_puts(stage);
+    serial_puts(ok ? " ok\r\n" : " failed\r\n");
+}
 static char pending[INPUT_CONSOLE_LINE_MAX + 1];
 static int pending_length = -1;
 #ifdef VOS_CONSOLE_HOST
@@ -28,6 +36,13 @@ static uint8_t port_in(uint16_t port){return inb(port);}
 static void port_out(uint16_t port,uint8_t data){outb(port,data);}
 #endif
 static const struct keyboard_io ports = { port_in, port_out };
+static int initialize_keyboard(const char *stage)
+{
+    /* The exact existing initialization and port-I/O sequence is retained. */
+    int ok = keyboard_init(&keyboard, &ports);
+    user_console_diagnostic(stage, ok);
+    return ok;
+}
 
 static uint64_t epoch;
 static struct process *reader;
@@ -78,7 +93,7 @@ int user_console_grant(struct process *p)
 {
     if(owner || gui_owner || lease.active || !proc_file_live(p) || p->state!=PROC_READY ||
        (p->abi!=3 && p->abi!=4) || p->kill_reason)return -VOS_EACCES;
-    if(!keyboard_init(&keyboard,&ports))return -VOS_EUNAVAIL;
+    if(!initialize_keyboard("text PS/2 keyboard initialization"))return -VOS_EUNAVAIL;
     advance();owner=p;owner_pid=p->pid;clear_pending();
     screen_begin_input();screen_status(SCREEN_PASS,"native console ready");
     return 0;
@@ -196,7 +211,7 @@ int user_console_gui_begin(struct process *p)
 {
     if(owner || gui_owner || lease.active || reader || !proc_file_live(p) ||
        p->state!=PROC_READY || p->abi!=5 || p->kill_reason)return -VOS_EACCES;
-    if(!keyboard_init(&keyboard,&ports))return -VOS_EUNAVAIL;
+    if(!initialize_keyboard("GUI PS/2 keyboard initialization"))return -VOS_EUNAVAIL;
     gui_owner=p;gui_pid=p->pid;clear_pending();advance();return 0;
 }
 void user_console_gui_end(struct process *p)
