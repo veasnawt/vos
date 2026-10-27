@@ -2,15 +2,36 @@
 
 **N0-N5 are complete and accepted within their authorized scopes.**
 Unified native application launching and the N6.1-N6.3 graphical components are
-also accepted and merged. **N6 remains in progress.** The current owner-accepted
-baseline is [PR #15](https://github.com/veasnawt/vos/pull/15) at
+also accepted and merged. **N6 remains in progress.** The owner-accepted
+graphical baseline is [PR #15](https://github.com/veasnawt/vos/pull/15) at
 [`bf5eb43f2e07478e31be8b4123c5a297add67efe`](https://github.com/veasnawt/vos/commit/bf5eb43f2e07478e31be8b4123c5a297add67efe).
+PR #16 synchronized documentation; accepted main at this planning integration is
+`cbe9f9202ca9a45aaafa57ec45fc01baeb347bc1`, after infrastructure PRs #17/#18.
 
 The accepted milestone sequence is preserved below. Proposed desktop,
 Rust-kernel and portability work is **not implementation authorization**.
 VOS is pre-alpha and targets independent physical x86_64 computers; current
 verification is QEMU SeaBIOS/OVMF only. See [STATUS](STATUS.md) for precise limits.
 Historical publication and branch narratives remain in their existing reports.
+
+## Plan navigation
+
+The [Master Development Plan](plans/MASTER-PLAN.md) consolidates the **proposed
+long-term strategy**, including N, R, H, D, NET, WF and W tracks. Its integration
+does not approve implementation or make the full N6 desktop complete.
+
+- This roadmap provides high-level navigation and the current milestone overview.
+- [MASTER-PLAN](plans/MASTER-PLAN.md) records cross-track proposals, dependencies,
+  open decisions and provenance; it remains subject to owner review.
+- [STATUS](STATUS.md) records verified implementation and acceptance state.
+- [Individual plans](plans/) retain detailed engineering specifications and their
+  own approval status; future subplans are not created as empty placeholders.
+- [Results](results/) preserve historical verification evidence unchanged.
+
+The owner's later decision stopped the D1 controller-transition project and
+withdrew the legacy maintainer-controller requirement. Historical controllers,
+reservations and interrupted work remain preserved. The master plan does not
+restart D1 or make its completion a prerequisite for ordinary scoped development.
 
 ## Completed
 
@@ -169,7 +190,7 @@ owner authorization. Emulator success alone is not physical-hardware evidence.
 | --- | --- |
 | U2 | IOAPIC/local APIC or MSI-X support and broader verified framebuffer formats |
 | U3 | Independent EFI loader, then Secure Boot |
-| H2 | Controlled physical-hardware tests, with explicit approval of each step |
+| H2 (historical UEFI roadmap label) | Controlled physical-hardware tests, with explicit approval of each step; the master plan's proposed H-series taxonomy does not renumber this record |
 | Other work | Writable storage, production/userspace networking and platform expansion remain separate future designs; the incomplete N6 desktop work is described above |
 
 Current limitations are listed in [STATUS](STATUS.md) and the closure record:
