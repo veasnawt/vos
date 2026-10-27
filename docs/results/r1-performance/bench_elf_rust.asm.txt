@@ -1,0 +1,492 @@
+
+/home/veasnawt/src/vos-r1-review/build/r1-review-1/comparison-2/bench:     file format elf64-x86-64
+
+
+Disassembly of section .init:
+
+Disassembly of section .plt:
+
+Disassembly of section .text:
+
+0000000000402720 <bench_elf_rust>:
+  402720:	41 57                	push   %r15
+  402722:	31 c0                	xor    %eax,%eax
+  402724:	49 89 fb             	mov    %rdi,%r11
+  402727:	b9 18 00 00 00       	mov    $0x18,%ecx
+  40272c:	41 56                	push   %r14
+  40272e:	49 89 d0             	mov    %rdx,%r8
+  402731:	41 55                	push   %r13
+  402733:	41 54                	push   %r12
+  402735:	55                   	push   %rbp
+  402736:	53                   	push   %rbx
+  402737:	48 81 ec 28 01 00 00 	sub    $0x128,%rsp
+  40273e:	48 8d 7c 24 60       	lea    0x60(%rsp),%rdi
+  402743:	f3 48 ab             	rep stos %rax,(%rdi)
+  402746:	48 89 d7             	mov    %rdx,%rdi
+  402749:	b9 18 00 00 00       	mov    $0x18,%ecx
+  40274e:	48 8d 56 c0          	lea    -0x40(%rsi),%rdx
+  402752:	f3 48 ab             	rep stos %rax,(%rdi)
+  402755:	b8 01 00 00 00       	mov    $0x1,%eax
+  40275a:	48 81 fa c0 ff 0f 00 	cmp    $0xfffc0,%rdx
+  402761:	0f 87 f1 04 00 00    	ja     402c58 <bench_elf_rust+0x538>
+  402767:	b8 02 00 00 00       	mov    $0x2,%eax
+  40276c:	41 80 3b 7f          	cmpb   $0x7f,(%r11)
+  402770:	0f 85 e2 04 00 00    	jne    402c58 <bench_elf_rust+0x538>
+  402776:	41 80 7b 01 45       	cmpb   $0x45,0x1(%r11)
+  40277b:	0f 85 d7 04 00 00    	jne    402c58 <bench_elf_rust+0x538>
+  402781:	41 80 7b 02 4c       	cmpb   $0x4c,0x2(%r11)
+  402786:	0f 85 cc 04 00 00    	jne    402c58 <bench_elf_rust+0x538>
+  40278c:	41 80 7b 03 46       	cmpb   $0x46,0x3(%r11)
+  402791:	0f 85 c1 04 00 00    	jne    402c58 <bench_elf_rust+0x538>
+  402797:	b8 03 00 00 00       	mov    $0x3,%eax
+  40279c:	41 80 7b 04 02       	cmpb   $0x2,0x4(%r11)
+  4027a1:	0f 85 b1 04 00 00    	jne    402c58 <bench_elf_rust+0x538>
+  4027a7:	41 80 7b 05 01       	cmpb   $0x1,0x5(%r11)
+  4027ac:	0f 85 a6 04 00 00    	jne    402c58 <bench_elf_rust+0x538>
+  4027b2:	41 80 7b 06 01       	cmpb   $0x1,0x6(%r11)
+  4027b7:	0f 85 9b 04 00 00    	jne    402c58 <bench_elf_rust+0x538>
+  4027bd:	41 80 7b 07 00       	cmpb   $0x0,0x7(%r11)
+  4027c2:	0f 85 90 04 00 00    	jne    402c58 <bench_elf_rust+0x538>
+  4027c8:	41 80 7b 08 00       	cmpb   $0x0,0x8(%r11)
+  4027cd:	0f 85 85 04 00 00    	jne    402c58 <bench_elf_rust+0x538>
+  4027d3:	49 8d 43 09          	lea    0x9(%r11),%rax
+  4027d7:	49 8d 53 10          	lea    0x10(%r11),%rdx
+  4027db:	0f 1f 44 00 00       	nopl   0x0(%rax,%rax,1)
+  4027e0:	80 38 00             	cmpb   $0x0,(%rax)
+  4027e3:	0f 85 81 04 00 00    	jne    402c6a <bench_elf_rust+0x54a>
+  4027e9:	48 83 c0 01          	add    $0x1,%rax
+  4027ed:	48 39 c2             	cmp    %rax,%rdx
+  4027f0:	75 ee                	jne    4027e0 <bench_elf_rust+0xc0>
+  4027f2:	41 0f b7 53 10       	movzwl 0x10(%r11),%edx
+  4027f7:	48 83 fa 03          	cmp    $0x3,%rdx
+  4027fb:	0f 84 70 04 00 00    	je     402c71 <bench_elf_rust+0x551>
+  402801:	b8 05 00 00 00       	mov    $0x5,%eax
+  402806:	48 83 fa 02          	cmp    $0x2,%rdx
+  40280a:	0f 85 48 04 00 00    	jne    402c58 <bench_elf_rust+0x538>
+  402810:	b8 06 00 00 00       	mov    $0x6,%eax
+  402815:	66 41 83 7b 12 3e    	cmpw   $0x3e,0x12(%r11)
+  40281b:	0f 85 37 04 00 00    	jne    402c58 <bench_elf_rust+0x538>
+  402821:	49 8d 4b 17          	lea    0x17(%r11),%rcx
+  402825:	49 8d 7b 13          	lea    0x13(%r11),%rdi
+  402829:	31 d2                	xor    %edx,%edx
+  40282b:	48 89 c8             	mov    %rcx,%rax
+  40282e:	0f 1f 80 00 00 00 00 	nopl   0x0(%rax)
+  402835:	66 66 2e 0f 1f 84 00 	data16 cs nopw 0x0(%rax,%rax,1)
+  40283c:	00 00 00 00 
+  402840:	44 0f b6 10          	movzbl (%rax),%r10d
+  402844:	48 c1 e2 08          	shl    $0x8,%rdx
+  402848:	48 83 e8 01          	sub    $0x1,%rax
+  40284c:	4c 09 d2             	or     %r10,%rdx
+  40284f:	48 39 c7             	cmp    %rax,%rdi
+  402852:	75 ec                	jne    402840 <bench_elf_rust+0x120>
+  402854:	b8 07 00 00 00       	mov    $0x7,%eax
+  402859:	48 83 fa 01          	cmp    $0x1,%rdx
+  40285d:	0f 85 f5 03 00 00    	jne    402c58 <bench_elf_rust+0x538>
+  402863:	49 8d 7b 1f          	lea    0x1f(%r11),%rdi
+  402867:	45 31 d2             	xor    %r10d,%r10d
+  40286a:	48 89 f8             	mov    %rdi,%rax
+  40286d:	0f 1f 84 00 00 00 00 	nopl   0x0(%rax,%rax,1)
+  402874:	00 
+  402875:	66 66 2e 0f 1f 84 00 	data16 cs nopw 0x0(%rax,%rax,1)
+  40287c:	00 00 00 00 
+  402880:	0f b6 10             	movzbl (%rax),%edx
+  402883:	49 c1 e2 08          	shl    $0x8,%r10
+  402887:	48 83 e8 01          	sub    $0x1,%rax
+  40288b:	49 09 d2             	or     %rdx,%r10
+  40288e:	48 39 c1             	cmp    %rax,%rcx
+  402891:	75 ed                	jne    402880 <bench_elf_rust+0x160>
+  402893:	49 8d 43 27          	lea    0x27(%r11),%rax
+  402897:	31 c9                	xor    %ecx,%ecx
+  402899:	0f 1f 80 00 00 00 00 	nopl   0x0(%rax)
+  4028a0:	0f b6 10             	movzbl (%rax),%edx
+  4028a3:	48 c1 e1 08          	shl    $0x8,%rcx
+  4028a7:	48 83 e8 01          	sub    $0x1,%rax
+  4028ab:	48 09 d1             	or     %rdx,%rcx
+  4028ae:	48 39 c7             	cmp    %rax,%rdi
+  4028b1:	75 ed                	jne    4028a0 <bench_elf_rust+0x180>
+  4028b3:	48 89 c8             	mov    %rcx,%rax
+  4028b6:	4c 09 d0             	or     %r10,%rax
+  4028b9:	48 c1 e8 28          	shr    $0x28,%rax
+  4028bd:	0f 85 b5 03 00 00    	jne    402c78 <bench_elf_rust+0x558>
+  4028c3:	49 89 f7             	mov    %rsi,%r15
+  4028c6:	49 8d 43 33          	lea    0x33(%r11),%rax
+  4028ca:	48 89 ce             	mov    %rcx,%rsi
+  4028cd:	31 d2                	xor    %edx,%edx
+  4028cf:	49 8d 4b 2f          	lea    0x2f(%r11),%rcx
+  4028d3:	66 90                	xchg   %ax,%ax
+  4028d5:	66 66 2e 0f 1f 84 00 	data16 cs nopw 0x0(%rax,%rax,1)
+  4028dc:	00 00 00 00 
+  4028e0:	0f b6 38             	movzbl (%rax),%edi
+  4028e3:	48 c1 e2 08          	shl    $0x8,%rdx
+  4028e7:	48 83 e8 01          	sub    $0x1,%rax
+  4028eb:	48 09 fa             	or     %rdi,%rdx
+  4028ee:	48 39 c1             	cmp    %rax,%rcx
+  4028f1:	75 ed                	jne    4028e0 <bench_elf_rust+0x1c0>
+  4028f3:	48 89 f1             	mov    %rsi,%rcx
+  4028f6:	b8 07 00 00 00       	mov    $0x7,%eax
+  4028fb:	48 85 d2             	test   %rdx,%rdx
+  4028fe:	0f 85 54 03 00 00    	jne    402c58 <bench_elf_rust+0x538>
+  402904:	66 41 83 7b 34 40    	cmpw   $0x40,0x34(%r11)
+  40290a:	0f 85 48 03 00 00    	jne    402c58 <bench_elf_rust+0x538>
+  402910:	66 41 83 7b 36 38    	cmpw   $0x38,0x36(%r11)
+  402916:	0f 85 3c 03 00 00    	jne    402c58 <bench_elf_rust+0x538>
+  40291c:	41 0f b7 5b 38       	movzwl 0x38(%r11),%ebx
+  402921:	48 8d 53 ff          	lea    -0x1(%rbx),%rdx
+  402925:	48 89 5c 24 48       	mov    %rbx,0x48(%rsp)
+  40292a:	48 83 fa 07          	cmp    $0x7,%rdx
+  40292e:	0f 87 4b 03 00 00    	ja     402c7f <bench_elf_rust+0x55f>
+  402934:	48 83 f9 3f          	cmp    $0x3f,%rcx
+  402938:	0f 86 41 03 00 00    	jbe    402c7f <bench_elf_rust+0x55f>
+  40293e:	f6 c1 07             	test   $0x7,%cl
+  402941:	0f 85 11 03 00 00    	jne    402c58 <bench_elf_rust+0x538>
+  402947:	48 6b d3 38          	imul   $0x38,%rbx,%rdx
+  40294b:	4c 89 ff             	mov    %r15,%rdi
+  40294e:	48 89 ce             	mov    %rcx,%rsi
+  402951:	4c 89 7c 24 38       	mov    %r15,0x38(%rsp)
+  402956:	48 89 4c 24 08       	mov    %rcx,0x8(%rsp)
+  40295b:	4d 89 de             	mov    %r11,%r14
+  40295e:	4c 89 dd             	mov    %r11,%rbp
+  402961:	4c 89 44 24 30       	mov    %r8,0x30(%rsp)
+  402966:	4c 89 54 24 40       	mov    %r10,0x40(%rsp)
+  40296b:	e8 80 05 00 00       	call   402ef0 <vos_rust_elf_inside>
+  402970:	85 c0                	test   %eax,%eax
+  402972:	0f 84 b6 04 00 00    	je     402e2e <bench_elf_rust+0x70e>
+  402978:	31 d2                	xor    %edx,%edx
+  40297a:	31 c0                	xor    %eax,%eax
+  40297c:	31 f6                	xor    %esi,%esi
+  40297e:	48 8b 4c 24 08       	mov    0x8(%rsp),%rcx
+  402983:	4c 8b 44 24 30       	mov    0x30(%rsp),%r8
+  402988:	48 89 44 24 10       	mov    %rax,0x10(%rsp)
+  40298d:	45 31 ed             	xor    %r13d,%r13d
+  402990:	45 31 e4             	xor    %r12d,%r12d
+  402993:	48 89 44 24 28       	mov    %rax,0x28(%rsp)
+  402998:	4d 8d 3c 0e          	lea    (%r14,%rcx,1),%r15
+  40299c:	89 54 24 24          	mov    %edx,0x24(%rsp)
+  4029a0:	89 54 24 08          	mov    %edx,0x8(%rsp)
+  4029a4:	89 54 24 20          	mov    %edx,0x20(%rsp)
+  4029a8:	89 74 24 1c          	mov    %esi,0x1c(%rsp)
+  4029ac:	4c 89 44 24 50       	mov    %r8,0x50(%rsp)
+  4029b1:	4d 8d 44 0e f8       	lea    -0x8(%r14,%rcx,1),%r8
+  4029b6:	4c 89 f8             	mov    %r15,%rax
+  4029b9:	31 d2                	xor    %edx,%edx
+  4029bb:	49 8d 4f fc          	lea    -0x4(%r15),%rcx
+  4029bf:	0f b6 70 03          	movzbl 0x3(%rax),%esi
+  4029c3:	48 c1 e2 08          	shl    $0x8,%rdx
+  4029c7:	48 83 e8 01          	sub    $0x1,%rax
+  4029cb:	48 09 f2             	or     %rsi,%rdx
+  4029ce:	48 39 c1             	cmp    %rax,%rcx
+  4029d1:	75 ec                	jne    4029bf <bench_elf_rust+0x29f>
+  4029d3:	48 89 54 24 30       	mov    %rdx,0x30(%rsp)
+  4029d8:	31 c0                	xor    %eax,%eax
+  4029da:	4c 89 fa             	mov    %r15,%rdx
+  4029dd:	0f b6 72 07          	movzbl 0x7(%rdx),%esi
+  4029e1:	48 c1 e0 08          	shl    $0x8,%rax
+  4029e5:	48 83 ea 01          	sub    $0x1,%rdx
+  4029e9:	48 09 f0             	or     %rsi,%rax
+  4029ec:	48 39 d1             	cmp    %rdx,%rcx
+  4029ef:	75 ec                	jne    4029dd <bench_elf_rust+0x2bd>
+  4029f1:	4c 89 fa             	mov    %r15,%rdx
+  4029f4:	45 31 db             	xor    %r11d,%r11d
+  4029f7:	0f b6 4a 0f          	movzbl 0xf(%rdx),%ecx
+  4029fb:	49 c1 e3 08          	shl    $0x8,%r11
+  4029ff:	48 83 ea 01          	sub    $0x1,%rdx
+  402a03:	49 09 cb             	or     %rcx,%r11
+  402a06:	49 39 d0             	cmp    %rdx,%r8
+  402a09:	75 ec                	jne    4029f7 <bench_elf_rust+0x2d7>
+  402a0b:	4c 89 f9             	mov    %r15,%rcx
+  402a0e:	31 d2                	xor    %edx,%edx
+  402a10:	0f b6 71 17          	movzbl 0x17(%rcx),%esi
+  402a14:	48 c1 e2 08          	shl    $0x8,%rdx
+  402a18:	48 83 e9 01          	sub    $0x1,%rcx
+  402a1c:	48 09 f2             	or     %rsi,%rdx
+  402a1f:	49 39 c8             	cmp    %rcx,%r8
+  402a22:	75 ec                	jne    402a10 <bench_elf_rust+0x2f0>
+  402a24:	4c 89 f9             	mov    %r15,%rcx
+  402a27:	31 f6                	xor    %esi,%esi
+  402a29:	0f b6 79 27          	movzbl 0x27(%rcx),%edi
+  402a2d:	48 c1 e6 08          	shl    $0x8,%rsi
+  402a31:	48 83 e9 01          	sub    $0x1,%rcx
+  402a35:	48 09 fe             	or     %rdi,%rsi
+  402a38:	49 39 c8             	cmp    %rcx,%r8
+  402a3b:	75 ec                	jne    402a29 <bench_elf_rust+0x309>
+  402a3d:	4c 89 f9             	mov    %r15,%rcx
+  402a40:	45 31 d2             	xor    %r10d,%r10d
+  402a43:	0f b6 79 2f          	movzbl 0x2f(%rcx),%edi
+  402a47:	49 c1 e2 08          	shl    $0x8,%r10
+  402a4b:	48 83 e9 01          	sub    $0x1,%rcx
+  402a4f:	49 09 fa             	or     %rdi,%r10
+  402a52:	49 39 c8             	cmp    %rcx,%r8
+  402a55:	75 ec                	jne    402a43 <bench_elf_rust+0x323>
+  402a57:	4c 89 ff             	mov    %r15,%rdi
+  402a5a:	31 c9                	xor    %ecx,%ecx
+  402a5c:	48 89 c3             	mov    %rax,%rbx
+  402a5f:	0f b6 47 37          	movzbl 0x37(%rdi),%eax
+  402a63:	48 c1 e1 08          	shl    $0x8,%rcx
+  402a67:	48 83 ef 01          	sub    $0x1,%rdi
+  402a6b:	48 09 c1             	or     %rax,%rcx
+  402a6e:	49 39 f8             	cmp    %rdi,%r8
+  402a71:	75 ec                	jne    402a5f <bench_elf_rust+0x33f>
+  402a73:	49 be ff ff ff ff ff 	movabs $0xffffffffff,%r14
+  402a7a:	00 00 00 
+  402a7d:	48 89 d7             	mov    %rdx,%rdi
+  402a80:	48 89 d8             	mov    %rbx,%rax
+  402a83:	4c 09 df             	or     %r11,%rdi
+  402a86:	48 89 fb             	mov    %rdi,%rbx
+  402a89:	48 09 f3             	or     %rsi,%rbx
+  402a8c:	4c 09 d3             	or     %r10,%rbx
+  402a8f:	48 09 cb             	or     %rcx,%rbx
+  402a92:	49 39 de             	cmp    %rbx,%r14
+  402a95:	0f 82 dd 01 00 00    	jb     402c78 <bench_elf_rust+0x558>
+  402a9b:	48 8b 5c 24 30       	mov    0x30(%rsp),%rbx
+  402aa0:	83 fb 04             	cmp    $0x4,%ebx
+  402aa3:	0f 84 f3 01 00 00    	je     402c9c <bench_elf_rust+0x57c>
+  402aa9:	89 44 24 30          	mov    %eax,0x30(%rsp)
+  402aad:	81 fb 51 e5 74 64    	cmp    $0x6474e551,%ebx
+  402ab3:	0f 84 d4 01 00 00    	je     402c8d <bench_elf_rust+0x56d>
+  402ab9:	83 eb 01             	sub    $0x1,%ebx
+  402abc:	0f 85 c4 01 00 00    	jne    402c86 <bench_elf_rust+0x566>
+  402ac2:	41 83 fc 04          	cmp    $0x4,%r12d
+  402ac6:	0f 84 94 03 00 00    	je     402e60 <bench_elf_rust+0x740>
+  402acc:	48 81 f9 00 10 00 00 	cmp    $0x1000,%rcx
+  402ad3:	0f 85 7d 03 00 00    	jne    402e56 <bench_elf_rust+0x736>
+  402ad9:	f7 c7 ff 0f 00 00    	test   $0xfff,%edi
+  402adf:	0f 85 71 03 00 00    	jne    402e56 <bench_elf_rust+0x736>
+  402ae5:	4d 85 d2             	test   %r10,%r10
+  402ae8:	0f 84 5e 03 00 00    	je     402e4c <bench_elf_rust+0x72c>
+  402aee:	49 39 f2             	cmp    %rsi,%r10
+  402af1:	0f 82 55 03 00 00    	jb     402e4c <bench_elf_rust+0x72c>
+  402af7:	4a 8d 0c 1e          	lea    (%rsi,%r11,1),%rcx
+  402afb:	48 39 4c 24 38       	cmp    %rcx,0x38(%rsp)
+  402b00:	0f 82 46 03 00 00    	jb     402e4c <bench_elf_rust+0x72c>
+  402b06:	48 81 fa ff ff 3f 00 	cmp    $0x3fffff,%rdx
+  402b0d:	0f 86 2f 03 00 00    	jbe    402e42 <bench_elf_rust+0x722>
+  402b13:	49 8d 0c 12          	lea    (%r10,%rdx,1),%rcx
+  402b17:	48 81 f9 00 00 00 40 	cmp    $0x40000000,%rcx
+  402b1e:	0f 87 1e 03 00 00    	ja     402e42 <bench_elf_rust+0x722>
+  402b24:	89 c7                	mov    %eax,%edi
+  402b26:	83 e7 fc             	and    $0xfffffffc,%edi
+  402b29:	83 ff 04             	cmp    $0x4,%edi
+  402b2c:	0f 85 6a 03 00 00    	jne    402e9c <bench_elf_rust+0x77c>
+  402b32:	89 c7                	mov    %eax,%edi
+  402b34:	f7 d7                	not    %edi
+  402b36:	40 80 e7 03          	and    $0x3,%dil
+  402b3a:	0f 84 52 03 00 00    	je     402e92 <bench_elf_rust+0x772>
+  402b40:	48 3b 54 24 28       	cmp    0x28(%rsp),%rdx
+  402b45:	0f 82 ed 02 00 00    	jb     402e38 <bench_elf_rust+0x718>
+  402b4b:	48 81 c1 ff 0f 00 00 	add    $0xfff,%rcx
+  402b52:	48 81 e1 00 f0 ff ff 	and    $0xfffffffffffff000,%rcx
+  402b59:	48 89 4c 24 28       	mov    %rcx,0x28(%rsp)
+  402b5e:	49 8d 8a ff 0f 00 00 	lea    0xfff(%r10),%rcx
+  402b65:	48 c1 e9 0c          	shr    $0xc,%rcx
+  402b69:	49 01 cd             	add    %rcx,%r13
+  402b6c:	a8 01                	test   $0x1,%al
+  402b6e:	74 20                	je     402b90 <bench_elf_rust+0x470>
+  402b70:	48 8b 5c 24 40       	mov    0x40(%rsp),%rbx
+  402b75:	83 44 24 20 01       	addl   $0x1,0x20(%rsp)
+  402b7a:	48 39 d3             	cmp    %rdx,%rbx
+  402b7d:	72 11                	jb     402b90 <bench_elf_rust+0x470>
+  402b7f:	48 8d 04 16          	lea    (%rsi,%rdx,1),%rax
+  402b83:	48 39 c3             	cmp    %rax,%rbx
+  402b86:	0f 92 c0             	setb   %al
+  402b89:	0f b6 c0             	movzbl %al,%eax
+  402b8c:	09 44 24 24          	or     %eax,0x24(%rsp)
+  402b90:	44 89 e0             	mov    %r12d,%eax
+  402b93:	b9 0a 00 00 00       	mov    $0xa,%ecx
+  402b98:	41 83 c4 01          	add    $0x1,%r12d
+  402b9c:	48 6b d8 28          	imul   $0x28,%rax,%rbx
+  402ba0:	31 c0                	xor    %eax,%eax
+  402ba2:	48 8d 7c 1c 70       	lea    0x70(%rsp,%rbx,1),%rdi
+  402ba7:	f3 ab                	rep stos %eax,(%rdi)
+  402ba9:	8b 44 24 30          	mov    0x30(%rsp),%eax
+  402bad:	48 89 54 1c 70       	mov    %rdx,0x70(%rsp,%rbx,1)
+  402bb2:	4c 89 54 1c 78       	mov    %r10,0x78(%rsp,%rbx,1)
+  402bb7:	4c 89 9c 1c 80 00 00 	mov    %r11,0x80(%rsp,%rbx,1)
+  402bbe:	00 
+  402bbf:	48 89 b4 1c 88 00 00 	mov    %rsi,0x88(%rsp,%rbx,1)
+  402bc6:	00 
+  402bc7:	89 84 1c 90 00 00 00 	mov    %eax,0x90(%rsp,%rbx,1)
+  402bce:	48 83 44 24 10 01    	addq   $0x1,0x10(%rsp)
+  402bd4:	48 8b 5c 24 48       	mov    0x48(%rsp),%rbx
+  402bd9:	49 83 c7 38          	add    $0x38,%r15
+  402bdd:	49 83 c0 38          	add    $0x38,%r8
+  402be1:	48 39 5c 24 10       	cmp    %rbx,0x10(%rsp)
+  402be6:	0f 82 ca fd ff ff    	jb     4029b6 <bench_elf_rust+0x296>
+  402bec:	4c 8b 54 24 40       	mov    0x40(%rsp),%r10
+  402bf1:	45 85 e4             	test   %r12d,%r12d
+  402bf4:	0f 84 66 02 00 00    	je     402e60 <bench_elf_rust+0x740>
+  402bfa:	83 7c 24 20 00       	cmpl   $0x0,0x20(%rsp)
+  402bff:	0f 84 83 02 00 00    	je     402e88 <bench_elf_rust+0x768>
+  402c05:	49 81 fd 00 01 00 00 	cmp    $0x100,%r13
+  402c0c:	0f 87 6c 02 00 00    	ja     402e7e <bench_elf_rust+0x75e>
+  402c12:	83 7c 24 24 00       	cmpl   $0x0,0x24(%rsp)
+  402c17:	0f 84 57 02 00 00    	je     402e74 <bench_elf_rust+0x754>
+  402c1d:	83 7c 24 08 01       	cmpl   $0x1,0x8(%rsp)
+  402c22:	0f 85 42 02 00 00    	jne    402e6a <bench_elf_rust+0x74a>
+  402c28:	8b 44 24 1c          	mov    0x1c(%rsp),%eax
+  402c2c:	4c 89 54 24 60       	mov    %r10,0x60(%rsp)
+  402c31:	b9 30 00 00 00       	mov    $0x30,%ecx
+  402c36:	48 8d 74 24 60       	lea    0x60(%rsp),%rsi
+  402c3b:	44 89 64 24 68       	mov    %r12d,0x68(%rsp)
+  402c40:	48 8b 7c 24 50       	mov    0x50(%rsp),%rdi
+  402c45:	89 84 24 18 01 00 00 	mov    %eax,0x118(%rsp)
+  402c4c:	31 c0                	xor    %eax,%eax
+  402c4e:	4c 89 ac 24 10 01 00 	mov    %r13,0x110(%rsp)
+  402c55:	00 
+  402c56:	f3 a5                	rep movsl (%rsi),(%rdi)
+  402c58:	48 81 c4 28 01 00 00 	add    $0x128,%rsp
+  402c5f:	5b                   	pop    %rbx
+  402c60:	5d                   	pop    %rbp
+  402c61:	41 5c                	pop    %r12
+  402c63:	41 5d                	pop    %r13
+  402c65:	41 5e                	pop    %r14
+  402c67:	41 5f                	pop    %r15
+  402c69:	c3                   	ret
+  402c6a:	b8 03 00 00 00       	mov    $0x3,%eax
+  402c6f:	eb e7                	jmp    402c58 <bench_elf_rust+0x538>
+  402c71:	b8 04 00 00 00       	mov    $0x4,%eax
+  402c76:	eb e0                	jmp    402c58 <bench_elf_rust+0x538>
+  402c78:	b8 09 00 00 00       	mov    $0x9,%eax
+  402c7d:	eb d9                	jmp    402c58 <bench_elf_rust+0x538>
+  402c7f:	b8 07 00 00 00       	mov    $0x7,%eax
+  402c84:	eb d2                	jmp    402c58 <bench_elf_rust+0x538>
+  402c86:	b8 19 00 00 00       	mov    $0x19,%eax
+  402c8b:	eb cb                	jmp    402c58 <bench_elf_rust+0x538>
+  402c8d:	a8 01                	test   $0x1,%al
+  402c8f:	0f 84 39 ff ff ff    	je     402bce <bench_elf_rust+0x4ae>
+  402c95:	b8 18 00 00 00       	mov    $0x18,%eax
+  402c9a:	eb bc                	jmp    402c58 <bench_elf_rust+0x538>
+  402c9c:	48 83 f9 04          	cmp    $0x4,%rcx
+  402ca0:	0f 85 fc 00 00 00    	jne    402da2 <bench_elf_rust+0x682>
+  402ca6:	4a 8d 04 1e          	lea    (%rsi,%r11,1),%rax
+  402caa:	49 89 c6             	mov    %rax,%r14
+  402cad:	48 39 44 24 38       	cmp    %rax,0x38(%rsp)
+  402cb2:	0f 82 ea 00 00 00    	jb     402da2 <bench_elf_rust+0x682>
+  402cb8:	48 8d 45 fc          	lea    -0x4(%rbp),%rax
+  402cbc:	48 89 44 24 30       	mov    %rax,0x30(%rsp)
+  402cc1:	48 83 fe 0b          	cmp    $0xb,%rsi
+  402cc5:	0f 86 ce 00 00 00    	jbe    402d99 <bench_elf_rust+0x679>
+  402ccb:	4c 89 44 24 58       	mov    %r8,0x58(%rsp)
+  402cd0:	49 89 f0             	mov    %rsi,%r8
+  402cd3:	48 8b 44 24 30       	mov    0x30(%rsp),%rax
+  402cd8:	4a 8d 74 1d 00       	lea    0x0(%rbp,%r11,1),%rsi
+  402cdd:	48 89 f2             	mov    %rsi,%rdx
+  402ce0:	4e 8d 14 18          	lea    (%rax,%r11,1),%r10
+  402ce4:	31 c0                	xor    %eax,%eax
+  402ce6:	0f 1f 40 00          	nopl   0x0(%rax)
+  402cea:	66 66 2e 0f 1f 84 00 	data16 cs nopw 0x0(%rax,%rax,1)
+  402cf1:	00 00 00 00 
+  402cf5:	66 66 2e 0f 1f 84 00 	data16 cs nopw 0x0(%rax,%rax,1)
+  402cfc:	00 00 00 00 
+  402d00:	0f b6 4a 03          	movzbl 0x3(%rdx),%ecx
+  402d04:	48 c1 e0 08          	shl    $0x8,%rax
+  402d08:	48 83 ea 01          	sub    $0x1,%rdx
+  402d0c:	48 09 c8             	or     %rcx,%rax
+  402d0f:	49 39 d2             	cmp    %rdx,%r10
+  402d12:	75 ec                	jne    402d00 <bench_elf_rust+0x5e0>
+  402d14:	48 89 f1             	mov    %rsi,%rcx
+  402d17:	31 d2                	xor    %edx,%edx
+  402d19:	0f 1f 80 00 00 00 00 	nopl   0x0(%rax)
+  402d20:	0f b6 79 07          	movzbl 0x7(%rcx),%edi
+  402d24:	48 c1 e2 08          	shl    $0x8,%rdx
+  402d28:	48 83 e9 01          	sub    $0x1,%rcx
+  402d2c:	48 09 fa             	or     %rdi,%rdx
+  402d2f:	49 39 ca             	cmp    %rcx,%r10
+  402d32:	75 ec                	jne    402d20 <bench_elf_rust+0x600>
+  402d34:	48 89 f7             	mov    %rsi,%rdi
+  402d37:	48 89 f3             	mov    %rsi,%rbx
+  402d3a:	31 c9                	xor    %ecx,%ecx
+  402d3c:	48 89 c6             	mov    %rax,%rsi
+  402d3f:	90                   	nop
+  402d40:	0f b6 47 0b          	movzbl 0xb(%rdi),%eax
+  402d44:	48 c1 e1 08          	shl    $0x8,%rcx
+  402d48:	48 83 ef 01          	sub    $0x1,%rdi
+  402d4c:	48 09 c1             	or     %rax,%rcx
+  402d4f:	49 39 fa             	cmp    %rdi,%r10
+  402d52:	75 ec                	jne    402d40 <bench_elf_rust+0x620>
+  402d54:	48 89 f0             	mov    %rsi,%rax
+  402d57:	48 8d 7a 03          	lea    0x3(%rdx),%rdi
+  402d5b:	48 89 de             	mov    %rbx,%rsi
+  402d5e:	49 83 e8 0c          	sub    $0xc,%r8
+  402d62:	48 8d 58 03          	lea    0x3(%rax),%rbx
+  402d66:	48 83 e7 fc          	and    $0xfffffffffffffffc,%rdi
+  402d6a:	48 83 e3 fc          	and    $0xfffffffffffffffc,%rbx
+  402d6e:	48 01 df             	add    %rbx,%rdi
+  402d71:	49 39 f8             	cmp    %rdi,%r8
+  402d74:	72 2c                	jb     402da2 <bench_elf_rust+0x682>
+  402d76:	4d 8d 43 0c          	lea    0xc(%r11),%r8
+  402d7a:	48 83 f8 04          	cmp    $0x4,%rax
+  402d7e:	74 2c                	je     402dac <bench_elf_rust+0x68c>
+  402d80:	4e 8d 1c 07          	lea    (%rdi,%r8,1),%r11
+  402d84:	4d 89 f0             	mov    %r14,%r8
+  402d87:	4d 29 d8             	sub    %r11,%r8
+  402d8a:	49 83 f8 0b          	cmp    $0xb,%r8
+  402d8e:	0f 87 3f ff ff ff    	ja     402cd3 <bench_elf_rust+0x5b3>
+  402d94:	4c 8b 44 24 58       	mov    0x58(%rsp),%r8
+  402d99:	4d 39 de             	cmp    %r11,%r14
+  402d9c:	0f 84 2c fe ff ff    	je     402bce <bench_elf_rust+0x4ae>
+  402da2:	b8 14 00 00 00       	mov    $0x14,%eax
+  402da7:	e9 ac fe ff ff       	jmp    402c58 <bench_elf_rust+0x538>
+  402dac:	42 80 7c 1d 0c 56    	cmpb   $0x56,0xc(%rbp,%r11,1)
+  402db2:	75 cc                	jne    402d80 <bench_elf_rust+0x660>
+  402db4:	42 80 7c 1d 0d 4f    	cmpb   $0x4f,0xd(%rbp,%r11,1)
+  402dba:	75 c4                	jne    402d80 <bench_elf_rust+0x660>
+  402dbc:	42 80 7c 1d 0e 53    	cmpb   $0x53,0xe(%rbp,%r11,1)
+  402dc2:	75 bc                	jne    402d80 <bench_elf_rust+0x660>
+  402dc4:	42 80 7c 1d 0f 00    	cmpb   $0x0,0xf(%rbp,%r11,1)
+  402dca:	75 b4                	jne    402d80 <bench_elf_rust+0x660>
+  402dcc:	48 83 e9 01          	sub    $0x1,%rcx
+  402dd0:	75 ae                	jne    402d80 <bench_elf_rust+0x660>
+  402dd2:	48 83 fa 04          	cmp    $0x4,%rdx
+  402dd6:	0f 85 ca 00 00 00    	jne    402ea6 <bench_elf_rust+0x786>
+  402ddc:	48 89 f2             	mov    %rsi,%rdx
+  402ddf:	31 c0                	xor    %eax,%eax
+  402de1:	0f b6 4a 13          	movzbl 0x13(%rdx),%ecx
+  402de5:	48 c1 e0 08          	shl    $0x8,%rax
+  402de9:	48 83 ea 01          	sub    $0x1,%rdx
+  402ded:	48 09 c8             	or     %rcx,%rax
+  402df0:	49 39 d2             	cmp    %rdx,%r10
+  402df3:	75 ec                	jne    402de1 <bench_elf_rust+0x6c1>
+  402df5:	48 83 f8 05          	cmp    $0x5,%rax
+  402df9:	0f 87 a7 00 00 00    	ja     402ea6 <bench_elf_rust+0x786>
+  402dff:	31 c0                	xor    %eax,%eax
+  402e01:	0f b6 56 13          	movzbl 0x13(%rsi),%edx
+  402e05:	48 c1 e0 08          	shl    $0x8,%rax
+  402e09:	48 83 ee 01          	sub    $0x1,%rsi
+  402e0d:	48 09 d0             	or     %rdx,%rax
+  402e10:	49 39 f2             	cmp    %rsi,%r10
+  402e13:	75 ec                	jne    402e01 <bench_elf_rust+0x6e1>
+  402e15:	83 44 24 08 01       	addl   $0x1,0x8(%rsp)
+  402e1a:	83 7c 24 08 01       	cmpl   $0x1,0x8(%rsp)
+  402e1f:	0f 87 8b 00 00 00    	ja     402eb0 <bench_elf_rust+0x790>
+  402e25:	89 44 24 1c          	mov    %eax,0x1c(%rsp)
+  402e29:	e9 52 ff ff ff       	jmp    402d80 <bench_elf_rust+0x660>
+  402e2e:	b8 08 00 00 00       	mov    $0x8,%eax
+  402e33:	e9 20 fe ff ff       	jmp    402c58 <bench_elf_rust+0x538>
+  402e38:	b8 10 00 00 00       	mov    $0x10,%eax
+  402e3d:	e9 16 fe ff ff       	jmp    402c58 <bench_elf_rust+0x538>
+  402e42:	b8 0d 00 00 00       	mov    $0xd,%eax
+  402e47:	e9 0c fe ff ff       	jmp    402c58 <bench_elf_rust+0x538>
+  402e4c:	b8 0c 00 00 00       	mov    $0xc,%eax
+  402e51:	e9 02 fe ff ff       	jmp    402c58 <bench_elf_rust+0x538>
+  402e56:	b8 0b 00 00 00       	mov    $0xb,%eax
+  402e5b:	e9 f8 fd ff ff       	jmp    402c58 <bench_elf_rust+0x538>
+  402e60:	b8 0a 00 00 00       	mov    $0xa,%eax
+  402e65:	e9 ee fd ff ff       	jmp    402c58 <bench_elf_rust+0x538>
+  402e6a:	b8 15 00 00 00       	mov    $0x15,%eax
+  402e6f:	e9 e4 fd ff ff       	jmp    402c58 <bench_elf_rust+0x538>
+  402e74:	b8 13 00 00 00       	mov    $0x13,%eax
+  402e79:	e9 da fd ff ff       	jmp    402c58 <bench_elf_rust+0x538>
+  402e7e:	b8 12 00 00 00       	mov    $0x12,%eax
+  402e83:	e9 d0 fd ff ff       	jmp    402c58 <bench_elf_rust+0x538>
+  402e88:	b8 11 00 00 00       	mov    $0x11,%eax
+  402e8d:	e9 c6 fd ff ff       	jmp    402c58 <bench_elf_rust+0x538>
+  402e92:	b8 0f 00 00 00       	mov    $0xf,%eax
+  402e97:	e9 bc fd ff ff       	jmp    402c58 <bench_elf_rust+0x538>
+  402e9c:	b8 0e 00 00 00       	mov    $0xe,%eax
+  402ea1:	e9 b2 fd ff ff       	jmp    402c58 <bench_elf_rust+0x538>
+  402ea6:	b8 17 00 00 00       	mov    $0x17,%eax
+  402eab:	e9 a8 fd ff ff       	jmp    402c58 <bench_elf_rust+0x538>
+  402eb0:	b8 16 00 00 00       	mov    $0x16,%eax
+  402eb5:	e9 9e fd ff ff       	jmp    402c58 <bench_elf_rust+0x538>
+
+Disassembly of section .fini:

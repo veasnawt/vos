@@ -5,9 +5,10 @@ Current accepted graphical baseline: owner-merged
 [`bf5eb43f2e07478e31be8b4123c5a297add67efe`](https://github.com/veasnawt/vos/commit/bf5eb43f2e07478e31be8b4123c5a297add67efe).
 VOS is pre-alpha. **N0-N5 are accepted; N6 is still in progress.**
 No physical-hardware or complete-desktop acceptance is claimed.
-The accepted main used for this Rust-foundation review is
-`67a525e2cbcb13215c4d17cdfd0e3740ad40ff16`, the owner's merged
-[Master Plan PR #19](https://github.com/veasnawt/vos/pull/19).
+The accepted main used for this review is
+`0291b1ab8f7d7d491bd2f276efa59a46b638d400`, the owner's merged
+[Rust foundation PR #20](https://github.com/veasnawt/vos/pull/20), following
+Master Plan PR #19.
 
 ## Current accepted components
 
@@ -46,7 +47,7 @@ all checks passed. See the [evidence index](results/n6-cursor-refinement/evidenc
 and [normal preview commands](results/n6-cursor-refinement.md#normal-interactive-preview).
 Automated overflow/timing verification is separate from ordinary manual use.
 
-## R0-A/R0-B: locally verified, pending acceptance
+## R0 merged; first R1 helper locally verified
 
 The [R0-A assessment](results/r0a-rust-kernel-assessment.md) is complete at
 `689260f6c93c97e9d062e7829f078a13e92350be`. Its dated read-only findings and
@@ -59,10 +60,18 @@ function inside the higher-half C/assembly kernel and forwards Rust panic to the
 existing C handler. Local evidence records 4,134 C/Rust ABI checks and ten
 BIOS/UEFI cases, including actual panic and incorrect-result controls. The
 five-segment layout, 4 MiB image limit and application ABIs v0-v5 are preserved.
-Both R0-A and R0-B are proposed for publication/review, not yet owner-accepted or
-merged. This is a kernel integration proof, not a migrated subsystem or physical
+Both R0-A and R0-B are merged through PR #20 at the accepted main above.
+This is a kernel integration proof, not a migrated subsystem or physical
 hardware qualification. See the [publication review](results/r0-publication-review.md)
 for final-tree checks and the exact provenance.
+
+The [first R1 candidate](results/r1-elf-bounds.md), commit
+`f67ebd968169560979fc1d5eefbc7ca6402a6910`, migrates the real ELF `inside`
+predicate to the same Rust kernel archive. Local boundary, host-tool and native
+loader checks pass. The [performance/publication review](results/r1-performance.md)
+compares actual original C and Rust-backed paths, including call overhead and
+timing variation. R1 remains pending owner acceptance and merge. Dated R0/R1
+reports and original evidence retain their historical status wording.
 
 ## Proposed next work, not execution approval
 
@@ -72,7 +81,7 @@ and eventually a dock and Settings/Accessibility (including cursor-size options)
 These are incomplete planning topics; their order, contracts and budgets require
 owner approval. The accepted mockup is a design reference, not implemented UI.
 
-Rust-first kernel migration beyond the locally verified R0-B proof and broader
+Rust-first kernel migration beyond this bounded R1 candidate and broader
 physical-hardware/architecture portability remain proposals. They require separate compatibility, unsafe/FFI/DMA,
 boot/interrupt/device and resource-management plans with reproducible checks.
 VOS targets real x86_64 computers; QEMU success does not establish firmware,

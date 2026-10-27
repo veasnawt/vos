@@ -1,0 +1,2 @@
+preflight: 256 scalar vectors (108 valid, 148 invalid), 32 ELF positions; exact C/Rust agreement
+consumed checksum=3298304

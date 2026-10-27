@@ -1,0 +1,13 @@
+{
+  "result": "PASS",
+  "documents": [
+    "README.md",
+    "docs/STATUS.md",
+    "docs/ROADMAP.md",
+    "docs/results/r1-performance.md"
+  ],
+  "internal_links_checked": 144,
+  "UTF8_and_Markdown_fences": "PASS",
+  "original_R1_files_byte_identical": 47,
+  "production_scope": "unchanged from f67ebd9; only documentation/benchmark/evidence overlay"
+}

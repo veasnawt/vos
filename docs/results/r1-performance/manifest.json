@@ -1,0 +1,351 @@
+{
+  "schema": 1,
+  "baseline": "0291b1ab8f7d7d491bd2f276efa59a46b638d400",
+  "original_R1": "f67ebd968169560979fc1d5eefbc7ca6402a6910",
+  "original_47_files_unchanged": true,
+  "file_count": 86,
+  "overlay_count": 39,
+  "files": {
+    ".github/workflows/build-smoke.yml": {
+      "bytes": 1614,
+      "sha256": "0084102fe2a302c881e71b7d96e4b5b6becfeb00abe292f6f3cbe1bb0073b124"
+    },
+    "README.md": {
+      "bytes": 8411,
+      "sha256": "47f0915361b5553cc1d252306abc4f319cd100ec76657fe4ddda9fa9a19cec2b"
+    },
+    "arch/x86_64/elf.c": {
+      "bytes": 7938,
+      "sha256": "d9a8d74859730b1e675166e2be2f7b4b882cc10641b831d6bd29f4b293a89080"
+    },
+    "arch/x86_64/rust/kernel_probe.rs": {
+      "bytes": 1402,
+      "sha256": "78ec7cc43d0465a81dab9aaca0b67061fc05d5dbd6eb93340b64651504540413"
+    },
+    "arch/x86_64/rust_kernel.h": {
+      "bytes": 766,
+      "sha256": "644f5e12a89829058f7b173bfaa7cb67cd009808175f76f0a46d5ce0d0b353b9"
+    },
+    "docs/ROADMAP.md": {
+      "bytes": 16259,
+      "sha256": "044d640002cea0bab809fce151c01d337fcffd96c6283e1a91c86e40de5f4e9e"
+    },
+    "docs/STATUS.md": {
+      "bytes": 26803,
+      "sha256": "180317d150c3fe5c151d12e30683222cc2458d81da2b7ad062722de77a92ab12"
+    },
+    "docs/results/r1-elf-bounds.md": {
+      "bytes": 12032,
+      "sha256": "5dd11b2d5adc973a7abaa1f702a2734bee066776fe40249a982fbbe4f69c93ed"
+    },
+    "docs/results/r1-elf-bounds/benchmark-build.txt": {
+      "bytes": 403,
+      "sha256": "cd957262d33c5e7fa2ff7bffad6b9191c830005e7181d462f59177abd418f0bc"
+    },
+    "docs/results/r1-elf-bounds/benchmark-conditions.json": {
+      "bytes": 667,
+      "sha256": "08c1b9a694a02c53320f0dabacaa5a3a43a4155494d0c8f8b84d369faad8b6df"
+    },
+    "docs/results/r1-elf-bounds/benchmark-repaired-build.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "docs/results/r1-elf-bounds/benchmark-results.csv": {
+      "bytes": 182,
+      "sha256": "6307cec76072aeec346ac09a03cba51e71a0c882edaea1b6acb701a3490c36c4"
+    },
+    "docs/results/r1-elf-bounds/benchmark-summary.json": {
+      "bytes": 334,
+      "sha256": "d68288a89efd2be8fed458ac77a5cc33ca5543d2a1d5df44e1f810fe75550566"
+    },
+    "docs/results/r1-elf-bounds/binary-audit.json": {
+      "bytes": 1508,
+      "sha256": "a5d0d60d9b271bda6f4fa69905383c9101772a14db55436bb8d23c15209f6aa8"
+    },
+    "docs/results/r1-elf-bounds/changed-files.txt": {
+      "bytes": 1977,
+      "sha256": "b6762ef29bb8a11c73a48e70c9330f3fd0811b069334bd47e9be511b578f98a4"
+    },
+    "docs/results/r1-elf-bounds/checked-bounds.txt": {
+      "bytes": 74,
+      "sha256": "88f2b3b25f1f8d2ab51a671cd3ba76204873a19123c9a38ebf2c4896fe4c18b3"
+    },
+    "docs/results/r1-elf-bounds/documentation-validation.json": {
+      "bytes": 283,
+      "sha256": "55311d47824d10d6f4ec417c82daca6d39e50ce7510019f2af93509874e4f732"
+    },
+    "docs/results/r1-elf-bounds/elf-call.txt": {
+      "bytes": 784,
+      "sha256": "74fd140da93acb8096feedd7a8b85e4fbf6183bd3a3a1a77e8fb040b6a1988aa"
+    },
+    "docs/results/r1-elf-bounds/existing-elf-tests.txt": {
+      "bytes": 192,
+      "sha256": "fd7eb97bf3ccf0558cbb3ec6ccb0bdb51292d37688694ff5ace63d15124fe2c9"
+    },
+    "docs/results/r1-elf-bounds/host-bounds.txt": {
+      "bytes": 74,
+      "sha256": "88f2b3b25f1f8d2ab51a671cd3ba76204873a19123c9a38ebf2c4896fe4c18b3"
+    },
+    "docs/results/r1-elf-bounds/host-compare.txt": {
+      "bytes": 104,
+      "sha256": "ba4880b112fc17091085b0f9f410222a682d904a5766862d7d5a0ed7d42bc472"
+    },
+    "docs/results/r1-elf-bounds/host-deny-bounds.txt": {
+      "bytes": 54,
+      "sha256": "d83fdfd4f4d9b997840909cea4a5ab10df59152d76a39ce8e759ed60423e196c"
+    },
+    "docs/results/r1-elf-bounds/host-deny-checker.txt": {
+      "bytes": 120,
+      "sha256": "1d2e2fc3ad059b8176be1dc301e4ea016b95bd496607198e3a88619d0a99bd81"
+    },
+    "docs/results/r1-elf-bounds/host-results.json": {
+      "bytes": 32389,
+      "sha256": "f669018b9029841e3d5682edb6339d74f000bc86579dc19dba260f3b605b8c46"
+    },
+    "docs/results/r1-elf-bounds/kernel-segments.txt": {
+      "bytes": 852,
+      "sha256": "5ebe627f454e9a4874fdd239e2771a45688814ad574cb09f8b850b777c3c5836"
+    },
+    "docs/results/r1-elf-bounds/layout-tests.txt": {
+      "bytes": 578,
+      "sha256": "43dfd6e4bc07fd3787c9259f4ce33add058c707c53cb8d9c96d894481080865c"
+    },
+    "docs/results/r1-elf-bounds/manifest.json": {
+      "bytes": 7643,
+      "sha256": "5c5931db0c9bf1bb9898961e33ba4cce50e935c4750db0bcecf074dddba0ee8e"
+    },
+    "docs/results/r1-elf-bounds/native-results.json": {
+      "bytes": 1255,
+      "sha256": "ff24296023a942417ec2b3bc6ad00aa6a6be39c1fcc56429c1ce72953687b676"
+    },
+    "docs/results/r1-elf-bounds/preservation.json": {
+      "bytes": 827,
+      "sha256": "572bad40f7e23a07bf99336fc0517af02c6eea889426b00ef4c1a977a80bf25c"
+    },
+    "docs/results/r1-elf-bounds/products.json": {
+      "bytes": 1925,
+      "sha256": "a36a3029de27f3e28077b8217c6b56425ad81833ffa4e44ac12a780ccca9a11c"
+    },
+    "docs/results/r1-elf-bounds/reference-mode-rejection.txt": {
+      "bytes": 219,
+      "sha256": "6f0c1c1b3b838960ba2f6695465672332c024d9a35c1988c5e984924543198b3"
+    },
+    "docs/results/r1-elf-bounds/resources.json": {
+      "bytes": 189,
+      "sha256": "b13f7ae8a2106d5ad30fb87a4bd8562f19a7f3df96dbc07c5f5f708f41e509b3"
+    },
+    "docs/results/r1-elf-bounds/review.json": {
+      "bytes": 771,
+      "sha256": "8c53752d368cebefeadec40affd19c69ced70157983604c164e3cd1cf0b3a394"
+    },
+    "docs/results/r1-elf-bounds/rust-function.txt": {
+      "bytes": 574,
+      "sha256": "a2abbcd3c10575b2ea43bf9b5b2c1a40ca6b4f67ba62d4281cd044e7c3f0e87d"
+    },
+    "docs/results/r1-elf-bounds/selected-host-reference.txt": {
+      "bytes": 110,
+      "sha256": "2e81a7add90061227e1fec4eadf6d19c2c6d7eb755495ade542cfe93a18410a7"
+    },
+    "docs/results/r1-elf-bounds/selected-host-rust.txt": {
+      "bytes": 113,
+      "sha256": "d7c079f8ed66dc7b2881a519563ca7e7689d2217cfe2895f22d396bcde7f2563"
+    },
+    "docs/results/r1-elf-bounds/selected-kernel.txt": {
+      "bytes": 113,
+      "sha256": "d7c079f8ed66dc7b2881a519563ca7e7689d2217cfe2895f22d396bcde7f2563"
+    },
+    "docs/results/r1-elf-bounds/serial-bios-elf.txt": {
+      "bytes": 11389,
+      "sha256": "78a9d8aed6e7a6a7f3a4cd1c20cd5bd046c0f163ca750d8a336a22d15dfa239a"
+    },
+    "docs/results/r1-elf-bounds/serial-bios-interactive.txt": {
+      "bytes": 5016,
+      "sha256": "ec9a529da1e9e8a4420fce8072d67ed8b2f84adb20cf19561a98fe8c2d88cade"
+    },
+    "docs/results/r1-elf-bounds/serial-uefi-elf.txt": {
+      "bytes": 11861,
+      "sha256": "50a0a7961563f6a771b6980e281c6b31c312da091a8ff92167892b814ea1b25a"
+    },
+    "docs/results/r1-elf-bounds/serial-uefi-interactive.txt": {
+      "bytes": 5342,
+      "sha256": "cbf4d6067cf053da665845889cd394cf46631f74d70f787c345e34188f1bb3cd"
+    },
+    "docs/results/r1-elf-bounds/trace-bios-rust.txt": {
+      "bytes": 5538,
+      "sha256": "fce5419263a2f5157761d4895c44538159f07f77bfbedcc1f3b003f24f87c6f8"
+    },
+    "docs/results/r1-elf-bounds/trace-uefi-rust.txt": {
+      "bytes": 5538,
+      "sha256": "1369417d810fd424ac475f31524a0ed95e895aff2cd9efb990497a5421936edb"
+    },
+    "docs/results/r1-performance.md": {
+      "bytes": 14272,
+      "sha256": "2a05c021762b2d12af1aa1fe6934e3279885bb896383ed9c010dac9b1a80fafb"
+    },
+    "docs/results/r1-performance/bench_c_inside.asm.txt": {
+      "bytes": 653,
+      "sha256": "8aded8d673b89118175b3d1ee38aa6162bab4541d4a7549b51dd4caf726eb23c"
+    },
+    "docs/results/r1-performance/bench_call_control.asm.txt": {
+      "bytes": 497,
+      "sha256": "00fb721f5134e0379fd3fd2206c834c0183407b441078138ce430b9e1080cca3"
+    },
+    "docs/results/r1-performance/bench_elf_c.asm.txt": {
+      "bytes": 26052,
+      "sha256": "186d508b8800753eabff718181dfd54c31db38ec28ff8b66517bff7335dac272"
+    },
+    "docs/results/r1-performance/bench_elf_rust.asm.txt": {
+      "bytes": 26342,
+      "sha256": "5d8bde845b024b7812d5c14f4bc3d5c4bf9415125e096f0efecaecdd612829a8"
+    },
+    "docs/results/r1-performance/bench_predicate_abi.asm.txt": {
+      "bytes": 2262,
+      "sha256": "c0da09b916c482d71ec731877606747f168f7e2b9dda234017ea506248ea7882"
+    },
+    "docs/results/r1-performance/bench_predicate_inline.asm.txt": {
+      "bytes": 1896,
+      "sha256": "363dc554c53b836d0946066b180d368d5146dcf46ff8563c9132ef3ac215de88"
+    },
+    "docs/results/r1-performance/bench_validate.asm.txt": {
+      "bytes": 2481,
+      "sha256": "d0dc736d7fe29954eb48c7fb4c469c9c66580ced61f49cb93545890d1d42a6b8"
+    },
+    "docs/results/r1-performance/build-summary.txt": {
+      "bytes": 378,
+      "sha256": "8df51af261e08006c4676ea990d1590855cf6bd8493bd272dcf29f6b126bb509"
+    },
+    "docs/results/r1-performance/changed-files.txt": {
+      "bytes": 3668,
+      "sha256": "e22c24a288acbcdd57970398312d714c1dd5ee47ff20b856ef24e04a9de9a670"
+    },
+    "docs/results/r1-performance/commands.json": {
+      "bytes": 4634,
+      "sha256": "0af93929863bfa83731ded694a9f0ec396086afa1222df80a9aa00455b1a05a0"
+    },
+    "docs/results/r1-performance/corpus.json": {
+      "bytes": 6900,
+      "sha256": "4da7041b4c520ef15e7ee248698cef86067fa806b6322cc8251d89921a1fdcac"
+    },
+    "docs/results/r1-performance/documentation-validation.json": {
+      "bytes": 352,
+      "sha256": "625bac4b34deed498628b9b12f1974ab9caf9fbfe0ef10eb42118c21bdca6a55"
+    },
+    "docs/results/r1-performance/focused-results.json": {
+      "bytes": 34618,
+      "sha256": "ba7943ba112a3806ba6cb669f8b32dcb4d3464e6ad52bde02543911e09e869ee"
+    },
+    "docs/results/r1-performance/load-identities.json": {
+      "bytes": 990,
+      "sha256": "e15f308f31a109a8a6409069cdf202566bfd0723ddae8e2037bda5e290abbb53"
+    },
+    "docs/results/r1-performance/pooled-summary.json": {
+      "bytes": 3947,
+      "sha256": "abb4763b1161722f8e6b3585772c7b33d4fdddcf0b22a1f42009e300885d96f8"
+    },
+    "docs/results/r1-performance/preservation.json": {
+      "bytes": 848,
+      "sha256": "389e9a5cb3a77b555dbcd82126aa0cb9ddd3a4a76ae25e92d0ae530b09077e8e"
+    },
+    "docs/results/r1-performance/resources.json": {
+      "bytes": 162,
+      "sha256": "1e263466624f7561a3ff947f801550cde005167465f98258636f4e2491d1ecdc"
+    },
+    "docs/results/r1-performance/review.json": {
+      "bytes": 980,
+      "sha256": "74c2dc936def4659fb1e927cd9f4135be002d3f5238512542023ddafd5f34333"
+    },
+    "docs/results/r1-performance/run-1-environment.json": {
+      "bytes": 6489,
+      "sha256": "edf6ebbfe1814c56a71025f4e1f06c98ac19fa3cf3322e602e32d4309d1925ed"
+    },
+    "docs/results/r1-performance/run-1-raw.csv": {
+      "bytes": 11679,
+      "sha256": "afc59bc4de58a426cd9661db5d81356e89bb488b91dd3a6c3000009423d3b1db"
+    },
+    "docs/results/r1-performance/run-1-run.txt": {
+      "bytes": 123,
+      "sha256": "27fe20c40be378f4aed9baf39483040348770135f93a805ee39ed7490d49a034"
+    },
+    "docs/results/r1-performance/run-1-summary.json": {
+      "bytes": 6376,
+      "sha256": "43154ecaafd6948f678fdbede6308121ee5cb6f7140b6e695f68833794e809c5"
+    },
+    "docs/results/r1-performance/run-2-environment.json": {
+      "bytes": 7857,
+      "sha256": "97c040918419313140983511c5bd41296098c7e8a4a73f4d81374118f1f2a0d1"
+    },
+    "docs/results/r1-performance/run-2-raw.csv": {
+      "bytes": 11739,
+      "sha256": "fa65a96f1611fe07bcd37be08316a2ee2b3b0ba3807a23c2d5a9b85c68c62ebe"
+    },
+    "docs/results/r1-performance/run-2-run.txt": {
+      "bytes": 123,
+      "sha256": "27fe20c40be378f4aed9baf39483040348770135f93a805ee39ed7490d49a034"
+    },
+    "docs/results/r1-performance/run-2-summary.json": {
+      "bytes": 6360,
+      "sha256": "4bc2f8b572917e1520d1b42fda652d64befaa9e54c0204c600eea024e7c729be"
+    },
+    "docs/results/r1-performance/rust-inputs.txt": {
+      "bytes": 1202,
+      "sha256": "d7de6116e27818ff67540dc648459ffcd95e4f304653b3b1dc09c25c64e5cb72"
+    },
+    "docs/results/r1-performance/serial-bios.txt": {
+      "bytes": 2634,
+      "sha256": "f66e716040b5f178a8150ba0b82fda587f721876960e7d94c91004e627db4048"
+    },
+    "docs/results/r1-performance/serial-uefi.txt": {
+      "bytes": 2964,
+      "sha256": "058c56a797e537e43bb45deaa487929b0a8146f3e5b3f916f9197166bcee0f0a"
+    },
+    "docs/results/r1-performance/smoke-results.json": {
+      "bytes": 289,
+      "sha256": "d5e647c87764d4f13908db84670678d2bac036a2a580149cff9e62f1fc389713"
+    },
+    "docs/results/r1-performance/vos_rust_elf_inside.asm.txt": {
+      "bytes": 581,
+      "sha256": "dfbf6bfe449378c93841df2ac06e8f4c75b11fe2ac09f98dec17d97ec374837a"
+    },
+    "scripts/benchmark-elf-bounds.py": {
+      "bytes": 8318,
+      "sha256": "3a899fb026b0d0ade66a0c9e5e6b74fab67139bbcb1a3ac1f4b8166e83211706"
+    },
+    "scripts/elfcheck.c": {
+      "bytes": 1676,
+      "sha256": "da5160cf4a2f6f4f6226a146830e3f7310ddec006eaa0f2193b126c18afecae1"
+    },
+    "scripts/test-elf-bounds-native.py": {
+      "bytes": 6562,
+      "sha256": "153d8b8cebd1056decc6f974a0c827b9d82045db2686e0a53129c9a7789bb7b5"
+    },
+    "scripts/test-elf-bounds.py": {
+      "bytes": 5656,
+      "sha256": "c08dfe5bede26a141d6d4601f844acc68c4768322f0b14e84dbf72a6adc15506"
+    },
+    "tests/bench/elf-bounds/predicates.c": {
+      "bytes": 457,
+      "sha256": "5c94bbfd54b761379136fe6d0242495b668394e2bd8cc7fe7612eed8ecaf44c5"
+    },
+    "tests/bench/elf-bounds/runner.c": {
+      "bytes": 7899,
+      "sha256": "5f0729b72b834690b2ea78d07764851e7f688d0732c89dfe628633267184a055"
+    },
+    "tests/host/elf-bounds-bench.c": {
+      "bytes": 1876,
+      "sha256": "3a4e3db3ab53503b73cb0a34133c0ad7efb73d4e8155d9e2765e2b2c785196c5"
+    },
+    "tests/host/elf-bounds.c": {
+      "bytes": 2189,
+      "sha256": "28d8cf522e8cf1b201d6a8ce678f11820e0d6b3c9ddddce72c810838b659a381"
+    },
+    "tests/host/elf-compare.c": {
+      "bytes": 1852,
+      "sha256": "6046caade6daf5a16f37f74974de55fc91f5fb993f363ce25db06abbfba7bf9b"
+    },
+    "user/user.mk": {
+      "bytes": 17873,
+      "sha256": "b48c164ee37b55dd6b230d918a4d7ea9d826c6bd9afab9780c19dbbd456048d9"
+    }
+  },
+  "self_excluded": true
+}

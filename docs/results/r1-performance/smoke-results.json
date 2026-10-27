@@ -1,0 +1,12 @@
+[
+  {
+    "firmware": "bios",
+    "result": "PASS",
+    "serial_sha256": "f66e716040b5f178a8150ba0b82fda587f721876960e7d94c91004e627db4048"
+  },
+  {
+    "firmware": "uefi",
+    "result": "PASS",
+    "serial_sha256": "058c56a797e537e43bb45deaa487929b0a8146f3e5b3f916f9197166bcee0f0a"
+  }
+]

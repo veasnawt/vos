@@ -1,0 +1,54 @@
+
+/home/veasnawt/src/vos-r1-review/build/r1-review-1/comparison-2/bench:     file format elf64-x86-64
+
+
+Disassembly of section .init:
+
+Disassembly of section .plt:
+
+Disassembly of section .text:
+
+0000000000401de0 <bench_predicate_abi>:
+  401de0:	41 56                	push   %r14
+  401de2:	41 55                	push   %r13
+  401de4:	41 54                	push   %r12
+  401de6:	55                   	push   %rbp
+  401de7:	53                   	push   %rbx
+  401de8:	48 85 d2             	test   %rdx,%rdx
+  401deb:	74 4b                	je     401e38 <bench_predicate_abi+0x58>
+  401ded:	49 89 d4             	mov    %rdx,%r12
+  401df0:	49 89 f6             	mov    %rsi,%r14
+  401df3:	49 89 fd             	mov    %rdi,%r13
+  401df6:	31 db                	xor    %ebx,%ebx
+  401df8:	31 ed                	xor    %ebp,%ebp
+  401dfa:	66 0f 1f 44 00 00    	nopw   0x0(%rax,%rax,1)
+  401e00:	0f b6 c3             	movzbl %bl,%eax
+  401e03:	48 83 c3 01          	add    $0x1,%rbx
+  401e07:	48 8d 04 40          	lea    (%rax,%rax,2),%rax
+  401e0b:	49 8d 04 c6          	lea    (%r14,%rax,8),%rax
+  401e0f:	48 8b 38             	mov    (%rax),%rdi
+  401e12:	48 8b 70 08          	mov    0x8(%rax),%rsi
+  401e16:	48 8b 50 10          	mov    0x10(%rax),%rdx
+  401e1a:	41 ff d5             	call   *%r13
+  401e1d:	89 c0                	mov    %eax,%eax
+  401e1f:	48 01 c5             	add    %rax,%rbp
+  401e22:	49 39 dc             	cmp    %rbx,%r12
+  401e25:	75 d9                	jne    401e00 <bench_predicate_abi+0x20>
+  401e27:	5b                   	pop    %rbx
+  401e28:	48 89 e8             	mov    %rbp,%rax
+  401e2b:	5d                   	pop    %rbp
+  401e2c:	41 5c                	pop    %r12
+  401e2e:	41 5d                	pop    %r13
+  401e30:	41 5e                	pop    %r14
+  401e32:	c3                   	ret
+  401e33:	0f 1f 44 00 00       	nopl   0x0(%rax,%rax,1)
+  401e38:	31 ed                	xor    %ebp,%ebp
+  401e3a:	5b                   	pop    %rbx
+  401e3b:	48 89 e8             	mov    %rbp,%rax
+  401e3e:	5d                   	pop    %rbp
+  401e3f:	41 5c                	pop    %r12
+  401e41:	41 5d                	pop    %r13
+  401e43:	41 5e                	pop    %r14
+  401e45:	c3                   	ret
+
+Disassembly of section .fini:
