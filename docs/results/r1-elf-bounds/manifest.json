@@ -1,0 +1,193 @@
+{
+  "schema": 1,
+  "baseline": "0291b1ab8f7d7d491bd2f276efa59a46b638d400",
+  "file_count": 47,
+  "files": {
+    ".github/workflows/build-smoke.yml": {
+      "bytes": 1614,
+      "sha256": "0084102fe2a302c881e71b7d96e4b5b6becfeb00abe292f6f3cbe1bb0073b124"
+    },
+    "arch/x86_64/elf.c": {
+      "bytes": 7938,
+      "sha256": "d9a8d74859730b1e675166e2be2f7b4b882cc10641b831d6bd29f4b293a89080"
+    },
+    "arch/x86_64/rust/kernel_probe.rs": {
+      "bytes": 1402,
+      "sha256": "78ec7cc43d0465a81dab9aaca0b67061fc05d5dbd6eb93340b64651504540413"
+    },
+    "arch/x86_64/rust_kernel.h": {
+      "bytes": 766,
+      "sha256": "644f5e12a89829058f7b173bfaa7cb67cd009808175f76f0a46d5ce0d0b353b9"
+    },
+    "docs/results/r1-elf-bounds.md": {
+      "bytes": 12032,
+      "sha256": "5dd11b2d5adc973a7abaa1f702a2734bee066776fe40249a982fbbe4f69c93ed"
+    },
+    "docs/results/r1-elf-bounds/benchmark-build.txt": {
+      "bytes": 403,
+      "sha256": "cd957262d33c5e7fa2ff7bffad6b9191c830005e7181d462f59177abd418f0bc"
+    },
+    "docs/results/r1-elf-bounds/benchmark-conditions.json": {
+      "bytes": 667,
+      "sha256": "08c1b9a694a02c53320f0dabacaa5a3a43a4155494d0c8f8b84d369faad8b6df"
+    },
+    "docs/results/r1-elf-bounds/benchmark-repaired-build.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "docs/results/r1-elf-bounds/benchmark-results.csv": {
+      "bytes": 182,
+      "sha256": "6307cec76072aeec346ac09a03cba51e71a0c882edaea1b6acb701a3490c36c4"
+    },
+    "docs/results/r1-elf-bounds/benchmark-summary.json": {
+      "bytes": 334,
+      "sha256": "d68288a89efd2be8fed458ac77a5cc33ca5543d2a1d5df44e1f810fe75550566"
+    },
+    "docs/results/r1-elf-bounds/binary-audit.json": {
+      "bytes": 1508,
+      "sha256": "a5d0d60d9b271bda6f4fa69905383c9101772a14db55436bb8d23c15209f6aa8"
+    },
+    "docs/results/r1-elf-bounds/changed-files.txt": {
+      "bytes": 1977,
+      "sha256": "b6762ef29bb8a11c73a48e70c9330f3fd0811b069334bd47e9be511b578f98a4"
+    },
+    "docs/results/r1-elf-bounds/checked-bounds.txt": {
+      "bytes": 74,
+      "sha256": "88f2b3b25f1f8d2ab51a671cd3ba76204873a19123c9a38ebf2c4896fe4c18b3"
+    },
+    "docs/results/r1-elf-bounds/documentation-validation.json": {
+      "bytes": 283,
+      "sha256": "55311d47824d10d6f4ec417c82daca6d39e50ce7510019f2af93509874e4f732"
+    },
+    "docs/results/r1-elf-bounds/elf-call.txt": {
+      "bytes": 784,
+      "sha256": "74fd140da93acb8096feedd7a8b85e4fbf6183bd3a3a1a77e8fb040b6a1988aa"
+    },
+    "docs/results/r1-elf-bounds/existing-elf-tests.txt": {
+      "bytes": 192,
+      "sha256": "fd7eb97bf3ccf0558cbb3ec6ccb0bdb51292d37688694ff5ace63d15124fe2c9"
+    },
+    "docs/results/r1-elf-bounds/host-bounds.txt": {
+      "bytes": 74,
+      "sha256": "88f2b3b25f1f8d2ab51a671cd3ba76204873a19123c9a38ebf2c4896fe4c18b3"
+    },
+    "docs/results/r1-elf-bounds/host-compare.txt": {
+      "bytes": 104,
+      "sha256": "ba4880b112fc17091085b0f9f410222a682d904a5766862d7d5a0ed7d42bc472"
+    },
+    "docs/results/r1-elf-bounds/host-deny-bounds.txt": {
+      "bytes": 54,
+      "sha256": "d83fdfd4f4d9b997840909cea4a5ab10df59152d76a39ce8e759ed60423e196c"
+    },
+    "docs/results/r1-elf-bounds/host-deny-checker.txt": {
+      "bytes": 120,
+      "sha256": "1d2e2fc3ad059b8176be1dc301e4ea016b95bd496607198e3a88619d0a99bd81"
+    },
+    "docs/results/r1-elf-bounds/host-results.json": {
+      "bytes": 32389,
+      "sha256": "f669018b9029841e3d5682edb6339d74f000bc86579dc19dba260f3b605b8c46"
+    },
+    "docs/results/r1-elf-bounds/kernel-segments.txt": {
+      "bytes": 852,
+      "sha256": "5ebe627f454e9a4874fdd239e2771a45688814ad574cb09f8b850b777c3c5836"
+    },
+    "docs/results/r1-elf-bounds/layout-tests.txt": {
+      "bytes": 578,
+      "sha256": "43dfd6e4bc07fd3787c9259f4ce33add058c707c53cb8d9c96d894481080865c"
+    },
+    "docs/results/r1-elf-bounds/native-results.json": {
+      "bytes": 1255,
+      "sha256": "ff24296023a942417ec2b3bc6ad00aa6a6be39c1fcc56429c1ce72953687b676"
+    },
+    "docs/results/r1-elf-bounds/preservation.json": {
+      "bytes": 827,
+      "sha256": "572bad40f7e23a07bf99336fc0517af02c6eea889426b00ef4c1a977a80bf25c"
+    },
+    "docs/results/r1-elf-bounds/products.json": {
+      "bytes": 1925,
+      "sha256": "a36a3029de27f3e28077b8217c6b56425ad81833ffa4e44ac12a780ccca9a11c"
+    },
+    "docs/results/r1-elf-bounds/reference-mode-rejection.txt": {
+      "bytes": 219,
+      "sha256": "6f0c1c1b3b838960ba2f6695465672332c024d9a35c1988c5e984924543198b3"
+    },
+    "docs/results/r1-elf-bounds/resources.json": {
+      "bytes": 189,
+      "sha256": "b13f7ae8a2106d5ad30fb87a4bd8562f19a7f3df96dbc07c5f5f708f41e509b3"
+    },
+    "docs/results/r1-elf-bounds/review.json": {
+      "bytes": 771,
+      "sha256": "8c53752d368cebefeadec40affd19c69ced70157983604c164e3cd1cf0b3a394"
+    },
+    "docs/results/r1-elf-bounds/rust-function.txt": {
+      "bytes": 574,
+      "sha256": "a2abbcd3c10575b2ea43bf9b5b2c1a40ca6b4f67ba62d4281cd044e7c3f0e87d"
+    },
+    "docs/results/r1-elf-bounds/selected-host-reference.txt": {
+      "bytes": 110,
+      "sha256": "2e81a7add90061227e1fec4eadf6d19c2c6d7eb755495ade542cfe93a18410a7"
+    },
+    "docs/results/r1-elf-bounds/selected-host-rust.txt": {
+      "bytes": 113,
+      "sha256": "d7c079f8ed66dc7b2881a519563ca7e7689d2217cfe2895f22d396bcde7f2563"
+    },
+    "docs/results/r1-elf-bounds/selected-kernel.txt": {
+      "bytes": 113,
+      "sha256": "d7c079f8ed66dc7b2881a519563ca7e7689d2217cfe2895f22d396bcde7f2563"
+    },
+    "docs/results/r1-elf-bounds/serial-bios-elf.txt": {
+      "bytes": 11389,
+      "sha256": "78a9d8aed6e7a6a7f3a4cd1c20cd5bd046c0f163ca750d8a336a22d15dfa239a"
+    },
+    "docs/results/r1-elf-bounds/serial-bios-interactive.txt": {
+      "bytes": 5016,
+      "sha256": "ec9a529da1e9e8a4420fce8072d67ed8b2f84adb20cf19561a98fe8c2d88cade"
+    },
+    "docs/results/r1-elf-bounds/serial-uefi-elf.txt": {
+      "bytes": 11861,
+      "sha256": "50a0a7961563f6a771b6980e281c6b31c312da091a8ff92167892b814ea1b25a"
+    },
+    "docs/results/r1-elf-bounds/serial-uefi-interactive.txt": {
+      "bytes": 5342,
+      "sha256": "cbf4d6067cf053da665845889cd394cf46631f74d70f787c345e34188f1bb3cd"
+    },
+    "docs/results/r1-elf-bounds/trace-bios-rust.txt": {
+      "bytes": 5538,
+      "sha256": "fce5419263a2f5157761d4895c44538159f07f77bfbedcc1f3b003f24f87c6f8"
+    },
+    "docs/results/r1-elf-bounds/trace-uefi-rust.txt": {
+      "bytes": 5538,
+      "sha256": "1369417d810fd424ac475f31524a0ed95e895aff2cd9efb990497a5421936edb"
+    },
+    "scripts/elfcheck.c": {
+      "bytes": 1676,
+      "sha256": "da5160cf4a2f6f4f6226a146830e3f7310ddec006eaa0f2193b126c18afecae1"
+    },
+    "scripts/test-elf-bounds-native.py": {
+      "bytes": 6562,
+      "sha256": "153d8b8cebd1056decc6f974a0c827b9d82045db2686e0a53129c9a7789bb7b5"
+    },
+    "scripts/test-elf-bounds.py": {
+      "bytes": 5656,
+      "sha256": "c08dfe5bede26a141d6d4601f844acc68c4768322f0b14e84dbf72a6adc15506"
+    },
+    "tests/host/elf-bounds-bench.c": {
+      "bytes": 1876,
+      "sha256": "3a4e3db3ab53503b73cb0a34133c0ad7efb73d4e8155d9e2765e2b2c785196c5"
+    },
+    "tests/host/elf-bounds.c": {
+      "bytes": 2189,
+      "sha256": "28d8cf522e8cf1b201d6a8ce678f11820e0d6b3c9ddddce72c810838b659a381"
+    },
+    "tests/host/elf-compare.c": {
+      "bytes": 1852,
+      "sha256": "6046caade6daf5a16f37f74974de55fc91f5fb993f363ce25db06abbfba7bf9b"
+    },
+    "user/user.mk": {
+      "bytes": 17873,
+      "sha256": "b48c164ee37b55dd6b230d918a4d7ea9d826c6bd9afab9780c19dbbd456048d9"
+    }
+  },
+  "self_excluded": true,
+  "verification": "PASS; local owner review pending; GitHub CI not run"
+}

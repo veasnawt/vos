@@ -1,0 +1,13 @@
+{
+  "original_cases_preserved": true,
+  "paired_production_builds_identical": true,
+  "production_kernel_sha256": "335ba8da65f1170a016eb50f132f693b2074f8b5b4d33f1a5bfa9f04692fce4c",
+  "archive_sha256": "abb3773f1b21e291a2eb1943f9a5a7e697f151f1ca79bcf2113ae9bfbfeb692b",
+  "primary_host_tool_uses_actual_kernel_archive": true,
+  "hosted_C_reference_kept_for_existing_direct_compiler_invocations": true,
+  "primary_tool_identity_check_rejects_C_reference": true,
+  "overflow_checked_Rust_cases": 497127,
+  "original_R0_panic_bridge_source_unchanged": true,
+  "CI": "step added; NOT RUN on GitHub because no push authorized",
+  "benchmark_fixture_failure": "initial -Werror sign-compare build preserved; corrected safe nonnegative cast; no kernel or test-criteria change"
+}

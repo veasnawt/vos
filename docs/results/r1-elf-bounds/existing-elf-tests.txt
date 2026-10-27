@@ -1,0 +1,3 @@
+test-user-elf: kernel validator agrees on 68 of 72 files (4 build-time-only differences expected)
+test-user-elf: 220 passed, 0 failed
+test-file-abi: 20 independent constant comparisons passed

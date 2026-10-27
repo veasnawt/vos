@@ -1,0 +1,8 @@
+{
+  "report_internal_destinations_checked": 19,
+  "UTF8": "PASS",
+  "Python_syntax": "PASS",
+  "CI_workflow": "Parsed using installed PyYAML",
+  "GitHub_CI": "NOT RUN (no publication authorized)",
+  "source_scope": "one private predicate plus required host/build/test integration"
+}

@@ -1,0 +1,1 @@
+elfcheck: /home/veasnawt/src/vos-r1-elf-bounds/build/r1-1/user/hello.elf: REJECT: program-header table outside the file

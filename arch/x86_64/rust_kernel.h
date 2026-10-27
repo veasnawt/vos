@@ -4,6 +4,8 @@
 #include <stdint.h>
 
 uint64_t vos_rust_probe(uint64_t seed, uint64_t salt);
+/* R1: exactly 0 or 1; valid iff off <= size && len <= size - off. */
+int vos_rust_elf_inside(uint64_t size, uint64_t off, uint64_t len);
 static inline uint64_t rust_probe_expected(uint64_t seed, uint64_t salt)
 {
     /* Unsigned C arithmetic specifies the same modulo-2^64 contract. */

@@ -1,0 +1,4 @@
+static int inside(uint64_t size, uint64_t off, uint64_t len)
+{
+    return off <= size && len <= size - off;
+}
