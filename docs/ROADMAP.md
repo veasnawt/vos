@@ -2,15 +2,37 @@
 
 **N0-N5 are complete and accepted within their authorized scopes.**
 Unified native application launching and the N6.1-N6.3 graphical components are
-also accepted and merged. **N6 remains in progress.** The current owner-accepted
-baseline is [PR #15](https://github.com/veasnawt/vos/pull/15) at
+also accepted and merged. **N6 remains in progress.** The owner-accepted
+graphical baseline is [PR #15](https://github.com/veasnawt/vos/pull/15) at
 [`bf5eb43f2e07478e31be8b4123c5a297add67efe`](https://github.com/veasnawt/vos/commit/bf5eb43f2e07478e31be8b4123c5a297add67efe).
+PR #16 synchronized documentation; accepted main at this planning integration is
+`cbe9f9202ca9a45aaafa57ec45fc01baeb347bc1`, after infrastructure PRs #17/#18.
 
 The accepted milestone sequence is preserved below. Proposed desktop,
 Rust-kernel and portability work is **not implementation authorization**.
 VOS is pre-alpha and targets independent physical x86_64 computers; current
-verification is QEMU SeaBIOS/OVMF only. See [STATUS](STATUS.md) for precise limits.
+recorded acceptance verification is QEMU SeaBIOS/OVMF only; the partial physical
+boot observation below is not hardware acceptance. See [STATUS](STATUS.md) for precise limits.
 Historical publication and branch narratives remain in their existing reports.
+
+## Plan navigation
+
+The [Master Development Plan](plans/MASTER-PLAN.md) consolidates the **proposed
+long-term strategy**, including N, R, H, D, NET, WF and W tracks. Its integration
+does not approve implementation or make the full N6 desktop complete.
+
+- This roadmap provides high-level navigation and the current milestone overview.
+- [MASTER-PLAN](plans/MASTER-PLAN.md) records cross-track proposals, dependencies,
+  open decisions and provenance; it remains subject to owner review.
+- [STATUS](STATUS.md) records verified implementation and acceptance state.
+- [Individual plans](plans/) retain detailed engineering specifications and their
+  own approval status; future subplans are not created as empty placeholders.
+- [Results](results/) preserve historical verification evidence unchanged.
+
+The owner's later decision stopped the D1 controller-transition project and
+withdrew the legacy maintainer-controller requirement. Historical controllers,
+reservations and interrupted work remain preserved. The master plan does not
+restart D1 or make its completion a prerequisite for ordinary scoped development.
 
 ## Completed
 
@@ -151,11 +173,21 @@ directions, not implemented desktop features.
 
 ## Proposed Rust-first kernel migration and portability
 
-A Rust-first kernel migration is a proposed planning track. No migration or
-R0-A execution is authorized here. A future plan must define small interoperable
+A Rust-first kernel migration remains an incremental planning track. The owner's
+R0-A authorization covers assessment only; no kernel implementation is authorized
+here. A future plan must define small interoperable
 boundaries, preserve supported ABIs and capability semantics, and audit unsafe
 Rust, assembly, FFI, interrupt entry and DMA ownership. Existing Rust application
 support is implemented; kernel migration is not.
+
+Rust is intended as the primary language for future kernel development. R0-A is
+the next authorized read-only assessment, independent of the stopped D1 transition
+and this plan PR's merge. R0-B requires separate review and authorization. Establish
+Rust kernel integration before substantial additional C subsystems where practical;
+USB.2 should evaluate Rust after R0-B is demonstrated. Preserve local USB.1 and
+R1–R5's incremental structure. Unrelated bug fixes, boot-media work and desktop
+planning need not wait for the full migration. Hardware and migration work
+coordinate when sharing files; neither authorizes the other automatically.
 
 Real physical x86_64 operation remains the target. Broader hardware portability
 requires explicit firmware/boot, hardware discovery, APIC/interrupt, memory/DMA,
@@ -163,13 +195,31 @@ storage, input and display resource contracts plus controlled physical testing.
 Other architecture ports are proposals requiring their own feasibility and
 owner authorization. Emulator success alone is not physical-hardware evidence.
 
+## Hardware and USB follow-up
+
+[USB.1](plans/MASTER-PLAN.md#71-usb-discovery-and-proposed-input-sequence) is
+implemented and committed **locally**, not merged or physically verified:
+`bd22803b8b5635b776c848d08d1494f65b49dd21` on `feat/usb-xhci-discovery`.
+It provides bus-0 xHCI discovery/diagnostics, not USB keyboard/mouse input.
+Proposed USB.2–USB.5 cover controller operation, enumeration/keyboard HID,
+unified keyboard routing and mouse HID within the existing H-series scope.
+
+The owner reports DD-mode Rufus media reaching a physical graphical display,
+with GUI/shell startup failures; functional GUI, shell and USB input remain
+undemonstrated. PS/2 initialization is a hypothesis, not a confirmed cause.
+[Rufus ISO-mode compatibility](plans/MASTER-PLAN.md#72-owner-reported-physical-boot-and-rufus-compatibility)
+is a separate proposed boot-media task, preserving DD mode and requiring
+BIOS/UEFI and physical validation before compatibility claims. Publication review,
+USB, boot-media work, R0-A and desktop development are coordinated priorities,
+not mandatory serial gates or permission to begin implementation.
+
 ## Later work
 
 | Area | Scope still to be designed/authorized |
 | --- | --- |
 | U2 | IOAPIC/local APIC or MSI-X support and broader verified framebuffer formats |
 | U3 | Independent EFI loader, then Secure Boot |
-| H2 | Controlled physical-hardware tests, with explicit approval of each step |
+| H2 (historical UEFI roadmap label) | Controlled physical-hardware tests, with explicit approval of each step; the master plan's proposed H-series taxonomy does not renumber this record |
 | Other work | Writable storage, production/userspace networking and platform expansion remain separate future designs; the incomplete N6 desktop work is described above |
 
 Current limitations are listed in [STATUS](STATUS.md) and the closure record:
