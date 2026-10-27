@@ -173,16 +173,21 @@ directions, not implemented desktop features.
 
 ## Proposed Rust-first kernel migration and portability
 
-A Rust-first kernel migration is a proposed planning track. No migration or
-R0-A execution is authorized here. A future plan must define small interoperable
+A Rust-first kernel migration remains an incremental planning track. The owner's
+R0-A authorization covers assessment only; no kernel implementation is authorized
+here. A future plan must define small interoperable
 boundaries, preserve supported ABIs and capability semantics, and audit unsafe
 Rust, assembly, FFI, interrupt entry and DMA ownership. Existing Rust application
 support is implemented; kernel migration is not.
 
 Rust is intended as the primary language for future kernel development. R0-A is
-the next proposed read-only assessment and is independent of the stopped D1
-transition. Hardware and migration work coordinate when sharing source files;
-neither grants automatic authorization for the other.
+the next authorized read-only assessment, independent of the stopped D1 transition
+and this plan PR's merge. R0-B requires separate review and authorization. Establish
+Rust kernel integration before substantial additional C subsystems where practical;
+USB.2 should evaluate Rust after R0-B is demonstrated. Preserve local USB.1 and
+R1–R5's incremental structure. Unrelated bug fixes, boot-media work and desktop
+planning need not wait for the full migration. Hardware and migration work
+coordinate when sharing files; neither authorizes the other automatically.
 
 Real physical x86_64 operation remains the target. Broader hardware portability
 requires explicit firmware/boot, hardware discovery, APIC/interrupt, memory/DMA,

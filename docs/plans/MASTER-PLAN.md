@@ -313,11 +313,16 @@ Scope: supported physical x86-64 devices, installation media with explicit disk 
 | **R4** | Memory, scheduler, process and security-critical core | Highest scrutiny, concurrency/isolation and regression matrix |
 | **R5** | Consolidation into predominantly Rust-owned kernel code | Retire C only after all affected tests and ABIs remain valid |
 
-**Scheduling:** the original proposal placed R0-A after the D1 documentation/infrastructure checkpoint. The owner has since stopped the D1 controller transition; completing that transition is not a prerequisite. R0-A and R0-B each still need their own authorization. R1–R5 can span multiple N milestones; N6.4 must not be blocked on finishing the entire R-series. Preserve portable C ABIs so non-Rust language bindings remain viable.
+**Scheduling:** the original proposal placed R0-A after the D1 documentation/infrastructure checkpoint. The owner has since stopped the D1 controller transition; completing that transition is not a prerequisite. R0-A's read-only assessment is now authorized; R0-B still requires separate review and implementation authorization. R1–R5 can span multiple N milestones; N6.4 must not be blocked on finishing the entire R-series. Preserve portable C ABIs so non-Rust language bindings remain viable.
 
-R0-A is the next proposed read-only architectural assessment, not work started
-by this update. Hardware development and Rust migration are independent tracks;
-coordinate scope and source ownership when they touch the same files.
+**Owner priority decision:** R0-A is the next Rust-kernel engineering milestone,
+limited to the authorized read-only assessment in a separate checkout. Establish
+the separately reviewed R0-B Rust integration before substantial additional C
+kernel subsystems where practical; this is not permission to implement R0-B.
+USB.1 remains preserved and locally implemented. USB.2 should evaluate Rust after
+R0-B is demonstrated. Do not block unrelated bug fixes, boot-media work or ongoing
+desktop planning on completion of the entire R1–R5 migration. Hardware development
+and Rust migration remain independent tracks; coordinate shared source files.
 
 ## 7. H-series: physical hardware and portability
 
@@ -364,7 +369,7 @@ USB identifiers do not replace H numbers or resolve the historical H2 collision.
 | Increment | Scope | State and boundary |
 |---|---|---|
 | USB.1 | Native xHCI discovery and diagnostics described above | Locally implemented/committed; publication review pending, not accepted main or physical input |
-| USB.2 | Controller ownership and initialization; owned DMA allocation; command/event rings; interrupt or bounded polling behavior; errors and teardown | PROPOSED; define bounded hardware ownership and cleanup before enabling a VOS data path |
+| USB.2 | Controller ownership and initialization; owned DMA allocation; command/event rings; interrupt or bounded polling behavior; errors and teardown | PROPOSED; evaluate Rust after R0-B is demonstrated; define bounded ownership and cleanup before enabling a VOS data path |
 | USB.3 | Port/device initialization, descriptor validation, endpoint configuration, HID boot-keyboard input and supported recovery | PROPOSED; builds on controller operation; reject malformed input and bound enumeration/resources |
 | USB.4 | Unified keyboard events through existing PS/2 input architecture, `vsh`, native GUI and process-owned input delivery | PROPOSED; preserve existing keyboard behavior, authority and input ownership rather than duplicate infrastructure |
 | USB.5 | USB mouse HID motion/buttons through the existing pointer/input architecture | PROPOSED; reuse enumeration and shared routing, preserving pointer bounds, button semantics and cleanup |
@@ -671,14 +676,14 @@ requirement to complete physical hardware support before progressing the desktop
 
 ### 15.2 Practical execution waves (no dates promised)
 
-**Wave A — protect and plan (integration status):** PR #16 is merged; D1-A completed, and actual D1-B1/B2 merged through PRs #17/#18. The later controller-transition project is stopped by owner decision. Complete publication review of this master plan and the locally committed USB.1 work; publishing either requires separate authorization. No new kernel feature or D1 work is authorized by the plan.
+**Wave A — protect and plan (integration status):** PR #16 is merged; D1-A completed, and actual D1-B1/B2 merged through PRs #17/#18. The later controller-transition project is stopped by owner decision. The owner has authorized this Master Plan's publication workflow and the separate R0-A assessment; USB.1 publication still needs its own authorization. No merge, new kernel feature or D1 work is authorized by the plan.
 
 **Near-term owner priorities (not mandatory serial gates):**
 
 1. Complete Master Plan and local USB.1 publication review.
-2. Investigate Rufus ISO-mode compatibility as a separate boot-media feature.
-3. Continue proposed USB.2–USB.5 toward functional physical input when authorized.
-4. Start the independent R0-A Rust-kernel assessment when authorized.
+2. Begin the authorized independent R0-A Rust-kernel assessment; R0-B needs separate review and authorization.
+3. Establish R0-B before substantial new C kernel subsystems where practical; USB.2 should evaluate Rust afterward, with USB.2–USB.5 still requiring their own authorization.
+4. Continue independent Rufus ISO-mode investigation, bug fixes and desktop planning without waiting for the full Rust migration.
 5. Continue N6.4–N6.8 desktop work in coordination with hardware progress.
 
 **Wave B — foundation work:** R0-A audit; possible separately approved R0-B; N6.4 compositor/window framework; NET0 and W0 design-only investigations; H0 physical-platform audit; WF0 architecture/chipset candidates. Avoid concurrent modifications to common graphics, process or device core.
@@ -710,7 +715,7 @@ These priority classes are planning guidance, not scheduling authorization. Comp
 | USB.1 publication review | Immediate review | Bounded review/publication risk | Preserve and publish the locally verified discovery increment | Source/evidence review and separate publication approval; no physical-input claim |
 | Rufus boot-media compatibility | Near-term, separate from USB | Firmware/media compatibility risk | Preserve DD boot and investigate ISO mode | Captured cause, qualified BIOS/UEFI layouts and physical validation of claimed configurations |
 | USB.2–USB.5 | Near-term hardware input | High device/DMA/lifecycle risk | Functional USB keyboard/mouse input | Separately approved increments, bounded lifecycle tests and physical qualification before hardware claims |
-| R0-A | Next proposed read-only Rust assessment; independent of D1 | Low execution/high analysis | Safe Rust integration architecture | Reviewed read-only audit and owner decision |
+| R0-A | Authorized next read-only Rust assessment; independent of D1 and the plan PR merge | Low execution/high analysis | Safe Rust integration architecture before substantial new C subsystems where practical | Assessment report; separate owner review and authorization before R0-B implementation |
 | N6.4–6.8 | Near-term core | High | First coherent VOS GUI | Real multi-app BIOS/UEFI acceptance |
 | H0 | Early parallel | Medium | Identify real hardware assumptions | Exact device/firmware gaps |
 | NET0/1/2 | Early parallel | High | App-level outbound networking | Genuine client behavior and denied ungranted access |
