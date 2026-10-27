@@ -1,0 +1,9 @@
+{
+  "compatibility_driver_stop": {
+    "operation": "first test compile invocation",
+    "exception": "FileExistsError: core-build.txt already exists",
+    "executed": "core library build PASS; test compilation not executed",
+    "recovery": "existing library reused; distinct core-test-build.txt/policy-test-build.txt names; no overwrite"
+  },
+  "initial_isolation": "No QEMU/Antigravity. Existing Claude bridge cwd Windows/system32, no open VOS files; no competing VOS writer observed. No identity attestation/controller revived."
+}

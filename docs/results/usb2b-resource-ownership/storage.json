@@ -1,0 +1,36 @@
+{
+  "timestamp_utc": "2026-10-27T14:06:11.226142+00:00",
+  "new_work_including_independent_checkout": {
+    "retained_logical_bytes_precommit": 90125403,
+    "allocated_blocks_bytes_precommit": 97243136,
+    "ordinary_provision_bytes": 100663296,
+    "remaining_precommit_bytes": 10537893,
+    "finalization_Git_forecast_bytes": 1048576
+  },
+  "producer_peak": {
+    "method": "conservative upper bound, not sampled high-water",
+    "retained_before_GOP_production_bytes": 70918956,
+    "fresh_UEFI_image_bytes": 12503040,
+    "stock_GRUB_scratch_provision_bytes": 14680064,
+    "growth_contingency_bytes": 1048576,
+    "upper_bound_bytes": 99150636,
+    "physical_upper_bound_with_retained_filesystem_overhead_bytes": 106268369,
+    "physical_planning_provision_bytes": 109051904,
+    "historical_ceiling_change": false
+  },
+  "linux_free_bytes": 1007221653504,
+  "Windows_drives": [
+    {
+      "Name": "C",
+      "Free": 21575467008
+    },
+    {
+      "Name": "E",
+      "Free": 244754636800
+    }
+  ],
+  "C_reserve_bytes": 21474836480,
+  "historical_ledgers_reservations_and_funding": "unchanged; no D1 execution or new funding",
+  "cleanup": "none; stock GRUB manages only its own fresh producer temporary paths; all failed media and evidence retained",
+  "read_only_reuse": "accepted app ELFs, GRUB EFI modules, original-C ELF reference, gitleaks tool"
+}

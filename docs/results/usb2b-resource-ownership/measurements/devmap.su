@@ -1,0 +1,17 @@
+arch/x86_64/devmap.c:53:6:devmap_scope_budget	8	static
+arch/x86_64/devmap.c:54:10:devmap_scope_token	8	static
+arch/x86_64/devmap.c:55:10:devmap_scope_tables	8	static
+arch/x86_64/devmap.c:62:13:devmap_strerror	8	static
+arch/x86_64/devmap.c:73:10:devmap_maxphys	8	static
+arch/x86_64/devmap.c:78:5:devmap_wc_available	8	static
+arch/x86_64/devmap.c:83:10:devmap_count	8	static
+arch/x86_64/devmap.c:88:10:devmap_table_frames	8	static
+arch/x86_64/devmap.c:112:5:devmap_init	32	static
+arch/x86_64/devmap.c:162:5:devmap_check	8	static
+arch/x86_64/devmap.c:209:5:devmap_map	144	static
+arch/x86_64/devmap.c:288:5:devmap_scope_acquire	144	static
+arch/x86_64/devmap.c:344:10:devmap_expected_pte	8	static
+arch/x86_64/devmap.c:352:13:devmap_audit.part.0	48	static
+arch/x86_64/devmap.c:250:5:devmap_scope_release	48	static
+arch/x86_64/devmap.c:352:13:devmap_audit	8	static
+arch/x86_64/devmap.c:397:5:devmap_mtrr_type	40	static

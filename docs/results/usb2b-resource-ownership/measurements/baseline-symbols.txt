@@ -1,0 +1,883 @@
+0000000000000008 a BOOT_CS
+0000000000000010 a BOOT_DS
+00000000000003f8 a COM1
+0000000020000000 a CPUID_EXT_LM
+0000000080000000 a CR0_PG
+0000000000000020 a CR4_PAE
+ffffffff8013b580 000000000000002c r CSWTCH.144
+ffffffff8013b500 0000000000000020 r CSWTCH.31
+ffffffff8013b700 0000000000000048 r CSWTCH.65
+0000000000000100 a EFER_LME
+0000000000200000 a EFLAGS_ID
+0000000000100000 A KERNEL_LMA
+00000000000001fe a KERNEL_PDPT_INDEX
+00000000000001ff a KERNEL_PML4_INDEX
+ffffffff80000000 a KERNEL_VMA
+ffffffff80000000 A KERNEL_VMA
+0000000000000000 a MB2_ARCH_I386
+0000000036d76289 a MB2_BOOT_MAGIC
+00000000e85250d6 a MB2_HEADER_MAGIC
+00000000c0000080 a MSR_EFER
+0000000000000083 a PDE_PRESENT_RW_2M
+0000000000000003 a PTE_PRESENT_RW
+0000000000000011 a TEST_EXIT_FAIL
+00000000000000f4 a TEST_EXIT_PORT
+0000000052455355 a TRAP_RESUME
+0000000000000023 a USER_CS
+000000000000001b a USER_DS
+0000000000000202 a USER_RFLAGS
+00000000000b8000 a VGA_TEXT
+ffffffff80130850 00000000000002f5 t _RINvNtNtCs5YZeFliBs6N_10vos_kernel4xhci9discovery5probeNtNtB6_14xhci_discovery9CallbacksEB6_
+ffffffff80130b50 000000000000000d T _RNvCsgpO44WCzh3m_7___rustc17rust_begin_unwind
+ffffffff80130b60 000000000000017d t _RNvNtNtCs5YZeFliBs6N_10vos_kernel4xhci9discovery11decode_caps
+ffffffff80130ce0 00000000000000a1 t _RNvXs_NtCs5YZeFliBs6N_10vos_kernel14xhci_discoveryNtB4_9CallbacksNtNtNtB6_4xhci9discovery7ProbeIo8snapshot
+0000000000107000 B __boot_bss_end
+0000000000102000 B __boot_bss_start
+0000000000101000 D __boot_data_start
+0000000000101000 T __boot_text_end
+ffffffff801ce648 B __bss_end
+ffffffff8013d0c0 B __bss_start
+ffffffff8013d000 D __data_start
+00000000001cf000 B __kernel_phys_end
+0000000000100000 T __kernel_phys_start
+ffffffff8013d000 R __rodata_end
+ffffffff80132000 R __rodata_start
+ffffffff80132000 T __text_end
+ffffffff80107000 T __text_start
+0000000000100038 0000000000000149 T _start
+ffffffff801b66e0 0000000000000010 b abandoned
+ffffffff801b66c0 0000000000000020 b abandoned_at
+ffffffff801ce4c8 0000000000000004 b access_error
+ffffffff80161008 0000000000000004 b active
+ffffffff8010a890 00000000000000d2 t add_page
+ffffffff8012e010 0000000000000052 t advertise
+ffffffff801174b0 00000000000000ce t alloc_pool
+ffffffff801b30a0 0000000000001370 b app
+ffffffff801cd140 0000000000001370 b app
+ffffffff80113680 0000000000000039 T app_catalog_at
+ffffffff80113340 000000000000033f T app_catalog_build
+ffffffff801136c0 000000000000006b T app_catalog_find
+ffffffff80112e70 00000000000000bd T app_find_module
+ffffffff80112e60 0000000000000008 T app_last
+ffffffff80113c00 0000000000000008 T app_payload_catalog
+ffffffff80113800 00000000000003f7 T app_payload_prepare
+ffffffff80113740 00000000000000b5 T app_payload_requested
+ffffffff80112f30 00000000000003fc T app_run_boot_module
+ffffffff801cbc20 0000000000001370 b application
+ffffffff8010f670 000000000000007e t apply_masks
+ffffffff80166008 0000000000000008 b at_tick.1
+ffffffff801172a0 0000000000000083 t attach
+ffffffff8010c470 0000000000000266 t audit_leaf
+ffffffff8010c730 00000000000000d7 t audit_nonleaf
+ffffffff80123ac0 0000000000000094 t aux_command
+ffffffff801b67d8 0000000000000008 b avail
+ffffffff8012d7d0 0000000000000109 t batch
+ffffffff8011d880 0000000000000077 t begin
+ffffffff8011d6a0 00000000000000ab t binding
+ffffffff8011d750 0000000000000021 t binding_guard
+ffffffff80116a80 00000000000003a3 T blk_audit
+ffffffff80116a00 0000000000000077 T blk_cache_frames
+ffffffff80115be0 0000000000000007 T blk_count
+ffffffff80115c40 00000000000000e7 T blk_describe
+ffffffff801167e0 000000000000021b T blk_invalidate
+ffffffff80115d30 0000000000000051 T blk_note_reset
+ffffffff80115bf0 0000000000000041 T blk_nth
+ffffffff80115d90 0000000000000917 T blk_read
+ffffffff801166b0 00000000000000c8 T blk_read_block
+ffffffff80115880 0000000000000239 T blk_register
+ffffffff80115870 0000000000000008 T blk_stats
+ffffffff80115850 0000000000000018 T blk_strerror
+ffffffff80115ac0 000000000000011e T blk_unregister
+ffffffff80116780 0000000000000056 T blk_write
+ffffffff8011a760 00000000000001d9 t bmap
+0000000000100126 t boot_fatal
+ffffffff801087a0 000000000000020b T boot_framebuffer
+0000000000101000 d boot_gdt
+0000000000101018 d boot_gdt_end
+0000000000101018 d boot_gdt_ptr
+ffffffff8013e000 B boot_kstack_guard
+0000000000101024 d boot_mb2_info
+0000000000101020 d boot_mb2_magic
+ffffffff801089b0 0000000000000013 T boot_mmap_entry
+0000000000105000 b boot_pd
+0000000000104000 b boot_pdpt_high
+0000000000103000 b boot_pdpt_low
+0000000000102000 b boot_pml4
+ffffffff801089d0 00000000000001ba T boot_reserve
+ffffffff80143020 0000000000000788 b boot_resv
+0000000000106000 b boot_stack
+0000000000107000 b boot_stack_top
+ffffffff80118450 0000000000000917 t bring_up.isra.0
+ffffffff8013c036 0000000000000006 r broadcast
+ffffffff80117960 000000000000014f t broken
+ffffffff80113d20 0000000000000426 t broker
+ffffffff80143000 0000000000000008 b bss_probe
+ffffffff80126330 00000000000000e3 t buffer_ok
+ffffffff80165060 0000000000000040 b burst
+ffffffff801650a0 0000000000000080 b burst_tick
+ffffffff801cb91c 0000000000000004 b busy
+ffffffff801b5dc0 0000000000000800 b cache
+ffffffff801b5db0 0000000000000004 b cache_ready
+ffffffff80122700 000000000000008a t caller
+ffffffff80124ae0 000000000000003c t cancelled
+ffffffff80126230 000000000000001e t cap32
+ffffffff80126250 000000000000001e t cap8
+ffffffff801b6800 000000000000004c b caps
+ffffffff801ce540 000000000000004c b caps
+ffffffff801b4420 0000000000000188 b catalog
+ffffffff801b5a00 0000000000000008 b catalog
+ffffffff80112450 00000000000001ec T channel_audit
+ffffffff80111bc0 0000000000000023 T channel_count
+ffffffff80111c60 0000000000000289 T channel_create
+ffffffff801121d0 000000000000027c T channel_recv
+ffffffff80112070 0000000000000155 T channel_send
+ffffffff801b2000 0000000000001000 b channels
+ffffffff80110490 0000000000000047 t check_entry
+ffffffff801155f0 000000000000000b t check_range
+ffffffff8010e300 00000000000002c6 t check_structure
+ffffffff80165438 0000000000000008 b chip
+ffffffff8012fa70 00000000000000a8 t clear
+ffffffff801cb8c4 0000000000000004 b clear_bottom
+ffffffff80120810 00000000000000cc t clear_line
+ffffffff801cb8c8 0000000000000004 b clear_w
+ffffffff801cb8cc 0000000000000004 b clear_x
+ffffffff8012b760 0000000000000065 t closure_timeout
+ffffffff80117ab0 0000000000000235 t collect_woken.constprop.0
+ffffffff801cb8e0 0000000000000004 b cols
+ffffffff80123a40 0000000000000073 t command
+ffffffff8013b3a0 0000000000000048 r commands.0
+ffffffff801151c0 000000000000002b t config
+ffffffff80108c60 0000000000000065 T console_erase_previous
+ffffffff80111b24 0000000000000022 T context_switch
+ffffffff8010c2f0 0000000000000179 T copy_from_user
+ffffffff8010c1f0 00000000000000f6 T copy_to_user
+ffffffff801c8f28 0000000000000004 b count
+ffffffff80108ef0 0000000000000087 T cpu_control_audit
+ffffffff801437b0 0000000000000018 B cpu_inherited
+ffffffff80108f80 0000000000000301 T cpu_init_protections
+ffffffff801437c8 0000000000000001 B cpu_smap_enabled
+ffffffff80110300 0000000000000189 t create
+ffffffff801660b8 0000000000000008 b current
+ffffffff8011cc50 0000000000000064 t current
+ffffffff801c9080 0000000000001010 b cursor
+ffffffff8013b800 0000000000000080 r cursor_fill
+ffffffff801203c0 00000000000000d8 t cursor_hide.part.0
+ffffffff8013b880 0000000000000080 r cursor_shape
+ffffffff801204a0 00000000000000df t cursor_show.part.0
+ffffffff801cb8d4 0000000000000004 b cx
+ffffffff801cb8d0 0000000000000004 b cy
+ffffffff8010be30 0000000000000100 T debug_emit
+ffffffff801b67e0 0000000000000008 b desc
+ffffffff801cb8a0 0000000000000020 b desktop
+ffffffff80122210 00000000000000fc T desktop_bar
+ffffffff801221a0 000000000000006b T desktop_compute
+ffffffff801cb8c0 0000000000000004 b desktop_mode
+ffffffff80122310 000000000000028c T desktop_paint
+ffffffff801220e0 00000000000000b5 T desktop_requested
+ffffffff8011a480 000000000000011a t dev_read
+ffffffff80117890 00000000000000c3 t device_reset
+ffffffff80166030 0000000000000004 b device_woke
+ffffffff8011fff0 000000000000028b T devmap_audit
+ffffffff8011fb30 0000000000000146 T devmap_check
+ffffffff8011f930 0000000000000007 T devmap_count
+ffffffff8011ff70 0000000000000071 T devmap_expected_pte
+ffffffff8011f9c0 0000000000000166 T devmap_init
+ffffffff8011fc80 00000000000002e9 T devmap_map
+ffffffff801203a6 000000000000000c t devmap_map.cold
+ffffffff8011f910 0000000000000007 T devmap_maxphys
+ffffffff80120280 0000000000000126 T devmap_mtrr_type
+ffffffff8011f8f0 0000000000000018 T devmap_strerror
+ffffffff8011f940 0000000000000071 T devmap_table_frames
+ffffffff8011f920 0000000000000007 T devmap_wc_available
+ffffffff801b65e0 00000000000000c0 b devs
+ffffffff8013d040 0000000000000008 d diag
+ffffffff8011a940 00000000000002b0 t dir_block
+ffffffff80165120 0000000000000002 b disabled
+ffffffff801b67a0 0000000000000010 b done
+ffffffff80120c90 00000000000004a6 t draw_bar
+ffffffff801173f0 00000000000000be t drop_irq
+ffffffff80124b20 00000000000000ba t drop_owner
+ffffffff801ca880 0000000000001000 b early
+ffffffff801ca874 0000000000000004 b early_len
+ffffffff80112e40 0000000000000018 T elf_strerror
+ffffffff801126a0 000000000000079a T elf_validate
+ffffffff8011d830 0000000000000044 t eligible
+ffffffff8012b970 0000000000000066 t emitted
+ffffffff801225a0 000000000000008c t enqueue
+ffffffff8011a5a0 00000000000001b9 t enter
+ffffffff8014a000 0000000000005000 b entry_stack
+ffffffff801cd010 0000000000000008 b epoch
+ffffffff801071a9 t exc_common
+ffffffff8013ae60 0000000000000200 r exc_info
+ffffffff80107043 t exc_stub_0
+ffffffff8010704c t exc_stub_1
+ffffffff8010709b t exc_stub_10
+ffffffff801070a2 t exc_stub_11
+ffffffff801070a9 t exc_stub_12
+ffffffff801071a0 T exc_stub_128
+ffffffff801070b0 t exc_stub_13
+ffffffff801070b7 t exc_stub_14
+ffffffff801070be t exc_stub_15
+ffffffff801070c7 t exc_stub_16
+ffffffff801070d0 t exc_stub_17
+ffffffff801070d7 t exc_stub_18
+ffffffff801070e0 t exc_stub_19
+ffffffff80107055 t exc_stub_2
+ffffffff801070e9 t exc_stub_20
+ffffffff801070f2 t exc_stub_21
+ffffffff801070f9 t exc_stub_22
+ffffffff80107102 t exc_stub_23
+ffffffff8010710b t exc_stub_24
+ffffffff80107114 t exc_stub_25
+ffffffff8010711d t exc_stub_26
+ffffffff80107126 t exc_stub_27
+ffffffff8010712c t exc_stub_28
+ffffffff80107132 t exc_stub_29
+ffffffff8010705e t exc_stub_3
+ffffffff80107136 t exc_stub_30
+ffffffff8010713a t exc_stub_31
+ffffffff80107140 t exc_stub_32
+ffffffff80107146 t exc_stub_33
+ffffffff8010714c t exc_stub_34
+ffffffff80107152 t exc_stub_35
+ffffffff80107158 t exc_stub_36
+ffffffff8010715e t exc_stub_37
+ffffffff80107164 t exc_stub_38
+ffffffff8010716a t exc_stub_39
+ffffffff80107067 t exc_stub_4
+ffffffff80107170 t exc_stub_40
+ffffffff80107176 t exc_stub_41
+ffffffff8010717c t exc_stub_42
+ffffffff80107182 t exc_stub_43
+ffffffff80107188 t exc_stub_44
+ffffffff8010718e t exc_stub_45
+ffffffff80107194 t exc_stub_46
+ffffffff8010719a t exc_stub_47
+ffffffff80107070 t exc_stub_5
+ffffffff80107079 t exc_stub_6
+ffffffff80107082 t exc_stub_7
+ffffffff8010708b t exc_stub_8
+ffffffff80107092 t exc_stub_9
+ffffffff80132000 R exc_stub_table
+ffffffff801092d0 00000000000002e6 T exception_handler
+ffffffff80109290 0000000000000032 T exception_name
+ffffffff80114170 0000000000000085 T exec_cancel_request
+ffffffff80114340 000000000000036d T exec_grant_install
+ffffffff801142b0 0000000000000011 T exec_grant_revoke
+ffffffff80114200 00000000000000a8 t exec_grant_revoke.part.0
+ffffffff801142d0 0000000000000011 T exec_process_cancel
+ffffffff801142f0 0000000000000049 T exec_process_end
+ffffffff80114150 000000000000000e T exec_request_busy
+ffffffff801146b0 0000000000000121 T exec_service_init
+ffffffff801147e0 00000000000000df T exec_service_stop
+ffffffff80114160 0000000000000008 T exec_statistics
+ffffffff801148c0 000000000000052f T exec_syscall
+ffffffff80128070 0000000000000055 t expire
+ffffffff8011cba0 00000000000000b0 T ext2_audit
+ffffffff8011b950 00000000000000a5 T ext2_close
+ffffffff8011ba20 00000000000000d1 T ext2_info
+ffffffff8011bc40 000000000000017c T ext2_lookup
+ffffffff8011b1c0 000000000000078b T ext2_open
+ffffffff8011ba00 0000000000000019 T ext2_open_count
+ffffffff8011b190 0000000000000008 T ext2_problem
+ffffffff8011c500 000000000000035e T ext2_read
+ffffffff8011c1f0 0000000000000307 T ext2_readdir
+ffffffff8011c860 0000000000000333 T ext2_readlink
+ffffffff8011bdc0 0000000000000428 T ext2_resolve
+ffffffff8011bb00 0000000000000132 T ext2_stat
+ffffffff8011b1a0 0000000000000018 T ext2_strerror
+ffffffff80161010 0000000000000018 b fail
+ffffffff80128a60 000000000000005b t fail.isra.0
+ffffffff80129e60 000000000000005b t fail.isra.0
+ffffffff8012aca0 000000000000005b t fail.isra.0
+ffffffff8012d770 000000000000005b t fail.isra.0
+ffffffff8012e070 000000000000005b t fail.isra.0
+ffffffff8012f0d0 000000000000005b t fail.isra.0
+ffffffff8012fc60 000000000000005b t fail.isra.0
+ffffffff801277c0 00000000000000ed t failed.isra.0
+ffffffff801cb900 0000000000000018 b fb
+ffffffff8011f400 00000000000004df T file_audit
+ffffffff8011f0f0 000000000000006f T file_close
+ffffffff8011f230 00000000000000c7 T file_close_all
+ffffffff8011ec50 00000000000003de T file_grants_install
+ffffffff8011f370 0000000000000055 T file_handle_count
+ffffffff8011f030 00000000000000a7 T file_initial
+ffffffff8011f180 0000000000000008 T file_next
+ffffffff8011f0e0 0000000000000008 T file_open_at
+ffffffff8011f300 0000000000000068 T file_process_busy
+ffffffff8011f170 0000000000000008 T file_read_at
+ffffffff8011f3d0 0000000000000028 T file_session_count
+ffffffff8011f160 0000000000000007 T file_stat
+ffffffff8011f190 000000000000009d T file_syscall
+ffffffff8011f8df 000000000000000c t file_syscall.cold
+ffffffff8011e840 000000000000039f T file_volume_attach
+ffffffff8011ebe0 0000000000000066 T file_volume_detach
+ffffffff8012b9e0 00000000000000e9 t fin_packet.isra.0
+ffffffff8011dab0 0000000000000077 t finish
+ffffffff8012fb20 0000000000000052 t finish
+ffffffff80110600 00000000000001d9 t finish_switch
+ffffffff80143008 0000000000000008 b first_failure
+ffffffff8013b900 00000000000005f0 R font8x16
+ffffffff801157c0 0000000000000085 t free_cache
+ffffffff80122630 00000000000000ca t free_surface
+ffffffff801b69c0 0000000000007a80 b fss
+ffffffff8013d000 0000000000000038 d gdt
+ffffffff801095e0 0000000000000008 T gdt_entry_stack_top
+ffffffff80109650 0000000000000053 T gdt_guard_pages
+ffffffff80109790 0000000000000018 T gdt_in_ist1_stack
+ffffffff801097b0 0000000000000248 T gdt_init
+ffffffff801095f0 0000000000000024 T gdt_set_rsp0
+ffffffff80109730 0000000000000053 T gdt_stack_canaries_intact
+ffffffff801096b0 0000000000000072 T gdt_stack_name
+ffffffff801095c0 0000000000000008 T gdt_tss_base
+ffffffff80109630 0000000000000013 T gdt_tss_ist
+ffffffff80109620 0000000000000008 T gdt_tss_ist1
+ffffffff801095d0 0000000000000008 T gdt_tss_rsp0
+ffffffff801183c0 0000000000000087 t give_up.isra.0
+ffffffff801b5a20 0000000000000300 b grants
+ffffffff801cb960 00000000000002a8 b gui
+ffffffff801cb8f4 0000000000000004 b gui_active
+ffffffff80123620 000000000000001b T gui_boot_requested
+ffffffff80123660 0000000000000266 T gui_boot_run
+ffffffff80122b00 0000000000000007 T gui_frames
+ffffffff80122ca0 000000000000016c T gui_grant
+ffffffff801cb8e4 0000000000000004 b gui_h
+ffffffff80122aa0 0000000000000054 T gui_owned
+ffffffff801cd120 0000000000000008 b gui_owner
+ffffffff801cd118 0000000000000008 b gui_pid
+ffffffff80122b10 000000000000005b T gui_revoke
+ffffffff80122b70 000000000000008a T gui_service_start
+ffffffff80122c00 000000000000009f T gui_service_stop
+ffffffff80122e10 0000000000000739 T gui_syscall
+ffffffff801cb8e8 0000000000000004 b gui_w
+ffffffff801cb8f0 0000000000000004 b gui_x
+ffffffff801cb8ec 0000000000000004 b gui_y
+ffffffff80111ef0 0000000000000128 T handle_close
+ffffffff80111bf0 0000000000000061 T handle_endpoint
+ffffffff80111b60 0000000000000056 t handle_slot
+ffffffff80165140 00000000000000c0 b handlers
+ffffffff80112640 0000000000000050 T handles_audit
+ffffffff80112020 0000000000000044 T handles_close_all
+ffffffff80165200 0000000000000004 b handling
+ffffffff8011a300 0000000000000104 t has_super
+ffffffff8013b7c0 0000000000000009 r head.0
+ffffffff80107000 t higher_half_entry
+ffffffff8013b200 0000000000000048 r i8259
+ffffffff8010f590 0000000000000027 t i8259_begin
+ffffffff8010f580 000000000000000e t i8259_eoi
+ffffffff8010f610 0000000000000010 t i8259_init
+ffffffff8010f5c0 000000000000000c t i8259_isr
+ffffffff8010f5f0 0000000000000013 t i8259_mask
+ffffffff8010f5d0 000000000000000c t i8259_masks
+ffffffff8010f570 000000000000000c t i8259_triggers
+ffffffff8010f5e0 0000000000000010 t i8259_unmask
+ffffffff801660b0 0000000000000008 b idle
+ffffffff80111b48 T idle_after_hlt
+ffffffff80111b46 0000000000000004 T idle_halt
+ffffffff80110ba0 00000000000000e9 t idle_main
+ffffffff80166000 0000000000000008 b idle_yields.0
+ffffffff8014f070 0000000000001000 b idt
+ffffffff80109c00 0000000000000033 T idt_gate_handler
+ffffffff80109bc0 000000000000001b T idt_gate_ist
+ffffffff80109be0 0000000000000018 T idt_gate_type
+ffffffff80109a00 00000000000001b6 T idt_init
+ffffffff801b67b0 0000000000000010 b inflight
+ffffffff801b6860 0000000000000158 b info
+ffffffff801cb920 0000000000000004 b inited
+ffffffff8011abf0 00000000000003e5 t inode_load
+ffffffff8012f130 00000000000000cf t input
+ffffffff8012fcc0 00000000000000e2 t input
+ffffffff801ca0a0 00000000000007d0 b input_cells
+ffffffff80124700 00000000000000b4 T input_console_accept
+ffffffff801249d0 0000000000000012 T input_console_read_line
+ffffffff80124880 0000000000000142 T input_console_read_line_for
+ffffffff80124640 00000000000000b5 T input_console_requested
+ffffffff801249f0 00000000000000cd T input_console_run
+ffffffff801247c0 00000000000000bd T input_console_take_line
+ffffffff801cd0a4 0000000000000004 b input_diagnostics
+ffffffff801ca870 0000000000000004 b input_mode
+ffffffff80122790 000000000000030f t input_worker
+ffffffff8011d500 0000000000000172 T io_scope_audit
+ffffffff8011cce0 0000000000000187 T io_scope_begin
+ffffffff8011d2b0 000000000000005d T io_scope_cancel
+ffffffff8011cf30 00000000000000ac T io_scope_check
+ffffffff8011d4e0 0000000000000019 T io_scope_count
+ffffffff8011ccc0 0000000000000017 T io_scope_current
+ffffffff8011d0f0 000000000000003d T io_scope_deadline
+ffffffff8011ce70 000000000000008f T io_scope_end
+ffffffff8011d010 0000000000000068 T io_scope_logical
+ffffffff8011d080 0000000000000068 T io_scope_read
+ffffffff8011d380 0000000000000059 T io_scope_request_abandon
+ffffffff8011d310 0000000000000064 T io_scope_request_begin
+ffffffff8011d3e0 0000000000000079 T io_scope_request_end
+ffffffff8011d460 0000000000000071 T io_scope_request_valid
+ffffffff8011cfe0 000000000000002c T io_scope_set_guard
+ffffffff8011cf00 0000000000000027 T io_scope_stop
+ffffffff8011d680 000000000000001f T io_scope_thread_exit
+ffffffff8011d130 000000000000017b T io_scope_wait
+ffffffff8010fd80 00000000000000f8 T irq_audit
+ffffffff8010fd70 0000000000000008 T irq_chip
+ffffffff8010f620 000000000000004c T irq_expected_masks
+ffffffff8010fa80 00000000000002b7 T irq_handle
+ffffffff8010fd40 0000000000000007 T irq_in_handler
+ffffffff8010f970 000000000000010e T irq_init
+ffffffff8010f950 0000000000000016 T irq_line_disabled
+ffffffff8010f6f0 0000000000000175 T irq_register
+ffffffff8010f8f0 000000000000005f T irq_run_deferred
+ffffffff8010fd60 0000000000000008 T irq_stats
+ffffffff80132100 R irq_stub_table
+ffffffff8010fd50 0000000000000008 T irq_ticks
+ffffffff8010f870 0000000000000073 T irq_unregister
+ffffffff8011a410 000000000000006a t is_metadata
+ffffffff80116ec0 00000000000000b3 t is_vblk
+ffffffff80144000 0000000000006000 b ist_stacks
+ffffffff801b45c0 00000000000013d0 b job
+ffffffff801500c0 0000000000008000 b kernel_alloc
+ffffffff801580c0 0000000000008000 b kernel_avail
+ffffffff80107260 0000000000000ff1 T kernel_main
+ffffffff80150080 0000000000000040 b kernel_pmm
+ffffffff80160100 0000000000000008 b kernel_root
+ffffffff8013f000 B kernel_stack
+ffffffff80143000 B kernel_stack_top
+ffffffff801cd0c0 0000000000000058 b keyboard
+ffffffff80123b60 0000000000000163 T keyboard_decode
+ffffffff80123de0 000000000000022c T keyboard_init
+ffffffff80124550 000000000000000b T keyboard_pointer_lost
+ffffffff801244c0 000000000000008e T keyboard_pointer_poll
+ffffffff80124270 00000000000001cf T keyboard_pointer_start
+ffffffff80124440 0000000000000078 T keyboard_pointer_stop
+ffffffff80124010 00000000000000c1 T keyboard_poll
+ffffffff801241d0 0000000000000095 T keyboard_resume
+ffffffff801240e0 00000000000000e2 T keyboard_suspend
+ffffffff8010abd0 0000000000000056 t kill_now
+ffffffff801cb924 0000000000000004 b kind
+ffffffff8010f560 0000000000000007 T kmap_active
+ffffffff8010ed10 000000000000007a T kmap_check
+ffffffff8010e600 0000000000000708 T kmap_check_running
+ffffffff8010e5d0 0000000000000021 T kmap_expected_pde
+ffffffff8010e230 00000000000000c1 T kmap_expected_pte
+ffffffff8010f550 0000000000000008 T kmap_failure
+ffffffff8010def0 0000000000000046 T kmap_guard_pages
+ffffffff8010ee00 000000000000074a T kmap_init
+ffffffff8010df40 0000000000000094 T kmap_is_guard
+ffffffff8010e1d0 0000000000000025 T kmap_is_text
+ffffffff8010ed90 000000000000006c T kmap_probe_fault
+ffffffff8010ddec t kmap_probe_fixup
+ffffffff8010dde0 t kmap_probe_load
+ffffffff8010dde0 t kmap_probe_read
+ffffffff8010dde7 t kmap_probe_store
+ffffffff8010dde5 t kmap_probe_write
+ffffffff8010e200 0000000000000028 T kmap_text_overlaps
+ffffffff80164000 0000000000001000 b kpd
+ffffffff80162000 0000000000002000 b kpt
+ffffffff8013b7d0 0000000000000018 r label.1
+ffffffff801b67c0 0000000000000002 b last_used
+ffffffff801280d0 0000000000000143 t learn
+ffffffff801ccfa0 0000000000000038 b lease
+ffffffff80116fa0 000000000000001e t live_rd32
+ffffffff80116f80 000000000000001e t live_rd8
+ffffffff80109ce0 000000000000015e T load_elf
+ffffffff801b5d20 0000000000000010 b load_wq
+ffffffff80117070 0000000000000225 t log_device
+ffffffff801cb8d8 0000000000000004 b log_y
+0000000000100181 t long_mode_entry
+ffffffff8011dcd0 00000000000000c7 t lookup
+ffffffff801c8f40 0000000000000140 b map
+ffffffff80115590 0000000000000054 t map_header
+ffffffff80126270 00000000000000b8 t match
+ffffffff8013d088 0000000000000004 d maxphys
+0000000000100000 t mb2_header
+0000000000100038 t mb2_header_end
+ffffffff80108480 0000000000000314 T mb2_parse
+ffffffff80109c60 0000000000000043 T memcmp
+ffffffff80109c50 0000000000000009 T memcpy
+ffffffff80109c40 000000000000000e T memset
+ffffffff801c8f10 0000000000000008 b mmap
+ffffffff801c8f08 0000000000000004 b mmap_entries
+00000000001001ab t msg_bad_magic
+00000000001001e1 t msg_no_long_mode
+ffffffff8013b5c0 0000000000000028 r n.0
+ffffffff8013b060 0000000000000018 r names.0
+ffffffff8013b080 0000000000000050 r names.0
+ffffffff8013b180 0000000000000070 r names.0
+ffffffff8013b2c0 00000000000000d0 r names.0
+ffffffff801b65c0 0000000000000004 b ndev
+ffffffff801ce5a0 00000000000000a8 b net
+ffffffff80128ac0 0000000000000713 T net_arp_boot_run
+ffffffff80128220 00000000000000d3 T net_arp_init
+ffffffff801283b0 000000000000020f T net_arp_query
+ffffffff80127960 000000000000070a T net_boot_run
+ffffffff801291e0 00000000000000a5 T net_checksum
+ffffffff801286d0 000000000000038a T net_ethernet_input
+ffffffff801285c0 0000000000000108 T net_ethernet_type
+ffffffff801293a0 00000000000001dd T net_ipv4_begin
+ffffffff80129ec0 00000000000006f1 T net_ipv4_boot_run
+ffffffff80129580 000000000000030f T net_ipv4_echo_request
+ffffffff80129330 0000000000000066 T net_ipv4_init
+ffffffff80129a30 0000000000000424 T net_ipv4_input
+ffffffff80129890 00000000000001a0 T net_ipv4_payload
+ffffffff80129290 000000000000009e T net_ipv4_transport_checksum
+ffffffff80128300 00000000000000a7 T net_neighbor_get
+ffffffff801278b0 00000000000000ab T net_requested
+ffffffff8012bc50 00000000000000d8 T net_tcp_abort
+ffffffff8012bf10 00000000000000bb T net_tcp_ack
+ffffffff8012d8e0 00000000000006bc T net_tcp_boot_run
+ffffffff8012d750 0000000000000019 T net_tcp_close
+ffffffff8012fdb0 0000000000000a98 T net_tcp_close_boot_run
+ffffffff8012e220 0000000000000dcd T net_tcp_data_boot_run
+ffffffff8012bec0 0000000000000046 T net_tcp_enable_closure
+ffffffff8012be30 0000000000000036 T net_tcp_enable_payload
+ffffffff8012be70 0000000000000046 T net_tcp_enable_retransmission
+ffffffff8012bd30 00000000000000f6 T net_tcp_expire
+ffffffff8012c540 00000000000000e7 T net_tcp_finish
+ffffffff8012bbc0 0000000000000086 T net_tcp_init
+ffffffff8012c630 000000000000111b T net_tcp_input
+ffffffff8012c3e0 000000000000015c T net_tcp_receive
+ffffffff8012c180 000000000000025c T net_tcp_retransmit
+ffffffff8012f200 000000000000086e T net_tcp_retry_boot_run
+ffffffff8012bfd0 00000000000001ae T net_tcp_send
+ffffffff8012ad00 0000000000000a43 T net_udp_boot_run
+ffffffff8012ab90 0000000000000019 T net_udp_close
+ffffffff8012a5c0 000000000000006e T net_udp_init
+ffffffff8012a8a0 0000000000000233 T net_udp_input
+ffffffff8012aae0 00000000000000a6 T net_udp_receive
+ffffffff8012a630 0000000000000267 T net_udp_send
+ffffffff80120a60 0000000000000227 t newline
+ffffffff801b67c2 0000000000000002 b next_avail
+ffffffff8013d050 0000000000000008 d next_channel_id
+ffffffff8011dda0 00000000000003f9 t next_entry
+ffffffff8013d0a8 0000000000000008 d next_epoch
+ffffffff801b65d0 0000000000000010 b next_gen
+ffffffff8013d058 0000000000000008 d next_generation
+ffffffff8013d048 0000000000000008 d next_id
+ffffffff8013d070 0000000000000008 d next_id
+ffffffff8013d060 0000000000000008 d next_incarnation
+ffffffff8013d038 0000000000000008 d next_pid
+ffffffff8013d080 0000000000000008 d next_token
+ffffffff8013d090 0000000000000008 d next_va
+ffffffff8013d078 0000000000000008 d next_volume
+ffffffff8011db30 000000000000004f t node_stat
+ffffffff801b67ec 0000000000000004 b notify_off
+ffffffff8012e0d0 0000000000000149 t one
+ffffffff80116e40 0000000000000043 t op_info
+ffffffff80116e90 000000000000002e t op_owns_frame
+ffffffff80119b30 00000000000000a0 t op_read
+ffffffff8011e1a0 000000000000028c t open_at
+ffffffff80123560 00000000000000b9 t option.part.0
+ffffffff80125f80 00000000000000b9 t option.part.0
+ffffffff80127700 00000000000000b9 t option.part.0
+ffffffff8011d780 00000000000000a5 t outcome
+ffffffff801cd130 0000000000000008 b owner
+ffffffff801ce4d0 0000000000000008 b owner
+ffffffff801cd128 0000000000000008 b owner_pid
+ffffffff8012b7d0 000000000000019a t packet
+ffffffff80109e40 0000000000000053 T panic
+ffffffff801cb918 0000000000000004 b panicked
+ffffffff80150070 0000000000000004 b panicking
+ffffffff801c8f00 0000000000000004 b pat_wc
+ffffffff8011d900 0000000000000120 t path_copy
+ffffffff80114e40 0000000000000050 T pci_read16
+ffffffff80114e90 000000000000004b T pci_read32
+ffffffff80114df0 000000000000004f T pci_read8
+ffffffff80115000 000000000000010c T pci_scan_bus0
+ffffffff80114f40 0000000000000058 T pci_write16
+ffffffff80114fa0 0000000000000053 T pci_write32
+ffffffff80114ee0 0000000000000057 T pci_write8
+ffffffff801c8f18 0000000000000008 b pd_pa
+ffffffff801cd020 0000000000000081 b pending
+ffffffff8013d0b0 0000000000000004 d pending_length
+ffffffff80110080 0000000000000075 T pic_begin
+ffffffff80110050 000000000000002a T pic_elcr
+ffffffff80110100 0000000000000050 T pic_eoi
+ffffffff8010fee0 00000000000000b1 T pic_init
+ffffffff80110040 000000000000000a T pic_irr
+ffffffff80110030 000000000000000a T pic_isr
+ffffffff80110000 000000000000002a T pic_masks
+ffffffff8013b250 0000000000000010 R pic_port_io
+ffffffff8010ffa0 0000000000000053 T pic_set_mask
+ffffffff80110150 0000000000000016 T pit_init
+ffffffff80110170 000000000000001b T pit_readback
+ffffffff801083b0 00000000000000c1 t place_object
+ffffffff8013bf80 0000000000000080 r plain
+ffffffff8010a690 0000000000000072 T pmm_alloc_frame
+ffffffff8010a3e0 000000000000001e T pmm_alloc_in
+ffffffff80109ec0 00000000000000a6 t pmm_alloc_in.part.0.constprop.0
+ffffffff8010a540 0000000000000102 T pmm_check_in
+ffffffff8010a500 000000000000003c T pmm_frame_state_in
+ffffffff8010a400 000000000000006a T pmm_free_check_in
+ffffffff8010a7e0 0000000000000008 T pmm_free_count
+ffffffff8010a710 00000000000000c3 T pmm_free_frame
+ffffffff8010a470 0000000000000090 T pmm_free_in
+ffffffff8010a650 0000000000000036 T pmm_init
+ffffffff80109f70 0000000000000461 T pmm_init_in
+ffffffff8010a7f0 0000000000000008 T pmm_kernel
+ffffffff8010a800 0000000000000018 T pmm_strerror
+ffffffff80123640 000000000000001b T pointer_boot_requested
+ffffffff80124560 000000000000007e T pointer_decode
+ffffffff801245e0 000000000000002c T pointer_idle
+ffffffff8013b420 0000000000000078 r pointer_provisioned
+ffffffff801660c0 0000000000000900 b pool
+ffffffff801b67e8 0000000000000004 b pool_ready
+ffffffff8010fe80 0000000000000004 t port_in
+ffffffff80124620 0000000000000004 t port_in
+ffffffff80124ac0 0000000000000004 t port_in
+ffffffff8013c010 0000000000000010 r port_io
+ffffffff8010fe90 000000000000000a t port_out
+ffffffff80124630 0000000000000006 t port_out
+ffffffff80124ad0 0000000000000006 t port_out
+ffffffff8013c020 0000000000000010 r ports
+ffffffff801ce4c4 0000000000000004 b present
+ffffffff80161000 0000000000000008 b probe
+ffffffff80165008 0000000000000004 b probe_armed
+ffffffff80165000 0000000000000008 b probe_err
+ffffffff8013d068 0000000000000008 d problem
+ffffffff8010b160 0000000000000076 T proc_add_page
+ffffffff8010aea0 000000000000013a T proc_audit
+ffffffff8010b020 000000000000013e T proc_begin
+ffffffff8010afe0 0000000000000036 T proc_count
+ffffffff8010b520 00000000000000f5 T proc_create
+ffffffff8010b2d0 0000000000000250 T proc_destroy
+ffffffff8010ae50 0000000000000043 T proc_file_live
+ffffffff8010b1e0 00000000000000ed T proc_finish
+ffffffff8010b7b0 0000000000000089 T proc_kill
+ffffffff8010b790 0000000000000019 T proc_run
+ffffffff8010b620 00000000000000bb T proc_start
+ffffffff8010b840 0000000000000516 T proc_user_trap
+ffffffff8010b6e0 00000000000000a2 T proc_wait
+ffffffff8013b4a0 0000000000000060 r provisioned
+ffffffff801ce4e0 0000000000000050 b queues
+ffffffff80117790 0000000000000083 t rd
+ffffffff8011e620 000000000000021f t read_at
+ffffffff801239c0 0000000000000073 t read_aux
+ffffffff80123940 0000000000000073 t read_keyboard
+ffffffff8010fea0 0000000000000040 t read_reg
+ffffffff80126560 00000000000000df t read_reg
+ffffffff801cd008 0000000000000008 b reader
+ffffffff801cd000 0000000000000008 b reader_pid
+ffffffff801c8f04 0000000000000004 b ready
+ffffffff80126a40 000000000000008f t ready
+ffffffff8012bad0 00000000000000ea t ready
+ffffffff8012abc0 0000000000000058 t receive
+ffffffff8010a820 000000000000006d t record
+ffffffff801101a0 00000000000000a2 t record_take
+ffffffff8011da20 0000000000000083 t release
+ffffffff80117330 00000000000000b3 t release_pool.part.0
+ffffffff801b59e0 0000000000000010 b requests
+ffffffff8010dfe0 00000000000001e3 t require
+ffffffff80108260 0000000000000141 t reserve_ram
+ffffffff80126640 000000000000004e t reset
+ffffffff801b3000 0000000000000098 b result
+ffffffff8010ad20 0000000000000122 t resume.isra.0
+ffffffff8010bd70 0000000000000068 T resv_add
+ffffffff8010bd60 000000000000000c T resv_init
+ffffffff8010bde0 0000000000000046 T resv_overlaps
+ffffffff80116fc0 000000000000004f t retire
+ffffffff8012eff0 000000000000006f t retry
+ffffffff8012fb80 000000000000006f t retry
+ffffffff80126080 000000000000001b T rixie_requested
+ffffffff80126210 0000000000000013 T rixie_run
+ffffffff80123cd0 000000000000010e t routed_drain
+ffffffff801cb8dc 0000000000000004 b rows
+ffffffff80125be0 0000000000000398 t run_module
+ffffffff80166028 0000000000000008 b runq_head
+ffffffff80166018 0000000000000004 b runq_len
+ffffffff80110290 0000000000000066 t runq_push
+ffffffff80166020 0000000000000008 b runq_tail
+ffffffff80126060 000000000000001b T rust_demo_requested
+ffffffff801261e0 000000000000002e T rust_demo_run
+ffffffff8013b520 0000000000000050 r s.0
+ffffffff8013b620 0000000000000090 r s.0
+ffffffff8013b760 0000000000000048 r s.0
+ffffffff80111710 00000000000003fc T sched_audit
+ffffffff80111b0c 0000000000000018 t sched_audit.cold
+ffffffff80111430 000000000000008e T sched_idle_irq
+ffffffff80111590 0000000000000172 T sched_init
+ffffffff80110f60 000000000000005f T sched_preempt_due
+ffffffff80110e30 0000000000000008 T sched_stats
+ffffffff80110fc0 000000000000003d T sched_tick
+ffffffff801107e0 00000000000003b5 t schedule
+ffffffff801213b0 0000000000000154 T screen_begin_input
+ffffffff801205a0 00000000000000c1 T screen_choose
+ffffffff80120590 0000000000000008 T screen_describe
+ffffffff80121b10 00000000000000f2 T screen_desktop_begin
+ffffffff801212a0 0000000000000105 T screen_erase_previous
+ffffffff80120670 0000000000000195 T screen_fill
+ffffffff801208e0 0000000000000175 T screen_glyph
+ffffffff80121c10 000000000000006b T screen_gui_available
+ffffffff80121c80 00000000000000db T screen_gui_begin
+ffffffff80121ee0 0000000000000040 T screen_gui_end
+ffffffff80121d60 0000000000000171 T screen_gui_row
+ffffffff801217b0 0000000000000351 T screen_init
+ffffffff80120580 0000000000000007 T screen_kind
+ffffffff80121570 0000000000000232 T screen_panic
+ffffffff80122060 000000000000005b T screen_pointer_begin
+ffffffff801220c0 000000000000001a T screen_pointer_end
+ffffffff80121f20 000000000000013d T screen_pointer_move
+ffffffff80121140 000000000000015a T screen_putc
+ffffffff80121510 0000000000000051 T screen_status
+ffffffff8012ac20 0000000000000075 t send
+ffffffff8012fbf0 000000000000006a t send
+ffffffff801ce4c0 0000000000000004 b sending
+ffffffff80108e50 000000000000009d T serial_dec
+ffffffff80108dc0 000000000000008b T serial_hex
+ffffffff80108bc0 0000000000000048 T serial_init
+000000000010019d t serial_init_table
+00000000001001ab t serial_init_table_end
+ffffffff80108c40 000000000000001e T serial_log_putc
+ffffffff80108c10 0000000000000026 T serial_putc
+ffffffff80108cd0 000000000000004b T serial_puts
+ffffffff80108d20 00000000000000a0 T serial_puts_safe
+ffffffff801be500 000000000000aa00 b sessions
+ffffffff80126690 0000000000000240 t setup_queue
+ffffffff80110250 000000000000003e t shares_kernel_half
+ffffffff8013bf00 0000000000000080 r shifted
+ffffffff801b66a4 0000000000000004 b skip_notify
+ffffffff801b6790 0000000000000010 b slot_count
+ffffffff801b6780 0000000000000010 b slot_len
+ffffffff801b6760 0000000000000020 b slot_owner
+ffffffff801b6740 0000000000000020 b slot_ticket
+ffffffff801b6700 0000000000000040 b slot_wq
+ffffffff801b5d40 0000000000000068 b st
+ffffffff801669c0 0000000000000078 b stack_owner
+ffffffff80167000 000000000004b000 b stacks
+ffffffff8011e430 00000000000001ed t stat_node
+ffffffff801b59a0 0000000000000038 b statistics
+ffffffff80165220 0000000000000218 b stats
+ffffffff80166040 0000000000000070 b stats
+ffffffff801ccfe0 0000000000000020 b stats
+ffffffff801cb888 0000000000000004 b status
+ffffffff801cb880 0000000000000008 b status_text
+ffffffff8011afe0 00000000000001ab t step
+ffffffff80126950 00000000000000e2 t stop_as
+ffffffff801b59f0 0000000000000004 b stopping
+ffffffff801cb950 0000000000000004 b stopping
+ffffffff80109cb0 0000000000000021 T strlen
+ffffffff80117cf0 000000000000041f t submit_type.constprop.0
+ffffffff80166010 0000000000000008 b switched_from
+ffffffff8010bf30 00000000000001ec T syscall_dispatch
+ffffffff801600c0 0000000000000040 b table
+ffffffff8010c6e0 000000000000004b t table
+ffffffff8010ab60 000000000000006a t terminate
+ffffffff8013d098 0000000000000004 d text_x
+ffffffff801110c0 0000000000000007 T thread_block
+ffffffff80111000 00000000000000b1 T thread_block_until
+ffffffff80110cd0 000000000000007b T thread_canaries_intact
+ffffffff80110d80 0000000000000037 T thread_count
+ffffffff80110e40 000000000000003b T thread_create
+ffffffff80110e80 0000000000000070 T thread_create_user
+ffffffff80110d50 0000000000000008 T thread_current
+ffffffff80111500 0000000000000052 T thread_exit
+ffffffff80111560 000000000000002f T thread_first_run
+ffffffff80110c90 0000000000000033 T thread_guard_pages
+ffffffff801112a0 0000000000000123 T thread_interrupt
+ffffffff80110d60 0000000000000011 T thread_is_boot
+ffffffff80110ef0 000000000000006a T thread_leave_user_space
+ffffffff801113d0 000000000000005c T thread_sleep
+ffffffff80110df0 0000000000000040 T thread_stack_top
+ffffffff80111b4a 0000000000000009 T thread_start
+ffffffff80110dc0 000000000000002f T thread_state
+ffffffff801111c0 00000000000000e0 T thread_wake_all
+ffffffff801110d0 00000000000000e9 T thread_wake_one
+ffffffff801114c0 0000000000000036 T thread_yield
+ffffffff801be440 0000000000000060 b tickets
+ffffffff80165208 0000000000000008 b ticks
+ffffffff8013b400 000000000000000b r token.0
+ffffffff8013c000 000000000000000e r token.0
+ffffffff8010ddf0 00000000000000f3 t translate.part.0
+ffffffff8012dfa0 000000000000006a t transmit
+ffffffff8012f060 000000000000006a t transmit
+ffffffff8014f000 0000000000000068 b tss
+ffffffff80165020 0000000000000040 b unclaimed_run
+ffffffff801b5da8 0000000000000008 b use_clock
+ffffffff801c8f20 0000000000000008 b used_bytes
+ffffffff801b67d0 0000000000000008 b used_hdr
+ffffffff801268d0 0000000000000080 t used_ok.isra.0
+ffffffff801b67c8 0000000000000008 b used_ring
+ffffffff80124ff0 00000000000001eb T user_console_begin_exec
+ffffffff80124ce0 0000000000000072 T user_console_debug_visible
+ffffffff80124bf0 0000000000000052 T user_console_diagnostic
+ffffffff80124d70 0000000000000048 T user_console_exec_active
+ffffffff801251e0 0000000000000259 T user_console_finish_exec
+ffffffff80124dd0 000000000000019a T user_console_grant
+ffffffff801257d0 000000000000017b T user_console_gui_begin
+ffffffff80125950 00000000000000b8 T user_console_gui_end
+ffffffff80125a10 0000000000000067 T user_console_gui_poll
+ffffffff80124d60 0000000000000007 T user_console_lease_active
+ffffffff80124dc0 0000000000000008 T user_console_lease_stats
+ffffffff80124c50 0000000000000054 T user_console_owned
+ffffffff80125a80 0000000000000046 T user_console_pointer_begin
+ffffffff80125b80 0000000000000060 T user_console_pointer_end
+ffffffff80125b40 0000000000000031 T user_console_pointer_lost
+ffffffff80125ad0 0000000000000068 T user_console_pointer_poll
+ffffffff80124cb0 000000000000002a T user_console_reader_active
+ffffffff80124f70 000000000000007b T user_console_revoke
+ffffffff80124be0 000000000000000e T user_console_set_diagnostics
+ffffffff80125440 0000000000000384 T user_console_syscall
+ffffffff80107207 000000000000003b T user_enter
+ffffffff8010ac30 00000000000000ee t user_main
+ffffffff8010c120 00000000000000c4 T user_writable
+ffffffff80113c40 00000000000000dc t valid_parent
+ffffffff80119ca0 000000000000001e T vblk_abandoned
+ffffffff80119cc0 0000000000000615 T vblk_audit
+ffffffff80118110 00000000000000de t vblk_bottom
+ffffffff801192c0 00000000000000d3 T vblk_buffer_ok
+ffffffff801191c0 0000000000000036 T vblk_choose_features
+ffffffff80119200 000000000000004b T vblk_choose_queue_size
+ffffffff80119250 0000000000000063 T vblk_dma_ok
+ffffffff80119c80 000000000000001e T vblk_inflight
+ffffffff801196d0 0000000000000008 T vblk_info
+ffffffff801193c0 000000000000016f T vblk_init
+ffffffff8013b600 0000000000000020 r vblk_ops
+ffffffff80119bd0 00000000000000ad T vblk_read
+ffffffff80119530 00000000000000ad T vblk_reinit
+ffffffff801196f0 000000000000004a T vblk_service
+ffffffff801195e0 00000000000000e8 T vblk_shutdown
+ffffffff80117580 0000000000000018 T vblk_state_name
+ffffffff801196e0 0000000000000005 T vblk_submit
+ffffffff801193a0 0000000000000014 T vblk_to_blk
+ffffffff80117820 000000000000006c t vblk_top
+ffffffff80119740 00000000000003ef T vblk_wait
+ffffffff801175a0 0000000000000111 T vblk_window_ok
+ffffffff8010a970 00000000000001ea t verify_space
+ffffffff801cb890 0000000000000008 b vga
+ffffffff801151f0 00000000000003a0 t visit
+ffffffff8010d080 0000000000000a09 T vmm_audit_space
+ffffffff8010ddb0 0000000000000008 T vmm_diagnostic
+ffffffff8010da90 0000000000000100 T vmm_init
+ffffffff8010dda0 0000000000000008 T vmm_kernel_root
+ffffffff8010cf00 000000000000017a T vmm_lookup
+ffffffff8010c810 00000000000003b7 T vmm_map
+ffffffff8010db90 0000000000000203 T vmm_remove_identity
+ffffffff8010ddc0 0000000000000018 T vmm_strerror
+ffffffff8010cbd0 0000000000000326 T vmm_unmap
+ffffffff801276e0 0000000000000008 T vnet_info
+ffffffff80126ad0 0000000000000678 T vnet_init
+ffffffff801273e0 0000000000000295 T vnet_receive
+ffffffff80127150 0000000000000282 T vnet_send
+ffffffff80127680 000000000000005e T vnet_stop
+ffffffff801be4a0 0000000000000060 b volume
+ffffffff80130d90 0000000000000012 T vos_rust_elf_inside
+ffffffff80130db0 000000000000001a T vos_rust_probe
+ffffffff80115120 000000000000009c T vos_xhci_copy_caps
+ffffffff80118d70 000000000000044d T vpci_parse_caps
+ffffffff80126040 000000000000001b T vsh_requested
+ffffffff801260a0 000000000000013c T vsh_run
+ffffffff801181f0 00000000000001c2 t wait_poll
+ffffffff801104e0 000000000000011b t wake_sleepers
+ffffffff8011db80 000000000000014e t walk
+ffffffff801437d8 0000000000000008 b want_cr0
+ffffffff801437d0 0000000000000008 b want_cr4
+ffffffff8013d0a0 0000000000000008 d why
+ffffffff801b66a0 0000000000000004 b win_error
+ffffffff80117010 000000000000005b t win_select
+ffffffff801cb940 0000000000000010 b work
+ffffffff801cb958 0000000000000008 b worker
+ffffffff801b59f8 0000000000000008 b worker_id
+ffffffff801176c0 00000000000000c7 t wr
+ffffffff801238d0 0000000000000065 t write_port
+ffffffff80126420 000000000000013f t write_reg
+ffffffff80115600 0000000000000184 T xhci_boot_probe
+ffffffff80130dd0 0000000000000012 T xhci_class_matches
+ffffffff80130df0 0000000000000172 T xhci_decode_caps
+ffffffff80130f70 000000000000043d T xhci_probe
+ffffffff8013c030 0000000000000006 r zero

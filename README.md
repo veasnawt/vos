@@ -42,10 +42,13 @@ Multiboot2 handoff through BIOS or UEFI; a legacy i386 baseline is also retained
   automatically. [Accepted N5 scope and limits](docs/networking.md).
 - Opt-in, read-only PCI bus-0 xHCI discovery and capability diagnostics are
   merged through PR #22. USB.2-A's portable Rust controller model is merged
-  through PR #23; it enables no live controller operations. This branch's
+  through PR #23; it enables no live controller operations. The
   [USB.1 Rust migration review](docs/results/usb1-rust-publication-review.md)
   covers production discovery decisions, shared validation, measured costs and
-  firmware evidence; migration acceptance is pending. There is no USB device
+  firmware evidence; migration is accepted through PR #24. This branch adds
+  [USB.2-B resource ownership](docs/results/usb2b-resource-ownership.md) for
+  review: real mapping/PMM rollback and worker fixtures, with no live xHCI
+  backend or DMA qualification. There is no USB device
   enumeration or USB keyboard/mouse support.
   [Original integration evidence and preview](docs/results/usb1-rust-integration.md).
 

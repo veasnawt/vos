@@ -1,0 +1,36 @@
+error[E0277]: `*mut ()` cannot be shared between threads safely
+   --> /home/veasnawt/src/vos-usb2b/build/usb2b-1/host-final/sync.rs:3:21
+    |
+  3 | fn main(){require::<resource_ownership::Owned>();}
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^ `*mut ()` cannot be shared between threads safely
+    |
+    = help: within `resource_ownership::Owned`, the trait `Sync` is not implemented for `*mut ()`
+note: required because it appears within the type `PhantomData<*mut ()>`
+   --> /home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/marker.rs:811:12
+    |
+811 | pub struct PhantomData<T: PointeeSized>;
+    |            ^^^^^^^^^^^
+note: required because it appears within the type `Lease`
+   --> /home/veasnawt/src/vos-usb2b/arch/x86_64/rust/../../../kernel/rust/usb/xhci/resources.rs:136:12
+    |
+136 | pub struct Lease {
+    |            ^^^^^
+note: required because it appears within the type `Option<Lease>`
+   --> /home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/option.rs:598:10
+    |
+598 | pub enum Option<T> {
+    |          ^^^^^^
+note: required because it appears within the type `resource_ownership::Owned`
+   --> /home/veasnawt/src/vos-usb2b/arch/x86_64/rust/resource_ownership.rs:29:19
+    |
+ 29 | pub(crate) struct Owned {
+    |                   ^^^^^
+note: required by a bound in `require`
+   --> /home/veasnawt/src/vos-usb2b/build/usb2b-1/host-final/sync.rs:2:15
+    |
+  2 | fn require<T: Sync>() {}
+    |               ^^^^ required by this bound in `require`
+
+error: aborting due to 1 previous error
+
+For more information about this error, try `rustc --explain E0277`.

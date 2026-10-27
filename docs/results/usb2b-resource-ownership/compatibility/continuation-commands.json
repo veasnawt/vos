@@ -1,0 +1,161 @@
+{
+  "core-test-build.txt": {
+    "exit": 0,
+    "command": [
+      "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+      "--edition=2024",
+      "-Dwarnings",
+      "-Copt-level=1",
+      "-Coverflow-checks=yes",
+      "-Cstrip=symbols",
+      "--extern",
+      "vos_xhci=/home/veasnawt/src/vos-usb2b/build/usb2b-1/compatibility/libvos_xhci.rlib",
+      "--test",
+      "tests/rust/xhci.rs",
+      "-o",
+      "/home/veasnawt/src/vos-usb2b/build/usb2b-1/compatibility/core"
+    ]
+  },
+  "core-tests.txt": {
+    "exit": 0,
+    "command": [
+      "/home/veasnawt/src/vos-usb2b/build/usb2b-1/compatibility/core",
+      "--nocapture",
+      "--test-threads=1"
+    ]
+  },
+  "policy-test-build.txt": {
+    "exit": 0,
+    "command": [
+      "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+      "--edition=2024",
+      "-Dwarnings",
+      "-Copt-level=1",
+      "-Coverflow-checks=yes",
+      "-Cstrip=symbols",
+      "--extern",
+      "vos_xhci=/home/veasnawt/src/vos-usb2b/build/usb2b-1/compatibility/libvos_xhci.rlib",
+      "--test",
+      "tests/rust/xhci-discovery-review.rs",
+      "-o",
+      "/home/veasnawt/src/vos-usb2b/build/usb2b-1/compatibility/policy"
+    ]
+  },
+  "policy-tests.txt": {
+    "exit": 0,
+    "command": [
+      "/home/veasnawt/src/vos-usb2b/build/usb2b-1/compatibility/policy",
+      "--nocapture",
+      "--test-threads=1"
+    ]
+  },
+  "bounds-build.txt": {
+    "exit": 0,
+    "command": [
+      "gcc",
+      "-std=gnu11",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-fno-pie",
+      "-no-pie",
+      "-Iarch/x86_64",
+      "-Wl,--gc-sections",
+      "-O1",
+      "-g",
+      "-fsanitize=address,undefined",
+      "-fno-omit-frame-pointer",
+      "tests/host/elf-bounds.c",
+      "/home/veasnawt/src/vos-usb2b/build/usb2b-1/kernel-final/rust/libvos_kernel.a",
+      "-o",
+      "/home/veasnawt/src/vos-usb2b/build/usb2b-1/compatibility/bounds"
+    ]
+  },
+  "bounds.txt": {
+    "exit": 0,
+    "command": [
+      "/home/veasnawt/src/vos-usb2b/build/usb2b-1/compatibility/bounds"
+    ]
+  },
+  "elfcheck-build.txt": {
+    "exit": 0,
+    "command": [
+      "gcc",
+      "-std=gnu11",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-fno-pie",
+      "-no-pie",
+      "-Iarch/x86_64",
+      "-Wl,--gc-sections",
+      "-O2",
+      "-DVOS_ELF_USE_RUST",
+      "scripts/elfcheck.c",
+      "arch/x86_64/elf.c",
+      "/home/veasnawt/src/vos-usb2b/build/usb2b-1/kernel-final/rust/libvos_kernel.a",
+      "-o",
+      "/home/veasnawt/src/vos-usb2b/build/usb2b-1/compatibility/elfcheck"
+    ]
+  },
+  "hello-elf.txt": {
+    "exit": 0,
+    "command": [
+      "/home/veasnawt/src/vos-usb2b/build/usb2b-1/compatibility/elfcheck",
+      "/home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/native/user/hello.elf"
+    ]
+  },
+  "hello-static.txt": {
+    "exit": 0,
+    "command": [
+      "bash",
+      "scripts/check-user-elf.sh",
+      "/home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/native/user/hello.elf"
+    ]
+  },
+  "vsh-elf.txt": {
+    "exit": 0,
+    "command": [
+      "/home/veasnawt/src/vos-usb2b/build/usb2b-1/compatibility/elfcheck",
+      "/home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/native/user/vsh.elf"
+    ]
+  },
+  "vsh-static.txt": {
+    "exit": 0,
+    "command": [
+      "bash",
+      "scripts/check-user-elf.sh",
+      "/home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/native/user/vsh.elf"
+    ]
+  },
+  "rixie-elf.txt": {
+    "exit": 0,
+    "command": [
+      "/home/veasnawt/src/vos-usb2b/build/usb2b-1/compatibility/elfcheck",
+      "/home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/native/user/rixie.elf"
+    ]
+  },
+  "rixie-static.txt": {
+    "exit": 0,
+    "command": [
+      "bash",
+      "scripts/check-user-elf.sh",
+      "/home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/native/user/rixie.elf"
+    ]
+  },
+  "gui-demo-elf.txt": {
+    "exit": 0,
+    "command": [
+      "/home/veasnawt/src/vos-usb2b/build/usb2b-1/compatibility/elfcheck",
+      "/home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/native/user/gui-demo.elf"
+    ]
+  },
+  "gui-demo-static.txt": {
+    "exit": 0,
+    "command": [
+      "bash",
+      "scripts/check-user-elf.sh",
+      "/home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/native/user/gui-demo.elf"
+    ]
+  }
+}

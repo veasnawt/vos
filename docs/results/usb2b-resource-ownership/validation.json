@@ -1,0 +1,13 @@
+{
+  "passed": true,
+  "candidate_files": 108,
+  "internal_links_checked": 145,
+  "UTF8": true,
+  "JSON": true,
+  "Python_AST": true,
+  "Markdown_fences": true,
+  "scope": "explicit source list plus evidence/screenshots; no binary build outputs",
+  "ABI_process_scheduler_linker_and_i386_sources": "byte unchanged from baseline",
+  "authored_source_Markdown_structured_diff_check": true,
+  "raw_tool_output_whitespace": "Full diff --check flags original CRLF/trailing whitespace/EOF blank lines. Raw outputs deliberately remain byte-identical; source/docs/JSON/config checks pass. No Git setting or guard changed."
+}

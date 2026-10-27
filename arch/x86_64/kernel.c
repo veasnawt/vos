@@ -33,6 +33,7 @@
 #include "pmm.h"
 #include "resv.h"
 #include "rust_kernel.h"
+#include "usb_resources.h"
 #include "screen.h"
 #include "desktop.h"
 #include "gui_verify.h"
@@ -290,6 +291,8 @@ void kernel_main(uint32_t mb2_magic, uint32_t mb2_info)
     irq_init();
     /* This code becomes the boot thread (N2.2); user programs keep running synchronously on it. */
     sched_init();
+    if (!usb_resources_verify(bi.cmdline))
+        panic("USB.2-B resource ownership verification failed");
     /* N3.1: the first virtio-blk device on PCI bus 0, read-only and polled; its absence is not an error. */
     vblk_init();
 

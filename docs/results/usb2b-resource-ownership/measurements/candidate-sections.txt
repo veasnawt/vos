@@ -1,0 +1,21 @@
+/home/veasnawt/src/vos-usb2b/build/usb2b-1/kernel-final/vos.bin  :
+section              size                   addr
+.boot.text           4096                1048576
+.boot.data             40                1052672
+.boot.bss           20480                1056768
+.text              180224   18446744071563145216
+.rodata             45056   18446744071563325440
+.data                 184   18446744071563370496
+.bss               597824   18446744071563370688
+.debug_line        167812                      0
+.debug_line_str      2190                      0
+.debug_info        342397                      0
+.debug_abbrev       50105                      0
+.debug_aranges       3120                      0
+.debug_str          18822                      0
+.debug_rnglists     17579                      0
+.debug_loclists    161757                      0
+.debug_frame        32344                      0
+Total             1644030
+
+

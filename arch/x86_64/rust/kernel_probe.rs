@@ -1,9 +1,11 @@
-//! Scalar kernel helpers and the R0-B proof; no device or allocator authority.
+//! Scalar helpers, read-only USB.1, and opt-in non-device resource fixtures.
+//! C platform services retain allocator/mapping authority; no live xHCI backend.
 #![no_std]
 
 #[path = "../../../kernel/rust/usb/xhci/discovery_core.rs"]
 mod xhci;
 mod xhci_discovery;
+mod resource_ownership;
 
 // SAFETY: this private kernel symbol is defined exactly once, with the scalar
 // System V C ABI declared in rust_kernel.h. It does not accept pointers.

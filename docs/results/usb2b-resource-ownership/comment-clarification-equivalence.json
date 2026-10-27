@@ -1,0 +1,45 @@
+{
+  "reason": "Only devmap header/root-module documentation clarified after native execution",
+  "native_kernel_sha256": "017cbc9eda6144b2c0078e531b6e1808627f5fd1111ebea56bcd262fd5e7c4c8",
+  "final_kernel_sha256": "65d980871e1f4401212cb08574a2317997b9a3d4c7f7d1bd693c75cf9844b869",
+  "PT_LOAD_metadata_and_all_file_backed_bytes_identical": true,
+  "archive_before_sha256": "9342b78964d9ab4185169aac03b8e95b981f22a5cfccc5ba2e4a44be83705b5d",
+  "archive_after_sha256": "9342b78964d9ab4185169aac03b8e95b981f22a5cfccc5ba2e4a44be83705b5d",
+  "segments": [
+    [
+      5,
+      1048576,
+      1048576,
+      4096,
+      "a51f87b7319ff92fe9113999d0bef84153fd2f3ae3cc4c6b6b64ea7e95a5b204"
+    ],
+    [
+      6,
+      1052672,
+      1052672,
+      24576,
+      "8a47426e96a1316b74be84dda219975ca6c74163287f8042c84699ccd235d58d"
+    ],
+    [
+      5,
+      18446744071563145216,
+      1077248,
+      180224,
+      "71382ef7bcacdb5f92b83a8294efa9936e2222b0c8262529a9a56d44aacc5be9"
+    ],
+    [
+      4,
+      18446744071563325440,
+      1257472,
+      45056,
+      "9edc0fecf3b374a73f7624cbda87dd5e74158efea72043cc70c34e170cd70be2"
+    ],
+    [
+      6,
+      18446744071563370496,
+      1302528,
+      598016,
+      "25bae8671b17821b514c2febb9c554243e8e7e497245e99917c6180995f96acd"
+    ]
+  ]
+}

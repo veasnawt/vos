@@ -1,0 +1,434 @@
+{
+  "baseline": "f24b3a803a65324f31cdb4c43fd4f504394a7cdb",
+  "files": {
+    "README.md": {
+      "bytes": 9174,
+      "sha256": "0acd10748d09210c86ea71704c4ef89e694b4535fa5c7a9cfc9c3e7c2026c6a7"
+    },
+    "arch/x86_64/arch.mk": {
+      "bytes": 36971,
+      "sha256": "108b653199dc940c736d58457ade3a5b3554d004e1dbbefc794bbe8bf8898ff3"
+    },
+    "arch/x86_64/devmap.c": {
+      "bytes": 16555,
+      "sha256": "3801401ec1d22d3d08db7db592935220782327f647d961fa3dbe19102e1f343b"
+    },
+    "arch/x86_64/devmap.h": {
+      "bytes": 5805,
+      "sha256": "21a477f2c8cfddd64c01331b756b8b678e049acf7be50be61f24ef355b413d92"
+    },
+    "arch/x86_64/kernel.c": {
+      "bytes": 17352,
+      "sha256": "02c2b2a1add782947f43ddf3d534396704f79722659eaec13d3e60cc993dd689"
+    },
+    "arch/x86_64/rust/kernel_probe.rs": {
+      "bytes": 1597,
+      "sha256": "c3e5e8c7ea5ba9933949eaa51bad69f8a1667b775c4159a95977c7a0a6f35fe3"
+    },
+    "arch/x86_64/rust/resource_ownership.rs": {
+      "bytes": 4490,
+      "sha256": "1f49b4e83e9f9e465db03099215c19f0b613a777d737451c65d5b2ea5d260435"
+    },
+    "arch/x86_64/usb_resources.c": {
+      "bytes": 7054,
+      "sha256": "8d2e34cd66d8758d34797ebd9329b3704bffabbba6dfff04b70121fae9d4ae3d"
+    },
+    "arch/x86_64/usb_resources.h": {
+      "bytes": 654,
+      "sha256": "c7889e1196b1803ec40ef7bdd86fc93ced5e3925e2724f79ef262caeb0f29642"
+    },
+    "docs/ROADMAP.md": {
+      "bytes": 17124,
+      "sha256": "54af53aa35a90da3877082671e737ea49d5a83863f555a3ad7a8b21574e565c3"
+    },
+    "docs/STATUS.md": {
+      "bytes": 28740,
+      "sha256": "2b6ccddb8e28cd3d8449c851ab58820f735e8ddd0aa9033aa2dc49e42ea294dd"
+    },
+    "docs/images/usb/usb2b/vos-usb2b-bios.png": {
+      "bytes": 8649,
+      "sha256": "7eeaaccc5c63384bc0912e4c24c0637cb71785c16f8934f160d77c9093565d33"
+    },
+    "docs/images/usb/usb2b/vos-usb2b-uefi.png": {
+      "bytes": 8649,
+      "sha256": "7eeaaccc5c63384bc0912e4c24c0637cb71785c16f8934f160d77c9093565d33"
+    },
+    "docs/results/usb2b-resource-ownership.md": {
+      "bytes": 14740,
+      "sha256": "43dcee363f716cb9074c755d72b6a7288a1498938068d425378315ff6f19703a"
+    },
+    "docs/results/usb2b-resource-ownership/changed-files.txt": {
+      "bytes": 6669,
+      "sha256": "4f5b017acbb5105501cf9d740e33bbb53cbd800e538d80686e7ca4f4d9058683"
+    },
+    "docs/results/usb2b-resource-ownership/comment-clarification-equivalence.json": {
+      "bytes": 1286,
+      "sha256": "678e4a7b87caf3fb34694553e5312665ba7476974fe5a877cddcda5293b0dd25"
+    },
+    "docs/results/usb2b-resource-ownership/compatibility/bounds-build.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "docs/results/usb2b-resource-ownership/compatibility/bounds.txt": {
+      "bytes": 74,
+      "sha256": "88f2b3b25f1f8d2ab51a671cd3ba76204873a19123c9a38ebf2c4896fe4c18b3"
+    },
+    "docs/results/usb2b-resource-ownership/compatibility/commands.json": {
+      "bytes": 486,
+      "sha256": "93d16d2ef43a22b2fd9728effd8880a5e0c50c45933fddfce5ed69e459ce0b1e"
+    },
+    "docs/results/usb2b-resource-ownership/compatibility/continuation-commands.json": {
+      "bytes": 4286,
+      "sha256": "993b616638792f909f5c63a24a3a7f41fdecf4b6489494e9c8a791001b749430"
+    },
+    "docs/results/usb2b-resource-ownership/compatibility/core-build.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "docs/results/usb2b-resource-ownership/compatibility/core-test-build.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "docs/results/usb2b-resource-ownership/compatibility/core-tests.txt": {
+      "bytes": 3046,
+      "sha256": "854d7f8818fb9471795d6dd5efbfc22589a7dd5d19983d7d97f10fba0a720ced"
+    },
+    "docs/results/usb2b-resource-ownership/compatibility/differential-build.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "docs/results/usb2b-resource-ownership/compatibility/differential.txt": {
+      "bytes": 102,
+      "sha256": "2a972bddd0ac2b1a8ecd69fe8724f3cebeb13aeef80d77b0d33189b6245eeab7"
+    },
+    "docs/results/usb2b-resource-ownership/compatibility/elf-corpus.json": {
+      "bytes": 71877,
+      "sha256": "122d4841c6c07e2b5d8115406acd50e95db3857d0d3ff5a53e8e46382cf0ab3b"
+    },
+    "docs/results/usb2b-resource-ownership/compatibility/elfcheck-build.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "docs/results/usb2b-resource-ownership/compatibility/gui-demo-elf.txt": {
+      "bytes": 127,
+      "sha256": "0f04258def0df89c46d52bb6315f44999eadd56e41c18765a98b5c8a3f21ab52"
+    },
+    "docs/results/usb2b-resource-ownership/compatibility/gui-demo-static.txt": {
+      "bytes": 144,
+      "sha256": "6d82589221844c65b7c665cd8ac9467f7aa68267a0f1e8eebc1d4fdbe250d6c6"
+    },
+    "docs/results/usb2b-resource-ownership/compatibility/hello-elf.txt": {
+      "bytes": 124,
+      "sha256": "17ef0596eb9ef8d8a789f4991d7eef22afc1e2f886af71c6d7752def356f7461"
+    },
+    "docs/results/usb2b-resource-ownership/compatibility/hello-static.txt": {
+      "bytes": 141,
+      "sha256": "4a73581d4357270e41fc9e1c7757e93de16cf26827693d7004b6d6b934e0dd5b"
+    },
+    "docs/results/usb2b-resource-ownership/compatibility/mutant-build.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "docs/results/usb2b-resource-ownership/compatibility/mutant-test-build.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "docs/results/usb2b-resource-ownership/compatibility/mutant-test.txt": {
+      "bytes": 583,
+      "sha256": "e94889364dd994526b8c11654013b073f9db50979b4a1a0c366adac0c75cb352"
+    },
+    "docs/results/usb2b-resource-ownership/compatibility/negative-differential-commands.json": {
+      "bytes": 3696,
+      "sha256": "b73eea26101f447e9af63f58f8ed15c2e1081ba4a0b9d84e09a117f8400dabf6"
+    },
+    "docs/results/usb2b-resource-ownership/compatibility/original-c-build.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "docs/results/usb2b-resource-ownership/compatibility/policy-test-build.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "docs/results/usb2b-resource-ownership/compatibility/policy-tests.txt": {
+      "bytes": 380,
+      "sha256": "0044ae7f301615623021259e0eb593d25e863ea65ac6d3e1e0b05dc1a0212c23"
+    },
+    "docs/results/usb2b-resource-ownership/compatibility/rixie-elf.txt": {
+      "bytes": 124,
+      "sha256": "fe069267556bad2d86ef6289617c0021bdee96f8fffe475c8e89b7e06cb825e3"
+    },
+    "docs/results/usb2b-resource-ownership/compatibility/rixie-static.txt": {
+      "bytes": 141,
+      "sha256": "550626e77a49008c1b32eac98e2ae9846f723cf24604f402c9143ce002c4b98c"
+    },
+    "docs/results/usb2b-resource-ownership/compatibility/send-model-negative.txt": {
+      "bytes": 2262,
+      "sha256": "af47fd725394bdb8d294e292593618ae4d3f509fde8941e8db3f0e91ebee5cfc"
+    },
+    "docs/results/usb2b-resource-ownership/compatibility/sync-model-negative.txt": {
+      "bytes": 2270,
+      "sha256": "7af906f2f7a6b23d2f5d7c55c773d241a9e118e0a0a67c5068b3cecdb3201cab"
+    },
+    "docs/results/usb2b-resource-ownership/compatibility/vsh-elf.txt": {
+      "bytes": 122,
+      "sha256": "02a4f70ca1d754b4c5450c63b6e2e791b13270857e4022936a52cf197f48bab3"
+    },
+    "docs/results/usb2b-resource-ownership/compatibility/vsh-static.txt": {
+      "bytes": 139,
+      "sha256": "2b61564cd651f299b5e9198dc4b707384ba5209b4618c409e8ec88586337e0df"
+    },
+    "docs/results/usb2b-resource-ownership/development-stops.json": {
+      "bytes": 535,
+      "sha256": "9e2397e4c3aabaec0076941fab8474cbeaf282de5899af69fd47daf116e6b851"
+    },
+    "docs/results/usb2b-resource-ownership/evidence.json": {
+      "bytes": 2448,
+      "sha256": "390ab5ab146ae8d41649a0d339863175ca820a1e64a2b105d83e243f85fd7384"
+    },
+    "docs/results/usb2b-resource-ownership/host-final/copy-negative.txt": {
+      "bytes": 830,
+      "sha256": "b89e85f5fd7d62b935b5d062ee89d4f3278aac57bcaebaa13b04dd54d312b9da"
+    },
+    "docs/results/usb2b-resource-ownership/host-final/release-build.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "docs/results/usb2b-resource-ownership/host-final/release.txt": {
+      "bytes": 1155,
+      "sha256": "874daf670f6fb884c2602ab775508e15e653328a171edb5a1bf46cb41db33bb3"
+    },
+    "docs/results/usb2b-resource-ownership/host-final/result.json": {
+      "bytes": 4255,
+      "sha256": "bddda2bc568d3378621eb0ce4abef95012e2351a1e2bc91c440d26ab49db62d9"
+    },
+    "docs/results/usb2b-resource-ownership/host-final/rust-build.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "docs/results/usb2b-resource-ownership/host-final/rust-tests.txt": {
+      "bytes": 149,
+      "sha256": "cf48ec237aefe5112b0d28034da125651d068f4da74bab6deef512758e46c656"
+    },
+    "docs/results/usb2b-resource-ownership/host-final/sanitizer-build.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "docs/results/usb2b-resource-ownership/host-final/sanitizer.txt": {
+      "bytes": 105,
+      "sha256": "6fa640f5ec4d5108a3f78aaa2c310dfc102284be87d868032938f79af78e13d2"
+    },
+    "docs/results/usb2b-resource-ownership/host-final/send-negative.txt": {
+      "bytes": 1722,
+      "sha256": "2c54a9557c60e15d9968a8c942a60397718a184431e6f31364dac1ef7e184ff4"
+    },
+    "docs/results/usb2b-resource-ownership/host-final/sync-negative.txt": {
+      "bytes": 1726,
+      "sha256": "0adc98badcf3717b7f17ffdbba50db197fd9b3cf387671a4656a24abff702678"
+    },
+    "docs/results/usb2b-resource-ownership/independent-final-audit.json": {
+      "bytes": 905,
+      "sha256": "b6cb8d1e9feab706e0e4644cffdcde8f1483563be184208844b76411d2436039"
+    },
+    "docs/results/usb2b-resource-ownership/measurements/baseline-sections.txt": {
+      "bytes": 939,
+      "sha256": "8e8302cecf9d0229906e1aeeec1aea2417b481ce8a8a45ab7d7c53f8e6554df7"
+    },
+    "docs/results/usb2b-resource-ownership/measurements/baseline-segments.txt": {
+      "bytes": 852,
+      "sha256": "b5bb560a650ca467b6d1c84298321794e7e9d4676104884426596a18bf424037"
+    },
+    "docs/results/usb2b-resource-ownership/measurements/baseline-symbols.txt": {
+      "bytes": 41030,
+      "sha256": "a02975fdfef42edc95696199ebfbe1e67a25a6f829c95dc7f21ba51907b11dab"
+    },
+    "docs/results/usb2b-resource-ownership/measurements/candidate-sections.txt": {
+      "bytes": 928,
+      "sha256": "b696d95e06c36886ba2a9fef3cc2e5ed3ce97a5ca7b57b6e4bcf8a22310a54a9"
+    },
+    "docs/results/usb2b-resource-ownership/measurements/candidate-segments.txt": {
+      "bytes": 852,
+      "sha256": "c79e0a3bdbbbf219d78e636766857a119913f0a18621ca0ce19dfdeed927f882"
+    },
+    "docs/results/usb2b-resource-ownership/measurements/candidate-symbols.txt": {
+      "bytes": 42061,
+      "sha256": "53eac6a04cd9bcf313865621ed9fe7056ff751a186874036b52b8cbb0bfc83b2"
+    },
+    "docs/results/usb2b-resource-ownership/measurements/devmap-strict.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "docs/results/usb2b-resource-ownership/measurements/devmap.su": {
+      "bytes": 912,
+      "sha256": "196e52c51f824d9f6a5e914614ff16451b547321df5433adf5ba313c005412c0"
+    },
+    "docs/results/usb2b-resource-ownership/measurements/performance.json": {
+      "bytes": 772,
+      "sha256": "8de3073117697ac38cee56a799c139035d95874e29b51f79b7b558a4a34c8b0d"
+    },
+    "docs/results/usb2b-resource-ownership/measurements/rust-sizes.txt": {
+      "bytes": 41,
+      "sha256": "b9801ad456355c107350793294a822b5cdd5bc912107ee31955a166510eb2525"
+    },
+    "docs/results/usb2b-resource-ownership/measurements/static.json": {
+      "bytes": 179,
+      "sha256": "fcd9c1a68a4b3ff3c323bbc85ab269ebe3d309671b7ccc597a6e0050ce33f1b4"
+    },
+    "docs/results/usb2b-resource-ownership/measurements/usb_resources-strict.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "docs/results/usb2b-resource-ownership/measurements/usb_resources.su": {
+      "bytes": 371,
+      "sha256": "89b5f30b676d210d51d059ce7595e10d1ca1169ec7aba346954dea3aa871af53"
+    },
+    "docs/results/usb2b-resource-ownership/native-uefi-continuation/grub.cfg": {
+      "bytes": 475,
+      "sha256": "22a963a622c71be021cc225e77dfdc9f32ae18269cb5784dda6098ef44db603e"
+    },
+    "docs/results/usb2b-resource-ownership/native-uefi-continuation/result.json": {
+      "bytes": 1262,
+      "sha256": "6a5ccca092bb086c3d99ab53a9078f75559dd3bcbd61a21fd1f6638dcea30f21"
+    },
+    "docs/results/usb2b-resource-ownership/native-uefi-continuation/uefi-normal/command.json": {
+      "bytes": 762,
+      "sha256": "caf2a0dc8e67c54d9a00da0844be441b13248704f27d3a57f2f1b570e8d1d37d"
+    },
+    "docs/results/usb2b-resource-ownership/native-uefi-continuation/uefi-normal/failed-boot.png": {
+      "bytes": 16004,
+      "sha256": "c4c768956b937989a63c6f0dae41b80cb020daaabd6344ab5563d6fe155b641e"
+    },
+    "docs/results/usb2b-resource-ownership/native-uefi-gop/grub-uefi.cfg": {
+      "bytes": 846,
+      "sha256": "069874cf8267c2b8b6964f98794682bd29de1a9d84c7400f9a649990b7d69978"
+    },
+    "docs/results/usb2b-resource-ownership/native-uefi-gop/grub.cfg": {
+      "bytes": 475,
+      "sha256": "22a963a622c71be021cc225e77dfdc9f32ae18269cb5784dda6098ef44db603e"
+    },
+    "docs/results/usb2b-resource-ownership/native-uefi-gop/result.json": {
+      "bytes": 1395,
+      "sha256": "d7d2a6eee944eb121feea5505d89c1eefc81f73811fddf444556b44570521f37"
+    },
+    "docs/results/usb2b-resource-ownership/native-uefi-gop/uefi-normal/command.json": {
+      "bytes": 744,
+      "sha256": "8aba746ea0701c62494fa2bed64eeb043c09238d9ee79f686cd5f238441a3666"
+    },
+    "docs/results/usb2b-resource-ownership/native-uefi-gop/uefi-normal/pci.json": {
+      "bytes": 3685,
+      "sha256": "f551d43d2a52efc13d9f273d188b64ac6a9274ea42086682c52d1200e592137f"
+    },
+    "docs/results/usb2b-resource-ownership/native-uefi-gop/uefi-resources/command.json": {
+      "bytes": 750,
+      "sha256": "2457dfefba7b3a4d31a1ef91fd0329db581a67fce61612c1369c2d176a801f5e"
+    },
+    "docs/results/usb2b-resource-ownership/native-uefi-gop/uefi-resources/gui.png": {
+      "bytes": 8649,
+      "sha256": "7eeaaccc5c63384bc0912e4c24c0637cb71785c16f8934f160d77c9093565d33"
+    },
+    "docs/results/usb2b-resource-ownership/native-uefi-gop/uefi-resources/pci.json": {
+      "bytes": 3685,
+      "sha256": "f551d43d2a52efc13d9f273d188b64ac6a9274ea42086682c52d1200e592137f"
+    },
+    "docs/results/usb2b-resource-ownership/native/bios-normal/command.json": {
+      "bytes": 498,
+      "sha256": "20a5643b7945d038677ea5e11f2f84487cbeacd47c23c3fcec3d14690b38a48c"
+    },
+    "docs/results/usb2b-resource-ownership/native/bios-normal/pci.json": {
+      "bytes": 3682,
+      "sha256": "6347f2d9abd57722eab35f04f58bdfef128dce08e7292d1d32767872def5d6b1"
+    },
+    "docs/results/usb2b-resource-ownership/native/bios-resources/command.json": {
+      "bytes": 504,
+      "sha256": "1e834abccccf2fb67597e1dfa691b39322cb9f3bcdff40cd172c055ebefdc3ca"
+    },
+    "docs/results/usb2b-resource-ownership/native/bios-resources/gui.png": {
+      "bytes": 8649,
+      "sha256": "7eeaaccc5c63384bc0912e4c24c0637cb71785c16f8934f160d77c9093565d33"
+    },
+    "docs/results/usb2b-resource-ownership/native/bios-resources/pci.json": {
+      "bytes": 3682,
+      "sha256": "6347f2d9abd57722eab35f04f58bdfef128dce08e7292d1d32767872def5d6b1"
+    },
+    "docs/results/usb2b-resource-ownership/native/grub.cfg": {
+      "bytes": 475,
+      "sha256": "22a963a622c71be021cc225e77dfdc9f32ae18269cb5784dda6098ef44db603e"
+    },
+    "docs/results/usb2b-resource-ownership/native/result.json": {
+      "bytes": 1306,
+      "sha256": "e7c2579db57256561cebc07eaf71fed53b728abf300179b61c725b3528a3eb9f"
+    },
+    "docs/results/usb2b-resource-ownership/native/uefi-normal/command.json": {
+      "bytes": 708,
+      "sha256": "d7243a2a6a329ce4e8d18e8d01b1119cdff871d7569f4448ef9b0efb1d8bc91c"
+    },
+    "docs/results/usb2b-resource-ownership/preservation-final.json": {
+      "bytes": 470,
+      "sha256": "8da5514bab076ce57e916d7a28df95b446480c6041e2947ee99e572e2ac5a53f"
+    },
+    "docs/results/usb2b-resource-ownership/progress.md": {
+      "bytes": 6614,
+      "sha256": "6f61e8c7ca3714d1419184998a67955397a602487a150d4def41f679a9013d6b"
+    },
+    "docs/results/usb2b-resource-ownership/storage.json": {
+      "bytes": 1361,
+      "sha256": "e0dbc953a2653df33bd735a534e666ca7bbef4d5ded35d74c2cb6f51100a2e3c"
+    },
+    "docs/results/usb2b-resource-ownership/uefi-boot-diagnostic/boot-10.png": {
+      "bytes": 3057,
+      "sha256": "05713dbacb00cfa92e8cad1581147b0f1349f6ee14c97d122440aff36011bd53"
+    },
+    "docs/results/usb2b-resource-ownership/uefi-boot-diagnostic/boot-20.png": {
+      "bytes": 15545,
+      "sha256": "bdbe9bcc9e25c09e53ff3f44faa3c6ed80388240008327687105ee8874320a68"
+    },
+    "docs/results/usb2b-resource-ownership/uefi-boot-diagnostic/boot-34.png": {
+      "bytes": 15545,
+      "sha256": "bdbe9bcc9e25c09e53ff3f44faa3c6ed80388240008327687105ee8874320a68"
+    },
+    "docs/results/usb2b-resource-ownership/uefi-boot-diagnostic/command.json": {
+      "bytes": 726,
+      "sha256": "fefe759d0be5f1aa8277a627db760895cc036e237bdeb05d08ce9deb2acb73b7"
+    },
+    "docs/results/usb2b-resource-ownership/uefi-boot-diagnostic/registers-10.txt": {
+      "bytes": 2120,
+      "sha256": "9373cfb1fc2c6a81331ec9027bed409518a5ffa3dbd0c8eb57ffb12dd0f2fb5b"
+    },
+    "docs/results/usb2b-resource-ownership/uefi-boot-diagnostic/registers-20.txt": {
+      "bytes": 2120,
+      "sha256": "819b65d0eaccfc3fc63bd8fc149a4256b1fcdb071cb7a43f1987539eb35c9536"
+    },
+    "docs/results/usb2b-resource-ownership/uefi-boot-diagnostic/registers-34.txt": {
+      "bytes": 2120,
+      "sha256": "819b65d0eaccfc3fc63bd8fc149a4256b1fcdb071cb7a43f1987539eb35c9536"
+    },
+    "docs/results/usb2b-resource-ownership/uefi-boot-diagnostic/result.json": {
+      "bytes": 549,
+      "sha256": "41acb78c26a118d27e322759cab2311f31d82fa359ffe493c778358de3003f5f"
+    },
+    "docs/results/usb2b-resource-ownership/validation.json": {
+      "bytes": 616,
+      "sha256": "b3445ee37fcc30054291333e00adb9983bb4826fe6110dfc4e0493bd882839b9"
+    },
+    "kernel/rust/usb/xhci/mod.rs": {
+      "bytes": 243,
+      "sha256": "1e5de618a8aacdeef94e9c801d8d3d9b3c3a4c2b2700d8cb8f660976f4f2f8f3"
+    },
+    "kernel/rust/usb/xhci/types.rs": {
+      "bytes": 491,
+      "sha256": "27eddcb969ef2ab87a056910b76b47a1865c7d464130d04095824ea0625a724a"
+    },
+    "scripts/test-usb-resources-native.py": {
+      "bytes": 11922,
+      "sha256": "0a26da0f02d6ea05b6bc1d2fff1634d577aebdccfb220464e47c49e8cdc10f93"
+    },
+    "scripts/test-usb-resources.py": {
+      "bytes": 3372,
+      "sha256": "55488bda6d9930a5233ca5cb166d52a3e87b58da2e5da6c9a66c7f16ae489228"
+    },
+    "tests/host/usb-resources.c": {
+      "bytes": 8205,
+      "sha256": "f0872ef089d3d7b4126f553033d791c62500ff31440c1ce4b0b3a53853631a28"
+    }
+  },
+  "self_hash": "excluded; Git commit binds manifest"
+}

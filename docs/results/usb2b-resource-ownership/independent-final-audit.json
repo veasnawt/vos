@@ -1,0 +1,21 @@
+{
+  "passed": true,
+  "method": "fresh evidence parsing and source/diff inspection; not an external human approval",
+  "baseline": "f24b3a803a65324f31cdb4c43fd4f504394a7cdb",
+  "candidate_files": 108,
+  "native_stage_counts": [
+    4,
+    4
+  ],
+  "worker_created_reaped_per_firmware": [
+    18,
+    18
+  ],
+  "historical_failed_results_preserved": true,
+  "protected_preservation": "preservation-final.json",
+  "frozen_ABI_source_paths_unchanged": true,
+  "final_comment_only_load_equivalence": "comment-clarification-equivalence.json",
+  "source_review": "no controller MMIO dereference/PCI writes/DMA paths; explicit failure retention and THREAD_FREE argument lifetime; portable lifecycle not duplicated",
+  "gates": "A-G pass within documented fixture subset; physical/live qualification NOT APPLICABLE, not passed",
+  "publication_decision": "ready for PR owner review; do not merge automatically"
+}

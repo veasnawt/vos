@@ -1,0 +1,21 @@
+/home/veasnawt/src/vos-usb1-rust/build/usb1-rust-1/reviewed-kernel/vos.bin  :
+section              size                   addr
+.boot.text           4096                1048576
+.boot.data             40                1052672
+.boot.bss           20480                1056768
+.text              176128   18446744071563145216
+.rodata             45056   18446744071563321344
+.data                 180   18446744071563366400
+.bss               597824   18446744071563366592
+.debug_line        163188                      0
+.debug_line_str      2150                      0
+.debug_info        335308                      0
+.debug_abbrev       49005                      0
+.debug_aranges       3072                      0
+.debug_str          18414                      0
+.debug_rnglists     17053                      0
+.debug_loclists    158460                      0
+.debug_frame        31608                      0
+Total             1622062
+
+

@@ -6,6 +6,7 @@
 #include "multiboot2.h"
 #include "pmm.h"
 #include "vmm.h"
+#include "irq.h"
 
 #define MSR_PAT             0x277
 #define MSR_MTRRCAP         0xFE
@@ -32,6 +33,26 @@ static uint32_t mmap_entries;
 static unsigned maxphys = 36;
 static int ready, pat_wc;
 static uint64_t uc_bits = PTE_PCD | PTE_PWT;
+
+/* Scope ownership survives caller errors/abandoned Rust handles. Newly owned
+ * PTs occupy a fresh two-PDE span; shared preexisting tables are never freed.
+ * No resources in this non-access fixture can become device-visible. */
+static struct {
+    uint64_t token, generation, previous_va, va, pa, length;
+    uint64_t tables[2];
+    unsigned indices[2], ntables, slot;
+} scope;
+static int scope_budget = -1;
+
+static int scope_context(void)
+{
+    return (read_cr3() & PTE_ADDR) == vmm_kernel_root() &&
+           !(read_rflags() & RFLAGS_IF) && !irq_in_handler();
+}
+
+void devmap_scope_budget(int n) { scope_budget = n; }
+uint64_t devmap_scope_token(void) { return scope.token; }
+unsigned devmap_scope_tables(void) { return scope.ntables; }
 
 static uint64_t page_down(uint64_t x)
 {
@@ -189,6 +210,8 @@ int devmap_map(uint64_t pa, uint64_t len, int attr, const char *what, void **va,
 {
     int err;
 
+    if (scope.token)
+        return DEVMAP_ESTATE;              /* preserve exclusive tail ownership */
     if (!va || (attr != DEVMAP_UC && attr != DEVMAP_WC))
         return DEVMAP_EINVAL;
     if ((err = devmap_check(pa, len)))
@@ -217,6 +240,104 @@ int devmap_map(uint64_t pa, uint64_t len, int attr, const char *what, void **va,
         *used = bits == PTE_PAT4K ? DEVMAP_WC : DEVMAP_UC;
     next_va += (pages + 1) * PAGE_SIZE;     /* one unmapped guard page after each mapping */
     used_bytes += last - first;
+    return DEVMAP_OK;
+}
+
+/* Validate the entire teardown before its first mutation. In this serialized
+ * context PMM prechecks make subsequent frees infallible absent corruption;
+ * nevertheless every return is checked and identifiers are cleared only after
+ * successful free. No table is freed while any leaf still references it. */
+int devmap_scope_release(uint64_t token)
+{
+    if (!scope_context() || !token || token != scope.token)
+        return DEVMAP_ESTATE;
+    uint64_t *pd = phys_to_virt(pd_pa);
+    if (count != scope.slot + 1 || map[scope.slot].va != scope.va ||
+        map[scope.slot].pa != scope.pa || map[scope.slot].end != scope.pa + scope.length ||
+        devmap_audit())
+        return DEVMAP_ESTATE;
+    for (unsigned t = 0; t < scope.ntables; t++) {
+        if (!scope.tables[t]) continue; /* retained after a hypothetical failed free */
+        uint64_t entry = pd[scope.indices[t]];
+        if (entry && (entry & ~PTE_A) != (scope.tables[t] | PTE_P | PTE_W))
+            return DEVMAP_ESTATE;
+        if (pmm_free_check_in(pmm_kernel(), scope.tables[t]) != PMM_OK)
+            return DEVMAP_ESTATE;
+    }
+    for (uint64_t v = scope.va; v < scope.va + scope.length; v += PAGE_SIZE) {
+        uint64_t *pte = pte_slot(v, 0);
+        if (pte) *pte = 0;
+        invlpg(v);
+    }
+    for (unsigned t = 0; t < scope.ntables; t++) {
+        if (!scope.tables[t]) continue;
+        pd[scope.indices[t]] = 0;
+        if (pmm_free_frame(scope.tables[t]) != PMM_OK)
+            return DEVMAP_ESTATE; /* token and all unreleased identifiers retained */
+        scope.tables[t] = 0;
+    }
+    used_bytes -= scope.length;
+    next_va = scope.previous_va;
+    memset(&map[--count], 0, sizeof(map[0]));
+    uint64_t generation = scope.generation;
+    memset(&scope, 0, sizeof(scope));
+    scope.generation = generation;
+    return DEVMAP_OK;
+}
+
+int devmap_scope_acquire(unsigned region, uint64_t offset, uint64_t length,
+                         int attr, uint64_t *token, uint64_t *va)
+{
+    if (!token || !va) return DEVMAP_EINVAL;
+    *token = *va = 0;
+    if (!scope_context() || !ready || scope.token) return DEVMAP_ESTATE;
+    if (region != DEVMAP_SCOPE_FIXTURE || attr != DEVMAP_UC || !length ||
+        offset % PAGE_SIZE || length % PAGE_SIZE || offset > 16384 || length > 16384 - offset)
+        return DEVMAP_EINVAL;
+    uint64_t pa = 0x100000000ULL + offset;
+    int err = devmap_check(pa, length);
+    if (err) return err; /* includes RAM, aliases, MAXPHYADDR and overflow */
+    if (count == DEVMAP_MAX || scope.generation == UINT64_MAX ||
+        used_bytes + length > DEVMAP_MAX_BYTES)
+        return DEVMAP_EFULL;
+    /* Fresh PTs give exact ownership, independent of framebuffer table sharing.
+     * At most two 4 KiB tables, even when the 16 KiB fixture straddles a PDE. */
+    uint64_t start = ((next_va + 0x1fffff) & ~0x1fffffULL) + 0x1ff000;
+    if (start + length + PAGE_SIZE > DEVMAP_VA_END) return DEVMAP_EFULL;
+    uint64_t *pd = phys_to_virt(pd_pa);
+    unsigned first = (start >> 21) & 511, last = ((start + length - 1) >> 21) & 511;
+    for (unsigned i = first; i <= last; i++) if (pd[i]) return DEVMAP_ESTATE;
+    scope.previous_va = next_va;
+    scope.va = start; scope.pa = pa; scope.length = length; scope.slot = count;
+    /* Register before acquisition: even a failed rollback retains identifiers. */
+    scope.token = ++scope.generation;
+    for (unsigned i = first; i <= last; i++) {
+        uint64_t frame = 0;
+        if (scope_budget == 0 || pmm_alloc_frame(&frame) != PMM_OK) {
+            /* No leaves have been installed. Every owned PT is still empty. */
+            for (unsigned t = 0; t < scope.ntables; t++) {
+                pd[scope.indices[t]] = 0;
+                if (pmm_free_frame(scope.tables[t]) != PMM_OK) {
+                    *token = scope.token; return DEVMAP_ESTATE;
+                }
+                scope.tables[t] = 0;
+            }
+            uint64_t generation = scope.generation;
+            memset(&scope, 0, sizeof(scope)); scope.generation = generation;
+            return DEVMAP_ENOMEM;
+        }
+        if (scope_budget > 0) scope_budget--;
+        unsigned t = scope.ntables++;
+        scope.tables[t] = frame; scope.indices[t] = i;
+        pd[i] = frame | PTE_P | PTE_W;
+    }
+    for (uint64_t off = 0; off < length; off += PAGE_SIZE) {
+        *pte_slot(start + off, 0) = (pa + off) | PTE_P | PTE_W | PTE_NX | uc_bits;
+        invlpg(start + off);
+    }
+    map[count++] = (struct devmap_entry){pa, pa + length, start, uc_bits, "USB.2-B no-access fixture"};
+    next_va = start + length + PAGE_SIZE; used_bytes += length;
+    *token = scope.token; *va = start;
     return DEVMAP_OK;
 }
 
