@@ -51,15 +51,18 @@ class QMP:
     def close(self):
         self.file.close(); self.socket.close()
 
-def hosted(out, rustc):
+def hosted(out, rustc, archive=None):
     # Use the same bare-metal Rust crate as the linked kernel, not a C fallback.
-    library = out/"libvos_kernel.a"
-    run([rustc,"--edition=2024","--target=x86_64-unknown-none","--crate-name=vos_kernel",
+    library = archive.resolve() if archive else out/"libvos_kernel.a"
+    if archive:
+        need(library.is_file(), "explicit existing kernel archive")
+    else:
+        run([rustc,"--edition=2024","--target=x86_64-unknown-none","--crate-name=vos_kernel",
          "--crate-type=staticlib","-Dwarnings","-Cpanic=abort","-Copt-level=2",
          "-Ctarget-cpu=x86-64","-Ccode-model=kernel","-Crelocation-model=static",
          "-Cno-redzone=yes","-Cforce-unwind-tables=no","-Clto=off",
          "-Cembed-bitcode=no","-Ccodegen-units=1","-Cdebuginfo=0",
-         "arch/x86_64/rust/kernel_probe.rs","-o",library],out/"rust-build.log")
+             "arch/x86_64/rust/kernel_probe.rs","-o",library],out/"rust-build.log")
     panic = out/"panic.c"
     panic.write_text('#include <stdio.h>\n#include <stdlib.h>\n'
                      '__attribute__((noreturn)) void panic(const char *s) {'
@@ -70,7 +73,9 @@ def hosted(out, rustc):
     syscall = (ROOT/"arch/x86_64/syscall.c").read_text()
     debug = out/"debug.c"
     debug.write_text("#include <stdint.h>\n"+syscall[syscall.index("void debug_emit("):syscall.index("/* debug_write")])
-    common = ["arch/x86_64/keyboard.c","arch/x86_64/pointer.c","arch/x86_64/input_console.c"]
+    # Production pointer symbols now come from the same bare-metal Rust archive.
+    # Keep the original arch/x86_64/pointer.c only for explicit C-reference tests.
+    common = ["arch/x86_64/keyboard.c","arch/x86_64/input_console.c",str(library)]
     cases = {
         "xhci":["tests/host/xhci.c","arch/x86_64/xhci.c","arch/x86_64/xhci_boot.c",str(panic),str(library)],
         "keyboard":["tests/host/keyboard-input.c",*common],
@@ -224,6 +229,7 @@ def main():
     ap.add_argument("--output",type=Path,required=True)
     ap.add_argument("--host-only",action="store_true")
     ap.add_argument("--rustc",default=os.environ.get("RUSTC"))
+    ap.add_argument("--archive",type=Path,help="reuse a previously built kernel Rust archive for host checks")
     ap.add_argument("--grub-efi-dir",type=Path,default=Path("/usr/lib/grub/x86_64-efi"))
     args=ap.parse_args()
     out=args.output.resolve()
@@ -233,7 +239,8 @@ def main():
     try:
         pinned=Path.home()/".rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc"
         rustc=args.rustc or os.environ.get("RUSTC") or (str(pinned) if pinned.is_file() else "rustc")
-        result["host"]=hosted(out, rustc)
+        need(not args.archive or args.host_only,"archive reuse is host-only")
+        result["host"]=hosted(out, rustc, args.archive)
         if not args.host_only:
             need(Path(rustc).is_file(),"supply --rustc for the installed native Rust toolchain")
             efi=args.grub_efi_dir.resolve()

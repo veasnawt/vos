@@ -1,0 +1,2 @@
+invalid-state/null/alignment/overlap/overflow checks PASS
+differential PASS: 16777216 triplets; 52394348 byte/idle comparisons; C ABI 5/6 bytes

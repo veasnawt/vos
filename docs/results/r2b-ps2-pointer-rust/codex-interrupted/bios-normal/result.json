@@ -1,0 +1,19 @@
+{
+  "passed": false,
+  "firmware": "bios",
+  "mode": "normal",
+  "native_Rust_calls": [
+    {
+      "symbol": "pointer_idle",
+      "RIP": "0xffffffff80131eb0",
+      "stop": "T05thread:01;"
+    },
+    {
+      "symbol": "pointer_decode",
+      "RIP": "0xffffffff80131dd0",
+      "stop": "T05thread:01;"
+    }
+  ],
+  "error": "shell response pwd",
+  "serial_sha256": "0d22df3092118cf4b6d590b5f47e28617dbd190b24f848b408de29568c7a327e"
+}

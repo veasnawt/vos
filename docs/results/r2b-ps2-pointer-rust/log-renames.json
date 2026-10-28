@@ -1,0 +1,105 @@
+{
+  "reason": ".gitignore excludes *.log; contents byte-identical to the build/ originals",
+  "files": {
+    "docs/results/r2b-ps2-pointer-rust/codex-interrupted/bios-normal/qemu.txt": {
+      "original_name": "qemu.log",
+      "sha256": "7a9202ea4c21c7a98823b49b33fe884165314616aaf5a9146e8e7845d0ab4b97"
+    },
+    "docs/results/r2b-ps2-pointer-rust/codex-interrupted/bios-normal/serial.txt": {
+      "original_name": "serial.log",
+      "sha256": "0d22df3092118cf4b6d590b5f47e28617dbd190b24f848b408de29568c7a327e"
+    },
+    "docs/results/r2b-ps2-pointer-rust/codex-interrupted/host-first-release-build.txt": {
+      "original_name": "host-first-release-build.log",
+      "sha256": "9616aac4bcb94ebc0f24f71a24274529d46ae49c42a937570b43c2e90de81da0"
+    },
+    "docs/results/r2b-ps2-pointer-rust/host/pointer-render.txt": {
+      "original_name": "pointer-render.log",
+      "sha256": "1d6f52288604c58382119f68ffad59084056fe9caf014cc662a5bc79b6ede0be"
+    },
+    "docs/results/r2b-ps2-pointer-rust/host/pointer-service.txt": {
+      "original_name": "pointer-service.log",
+      "sha256": "83339918ab0410be444c5f2673bc7abe27fbbd90888a875f023bcb24216f2be6"
+    },
+    "docs/results/r2b-ps2-pointer-rust/host/release.txt": {
+      "original_name": "release.log",
+      "sha256": "676d3df4f3189afc10cab27310265dda95480a8c602ed765589df9c70ef5da16"
+    },
+    "docs/results/r2b-ps2-pointer-rust/host/rust-tests.txt": {
+      "original_name": "rust-tests.log",
+      "sha256": "ac6229b1d2861aac2be114c1a30bfedd2602eb857675a2ad35641f409b1d772b"
+    },
+    "docs/results/r2b-ps2-pointer-rust/host/sanitizer.txt": {
+      "original_name": "sanitizer.log",
+      "sha256": "676d3df4f3189afc10cab27310265dda95480a8c602ed765589df9c70ef5da16"
+    },
+    "docs/results/r2b-ps2-pointer-rust/native/bios-normal/serial.txt": {
+      "original_name": "serial.log",
+      "sha256": "5a1a3156520598b3e118107e022de03bfe4988594883442deb743e46d4da11aa"
+    },
+    "docs/results/r2b-ps2-pointer-rust/native/bios-verify/serial.txt": {
+      "original_name": "serial.log",
+      "sha256": "d01bced5729b13ff34a5c8aa41d2ba4d27248a3f75dc8ee833d232053369b9b8"
+    },
+    "docs/results/r2b-ps2-pointer-rust/native/run.txt": {
+      "original_name": "run.log",
+      "sha256": "c34c166f889a6a915f212f0c15773215c39c1a8fc6d155c5ce88d201c17a8c14"
+    },
+    "docs/results/r2b-ps2-pointer-rust/native/uefi-normal/serial.txt": {
+      "original_name": "serial.log",
+      "sha256": "84aa337d3267ae82acafb23bed6692f3b8e02d0b3a3d720143040d7ff95817cc"
+    },
+    "docs/results/r2b-ps2-pointer-rust/native/uefi-verify/serial.txt": {
+      "original_name": "serial.log",
+      "sha256": "1fff14090111b8effd6df8040e182d16dd18609dc4e3757f9acdaaa07e0c453e"
+    },
+    "docs/results/r2b-ps2-pointer-rust/native-attempt-1/bios-normal-serial.txt": {
+      "original_name": "bios-normal-serial.log",
+      "sha256": "5a1a3156520598b3e118107e022de03bfe4988594883442deb743e46d4da11aa"
+    },
+    "docs/results/r2b-ps2-pointer-rust/native-attempt-1/normal-uefi-producer.txt": {
+      "original_name": "normal-uefi-producer.log",
+      "sha256": "91296eefd5a66e445c3602096ddf07e4f9146d9d79b1750df5aa909272b39b97"
+    },
+    "docs/results/r2b-ps2-pointer-rust/native-attempt-1/run.txt": {
+      "original_name": "run.log",
+      "sha256": "3bad616e42bd0dbfa04971a4660351f0820c7e6415d97201b1fa38d25010c0ba"
+    },
+    "docs/results/r2b-ps2-pointer-rust/negative-controls/buttons3.txt": {
+      "original_name": "buttons3.log",
+      "sha256": "79e4d1b4ccd038ffadf17455c3e7a814509c405a60b99a61e3c1d68b39725c51"
+    },
+    "docs/results/r2b-ps2-pointer-rust/negative-controls/idle15.txt": {
+      "original_name": "idle15.log",
+      "sha256": "62f5a56ac0f3fb89de5df1ec95edbcd110150a811fbf78fae57ca5f2bd88b6fd"
+    },
+    "docs/results/r2b-ps2-pointer-rust/negative-controls/overflow80.txt": {
+      "original_name": "overflow80.log",
+      "sha256": "8d66bdfd0870ac01fcc9adafdbbea59537c63aeea744af4fdd9d5dc0f2707508"
+    },
+    "docs/results/r2b-ps2-pointer-rust/negative-controls/sync-bit.txt": {
+      "original_name": "sync-bit.log",
+      "sha256": "028030ba54bcc76ff70b36f3cc5bf684c38d522655806bf84094695e4025b15d"
+    },
+    "docs/results/r2b-ps2-pointer-rust/negative-controls/xsign.txt": {
+      "original_name": "xsign.log",
+      "sha256": "d0dd7aa2e391e3992683fa92b8ac7012abf8982e023317d704f61f265376dd29"
+    },
+    "docs/results/r2b-ps2-pointer-rust/usb-regression/bios-normal/serial.txt": {
+      "original_name": "serial.log",
+      "sha256": "821f63f9eed2d4c23936df335ce486903efe06de842e65b914af50e255040eb7"
+    },
+    "docs/results/r2b-ps2-pointer-rust/usb-regression/bios-resources/serial.txt": {
+      "original_name": "serial.log",
+      "sha256": "3cafb075c402744bc8e00e598f1cf58c645bc9ff5cce0f87d98bfa30fa58b3e4"
+    },
+    "docs/results/r2b-ps2-pointer-rust/usb-regression/uefi-normal/serial.txt": {
+      "original_name": "serial.log",
+      "sha256": "d06f98a4ef818c10e9814219d1bac220fa6f59a54997de995c66b9be0d6f5d67"
+    },
+    "docs/results/r2b-ps2-pointer-rust/usb-regression/uefi-resources/serial.txt": {
+      "original_name": "serial.log",
+      "sha256": "efcdd461336c9d13051659e5c8cdec3d8b2e3272f1ea1690de224d32cc70385d"
+    }
+  }
+}

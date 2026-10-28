@@ -53,4 +53,10 @@ jobs:
             --user build/x86_64/user --out build/r1-elf-bounds-ci
 
       - name: Verify read-only USB.1 probing and input diagnostics
-        run: python3 -I -B scripts/test-usb-probe.py --host-only --output build/usb1-host-ci
+        run: python3 -I -B scripts/test-usb-probe.py --host-only --archive build/x86_64/rust/libvos_kernel.a --output build/usb1-host-ci
+
+      - name: Verify production Rust PS/2 decoder and input compatibility
+        run: |
+          python3 -I -B scripts/test-ps2-pointer-rust.py \
+            --archive build/x86_64/rust/libvos_kernel.a \
+            --rustc "$RUSTC" --out build/r2b-pointer-ci

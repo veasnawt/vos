@@ -1,0 +1,19 @@
+normal bios PASS
+Traceback (most recent call last):
+  File "/home/veasnawt/src/vos-r2b/scripts/test-ps2-pointer-native.py", line 322, in <module>
+    if __name__=='__main__':main()
+                            ~~~~^^
+  File "/home/veasnawt/src/vos-r2b/scripts/test-ps2-pointer-native.py", line 313, in main
+    V.run(['grub-mkrescue','-d',modules,'-o',iso,'-graft-points',
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+           *[n+'='+str(p) for n,p in expected.items()]],out/(mode+'-'+fw+'-producer.log'),
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+          dict(os.environ,TMPDIR=str(tmp),PYTHONDONTWRITEBYTECODE='1'))
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/veasnawt/src/vos-r2b/scripts/test-usb-resources-native.py", line 35, in run
+    need(p.returncode == 0, 'producer/validator failed: '+str(log))
+    ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/veasnawt/src/vos-r2b/scripts/test-usb-resources-native.py", line 28, in need
+    raise RuntimeError(message)
+RuntimeError: producer/validator failed: /home/veasnawt/src/vos-r2b/build/r2b-claude-1/native/normal-uefi-producer.log
+exit=1

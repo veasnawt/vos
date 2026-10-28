@@ -1,0 +1,2 @@
+PASS 562325 assertions: actual refined renderer/console; single header/full captions/no PASS badge, stride/padding/guards, viewport and fallback
+pointer renderer PASS 2179862 assertions; clipping, stride, underlay restoration, surface redraw

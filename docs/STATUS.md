@@ -6,15 +6,18 @@ Current accepted graphical baseline: owner-merged
 VOS is pre-alpha. **N0-N5 are accepted; N6 is still in progress.**
 No physical-hardware or complete-desktop acceptance is claimed.
 The accepted main used for this review is
-`f24b3a803a65324f31cdb4c43fd4f504394a7cdb`, following R0/R1,
-[USB.1 integration PR #22](https://github.com/veasnawt/vos/pull/22) and
-[portable USB.2-A PR #23](https://github.com/veasnawt/vos/pull/23), and
-[USB.1 Rust migration PR #24](https://github.com/veasnawt/vos/pull/24).
-This branch's [USB.2-B ownership foundation](results/usb2b-resource-ownership.md)
-is verified for PR review, not accepted or merged. It executes real non-device
-mapping/PMM and worker-reaping fixtures; live xHCI, DMA qualification and USB
-device operations remain unimplemented. Both firmware paths pass final checks;
-the failed pre-GRUB boot and missing-GOP media attempt remain preserved.
+`d2c0ac2d92bb917531a372d21d6b432425c4645f`, following R0/R1,
+[USB.1 integration PR #22](https://github.com/veasnawt/vos/pull/22),
+[portable USB.2-A PR #23](https://github.com/veasnawt/vos/pull/23),
+[USB.1 Rust migration PR #24](https://github.com/veasnawt/vos/pull/24) and the
+[USB.2-B ownership foundation](results/usb2b-resource-ownership.md)
+([PR #25](https://github.com/veasnawt/vos/pull/25)). USB.2-B executes real
+non-device mapping/PMM and worker-reaping fixtures; live xHCI, DMA qualification
+and USB device operations remain unimplemented.
+This branch's [R2-B Rust PS/2 pointer decoder](results/r2b-ps2-pointer-rust.md)
+is verified for PR review, not accepted or merged. The production
+`pointer_decode()`/`pointer_idle()` are Rust; BIOS/UEFI QEMU regressions pass.
+It is not a USB input fix: physical PCs with USB keyboards/mice remain unsupported.
 
 ## Current accepted components
 
@@ -95,7 +98,8 @@ through PR #22. Its original integration report retains its dated status.
 
 USB.2-A's [portable Rust core](results/usb2a-rust-core.md) is merged through
 PR #23. It is a tested software lifecycle/ring/resource model without a live
-MMIO/DMA/reset backend. USB.2-B/C remain unimplemented.
+MMIO/DMA/reset backend. USB.2-B's non-activating ownership foundation is merged
+through PR #25; USB.2-C remains unimplemented.
 
 The [USB.1 Rust publication review](results/usb1-rust-publication-review.md)
 records the candidate production migration, preserved read-only behavior,

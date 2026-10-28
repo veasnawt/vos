@@ -1,0 +1,2 @@
+ffffffff80131dd0 00000000000000d9 T pointer_decode
+ffffffff80131eb0 0000000000000033 T pointer_idle

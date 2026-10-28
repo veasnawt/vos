@@ -1,0 +1,41 @@
+{
+  "isos": {
+    "build/r2b-claude-1/native-2/normal-bios.iso": "efdd9f84d8011ff430c9a39eaca939eba63d621ffa43ba6f269c7b522169a4fd",
+    "build/r2b-claude-1/native-2/normal-uefi.iso": "1a2201601b54afd3ced848ca766ac32e5674ac0988e92116e47ca0ff642dc935",
+    "build/r2b-claude-1/native-2/verify-bios.iso": "aef942eddf5ab9bf5900eb19d4fc070151812cd1babd2f2cf829cf247dcaed0a",
+    "build/r2b-claude-1/native-2/verify-uefi.iso": "07c4243a390295d62042381b2914db271e0109e267852f40c591dbb3286f843f",
+    "build/r2b-claude-1/usb-regression/bios.iso": "8c00a17b379c189d5759f964027a2d7bac4fd326e7ed0cd2e9989fabedb507fc",
+    "build/r2b-claude-1/usb-regression/uefi.iso": "a1305ebf58c8c8b020dd7b154c0f2f50cadfb468be88462a9fe30bcf64894435"
+  },
+  "ps2_traces": {
+    "build/r2b-claude-1/native-2/bios-normal/ps2.trace": "6cb326a024db2cfe38c37a8e2d0aa66bf98c58c08b14038ab334fe332c7db888",
+    "build/r2b-claude-1/native-2/bios-verify/ps2.trace": "b93cdad302301a82e6feb1ab8fc4c09f3f539a61409fc64a45bc950e9f79d935",
+    "build/r2b-claude-1/native-2/uefi-normal/ps2.trace": "76b137244d1cdfe91dec688f10067d465ee51ff863930f55fec7591fba1c4631",
+    "build/r2b-claude-1/native-2/uefi-verify/ps2.trace": "08ff3f3bdd8490eb55ab3bb8de02640080a53c4512f795a791e9533b7b818c18"
+  },
+  "verify_pointer_screenshots_build_only": {
+    "build/r2b-claude-1/native-2/bios-verify/bottom-left.png": "d85b3a11489333ba4c3ad306ef52c5f179cb73f19b10e8a914e2652c9501c955",
+    "build/r2b-claude-1/native-2/bios-verify/bottom-right.png": "75d708b8f3afb5cb386ea6d7b75a43a4adbd1744964e54f606b0c24c9a03d431",
+    "build/r2b-claude-1/native-2/bios-verify/click.png": "2d74c8424da262ee4eb18aefb2237d84ffe1bf9113d5c4417bf853a48e64c12a",
+    "build/r2b-claude-1/native-2/bios-verify/final.png": "009a27d95cad9c80da39190c1a16bf2571fdeb318dda70db5a53ccacfc7d455c",
+    "build/r2b-claude-1/native-2/bios-verify/initial.png": "ab3b32706c100da094a11718b7b1c119c01d7cfbfbe045a9770bad91bc897af0",
+    "build/r2b-claude-1/native-2/bios-verify/movement.png": "3addb95d8518f541cc51d635d17424468844821e79674f6b3e1b98ff3904f150",
+    "build/r2b-claude-1/native-2/bios-verify/press.png": "c5693b7d21df304a00a42260fa2efa5eab72d95caef9da1f15be844fc90fb929",
+    "build/r2b-claude-1/native-2/bios-verify/top-left.png": "b9b42d93c19c7d462edda7c2aa8858aacfb17e299022404ba8c4890b0dc17959",
+    "build/r2b-claude-1/native-2/bios-verify/top-right.png": "7525261f59686c2b2b615f9e3385f313392cfec700447b3c72c3fa6a22add46e",
+    "build/r2b-claude-1/native-2/uefi-verify/bottom-left.png": "d85b3a11489333ba4c3ad306ef52c5f179cb73f19b10e8a914e2652c9501c955",
+    "build/r2b-claude-1/native-2/uefi-verify/bottom-right.png": "75d708b8f3afb5cb386ea6d7b75a43a4adbd1744964e54f606b0c24c9a03d431",
+    "build/r2b-claude-1/native-2/uefi-verify/click.png": "2d74c8424da262ee4eb18aefb2237d84ffe1bf9113d5c4417bf853a48e64c12a",
+    "build/r2b-claude-1/native-2/uefi-verify/final.png": "009a27d95cad9c80da39190c1a16bf2571fdeb318dda70db5a53ccacfc7d455c",
+    "build/r2b-claude-1/native-2/uefi-verify/initial.png": "ab3b32706c100da094a11718b7b1c119c01d7cfbfbe045a9770bad91bc897af0",
+    "build/r2b-claude-1/native-2/uefi-verify/movement.png": "3addb95d8518f541cc51d635d17424468844821e79674f6b3e1b98ff3904f150",
+    "build/r2b-claude-1/native-2/uefi-verify/press.png": "c5693b7d21df304a00a42260fa2efa5eab72d95caef9da1f15be844fc90fb929",
+    "build/r2b-claude-1/native-2/uefi-verify/top-left.png": "b9b42d93c19c7d462edda7c2aa8858aacfb17e299022404ba8c4890b0dc17959",
+    "build/r2b-claude-1/native-2/uefi-verify/top-right.png": "7525261f59686c2b2b615f9e3385f313392cfec700447b3c72c3fa6a22add46e"
+  },
+  "disk": {
+    "path": "/home/veasnawt/src/myos/build/app-console-20261025T051241Z/attempt-1/disk.img",
+    "sha256": "5ef98c6e0b4dd983dfb7db1a8d73d0175cbb86c358e61f2957c689d164890dcc"
+  },
+  "efi_modules": "/home/veasnawt/vos-evidence/n36-stage3-gatea-cont-20261021T220119Z/efi-tools/usr/lib/grub/x86_64-efi (305/305 hashes match docs/results/usb1-rust-migration/native-original-failed.json)"
+}

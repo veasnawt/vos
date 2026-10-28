@@ -6,6 +6,7 @@
 mod xhci;
 mod xhci_discovery;
 mod resource_ownership;
+mod ps2_pointer;
 
 // SAFETY: this private kernel symbol is defined exactly once, with the scalar
 // System V C ABI declared in rust_kernel.h. It does not accept pointers.

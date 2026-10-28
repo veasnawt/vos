@@ -1,0 +1,5 @@
+xsign: exit=134 DETECTED xsign.bin: tests/host/ps2-pointer-differential.c:19: feed: Assertion `r==s && !memcmp(a,b,5) && !memcmp(x,y,6)' failed. 
+buttons3: exit=134 DETECTED buttons3.bin: tests/host/ps2-pointer-differential.c:19: feed: Assertion `r==s && !memcmp(a,b,5) && !memcmp(x,y,6)' failed. 
+sync-bit: exit=134 DETECTED sync-bit.bin: tests/host/ps2-pointer-differential.c:19: feed: Assertion `r==s && !memcmp(a,b,5) && !memcmp(x,y,6)' failed. 
+overflow80: exit=134 DETECTED overflow80.bin: tests/host/ps2-pointer-differential.c:19: feed: Assertion `r==s && !memcmp(a,b,5) && !memcmp(x,y,6)' failed. 
+idle15: exit=134 DETECTED idle15.bin: tests/host/ps2-pointer-differential.c:39: differential: Assertion `pointer_idle(&a)==pointer_idle_reference(&b)' failed. 

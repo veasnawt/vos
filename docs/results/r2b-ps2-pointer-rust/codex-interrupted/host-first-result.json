@@ -1,0 +1,6 @@
+{
+  "passed": false,
+  "archive_sha256": "4e7238c5831779a12229c91779a660749f673557559088b15325ff0ded8200a8",
+  "rust_sanitized": false,
+  "sanitizer": "invalid-state/null/alignment/overlap/overflow checks PASS\ndifferential PASS: 16777216 triplets; 52394348 byte/idle comparisons; C ABI 5/6 bytes\n"
+}
