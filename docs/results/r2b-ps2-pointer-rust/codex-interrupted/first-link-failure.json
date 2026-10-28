@@ -1,0 +1,9 @@
+{
+  "result": "FAIL",
+  "log": "kernel-build-1.log",
+  "cause": "Manual object-list edit unintentionally omitted net_ipv4.o as well as pointer.o; no networking source changed",
+  "recovery": "Restore exact baseline arch.mk with only pointer.o removed",
+  "first_arch_mk_sha256": "0f1e59fbf08eafae3f990564b4a6cb273a5dfcc982db0dcbfbd9ed9cd49586cb",
+  "corrected_arch_mk_sha256": "e66d61926ab91cd3964674f641f1615c418d6c53051ec1ec7e3ffc4dfeb7b589",
+  "archive_reuse": "Rust source and flags unchanged; first archive retained and reused read-only in new final build"
+}

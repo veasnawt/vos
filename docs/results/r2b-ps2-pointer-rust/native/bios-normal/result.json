@@ -1,0 +1,104 @@
+{
+  "passed": true,
+  "firmware": "bios",
+  "mode": "normal",
+  "native_Rust_calls": [
+    {
+      "symbol": "pointer_idle",
+      "RIP": "0xffffffff80131eb0",
+      "stop": "T05thread:01;"
+    },
+    {
+      "symbol": "pointer_decode",
+      "RIP": "0xffffffff80131dd0",
+      "stop": "T05thread:01;"
+    }
+  ],
+  "screenshots": {
+    "initial": {
+      "path": "/home/veasnawt/src/vos-r2b/build/r2b-claude-1/native-2/bios-normal/initial.png",
+      "sha256": "f498dd815f89358990086ecc48f94680f1d1abd2e83517ceedb3c1521c37558b"
+    },
+    "movement": {
+      "path": "/home/veasnawt/src/vos-r2b/build/r2b-claude-1/native-2/bios-normal/movement.png",
+      "sha256": "0a7fae58fbe30b8c016eef0d63bc04efbdfbf48887ccbd556115109bdacc4e58"
+    },
+    "press": {
+      "path": "/home/veasnawt/src/vos-r2b/build/r2b-claude-1/native-2/bios-normal/press.png",
+      "sha256": "2ccf213f2b9084a3b7b6d3006310ba4d052d21786d5e809a37e0c888c0f6bbce"
+    },
+    "click": {
+      "path": "/home/veasnawt/src/vos-r2b/build/r2b-claude-1/native-2/bios-normal/click.png",
+      "sha256": "3814e66733e1139bf7cd48891ad88d18cfcdc30c7114c2f2739a6241d2566b09"
+    },
+    "top-left": {
+      "path": "/home/veasnawt/src/vos-r2b/build/r2b-claude-1/native-2/bios-normal/top-left.png",
+      "sha256": "6fa27543f1f507ab7f51909705a5434a9e6cbe425d8c00130689f555e1ea8797"
+    },
+    "top-right": {
+      "path": "/home/veasnawt/src/vos-r2b/build/r2b-claude-1/native-2/bios-normal/top-right.png",
+      "sha256": "4a6ea51c0841bcb0d5adc058f278624e9532793c8be9840778d084aef9f567d6"
+    },
+    "bottom-right": {
+      "path": "/home/veasnawt/src/vos-r2b/build/r2b-claude-1/native-2/bios-normal/bottom-right.png",
+      "sha256": "c678e1d76abfad6e980a5667dd0627b6162e37a805ec1c11e9a83ecc57d49edc"
+    },
+    "bottom-left": {
+      "path": "/home/veasnawt/src/vos-r2b/build/r2b-claude-1/native-2/bios-normal/bottom-left.png",
+      "sha256": "5845f32844733336ab5d29eaded357d670cefdd3dacd7462b9ebfd73849816d7"
+    },
+    "final": {
+      "path": "/home/veasnawt/src/vos-r2b/build/r2b-claude-1/native-2/bios-normal/final.png",
+      "sha256": "101d2db2871c052602f669c94cdfab0497c252b5508ff5a34e2033ca2a08ebcc"
+    }
+  },
+  "pixels": {
+    "initial": {
+      "passed": true,
+      "cursor": [
+        512,
+        390
+      ],
+      "panel_rgb": "0x409ddd",
+      "width": 1024,
+      "height": 768
+    },
+    "movement": {
+      "passed": true,
+      "cursor": [
+        524,
+        382
+      ],
+      "panel_rgb": "0x409ddd",
+      "width": 1024,
+      "height": 768
+    },
+    "press": {
+      "passed": true,
+      "cursor": [
+        524,
+        382
+      ],
+      "panel_rgb": "0xe8b34e",
+      "width": 1024,
+      "height": 768
+    },
+    "click": {
+      "passed": true,
+      "cursor": [
+        524,
+        382
+      ],
+      "panel_rgb": "0x42c497",
+      "width": 1024,
+      "height": 768
+    }
+  },
+  "exact_corners": true,
+  "keyboard_mouse": true,
+  "held_exit_cleanup": true,
+  "shell_hello_rixie": true,
+  "native_cases": 0,
+  "elapsed_seconds": 17.07927614900001,
+  "serial_sha256": "5a1a3156520598b3e118107e022de03bfe4988594883442deb743e46d4da11aa"
+}

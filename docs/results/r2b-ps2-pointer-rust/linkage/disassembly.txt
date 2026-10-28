@@ -1,0 +1,96 @@
+
+build/r2b-claude-1/kernel-normal/vos.bin:     file format elf64-x86-64
+
+
+Disassembly of section .text:
+
+ffffffff80131dd0 <pointer_decode>:
+ffffffff80131dd0:	test   rdi,rdi
+ffffffff80131dd3:	sete   al
+ffffffff80131dd6:	test   rdx,rdx
+ffffffff80131dd9:	sete   cl
+ffffffff80131ddc:	or     cl,al
+ffffffff80131dde:	mov    eax,0xffffffff
+ffffffff80131de3:	mov    r8d,edx
+ffffffff80131de6:	or     r8b,cl
+ffffffff80131de9:	test   r8b,0x1
+ffffffff80131ded:	jne    ffffffff80131ea8 <pointer_decode+0xd8>
+ffffffff80131df3:	lea    r8,[rdi+0x5]
+ffffffff80131df7:	lea    rcx,[rdx+0x6]
+ffffffff80131dfb:	cmp    rcx,rdi
+ffffffff80131dfe:	seta   cl
+ffffffff80131e01:	cmp    r8,rdx
+ffffffff80131e04:	seta   r8b
+ffffffff80131e08:	cmp    rdi,0xfffffffffffffffa
+ffffffff80131e0c:	ja     ffffffff80131ea8 <pointer_decode+0xd8>
+ffffffff80131e12:	cmp    rdx,0xfffffffffffffff9
+ffffffff80131e16:	ja     ffffffff80131ea8 <pointer_decode+0xd8>
+ffffffff80131e1c:	and    r8b,cl
+ffffffff80131e1f:	jne    ffffffff80131ea8 <pointer_decode+0xd8>
+ffffffff80131e25:	movzx  ecx,BYTE PTR [rdi+0x3]
+ffffffff80131e29:	cmp    rcx,0x2
+ffffffff80131e2d:	ja     ffffffff80131e3a <pointer_decode+0x6a>
+ffffffff80131e2f:	test   rcx,rcx
+ffffffff80131e32:	je     ffffffff80131e41 <pointer_decode+0x71>
+ffffffff80131e34:	cmp    BYTE PTR [rdi+0x4],0x10
+ffffffff80131e38:	jb     ffffffff80131e41 <pointer_decode+0x71>
+ffffffff80131e3a:	mov    WORD PTR [rdi+0x3],0x0
+ffffffff80131e40:	ret
+ffffffff80131e41:	mov    BYTE PTR [rdi+0x4],0x0
+ffffffff80131e45:	mov    r8d,esi
+ffffffff80131e48:	and    r8b,0x8
+ffffffff80131e4c:	or     r8b,cl
+ffffffff80131e4f:	je     ffffffff80131ea8 <pointer_decode+0xd8>
+ffffffff80131e51:	mov    BYTE PTR [rdi+rcx*1],sil
+ffffffff80131e55:	movzx  ecx,BYTE PTR [rdi+0x3]
+ffffffff80131e59:	inc    cl
+ffffffff80131e5b:	mov    BYTE PTR [rdi+0x3],cl
+ffffffff80131e5e:	xor    eax,eax
+ffffffff80131e60:	cmp    cl,0x3
+ffffffff80131e63:	jb     ffffffff80131ea8 <pointer_decode+0xd8>
+ffffffff80131e65:	mov    BYTE PTR [rdi+0x3],0x0
+ffffffff80131e69:	movzx  ecx,BYTE PTR [rdi]
+ffffffff80131e6c:	mov    eax,0xffffffff
+ffffffff80131e71:	cmp    cl,0x3f
+ffffffff80131e74:	ja     ffffffff80131ea8 <pointer_decode+0xd8>
+ffffffff80131e76:	movzx  eax,BYTE PTR [rdi+0x1]
+ffffffff80131e7a:	lea    esi,[rax-0x100]
+ffffffff80131e80:	test   cl,0x10
+ffffffff80131e83:	cmovne eax,esi
+ffffffff80131e86:	movzx  esi,BYTE PTR [rdi+0x2]
+ffffffff80131e8a:	lea    edi,[rsi-0x100]
+ffffffff80131e90:	cmp    cl,0x20
+ffffffff80131e93:	cmovae esi,edi
+ffffffff80131e96:	and    cl,0x1
+ffffffff80131e99:	mov    WORD PTR [rdx],ax
+ffffffff80131e9c:	mov    WORD PTR [rdx+0x2],si
+ffffffff80131ea0:	mov    BYTE PTR [rdx+0x4],cl
+ffffffff80131ea3:	mov    eax,0x1
+ffffffff80131ea8:	ret
+ffffffff80131ea9:	int3
+ffffffff80131eaa:	int3
+ffffffff80131eab:	int3
+ffffffff80131eac:	int3
+ffffffff80131ead:	int3
+ffffffff80131eae:	int3
+ffffffff80131eaf:	int3
+
+ffffffff80131eb0 <pointer_idle>:
+ffffffff80131eb0:	xor    eax,eax
+ffffffff80131eb2:	test   rdi,rdi
+ffffffff80131eb5:	je     ffffffff80131ee2 <pointer_idle+0x32>
+ffffffff80131eb7:	movzx  ecx,BYTE PTR [rdi+0x3]
+ffffffff80131ebb:	cmp    cl,0x2
+ffffffff80131ebe:	ja     ffffffff80131ed7 <pointer_idle+0x27>
+ffffffff80131ec0:	test   cl,cl
+ffffffff80131ec2:	je     ffffffff80131ee2 <pointer_idle+0x32>
+ffffffff80131ec4:	movzx  ecx,BYTE PTR [rdi+0x4]
+ffffffff80131ec8:	cmp    cl,0xf
+ffffffff80131ecb:	ja     ffffffff80131ed7 <pointer_idle+0x27>
+ffffffff80131ecd:	inc    cl
+ffffffff80131ecf:	mov    BYTE PTR [rdi+0x4],cl
+ffffffff80131ed2:	cmp    cl,0x10
+ffffffff80131ed5:	jne    ffffffff80131ee2 <pointer_idle+0x32>
+ffffffff80131ed7:	mov    WORD PTR [rdi+0x3],0x0
+ffffffff80131edd:	mov    eax,0x1
+ffffffff80131ee2:	ret

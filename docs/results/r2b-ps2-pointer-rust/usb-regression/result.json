@@ -1,0 +1,66 @@
+{
+  "passed": true,
+  "hardware_activation": false,
+  "payloads": {
+    "/boot/vos.bin": {
+      "bytes": 1068936,
+      "sha256": "6dbb8cb69ef863177af0b5c1110c195af9bcb64651e01cb3b37d44bc2477d98b"
+    },
+    "/boot/vsh.elf": {
+      "bytes": 662984,
+      "sha256": "e7af3ee56164f587f7ca1338f7ddfcb202b6f4310f10b4dcba6a2576743cb181"
+    },
+    "/boot/hello.elf": {
+      "bytes": 13128,
+      "sha256": "c6c6416195a0f18d680d7f8f19be52ce02ff02912ef3bac45324fbe88006cd06"
+    },
+    "/boot/rixie.elf": {
+      "bytes": 662376,
+      "sha256": "77104da3b33caf809daf5e6674ac4e2fa9edf6a9e2e5dd59828514df76490d32"
+    },
+    "/boot/gui-demo.elf": {
+      "bytes": 14400,
+      "sha256": "f114dbe666ff479229ce851658847a4b11b5f0e5b61f45b73d8a0ee39fc57faa"
+    }
+  },
+  "cases": [
+    {
+      "firmware": "bios",
+      "mode": "normal",
+      "passed": true,
+      "serial_sha256": "821f63f9eed2d4c23936df335ce486903efe06de842e65b914af50e255040eb7",
+      "pci_unchanged": true
+    },
+    {
+      "firmware": "bios",
+      "mode": "resources",
+      "passed": true,
+      "serial_sha256": "3cafb075c402744bc8e00e598f1cf58c645bc9ff5cce0f87d98bfa30fa58b3e4",
+      "pci_unchanged": true
+    },
+    {
+      "firmware": "uefi",
+      "mode": "normal",
+      "passed": true,
+      "serial_sha256": "d06f98a4ef818c10e9814219d1bac220fa6f59a54997de995c66b9be0d6f5d67",
+      "pci_unchanged": true
+    },
+    {
+      "firmware": "uefi",
+      "mode": "resources",
+      "passed": true,
+      "serial_sha256": "efcdd461336c9d13051659e5c8cdec3d8b2e3272f1ea1690de224d32cc70385d",
+      "pci_unchanged": true
+    }
+  ],
+  "media": {
+    "bios": {
+      "path": "/home/veasnawt/src/vos-r2b/build/r2b-claude-1/usb-regression/bios.iso",
+      "sha256": "8c00a17b379c189d5759f964027a2d7bac4fd326e7ed0cd2e9989fabedb507fc"
+    },
+    "uefi": {
+      "path": "/home/veasnawt/src/vos-r2b/build/r2b-claude-1/usb-regression/uefi.iso",
+      "sha256": "a1305ebf58c8c8b020dd7b154c0f2f50cadfb468be88462a9fe30bcf64894435"
+    }
+  }
+}

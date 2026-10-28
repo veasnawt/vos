@@ -1,0 +1,16 @@
+{
+  "windows_c_free_before_bytes": 22930595840,
+  "measured_before": "2026-10-29 Get-PSDrive C and df /mnt/c (agreed)",
+  "reserve_bytes": 21474836480,
+  "provision_bytes": 134217728,
+  "headroom_before_after_provision": 1321541632,
+  "windows_c_free_after_bytes": 22927331328,
+  "df_mnt_c_after_bytes": 22927331328,
+  "headroom_after_bytes": 1452494848,
+  "r2b_claude_build_bytes": 134430720,
+  "codex_r2b1_build_bytes": 32505856,
+  "gate": "PASS for the 20 GiB reserve: Windows C: free fell by 3264512 bytes and 1452494848 bytes of headroom remain above the reserve. DISCLOSED: the logical WSL build tree (134430720 bytes, mostly three 11 MB Rust archives, a baseline source export and six ISOs) exceeded the 128 MiB provision by 212992 bytes; the VHDX absorbed it without proportional C: growth. No cleanup was performed to hide the overrun.",
+  "notes": "WSL logical free space and E: were not used for admission. No cleanup, compaction, backup or relocation performed. Antigravity storage ownership respected.",
+  "windows_c_consumed_bytes": 3264512,
+  "provision_overrun_logical_bytes": 212992
+}

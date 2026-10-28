@@ -1,0 +1,7 @@
+In file included from /usr/include/stdio.h:974,
+                 from tests/host/ps2-pointer-differential.c:5:
+In function ‘printf’,
+    inlined from ‘bench’ at tests/host/ps2-pointer-differential.c:80:5:
+/usr/include/x86_64-linux-gnu/bits/stdio2.h:118:10: error: SSE register return with SSE disabled
+  118 |   return __printf_chk (__USE_FORTIFY_LEVEL - 1, __fmt, __va_arg_pack ());
+      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

@@ -1,0 +1,6 @@
+ .text.pointer_decode
+                0xffffffff80131dd0       0xd9 build/r2b-claude-1/kernel-normal/rust/libvos_kernel.a(libvos_kernel.vos_kernel.45b20e7284a592af-cgu.0.rcgu.o)
+                0xffffffff80131dd0                pointer_decode
+ .text.pointer_idle
+                0xffffffff80131eb0       0x33 build/r2b-claude-1/kernel-normal/rust/libvos_kernel.a(libvos_kernel.vos_kernel.45b20e7284a592af-cgu.0.rcgu.o)
+                0xffffffff80131eb0                pointer_idle

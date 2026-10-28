@@ -1,0 +1,30 @@
+{
+  "vsh": {
+    "path": "/home/veasnawt/src/myos/build/app-console-20261025T051241Z/attempt-1/image/user/vsh.elf",
+    "sha256": "e7af3ee56164f587f7ca1338f7ddfcb202b6f4310f10b4dcba6a2576743cb181"
+  },
+  "hello": {
+    "path": "/home/veasnawt/src/myos/build/app-console-20261025T051241Z/attempt-1/image/user/hello.elf",
+    "sha256": "c6c6416195a0f18d680d7f8f19be52ce02ff02912ef3bac45324fbe88006cd06"
+  },
+  "rixie": {
+    "path": "/home/veasnawt/src/myos/build/app-console-20261025T051241Z/attempt-1/image/user/rixie.elf",
+    "sha256": "77104da3b33caf809daf5e6674ac4e2fa9edf6a9e2e5dd59828514df76490d32"
+  },
+  "gui-demo": {
+    "path": "/home/veasnawt/src/myos/build/n6-gui-20261025T083036Z/image-recipe-recovery-1/image/user/gui-demo.elf",
+    "sha256": "f114dbe666ff479229ce851658847a4b11b5f0e5b61f45b73d8a0ee39fc57faa"
+  },
+  "gui-probe": {
+    "path": "/home/veasnawt/src/myos/build/n6-gui-20261025T083036Z/image-recipe-recovery-1/image/user/gui-probe.elf",
+    "sha256": "2b976cffcc32802f7c4a9a95cb9d0966db4a4c5c5b0c3aaf91ab240065cbfe2b"
+  },
+  "pointer-demo": {
+    "path": "/home/veasnawt/src/myos/build/n6-pointer-1/coordinate-log-continuation-1/payload/pointer-demo.elf",
+    "sha256": "2389d0690177e1de08a6211919e1dc1247d81faaeb5e5c90c196b05fbb7022e2"
+  },
+  "pointer-probe": {
+    "path": "/home/veasnawt/src/myos/build/n6-pointer-1/attempt-1/user/pointer-probe.elf",
+    "sha256": "f871f8889a75c401b5674394d3041335ea0e099e9f22f0b5913d429a18475427"
+  }
+}

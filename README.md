@@ -45,10 +45,10 @@ Multiboot2 handoff through BIOS or UEFI; a legacy i386 baseline is also retained
   through PR #23; it enables no live controller operations. The
   [USB.1 Rust migration review](docs/results/usb1-rust-publication-review.md)
   covers production discovery decisions, shared validation, measured costs and
-  firmware evidence; migration is accepted through PR #24. This branch adds
-  [USB.2-B resource ownership](docs/results/usb2b-resource-ownership.md) for
-  review: real mapping/PMM rollback and worker fixtures, with no live xHCI
-  backend or DMA qualification. There is no USB device
+  firmware evidence; migration is accepted through PR #24.
+  [USB.2-B resource ownership](docs/results/usb2b-resource-ownership.md) is
+  merged through PR #25: real mapping/PMM rollback and worker fixtures, with no
+  live xHCI backend or DMA qualification. There is no USB device
   enumeration or USB keyboard/mouse support.
   [Original integration evidence and preview](docs/results/usb1-rust-integration.md).
 
@@ -128,7 +128,9 @@ Current limits include QEMU-only BIOS/OVMF validation, RAM tracked below 1 GiB,
 read-only trusted media, bounded single-endpoint networking, polling limitations
 and standard PS/2 keyboard/primary-button mouse input. USB input, production
 networking, writable storage, installation and Secure Boot are not implemented.
-Further Rust kernel migration beyond the merged R1 helper and broader hardware
+This branch's [R2-B Rust PS/2 pointer decoder](docs/results/r2b-ps2-pointer-rust.md)
+is verified in QEMU for review; it does not add USB input or fix physical
+USB-keyboard/mouse PCs. Further Rust kernel migration and broader hardware
 portability remain proposed tracks requiring separate authorization.
 
 The separate [Veasna OS React/Electron prototype](https://github.com/veasnawt/veasna-os)

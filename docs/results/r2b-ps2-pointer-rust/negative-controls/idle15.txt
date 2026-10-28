@@ -1,0 +1,1 @@
+idle15.bin: tests/host/ps2-pointer-differential.c:39: differential: Assertion `pointer_idle(&a)==pointer_idle_reference(&b)' failed.

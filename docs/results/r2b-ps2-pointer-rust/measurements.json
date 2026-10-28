@@ -1,0 +1,98 @@
+{
+  "decoder_state_bytes": {
+    "C": 5,
+    "Rust": 5,
+    "packet_bytes": 6,
+    "packet_align": 2,
+    "checked_by": "Rust const asserts and C _Static_assert in tests/host/ps2-pointer-differential.c"
+  },
+  "stack_frame_bytes": {
+    "Rust_pointer_decode": 0,
+    "Rust_pointer_idle": 0,
+    "C_baseline": 0,
+    "note": "leaf functions: no push, sub rsp or call; only the caller-pushed 8-byte return address",
+    "target_max": 128
+  },
+  "loaded_kernel": {
+    "baseline_filesz_memsz": [
+      229600,
+      851968
+    ],
+    "r2b_filesz_memsz": [
+      229600,
+      851968
+    ],
+    "delta_bytes": [
+      0,
+      0
+    ],
+    "target_max_growth": 4096,
+    "sections_baseline": {
+      ".text": 180224,
+      ".rodata": 45056,
+      ".data": 184,
+      ".bss": 597824
+    },
+    "sections_r2b": {
+      ".text": 180224,
+      ".rodata": 45056,
+      ".data": 184,
+      ".bss": 597824
+    }
+  },
+  "decoder_code_bytes": {
+    "baseline_C": {
+      "pointer_decode": 126,
+      "pointer_idle": 44
+    },
+    "r2b_Rust": {
+      "pointer_decode": 217,
+      "pointer_idle": 51
+    }
+  },
+  "vos_bin_file_bytes": {
+    "baseline": 1070160,
+    "r2b": 1068936
+  },
+  "rust_archive_bytes": {
+    "baseline": 11109356,
+    "r2b": 11109896
+  },
+  "permanent_allocations": {
+    "new": 0,
+    "evidence": ".data and .bss sizes unchanged; decoder storage remains the existing 5-byte field in struct keyboard"
+  },
+  "source_bytes": {
+    "kernel/rust/input/ps2_pointer.rs": 2125,
+    "arch/x86_64/rust/ps2_pointer.rs": 2802,
+    "arch/x86_64/pointer.c": 769
+  },
+  "performance": {
+    "conditions": "hosted x86_64 microbenchmark, release build, taskset single CPU, same archive as kernel; not kernel latency",
+    "results": {
+      "valid packet stream": {
+        "C_median_ns": 3.433,
+        "Rust_median_ns": 5.17,
+        "ratio": 1.51,
+        "samples": 7,
+        "iterations_per_sample": 6000000
+      },
+      "rejected unsynchronized bytes": {
+        "C_median_ns": 2.325,
+        "Rust_median_ns": 3.518,
+        "ratio": 1.51,
+        "samples": 7,
+        "iterations_per_sample": 6000000
+      },
+      "decode plus idle poll": {
+        "C_median_ns": 4.823,
+        "Rust_median_ns": 6.794,
+        "ratio": 1.41,
+        "samples": 7,
+        "iterations_per_sample": 6000000
+      }
+    },
+    "assessment": "Rust adds about 1.2-2.0 ns per call (1.4-1.5x) from FFI null/alignment/overlap and state-validity checks absent in C. A PS/2 mouse delivers at most a few hundred bytes per second at the configured 100 samples/s, so the added cost is well under one microsecond per second of input."
+  },
+  "baseline": "d2c0ac2d92bb917531a372d21d6b432425c4645f (built from git archive, same rustc/gcc)"
+}

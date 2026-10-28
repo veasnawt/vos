@@ -1,0 +1,1 @@
+buttons3.bin: tests/host/ps2-pointer-differential.c:19: feed: Assertion `r==s && !memcmp(a,b,5) && !memcmp(x,y,6)' failed.

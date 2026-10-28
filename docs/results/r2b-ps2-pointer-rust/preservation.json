@@ -1,0 +1,28 @@
+{
+  "head": "d2c0ac2d92bb917531a372d21d6b432425c4645f",
+  "checks": {
+    "git refs (6)": "unchanged",
+    "worktrees": "unchanged (single checkout)",
+    "stashes": "none before, none after",
+    "index": "unchanged before commit",
+    "Codex build/r2b-1 evidence (446 files)": "all sha256 unchanged",
+    "tracked docs/results history": "unmodified vs d2c0ac2",
+    "Codex untracked sources": "unchanged except scripts/test-ps2-pointer-native.py (corrected) and progress.md (appended)",
+    "other VOS checkouts": "not written; HEADs recorded"
+  },
+  "codex_original_snapshot": "build/r2b-claude-1/preservation/codex-original/{tracked.patch,untracked.tar,*.sha256}",
+  "codex_original_native_runner_sha256": "c79afcf3e18ea967b175063a21cfa7560e9a15d84648658da3111a1335d82a1e",
+  "codex_original_progress_sha256": "e479ee638ed4c33857f659e908a3827dcf4625a5a23d3060d9166bc357064e0a",
+  "preserved_failures": [
+    "codex-interrupted/first-link-failure.json (net_ipv4.o omitted, corrected)",
+    "codex-interrupted/host-first-* (release harness SSE build failure, corrected by Codex)",
+    "codex-interrupted/bios-normal (shell response pwd: no disk attached)",
+    "linkage.json codex_kernel_verify_identical_to_normal (verify kernel lacked -DVOS_GUI_VERIFY; never booted)",
+    "native-attempt-1 (Claude: UEFI producer lacked x86_64-efi modules; BIOS normal passed)"
+  ],
+  "external_inputs_read_only": [
+    "/home/veasnawt/src/myos/build (application ELFs and disk.img, hash-checked)",
+    "/home/veasnawt/vos-evidence/.../x86_64-efi (hash-checked)"
+  ],
+  "not_found": "No R2-A assessment exists in any local VOS checkout or docs tree; R2 scope was taken from docs/plans/MASTER-PLAN.md section 6 and the task statement."
+}

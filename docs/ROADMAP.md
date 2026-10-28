@@ -200,10 +200,16 @@ implemented independently of this kernel proof.
 USB.2-A's [portable Rust core](results/usb2a-rust-core.md) is merged through
 PR #23. It models bounded validation, rings and lifecycle without operating a
 controller. The separately authorized
-[USB.2-B ownership foundation](results/usb2b-resource-ownership.md) is implemented
-and verified in this PR candidate, not yet accepted. It adds non-device scoped
-mapping/PMM ownership and worker fixtures, not a live backend. USB.2-C activation
-remains separately authorized future work. USB.1's original evidence is preserved.
+[USB.2-B ownership foundation](results/usb2b-resource-ownership.md) is merged
+through PR #25 at `d2c0ac2d92bb917531a372d21d6b432425c4645f`. It adds non-device
+scoped mapping/PMM ownership and worker fixtures, not a live backend. USB.2-C
+activation remains separately authorized future work. USB.1's original evidence
+is preserved.
+
+The first R2 increment, the [R2-B Rust PS/2 pointer decoder](results/r2b-ps2-pointer-rust.md),
+is implemented and verified in this PR candidate, not yet accepted. Only the
+pure packet/idle decoder moved to Rust; the PS/2 controller, routing and GUI
+delivery remain C. Further R2 drivers and R3-R5 remain separately authorized.
 This status update grants no implementation authority.
 Unrelated bug fixes, boot-media work and desktop planning need not
 wait for the full migration. Hardware and migration work coordinate when sharing

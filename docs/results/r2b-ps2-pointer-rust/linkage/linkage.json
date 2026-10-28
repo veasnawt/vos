@@ -1,0 +1,18 @@
+{
+  "kernel": "build/r2b-claude-1/kernel-normal/vos.bin",
+  "kernel_sha256": "6dbb8cb69ef863177af0b5c1110c195af9bcb64651e01cb3b37d44bc2477d98b",
+  "codex_kernel_final_sha256": "6dbb8cb69ef863177af0b5c1110c195af9bcb64651e01cb3b37d44bc2477d98b",
+  "reproduced_byte_identical": true,
+  "verify_kernel_sha256": "c5b7f1b636c180a271c29474f9a8830f0e2f0004c3b6791dcb77a248f7403dc4",
+  "codex_kernel_verify_sha256": "6dbb8cb69ef863177af0b5c1110c195af9bcb64651e01cb3b37d44bc2477d98b",
+  "codex_kernel_verify_identical_to_normal": true,
+  "archive_sha256": "4e7238c5831779a12229c91779a660749f673557559088b15325ff0ded8200a8",
+  "codex_archive_sha256": "4e7238c5831779a12229c91779a660749f673557559088b15325ff0ded8200a8",
+  "pointer_o_references": {
+    "r2b": 0,
+    "baseline": 14
+  },
+  "defining_member": "libvos_kernel.a(libvos_kernel.vos_kernel.45b20e7284a592af-cgu.0.rcgu.o)",
+  "leaf_functions_no_stack_frame": true,
+  "no_sse": true
+}
