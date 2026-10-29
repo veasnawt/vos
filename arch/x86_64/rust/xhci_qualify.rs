@@ -149,6 +149,14 @@ pub struct Report {
     mapping_error: i32,
     usb1_compatible: u32,
 }
+impl Report {
+    pub(crate) fn status(&self) -> i32 {
+        self.status
+    }
+    pub(crate) fn pci_command(&self) -> u32 {
+        self.command_before
+    }
+}
 const _: () = {
     assert!(size_of::<Report>() == 224 && align_of::<Report>() == 8);
     assert!(offset_of!(Report, base) == 8 && offset_of!(Report, status) == 16);
@@ -173,7 +181,7 @@ impl Config for PciConfig {
 
 /// Copies one DWORD at a time from the read-only lease, within the profile
 /// extent and a fixed budget. Every value is copied before interpretation.
-struct BarWords<'a> {
+pub(crate) struct BarWords<'a> {
     lease: &'a BarLease,
     reads: u32,
 }
@@ -242,9 +250,14 @@ fn record_inspection(r: &mut Report, i: &Inspection) {
     }
 }
 
+/// Runs while the lease is held, after the first and before the second
+/// observation of USBCMD/USBSTS/legacy words, so their stability check spans
+/// it. Reads only: `BarWords` has no write operation.
+pub(crate) type Hook<'h> = &'h mut dyn FnMut(&mut BarWords<'_>, &Inspection) -> Result<(), Reason>;
+
 /// Everything that touches the leased BAR. Second observations of USBCMD,
 /// USBSTS and legacy-support words follow the walk, before release.
-fn inspect_bar(w: &mut BarWords<'_>, r: &mut Report) -> Result<(), Reason> {
+fn inspect_bar(w: &mut BarWords<'_>, r: &mut Report, hook: Hook<'_>) -> Result<(), Reason> {
     let i = capabilities::inspect(w).map_err(Reason::from)?;
     record_inspection(r, &i);
     // USB.1's accepted decoder must also accept the same copied header.
@@ -260,6 +273,7 @@ fn inspect_bar(w: &mut BarWords<'_>, r: &mut Report) -> Result<(), Reason> {
         r.usblegsup_after = w.word(l.offset).map_err(Reason::from)?;
         r.usblegctlsts_after = w.word(l.offset + 4).map_err(Reason::from)?;
     }
+    hook(w, &i)?;
     r.usbcmd_after = w.word(op).map_err(Reason::from)?;
     r.usbsts_after = w.word(op + 4).map_err(Reason::from)?;
     Ok(())
@@ -272,7 +286,7 @@ fn finish(r: &mut Report, status: i32, reason: Reason) -> i32 {
     status
 }
 
-fn qualify(candidates: u32, complete: bool, physical_bits: u32, r: &mut Report) -> i32 {
+pub(crate) fn qualify(candidates: u32, complete: bool, physical_bits: u32, r: &mut Report, hook: Hook<'_>) -> i32 {
     r.candidates = candidates;
     r.complete = u32::from(complete);
     if let Err(reason) = qualify::select(candidates, complete) {
@@ -295,7 +309,7 @@ fn qualify(candidates: u32, complete: bool, physical_bits: u32, r: &mut Report) 
     };
     r.lease_acquired = 1;
     let mut words = BarWords { lease: &lease, reads: 0 };
-    let inspected = inspect_bar(&mut words, r);
+    let inspected = inspect_bar(&mut words, r, hook);
     r.mmio_reads = words.reads;
     // Release before any PCI re-observation; failure retains the lease (Drop).
     if lease.release().is_err() {
@@ -327,7 +341,7 @@ fn qualify(candidates: u32, complete: bool, physical_bits: u32, r: &mut Report) 
 }
 
 /// All-zero initial report (reason_text null until `finish`).
-const ZERO: Report = Report {
+pub(crate) const ZERO: Report = Report {
     reason_text: core::ptr::null(),
     base: 0,
     status: 0,
@@ -406,5 +420,5 @@ pub unsafe extern "C" fn vos_xhci_qualify_v1(
         out.write(ZERO);
         &mut *out
     };
-    qualify(candidates, complete != 0, physical_bits, r)
+    qualify(candidates, complete != 0, physical_bits, r, &mut |_, _| Ok(()))
 }

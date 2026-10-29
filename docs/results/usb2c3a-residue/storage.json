@@ -1,0 +1,22 @@
+{
+  "windows_c_free_preflight_bytes": 23259885568,
+  "windows_c_free_final_bytes": 23276871680,
+  "reserve_bytes": 21474836480,
+  "headroom_above_reserve_final_bytes": 1802035200,
+  "reserve_satisfied": true,
+  "provision_bytes": 629145600,
+  "stop_threshold_bytes": 566231040,
+  "stop_threshold_basis": "fixed 90% warning/stop checkpoint of the authorized 600 MiB",
+  "build_tree_disk_bytes_final": 500346880,
+  "committed_evidence_bytes": 561177,
+  "within_provision": true,
+  "below_stop_threshold": true,
+  "provision_changed_during_execution": false,
+  "storage_driven_scope_decisions": [
+    "USB.1, USB.2-C1 and USB.2-C2 native regressions were consolidated into the C3a native matrix (modes n/p/c cover USB.1 probe and normal boots; q covers C1 qualification; d covers the C2 DMA exercise) instead of running their separate native runners",
+    "the trial c3a-host run is the final hosted C3a evidence; its archive SHA-256 equals kernel-3 and kernel-repro (124ba537...)",
+    "QEMU traces and ISOs stay in build/; only their hashes are committed (media.json)"
+  ],
+  "deletions": 0,
+  "cleanup_or_compaction": false
+}

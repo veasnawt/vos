@@ -1,0 +1,6 @@
+{
+  "run": "build/usb2c3a-1/final/native (retained, result.json passed=false)",
+  "result": "13 of 15 PASS; bios-q and uefi-q FAIL: register reads 145 == expected 36",
+  "cause": "runner parsed mmio_reads from the whole serial tail; in guard+qualification boots the later C1 qualification report (mmio_reads=0x12) overrode the guard report (0x7f = 127); 127 + 18 = 145 matches the trace exactly",
+  "correction": "parse only the guard block (first usb2c3a line through its verdict); rerun only the two affected cases into a fresh directory; production code unchanged"
+}

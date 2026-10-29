@@ -1,0 +1,9 @@
+error[E0451]: fields `steps` and `len` of struct `Plan` are private
+ --> /home/veasnawt/src/vos-usb2c3a/build/usb2c3a-1/trial/c3a-host/cf-plan-only-from-planner.rs:2:28
+  |
+2 | fn main() { let _ = Plan { steps: [Step::Reset; 24], len: 1 }; }
+  |                            ^^^^^ private field       ^^^ private field
+
+error: aborting due to 1 previous error
+
+For more information about this error, try `rustc --explain E0451`.

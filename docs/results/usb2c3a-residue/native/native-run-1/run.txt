@@ -1,0 +1,26 @@
+bios-n-qemu-xhci PASS
+bios-r-qemu-xhci PASS
+bios-q-qemu-xhci FAIL register reads 145 == expected 36
+bios-d-qemu-xhci PASS
+bios-p-qemu-xhci PASS
+bios-c-qemu-xhci PASS
+bios-r-none PASS
+bios-r-nec-xhci PASS
+bios-r-two-xhci PASS
+uefi-n-qemu-xhci PASS
+uefi-r-qemu-xhci PASS
+uefi-q-qemu-xhci FAIL register reads 145 == expected 36
+uefi-d-qemu-xhci PASS
+uefi-p-qemu-xhci PASS
+uefi-c-qemu-xhci PASS
+Traceback (most recent call last):
+  File "/home/veasnawt/src/vos-usb2c3a/scripts/test-usb2c3a-native.py", line 303, in <module>
+    main()
+    ~~~~^^
+  File "/home/veasnawt/src/vos-usb2c3a/scripts/test-usb2c3a-native.py", line 299, in main
+    need(report['passed'], 'native matrix failures: ' + str(report['failures']))
+    ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/veasnawt/src/vos-usb2c3a/scripts/test-usb2c1-native.py", line 56, in need
+    raise RuntimeError(message)
+RuntimeError: native matrix failures: [{'case': 'bios-q-qemu-xhci', 'error': 'register reads 145 == expected 36'}, {'case': 'uefi-q-qemu-xhci', 'error': 'register reads 145 == expected 36'}]
+exit=1

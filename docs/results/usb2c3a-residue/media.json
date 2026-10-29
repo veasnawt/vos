@@ -1,0 +1,118 @@
+{
+  "build/usb2c3a-1/final/native/bios-c-qemu-xhci/trace.txt": {
+    "sha256": "56915687d0de37f008fdcca81d9f64d9dacb77eb4141284a2bac87a53df9bad9",
+    "bytes": 5890411
+  },
+  "build/usb2c3a-1/final/native/bios-d-qemu-xhci/trace.txt": {
+    "sha256": "a41bec544f343db71c63228aaf4c41fb537fdd4645a088b4158f26a3c73b9155",
+    "bytes": 7400849
+  },
+  "build/usb2c3a-1/final/native/bios-n-qemu-xhci/trace.txt": {
+    "sha256": "821093ce47bd072a2d6be807249f6baed03583d59e5bb36acb9c3422af23234e",
+    "bytes": 6853093
+  },
+  "build/usb2c3a-1/final/native/bios-p-qemu-xhci/trace.txt": {
+    "sha256": "44d7cd945bed8c3c51576d785607e7c3f4ac886003e71c5e22d34c8b071bb18d",
+    "bytes": 7020074
+  },
+  "build/usb2c3a-1/final/native/bios-q-qemu-xhci/trace.txt": {
+    "sha256": "cf83b0da10452c7656698272d64500635e4c1b3cc7521faa839b5cfa25582550",
+    "bytes": 7520593
+  },
+  "build/usb2c3a-1/final/native/bios-r-nec-xhci/trace.txt": {
+    "sha256": "aa2ae7a288ef937cd4085ac82384f7d82f37a1f4c1da48aa82f92a8f18e8bdbd",
+    "bytes": 7168232
+  },
+  "build/usb2c3a-1/final/native/bios-r-none/trace.txt": {
+    "sha256": "bde9285ba792b1b3909537176edf67b6f8bf66057dc15a2847b3f75eb65f10b2",
+    "bytes": 7202915
+  },
+  "build/usb2c3a-1/final/native/bios-r-qemu-xhci/trace.txt": {
+    "sha256": "46815f91cf6f6a539ba49353861e8c2a9e5a4086ecf2bb0e0b7b2c5cd9e7ae20",
+    "bytes": 7236531
+  },
+  "build/usb2c3a-1/final/native/bios-r-two-xhci/trace.txt": {
+    "sha256": "4f64bb73f3a570f4e05b3630c458ef7821d693df6dbe85d56f1a4459138b4a52",
+    "bytes": 7226169
+  },
+  "build/usb2c3a-1/final/native/uefi-c-qemu-xhci/trace.txt": {
+    "sha256": "0ab5cf1e0c2b84a4d782ecc0d5e250a24145d2dfce9445c966ffcec86eaf5b88",
+    "bytes": 3727097
+  },
+  "build/usb2c3a-1/final/native/uefi-d-qemu-xhci/trace.txt": {
+    "sha256": "db3d4324c19edefd0724ba6a7ffbcfa02ed3398883eeb2e08ed1169f8bc4439d",
+    "bytes": 5306520
+  },
+  "build/usb2c3a-1/final/native/uefi-n-qemu-xhci/trace.txt": {
+    "sha256": "5c0ef0baa00be3e0032cc39f561933d75e56fc22b08d9c568a97691beea3a271",
+    "bytes": 5276311
+  },
+  "build/usb2c3a-1/final/native/uefi-p-qemu-xhci/trace.txt": {
+    "sha256": "946c799ceecab6fc17804856a5c2e1cbc7a7a4b8848905fa06831da82d104147",
+    "bytes": 5146949
+  },
+  "build/usb2c3a-1/final/native/uefi-q-qemu-xhci/trace.txt": {
+    "sha256": "fa90de378fb572bf6f7baf925dcc549a1fce0f70e5a48937d69b9f289b9fd2c2",
+    "bytes": 5646881
+  },
+  "build/usb2c3a-1/final/native/uefi-r-qemu-xhci/trace.txt": {
+    "sha256": "f0dffecee5db15215de9cbed1e77697cf7b24fdf004d06567591307f41c520b2",
+    "bytes": 5335425
+  },
+  "build/usb2c3a-1/final/native/bios.iso": {
+    "sha256": "05b14ca55db21bf17c9d434dfa6723d77a2ce40310cae35bd1382cc29dfa0a3b",
+    "bytes": 8030208
+  },
+  "build/usb2c3a-1/final/native/uefi.iso": {
+    "sha256": "8e0cdc7d00442bf44825d8793b786d249f2edf0e1df822db8f9b1f783ebc2752",
+    "bytes": 12578816
+  },
+  "build/usb2c3a-1/final/native-2/bios-q-qemu-xhci/trace.txt": {
+    "sha256": "7cc881ee7ca2db390f14cddae06caf11cb81b1b62423f44965b36dbe29e76248",
+    "bytes": 7563248
+  },
+  "build/usb2c3a-1/final/native-2/uefi-q-qemu-xhci/trace.txt": {
+    "sha256": "9d1cf70ff649f841326136c12568c425935f8bbf62c558cfd0574ee1b7952932",
+    "bytes": 5992688
+  },
+  "build/usb2c3a-1/final/native-2/bios.iso": {
+    "sha256": "41c70ce74943a897874c3a5667bda6bf531341c4873c2caf07ef78bf889e4061",
+    "bytes": 8030208
+  },
+  "build/usb2c3a-1/final/native-2/uefi.iso": {
+    "sha256": "da03c95ac0fcfd27af7218827f4dd0dae03ba4ab9916a6019960802ae32652ea",
+    "bytes": 12578816
+  },
+  "build/usb2c3a-1/kernel-3/vos.bin": {
+    "sha256": "0b1e8f5328ff1fc0cba50a3cfef27ea72deef6f4eca20d29c5961c348efb651c",
+    "bytes": 1146832
+  },
+  "build/usb2c3a-1/kernel-3/rust/libvos_kernel.a": {
+    "sha256": "124ba537a3b057a50001185e8deabdde027fc7f31f365a108982a7ddc36ec9c1",
+    "bytes": 11162524
+  },
+  "build/usb2c3a-1/kernel-repro/vos.bin": {
+    "sha256": "0b1e8f5328ff1fc0cba50a3cfef27ea72deef6f4eca20d29c5961c348efb651c",
+    "bytes": 1146832
+  },
+  "build/usb2c3a-1/kernel-repro/rust/libvos_kernel.a": {
+    "sha256": "124ba537a3b057a50001185e8deabdde027fc7f31f365a108982a7ddc36ec9c1",
+    "bytes": 11162524
+  },
+  "build/usb2c3a-1/kernel-3-verify/vos.bin": {
+    "sha256": "c02c1be75b378e5e9c3acb068deaa9b2939667d04cdea084104cdc5f3c38d0fa",
+    "bytes": 1154752
+  },
+  "build/usb2c3a-1/baseline-src/build/k/vos.bin": {
+    "sha256": "c07e8f36404a517b55292d5e3567b3dcfa18a8a5696b19bcce7b0bce9ee89fdd",
+    "bytes": 1128584
+  },
+  "build/usb2c3a-1/baseline-src/build/k/rust/libvos_kernel.a": {
+    "sha256": "98e850878bdada7c8d0eebf12d0e1dc2449c0cc08d67d956753c4ad50a071972",
+    "bytes": 11151436
+  },
+  "build/usb2c3a-1/kernel-1/vos.bin": {
+    "sha256": "7886d18555b192d098817cc3219b74982e5f561b56b090ce3da46e1bd26b8224",
+    "bytes": 2118408
+  }
+}

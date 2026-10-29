@@ -44,6 +44,7 @@
 #define PMM_EMMAP       7   /* memory map missing or unsupported */
 #define PMM_EINVAL      8   /* bad instance parameters or repeated init */
 #define PMM_ECORRUPT    9   /* internal invariant broken */
+#define PMM_EINUSE      10  /* frame already allocated: not reserved again */
 
 #define PMM_UNINIT      0
 #define PMM_READY       1
@@ -75,6 +76,11 @@ int pmm_alloc_in(struct pmm *p, uint64_t *phys);       /* *phys = 0 on failure *
 int pmm_free_check_in(const struct pmm *p, uint64_t phys);     /* validation only */
 int pmm_free_in(struct pmm *p, uint64_t phys);         /* no change on failure */
 int pmm_frame_state_in(const struct pmm *p, uint64_t phys);
+/* USB.2-C3a: mark one specific free frame allocated for the rest of the boot
+ * (firmware-owned DMA residue found after initialization). It never claims an
+ * allocated frame (PMM_EINUSE) or a never-allocatable one (PMM_EPROTECTED:
+ * already safe). No change on failure; there is no matching release path. */
+int pmm_reserve_in(struct pmm *p, uint64_t phys);
 /* Recount both bitmaps and check every invariant; PMM_OK or PMM_ECORRUPT. */
 int pmm_check_in(const struct pmm *p);
 
@@ -82,6 +88,7 @@ int pmm_check_in(const struct pmm *p);
 int pmm_init(const struct boot_info *bi, const struct resv_table *t);
 int pmm_alloc_frame(uint64_t *phys);    /* zeroed frame; panics on PMM_ECORRUPT */
 int pmm_free_frame(uint64_t phys);      /* callers should treat any failure as a bug */
+int pmm_reserve_frame(uint64_t phys);   /* pmm_reserve_in on the kernel instance */
 uint64_t pmm_free_count(void);
 const struct pmm *pmm_kernel(void);     /* read-only view for diagnostics and tests */
 const char *pmm_strerror(int err);

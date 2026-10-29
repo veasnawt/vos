@@ -1,0 +1,10 @@
+{
+  "run": "first pure Rust residue/lifecycle run (stdout only)",
+  "result": "FAIL: 11 passed, 1 failed (command_ring_walk_is_bounded)",
+  "cause": "PRODUCTION DEFECT: residue.rs masked the Link TRB pointer reserved bits 3:0 before validating, so a malformed target (0x674a248) was treated as the ring start and the misalignment check was dead code",
+  "correction": "read the raw pointer; nonzero reserved bits now flag RING_OPEN; test unchanged",
+  "earlier": [
+    "kernel archive compile error: Violation cast to u32 (data-carrying enum) -> explicit code()",
+    "candidate kernel-1 linked core/compiler_builtins (+181,730 B) through a fallible slice range in Plan::steps; replaced with panic-free get/get_mut; kernel-1 retained as evidence"
+  ]
+}

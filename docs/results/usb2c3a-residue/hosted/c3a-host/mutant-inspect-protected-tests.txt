@@ -1,0 +1,20 @@
+
+running 1 test
+test seabios_residue_in_reserved_memory_is_uninspected_not_safe ... FAILED
+
+failures:
+
+---- seabios_residue_in_reserved_memory_is_uninspected_not_safe stdout ----
+
+thread 'seabios_residue_in_reserved_memory_is_uninspected_not_safe' (80276) panicked at tests/rust/xhci_residue.rs:111:5:
+assertion `left == right` failed
+  left: 0
+ right: 2
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    seabios_residue_in_reserved_memory_is_uninspected_not_safe
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 11 filtered out; finished in 0.00s
+

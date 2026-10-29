@@ -246,13 +246,18 @@ void kernel_main(uint32_t mb2_magic, uint32_t mb2_info)
         serial_puts(devmap_strerror(derr));
     }
     serial_puts("\r\n");
-    /* U1: the screen console (framebuffer, VGA text when positively known, or none). */
-    screen_init(&bi);
-    user_console_set_diagnostics(boot_option(bi.cmdline, "vos.input_diag=1"));
     /* USB.2-C1: USB.1's permanent probe mapping and the qualification lease
      * are mutually exclusive. Refuse the pair before either reads the BAR. */
     int usb_conflict = xhci_qualify_conflict(bi.cmdline);
-    check(!usb_conflict, "vos.usb_probe=1 and vos.usb2-qualify=1 are mutually exclusive");
+    /* USB.2-C3a: opt-in firmware DMA residue guard. It runs here, right after
+     * the device window exists and before screen_init or any later PMM user,
+     * and verifies every firmware frame is still unallocated as it reserves it. */
+    if (!usb_conflict)
+        check(xhci_residue_boot(bi.cmdline), "USB.2-C3a firmware residue guard integrity");
+    /* U1: the screen console (framebuffer, VGA text when positively known, or none). */
+    screen_init(&bi);
+    user_console_set_diagnostics(boot_option(bi.cmdline, "vos.input_diag=1"));
+    check(!usb_conflict, "vos.usb_probe=1 is exclusive with vos.usb2-qualify=1 and vos.usb2-residue=1");
     if (!usb_conflict)
         xhci_boot_probe(bi.cmdline);
 

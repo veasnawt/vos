@@ -1,0 +1,30 @@
+{
+  "baseline": "62ce8de2b3d4b12e53c465f9ad3bb92fb0bfeffe",
+  "worktrees": [
+    "/home/veasnawt/src/vos-r2b     4352815 [feat/r2b-ps2-pointer-rust]",
+    "/home/veasnawt/src/vos-usb2c1  1b4c4fb [feat/usb2c1-qualification]",
+    "/home/veasnawt/src/vos-usb2c2  885b9e3 [feat/usb2c2-dma]",
+    "/home/veasnawt/src/vos-usb2c3a 62ce8de [feat/usb2c3a-residue-guard] (new, authorized)"
+  ],
+  "stashes": 0,
+  "ref_changes": [
+    "new branch feat/usb2c3a-residue-guard at 62ce8de (authorized)"
+  ],
+  "existing_worktrees_unchanged": {
+    "vos-r2b": "4352815 clean",
+    "vos-usb2c1": "1b4c4fb clean (C1 evidence untouched)",
+    "vos-usb2c2": "885b9e3 clean (C2 evidence untouched)"
+  },
+  "accepted_evidence_modified": false,
+  "retained_failures": [
+    "history/gate-a-first-run.json (production defect: masked Link TRB pointer; fixed, test unchanged)",
+    "history/kernel1-core-linked-measurements.json (candidate over budget through core linkage; replaced)",
+    "history/kernel2-pre-link-fix-measurements.json (candidate before the Link TRB fix)",
+    "native/native-run-1 (13/15; bios-q and uefi-q runner parse failure, result.json passed=false)",
+    "history/native-run-1-parse.json",
+    "history/archive-identity-note.json (ad-hoc rebuild hash mismatch; identity proven by make rebuild)"
+  ],
+  "build_tree_retained": "build/usb2c3a-1 (not committed; protected by the fail-closed root make clean)",
+  "deletions": 0,
+  "history_rewritten": false
+}
