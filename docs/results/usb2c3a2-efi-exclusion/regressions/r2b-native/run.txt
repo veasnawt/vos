@@ -1,0 +1,4 @@
+normal bios PASS
+normal uefi PASS
+verify bios PASS
+verify uefi PASS

@@ -15,6 +15,9 @@ mod xhci_qualify;
 mod xhci_link;
 mod xhci_dma;
 mod xhci_residue;
+#[path = "../../../kernel/rust/boot/efi_memory.rs"]
+pub mod efi_memory;
+mod efi_exclusion;
 mod ps2_pointer;
 
 // SAFETY: this private kernel symbol is defined exactly once, with the scalar

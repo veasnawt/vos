@@ -1,0 +1,161 @@
+{
+  "case": "uefi-n-qemu-xhci+disk",
+  "firmware": "uefi",
+  "mode": "n",
+  "device": "qemu-xhci+disk",
+  "expect": "exclusion",
+  "passed": false,
+  "first_allocation": {
+    "avail_ptr": 18446744071563522240,
+    "alloc_ptr": 18446744071563489472,
+    "frames": 262144,
+    "usable": 20701,
+    "free": 20701,
+    "hint": 0,
+    "ignored": 0,
+    "state": 1
+  },
+  "mb2": {
+    "tags": [
+      [
+        21,
+        12
+      ],
+      [
+        1,
+        43
+      ],
+      [
+        2,
+        27
+      ],
+      [
+        3,
+        20
+      ],
+      [
+        3,
+        22
+      ],
+      [
+        3,
+        22
+      ],
+      [
+        3,
+        25
+      ],
+      [
+        6,
+        520
+      ],
+      [
+        9,
+        1428
+      ],
+      [
+        4,
+        16
+      ],
+      [
+        8,
+        38
+      ],
+      [
+        12,
+        16
+      ],
+      [
+        14,
+        28
+      ],
+      [
+        15,
+        44
+      ],
+      [
+        17,
+        5728
+      ],
+      [
+        0,
+        8
+      ]
+    ],
+    "efi_header": {
+      "size": 5728,
+      "descriptor_size": 48,
+      "descriptor_version": 1,
+      "descriptors": 119,
+      "remainder": 0
+    },
+    "mmap_entries": 21,
+    "efi_descriptors": 119
+  },
+  "efi": {
+    "boot_services_frames_in_window": 9777,
+    "boot_services_frames_allocatable": 0,
+    "excluded_frames_oracle": 9777,
+    "excluded_ranges_oracle": [
+      [
+        "0x900000",
+        "0x1780000"
+      ],
+      [
+        "0x3b6c000",
+        "0x3b8c000"
+      ],
+      [
+        "0x6320000",
+        "0x693f000"
+      ],
+      [
+        "0x6a00000",
+        "0x74ed000"
+      ],
+      [
+        "0x77ff000",
+        "0x7e00000"
+      ],
+      [
+        "0x7e6f000",
+        "0x7ec5000"
+      ],
+      [
+        "0x7ec6000",
+        "0x7ef4000"
+      ]
+    ],
+    "excluded_ranges_kernel": [
+      [
+        "0x900000",
+        "0x1780000"
+      ],
+      [
+        "0x3b6c000",
+        "0x3b8c000"
+      ],
+      [
+        "0x6320000",
+        "0x693f000"
+      ],
+      [
+        "0x6a00000",
+        "0x74ed000"
+      ],
+      [
+        "0x77ff000",
+        "0x7e00000"
+      ],
+      [
+        "0x7e6f000",
+        "0x7ec5000"
+      ],
+      [
+        "0x7ec6000",
+        "0x7ef4000"
+      ]
+    ]
+  },
+  "serial_sha256": "3e03b25b5fec5d3e708b4a6f1e09a8e549797b4855c4a25a89f66db313a90bce"
+}

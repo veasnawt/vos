@@ -1,0 +1,245 @@
+{
+  "commands": [
+    [
+      "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+      "--edition=2024",
+      "-Dwarnings",
+      "--crate-name",
+      "vos_boot",
+      "--crate-type=rlib",
+      "-Coverflow-checks=yes",
+      "-Cdebug-assertions=yes",
+      "/home/veasnawt/src/vos-usb2c3a2/kernel/rust/boot/lib.rs",
+      "-o",
+      "/home/veasnawt/src/vos-usb2c3a2/build/usb2c3a2-1/host-2/libvos_boot.rlib"
+    ],
+    [
+      "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+      "--edition=2024",
+      "-Dwarnings",
+      "--test",
+      "-Copt-level=1",
+      "-Coverflow-checks=yes",
+      "--extern",
+      "vos_boot=/home/veasnawt/src/vos-usb2c3a2/build/usb2c3a2-1/host-2/libvos_boot.rlib",
+      "tests/rust/efi_memory.rs",
+      "-o",
+      "/home/veasnawt/src/vos-usb2c3a2/build/usb2c3a2-1/host-2/efi-tests"
+    ],
+    [
+      "/home/veasnawt/src/vos-usb2c3a2/build/usb2c3a2-1/host-2/efi-tests",
+      "--test-threads=1"
+    ],
+    [
+      "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+      "--edition=2024",
+      "--extern",
+      "vos_boot=/home/veasnawt/src/vos-usb2c3a2/build/usb2c3a2-1/host-2/libvos_boot.rlib",
+      "/home/veasnawt/src/vos-usb2c3a2/build/usb2c3a2-1/host-2/cf-efi-map-only-from-parse.rs",
+      "-o",
+      "/home/veasnawt/src/vos-usb2c3a2/build/usb2c3a2-1/host-2/cf-efi-map-only-from-parse"
+    ],
+    [
+      "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+      "--edition=2024",
+      "--extern",
+      "vos_boot=/home/veasnawt/src/vos-usb2c3a2/build/usb2c3a2-1/host-2/libvos_boot.rlib",
+      "/home/veasnawt/src/vos-usb2c3a2/build/usb2c3a2-1/host-2/cf-memory-map-only-from-parse.rs",
+      "-o",
+      "/home/veasnawt/src/vos-usb2c3a2/build/usb2c3a2-1/host-2/cf-memory-map-only-from-parse"
+    ],
+    [
+      "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+      "--edition=2024",
+      "--extern",
+      "vos_boot=/home/veasnawt/src/vos-usb2c3a2/build/usb2c3a2-1/host-2/libvos_boot.rlib",
+      "/home/veasnawt/src/vos-usb2c3a2/build/usb2c3a2-1/host-2/cf-no-release-plan.rs",
+      "-o",
+      "/home/veasnawt/src/vos-usb2c3a2/build/usb2c3a2-1/host-2/cf-no-release-plan"
+    ],
+    [
+      "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+      "--edition=2024",
+      "--crate-name",
+      "vos_boot",
+      "--crate-type=rlib",
+      "--cap-lints=allow",
+      "/home/veasnawt/src/vos-usb2c3a2/build/usb2c3a2-1/host-2/mutant-boot-services-allowed/lib.rs",
+      "-o",
+      "/home/veasnawt/src/vos-usb2c3a2/build/usb2c3a2-1/host-2/mutant-boot-services-allowed/libvos_boot.rlib"
+    ],
+    [
+      "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+      "--edition=2024",
+      "--test",
+      "--extern",
+      "vos_boot=/home/veasnawt/src/vos-usb2c3a2/build/usb2c3a2-1/host-2/mutant-boot-services-allowed/libvos_boot.rlib",
+      "tests/rust/efi_memory.rs",
+      "-o",
+      "/home/veasnawt/src/vos-usb2c3a2/build/usb2c3a2-1/host-2/mutant-boot-services-allowed/tests"
+    ],
+    [
+      "/home/veasnawt/src/vos-usb2c3a2/build/usb2c3a2-1/host-2/mutant-boot-services-allowed/tests",
+      "--test-threads=1",
+      "ovmf_fixture_excludes_exactly_boot_services_and_firmware_dma_pages"
+    ],
+    [
+      "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+      "--edition=2024",
+      "--crate-name",
+      "vos_boot",
+      "--crate-type=rlib",
+      "--cap-lints=allow",
+      "/home/veasnawt/src/vos-usb2c3a2/build/usb2c3a2-1/host-2/mutant-uncovered-ram-allowed/lib.rs",
+      "-o",
+      "/home/veasnawt/src/vos-usb2c3a2/build/usb2c3a2-1/host-2/mutant-uncovered-ram-allowed/libvos_boot.rlib"
+    ],
+    [
+      "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+      "--edition=2024",
+      "--test",
+      "--extern",
+      "vos_boot=/home/veasnawt/src/vos-usb2c3a2/build/usb2c3a2-1/host-2/mutant-uncovered-ram-allowed/libvos_boot.rlib",
+      "tests/rust/efi_memory.rs",
+      "-o",
+      "/home/veasnawt/src/vos-usb2c3a2/build/usb2c3a2-1/host-2/mutant-uncovered-ram-allowed/tests"
+    ],
+    [
+      "/home/veasnawt/src/vos-usb2c3a2/build/usb2c3a2-1/host-2/mutant-uncovered-ram-allowed/tests",
+      "--test-threads=1",
+      "overlaps_contradictions_and_attributes_resolve_toward_exclusion"
+    ],
+    [
+      "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+      "--edition=2024",
+      "--crate-name",
+      "vos_boot",
+      "--crate-type=rlib",
+      "--cap-lints=allow",
+      "/home/veasnawt/src/vos-usb2c3a2/build/usb2c3a2-1/host-2/mutant-unchecked-end/lib.rs",
+      "-o",
+      "/home/veasnawt/src/vos-usb2c3a2/build/usb2c3a2-1/host-2/mutant-unchecked-end/libvos_boot.rlib"
+    ],
+    [
+      "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+      "--edition=2024",
+      "--test",
+      "--extern",
+      "vos_boot=/home/veasnawt/src/vos-usb2c3a2/build/usb2c3a2-1/host-2/mutant-unchecked-end/libvos_boot.rlib",
+      "tests/rust/efi_memory.rs",
+      "-o",
+      "/home/veasnawt/src/vos-usb2c3a2/build/usb2c3a2-1/host-2/mutant-unchecked-end/tests"
+    ],
+    [
+      "/home/veasnawt/src/vos-usb2c3a2/build/usb2c3a2-1/host-2/mutant-unchecked-end/tests",
+      "--test-threads=1",
+      "malformed_efi_maps_are_rejected"
+    ],
+    [
+      "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+      "--edition=2024",
+      "--crate-name",
+      "vos_boot",
+      "--crate-type=rlib",
+      "--cap-lints=allow",
+      "/home/veasnawt/src/vos-usb2c3a2/build/usb2c3a2-1/host-2/mutant-coalesce-drops-range/lib.rs",
+      "-o",
+      "/home/veasnawt/src/vos-usb2c3a2/build/usb2c3a2-1/host-2/mutant-coalesce-drops-range/libvos_boot.rlib"
+    ],
+    [
+      "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+      "--edition=2024",
+      "--test",
+      "--extern",
+      "vos_boot=/home/veasnawt/src/vos-usb2c3a2/build/usb2c3a2-1/host-2/mutant-coalesce-drops-range/libvos_boot.rlib",
+      "tests/rust/efi_memory.rs",
+      "-o",
+      "/home/veasnawt/src/vos-usb2c3a2/build/usb2c3a2-1/host-2/mutant-coalesce-drops-range/tests"
+    ],
+    [
+      "/home/veasnawt/src/vos-usb2c3a2/build/usb2c3a2-1/host-2/mutant-coalesce-drops-range/tests",
+      "--test-threads=1",
+      "capacity_coalesces_conservatively_and_fails_closed"
+    ],
+    [
+      "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+      "--edition=2024",
+      "--crate-name",
+      "vos_boot",
+      "--crate-type=rlib",
+      "--cap-lints=allow",
+      "/home/veasnawt/src/vos-usb2c3a2/build/usb2c3a2-1/host-2/mutant-missing-map-accepted/lib.rs",
+      "-o",
+      "/home/veasnawt/src/vos-usb2c3a2/build/usb2c3a2-1/host-2/mutant-missing-map-accepted/libvos_boot.rlib"
+    ],
+    [
+      "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+      "--edition=2024",
+      "--test",
+      "--extern",
+      "vos_boot=/home/veasnawt/src/vos-usb2c3a2/build/usb2c3a2-1/host-2/mutant-missing-map-accepted/libvos_boot.rlib",
+      "tests/rust/efi_memory.rs",
+      "-o",
+      "/home/veasnawt/src/vos-usb2c3a2/build/usb2c3a2-1/host-2/mutant-missing-map-accepted/tests"
+    ],
+    [
+      "/home/veasnawt/src/vos-usb2c3a2/build/usb2c3a2-1/host-2/mutant-missing-map-accepted/tests",
+      "--test-threads=1",
+      "bios_and_policy_decisions_fail_closed"
+    ],
+    [
+      "gcc",
+      "-std=gnu11",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-ffunction-sections",
+      "-fdata-sections",
+      "-Wl,--gc-sections",
+      "-fno-pie",
+      "-no-pie",
+      "-Iarch/x86_64",
+      "-O1",
+      "-g",
+      "-fsanitize=address,undefined",
+      "-fno-sanitize-recover=all",
+      "-fno-omit-frame-pointer",
+      "tests/host/usb2c3a2-efi.c",
+      "/home/veasnawt/src/vos-usb2c3a2/build/usb2c3a2-1/kernel-4/rust/libvos_kernel.a",
+      "-o",
+      "/home/veasnawt/src/vos-usb2c3a2/build/usb2c3a2-1/host-2/sanitizer"
+    ],
+    [
+      "/home/veasnawt/src/vos-usb2c3a2/build/usb2c3a2-1/host-2/sanitizer",
+      "tests/rust/fixtures"
+    ]
+  ],
+  "rust_sanitized": false,
+  "hardware": false,
+  "archive_sha256": "64bb1d7a9fbf9f6a681ad1a0d2fe223f8e89e107e6da93c074118d89f2ba510d",
+  "source_sha256": {
+    "kernel/rust/boot/efi_memory.rs": "e400f78d2ca549e9a6115b732cd1380628f4be8f9b7df024da85a65bed01be08",
+    "kernel/rust/boot/lib.rs": "3fbbb17da750bf6b108d63b249521f6a1c483aab5269808fb51221153462a9a3",
+    "tests/rust/fixtures/ovmf-tag17.bin": "82f75879e3700945ebcf2673b049aa574eaa722e45a43981304cb3cf42476f83",
+    "tests/rust/fixtures/ovmf-tag6.bin": "cdbdc4ff4213520a98f121fa8e3381bae37c24ce7c40dfcdc84982d773d6171e",
+    "tests/rust/fixtures/seabios-tag6.bin": "7bd3eb077b321cf4733bfe8763503536ac8fe3b9a535ad50d4999cb929015da4"
+  },
+  "kernel_link_rust_members": [
+    "libvos_kernel.vos_kernel.45b20e7284a592af-cgu.0.rcgu.o"
+  ],
+  "efi_tests": "test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.91s",
+  "compile_fail_controls": {
+    "efi-map-only-from-parse": "rejected with E0451",
+    "memory-map-only-from-parse": "rejected with E0451",
+    "no-release-plan": "rejected with E0599"
+  },
+  "mutation_controls": {
+    "boot-services-allowed": "detected by ovmf_fixture_excludes_exactly_boot_services_and_firmware_dma_pages (exit 101)",
+    "uncovered-ram-allowed": "detected by overlaps_contradictions_and_attributes_resolve_toward_exclusion (exit 101)",
+    "unchecked-end": "detected by malformed_efi_maps_are_rejected (exit 101)",
+    "coalesce-drops-range": "detected by capacity_coalesces_conservatively_and_fails_closed (exit 101)",
+    "missing-map-accepted": "detected by bios_and_policy_decisions_fail_closed (exit 101)"
+  },
+  "sanitizer": "OVMF map: boot-services frames excluded before the first allocation, exact vs model: 31 checks PASS\n  allocate until exhausted: no excluded frame; reserving one is refused (reference hands all out): 9 checks PASS\n  SeaBIOS map: not EFI, PMM identical to the e820-only reference: 12 checks PASS\n  UEFI without a map, boot services active, duplicate map: refused, nothing entered: 44 checks PASS\n  malformed EFI maps (version, size, alignment, overflow, empty): refused, nothing entered: 70 checks PASS\n  one free table slot: one widened range (superset); full table: refused: 87 checks PASS\n  EFI map can only remove: conventional claims add nothing; BS + runtime RAM removed exactly: 262183 checks PASS\n  direct ABI: null/misaligned report, null input/sink, policy codes: 7 checks PASS\nPASS: 262450 checks; real bootinfo/resv/pmm/efi_memory C with the bare-metal Rust archive",
+  "status": "PASS"
+}

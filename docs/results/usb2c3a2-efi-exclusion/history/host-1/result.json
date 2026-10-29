@@ -1,0 +1,45 @@
+{
+  "commands": [
+    [
+      "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+      "--edition=2024",
+      "-Dwarnings",
+      "--crate-name",
+      "vos_boot",
+      "--crate-type=rlib",
+      "-Coverflow-checks=yes",
+      "-Cdebug-assertions=yes",
+      "/home/veasnawt/src/vos-usb2c3a2/kernel/rust/boot/lib.rs",
+      "-o",
+      "/home/veasnawt/src/vos-usb2c3a2/build/usb2c3a2-1/host-1/libvos_boot.rlib"
+    ],
+    [
+      "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+      "--edition=2024",
+      "-Dwarnings",
+      "--test",
+      "-Copt-level=1",
+      "-Coverflow-checks=yes",
+      "--extern",
+      "vos_boot=/home/veasnawt/src/vos-usb2c3a2/build/usb2c3a2-1/host-1/libvos_boot.rlib",
+      "tests/rust/efi_memory.rs",
+      "-o",
+      "/home/veasnawt/src/vos-usb2c3a2/build/usb2c3a2-1/host-1/efi-tests"
+    ]
+  ],
+  "rust_sanitized": false,
+  "hardware": false,
+  "archive_sha256": "64bb1d7a9fbf9f6a681ad1a0d2fe223f8e89e107e6da93c074118d89f2ba510d",
+  "source_sha256": {
+    "kernel/rust/boot/efi_memory.rs": "e400f78d2ca549e9a6115b732cd1380628f4be8f9b7df024da85a65bed01be08",
+    "kernel/rust/boot/lib.rs": "3fbbb17da750bf6b108d63b249521f6a1c483aab5269808fb51221153462a9a3",
+    "tests/rust/fixtures/ovmf-tag17.bin": "82f75879e3700945ebcf2673b049aa574eaa722e45a43981304cb3cf42476f83",
+    "tests/rust/fixtures/ovmf-tag6.bin": "cdbdc4ff4213520a98f121fa8e3381bae37c24ce7c40dfcdc84982d773d6171e",
+    "tests/rust/fixtures/seabios-tag6.bin": "7bd3eb077b321cf4733bfe8763503536ac8fe3b9a535ad50d4999cb929015da4"
+  },
+  "kernel_link_rust_members": [
+    "libvos_kernel.vos_kernel.45b20e7284a592af-cgu.0.rcgu.o"
+  ],
+  "status": "FAIL",
+  "error": "efi-build.txt: exit 1, expected 0"
+}

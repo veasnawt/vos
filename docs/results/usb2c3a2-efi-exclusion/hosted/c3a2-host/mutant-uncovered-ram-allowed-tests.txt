@@ -1,0 +1,20 @@
+
+running 1 test
+test overlaps_contradictions_and_attributes_resolve_toward_exclusion ... FAILED
+
+failures:
+
+---- overlaps_contradictions_and_attributes_resolve_toward_exclusion stdout ----
+
+thread 'overlaps_contradictions_and_attributes_resolve_toward_exclusion' (105452) panicked at tests/rust/efi_memory.rs:220:9:
+assertion `left == right` failed: tag-6 RAM with no EFI descriptor
+  left: []
+ right: [(3145728, 4194304)]
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    overlaps_contradictions_and_attributes_resolve_toward_exclusion
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 8 filtered out; finished in 0.00s
+

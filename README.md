@@ -133,10 +133,13 @@ merged through PR #26; it does not add USB input or fix physical
 USB-keyboard/mouse PCs.
 [USB.2-C1 read-only xHCI qualification](docs/results/usb2c1-qualification.md) is
 merged through PR #27 and the
-[USB.2-C2 DMA ownership foundation](docs/results/usb2c2-dma.md) through PR #28.
-This branch's [USB.2-C3a firmware residue guard](docs/results/usb2c3a-residue.md)
-is verified in QEMU for review: it protects firmware xHCI DMA pages from reuse and
-plans (never executes) a halt/reset sequence, with no device writes. Further Rust
+[USB.2-C2 DMA ownership foundation](docs/results/usb2c2-dma.md) through PR #28,
+and the [USB.2-C3a firmware residue guard](docs/results/usb2c3a-residue.md) through
+PR #29. This branch's
+[USB.2-C3a.2 early UEFI firmware memory exclusion](docs/results/usb2c3a2-efi-exclusion.md)
+is verified in QEMU for review: on UEFI, EFI boot-services and other non-RAM memory
+never becomes allocatable, from before the first PMM allocation, with no device
+writes. Further Rust
 kernel migration and broader
 hardware portability remain proposed tracks requiring separate authorization.
 

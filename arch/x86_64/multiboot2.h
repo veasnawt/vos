@@ -15,6 +15,8 @@
 #define MB2_TAG_FRAMEBUFFER     8
 #define MB2_TAG_EFI32_SYSTAB    11
 #define MB2_TAG_EFI64_SYSTAB    12
+#define MB2_TAG_EFI_MMAP        17
+#define MB2_TAG_EFI_BS          18      /* EFI boot services not terminated */
 
 #define MB2_FB_TYPE_INDEXED     0
 #define MB2_FB_TYPE_RGB         1

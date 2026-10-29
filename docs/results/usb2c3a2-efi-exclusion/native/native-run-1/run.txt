@@ -1,0 +1,28 @@
+bios-n-qemu-xhci PASS
+bios-r-qemu-xhci PASS
+bios-q-qemu-xhci PASS
+bios-d-qemu-xhci PASS
+bios-p-qemu-xhci PASS
+bios-c-qemu-xhci PASS
+bios-r-none PASS
+bios-r-nec-xhci PASS
+bios-r-two-xhci PASS
+bios-n-qemu-xhci+disk FAIL QMP {'id': 76, 'error': {'class': 'GenericError', 'desc': "Parameter 'data' does not accept value '.'"}}
+uefi-n-qemu-xhci PASS
+uefi-r-qemu-xhci PASS
+uefi-q-qemu-xhci PASS
+uefi-d-qemu-xhci PASS
+uefi-p-qemu-xhci PASS
+uefi-c-qemu-xhci PASS
+uefi-n-qemu-xhci+disk FAIL QMP {'id': 76, 'error': {'class': 'GenericError', 'desc': "Parameter 'data' does not accept value '.'"}}
+Traceback (most recent call last):
+  File "/home/veasnawt/src/vos-usb2c3a2/scripts/test-usb2c3a2-native.py", line 540, in <module>
+    main()
+    ~~~~^^
+  File "/home/veasnawt/src/vos-usb2c3a2/scripts/test-usb2c3a2-native.py", line 536, in main
+    need(report['passed'], 'native matrix failures: ' + str(report['failures']))
+    ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/veasnawt/src/vos-usb2c3a2/scripts/test-usb2c1-native.py", line 56, in need
+    raise RuntimeError(message)
+RuntimeError: native matrix failures: [{'case': 'bios-n-qemu-xhci+disk', 'error': 'QMP {\'id\': 76, \'error\': {\'class\': \'GenericError\', \'desc\': "Parameter \'data\' does not accept value \'.\'"}}'}, {'case': 'uefi-n-qemu-xhci+disk', 'error': 'QMP {\'id\': 76, \'error\': {\'class\': \'GenericError\', \'desc\': "Parameter \'data\' does not accept value \'.\'"}}'}]
+exit 1

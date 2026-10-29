@@ -1,0 +1,20 @@
+
+running 1 test
+test bios_and_policy_decisions_fail_closed ... FAILED
+
+failures:
+
+---- bios_and_policy_decisions_fail_closed stdout ----
+
+thread 'bios_and_policy_decisions_fail_closed' (105521) panicked at tests/rust/efi_memory.rs:146:5:
+assertion `left == right` failed
+  left: Ok(NotApplicable)
+ right: Err(Missing)
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    bios_and_policy_decisions_fail_closed
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 8 filtered out; finished in 0.00s
+

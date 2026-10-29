@@ -93,6 +93,13 @@ const char *mb2_parse(const void *info, uint64_t info_phys, struct boot_info *bi
         case MB2_TAG_EFI64_SYSTAB:
             bi->efi = 1;
             break;
+        case MB2_TAG_EFI_MMAP:
+            if (!bi->efi_mmap_tags++)
+                bi->efi_mmap = tag;
+            break;
+        case MB2_TAG_EFI_BS:
+            bi->efi_bs_active = 1;
+            break;
         case MB2_TAG_MMAP: {
             const struct mb2_tag_mmap *m = (const void *)tag;
 

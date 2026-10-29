@@ -1,0 +1,13 @@
+bios-n-qemu-xhci+disk FAIL no PCI configuration writes after VOS start
+uefi-n-qemu-xhci+disk FAIL no PCI configuration writes after VOS start
+Traceback (most recent call last):
+  File "/home/veasnawt/src/vos-usb2c3a2/scripts/test-usb2c3a2-native.py", line 553, in <module>
+    main()
+    ~~~~^^
+  File "/home/veasnawt/src/vos-usb2c3a2/scripts/test-usb2c3a2-native.py", line 549, in main
+    need(report['passed'], 'native matrix failures: ' + str(report['failures']))
+    ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/veasnawt/src/vos-usb2c3a2/scripts/test-usb2c1-native.py", line 56, in need
+    raise RuntimeError(message)
+RuntimeError: native matrix failures: [{'case': 'bios-n-qemu-xhci+disk', 'error': 'no PCI configuration writes after VOS start'}, {'case': 'uefi-n-qemu-xhci+disk', 'error': 'no PCI configuration writes after VOS start'}]
+exit 1

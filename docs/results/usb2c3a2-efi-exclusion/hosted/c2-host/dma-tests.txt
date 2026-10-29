@@ -1,0 +1,14 @@
+
+running 9 tests
+test budget_kind_and_closed_refusals ... ok
+test cancellation_releases_only_unpublished_pages ... ok
+test device_limit_never_exceeds_pmm_range ... ok
+test frame_validation_and_rollback ... ok
+test lifecycle_and_exact_accounting ... ok
+test partial_set_failures_at_every_step ... ok
+test quarantine_is_bounded_and_fails_closed ... ok
+test stale_and_foreign_handles_are_refused ... ok
+test transitions_are_ordered ... ok
+
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

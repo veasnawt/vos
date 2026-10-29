@@ -1,0 +1,12 @@
+error[E0451]: fields `bytes`, `size` and `count` of struct `EfiMap` are private
+ --> /home/veasnawt/src/vos-usb2c3a2/build/usb2c3a2-1/host-2/cf-efi-map-only-from-parse.rs:2:30
+  |
+2 | fn main() { let _ = EfiMap { bytes: &[], size: 48, count: 1 }; }
+  |                              ^^^^^       ^^^^      ^^^^^ private field
+  |                              |           |
+  |                              |           private field
+  |                              private field
+
+error: aborting due to 1 previous error
+
+For more information about this error, try `rustc --explain E0451`.
