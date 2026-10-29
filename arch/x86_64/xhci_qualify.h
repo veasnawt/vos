@@ -43,4 +43,31 @@ int xhci_qualify_bar_acquire(uint64_t base, struct usb_resource *out);
 int xhci_qualify_bar_read32(uint64_t token, uint32_t offset, uint32_t *value);
 int xhci_qualify_bar_release(uint64_t token);
 void xhci_qualify_bar_retain(uint64_t token);
+
+/* USB.2-C3a firmware DMA residue guard (vos.usb2-residue=1). The C1 session
+ * plus PMM reservations of firmware-owned frames, kept for the whole boot in
+ * a 16-entry registry separate from the C2 DMA pool. Reads only: no PCI or
+ * controller write, no handoff, halt, reset, publication or interrupt change.
+ * The dry-run halt/reset plan is reported, never executed. */
+#define XHCI_RESIDUE_FRAMES 16u
+struct xhci_residue_report {
+    struct xhci_qualify_report q;
+    uint64_t crcr, dcbaap, erstba0, erdp0;
+    int32_t status;             /* 0 plan valid, 1 refused, -1 refused with hazard */
+    uint32_t usbcmd, usbsts, config, iman0, erstsz0, findings, reserved, owned_again;
+    uint32_t protected_pages, hazards, pages, interrupters, interrupter_enables;
+    uint32_t refusal, violation, plan_len;
+    uint8_t plan[24];
+};
+int32_t vos_xhci_residue_v1(uint32_t candidates, uint32_t complete, uint32_t physical_bits,
+                            struct xhci_residue_report *out);
+/* 1 if not requested, assessed (whatever the verdict) with the lease
+ * released; 0 for an integrity failure. Once per boot. */
+int xhci_residue_boot(const char *cmdline);
+/* Frame class: 0 free, 1 owned by this guard, 2 allocated, 3 protected,
+ * 4 untracked. Reserve: 0, -2 registry full, -3 duplicate, -4 not reservable.
+ * Read: 8 aligned bytes inside a frame this guard reserved. */
+int xhci_residue_page(uint64_t frame);
+int xhci_residue_reserve(uint64_t frame, uint32_t role);
+int xhci_residue_read64(uint64_t phys, uint64_t *value);
 #endif

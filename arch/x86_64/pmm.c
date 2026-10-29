@@ -169,6 +169,26 @@ int pmm_free_in(struct pmm *p, uint64_t phys)
     return PMM_OK;
 }
 
+int pmm_reserve_in(struct pmm *p, uint64_t phys)
+{
+    if (p->state != PMM_READY)
+        return PMM_ENOTREADY;
+    if (phys % PAGE_SIZE != 0)
+        return PMM_EALIGN;
+    if (phys >= p->frames * PAGE_SIZE)
+        return PMM_ERANGE;
+    uint64_t frame = phys / PAGE_SIZE;
+    if (!test_bit(p->avail, frame))
+        return PMM_EPROTECTED;
+    if (test_bit(p->alloc, frame))
+        return PMM_EINUSE;
+    if (p->free == 0)
+        return PMM_ECORRUPT;
+    p->alloc[frame / 64] |= 1ULL << (frame % 64);
+    p->free--;
+    return PMM_OK;
+}
+
 int pmm_frame_state_in(const struct pmm *p, uint64_t phys)
 {
     uint64_t frame = phys / PAGE_SIZE;
@@ -240,6 +260,15 @@ int pmm_free_frame(uint64_t phys)
     return pmm_free_in(&kernel_pmm, phys);
 }
 
+int pmm_reserve_frame(uint64_t phys)
+{
+    int err = pmm_reserve_in(&kernel_pmm, phys);
+
+    if (err == PMM_ECORRUPT)
+        panic("pmm: allocator state corrupt");
+    return err;     /* the frame is neither zeroed nor touched: firmware may own it */
+}
+
 uint64_t pmm_free_count(void)
 {
     return kernel_pmm.free;
@@ -255,7 +284,7 @@ const char *pmm_strerror(int err)
     static const char *const names[] = {
         "ok", "not ready", "out of memory", "unaligned address", "address out of range",
         "protected frame", "frame not allocated", "memory map unsupported",
-        "invalid argument", "allocator state corrupt",
+        "invalid argument", "allocator state corrupt", "frame already allocated",
     };
 
     return err >= 0 && err < (int)(sizeof(names) / sizeof(names[0])) ? names[err] : "?";

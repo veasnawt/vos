@@ -1,0 +1,17 @@
+{
+  "passed": true,
+  "physical_hardware_tested": false,
+  "host": {
+    "xhci": "xhci host: 45713 assertions PASS; bounded read-only probing, malformed input, mapping and opt-in coverage\n",
+    "keyboard": "PASS: decoder modifiers, repeat, release, extended/Pause and unsupported keys\nPASS: acknowledged setup, bounded timeouts/drain, aux/errors and fail-closed readiness\nPASS: exact opt-in token, prompt boundary, 128-cell limit, editing, Enter and overflow rejection\n",
+    "diagnostics": "input diagnostics: default silent, explicit enable, stage/results and disable PASS\n",
+    "console": "console-handoff: 49499 assertions PASS; actual console+keyboard+editor; bounded modeled hardware/scheduler; transfers=1007 restored=1003\n"
+  },
+  "source_sha256": {
+    "arch/x86_64/xhci.c": "38ddad82c88517d4271c460ffca8a4eb8c0984aad12f6ff459a8fb5cbb7cea44",
+    "arch/x86_64/xhci_boot.c": "a5a6ef01df6817eb780d094582ba288dca37efba5efbdb0a0862e3f625c83ff9",
+    "arch/x86_64/user_console.c": "c5a35faa2bc290c9224b3dfa7dbe8835f3178f68714aa4c7d515825ea675949a",
+    "arch/x86_64/kernel.c": "bc1595945869aea32dd35d156bc95f9cca12ae7d973c33aeb8d0caa2766a7b40",
+    "scripts/test-usb-probe.py": "340a1b418a7e58bdcf4c0396063173e5784e545818fa739223d79282f09d9052"
+  }
+}

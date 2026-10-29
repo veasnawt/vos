@@ -6,7 +6,7 @@ Current accepted graphical baseline: owner-merged
 VOS is pre-alpha. **N0-N5 are accepted; N6 is still in progress.**
 No physical-hardware or complete-desktop acceptance is claimed.
 The accepted main used for this review is
-`84a0c15c223001411499f396a6a89cc98684d6d3`, following R0/R1,
+`62ce8de2b3d4b12e53c465f9ad3bb92fb0bfeffe`, following R0/R1,
 [USB.1 integration PR #22](https://github.com/veasnawt/vos/pull/22),
 [portable USB.2-A PR #23](https://github.com/veasnawt/vos/pull/23),
 [USB.1 Rust migration PR #24](https://github.com/veasnawt/vos/pull/24) and the
@@ -21,11 +21,15 @@ through [PR #26](https://github.com/veasnawt/vos/pull/26): production
 through [PR #27](https://github.com/veasnawt/vos/pull/27): the USB.2-A controller is
 linked but never activated, and opt-in `vos.usb2-qualify=1` inspects the QEMU
 `1b36:000d` profile read-only.
-This branch's [USB.2-C2 DMA ownership foundation](results/usb2c2-dma.md) is
-verified for PR review, not accepted or merged: a fixed-table Rust pool for
-DMA-designated pages with zeroing, rollback and bounded quarantine, exercised by
-opt-in `vos.usb2c2-dma=1`. No page is published to a device and no PCI/xHCI
-register is written; physical hardware and USB keyboards/mice remain unsupported.
+The [USB.2-C2 DMA ownership foundation](results/usb2c2-dma.md) is merged through
+[PR #28](https://github.com/veasnawt/vos/pull/28): a fixed-table Rust pool for
+DMA-designated pages with publication statically unavailable.
+This branch's [USB.2-C3a firmware residue guard](results/usb2c3a-residue.md) is
+verified for PR review, not accepted or merged. Opt-in `vos.usb2-residue=1` runs
+right after the device window exists, reserves every firmware xHCI DMA page the
+allocator could reuse (OVMF), refuses when the residue cannot be fully inspected
+(SeaBIOS reserved memory), and validates a dry-run halt/reset plan that nothing
+executes. No PCI/xHCI write; physical hardware remains unsupported.
 
 ## Current accepted components
 
@@ -107,9 +111,9 @@ through PR #22. Its original integration report retains its dated status.
 USB.2-A's [portable Rust core](results/usb2a-rust-core.md) is merged through
 PR #23. It is a tested software lifecycle/ring/resource model without a live
 MMIO/DMA/reset backend. USB.2-B's non-activating ownership foundation is merged
-through PR #25 and USB.2-C1 read-only qualification through PR #27. USB.2-C2
-software DMA ownership is a review candidate on this branch; USB.2-C3 and later
-remain unimplemented.
+through PR #25, USB.2-C1 read-only qualification through PR #27 and USB.2-C2
+software DMA ownership through PR #28. The USB.2-C3a residue guard is a review
+candidate on this branch; C3b controller writes and later remain unimplemented.
 
 The [USB.1 Rust publication review](results/usb1-rust-publication-review.md)
 records the candidate production migration, preserved read-only behavior,

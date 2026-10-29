@@ -215,10 +215,14 @@ delivery remain C. Further R2 drivers and R3-R5 remain separately authorized.
 through PR #27 at `84a0c15c223001411499f396a6a89cc98684d6d3`: one canonical Rust USB
 tree, the USB.2-A controller linked but never instantiated, and opt-in read-only
 qualification of the QEMU xHCI profile through a releasable BAR lease.
-[USB.2-C2](results/usb2c2-dma.md) is implemented and verified in this PR candidate,
-not yet accepted: Rust-owned DMA-designated pages (allocate, zero, prepare,
-release, bounded quarantine) with publication statically unavailable. C3
-(controlled MMIO lifecycle) and later increments require separate authorization.
+[USB.2-C2](results/usb2c2-dma.md) is merged through PR #28 at
+`62ce8de2b3d4b12e53c465f9ad3bb92fb0bfeffe`: Rust-owned DMA-designated pages with
+publication statically unavailable. [USB.2-C3a](results/usb2c3a-residue.md) is
+implemented and verified in this PR candidate, not yet accepted: a firmware DMA
+residue guard that reserves reusable firmware xHCI pages before any later
+allocator user, and a dry-run halt/reset plan that is validated but never
+executed. C3b (QEMU-only containment writes) and later require separate
+authorization; physical controller takeover remains unauthorized.
 This status update grants no implementation authority.
 Unrelated bug fixes, boot-media work and desktop planning need not
 wait for the full migration. Hardware and migration work coordinate when sharing

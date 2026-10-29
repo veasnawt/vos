@@ -101,7 +101,56 @@ void xhci_qualify_bar_retain(uint64_t token)
 
 int xhci_qualify_conflict(const char *cmdline)
 {
-    return boot_option(cmdline, "vos.usb_probe=1") && boot_option(cmdline, "vos.usb2-qualify=1");
+    return boot_option(cmdline, "vos.usb_probe=1") &&
+           (boot_option(cmdline, "vos.usb2-qualify=1") || boot_option(cmdline, "vos.usb2-residue=1"));
+}
+
+/* USB.2-C3a registry: firmware-owned frames reserved for the whole boot.
+ * Separate from the C2 DMA pool; no release path exists. */
+static struct {
+    uint64_t frame[XHCI_RESIDUE_FRAMES];
+    uint8_t role[XHCI_RESIDUE_FRAMES];
+    unsigned count, session, ran;
+} residue;
+
+static int residue_owned(uint64_t frame)
+{
+    for (unsigned i = 0; i < residue.count; i++)
+        if (residue.frame[i] == frame) return 1;
+    return 0;
+}
+
+int xhci_residue_page(uint64_t frame)
+{
+    if (frame & (PAGE_SIZE - 1)) return 3;
+    if (residue_owned(frame)) return 1;
+    if (frame >= pmm_kernel()->frames * PAGE_SIZE) return 4;
+    switch (pmm_frame_state_in(pmm_kernel(), frame)) {
+    case PMM_FRAME_FREE: return 0;
+    case PMM_FRAME_ALLOCATED: return 2;
+    default: return 3;
+    }
+}
+
+int xhci_residue_reserve(uint64_t frame, uint32_t role)
+{
+    if (!residue.session || !qualify_context()) return -4;
+    if (residue_owned(frame)) return -3;
+    if (residue.count == XHCI_RESIDUE_FRAMES) return -2;  /* fail closed */
+    if (pmm_reserve_frame(frame) != PMM_OK) return -4;    /* allocated or protected */
+    residue.frame[residue.count] = frame;
+    residue.role[residue.count++] = (uint8_t)role;
+    return 0;
+}
+
+int xhci_residue_read64(uint64_t phys, uint64_t *value)
+{
+    if (!value) return -1;
+    *value = 0;
+    if (!residue.session || phys & 7 || !residue_owned(phys & ~(PAGE_SIZE - 1))) return -1;
+    /* The frame is RAM this guard now owns; read it through the kernel alias. */
+    *value = *(const volatile uint64_t *)phys_to_virt(phys);
+    return 0;
 }
 
 struct candidates { unsigned count; struct pci_addr first; };
@@ -181,5 +230,59 @@ int xhci_qualify_boot(const char *cmdline)
     serial_puts("usb2c1: resources restored; no PCI/xHCI writes, semaphore, reset, run, BME, DMA "
                 "or enumeration\r\n");
     serial_puts("usb2c1: DMA, coherency and IOMMU not established; activation unsupported\r\n");
+    return 1;
+}
+
+#define R(n) {#n, offsetof(struct xhci_residue_report, n)}
+static const struct { char name[20]; uint16_t offset; } residue_fields[] = {
+    R(usbcmd), R(usbsts), R(config), R(iman0), R(erstsz0), R(findings), R(reserved),
+    R(owned_again), R(protected_pages), R(hazards), R(pages), R(interrupters),
+    R(interrupter_enables), R(refusal), R(violation), R(plan_len),
+};
+#undef R
+
+int xhci_residue_boot(const char *cmdline)
+{
+    if (!boot_option(cmdline, "vos.usb2-residue=1")) return 1; /* no effects or output */
+    if (residue.ran++) return 0;
+    serial_puts("usb2c3a: firmware DMA residue guard; reads only, no PCI/xHCI writes\r\n");
+    struct candidates c = {0};
+    struct pci_addr unused;
+    int stopped = pci_scan_bus0(visit, &c, &unused);
+    uint64_t free = pmm_free_count();
+    unsigned maps = devmap_count();
+    struct xhci_residue_report r;
+    qual.fn = c.first; qual.active = 1; residue.session = 1;
+    int32_t status = vos_xhci_residue_v1(c.count, !stopped, devmap_maxphys(), &r);
+    qual.active = 0; residue.session = 0;
+    if (status == -2) {
+        serial_puts("usb2c3a: FAIL: invalid report interface\r\n");
+        return 0;
+    }
+    print(&r.q);
+    serial_puts("usb2c3a: pmm_allocated_before="); serial_dec(pmm_kernel()->usable - free);
+    serial_puts(" crcr="); serial_hex(r.crcr); serial_puts(" dcbaap="); serial_hex(r.dcbaap);
+    serial_puts(" erstba0="); serial_hex(r.erstba0); serial_puts(" erdp0="); serial_hex(r.erdp0);
+    for (unsigned i = 0; i < sizeof(residue_fields) / sizeof(residue_fields[0]); i++) {
+        serial_puts(i % 8 ? " " : "\r\nusb2c3a: ");
+        serial_puts(residue_fields[i].name); serial_puts("=");
+        serial_hex(*(const uint32_t *)((const char *)&r + residue_fields[i].offset));
+    }
+    serial_puts("\r\nusb2c3a: plan=");
+    for (unsigned i = 0; i < r.plan_len && i < sizeof(r.plan); i++) { serial_hex(r.plan[i]); serial_puts(" "); }
+    for (unsigned i = 0; i < residue.count; i++) {
+        serial_puts("\r\nusb2c3a: reserved frame="); serial_hex(residue.frame[i]);
+        serial_puts(" role="); serial_dec(residue.role[i]);
+    }
+    serial_puts("\r\n");
+    int restored = !qual.token && !devmap_scope_token() && devmap_count() == maps && !devmap_audit() &&
+                   pmm_free_count() + residue.count == free && residue.count == r.reserved;
+    if (r.q.status < 0 || !restored) {
+        serial_puts("usb2c3a: FAIL: integrity (lease, mapping or reservation accounting)\r\n");
+        return 0;
+    }
+    serial_puts(r.status == 0 ? "usb2c3a: PLAN VALID (dry run, not executed); residue complete and protected\r\n"
+                : r.status > 0 ? "usb2c3a: REFUSED: residue incomplete or controller unqualified; protected pages kept\r\n"
+                               : "usb2c3a: REFUSED: HAZARD: firmware frame already allocated; activation refused\r\n");
     return 1;
 }

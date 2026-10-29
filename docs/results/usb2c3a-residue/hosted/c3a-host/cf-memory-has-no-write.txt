@@ -1,0 +1,9 @@
+error[E0599]: no method named `write64` found for mutable reference `&mut impl Memory` in the current scope
+ --> /home/veasnawt/src/vos-usb2c3a/build/usb2c3a-1/trial/c3a-host/cf-memory-has-no-write.rs:2:31
+  |
+2 | fn f(m: &mut impl Memory) { m.write64(0, 0); }
+  |                               ^^^^^^^ method not found in `&mut impl Memory`
+
+error: aborting due to 1 previous error
+
+For more information about this error, try `rustc --explain E0599`.

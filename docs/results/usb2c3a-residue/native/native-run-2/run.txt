@@ -1,0 +1,2 @@
+bios-q-qemu-xhci PASS
+uefi-q-qemu-xhci PASS

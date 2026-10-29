@@ -1,0 +1,12 @@
+  OVMF-like residue: complete, reserved, plan valid, once per boot: 18 checks PASS
+  already-allocated frame: hazard, not reserved: 8 checks PASS
+  residue in a reserved map entry: uninspected, refused: 10 checks PASS
+  registry exhaustion fails closed: 7 checks PASS
+  running controller refused, structures protected: 5 checks PASS
+  device context present: protected, incomplete: 6 checks PASS
+  unsupported controller: refused, no MMIO, nothing reserved: 6 checks PASS
+  no controller: refused, nothing reserved: 5 checks PASS
+  state change mid-guard: integrity failure, reservations kept: 6 checks PASS
+  bad context: lease refused, nothing reserved: 5 checks PASS
+  direct PMM and registry API: 15 checks PASS
+PASS: real PMM/devmap/qualification/residue C with the bare-metal Rust archive; zero PCI writes

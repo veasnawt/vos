@@ -1,0 +1,31 @@
+{
+  "authority": "USB.2-C3a authorization ceilings (not entitlements); unchanged during execution",
+  "ceilings": {
+    "text_rodata_growth_bytes": 10240,
+    "permanent_rw_growth_bytes": 256,
+    "firmware_residue_reservation_frames": 16,
+    "largest_stack_frame_bytes": 512,
+    "storage_bytes": 629145600,
+    "new_threads": 0,
+    "heap": 0,
+    "dma_publication": 0
+  },
+  "measured": {
+    "text_rodata_growth_bytes": 9107,
+    "text_growth_bytes": 7887,
+    "rodata_growth_bytes": 1220,
+    "data_growth_bytes": 0,
+    "bss_growth_bytes": 160,
+    "reservation_registry_frames": 16,
+    "frames_reserved_ovmf_boot": 4,
+    "frames_reserved_seabios_boot": 0,
+    "largest_rust_frame_bytes": 424,
+    "largest_c_frame_bytes": 432,
+    "pt_load_memsz_growth_bytes": 8192,
+    "new_threads": 0,
+    "heap": 0,
+    "dma_publication": 0
+  },
+  "within_all_ceilings": true,
+  "rejected_candidate": "kernel-1 (+181,730 B) linked Rust core/compiler_builtins; replaced before measurement acceptance, see history/kernel1-core-linked-measurements.json"
+}

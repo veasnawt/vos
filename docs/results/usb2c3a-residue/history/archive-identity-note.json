@@ -1,0 +1,6 @@
+{
+  "check": "archive identity",
+  "adhoc_rustc_without_emit_dep_info": "6df559b8a07bf5e6 (differs: recipe differs - no --emit=link,dep-info, different output name)",
+  "make_rebuild": "see kernel-repro",
+  "conclusion": "identity established by the real make rule, not the ad-hoc command"
+}
