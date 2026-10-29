@@ -89,3 +89,9 @@ jobs:
             --archive build/x86_64/rust/libvos_kernel.a \
             --kernel-map build/x86_64/kernel.map \
             --rustc "$RUSTC" --out build/usb2c3a2-ci
+
+      - name: Verify USB.2-C3b.1 read-only containment dry-run (no write path)
+        run: |
+          python3 -I -B scripts/test-usb2c3b1.py \
+            --kernel-build build/x86_64 \
+            --rustc "$RUSTC" --out build/usb2c3b1-ci

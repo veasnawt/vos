@@ -243,7 +243,8 @@ fn command_ring_walk_is_bounded() {
 
 fn qemu_facts() -> Facts {
     Facts { qualified: true, residue_complete: true, halted: true, run_stop: false, bus_master: true,
-            controller_ready: true, interrupter_enables: 1, legacy_present: false, legacy_os_owned: false }
+            controller_ready: true, interrupter_enables: 1, interrupts_disabled: false, legacy_present: false,
+            legacy_os_owned: false }
 }
 
 #[test]

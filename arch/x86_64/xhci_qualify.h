@@ -72,6 +72,24 @@ int xhci_residue_boot(const char *cmdline);
 struct boot_info;
 struct resv_table;
 void xhci_residue_boot_memory(const struct boot_info *bi, const struct resv_table *t);
+/* USB.2-C3b.1 controller containment DRY-RUN (vos.usb2-contain=1): a read-only
+ * rehearsal of the proposed C3b.2 sequence for the one eligible QEMU profile.
+ * It evaluates every eligibility condition, revalidates identity, configuration
+ * and firmware-memory ownership before each simulated operation, and prints the
+ * writes that WOULD be made. This build contains no PCI-write or register-write
+ * path and the session may not reserve a frame. */
+struct xhci_contain_report {
+    struct xhci_qualify_report q;
+    int32_t status;             /* 0 dry-run complete, 1 refused, -1 integrity failure */
+    uint32_t state, refusals, uefi, command, pci_status, usbcmd, usbsts, findings, excluded;
+    uint32_t interrupts_disabled, plan_len, trace_len;
+    uint32_t trace[6][4];       /* kind | result << 8 | width << 16 | step << 24, offset, old, new */
+};
+int32_t vos_xhci_contain_v1(uint32_t candidates, uint32_t complete, uint32_t physical_bits,
+                            uint32_t uefi, struct xhci_contain_report *out);
+/* 1 if not requested or assessed (whatever the verdict) with everything
+ * restored; 0 for an integrity failure. Once per boot. */
+int xhci_contain_boot(const char *cmdline);
 /* Frame class: 0 free, 1 owned by this guard, 2 allocated, 3 protected,
  * 4 untracked, 5 excluded firmware RAM (readable in place, never reserved).
  * Reserve: 0, -2 registry full, -3 duplicate, -4 not reservable.

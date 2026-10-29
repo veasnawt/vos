@@ -1,0 +1,15 @@
+{
+  "event": "host power loss during C3b.1 (resume after budget approval), reboot at 2026-10-29 18:07",
+  "lost": [
+    "session scratchpad under /tmp (cleared by the reboot): the saved WIP patch (wip-c3b1-budget-gate.patch, sha256 e1bd2d9d...), the budget request markdown, the throwaway smoke script and outputs, the C3b Gate 0 observation script and results (obs-idle, obs-dev, obs-dev2, evidence.sha256), and the C3a.1 observation results",
+    "the C3a.1 design-gate report and the C3b Gate 0 assessment and budget request had been delivered to the owner with SendUserFile; only their local scratchpad copies and raw observation files are gone"
+  ],
+  "verified_intact": [
+    "all six existing worktrees clean at their recorded commits; git connectivity check passed",
+    "accepted evidence: C3a.3 manifest 160/160 evidence files match; C3a.2 differs only in docs/ROADMAP.md and docs/STATUS.md, which C3a.3 legitimately edited",
+    "C3b.1 working tree: 14 uncommitted files, none truncated; a fresh build (kernel-3-repro) is byte-identical to the pre-blackout kernel-3 (vos.bin 2bf50222..., archive 4baf4f8e...)",
+    "all pre-blackout build-tree records (gate0.json, kernel-1..3, measure-1..4)"
+  ],
+  "change_of_practice": "every artifact of this milestone is now kept under build/usb2c3b1-1 (persistent disk), not the scratchpad",
+  "not_recreated": "the C3b Gate 0 device observations are superseded by this milestone's native matrix (UEFI idle, UEFI + 1 and 2 devices, SeaBIOS idle and running), which records the same facts as retained evidence"
+}

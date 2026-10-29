@@ -1,0 +1,311 @@
+{
+  "workflow": "deterministic gzip (level 9, mtime 0, no name); decompress and compare length and SHA-256 with the raw trace before removing it; independently re-verified afterwards (32/32 final, 2/2 failed smoke, 0 mismatches)",
+  "location": "compressed traces remain in build/usb2c3b1-1 (not committed); restore with gzip -dk",
+  "uncompressed_retained": "smoke-native-3 traces were compressed by the runner; ISOs and OVMF variables kept uncompressed",
+  "traces": {
+    "build/usb2c3b1-1/final/native/bios-c-qemu-xhci/trace.preservation.json": {
+      "raw_sha256": "927bbcac2d37ce738af88274fda8e7672e6b4e12c200b4eeb0674a86f283c1fc",
+      "raw_bytes": 5883785,
+      "gz_sha256": "8f1591eb320b5f67719d14787c586278f69379aa06b5554bd22e1e59271dec64",
+      "gz_bytes": 158612,
+      "roundtrip_verified": true,
+      "restore": "gzip -dk trace.txt.gz"
+    },
+    "build/usb2c3b1-1/final/native/bios-d-qemu-xhci/trace.preservation.json": {
+      "raw_sha256": "304d362b4b622d7347ced84daf4d44c553ac6391ba6c467a5fc8c92ad57fde35",
+      "raw_bytes": 7401797,
+      "gz_sha256": "ef509d61861a00d2b0675a5f433a7cad7992cf6e465ed809ef64eb2dcbb6db0c",
+      "gz_bytes": 175148,
+      "roundtrip_verified": true,
+      "restore": "gzip -dk trace.txt.gz"
+    },
+    "build/usb2c3b1-1/final/native/bios-n-qemu-xhci+disk/trace.preservation.json": {
+      "raw_sha256": "a51d54bc016af8f5402a430cbe5fb7f5b2644efacb38829342ac85b60a6d11e6",
+      "raw_bytes": 7469809,
+      "gz_sha256": "09d87d403962cc44b5bcc3a61be27737bcc653df917883c4420ab7f8a2b702da",
+      "gz_bytes": 175225,
+      "roundtrip_verified": true,
+      "restore": "gzip -dk trace.txt.gz"
+    },
+    "build/usb2c3b1-1/final/native/bios-n-qemu-xhci+kbd/trace.preservation.json": {
+      "raw_sha256": "54606d65d966d5e9ff3113241d7fc51273a65c98fa04ae6a1705c24e9c2e365b",
+      "raw_bytes": 5964043,
+      "gz_sha256": "740a715956e10ca9b43e008ad17b944fbcca885dbe744580f7a27a857d1d7358",
+      "gz_bytes": 162096,
+      "roundtrip_verified": true,
+      "restore": "gzip -dk trace.txt.gz"
+    },
+    "build/usb2c3b1-1/final/native/bios-n-qemu-xhci/trace.preservation.json": {
+      "raw_sha256": "e95d71dd9f617c22144a7aad044d25b3c705573bae82ee24573362e071963775",
+      "raw_bytes": 6862006,
+      "gz_sha256": "048a1222d1b251d3767e489f8c51bae04c89dfc31427e0a80f76b66d484018c0",
+      "gz_bytes": 168254,
+      "roundtrip_verified": true,
+      "restore": "gzip -dk trace.txt.gz"
+    },
+    "build/usb2c3b1-1/final/native/bios-p-qemu-xhci/trace.preservation.json": {
+      "raw_sha256": "431f7d397af6d15b9b5b70df9d42e093c6dc277558697cff0b8e24b131729b8a",
+      "raw_bytes": 6955247,
+      "gz_sha256": "966db907ef6ae8ed7a1521289ab17c7782190a0e0bcbb6009793df76cf9b69fa",
+      "gz_bytes": 169902,
+      "roundtrip_verified": true,
+      "restore": "gzip -dk trace.txt.gz"
+    },
+    "build/usb2c3b1-1/final/native/bios-q-qemu-xhci/trace.preservation.json": {
+      "raw_sha256": "50007cbd37fcfe5ded8492c715dc8a689f2610504f1315593f0870d8408858bb",
+      "raw_bytes": 7543183,
+      "gz_sha256": "615cdabd484a1459ad0bee0082fcd122f542392315b94b273d2ec04c6b65e8a9",
+      "gz_bytes": 177218,
+      "roundtrip_verified": true,
+      "restore": "gzip -dk trace.txt.gz"
+    },
+    "build/usb2c3b1-1/final/native/bios-r-nec-xhci/trace.preservation.json": {
+      "raw_sha256": "ee910da42d1f9831524283c937ba72dc7e10554da04322c40466ee891e66bad4",
+      "raw_bytes": 7176993,
+      "gz_sha256": "2c1fa65bb335020cc6683e8674d86acec0f1427529fa1c13147bdba036c77c08",
+      "gz_bytes": 171597,
+      "roundtrip_verified": true,
+      "restore": "gzip -dk trace.txt.gz"
+    },
+    "build/usb2c3b1-1/final/native/bios-r-none/trace.preservation.json": {
+      "raw_sha256": "d7bdd95aeb8a2a89dacd1e4747badf32458fd3874b252c97fb81cb2b34269b1b",
+      "raw_bytes": 7201774,
+      "gz_sha256": "e39b1a8152788c58d2f906130d61492aff251e1421c6124c2fd19997f8bf2af4",
+      "gz_bytes": 170680,
+      "roundtrip_verified": true,
+      "restore": "gzip -dk trace.txt.gz"
+    },
+    "build/usb2c3b1-1/final/native/bios-r-qemu-xhci/trace.preservation.json": {
+      "raw_sha256": "7098e6cb0b5db8f40b0882e605550bbfb7a4838de217889b8509fbabd7cbaf22",
+      "raw_bytes": 7318071,
+      "gz_sha256": "88430fb8ce917734ae81c1e64c625f33878b66f12a7299aa9e859d853211f75b",
+      "gz_bytes": 174293,
+      "roundtrip_verified": true,
+      "restore": "gzip -dk trace.txt.gz"
+    },
+    "build/usb2c3b1-1/final/native/bios-r-two-xhci/trace.preservation.json": {
+      "raw_sha256": "068026e42714c8917f167414ccdc24bdadbc84022fdf17d793a90d137965a894",
+      "raw_bytes": 7233322,
+      "gz_sha256": "bda301af8623364eb7872d62e3b3498cd83c06f1f7b8f5ef603be75ba69bbac2",
+      "gz_bytes": 172297,
+      "roundtrip_verified": true,
+      "restore": "gzip -dk trace.txt.gz"
+    },
+    "build/usb2c3b1-1/final/native/bios-t-nec-xhci/trace.preservation.json": {
+      "raw_sha256": "84cb4f7ffe775c8ad7a1deabda2afaf4da7b147f78081f2b35b3305796fae71e",
+      "raw_bytes": 7157397,
+      "gz_sha256": "c27dcb1a5254ae16516eda12afbc43305ffc9efd9740317b731b2f308d01cac4",
+      "gz_bytes": 171426,
+      "roundtrip_verified": true,
+      "restore": "gzip -dk trace.txt.gz"
+    },
+    "build/usb2c3b1-1/final/native/bios-t-none/trace.preservation.json": {
+      "raw_sha256": "f80bc9d98a9648cb7ef130c96b4afa231730259fa5df513bcd56baa14601a516",
+      "raw_bytes": 7084852,
+      "gz_sha256": "46c0c310524da77800b18ac64bd80c23106924e0628b8178d763789b9700cd7c",
+      "gz_bytes": 169615,
+      "roundtrip_verified": true,
+      "restore": "gzip -dk trace.txt.gz"
+    },
+    "build/usb2c3b1-1/final/native/bios-t-qemu-xhci+disk/trace.preservation.json": {
+      "raw_sha256": "0bebe3ff5e8668f6858604bc6ed23a6d25442779fd166c8547020407f74847bf",
+      "raw_bytes": 7773777,
+      "gz_sha256": "8f423c35c2f03143937f2bf308967186906795dd3215ee0d1fbf8d3fc095a071",
+      "gz_bytes": 180026,
+      "roundtrip_verified": true,
+      "restore": "gzip -dk trace.txt.gz"
+    },
+    "build/usb2c3b1-1/final/native/bios-t-qemu-xhci+kbd/trace.preservation.json": {
+      "raw_sha256": "6cf621b7277e388247d31eee054d2d96e944b09d53244dc1d7e3e6edfebe6a71",
+      "raw_bytes": 6334022,
+      "gz_sha256": "6aea9b62cd4320cddf0dc9a7b995de03c8c123705bcc07c7a34a5b988656a3dd",
+      "gz_bytes": 167030,
+      "roundtrip_verified": true,
+      "restore": "gzip -dk trace.txt.gz"
+    },
+    "build/usb2c3b1-1/final/native/bios-t-qemu-xhci/trace.preservation.json": {
+      "raw_sha256": "527d36ec83b2488e5fd37d21143708291e72d8536fd8c712b44bc3d540c269f9",
+      "raw_bytes": 7147492,
+      "gz_sha256": "8ff08396967530c203cdc49116a1af2cc893600e12531a93ffe70058b3aad65d",
+      "gz_bytes": 172700,
+      "roundtrip_verified": true,
+      "restore": "gzip -dk trace.txt.gz"
+    },
+    "build/usb2c3b1-1/final/native/bios-t-two-xhci/trace.preservation.json": {
+      "raw_sha256": "43da4593b0f153d954805e76a7d4870a313dff2508a8c14863b9bf57fbff2514",
+      "raw_bytes": 7172155,
+      "gz_sha256": "8dbd0d41f4ae97d01f7f4ab4c28db62ffe08d4c855f086403e3281068a678188",
+      "gz_bytes": 171702,
+      "roundtrip_verified": true,
+      "restore": "gzip -dk trace.txt.gz"
+    },
+    "build/usb2c3b1-1/final/native/uefi-c-qemu-xhci/trace.preservation.json": {
+      "raw_sha256": "58be81388dcad8c76ba35d05c0c9ed0407ee5f075cb28b86683144b955311f7a",
+      "raw_bytes": 3782646,
+      "gz_sha256": "f8f3345b45bcb79f3af4be40013af8935826aa6fbfcdceb635d62dc2368e3785",
+      "gz_bytes": 86031,
+      "roundtrip_verified": true,
+      "restore": "gzip -dk trace.txt.gz"
+    },
+    "build/usb2c3b1-1/final/native/uefi-d-qemu-xhci/trace.preservation.json": {
+      "raw_sha256": "cdcb995d733d0aad0dd113937592b885dabdf5b55cf3486bfead64038747ee37",
+      "raw_bytes": 5223759,
+      "gz_sha256": "c48455acf5ee72105d057ad41a97185ac30172869611fb7f4cbb689e4eb89cf9",
+      "gz_bytes": 100408,
+      "roundtrip_verified": true,
+      "restore": "gzip -dk trace.txt.gz"
+    },
+    "build/usb2c3b1-1/final/native/uefi-n-qemu-xhci+disk/trace.preservation.json": {
+      "raw_sha256": "59cca4b7b66b4bc672ffd9e65cedf32203cca37f79ededc608bcec68a3cb555a",
+      "raw_bytes": 7841298,
+      "gz_sha256": "b907aaf6ed80ab25930a1b2263df546e069298294defd7b538eaf7d0c57afedf",
+      "gz_bytes": 185307,
+      "roundtrip_verified": true,
+      "restore": "gzip -dk trace.txt.gz"
+    },
+    "build/usb2c3b1-1/final/native/uefi-n-qemu-xhci+kbd/trace.preservation.json": {
+      "raw_sha256": "f58496aad779275f301e61aa7394154bb65d443b6fd3d82ebad499776bc212ce",
+      "raw_bytes": 4604205,
+      "gz_sha256": "48601b5b907371d85a04043b475da7829c421e33068115aa92d6d386cb9f79a0",
+      "gz_bytes": 98886,
+      "roundtrip_verified": true,
+      "restore": "gzip -dk trace.txt.gz"
+    },
+    "build/usb2c3b1-1/final/native/uefi-n-qemu-xhci/trace.preservation.json": {
+      "raw_sha256": "babcbb0aa2e8b2591a5f42f66ae5ad8322d5eeefada6aaf9431d85c5bafa7c1e",
+      "raw_bytes": 5344417,
+      "gz_sha256": "29dd817b9f4b59d0e777b1665476713b63ee12c8e0eaafca408fe45c1adb000f",
+      "gz_bytes": 114119,
+      "roundtrip_verified": true,
+      "restore": "gzip -dk trace.txt.gz"
+    },
+    "build/usb2c3b1-1/final/native/uefi-p-qemu-xhci/trace.preservation.json": {
+      "raw_sha256": "b656f775937c059a39e11f1fb7a2f31220e815181c1019aba23d1cdfa48a90ea",
+      "raw_bytes": 6999107,
+      "gz_sha256": "82e515ea7bffff031368641e5597f9d1404be68db241d16acfb8378b5b051bfd",
+      "gz_bytes": 168041,
+      "roundtrip_verified": true,
+      "restore": "gzip -dk trace.txt.gz"
+    },
+    "build/usb2c3b1-1/final/native/uefi-q-qemu-xhci/trace.preservation.json": {
+      "raw_sha256": "bd7a3bd403c5af6baf00429c80bb75f04a1e57c275f49ecbb2f36360c1ad8196",
+      "raw_bytes": 5462762,
+      "gz_sha256": "3dce5ace017e5bb6977fc2d1ddac237e9e8dd30f2d15cb48a49ebc9892d24a72",
+      "gz_bytes": 106375,
+      "roundtrip_verified": true,
+      "restore": "gzip -dk trace.txt.gz"
+    },
+    "build/usb2c3b1-1/final/native/uefi-r-qemu-xhci/trace.preservation.json": {
+      "raw_sha256": "a0b0eef6bc0acfa5ce60d43d60d55555ac3f62d946e941428898a61e91b62eef",
+      "raw_bytes": 5322558,
+      "gz_sha256": "d85ad0196ede3dd7f598492239c2fb66bcbd54a8c6b775790564a6aef5110653",
+      "gz_bytes": 108781,
+      "roundtrip_verified": true,
+      "restore": "gzip -dk trace.txt.gz"
+    },
+    "build/usb2c3b1-1/final/native/uefi-t-nec-xhci/trace.preservation.json": {
+      "raw_sha256": "87d28235d4f03a5307ad8b46cfaa567598adc23f4f5081123c8eb1628b524a8f",
+      "raw_bytes": 5147949,
+      "gz_sha256": "d0ae338aa136097ade6d30f4f2612ca0b493385d47c93baee4d950033c50ee3e",
+      "gz_bytes": 103165,
+      "roundtrip_verified": true,
+      "restore": "gzip -dk trace.txt.gz"
+    },
+    "build/usb2c3b1-1/final/native/uefi-t-none/trace.preservation.json": {
+      "raw_sha256": "9198a234bbfe88c7f76b8194839f560599c19d89668785e89f7a2dd6c6ac2aed",
+      "raw_bytes": 5124636,
+      "gz_sha256": "10fa74a95edba6ad2466c7423f8f718cc3a3672f6deeb9424361a8b19f94df03",
+      "gz_bytes": 99341,
+      "roundtrip_verified": true,
+      "restore": "gzip -dk trace.txt.gz"
+    },
+    "build/usb2c3b1-1/final/native/uefi-t-qemu-xhci+disk/trace.preservation.json": {
+      "raw_sha256": "9acf16b0c19779ce5753ea094b57e464e053a2b7a6d4c9f5f2394dfa66ab6c21",
+      "raw_bytes": 5970684,
+      "gz_sha256": "95312502c0a16020934324e684a38045fe0acaf04cb211740f9617d300e3417d",
+      "gz_bytes": 115447,
+      "roundtrip_verified": true,
+      "restore": "gzip -dk trace.txt.gz"
+    },
+    "build/usb2c3b1-1/final/native/uefi-t-qemu-xhci+kbd/trace.preservation.json": {
+      "raw_sha256": "be79be92ac03021c2f82666722649c6027d0e3f1ee2ebfe9045890b425a6d6b9",
+      "raw_bytes": 4955943,
+      "gz_sha256": "db7daedb1c630e4773d3156ffc80113c81fa997a862079cfff9c1407bf815947",
+      "gz_bytes": 100057,
+      "roundtrip_verified": true,
+      "restore": "gzip -dk trace.txt.gz"
+    },
+    "build/usb2c3b1-1/final/native/uefi-t-qemu-xhci+kbd2/trace.preservation.json": {
+      "raw_sha256": "c39989856a729388e5a57cec62247ccff182ff2885e030e4015dc23019040e0e",
+      "raw_bytes": 5147187,
+      "gz_sha256": "90996531e367823a0f88e0c726e52eaf211f9292a98664a3efefd73c6989ef08",
+      "gz_bytes": 114637,
+      "roundtrip_verified": true,
+      "restore": "gzip -dk trace.txt.gz"
+    },
+    "build/usb2c3b1-1/final/native/uefi-t-qemu-xhci/trace.preservation.json": {
+      "raw_sha256": "cd40ddf86c20161148db8f3d5711f0f49e4408cd313adbdd2d693285c1d3aa6d",
+      "raw_bytes": 5205422,
+      "gz_sha256": "4cc1507256f198ceb79d485f83a353253aab175435a253cef1342b8858468548",
+      "gz_bytes": 100386,
+      "roundtrip_verified": true,
+      "restore": "gzip -dk trace.txt.gz"
+    },
+    "build/usb2c3b1-1/final/native/uefi-t-two-xhci/trace.preservation.json": {
+      "raw_sha256": "8420a671f0373495dd0ef8a7ae52dbd430231d578ef7ad69ffc2926899c25e86",
+      "raw_bytes": 5495479,
+      "gz_sha256": "91245e2a60d3fab5c41a1b899df79c0e85b94bd5e391c5174b4f273671f4a6d7",
+      "gz_bytes": 114531,
+      "roundtrip_verified": true,
+      "restore": "gzip -dk trace.txt.gz"
+    },
+    "build/usb2c3b1-1/smoke-native-1/uefi-t-qemu-xhci+kbd/trace.preservation.json": {
+      "raw_sha256": "cbad97cd01c249bf0b4e7188fdfb6630f6dc3d730e6c1730e9f19c5b6baba36b",
+      "raw_bytes": 4612580,
+      "gz_sha256": "45c2599ca6ece6dca058ba825496e44d40ba931a78fd83d845e5bd12e3b332bf",
+      "gz_bytes": 106650,
+      "roundtrip_verified": true,
+      "restore": "gzip -dk trace.txt.gz"
+    },
+    "build/usb2c3b1-1/smoke-native-1/uefi-t-qemu-xhci/trace.preservation.json": {
+      "raw_sha256": "bd44b74f7c9b7fc8451863b8802d6694efafdab50021299d0049dc2b214a29cc",
+      "raw_bytes": 5892401,
+      "gz_sha256": "96943675e38cfdf516acd7658dec8bbda9824daa7c0cede0294b769a456b1098",
+      "gz_bytes": 123362,
+      "roundtrip_verified": true,
+      "restore": "gzip -dk trace.txt.gz"
+    },
+    "build/usb2c3b1-1/smoke-native-2/uefi-t-qemu-xhci+kbd/trace.preservation.json": {
+      "raw_sha256": "2df93ae27bbd7d2e78ec32d70ece86fabfc291601a909308d2ed0e3bb79158ec",
+      "raw_bytes": 5721959,
+      "gz_sha256": "7d959d6db02383eb5f0aab7a9a8186c9fe820811aafd2fefce1bf6b00453f09c",
+      "gz_bytes": 128072,
+      "roundtrip_verified": true,
+      "restore": "gzip -dk trace.txt.gz"
+    },
+    "build/usb2c3b1-1/smoke-native-3/bios-n-qemu-xhci+kbd/trace.preservation.json": {
+      "raw_sha256": "63f511244c459bbd8fe1ad74e147f8422ef78c2270b3a5bd74c7667faef47c2a",
+      "raw_bytes": 6006219,
+      "gz_sha256": "675dd4ae9963cd0c611fa77b67ad59fc90632b1c1853b58c9fc7a94d32694cef",
+      "gz_bytes": 162698,
+      "roundtrip_verified": true,
+      "restore": "gzip -dk trace.txt.gz"
+    },
+    "build/usb2c3b1-1/smoke-native-3/bios-t-qemu-xhci+kbd/trace.preservation.json": {
+      "raw_sha256": "761f33ade071d10918aa799dae615f9bcae74dfa6c8e10b6f92a212dd557d0a4",
+      "raw_bytes": 6336515,
+      "gz_sha256": "f273157559ae489187c9f33033117152d6fcc867e13084feb074b465dad7936f",
+      "gz_bytes": 167409,
+      "roundtrip_verified": true,
+      "restore": "gzip -dk trace.txt.gz"
+    },
+    "build/usb2c3b1-1/smoke-native-3/uefi-t-qemu-xhci+kbd/trace.preservation.json": {
+      "raw_sha256": "38b0ce58dd365f2d26b7d0dd690fba6f96abd3c1e2937e0627c115ab249746da",
+      "raw_bytes": 5380354,
+      "gz_sha256": "80d90f804fd532a7bf3d35854cd764ccf73e8e9a53ab29ea0b2dcc52be0f7ef7",
+      "gz_bytes": 115473,
+      "roundtrip_verified": true,
+      "restore": "gzip -dk trace.txt.gz"
+    }
+  }
+}

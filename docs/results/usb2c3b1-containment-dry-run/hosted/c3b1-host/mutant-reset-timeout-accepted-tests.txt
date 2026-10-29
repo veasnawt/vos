@@ -1,0 +1,20 @@
+
+running 1 test
+test reset_completion_and_timeout_model ... FAILED
+
+failures:
+
+---- reset_completion_and_timeout_model stdout ----
+
+thread 'reset_completion_and_timeout_model' (1996) panicked at tests/rust/xhci_containment.rs:448:5:
+assertion `left == right` failed
+  left: Contained
+ right: ResetStuck
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    reset_completion_and_timeout_model
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 10 filtered out; finished in 0.00s
+

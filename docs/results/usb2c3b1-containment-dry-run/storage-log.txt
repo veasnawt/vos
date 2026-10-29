@@ -1,0 +1,32 @@
+storage before smoke-uefi-t: tree=232336907 c_free=23291625472 projected=30000000
+smoke-uefi-t exit 1 tree_after=250312129
+storage before smoke-uefi-t-kbd: tree=250312170 c_free=23291580416 projected=20000000
+smoke-uefi-t-kbd exit 1 tree_after=269219075
+storage before smoke-kbd-bios: tree=269219120 c_free=23291576320 projected=30000000
+smoke-kbd-bios exit 0 tree_after=290997257
+storage before native: tree=290997300 c_free=23290417152 projected=40000000
+native exit 0 tree_after=287567869
+storage before c3a-host: tree=287570572 c_free=23272767488 projected=70000000
+c3a-host exit 0 tree_after=358253310
+storage before c3a2-san: tree=358253363 c_free=23272833024 projected=6000000
+c3a2-san exit 127 tree_after=358253497
+storage before c2-host: tree=358253554 c_free=23272833024 projected=36000000
+c2-host exit 0 tree_after=392803325
+storage before c1-host: tree=392803376 c_free=23272833024 projected=28000000
+c1-host exit 0 tree_after=418902972
+storage before usb2b-host: tree=418903023 c_free=23272833024 projected=9000000
+usb2b-host exit 0 tree_after=426391788
+storage before usb1-host: tree=426391845 c_free=23272833024 projected=2000000
+usb1-host exit 0 tree_after=426983857
+storage before r2b-host: tree=426983912 c_free=23272833024 projected=4000000
+r2b-host exit 0 tree_after=429345522
+storage before r1-bounds: tree=429345575 c_free=23272828928 projected=4000000
+r1-bounds exit 0 tree_after=431473932
+storage before kernel-3-verify: tree=431473987 c_free=23272828928 projected=16000000
+kernel-3-verify exit 0 tree_after=446409065
+storage before r2b-native: tree=446409132 c_free=23272828928 projected=45000000
+r2b-native exit 0 tree_after=489613873
+storage before usb2a-core: tree=489613930 c_free=23272505344 projected=25000000
+usb2a-core exit 0 tree_after=512994899
+storage before c3a2-san-2: tree=512994956 c_free=23278067712 projected=6000000
+c3a2-san-2 exit 0 tree_after=513239737

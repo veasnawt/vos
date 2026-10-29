@@ -1,0 +1,1 @@
+{"host_simulation_only":true,"iterations_per_sample":200000,"sample_total_ns":[1223800, 1136000, 1172000, 1408600, 1233900],"checksum":200000,"sizes":{"Controller":424,"PermanentSnapshot":144,"Capabilities":40,"CommandRing":64,"EventRing":24,"Usage":8,"Trb":16}}

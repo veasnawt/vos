@@ -33,13 +33,20 @@ boot, a Rust decision over GRUB's EFI memory map removes BootServicesCode/Data a
 any other non-RAM or unclassified memory from the allocatable set before
 `pmm_init`, so before the first allocation; a UEFI boot without a valid EFI map is
 refused. BIOS boots are unchanged.
-This branch's [USB.2-C3a.3 protected firmware DMA inspection](results/usb2c3a3-protected-inspection.md)
-is verified for PR review, not accepted or merged. The opt-in residue guard now
+The [USB.2-C3a.3 protected firmware DMA inspection](results/usb2c3a3-protected-inspection.md)
+is merged through [PR #31](https://github.com/veasnawt/vos/pull/31). The opt-in residue guard
 reads that excluded firmware memory in place through the existing kernel alias
 (no new mapping, allocation or reservation), validates the xHCI rings, and reports
 reuse protection and inspection completeness separately; a complete inspection
 never makes firmware memory releasable. BIOS residue (e820-reserved) stays
 protected but uninspected. No PCI/xHCI write; physical hardware remains unsupported.
+This branch's [USB.2-C3b.1 containment dry-run](results/usb2c3b1-containment-dry-run.md)
+is verified for PR review, not accepted or merged. Opt-in `vos.usb2-contain=1`
+admits only an idle QEMU xHCI left by UEFI (no slots, devices, scratchpads,
+pending interrupts, ambiguous ownership or residue hazards), re-observes it twice,
+and records the proposed bus-master clear and HCRST as `NOT-ISSUED` trace data. The
+build contains no PCI-write or register-write path; it establishes nothing about
+real reset behavior. C3b.2 (actual writes) requires separate authorization.
 
 ## Current accepted components
 
@@ -123,9 +130,10 @@ PR #23. It is a tested software lifecycle/ring/resource model without a live
 MMIO/DMA/reset backend. USB.2-B's non-activating ownership foundation is merged
 through PR #25, USB.2-C1 read-only qualification through PR #27 and USB.2-C2
 software DMA ownership through PR #28 and the USB.2-C3a residue guard through
-PR #29 and the USB.2-C3a.2 early UEFI firmware memory exclusion through PR #30.
-USB.2-C3a.3 protected firmware DMA inspection is a review candidate on this
-branch; C3b controller writes and later remain unimplemented.
+PR #29 and the USB.2-C3a.2 early UEFI firmware memory exclusion through PR #30
+and the USB.2-C3a.3 protected firmware DMA inspection through PR #31.
+The USB.2-C3b.1 read-only containment dry-run is a review candidate on this
+branch; C3b.2 controller writes and later remain unimplemented.
 
 The [USB.1 Rust publication review](results/usb1-rust-publication-review.md)
 records the candidate production migration, preserved read-only behavior,

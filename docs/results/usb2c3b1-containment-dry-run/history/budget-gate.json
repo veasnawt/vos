@@ -1,0 +1,14 @@
+{
+  "event": "C3b.1 stopped at the code-size gate before any test, commit or publication",
+  "baseline_for_measurement": "/home/veasnawt/src/vos-usb2c3a3/build/usb2c3a3-1/kernel-2 (C3a.3 build; source tree identical to merged baseline 55f6693)",
+  "original_ceiling": {"text_rodata_growth_bytes": 4096, "source": "C3b Gate 0 proposal, accepted as the existing guard"},
+  "candidates": [
+    {"build": "kernel-1", "text_rodata_growth_bytes": 9674, "bss": 32, "largest_rust_frame": 504, "largest_c_frame": 512, "measurements": "measure-1/measurements.json", "note": "first draft (oversized)"},
+    {"build": "kernel-2", "text_rodata_growth_bytes": 8860, "bss": 32, "largest_rust_frame": 472, "largest_c_frame": 480, "measurements": "measure-3/measurements.json", "note": "optimized: no duplicate inlining, one-call report clear, fewer printed fields"},
+    {"build": "kernel-3", "text_rodata_growth_bytes": 8899, "bss": 32, "largest_rust_frame": 472, "largest_c_frame": 480, "measurements": "measure-4/measurements.json", "note": "plus the verify trace entry; candidate reported to the owner"}
+  ],
+  "failed_attempt": "measure-2 is an empty directory left by a measurement run that failed on an unused-import build error (kernel-2 first build); retained",
+  "request": "Option A: C3b.1 code ceiling 9.5 KiB; cumulative C3b about 12 KiB (report usb2c3b1-budget-request.md was delivered to the owner; its scratchpad copy was lost in the blackout, see blackout-incident.json)",
+  "owner_decision": "approved: C3b.1 code+rodata <= 9,728 B, permanent RW <= 96 B, largest stack frame <= 512 B; cumulative C3b 12 KiB provisional planning allowance only; storage stop 566.2 MB and C: reserve 20 GiB unchanged; C3b.2 not authorized",
+  "throwaway_smoke": "four configurations (UEFI idle complete; UEFI+kbd, SeaBIOS+kbd running, SeaBIOS idle refused; 0 VOS writes) - script and outputs were in the scratchpad and were lost in the blackout; superseded by the native matrix of this milestone"
+}

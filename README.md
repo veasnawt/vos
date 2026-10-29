@@ -138,11 +138,15 @@ and the [USB.2-C3a firmware residue guard](docs/results/usb2c3a-residue.md) thro
 PR #29, and the
 [USB.2-C3a.2 early UEFI firmware memory exclusion](docs/results/usb2c3a2-efi-exclusion.md)
 through PR #30: on UEFI, EFI boot-services and other non-RAM memory never becomes
-allocatable, from before the first PMM allocation. This branch's
+allocatable, from before the first PMM allocation. The
 [USB.2-C3a.3 protected firmware DMA inspection](docs/results/usb2c3a3-protected-inspection.md)
-is verified in QEMU for review: the guard reads that excluded firmware memory in
-place, read-only and bounded, again without device writes, and reports
-reuse protection and inspection completeness separately. Further Rust
+is merged through PR #31: the guard reads that excluded firmware memory in
+place, read-only and bounded, again without device writes. This branch's
+[USB.2-C3b.1 containment dry-run](docs/results/usb2c3b1-containment-dry-run.md)
+is verified in QEMU for review: opt-in `vos.usb2-contain=1` rehearses the
+bus-master-off and controller-reset sequence for the strict idle UEFI QEMU
+profile and lists the proposed writes as data; the build has no PCI or xHCI
+write path, and no controller is reset. Further Rust
 kernel migration and broader
 hardware portability remain proposed tracks requiring separate authorization.
 

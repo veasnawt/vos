@@ -1,0 +1,12 @@
+c3a-host exit 0
+c3a2-san exit 127
+c2-host exit 0
+c1-host exit 0
+usb2b-host exit 0
+usb1-host exit 0
+r2b-host exit 0
+r1-bounds exit 0
+kernel-3-verify exit 0
+r2b-native exit 0
+usb2a-core exit 0
+c3a2-san-2 exit 0

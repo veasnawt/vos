@@ -108,6 +108,11 @@ pub struct Outcome {
     pub excluded: u8,
     /// Bit i set: interrupter i has IMAN.IE set (input to the lifecycle plan).
     pub interrupter_enables: u16,
+    /// Bit i set: interrupter i has IMAN.IP set (a pending interrupt; USB.2-C3b.1).
+    pub interrupter_pending: u16,
+    /// Order-sensitive digest of every memory word and interrupter register the
+    /// walk read, so a revalidation can detect any change (USB.2-C3b.1).
+    pub digest: u64,
 }
 impl Outcome {
     /// Every firmware structure bounded, protected and inspected.
@@ -134,6 +139,11 @@ struct Walk<'a, M: Memory> {
     m: &'a mut M,
     out: Outcome,
     limit: u64,
+}
+
+/// FNV-1a style fold; detects drift between two reads, not an adversary.
+pub fn fold(digest: u64, value: u64) -> u64 {
+    (digest ^ value).wrapping_mul(0x0000_0100_0000_01b3).rotate_left(23)
 }
 
 impl<M: Memory> Walk<'_, M> {
@@ -187,7 +197,10 @@ impl<M: Memory> Walk<'_, M> {
     }
     fn read(&mut self, phys: u64) -> Option<u64> {
         match self.m.read64(phys) {
-            Ok(v) => Some(v),
+            Ok(v) => {
+                self.out.digest = fold(self.out.digest, v ^ phys);
+                Some(v)
+            }
             Err(_) => {
                 self.flag(READ_FAILED);
                 None
@@ -285,6 +298,12 @@ impl<M: Memory> Walk<'_, M> {
             };
             if it.iman & 2 != 0 {
                 self.out.interrupter_enables |= 1 << i;
+            }
+            if it.iman & 1 != 0 {
+                self.out.interrupter_pending |= 1 << i;
+            }
+            for v in [u64::from(it.iman), u64::from(it.erstsz), it.erstba, it.erdp] {
+                self.out.digest = fold(self.out.digest, v);
             }
             let size = u64::from(it.erstsz & 0xffff);
             if size == 0 {

@@ -223,10 +223,12 @@ firmware DMA residue guard and a dry-run halt/reset plan that is never executed.
 [USB.2-C3a.2](results/usb2c3a2-efi-exclusion.md) is merged through PR #30 at
 `662a3ccb6d1111393c30c486ca4af657fac5808e`: EFI boot-services and other non-RAM
 memory is excluded from the PMM on every UEFI boot before the first allocation.
-[USB.2-C3a.3](results/usb2c3a3-protected-inspection.md) is implemented and verified
-in this PR candidate, not yet accepted: bounded, read-only inspection of that
+[USB.2-C3a.3](results/usb2c3a3-protected-inspection.md) is merged through PR #31 at
+`55f6693a4e537248c912aaed61f0194cc07be811`: bounded, read-only inspection of that
 excluded firmware DMA memory, with reuse protection and inspection completeness
-reported separately. C3b
+reported separately. [USB.2-C3b.1](results/usb2c3b1-containment-dry-run.md) is
+implemented and verified in this PR candidate, not yet accepted: a read-only
+rehearsal of controller containment with no write path. C3b.2
 (QEMU-only containment writes) and later require separate authorization; physical
 controller takeover remains unauthorized.
 This status update grants no implementation authority.

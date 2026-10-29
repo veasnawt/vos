@@ -105,9 +105,9 @@ impl Memory for Kernel<'_, '_> {
 }
 
 #[derive(Default)]
-struct Found {
-    regs: Registers,
-    outcome: Outcome,
+pub(crate) struct Found {
+    pub(crate) regs: Registers,
+    pub(crate) outcome: Outcome,
     legacy: bool,
     legacy_os_owned: bool,
     first: Interrupter,
@@ -115,7 +115,7 @@ struct Found {
 
 /// Read the residue registers (inspect proved op + 0x400 and the runtime
 /// block lie inside the extent), then assess and protect.
-fn inspect(w: &mut BarWords<'_>, i: &Inspection, bits: u32, found: &mut Found) -> Result<(), Reason> {
+pub(crate) fn inspect(w: &mut BarWords<'_>, i: &Inspection, bits: u32, found: &mut Found) -> Result<(), Reason> {
     let op = i.operational;
     let mut k = Kernel { words: w, runtime: i.runtime };
     let read = |k: &mut Kernel<'_, '_>, off| k.words.word(off).map_err(Reason::from);
@@ -169,6 +169,7 @@ fn finish(r: &mut ResidueReport, f: &Found) -> i32 {
         bus_master: r.q.pci_command() & 4 != 0,
         controller_ready: f.regs.usbsts & (1 << 11) == 0,
         interrupter_enables: o.interrupter_enables,
+        interrupts_disabled: false, // the guard's plan keeps the generic mask step (C3b.1 uses its own)
         legacy_present: f.legacy,
         legacy_os_owned: f.legacy_os_owned,
     };

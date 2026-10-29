@@ -15,6 +15,7 @@ mod xhci_qualify;
 mod xhci_link;
 mod xhci_dma;
 mod xhci_residue;
+mod xhci_contain;
 #[path = "../../../kernel/rust/boot/efi_memory.rs"]
 pub mod efi_memory;
 mod efi_exclusion;
