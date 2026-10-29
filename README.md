@@ -130,10 +130,12 @@ and standard PS/2 keyboard/primary-button mouse input. USB input, production
 networking, writable storage, installation and Secure Boot are not implemented.
 The [R2-B Rust PS/2 pointer decoder](docs/results/r2b-ps2-pointer-rust.md) is
 merged through PR #26; it does not add USB input or fix physical
-USB-keyboard/mouse PCs. This branch's
-[USB.2-C1 read-only xHCI qualification](docs/results/usb2c1-qualification.md)
-is verified in QEMU for review: it inspects the emulated QEMU controller only and
-writes no PCI or controller register. Further Rust kernel migration and broader
+USB-keyboard/mouse PCs.
+[USB.2-C1 read-only xHCI qualification](docs/results/usb2c1-qualification.md) is
+merged through PR #27; it inspects the emulated QEMU controller only. This branch's
+[USB.2-C2 DMA ownership foundation](docs/results/usb2c2-dma.md) is verified in
+QEMU for review: software-only ownership of DMA-designated pages, with nothing
+published to any device. Further Rust kernel migration and broader
 hardware portability remain proposed tracks requiring separate authorization.
 
 The separate [Veasna OS React/Electron prototype](https://github.com/veasnawt/veasna-os)

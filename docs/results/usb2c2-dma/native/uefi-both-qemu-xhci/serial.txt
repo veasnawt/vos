@@ -1,0 +1,118 @@
+[2J[001;001H[=3h[2J[001;001H[2J[001;001H[8;042;160t[2J[001;001H[2J[001;001H[8;056;240t[2J[001;001HBdsDxe: loading Boot0002 "UEFI QEMU DVD-ROM QM00005 " from PciRoot(0x0)/Pci(0x1F,0x2)/Sata(0x2,0xFFFF,0x0)
+BdsDxe: starting Boot0002 "UEFI QEMU DVD-ROM QM00005 " from PciRoot(0x0)/Pci(0x1F,0x2)/Sata(0x2,0xFFFF,0x0)
+[H[J[1;1HUSB2C2 CHOICE: n normal, d DMA ownership exercise, b exercise and qualificationUSB2C2 CHOICE: n normal, d DMA ownership exercise, b exercise and qualification
+
+bbHello from VOS!
+boot: x86_64 long mode, cs=0x8 efer=0xd00 rip=0xffffffff801072a8
+gdt: loaded cs=0x8 ss=0x10 tr=0x28 tss=busy
+tss: rsp0=0xffffffff80157000 ist1=0xffffffff8014e000 ist2=0xffffffff80150000 ist3=0xffffffff80152000 iomap=104 limit=103
+idt: 32 exception vectors loaded, df ist=1, nmi ist=2, mc ist=3
+idt: IRQ vectors 0x20-0x2f present, DPL 0, interrupt gates
+idt: vector 0x80 present, DPL 3 (system calls, ABI v0)
+cpu: wp=on nx=on smep=unsupported umip=unsupported smap=unsupported x87=off(em)
+cpu: inherited cr0=0x80010033 cr4=0x668 efer=0xd00; set cr0=0x80010035 cr4=0x68 efer=0xd00
+boot: loader "GRUB 2.14-2ubuntu1", memory map 21 entries, 127713280 bytes usable
+boot: multiboot2 info at 0x8c000-0x8dff0
+boot: kernel command line "vos.apps=1 vos.desktop=1 vos.gui=1 vos.usb2-qualify=1 vos.usb2c2-dma=1"
+boot: modules 4
+boot: module 0 0x22e000-0x2cfdc8 "vsh"
+boot: module 1 0x83000-0x86348 "hello"
+boot: module 2 0x2d0000-0x371b68 "rixie"
+boot: module 3 0x88000-0x8b840 "gui-demo"
+boot: reserved 0x0-0x100000 low 1 MiB
+boot: reserved 0x100000-0x1d7000 kernel image
+boot: reserved 0x8c000-0x8e000 multiboot2 info
+boot: reserved 0x22e000-0x2d0000 module
+boot: reserved 0x83000-0x87000 module
+boot: reserved 0x2d0000-0x372000 module
+boot: reserved 0x88000-0x8c000 module
+pmm: 262144 frames tracked below 1 GiB, 30481 usable (121924 KiB), 0 bytes of RAM above 1 GiB ignored
+vmm: identity map removed
+kmap: phys 0-4 MiB as 4 KiB pages: 50 text R-X, 13 R NX, 941 RW NX, 20 guard pages unmapped; 510 x 2 MiB RW NX
+kmap: text 0xffffffff80107000-0xffffffff80139000, rodata 0xffffffff80139000-0xffffffff80145000
+kmap: PDPT[510] 0x105000 -> 0x16c000, checked before and after the switch; boot directory retired
+kmap: after the TLB flush the CPU refused a text write (#PF err=0x3) and a guard read (#PF err=0x0)
+devmap: window at 0xffffffff40000000, 40-bit physical addresses, write-combining via PAT entry 4
+screen: framebuffer 1280x800 BGRX at 0x80000000, pitch 5120, write-combining, MTRR type 0, 156x41 cells
+vmm: audit passed: kernel alias 1004 x 4 KiB + 510 x 2 MiB supervisor pages, 50 ring-0 executable (all kernel text, none writable), 0 lower-half tables
+rust: kernel probe PASS; fn=0xffffffff801369c0 seed=0xffffffffb6c71021 salt=0xffffffff80048910 result=0xde303edc75575673
+irq: 8259 master 0x20-0x27, slave 0x28-0x2f (cascade IRQ2); masks 0xfffe (IRQ0 only); level-triggered lines (ELCR) 0x0
+pit: channel 0 mode 2, divisor 11932 (99.998 Hz)
+sched: 16 thread records, 15 guarded stacks of 16 KiB at 0xffffffff8016f000; boot thread id 1, idle thread id 2
+usb2c1: read-only xHCI qualification; QEMU 1b36:000d 16 KiB profile; PCI bus 0 only
+usb2c1: bus=0 dev=2 fn=0 base=0xc000000000
+usb2c1: candidates=0x1 complete=0x1 vendor=0x1b36 device=0xd class_revision=0xc033001 pci_status=0x10 bar_low=0x4
+usb2c1: bar_high=0xc0 bar_bits=0x40 pci_caps=0x2 pm_offset=0x0 pmcsr_before=0x0 power_state=0x0 msi_offset=0x0
+usb2c1: msi_control_before=0x0 msix_offset=0x90 msix_control_before=0xf msix_table=0x3000 msix_pba=0x3800 command_before=0x7 version=0x100
+usb2c1: caplength=0x40 hcs1=0x8001040 hcs2=0xf hcc1=0x87001 doorbell=0x2000 runtime=0x1000 pagesize=0x1
+usb2c1: xecp_headers=0x2 protocol_ports=0xff usb1_compatible=0x1 legacy_offset=0x0 usblegsup_before=0x0 usblegctlsts_before=0x0 usblegsup_after=0x0
+usb2c1: usblegctlsts_after=0x0 usbcmd_before=0x0 usbsts_before=0x1 usbcmd_after=0x0 usbsts_after=0x1 command_after=0x7 bar_low_after=0x4
+usb2c1: bar_high_after=0xc0 pmcsr_after=0x0 msi_control_after=0x0 msix_control_after=0xf mmio_reads=0x12 lease_acquired=0x1 lease_released=0x1
+usb2c1: QUALIFIED: profile qualified
+usb2c1: resources restored; no PCI/xHCI writes, semaphore, reset, run, BME, DMA or enumeration
+usb2c1: DMA, coherency and IOMMU not established; activation unsupported
+usb2c2: software-only DMA ownership exercise; no device access or publication
+usb2c2: set_frame=0x1da000 set_frame=0x1db000 set_frame=0x1dc000 set_frame=0x1dd000 retained_frame=0x1da000
+usb2c2: allocated=0xc prepared=0xc released=0xb quarantined=0x1 active_now=0x0 retained_now=0x1 allocation_failures=0x5 rollback_failures=0x0 violations=0x2
+usb2c2: budget_refused=0x1 nondma_refused=0x1 wrong_state_refused=0x1 injected_steps=0x4 retained_state=0x5 frames_held=0x1 pmm_before=0x770e pmm_after=0x770d
+usb2c2: PASS; unpublished pages released exactly; one deliberate quarantine retained for the boot; no PCI/xHCI access, DMA publication or device ownership transfer
+vblk: no virtio-blk device on PCI bus 0; block storage unavailable
+catalog: ready 4 entries, 392 bytes; all executable source pages reserved
+catalog: vsh id=4097 ABI=4 policy=1 size=662984
+catalog: hello id=4098 ABI=0 policy=2 size=13128
+catalog: rixie id=4099 ABI=3 policy=3 size=662376
+catalog: gui-demo id=4100 ABI=5 policy=4 size=14400
+app: module "hello" at 0x83000-0x86348, 13128 bytes
+elf: hello: ET_EXEC entry 0x400000, 3 PT_LOAD, 3 pages, VOS ABI 0
+user[hello]: Hello from VOS!
+proc: exit status 0 (cs=0x23 rip=0x40002a)
+proc[hello]: exited status 0, all frames reclaimed
+boot: checks passed
+desktop: scene ready; kernel-owned BGRX surface, bounded console viewport
+gui: native ABI5 demo; one surface <=163840 bytes; upload <=4096 bytes; event queue=16
+user[gui-demo]: gui-demo: PRESENTED; Rust ring 3; a/b changes pixels; q exits
+user[gui-demo]: gui-demo: KEY a PRESENTED
+user[gui-demo]: gui-demo: KEY b PRESENTED
+user[gui-demo]: gui-demo: RELEASED; clean exit
+proc: exit status 0 (cs=0x23 rip=0x40002a)
+gui: PASS; kernel-CR3 reclamation, all resources restored
+user[vsh]: VOS native vsh (Rust, ring 3)
+user[vsh]: Type help for commands.
+user[vsh]: 
+user[vsh]: VOS> 
+apps
+user[vsh]: hello
+user[vsh]: 
+user[vsh]: rixie
+user[vsh]: 
+user[vsh]: VOS> 
+hello
+console: foreground child 4
+user[hello]: Hello from VOS!
+proc: exit status 0 (cs=0x23 rip=0x40002a)
+console: restored parent 3
+user[vsh]: VOS> 
+rixie
+console: foreground child 5
+user[rixie]: Rixie Core v0 - deterministic offline prototype
+user[rixie]: I use predefined replies, not a conversational AI model.
+user[rixie]: Type help for topics; exit ends this session.
+user[rixie]: 
+user[rixie]: Rixie> 
+help
+user[rixie]: Topics: hello, help, about, questions, explain <command>, exit
+user[rixie]: Explain vsh commands: help, clear, echo, pwd, ls, cd, cat, exit
+user[rixie]: Explanations are text only; Rixie does not execute shell commands.
+user[rixie]: Rixie> 
+exit
+user[rixie]: Goodbye from Rixie.
+proc: exit status 0 (cs=0x23 rip=0x40002a)
+console: restored parent 3
+user[vsh]: VOS> 
+echo restored
+user[vsh]: restored
+user[vsh]: 
+user[vsh]: VOS> 
+exit
+proc: exit status 0 (cs=0x23 rip=0x40002a)
+native: vsh PASS, process reclaimed

@@ -13,6 +13,7 @@ mod xhci_discovery;
 mod resource_ownership;
 mod xhci_qualify;
 mod xhci_link;
+mod xhci_dma;
 mod ps2_pointer;
 
 // SAFETY: this private kernel symbol is defined exactly once, with the scalar

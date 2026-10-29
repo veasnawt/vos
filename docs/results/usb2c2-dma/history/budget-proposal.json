@@ -1,0 +1,50 @@
+{
+  "recorded_utc": "2026-10-29T00:29:00.286960+00:00",
+  "stage": "before implementation (Gate E proposal)",
+  "baseline": "84a0c15c223001411499f396a6a89cc98684d6d3 (C1 merge); measurements against a kernel built from it with the pinned toolchain",
+  "limits": {
+    "loaded_text_rodata_growth_bytes": {
+      "limit": 12288,
+      "basis": "C1 measured ~10 KiB for qualify path (Rust logic + C adapter + strings) of comparable size; C2 adds a fixed-table state machine, PMM adapter and an opt-in exercise; the C1 20 KiB exception is NOT inherited"
+    },
+    "loaded_pt_load_growth_page_rounded_bytes": {
+      "limit": 16384
+    },
+    "bss_growth_bytes": {
+      "limit": 512,
+      "basis": "USB.2 design permanent bookkeeping bound; 8 records x ~32 B + accounting + C allow-list"
+    },
+    "dma_designated_pages_live": {
+      "limit": 4,
+      "basis": "USB.2 design: command, event, DCBAA, ERST = 16 KiB"
+    },
+    "quarantine_records": {
+      "limit": 4,
+      "basis": "design quarantine bound 16 KiB DMA; exhaustion fails closed"
+    },
+    "native_retained_pages_per_opt_in_boot": {
+      "limit": 1,
+      "basis": "one deliberate quarantine, retained for the rest of boot"
+    },
+    "new_page_tables": {
+      "limit": 0,
+      "basis": "frames are reached through the existing kernel RAM alias; no devmap mapping"
+    },
+    "stack_frame_bytes": {
+      "limit": 512
+    },
+    "threads": {
+      "limit": 0
+    },
+    "heap": {
+      "limit": 0
+    },
+    "storage": {
+      "provision_bytes": 734003200,
+      "stop_threshold_bytes": 660602880,
+      "basis": "C1 unit costs: kernel 15 MB, 14-boot native matrix 101 MB, R2-B native 43 MB, hosted suites ~80 MB; one-pass plan ~411 MB + one native rerun + 15% margin; not to be raised without owner approval"
+    }
+  },
+  "c_free_at_proposal_bytes": 23466467328,
+  "reserve_bytes": 21474836480
+}

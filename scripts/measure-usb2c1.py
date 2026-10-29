@@ -74,6 +74,8 @@ def main():
     ap.add_argument('--candidate', type=Path, required=True, help='candidate build directory')
     ap.add_argument('--out', type=Path, required=True)
     ap.add_argument('--budget', type=int, default=20480)
+    ap.add_argument('--symbols', default=r'vos_xhci|xhci_qualify|qualify|capabilities|controller|ring|scope_install|devmap_scope',
+                    help='regex of symbols whose stack frames are reported')
     args = ap.parse_args()
     out = args.out.resolve()
     if out.exists():
@@ -89,7 +91,7 @@ def main():
     seg_delta = [{'filesz': y['filesz'] - x['filesz'], 'memsz': y['memsz'] - x['memsz'], 'flags': y['flags']}
                  for x, y in zip(bseg, cseg)]
     syms = symbols(args.candidate / 'vos.bin')
-    interesting = re.compile(r'vos_xhci|xhci_qualify|qualify|capabilities|controller|ring|scope_install|devmap_scope')
+    interesting = re.compile(args.symbols)
     frames = {}
     for name, (addr, size, kind) in syms.items():
         if kind in 'Tt' and interesting.search(name) and size:
@@ -101,7 +103,8 @@ def main():
               '-Wextra', '-g', '-m64', '-mcmodel=kernel', '-mno-red-zone', '-mgeneral-regs-only',
               '-fcf-protection=none', '-fno-stack-clash-protection', '-fstack-usage', '-c']
     c_stack = {}
-    for src in ('arch/x86_64/xhci_qualify.c', 'arch/x86_64/devmap.c', 'arch/x86_64/usb_resources.c'):
+    for src in [s for s in ('arch/x86_64/xhci_qualify.c', 'arch/x86_64/devmap.c', 'arch/x86_64/usb_resources.c',
+                            'arch/x86_64/usb_dma.c') if (ROOT / s).exists()]:
         obj = out / (Path(src).stem + '.o')
         subprocess.run(cflags + [src, '-o', str(obj)], cwd=ROOT, check=True)
         for line in obj.with_suffix('.su').read_text().splitlines():
