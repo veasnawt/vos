@@ -334,3 +334,62 @@ fn allocator_model_never_hands_out_excluded_frames() {
     // A request for a specific excluded frame finds it unavailable.
     assert!(firmware.iter().all(|&p| !with[(p / PAGE) as usize]));
 }
+
+// ---- USB.2-C3a.3: excluded firmware RAM that may be inspected in place ----
+
+fn frame(t6: &[u8], t17: &[u8], f: u64) -> bool {
+    efi_memory::firmware_frame(&EfiMap::parse(t17).unwrap(), &MemoryMap::parse(t6).unwrap(), f, LO, HI)
+}
+
+#[test]
+fn firmware_frames_are_exactly_the_whole_excluded_ram_frames() {
+    // OVMF: the xHCI and AHCI firmware pages are excluded RAM; every frame agrees
+    // with the independent model restricted to whole tag-6 RAM frames.
+    for p in [0x674a000u64, 0x674b000, 0x674c000, 0x674d000, 0x6744000, 0x6745000] {
+        assert!(frame(OVMF6, OVMF17, p), "{p:#x}");
+    }
+    let m = model(OVMF6, OVMF17);
+    let (efi, ram) = (EfiMap::parse(OVMF17).unwrap(), MemoryMap::parse(OVMF6).unwrap());
+    let mut yes = 0;
+    for f in (0..HI / PAGE).step_by(7) {        // a deterministic sample across the window
+        let got = efi_memory::firmware_frame(&efi, &ram, f * PAGE, LO, HI);
+        assert_eq!(got, m.must_exclude(f as usize), "frame {:#x}", f * PAGE);
+        yes += got as u32;
+    }
+    assert!(yes > 1000);
+    // Outside the window, unaligned, or at the 64-bit edge: never.
+    assert!(!frame(OVMF6, OVMF17, 0x9000) && !frame(OVMF6, OVMF17, HI) && !frame(OVMF6, OVMF17, 0x674a008));
+    assert!(!frame(OVMF6, OVMF17, u64::MAX & !(PAGE - 1)));
+    // Allowed (conventional/loader) RAM is never inspectable firmware memory.
+    let conventional = (LO / PAGE..HI / PAGE).find(|&f| m.ram[f as usize] && !m.must_exclude(f as usize)).unwrap();
+    assert!(!frame(OVMF6, OVMF17, conventional * PAGE));
+}
+
+#[test]
+fn firmware_frames_require_whole_ram_and_no_unavailable_overlap() {
+    // Tag-6 RAM ends mid-page inside boot-services memory: that frame is removed
+    // (outward) but is not whole RAM, so it is not inspectable.
+    let t6 = tag6(&[(0x100000, 0x100800, 1)]);
+    let t17 = tag17(48, 1, &[(7, 0x100000, 256, WB), (4, 0x200000, 16, WB)]);
+    assert!(!frame(&t6, &t17, 0x200000));
+    // A non-available entry touching a boot-services frame makes it uninspectable.
+    let t6 = tag6(&[(0x100000, 0x300000, 1), (0x300800, 0x100, 2)]);
+    let t17 = tag17(48, 1, &[(7, 0x100000, 512, WB), (4, 0x300000, 256, WB)]);
+    assert!(!frame(&t6, &t17, 0x300000) && frame(&t6, &t17, 0x301000));
+    // A conventional gap between two excluded ranges (what a coalesced
+    // reservation would also cover) is not firmware memory.
+    let t6 = tag6(&[(0x100000, 0x1000000, 1)]);
+    let t17 = tag17(48, 1, &[(7, 0x100000, 0x1000, WB), (4, 0x200000, 16, WB), (4, 0x400000, 16, WB)]);
+    assert!(frame(&t6, &t17, 0x200000) && frame(&t6, &t17, 0x400000) && !frame(&t6, &t17, 0x300000));
+    // Uncovered tag-6 RAM is excluded and inspectable; RAM the EFI map calls
+    // conventional but tag 6 does not list is neither.
+    let t6 = tag6(&[(0x100000, 0x300000, 1)]);
+    let t17 = tag17(48, 1, &[(7, 0x100000, 256, WB), (7, 0x300000, 0x1000, WB)]);
+    assert!(frame(&t6, &t17, 0x200000) && !frame(&t6, &t17, 0x500000));
+    // The window must itself be page-aligned.
+    let t6 = tag6(&[(0x100000, 0x300000, 1)]);
+    let t17 = tag17(48, 1, &[(4, 0x100000, 768, WB)]);
+    let (efi, ram) = (EfiMap::parse(&t17).unwrap(), MemoryMap::parse(&t6).unwrap());
+    assert!(efi_memory::firmware_frame(&efi, &ram, 0x200000, LO, HI));
+    assert!(!efi_memory::firmware_frame(&efi, &ram, 0x200000, LO + 1, HI));
+}

@@ -22,6 +22,7 @@ SP, removed from tag-6 available RAM. Firmware xHCI and AHCI DMA pointers are
 read through HMP with read tracing off and checked against the PMM bits.
 """
 import argparse
+import hashlib
 import importlib.util
 import json
 import os
@@ -198,6 +199,52 @@ def snapshot(gdb, syms):
             'hint': f[5], 'ignored': f[6], 'state': state}, avail, alloc
 
 
+READ_EVENTS = ('memory_region_ops_read', 'usb_xhci_cap_read', 'usb_xhci_oper_read',
+               'usb_xhci_port_read', 'usb_xhci_runtime_read', 'usb_xhci_doorbell_read')
+
+
+def quiet_pages(q, base):
+    """Firmware xHCI ring/context pages via HMP with read tracing paused (so the
+    observer's own reads are never attributed to VOS), then resumed."""
+    for event in READ_EVENTS:
+        q.command('trace-event-set-state', {'name': event, 'enable': False})
+    try:
+        return C3A.firmware_pages(q, base)
+    finally:
+        for event in READ_EVENTS:
+            q.command('trace-event-set-state', {'name': event, 'enable': True})
+
+
+def mappings(gdb, root, frames):
+    """Every leaf of the live kernel page tables (read from guest memory, never
+    written) that maps one of `frames`: [(frame, va, writable, nx, cache_bits)]."""
+    found, seen = [], set()
+
+    def walk(table, level, va):
+        need(table not in seen and len(seen) < 128, 'bounded page-table walk')
+        seen.add(table)
+        raw = gdb.read(KVMA + table, 4096)
+        for i in range(512):
+            e = int.from_bytes(raw[i * 8:i * 8 + 8], 'little')
+            if not e & 1:
+                continue
+            v = va | i << (12 + 9 * level)
+            if level == 3 and i >= 256:
+                v |= 0xffff000000000000
+            pa = e & 0x000ffffffffff000
+            if level == 0 or (level in (1, 2) and e & 0x80):
+                size = 1 << (12 + 9 * level)
+                pa &= ~(size - 1)
+                pat = (e >> 12 if level else e >> 7) & 1          # PAT bit position by level
+                for f in frames:
+                    if pa <= f < pa + size:
+                        found.append((f, v + (f - pa), bool(e & 2), bool(e >> 63), (e >> 3) & 3 | pat << 2))
+            else:
+                walk(pa, level - 1, v)
+    walk(root, 3, 0)
+    return found
+
+
 def ahci_pointers(q, regions):
     abar = next(g['address'] for g in regions if g.get('bar') == 5)
     pi = words(q, abar + 0x0c, 1)[0]
@@ -282,7 +329,7 @@ def boot(out, fw, iso, variables, mode, device, syms, expect):
                         re.findall(r'boot: reserved (0x[0-9a-f]+)-(0x[0-9a-f]+) ([^\r\n]*)', s)]
             resv = [(a, b) for a, b, w in resv_all if w != EFI_RESV]
             printed = [(a, b) for a, b, w in resv_all if w == EFI_RESV]
-            exclude = expect == 'exclusion' and fw == 'uefi'
+            exclude = expect != 'baseline' and fw == 'uefi'
             want, excluded = oracle(mb2, resv, exclude)
             got = bits(avail0)
             diff = [f for f in range(NFRAMES) if got[f] != want[f]]
@@ -312,6 +359,36 @@ def boot(out, fw, iso, variables, mode, device, syms, expect):
                      'baseline: BootServices frames allocatable (the hazard)')
             else:
                 need(not mb2['efi_header'] and not printed, 'BIOS: no EFI map, no EFI exclusion')
+            if expect == 'inspection' and mode != 'c' and functions and device.startswith('qemu-xhci'):
+                # USB.2-C3a.3: observe the guard window from outside: stop at the
+                # guard's entry and at screen_init (its successor), compare PMM
+                # bitmaps, firmware page bytes and every page-table mapping of them.
+                bar = next(r['address'] for r in functions[0]['regions'] if r.get('bar') == 0)
+                window = {}
+                for label, symbol in (('guard_entry', 'xhci_residue_boot'), ('after_guard', 'screen_init')):
+                    gdb.insert(0, syms[symbol], 1)
+                    stop = gdb.cont()
+                    need(stop.startswith('T05') or stop.startswith('S05'), f'breakpoint at {symbol}')
+                    gdb.remove(0, syms[symbol], 1)
+                    state, av, al = snapshot(gdb, syms)
+                    pointers, pages = quiet_pages(q, bar)
+                    window[label] = {'state': state, 'avail': av, 'alloc': al, 'pages': pages,
+                                     'sha256': {hex(p): hashlib.sha256(gdb.read(KVMA + p, PAGE)).hexdigest() for p in pages},
+                                     'mappings': mappings(gdb, gdb.u64(syms['kernel_root']), pages)}
+                g0, g1 = window['guard_entry'], window['after_guard']
+                need(g0['pages'] == g1['pages'] and g0['pages'], 'firmware pointers stable across the guard')
+                need(g0['avail'] == avail0 == g1['avail'], 'avail bitmap unchanged across the guard')
+                need(g0['alloc'] == g1['alloc'], 'no frame allocated, reserved or freed by the inspection')
+                need(g0['sha256'] == g1['sha256'], 'firmware page bytes unchanged by the inspection')
+                for label in window:
+                    maps = window[label]['mappings']
+                    need(sorted(m[0] for m in maps) == sorted(window[label]['pages']), f'{label}: one mapping per page')
+                    need(all(va == KVMA + f and w and nx and cache == 0 for f, va, w, nx, cache in maps),
+                         f'{label}: only the write-back kernel alias (no new alias)')
+                result['guard_window'] = {k: {'free': v['state']['free'], 'pages': [hex(p) for p in v['pages']],
+                                              'sha256': v['sha256'],
+                                              'mappings': [(hex(f), hex(va), w, nx, c) for f, va, w, nx, c in v['mappings']]}
+                                          for k, v in window.items()}
             watch = Watch(gdb, syms['kernel_pmm'] + 32)
             gdb.insert(2, syms['kernel_pmm'] + 32, 8)
             watch.start()
@@ -329,8 +406,18 @@ def boot(out, fw, iso, variables, mode, device, syms, expect):
                     text = s[s.index('usb2c3a:'):m.end()]
                     result['guard'] = dict(re.findall(r'\b(\w+)=(0x[0-9a-f]+)', text))
                     result['reserved'] = [int(x, 16) for x in re.findall(r'reserved frame=(0x[0-9a-f]+)', text)]
+                    g = result['guard']
                     if device.startswith('qemu-xhci') and fw == 'uefi' and expect == 'baseline':
                         need('PLAN VALID' in m[0] and result['reserved'], 'baseline UEFI guard reserves (C3a)')
+                    elif device.startswith('qemu-xhci') and fw == 'uefi' and expect == 'inspection':
+                        need('PLAN VALID' in m[0] and not result['reserved'] and g.get('findings') == '0x0' and
+                             g.get('excluded') == '0x7' and g.get('inspection') == '0x3' and g.get('hazards') == '0x0' and
+                             'reuse_protected=1 inspection_complete=1; firmware memory is never released' in text + s,
+                             'excluded firmware residue inspected in place: complete, nothing reserved')
+                    elif device.startswith('qemu-xhci') and expect == 'inspection':
+                        need('REFUSED: residue incomplete' in m[0] and not result['reserved'] and g.get('hazards') == '0x0'
+                             and g.get('excluded') == '0x0' and g.get('inspection') == '0x1',
+                             'BIOS: map-protected residue, reuse protected, inspection incomplete, refused')
                     elif device.startswith('qemu-xhci'):
                         need('REFUSED: residue incomplete' in m[0] and not result['reserved'] and
                              result['guard'].get('hazards') == '0x0',
@@ -378,6 +465,13 @@ def boot(out, fw, iso, variables, mode, device, syms, expect):
             gdb.remove(2, syms['kernel_pmm'] + 32, 8)
             last, avail1, alloc1 = snapshot(gdb, syms)
             need(avail1 == avail0 and last['usable'] == first['usable'], 'avail bitmap unchanged since initialization')
+            if 'guard_window' in result:
+                after = {hex(p): hashlib.sha256(gdb.read(KVMA + p, PAGE)).hexdigest() for p in window['after_guard']['pages']}
+                need(after == window['after_guard']['sha256'], 'firmware page bytes unchanged through the GUI run')
+                maps = mappings(gdb, gdb.u64(syms['kernel_root']), window['after_guard']['pages'])
+                need(len(maps) == len(after) and all(va == KVMA + f and w and nx and c == 0 for f, va, w, nx, c in maps),
+                     'after the GUI run: still only the kernel alias')
+                result['guard_window']['end'] = {'sha256': after, 'mappings': [(hex(f), hex(va), w, nx, c) for f, va, w, nx, c in maps]}
             a1 = bits(alloc1)
             need(not any(a1[f] for f in range(NFRAMES) if not want[f]), 'no unavailable frame ever allocated')
             need(not any(a1[f] for f in range(NFRAMES) if excluded[f]), 'no excluded frame allocated')
@@ -414,7 +508,7 @@ def boot(out, fw, iso, variables, mode, device, syms, expect):
                                                                      for k, v in a['ports'].items()},
                                   'live_pages': {hex(p): got[p // PAGE] for p in sorted(live)}}
                 need(live, 'firmware left at least one AHCI engine armed')
-                if expect == 'exclusion' or fw == 'bios':
+                if expect != 'baseline' or fw == 'bios':
                     need(not any(got[p // PAGE] for p in live), 'armed AHCI command/FIS pages unallocatable')
                 else:
                     need(all(got[p // PAGE] for p in live), 'baseline UEFI: armed AHCI pages allocatable (the hazard)')
@@ -510,7 +604,7 @@ def main():
     ap.add_argument('--apps', type=Path, required=True)
     ap.add_argument('--efi', type=Path, required=True)
     ap.add_argument('--out', type=Path, required=True)
-    ap.add_argument('--expect', choices=('baseline', 'exclusion'), required=True)
+    ap.add_argument('--expect', choices=('baseline', 'exclusion', 'inspection'), required=True)
     ap.add_argument('--cases', help='comma-separated fw-mode-device subset')
     ap.add_argument('--disk', type=Path, required=True, help='read-only ext2 fixture (accepted N6.3 disk)')
     ap.add_argument('--iso-dir', type=Path, help='reuse validated images of an earlier run of the same inputs')
@@ -531,7 +625,9 @@ def main():
     kernel = args.kernel.resolve()
     table = {l.split()[-1]: int(l.split()[0], 16) for l in subprocess.check_output(['nm', str(kernel)], text=True).splitlines()
              if len(l.split()) == 3}
-    syms = {k: table[k] for k in ('kernel_pmm', 'pmm_alloc_frame')}
+    syms = {k: table[k] for k in ('kernel_pmm', 'pmm_alloc_frame', 'xhci_residue_boot', 'screen_init', 'kernel_root')
+            if k in table}
+    need(len(syms) == 5 or args.expect != 'inspection', 'symbols for the guard window')
     inputs = {'/boot/vos.bin': kernel}
     for n in APPS:
         inputs[f'/boot/{n}.elf'] = (args.apps / f'{n}.elf').resolve()

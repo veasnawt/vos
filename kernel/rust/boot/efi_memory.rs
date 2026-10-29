@@ -212,13 +212,28 @@ impl<'a> MemoryMap<'a> {
     /// Available RAM entry `i` as [start, end); None if not RAM, empty or overflowing
     /// (the PMM never frees an overflowing entry either).
     fn available(&self, i: usize) -> Option<(u64, u64)> {
+        let (base, end, kind) = self.entry(i)?;
+        (kind == AVAILABLE && base != end).then_some((base, end))
+    }
+
+    /// Entry `i` as (base, end, type); an overflowing end saturates to 2^64 - 1.
+    fn entry(&self, i: usize) -> Option<(u64, u64, u64)> {
         let at = HEADER + i.checked_mul(self.size)?;
         let base = le(self.bytes, at, 8)?;
         let length = le(self.bytes, at + 8, 8)?;
-        if le(self.bytes, at + 16, 4)? != AVAILABLE || length == 0 {
-            return None;
+        let kind = le(self.bytes, at + 16, 4)?;
+        match base.checked_add(length) {
+            Some(end) => Some((base, end, kind)),
+            None if kind == AVAILABLE => None,
+            None => Some((base, u64::MAX, kind)),
         }
-        Some((base, base.checked_add(length)?))
+    }
+
+    /// Whether any non-available entry touches [start, end).
+    fn unavailable_overlaps(&self, start: u64, end: u64) -> bool {
+        (0..self.count).any(|i| {
+            matches!(self.entry(i), Some((b, e, k)) if k != AVAILABLE && b < e && b < end && start < e)
+        })
     }
 }
 
@@ -306,6 +321,25 @@ fn probe(efi: &EfiMap<'_>, ram: &MemoryMap<'_>, p: u64, hi: u64) -> (bool, u64) 
         }
     }
     (ram_here && (bad || !ok), next)
+}
+
+/// USB.2-C3a.3: whether the whole frame at `frame` is excluded firmware RAM:
+/// inside the page-aligned window [lo, hi), touching no non-available entry,
+/// and excluded with no range boundary inside it. `probe` treats every tag-6
+/// RAM and EFI descriptor edge as a boundary, so "excluded at `frame` and the
+/// next boundary at or past its end" means the whole frame is tag-6 RAM with
+/// one classification. Such a frame is RAM the kernel's alias maps and the
+/// allocator never hands out; inspecting it never makes it releasable.
+pub fn firmware_frame(efi: &EfiMap<'_>, ram: &MemoryMap<'_>, frame: u64, lo: u64, hi: u64) -> bool {
+    let Some(end) = frame.checked_add(PAGE) else { return false };
+    if frame % PAGE != 0 || lo % PAGE != 0 || hi % PAGE != 0 || frame < lo || end > hi {
+        return false;
+    }
+    if ram.unavailable_overlaps(frame, end) {
+        return false;
+    }
+    let (excluded, next) = probe(efi, ram, frame, end);
+    excluded && next >= end
 }
 
 /// Emit, in ascending order, every part of tag-6 available RAM inside the

@@ -33,6 +33,11 @@ MUTATIONS = {
                              'capacity_coalesces_conservatively_and_fails_closed'),
     'missing-map-accepted': ('efi_memory.rs', '0 if e.efi_firmware => Err(Error::Missing),',
                              '0 if e.efi_firmware => Ok(Plan::NotApplicable),', 'bios_and_policy_decisions_fail_closed'),
+    # USB.2-C3a.3: only whole tag-6 RAM frames untouched by non-available entries are inspectable.
+    'frame-partial-ram': ('efi_memory.rs', '    excluded && next >= end\n', '    excluded\n',
+                          'firmware_frames_require_whole_ram_and_no_unavailable_overlap'),
+    'frame-ignores-unavailable': ('efi_memory.rs', 'if ram.unavailable_overlaps(frame, end) {', 'if false {',
+                                  'firmware_frames_require_whole_ram_and_no_unavailable_overlap'),
 }
 COMPILE_FAIL = {
     'efi-map-only-from-parse': ('use vos_boot::efi_memory::EfiMap;\n'

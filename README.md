@@ -135,11 +135,14 @@ USB-keyboard/mouse PCs.
 merged through PR #27 and the
 [USB.2-C2 DMA ownership foundation](docs/results/usb2c2-dma.md) through PR #28,
 and the [USB.2-C3a firmware residue guard](docs/results/usb2c3a-residue.md) through
-PR #29. This branch's
+PR #29, and the
 [USB.2-C3a.2 early UEFI firmware memory exclusion](docs/results/usb2c3a2-efi-exclusion.md)
-is verified in QEMU for review: on UEFI, EFI boot-services and other non-RAM memory
-never becomes allocatable, from before the first PMM allocation, with no device
-writes. Further Rust
+through PR #30: on UEFI, EFI boot-services and other non-RAM memory never becomes
+allocatable, from before the first PMM allocation. This branch's
+[USB.2-C3a.3 protected firmware DMA inspection](docs/results/usb2c3a3-protected-inspection.md)
+is verified in QEMU for review: the guard reads that excluded firmware memory in
+place, read-only and bounded, again without device writes, and reports
+reuse protection and inspection completeness separately. Further Rust
 kernel migration and broader
 hardware portability remain proposed tracks requiring separate authorization.
 

@@ -67,6 +67,52 @@ fn decide(i: &EfiInput, mmap: &[u8], efi: &[u8], sink: &mut dyn FnMut(u64, u64) 
     Ok(Plan::Apply)
 }
 
+/// The two loader tags of `i` as byte slices (empty when absent or oversized).
+///
+/// # Safety
+/// Each non-null tag pointer in `i` must address `size` readable bytes for the
+/// lifetime of the returned slices (see the contracts below).
+unsafe fn tags(i: &EfiInput) -> (&[u8], &[u8]) {
+    let slice = |p: *const u8, n: u32| -> &[u8] {
+        if p.is_null() || n == 0 || n > TAG_MAX {
+            &[]
+        } else {
+            // SAFETY: the caller's contract (n readable bytes at p).
+            unsafe { core::slice::from_raw_parts(p, n as usize) }
+        }
+    };
+    (slice(i.mmap, i.mmap_size), slice(i.efi_mmap, i.efi_mmap_size))
+}
+
+// USB.2-C3a.3: 1 when `frame` is excluded firmware RAM by the same EFI map
+// decision, 0 when it is not (or the boot is not EFI), -1 for invalid input.
+// SAFETY: unique private symbol declared in efi_memory.h; `input` as for
+// vos_efi_exclusions_v1 (valid, aligned, tags readable and never written).
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn vos_efi_firmware_frame_v1(input: *const EfiInput, frame: u64) -> i32 {
+    if input.is_null() || !(input as usize).is_multiple_of(align_of::<EfiInput>()) {
+        return -1;
+    }
+    // SAFETY: checked non-null/aligned input, read-only for the call.
+    let i = unsafe { &*input };
+    let evidence = Evidence {
+        efi_firmware: i.efi_firmware != 0,
+        efi_map_tags: i.efi_mmap_tags,
+        boot_services_active: i.boot_services_active != 0,
+    };
+    match efi_memory::plan(&evidence) {
+        Ok(Plan::Apply) => {}
+        Ok(Plan::NotApplicable) => return 0,
+        Err(_) => return -1,
+    }
+    // SAFETY: the contract above.
+    let (mmap, efi) = unsafe { tags(i) };
+    match (EfiMap::parse(efi), MemoryMap::parse(mmap)) {
+        (Ok(map), Ok(ram)) => i32::from(efi_memory::firmware_frame(&map, &ram, frame, i.window_lo, i.window_hi)),
+        _ => -1,
+    }
+}
+
 // SAFETY: unique private symbol declared in efi_memory.h. `input` and `out`
 // must be valid, aligned and exclusive for the call; `out` is written whole
 // before any field is read. Each non-null tag pointer must address `size`
@@ -98,15 +144,8 @@ pub unsafe extern "C" fn vos_efi_exclusions_v1(
         r.error = Error::Sink.code();
         return -1;
     };
-    let slice = |p: *const u8, n: u32| -> &[u8] {
-        if p.is_null() || n == 0 || n > TAG_MAX {
-            &[]
-        } else {
-            // SAFETY: the caller contract above (n readable bytes at p).
-            unsafe { core::slice::from_raw_parts(p, n as usize) }
-        }
-    };
-    let (mmap, efi) = (slice(i.mmap, i.mmap_size), slice(i.efi_mmap, i.efi_mmap_size));
+    // SAFETY: the caller contract above.
+    let (mmap, efi) = unsafe { tags(i) };
     let mut add = |s: u64, e: u64| {
         // SAFETY: C callback with the caller's context, per the contract above.
         unsafe { sink(ctx, s, e) == 0 }

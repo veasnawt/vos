@@ -1,0 +1,22 @@
+
+running 17 tests
+test bar_form_extent_and_width ... ok
+test candidate_selection ... ok
+test capability_list_offsets_cycles_and_limit ... ok
+test command_and_capability_presence ... ok
+test controller_register_profile ... ok
+test duplicate_and_malformed_extended_capabilities ... ok
+test duplicate_capabilities ... ok
+test extended_chain_bound_and_progress ... ok
+test identity_and_header ... ok
+test inspect_observed_profile_and_parse_equivalence ... ok
+test legacy_semaphores_observed_only ... ok
+test msix_layout_inside_profile_bar ... ok
+test observation_detects_every_compared_field ... ok
+test power_states ... ok
+test qemu_profile_qualifies ... ok
+test read_budget_and_reason_mapping ... ok
+test truncation_and_bounds ... ok
+
+test result: ok. 17 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

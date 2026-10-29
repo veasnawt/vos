@@ -1,0 +1,20 @@
+
+running 1 test
+test excluded_firmware_residue_is_inspected_in_place_never_reserved ... FAILED
+
+failures:
+
+---- excluded_firmware_residue_is_inspected_in_place_never_reserved stdout ----
+
+thread 'excluded_firmware_residue_is_inspected_in_place_never_reserved' (119798) panicked at tests/rust/xhci_residue.rs:56:9:
+assertion `left == right` failed: only free frames reach reserve
+  left: Excluded
+ right: Free
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    excluded_firmware_residue_is_inspected_in_place_never_reserved
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 16 filtered out; finished in 0.00s
+

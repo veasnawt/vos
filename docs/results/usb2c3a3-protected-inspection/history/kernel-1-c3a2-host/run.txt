@@ -1,0 +1,9 @@
+Traceback (most recent call last):
+  File "/home/veasnawt/src/vos-usb2c3a3/scripts/test-usb2c3a2.py", line 141, in <module>
+    main()
+    ~~~~^^
+  File "/home/veasnawt/src/vos-usb2c3a3/scripts/test-usb2c3a2.py", line 121, in main
+    mlog = run([tree / 'tests', '--test-threads=1', test], f'mutant-{name}-tests.txt', 101)
+  File "/home/veasnawt/src/vos-usb2c3a3/scripts/test-usb2c3a2.py", line 78, in run
+    raise RuntimeError(f'{name}: exit {p.returncode}, expected {expected}')
+RuntimeError: mutant-frame-partial-ram-tests.txt: exit 0, expected 101

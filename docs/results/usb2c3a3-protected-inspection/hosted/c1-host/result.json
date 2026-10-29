@@ -1,0 +1,171 @@
+{
+  "commands": [
+    [
+      "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+      "--edition=2024",
+      "-Dwarnings",
+      "--crate-name",
+      "vos_xhci",
+      "--crate-type=rlib",
+      "-Coverflow-checks=yes",
+      "-Cdebug-assertions=yes",
+      "/home/veasnawt/src/vos-usb2c3a3/kernel/rust/usb/xhci/lib.rs",
+      "-o",
+      "/home/veasnawt/src/vos-usb2c3a3/build/usb2c3a3-1/final/c1-host/libvos_xhci.rlib"
+    ],
+    [
+      "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+      "--edition=2024",
+      "-Dwarnings",
+      "--test",
+      "-Copt-level=1",
+      "-Coverflow-checks=yes",
+      "--extern",
+      "vos_xhci=/home/veasnawt/src/vos-usb2c3a3/build/usb2c3a3-1/final/c1-host/libvos_xhci.rlib",
+      "tests/rust/xhci_qualify.rs",
+      "-o",
+      "/home/veasnawt/src/vos-usb2c3a3/build/usb2c3a3-1/final/c1-host/qualify-tests"
+    ],
+    [
+      "/home/veasnawt/src/vos-usb2c3a3/build/usb2c3a3-1/final/c1-host/qualify-tests",
+      "--test-threads=1"
+    ],
+    [
+      "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+      "--edition=2024",
+      "-Dwarnings",
+      "--crate-name",
+      "vos_xhci",
+      "--crate-type=rlib",
+      "/home/veasnawt/src/vos-usb2c3a3/build/usb2c3a3-1/final/c1-host/mutant-pci-cycle/lib.rs",
+      "-o",
+      "/home/veasnawt/src/vos-usb2c3a3/build/usb2c3a3-1/final/c1-host/mutant-pci-cycle/libvos_xhci.rlib"
+    ],
+    [
+      "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+      "--edition=2024",
+      "-Dwarnings",
+      "--test",
+      "--extern",
+      "vos_xhci=/home/veasnawt/src/vos-usb2c3a3/build/usb2c3a3-1/final/c1-host/mutant-pci-cycle/libvos_xhci.rlib",
+      "tests/rust/xhci_qualify.rs",
+      "-o",
+      "/home/veasnawt/src/vos-usb2c3a3/build/usb2c3a3-1/final/c1-host/mutant-pci-cycle/tests"
+    ],
+    [
+      "/home/veasnawt/src/vos-usb2c3a3/build/usb2c3a3-1/final/c1-host/mutant-pci-cycle/tests",
+      "--test-threads=1",
+      "capability_list_offsets_cycles_and_limit"
+    ],
+    [
+      "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+      "--edition=2024",
+      "-Dwarnings",
+      "--crate-name",
+      "vos_xhci",
+      "--crate-type=rlib",
+      "/home/veasnawt/src/vos-usb2c3a3/build/usb2c3a3-1/final/c1-host/mutant-duplicate-legacy/lib.rs",
+      "-o",
+      "/home/veasnawt/src/vos-usb2c3a3/build/usb2c3a3-1/final/c1-host/mutant-duplicate-legacy/libvos_xhci.rlib"
+    ],
+    [
+      "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+      "--edition=2024",
+      "-Dwarnings",
+      "--test",
+      "--extern",
+      "vos_xhci=/home/veasnawt/src/vos-usb2c3a3/build/usb2c3a3-1/final/c1-host/mutant-duplicate-legacy/libvos_xhci.rlib",
+      "tests/rust/xhci_qualify.rs",
+      "-o",
+      "/home/veasnawt/src/vos-usb2c3a3/build/usb2c3a3-1/final/c1-host/mutant-duplicate-legacy/tests"
+    ],
+    [
+      "/home/veasnawt/src/vos-usb2c3a3/build/usb2c3a3-1/final/c1-host/mutant-duplicate-legacy/tests",
+      "--test-threads=1",
+      "duplicate_and_malformed_extended_capabilities"
+    ],
+    [
+      "gcc",
+      "-std=gnu11",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-ffunction-sections",
+      "-fdata-sections",
+      "-Wl,--gc-sections",
+      "-fno-pie",
+      "-no-pie",
+      "-Iarch/x86_64",
+      "-O1",
+      "-g",
+      "-fsanitize=address,undefined",
+      "-fno-omit-frame-pointer",
+      "tests/host/usb2c1-qualify.c",
+      "/home/veasnawt/src/vos-usb2c3a3/build/usb2c3a3-1/kernel-2/rust/libvos_kernel.a",
+      "-o",
+      "/home/veasnawt/src/vos-usb2c3a3/build/usb2c3a3-1/final/c1-host/sanitizer"
+    ],
+    [
+      "/home/veasnawt/src/vos-usb2c3a3/build/usb2c3a3-1/final/c1-host/sanitizer"
+    ],
+    [
+      "gcc",
+      "-std=gnu11",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-ffunction-sections",
+      "-fdata-sections",
+      "-Wl,--gc-sections",
+      "-fno-pie",
+      "-no-pie",
+      "-Iarch/x86_64",
+      "-O2",
+      "-DUSB2C1_BENCH",
+      "tests/host/usb2c1-qualify.c",
+      "/home/veasnawt/src/vos-usb2c3a3/build/usb2c3a3-1/kernel-2/rust/libvos_kernel.a",
+      "-o",
+      "/home/veasnawt/src/vos-usb2c3a3/build/usb2c3a3-1/final/c1-host/release"
+    ],
+    [
+      "/home/veasnawt/src/vos-usb2c3a3/build/usb2c3a3-1/final/c1-host/release"
+    ]
+  ],
+  "rust_sanitized": false,
+  "hardware": false,
+  "archive_sha256": "a020b82d27f1e7bd076333341f53caa33dc444b88443f913e8a6de29dc8e9bef",
+  "source_sha256": {
+    "kernel/rust/usb/xhci/capabilities.rs": "e8864394b59f0d8cf42993a7d141e7e75dd98f91788d7ce9c6ffa9fcfe66e03f",
+    "kernel/rust/usb/xhci/controller.rs": "86217a6d2502830ff22b30393338ad5910f8133123aee4e1167390fd06c468a2",
+    "kernel/rust/usb/xhci/discovery.rs": "f3e50289da2afb22900dcd630651ce0ac2690489d22262d963fa962d16661c43",
+    "kernel/rust/usb/xhci/dma.rs": "9aac2669ad22d7c33480a43199ba9d5078c45c39e14e406c609b222af19689c6",
+    "kernel/rust/usb/xhci/header.rs": "4d78fc16c6a52806b3b001e50a28d85b6ba98eecf715b4ac86cb8e415b2a0a3e",
+    "kernel/rust/usb/xhci/lib.rs": "15a8982e2ee49e0e4d9198b061382d3e27549a5867872202148b9bdd7aa232ba",
+    "kernel/rust/usb/xhci/lifecycle.rs": "d4c6a6e7aacf9a368a63231613d8d83f652a0672df3b51e648c484b6d5531c8d",
+    "kernel/rust/usb/xhci/mod.rs": "b38750da24893ffd4ad49f5e4f18c065810230688a0355093f74e3ab6fbcbd3a",
+    "kernel/rust/usb/xhci/qualify.rs": "d2808c0131ca916125f1a27b1b024a2f870cbfc20adeca4bfed553046fdd0052",
+    "kernel/rust/usb/xhci/residue.rs": "c287eac33768f8aafb9fb48e09848aa209ec591e5b83588701ece6c2a1e07ebc",
+    "kernel/rust/usb/xhci/resources.rs": "a46ff4fed32b775e6d03e0fcb85594de6224b484c21183bb2a13a4b83502f372",
+    "kernel/rust/usb/xhci/ring.rs": "87b575a4a9e4353a00eeb1bbe23ec7452e978c413566d8b2cff98d71ba2fd3c2",
+    "kernel/rust/usb/xhci/types.rs": "27eddcb969ef2ab87a056910b76b47a1865c7d464130d04095824ea0625a724a"
+  },
+  "qualify_tests": "test result: ok. 17 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+  "mutation_controls": {
+    "pci-cycle": "detected by capability_list_offsets_cycles_and_limit (exit 101)",
+    "duplicate-legacy": "detected by duplicate_and_malformed_extended_capabilities (exit 101)"
+  },
+  "sanitizer": "PASS: 76 assertions; actual PMM/devmap/USB resource/xhci_qualify C with the bare-metal Rust archive: profile, rejections, overlap/RAM, PT failure, CR3/IF/IRQ, stale/double/cross-kind tokens, bounds, state-change integrity, retention and recovery; zero PCI writes",
+  "release_ns_per_qualification": {
+    "samples_sorted": [
+      7992,
+      8166,
+      8213,
+      8474,
+      8551,
+      8651,
+      9422
+    ],
+    "median": 8474
+  },
+  "status": "PASS"
+}

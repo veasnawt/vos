@@ -1,0 +1,21 @@
+{
+  "windows_c_free_preflight_bytes": 23222087680,
+  "windows_c_free_final_bytes": 23222972416,
+  "reserve_bytes": 21474836480,
+  "headroom_above_reserve_final_bytes": 1748135936,
+  "reserve_satisfied": true,
+  "provision_bytes": 629145600,
+  "stop_threshold_bytes": 566231040,
+  "build_tree_disk_bytes_final": 546701312,
+  "within_provision": true,
+  "below_stop_threshold": true,
+  "provision_changed_during_execution": false,
+  "storage_driven_scope_decisions": [
+    "the baseline kernel for size measurement is the retained C3a.2 kernel-4 build (no second baseline build)",
+    "USB.2-A core: only its 46 host tests were run (scratch directory, 8.3 MB); the full script (about 23 MB) would have crossed the stop line and was not run",
+    "QEMU traces, ISOs and Multiboot2 dumps stay in build/; only their hashes are committed (media.json)",
+    "every regression step ran under a guard that aborts before the 90% line (storage-log.txt)"
+  ],
+  "deletions": 0,
+  "cleanup_or_compaction": false
+}

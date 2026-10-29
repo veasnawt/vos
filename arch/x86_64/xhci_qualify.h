@@ -58,15 +58,24 @@ struct xhci_residue_report {
     uint32_t protected_pages, hazards, pages, interrupters, interrupter_enables;
     uint32_t refusal, violation, plan_len;
     uint8_t plan[24];
+    uint32_t excluded;          /* USB.2-C3a.3: frames read in place, excluded at boot */
+    uint32_t inspection;        /* bit 0 reuse protected, bit 1 inspection complete */
 };
 int32_t vos_xhci_residue_v1(uint32_t candidates, uint32_t complete, uint32_t physical_bits,
                             struct xhci_residue_report *out);
 /* 1 if not requested, assessed (whatever the verdict) with the lease
  * released; 0 for an integrity failure. Once per boot. */
 int xhci_residue_boot(const char *cmdline);
+/* USB.2-C3a.3: the boot information and reservation table that C3a.2's EFI
+ * exclusion used, so the next guard session can recognise excluded firmware
+ * RAM. Without it (or on BIOS) such frames stay protected and uninspected. */
+struct boot_info;
+struct resv_table;
+void xhci_residue_boot_memory(const struct boot_info *bi, const struct resv_table *t);
 /* Frame class: 0 free, 1 owned by this guard, 2 allocated, 3 protected,
- * 4 untracked. Reserve: 0, -2 registry full, -3 duplicate, -4 not reservable.
- * Read: 8 aligned bytes inside a frame this guard reserved. */
+ * 4 untracked, 5 excluded firmware RAM (readable in place, never reserved).
+ * Reserve: 0, -2 registry full, -3 duplicate, -4 not reservable.
+ * Read: 8 aligned bytes inside a frame this guard reserved or class 5. */
 int xhci_residue_page(uint64_t frame);
 int xhci_residue_reserve(uint64_t frame, uint32_t role);
 int xhci_residue_read64(uint64_t phys, uint64_t *value);

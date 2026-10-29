@@ -3,9 +3,14 @@
 //! and reads memory only inside frames it has reserved for this guard.
 //!
 //! Protect first, inspect second: every frame a firmware structure occupies is
-//! claimed before any of its contents is read. Structures in memory the guard
-//! cannot read (map-protected or untracked) are reported as uninspected, never
-//! as safe. Device contexts and scratchpads are protected but their transfer
+//! claimed before any of its contents is read. Frames the boot already
+//! excluded from the allocator as firmware memory (USB.2-C3a.3) are protected
+//! for the whole boot and may be read without reserving them. Structures in
+//! memory the guard cannot read (map-protected or untracked) are reported as
+//! uninspected, never as safe. Two results are kept apart: reuse protection
+//! (every discovered frame is unallocatable) and inspection completeness
+//! (every structure was read and validated); neither ever makes firmware
+//! memory releasable. Device contexts and scratchpads are protected but their transfer
 //! rings and buffers are not bounded, so they leave the assessment incomplete.
 use super::Error;
 
@@ -41,6 +46,9 @@ pub enum Page {
     Protected,
     /// Beyond the allocator's range: safe from reuse, not readable here.
     Untracked,
+    /// Excluded from the allocator at boot as firmware memory and verified to
+    /// be RAM: safe from reuse for the whole boot and readable, never reserved.
+    Excluded,
 }
 
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
@@ -56,7 +64,7 @@ pub trait Memory {
     /// Reserve a Free frame for the rest of the boot. `Err(Budget)` when the
     /// registry is full; any other error means the frame was not reserved.
     fn reserve(&mut self, frame: u64, role: Role) -> Result<(), Error>;
-    /// Eight aligned bytes inside an Owned frame.
+    /// Eight aligned bytes inside an Owned or Excluded frame.
     fn read64(&mut self, phys: u64) -> Result<u64, Error>;
     /// Runtime registers of interrupter `index` (< the inspected count).
     fn interrupter(&mut self, index: u8) -> Result<Interrupter, Error>;
@@ -96,6 +104,8 @@ pub struct Outcome {
     pub protected: u8,
     pub hazards: u8,
     pub pages: u8,
+    /// Frames read in place because the boot excluded them (never reserved).
+    pub excluded: u8,
     /// Bit i set: interrupter i has IMAN.IE set (input to the lifecycle plan).
     pub interrupter_enables: u16,
 }
@@ -106,6 +116,17 @@ impl Outcome {
     }
     pub fn halted(&self) -> bool {
         self.findings & RUNNING == 0
+    }
+    /// Every discovered frame is unallocatable: reserved by the guard,
+    /// excluded at boot, map-protected or untracked. Says nothing about frames
+    /// an incomplete walk could not discover, and never permits release.
+    pub fn reuse_protected(&self) -> bool {
+        self.findings & (HAZARD | EXHAUSTED) == 0
+    }
+    /// Every firmware structure was bounded, read and validated (controller
+    /// state is reported separately by `halted`).
+    pub fn inspection_complete(&self) -> bool {
+        self.findings & !RUNNING == 0
     }
 }
 
@@ -136,6 +157,7 @@ impl<M: Memory> Walk<'_, M> {
             self.out.pages = self.out.pages.saturating_add(1);
             match self.m.page(frame) {
                 Page::Owned => self.out.owned_again = self.out.owned_again.saturating_add(1),
+                Page::Excluded => self.out.excluded = self.out.excluded.saturating_add(1),
                 Page::Free => match self.m.reserve(frame, role) {
                     Ok(()) => self.out.reserved += 1,
                     Err(Error::Budget) => {

@@ -220,9 +220,13 @@ qualification of the QEMU xHCI profile through a releasable BAR lease.
 publication statically unavailable. [USB.2-C3a](results/usb2c3a-residue.md) is
 merged through PR #29 at `9c93d549678e37b4857e3a927971972583486983`: an opt-in
 firmware DMA residue guard and a dry-run halt/reset plan that is never executed.
-[USB.2-C3a.2](results/usb2c3a2-efi-exclusion.md) is implemented and verified in
-this PR candidate, not yet accepted: EFI boot-services and other non-RAM memory is
-excluded from the PMM on every UEFI boot before the first allocation. C3b
+[USB.2-C3a.2](results/usb2c3a2-efi-exclusion.md) is merged through PR #30 at
+`662a3ccb6d1111393c30c486ca4af657fac5808e`: EFI boot-services and other non-RAM
+memory is excluded from the PMM on every UEFI boot before the first allocation.
+[USB.2-C3a.3](results/usb2c3a3-protected-inspection.md) is implemented and verified
+in this PR candidate, not yet accepted: bounded, read-only inspection of that
+excluded firmware DMA memory, with reuse protection and inspection completeness
+reported separately. C3b
 (QEMU-only containment writes) and later require separate authorization; physical
 controller takeover remains unauthorized.
 This status update grants no implementation authority.

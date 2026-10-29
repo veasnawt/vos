@@ -284,8 +284,10 @@ void kernel_main(uint32_t mb2_magic, uint32_t mb2_info)
     /* USB.2-C3a: opt-in firmware DMA residue guard. It runs here, right after
      * the device window exists and before screen_init or any later PMM user,
      * and verifies every firmware frame is still unallocated as it reserves it. */
-    if (!usb_conflict)
+    if (!usb_conflict) {
+        xhci_residue_boot_memory(&bi, &boot_resv);      /* USB.2-C3a.3: excluded firmware RAM */
         check(xhci_residue_boot(bi.cmdline), "USB.2-C3a firmware residue guard integrity");
+    }
     /* U1: the screen console (framebuffer, VGA text when positively known, or none). */
     screen_init(&bi);
     user_console_set_diagnostics(boot_option(bi.cmdline, "vos.input_diag=1"));
