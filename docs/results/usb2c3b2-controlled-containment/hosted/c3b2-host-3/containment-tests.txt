@@ -1,0 +1,16 @@
+
+running 11 tests
+test bus_master_failure_model ... ok
+test d1_mask_is_omitted_only_when_interrupts_are_verifiably_disabled ... ok
+test each_requirement_is_individually_enforced ... ok
+test eligible_idle_uefi_completes_and_issues_nothing ... ok
+test fingerprint_tracks_the_fields_it_summarizes ... ok
+test observed_configurations_are_refused_with_exactly_the_native_masks ... ok
+test proposed_writes_have_exact_widths_offsets_masks_and_preserve_reserved_bits ... ok
+test refusal_mask_equals_an_independent_oracle_on_random_observations ... ok
+test reset_completion_and_timeout_model ... ok
+test revalidation_detects_every_change_and_unreadable_pass ... ok
+test trace_is_data_only_and_every_write_is_marked_not_issued ... ok
+
+test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+

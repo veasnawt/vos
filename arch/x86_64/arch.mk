@@ -11,6 +11,8 @@ ARCH_LDFLAGS    := -m elf_x86_64 -z max-page-size=0x1000 -Map=$(BUILD)/kernel.ma
 # After every link (N3.6): the PT_LOAD segments must tile the page-rounded kernel
 # reservation, leaving no page tail a loader may use; a failing kernel is removed.
 ARCH_LINK_CHECK  = python3 -I -B scripts/check-kernel-layout.py $@ || { rm -f $@; exit 1; }
+# USB.2-C3b.2: every link also proves the flavour from the binary itself (below).
+CONTAIN_FLAVOUR  = production
 ARCH_OBJS       := boot.o entry.o usermode.o kernel.o bootinfo.o console.o cpu.o exception.o gdt.o idt.o \
                    lib.o loader.o panic.o pmm.o process.o resv.o syscall.o usercopy.o vmm.o kmap.o irq.o pic.o pit.o thread.o thread_switch.o channel.o elf.o app.o app_catalog.o app_payload.o exec.o \
                    pci.o xhci.o xhci_boot.o blockdev.o virtio_blk.o ext2.o io_scope.o file.o devmap.o screen.o desktop.o gui.o gui_verify.o font8x16.o keyboard.o input_console.o user_console.o vsh_boot.o virtio_net.o net_boot.o net_arp.o net_arp_boot.o net_ipv4.o net_ipv4_boot.o net_udp.o net_udp_boot.o net_tcp.o net_tcp_boot.o net_tcp_data_boot.o net_tcp_retry_boot.o net_tcp_close_boot.o
@@ -42,6 +44,53 @@ endif
 endif
 QEMU            := qemu-system-x86_64
 
+# USB.2-C3b.2: the controller-containment write path exists only in explicitly
+# named QEMU test images. VOS_CONTAIN_TEST=1 refuses any build directory whose
+# name lacks "contain-test", so production and physical-PC images (build/x86_64
+# and every other default) can never carry it.
+# Layered protection (a directory name alone is not trusted):
+#  1. VOS_CONTAIN_TEST=1 and VOS_CONTAIN_TEST_ACK=QEMU-ONLY-EXPERIMENTAL must both be
+#     given on the make command line; an environment or makefile value is refused,
+#     so a stray exported variable can never turn the executor on;
+#  2. BUILD must be a directory whose name contains "contain-test", and VOS_TEST /
+#     VOS_TEST_CASE must not be combined with it;
+#  3. only the kernel goals (all, verify, the image itself) are accepted: no iso,
+#     uefi-iso, run or any other packaging target can be built in this mode;
+#  4. every link then proves the flavour from the binary (check-contain-image.py):
+#     a production link fails if any executor symbol, string or marker is present
+#     (catching KERNEL_RUST_EXTRA_FLAGS, CFLAGS or stale-object smuggling), and the
+#     test link fails unless the marker and the full executor are present;
+#  5. the `iso` recipe re-checks the kernel it packages (see Makefile).
+ifneq ($(origin VOS_CONTAIN_TEST),undefined)
+ifneq ($(origin VOS_CONTAIN_TEST),command line)
+$(error VOS_CONTAIN_TEST must be given on the make command line, not inherited from the environment or a makefile)
+endif
+ifneq ($(VOS_CONTAIN_TEST),1)
+$(error VOS_CONTAIN_TEST must be 1 or unset)
+endif
+ifneq ($(origin VOS_CONTAIN_TEST_ACK),command line)
+$(error VOS_CONTAIN_TEST=1 also requires VOS_CONTAIN_TEST_ACK=QEMU-ONLY-EXPERIMENTAL on the make command line)
+endif
+ifneq ($(VOS_CONTAIN_TEST_ACK),QEMU-ONLY-EXPERIMENTAL)
+$(error VOS_CONTAIN_TEST_ACK must be exactly QEMU-ONLY-EXPERIMENTAL)
+endif
+ifeq ($(findstring contain-test,$(BUILD)),)
+$(error VOS_CONTAIN_TEST=1 requires BUILD=<directory whose name contains "contain-test">)
+endif
+ifneq ($(VOS_TEST)$(VOS_TEST_CASE),)
+$(error VOS_CONTAIN_TEST=1 cannot be combined with VOS_TEST or VOS_TEST_CASE)
+endif
+ifneq ($(filter-out all verify $(KERNEL),$(MAKECMDGOALS)),)
+$(error VOS_CONTAIN_TEST=1 builds the QEMU-only kernel only: refused goals: $(filter-out all verify $(KERNEL),$(MAKECMDGOALS)))
+endif
+ARCH_CFLAGS += -DVOS_CONTAIN_TEST
+CONTAIN_RUST_CFG := --cfg vos_contain_test
+CONTAIN_FLAVOUR := test
+else ifneq ($(VOS_CONTAIN_TEST_ACK),)
+$(error VOS_CONTAIN_TEST_ACK without VOS_CONTAIN_TEST=1)
+endif
+ARCH_LINK_CHECK += && python3 -I -B scripts/check-contain-image.py --expect $(CONTAIN_FLAVOUR) $@ || { rm -f $@; exit 1; }
+
 # R0-B: one freestanding Rust archive, separate from userspace and ARCH_OBJS.
 # Retain GNU ld, the existing five-segment script and the post-link validator.
 RUSTC ?= rustc
@@ -53,7 +102,8 @@ KERNEL_RUST_FLAGS = --edition=2024 --target=x86_64-unknown-none --crate-name vos
                     -C no-redzone=yes -C force-unwind-tables=no -C lto=off \
                     -C embed-bitcode=no -C codegen-units=1 -C debuginfo=0 \
                     --remap-path-prefix=$(CURDIR)=. $(KERNEL_RUST_EXTRA_FLAGS) \
-                    $(if $(and $(filter 1,$(VOS_TEST)),$(filter rust-panic,$(VOS_TEST_CASE))),--cfg vos_rust_panic_test)
+                    $(if $(and $(filter 1,$(VOS_TEST)),$(filter rust-panic,$(VOS_TEST_CASE))),--cfg vos_rust_panic_test) \
+                    $(CONTAIN_RUST_CFG)
 .PHONY: kernel-rust-inputs
 kernel-rust-inputs:
 $(BUILD)/rust/inputs: kernel-rust-inputs

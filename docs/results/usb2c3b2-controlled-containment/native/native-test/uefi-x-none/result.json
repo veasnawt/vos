@@ -1,0 +1,9 @@
+{
+  "case": "uefi-x-none",
+  "firmware": "uefi",
+  "mode": "x",
+  "device": "none",
+  "expect": "execution",
+  "passed": false,
+  "serial_sha256": "5c18be116b76d32b6f5b7ff3cef96317de87e5bb532fe56a6dc2275dea093039"
+}

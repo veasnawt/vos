@@ -1,0 +1,2 @@
+write made without the freeze flag held
+scenario C3b.2 eligible QEMU profile: exactly W1 then W2, read-backs, reset, once per boot, firmware memory untouched FAILED

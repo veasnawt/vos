@@ -1,0 +1,18 @@
+
+running 1 test
+test quarantine_is_bounded_and_fails_closed ... FAILED
+
+failures:
+
+---- quarantine_is_bounded_and_fails_closed stdout ----
+
+thread 'quarantine_is_bounded_and_fails_closed' (43469) panicked at tests/rust/xhci_dma.rs:249:61:
+called `Result::unwrap_err()` on an `Ok` value: ()
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    quarantine_is_bounded_and_fails_closed
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 8 filtered out; finished in 0.00s
+

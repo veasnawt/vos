@@ -1,0 +1,375 @@
+{
+  "budget_text_rodata_bytes": 3072,
+  "input_sections_baseline": {
+    ".text": 222006,
+    ".rodata": 48358,
+    ".data": 456,
+    ".bss": 582784
+  },
+  "input_sections_candidate": {
+    ".text": 229074,
+    ".rodata": 49571,
+    ".data": 456,
+    ".bss": 582784
+  },
+  "input_section_delta": {
+    ".text": 7068,
+    ".rodata": 1213,
+    ".data": 0,
+    ".bss": 0
+  },
+  "text_rodata_growth_bytes": 8281,
+  "within_budget": false,
+  "bss_growth_bytes": 0,
+  "bss_within_256": true,
+  "per_object_delta": {
+    ".rodata kernel.o": 597,
+    ".rodata rust": 232,
+    ".rodata xhci_qualify.o": 384,
+    ".text kernel.o": 90,
+    ".text rust": 4474,
+    ".text xhci_qualify.o": 2504
+  },
+  "pt_load_baseline": [
+    {
+      "vaddr": "0x0000000000100000",
+      "filesz": 4096,
+      "memsz": 4096,
+      "flags": "R E"
+    },
+    {
+      "vaddr": "0x0000000000101000",
+      "filesz": 40,
+      "memsz": 24576,
+      "flags": "RW"
+    },
+    {
+      "vaddr": "0xffffffff80107000",
+      "filesz": 225280,
+      "memsz": 225280,
+      "flags": "R E"
+    },
+    {
+      "vaddr": "0xffffffff8013e000",
+      "filesz": 49152,
+      "memsz": 49152,
+      "flags": "R"
+    },
+    {
+      "vaddr": "0xffffffff8014a000",
+      "filesz": 504,
+      "memsz": 598016,
+      "flags": "RW"
+    }
+  ],
+  "pt_load_candidate": [
+    {
+      "vaddr": "0x0000000000100000",
+      "filesz": 4096,
+      "memsz": 4096,
+      "flags": "R E"
+    },
+    {
+      "vaddr": "0x0000000000101000",
+      "filesz": 40,
+      "memsz": 24576,
+      "flags": "RW"
+    },
+    {
+      "vaddr": "0xffffffff80107000",
+      "filesz": 233472,
+      "memsz": 233472,
+      "flags": "R E"
+    },
+    {
+      "vaddr": "0xffffffff80140000",
+      "filesz": 53248,
+      "memsz": 53248,
+      "flags": "R"
+    },
+    {
+      "vaddr": "0xffffffff8014d000",
+      "filesz": 512,
+      "memsz": 598016,
+      "flags": "RW"
+    }
+  ],
+  "pt_load_delta": [
+    {
+      "filesz": 0,
+      "memsz": 0,
+      "flags": "R E"
+    },
+    {
+      "filesz": 0,
+      "memsz": 0,
+      "flags": "RW"
+    },
+    {
+      "filesz": 8192,
+      "memsz": 8192,
+      "flags": "R E"
+    },
+    {
+      "filesz": 4096,
+      "memsz": 4096,
+      "flags": "R"
+    },
+    {
+      "filesz": 8,
+      "memsz": 0,
+      "flags": "RW"
+    }
+  ],
+  "pt_load_total_memsz_delta": 12288,
+  "linked_controller_symbols": [
+    "_RINvMs0_NtNtCs5YZeFliBs6N_10vos_kernel4xhci10controllerNtB6_10Controller4joinNtNtBa_9xhci_link8RefusingEBa_",
+    "_RINvMs0_NtNtCs5YZeFliBs6N_10vos_kernel4xhci10controllerNtB6_10Controller4pollNtNtBa_9xhci_link8RefusingEBa_",
+    "_RINvMs0_NtNtCs5YZeFliBs6N_10vos_kernel4xhci10controllerNtB6_10Controller4stopNtNtBa_9xhci_link8RefusingEBa_",
+    "_RINvMs0_NtNtCs5YZeFliBs6N_10vos_kernel4xhci10controllerNtB6_10Controller7acquireNtNtBa_9xhci_link8RefusingEBa_",
+    "_RINvMs0_NtNtCs5YZeFliBs6N_10vos_kernel4xhci10controllerNtB6_10Controller7prepareNtNtBa_9xhci_link8RefusingEBa_",
+    "_RINvMs0_NtNtCs5YZeFliBs6N_10vos_kernel4xhci10controllerNtB6_10Controller7releaseNtNtBa_9xhci_link8RefusingEBa_",
+    "_RNCINvMs0_NtNtCs5YZeFliBs6N_10vos_kernel4xhci10controllerNtB8_10Controller4stepNtNtBc_9xhci_link8RefusingE0Bc_",
+    "_RNCINvMs0_NtNtCs5YZeFliBs6N_10vos_kernel4xhci10controllerNtB8_10Controller4stepNtNtBc_9xhci_link8RefusingEs3_0Bc_",
+    "_RNCINvMs0_NtNtCs5YZeFliBs6N_10vos_kernel4xhci10controllerNtB8_10Controller4stepNtNtBc_9xhci_link8RefusingEs_0Bc_",
+    "_RNvNtCs5YZeFliBs6N_10vos_kernel9xhci_link4step",
+    "_RNvNtCs5YZeFliBs6N_10vos_kernel9xhci_link4stop",
+    "_RNvNtCs5YZeFliBs6N_10vos_kernel9xhci_link5start",
+    "_RNvNtCs5YZeFliBs6N_10vos_kernel9xhci_link6submit",
+    "_RNvNtCs5YZeFliBs6N_10vos_kernel9xhci_link7qualify",
+    "vos_xhci_controller_link_v1"
+  ],
+  "controller_symbol_bytes": 6546,
+  "kernel_map_excerpt": [
+    " .text.vos_xhci_controller_link_v1",
+    "                0xffffffff8013e820      0x188 build/usb2c3b2-1/contain-test-2/rust/libvos_kernel.a(libvos_kernel.vos_kernel.45b20e7284a592af-cgu.0.rcgu.o)",
+    "                0xffffffff8013e820                vos_xhci_controller_link_v1",
+    " .text.vos_xhci_qualify_v1",
+    "                0xffffffff8013e9b0       0x65 build/usb2c3b2-1/contain-test-2/rust/libvos_kernel.a(libvos_kernel.vos_kernel.45b20e7284a592af-cgu.0.rcgu.o)",
+    "                0xffffffff8013e9b0                vos_xhci_qualify_v1"
+  ],
+  "rust_stack_frames_bytes": {
+    "xhci_contain_boot": 472,
+    "_RNCNvNtNtCs5YZeFliBs6N_10vos_kernel12xhci_contain7execute27vos_xhci_contain_execute_v10B7_": 440,
+    "_RNSNvYNCNvNtNtCs5YZeFliBs6N_10vos_kernel12xhci_contain7execute27vos_xhci_contain_execute_v10INtNtNtCs5DY3uuhqWn8_4core3ops8function6FnOnceTQNtNtBc_12xhci_qualify8BarWordsRNtNtNtBc_4xhci12capabilities10InspectionEE9call_once6vtableBc_": 440,
+    "xhci_contain_execute_boot": 440,
+    "vos_xhci_contain_execute_v1": 424,
+    "vos_xhci_contain_v1": 408,
+    "_RNvNtNtCs5YZeFliBs6N_10vos_kernel4xhci11containment8rehearse": 296,
+    "_RNvXNtCs5YZeFliBs6N_10vos_kernel12xhci_containNtB2_4LiveNtNtNtB4_4xhci11containment6Source7observe": 264,
+    "_RNvNtNtCs5YZeFliBs6N_10vos_kernel4xhci11containment6stages": 200,
+    "_RNCNvNtCs5YZeFliBs6N_10vos_kernel12xhci_contain19vos_xhci_contain_v10B5_": 152,
+    "_RNSNvYNCNvNtCs5YZeFliBs6N_10vos_kernel12xhci_contain19vos_xhci_contain_v10INtNtNtCs5DY3uuhqWn8_4core3ops8function6FnOnceTQNtNtBa_12xhci_qualify8BarWordsRNtNtNtBa_4xhci12capabilities10InspectionEE9call_once6vtableBa_": 152,
+    "_RNvXs0_NtNtCs5YZeFliBs6N_10vos_kernel12xhci_contain7executeNtB5_4ExecNtNtNtB9_4xhci11containment7Effects11after_reset": 152,
+    "_RNvXs0_NtNtCs5YZeFliBs6N_10vos_kernel12xhci_contain7executeNtB5_4ExecNtNtNtB9_4xhci11containment7Effects5quick": 72,
+    "xhci_contain_w2": 72,
+    "_RNvMNtNtCs5YZeFliBs6N_10vos_kernel12xhci_contain7executeNtB2_4Exec4rd64": 40,
+    "xhci_contain_w1": 40,
+    "_RNvNtNtCs5YZeFliBs6N_10vos_kernel4xhci11containment8refusals": 24,
+    "_RNvMNtNtCs5YZeFliBs6N_10vos_kernel4xhci11containmentNtB2_8Observed11fingerprint": 16,
+    "_RNvNtCs5YZeFliBs6N_10vos_kernel12xhci_contain10pcie_state": 8,
+    "_RNvXs0_NtNtCs5YZeFliBs6N_10vos_kernel12xhci_contain7executeNtB5_4ExecNtNtNtB9_4xhci11containment7Effects12write_usbcmd": 8,
+    "_RNvXs0_NtNtCs5YZeFliBs6N_10vos_kernel12xhci_contain7executeNtB5_4ExecNtNtNtB9_4xhci11containment7Effects13write_command": 8,
+    "_RNvXs6_NtNtCs5YZeFliBs6N_10vos_kernel4xhci11containmentNtB5_8ObservedNtNtCs5DY3uuhqWn8_4core3cmp9PartialEq2eq": 8,
+    "_RNvMs_NtNtCs5YZeFliBs6N_10vos_kernel4xhci11containmentNtB4_9Rehearsal4push": 0,
+    "_RNvNtNtCs5YZeFliBs6N_10vos_kernel4xhci11containment14reset_verified": 0,
+    "_RNvXs0_NtNtCs5YZeFliBs6N_10vos_kernel12xhci_contain7executeNtB5_4ExecNtNtNtB9_4xhci11containment7Effects5phase": 0,
+    "_RNvXs_NtNtCs5YZeFliBs6N_10vos_kernel12xhci_contain7executeNtB4_4ExecNtNtNtB8_4xhci11containment6Source7observe": 0
+  },
+  "rust_max_frame_bytes": 472,
+  "c_stack_usage_bytes": {
+    "xhci_contain_boot (xhci_qualify.c)": [
+      480,
+      "static"
+    ],
+    "xhci_residue_boot (xhci_qualify.c)": [
+      448,
+      "static"
+    ],
+    "xhci_qualify_boot (xhci_qualify.c)": [
+      288,
+      "static"
+    ],
+    "usb_dma_boot (usb_dma.c)": [
+      160,
+      "static"
+    ],
+    "devmap_map (devmap.c)": [
+      144,
+      "static"
+    ],
+    "scope_install (devmap.c)": [
+      128,
+      "static"
+    ],
+    "devmap_scope_acquire (devmap.c)": [
+      96,
+      "dynamic,bounded"
+    ],
+    "usb_resources_verify (usb_resources.c)": [
+      96,
+      "static"
+    ],
+    "xhci_qualify_bar_acquire (xhci_qualify.c)": [
+      80,
+      "static"
+    ],
+    "devmap_scope_acquire_region (devmap.c)": [
+      80,
+      "dynamic,bounded"
+    ],
+    "xhci_qualify_bar_read32 (xhci_qualify.c)": [
+      64,
+      "static"
+    ],
+    "usb_resource_acquire (usb_resources.c)": [
+      64,
+      "static"
+    ],
+    "print (xhci_qualify.c)": [
+      48,
+      "static"
+    ],
+    "devmap_audit.part.0 (devmap.c)": [
+      48,
+      "static"
+    ],
+    "devmap_scope_release (devmap.c)": [
+      48,
+      "static"
+    ],
+    "worker_start (usb_resources.c)": [
+      48,
+      "static"
+    ],
+    "usb_dma_frame_alloc (usb_dma.c)": [
+      48,
+      "static"
+    ],
+    "devmap_mtrr_type (devmap.c)": [
+      40,
+      "static"
+    ],
+    "visit (xhci_qualify.c)": [
+      32,
+      "static"
+    ],
+    "xhci_qualify_config32 (xhci_qualify.c)": [
+      32,
+      "static"
+    ],
+    "xhci_residue_reserve (xhci_qualify.c)": [
+      32,
+      "static"
+    ],
+    "xhci_residue_read64 (xhci_qualify.c)": [
+      32,
+      "static"
+    ],
+    "devmap_init (devmap.c)": [
+      32,
+      "static"
+    ],
+    "usb_resource_release (usb_resources.c)": [
+      32,
+      "static"
+    ],
+    "usb_dma_frame_zero (usb_dma.c)": [
+      32,
+      "static"
+    ],
+    "usb_dma_frame_free (usb_dma.c)": [
+      32,
+      "static"
+    ],
+    "xhci_qualify_bar_release (xhci_qualify.c)": [
+      16,
+      "static"
+    ],
+    "xhci_residue_page (xhci_qualify.c)": [
+      16,
+      "static"
+    ],
+    "fixture_worker (usb_resources.c)": [
+      16,
+      "static"
+    ],
+    "xhci_qualify_bar_retain (xhci_qualify.c)": [
+      8,
+      "static"
+    ],
+    "xhci_qualify_conflict (xhci_qualify.c)": [
+      8,
+      "static"
+    ],
+    "xhci_residue_boot_memory (xhci_qualify.c)": [
+      8,
+      "static"
+    ],
+    "devmap_scope_budget (devmap.c)": [
+      8,
+      "static"
+    ],
+    "devmap_scope_token (devmap.c)": [
+      8,
+      "static"
+    ],
+    "devmap_scope_tables (devmap.c)": [
+      8,
+      "static"
+    ],
+    "devmap_scope_kind (devmap.c)": [
+      8,
+      "static"
+    ],
+    "devmap_scope_extent (devmap.c)": [
+      8,
+      "static"
+    ],
+    "devmap_strerror (devmap.c)": [
+      8,
+      "static"
+    ],
+    "devmap_maxphys (devmap.c)": [
+      8,
+      "static"
+    ],
+    "devmap_wc_available (devmap.c)": [
+      8,
+      "static"
+    ],
+    "devmap_count (devmap.c)": [
+      8,
+      "static"
+    ],
+    "devmap_table_frames (devmap.c)": [
+      8,
+      "static"
+    ],
+    "devmap_check (devmap.c)": [
+      8,
+      "static"
+    ],
+    "devmap_expected_pte (devmap.c)": [
+      8,
+      "static"
+    ],
+    "devmap_audit (devmap.c)": [
+      8,
+      "static"
+    ],
+    "usb_resource_retain (usb_resources.c)": [
+      8,
+      "static"
+    ],
+    "usb_dma_faults (usb_dma.c)": [
+      8,
+      "static"
+    ],
+    "usb_dma_frames_held (usb_dma.c)": [
+      8,
+      "static"
+    ]
+  },
+  "c_max_frame_bytes": 480
+}

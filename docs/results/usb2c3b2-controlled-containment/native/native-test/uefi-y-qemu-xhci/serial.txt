@@ -1,0 +1,89 @@
+[2J[001;001H[=3h[2J[001;001H[2J[001;001H[8;042;160t[2J[001;001H[2J[001;001H[8;056;240t[2J[001;001HBdsDxe: loading Boot0002 "UEFI QEMU DVD-ROM QM00005 " from PciRoot(0x0)/Pci(0x1F,0x2)/Sata(0x2,0xFFFF,0x0)
+BdsDxe: starting Boot0002 "UEFI QEMU DVD-ROM QM00005 " from PciRoot(0x0)/Pci(0x1F,0x2)/Sata(0x2,0xFFFF,0x0)
+[H[J[1;1HUSB2C3A CHOICE: n r q d p c t x y z w u vUSB2C3A CHOICE: n r q d p c t x y z w u v
+
+yyHello from VOS!
+boot: x86_64 long mode, cs=0x8 efer=0xd00 rip=0xffffffff801072ab
+gdt: loaded cs=0x8 ss=0x10 tr=0x28 tss=busy
+tss: rsp0=0xffffffff8015f000 ist1=0xffffffff80156000 ist2=0xffffffff80158000 ist3=0xffffffff8015a000 iomap=104 limit=103
+idt: 32 exception vectors loaded, df ist=1, nmi ist=2, mc ist=3
+idt: IRQ vectors 0x20-0x2f present, DPL 0, interrupt gates
+idt: vector 0x80 present, DPL 3 (system calls, ABI v0)
+cpu: wp=on nx=on smep=unsupported umip=unsupported smap=unsupported x87=off(em)
+cpu: inherited cr0=0x80010033 cr4=0x668 efer=0xd00; set cr0=0x80010035 cr4=0x68 efer=0xd00
+boot: loader "GRUB 2.14-2ubuntu1", memory map 21 entries, 127713280 bytes usable
+boot: multiboot2 info at 0x95000-0x97090
+boot: kernel command line "vos.apps=1 vos.desktop=1 vos.gui=1 vos.usb2-contain-execute=1 vos.usb2-contain=1"
+boot: modules 4
+boot: module 0 0x23a000-0x2dbdc8 "vsh"
+boot: module 1 0x8d000-0x90348 "hello"
+boot: module 2 0x2dc000-0x37db68 "rixie"
+boot: module 3 0x91000-0x94840 "gui-demo"
+boot: reserved 0x0-0x100000 low 1 MiB
+boot: reserved 0x100000-0x1df000 kernel image
+boot: reserved 0x95000-0x98000 multiboot2 info
+boot: reserved 0x23a000-0x2dc000 module
+boot: reserved 0x8d000-0x91000 module
+boot: reserved 0x2dc000-0x37e000 module
+boot: reserved 0x91000-0x95000 module
+boot: reserved 0x900000-0x1780000 firmware memory (EFI)
+boot: reserved 0x3b6c000-0x3b8c000 firmware memory (EFI)
+boot: reserved 0x6326000-0x66ea000 firmware memory (EFI)
+boot: reserved 0x66eb000-0x673f000 firmware memory (EFI)
+boot: reserved 0x6743000-0x6749000 firmware memory (EFI)
+boot: reserved 0x674a000-0x693f000 firmware memory (EFI)
+boot: reserved 0x6a00000-0x74ed000 firmware memory (EFI)
+boot: reserved 0x77ff000-0x7e00000 firmware memory (EFI)
+boot: reserved 0x7e6f000-0x7ec5000 firmware memory (EFI)
+boot: reserved 0x7ec6000-0x7ef4000 firmware memory (EFI)
+efi: 9765 frames excluded in 10 ranges from 124 descriptors, coalesced 0
+pmm: 262144 frames tracked below 1 GiB, 20708 usable (82832 KiB), 0 bytes of RAM above 1 GiB ignored
+efi: 20708 usable frames remain (floor 2048)
+vmm: identity map removed
+kmap: phys 0-4 MiB as 4 KiB pages: 57 text R-X, 14 R NX, 933 RW NX, 20 guard pages unmapped; 510 x 2 MiB RW NX
+kmap: text 0xffffffff80107000-0xffffffff80140000, rodata 0xffffffff80140000-0xffffffff8014d000
+kmap: PDPT[510] 0x105000 -> 0x174000, checked before and after the switch; boot directory retired
+kmap: after the TLB flush the CPU refused a text write (#PF err=0x3) and a guard read (#PF err=0x0)
+devmap: window at 0xffffffff40000000, 40-bit physical addresses, write-combining via PAT entry 4
+usb2c3b1: containment DRY-RUN (read-only rehearsal); this QEMU test image's C3b.2 write path is not reachable from it
+usb2c1: bus=0 dev=2 fn=0 base=0xc000000000
+usb2c1: candidates=0x1 complete=0x1 vendor=0x1b36 device=0xd class_revision=0xc033001 pci_status=0x10 bar_low=0x4
+usb2c1: bar_high=0xc0 bar_bits=0x40 pci_caps=0x2 pm_offset=0x0 pmcsr_before=0x0 power_state=0x0 msi_offset=0x0
+usb2c1: msi_control_before=0x0 msix_offset=0x90 msix_control_before=0xf msix_table=0x3000 msix_pba=0x3800 command_before=0x7 version=0x100
+usb2c1: caplength=0x40 hcs1=0x8001040 hcs2=0xf hcc1=0x87001 doorbell=0x2000 runtime=0x1000 pagesize=0x1
+usb2c1: xecp_headers=0x2 protocol_ports=0xff usb1_compatible=0x1 legacy_offset=0x0 usblegsup_before=0x0 usblegctlsts_before=0x0 usblegsup_after=0x0
+usb2c1: usblegctlsts_after=0x0 usbcmd_before=0x0 usbsts_before=0x1 usbcmd_after=0x0 usbsts_after=0x1 command_after=0x7 bar_low_after=0x4
+usb2c1: bar_high_after=0xc0 pmcsr_after=0x0 msi_control_after=0x0 msix_control_after=0xf mmio_reads=0x19b lease_acquired=0x1 lease_released=0x1
+
+usb2c3b1: state=0x6 refusals=0x0 uefi=0x1 command=0x7 status=0x10 usbcmd=0x0 usbsts=0x1 findings=0x0
+usb2c3b1: excluded=0x7 irq_off=0x1 plan_len=0x5 trace_len=0x6
+usb2c3b1: trace=1 revalidate ok width=0 offset=0x0 old=0xbf7f64e2 new=0xbf7f64e2
+usb2c3b1: trace=2 pci-write NOT-ISSUED width=16 offset=0x4 old=0x7 new=0x3
+usb2c3b1: trace=3 revalidate ok width=0 offset=0x0 old=0xbf7f64e2 new=0xbf7f64e2
+usb2c3b1: trace=4 mmio-write NOT-ISSUED width=32 offset=0x40 old=0x0 new=0x2
+usb2c3b1: trace=5 reset-poll NOT-RUN width=32 offset=0x44 old=0x400 new=0x800
+usb2c3b1: trace=6 verify NOT-RUN width=32 offset=0x44 old=0x1 new=0x0
+usb2c3b1: DRY-RUN COMPLETE: eligible; every proposed write is listed above and NONE was issued
+usb2c3b2: VOS-CONTAIN-TEST-IMAGE: QEMU-ONLY EXPERIMENTAL; NEVER FOR PHYSICAL PCS
+usb2c3b2: REFUSED: conflicting option vos.usb2-contain=1; nothing written
+screen: framebuffer 1280x800 BGRX at 0x80000000, pitch 5120, write-combining, MTRR type 0, 156x41 cells
+vmm: audit passed: kernel alias 1004 x 4 KiB + 510 x 2 MiB supervisor pages, 57 ring-0 executable (all kernel text, none writable), 0 lower-half tables
+rust: kernel probe PASS; fn=0xffffffff8013d050 seed=0xffffffffb6c71022 salt=0xffffffff800508e0 result=0x26303edc755556b3
+irq: 8259 master 0x20-0x27, slave 0x28-0x2f (cascade IRQ2); masks 0xfffe (IRQ0 only); level-triggered lines (ELCR) 0x0
+pit: channel 0 mode 2, divisor 11932 (99.998 Hz)
+sched: 16 thread records, 15 guarded stacks of 16 KiB at 0xffffffff80177000; boot thread id 1, idle thread id 2
+vblk: no virtio-blk device on PCI bus 0; block storage unavailable
+catalog: ready 4 entries, 392 bytes; all executable source pages reserved
+catalog: vsh id=4097 ABI=4 policy=1 size=662984
+catalog: hello id=4098 ABI=0 policy=2 size=13128
+catalog: rixie id=4099 ABI=3 policy=3 size=662376
+catalog: gui-demo id=4100 ABI=5 policy=4 size=14400
+app: module "hello" at 0x8d000-0x90348, 13128 bytes
+elf: hello: ET_EXEC entry 0x400000, 3 PT_LOAD, 3 pages, VOS ABI 0
+user[hello]: Hello from VOS!
+proc: exit status 0 (cs=0x23 rip=0x40002a)
+proc[hello]: exited status 0, all frames reclaimed
+boot: checks passed
+desktop: scene ready; kernel-owned BGRX surface, bounded console viewport
+gui: native ABI5 demo; one surface <=163840 bytes; upload <=4096 bytes; event queue=16
+user[gui-demo]: gui-demo: PRESENTED; Rust ring 3; a/b changes pixels; q exits

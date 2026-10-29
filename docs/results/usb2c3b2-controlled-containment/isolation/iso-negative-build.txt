@@ -1,0 +1,5 @@
+grub-file --is-x86-multiboot2 build/usb2c3b2-1/iso-negative-probe/vos.bin
+x86_64: Multiboot header OK
+python3 -I -B scripts/check-contain-image.py --expect production build/usb2c3b2-1/iso-negative-probe/vos.bin
+build/usb2c3b2-1/iso-negative-probe/vos.bin: NOT a production image: {'marker': True, 'option': True, 'symbols': ['vos_contain_test_image', 'vos_xhci_contain_execute_v1', 'xhci_contain_execute_boot', 'xhci_contain_w1', 'xhci_contain_w2'], 'rust_executor': True}
+make: *** [Makefile:89: iso] Error 1

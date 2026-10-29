@@ -1,0 +1,16 @@
+{
+  "owner": "Antigravity (storage management, backup, cleanup, recovery). Nothing was cleaned, moved or pruned; the only removals were raw QEMU traces replaced by verified compressed copies through the approved preservation workflow (preservation.json), and this suite scripts removing their own temporary mutant/probe build trees (logs and results kept)",
+  "limits": {
+    "original_stop_line_bytes": 566231040,
+    "cap_600_MiB_bytes": 629145600,
+    "windows_c_reserve_bytes": 21474836480
+  },
+  "owner_decision": "2026-10-30: cross the 566,231,040 B stop line, stay within 600 MiB, to run the R2-B native matrix (logged in storage-log.txt)",
+  "build_tree_bytes_final": 622168064,
+  "repository_evidence_bytes": 3094703,
+  "total_bytes": 625262767,
+  "headroom_to_cap_bytes": 3882833,
+  "c_free_bytes_final": 23314956288,
+  "per_step_admission": "storage-log.txt (guard.sh until the stop line; guard-cap.sh against the cap afterwards)",
+  "retained_intermediate_builds": "kernel-1..4 and contain-test-1..7 (the gate-time and intermediate candidates) are kept as evidence of the measured candidates"
+}

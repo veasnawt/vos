@@ -1,0 +1,66 @@
+[2J[001;001H[=3h[2J[001;001H[2J[001;001H[8;042;160t[2J[001;001H[2J[001;001H[8;056;240t[2J[001;001HBdsDxe: loading Boot0002 "UEFI QEMU DVD-ROM QM00005 " from PciRoot(0x0)/Pci(0x1F,0x2)/Sata(0x2,0xFFFF,0x0)
+BdsDxe: starting Boot0002 "UEFI QEMU DVD-ROM QM00005 " from PciRoot(0x0)/Pci(0x1F,0x2)/Sata(0x2,0xFFFF,0x0)
+[H[J[1;1HUSB2C3A CHOICE: n r q d p c t x y z w u vUSB2C3A CHOICE: n r q d p c t x y z w u v
+
+nnHello from VOS!
+boot: x86_64 long mode, cs=0x8 efer=0xd00 rip=0xffffffff801072ab
+gdt: loaded cs=0x8 ss=0x10 tr=0x28 tss=busy
+tss: rsp0=0xffffffff8015c000 ist1=0xffffffff80153000 ist2=0xffffffff80155000 ist3=0xffffffff80157000 iomap=104 limit=103
+idt: 32 exception vectors loaded, df ist=1, nmi ist=2, mc ist=3
+idt: IRQ vectors 0x20-0x2f present, DPL 0, interrupt gates
+idt: vector 0x80 present, DPL 3 (system calls, ABI v0)
+cpu: wp=on nx=on smep=unsupported umip=unsupported smap=unsupported x87=off(em)
+cpu: inherited cr0=0x80010033 cr4=0x668 efer=0xd00; set cr0=0x80010035 cr4=0x68 efer=0xd00
+boot: loader "GRUB 2.14-2ubuntu1", memory map 21 entries, 127713280 bytes usable
+boot: multiboot2 info at 0x90000-0x91f10
+boot: kernel command line "vos.apps=1 vos.desktop=1 vos.gui=1"
+boot: modules 4
+boot: module 0 0x236000-0x2d7dc8 "vsh"
+boot: module 1 0x88000-0x8b348 "hello"
+boot: module 2 0x2d8000-0x379b68 "rixie"
+boot: module 3 0x8c000-0x8f840 "gui-demo"
+boot: reserved 0x0-0x100000 low 1 MiB
+boot: reserved 0x100000-0x1dc000 kernel image
+boot: reserved 0x90000-0x92000 multiboot2 info
+boot: reserved 0x236000-0x2d8000 module
+boot: reserved 0x88000-0x8c000 module
+boot: reserved 0x2d8000-0x37a000 module
+boot: reserved 0x8c000-0x90000 module
+boot: reserved 0x900000-0x1780000 firmware memory (EFI)
+boot: reserved 0x3b6c000-0x3b8c000 firmware memory (EFI)
+boot: reserved 0x6326000-0x66ea000 firmware memory (EFI)
+boot: reserved 0x66eb000-0x693f000 firmware memory (EFI)
+boot: reserved 0x6a00000-0x74ed000 firmware memory (EFI)
+boot: reserved 0x77ff000-0x7e00000 firmware memory (EFI)
+boot: reserved 0x7e6f000-0x7ec5000 firmware memory (EFI)
+boot: reserved 0x7ec6000-0x7ef4000 firmware memory (EFI)
+efi: 9770 frames excluded in 8 ranges from 117 descriptors, coalesced 0
+pmm: 262144 frames tracked below 1 GiB, 20706 usable (82824 KiB), 0 bytes of RAM above 1 GiB ignored
+efi: 20706 usable frames remain (floor 2048)
+vmm: identity map removed
+kmap: phys 0-4 MiB as 4 KiB pages: 55 text R-X, 13 R NX, 936 RW NX, 20 guard pages unmapped; 510 x 2 MiB RW NX
+kmap: text 0xffffffff80107000-0xffffffff8013e000, rodata 0xffffffff8013e000-0xffffffff8014a000
+kmap: PDPT[510] 0x105000 -> 0x171000, checked before and after the switch; boot directory retired
+kmap: after the TLB flush the CPU refused a text write (#PF err=0x3) and a guard read (#PF err=0x0)
+devmap: window at 0xffffffff40000000, 40-bit physical addresses, write-combining via PAT entry 4
+screen: framebuffer 1280x800 BGRX at 0x80000000, pitch 5120, write-combining, MTRR type 0, 156x41 cells
+vmm: audit passed: kernel alias 1004 x 4 KiB + 510 x 2 MiB supervisor pages, 55 ring-0 executable (all kernel text, none writable), 0 lower-half tables
+rust: kernel probe PASS; fn=0xffffffff8013b9f0 seed=0xffffffffb6c71022 salt=0xffffffff8004d8e0 result=0x26303edc7555565b
+irq: 8259 master 0x20-0x27, slave 0x28-0x2f (cascade IRQ2); masks 0xfffe (IRQ0 only); level-triggered lines (ELCR) 0x0
+pit: channel 0 mode 2, divisor 11932 (99.998 Hz)
+sched: 16 thread records, 15 guarded stacks of 16 KiB at 0xffffffff80174000; boot thread id 1, idle thread id 2
+vblk: no virtio-blk device on PCI bus 0; block storage unavailable
+catalog: ready 4 entries, 392 bytes; all executable source pages reserved
+catalog: vsh id=4097 ABI=4 policy=1 size=662984
+catalog: hello id=4098 ABI=0 policy=2 size=13128
+catalog: rixie id=4099 ABI=3 policy=3 size=662376
+catalog: gui-demo id=4100 ABI=5 policy=4 size=14400
+app: module "hello" at 0x88000-0x8b348, 13128 bytes
+elf: hello: ET_EXEC entry 0x400000, 3 PT_LOAD, 3 pages, VOS ABI 0
+user[hello]: Hello from VOS!
+proc: exit status 0 (cs=0x23 rip=0x40002a)
+proc[hello]: exited status 0, all frames reclaimed
+boot: checks passed
+desktop: scene ready; kernel-owned BGRX surface, bounded console viewport
+gui: native ABI5 demo; one surface <=163840 bytes; upload <=4096 bytes; event queue=16
+user[gui-demo]: gui-demo: PRESENTED; Rust ring 3; a/b changes pixels; q exits

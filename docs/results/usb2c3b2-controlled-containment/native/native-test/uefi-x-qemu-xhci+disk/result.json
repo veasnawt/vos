@@ -1,0 +1,592 @@
+{
+  "case": "uefi-x-qemu-xhci+disk",
+  "firmware": "uefi",
+  "mode": "x",
+  "device": "qemu-xhci+disk",
+  "expect": "execution",
+  "passed": true,
+  "first_allocation": {
+    "avail_ptr": 18446744071563542720,
+    "alloc_ptr": 18446744071563509952,
+    "frames": 262144,
+    "usable": 20696,
+    "free": 20696,
+    "hint": 0,
+    "ignored": 0,
+    "state": 1
+  },
+  "mb2": {
+    "tags": [
+      [
+        21,
+        12
+      ],
+      [
+        1,
+        70
+      ],
+      [
+        2,
+        27
+      ],
+      [
+        3,
+        20
+      ],
+      [
+        3,
+        22
+      ],
+      [
+        3,
+        22
+      ],
+      [
+        3,
+        25
+      ],
+      [
+        6,
+        520
+      ],
+      [
+        9,
+        1428
+      ],
+      [
+        4,
+        16
+      ],
+      [
+        8,
+        38
+      ],
+      [
+        12,
+        16
+      ],
+      [
+        14,
+        28
+      ],
+      [
+        15,
+        44
+      ],
+      [
+        17,
+        5824
+      ],
+      [
+        0,
+        8
+      ]
+    ],
+    "efi_header": {
+      "size": 5824,
+      "descriptor_size": 48,
+      "descriptor_version": 1,
+      "descriptors": 121,
+      "remainder": 0
+    },
+    "mmap_entries": 21,
+    "efi_descriptors": 121
+  },
+  "efi": {
+    "boot_services_frames_in_window": 9777,
+    "boot_services_frames_allocatable": 0,
+    "excluded_frames_oracle": 9777,
+    "excluded_ranges_oracle": [
+      [
+        "0x900000",
+        "0x1780000"
+      ],
+      [
+        "0x3b6c000",
+        "0x3b8c000"
+      ],
+      [
+        "0x6320000",
+        "0x693f000"
+      ],
+      [
+        "0x6a00000",
+        "0x74ed000"
+      ],
+      [
+        "0x77ff000",
+        "0x7e00000"
+      ],
+      [
+        "0x7e6f000",
+        "0x7ec5000"
+      ],
+      [
+        "0x7ec6000",
+        "0x7ef4000"
+      ]
+    ],
+    "excluded_ranges_kernel": [
+      [
+        "0x900000",
+        "0x1780000"
+      ],
+      [
+        "0x3b6c000",
+        "0x3b8c000"
+      ],
+      [
+        "0x6320000",
+        "0x693f000"
+      ],
+      [
+        "0x6a00000",
+        "0x74ed000"
+      ],
+      [
+        "0x77ff000",
+        "0x7e00000"
+      ],
+      [
+        "0x7e6f000",
+        "0x7ec5000"
+      ],
+      [
+        "0x7ec6000",
+        "0x7ef4000"
+      ]
+    ]
+  },
+  "pointers_at_guard_exit": {
+    "crcr": "0x0",
+    "dcbaap": "0x0",
+    "erstba": "0x0",
+    "erdp": "0x0",
+    "segment": "0x0",
+    "segment_trbs": 0
+  },
+  "firmware_dma_changed_pages": [],
+  "guard_window": {
+    "guard_entry": {
+      "free": 20695,
+      "pages": [
+        "0x6756000",
+        "0x6757000",
+        "0x6758000",
+        "0x6759000"
+      ],
+      "sha256": {
+        "0x6756000": "af887a7aecea3f996376a1e4995ae42fe470b25e4214926ee35ac49bc8535664",
+        "0x6757000": "d8aeccbc5c0ac9adecadc5bcaebb0a77e07ebf465bcc6a7975de83424cf20d41",
+        "0x6758000": "ad7facb2586fc6e966c004d7d1d16b024f5805ff7cb47c7a85dabd8b48892ca7",
+        "0x6759000": "b45c7320ca9be3e67c48278c906af78e58a3b78571f86d01196905f1f0e189e7"
+      },
+      "mappings": [
+        [
+          "0x6756000",
+          "0xffffffff86756000",
+          true,
+          true,
+          0
+        ],
+        [
+          "0x6757000",
+          "0xffffffff86757000",
+          true,
+          true,
+          0
+        ],
+        [
+          "0x6758000",
+          "0xffffffff86758000",
+          true,
+          true,
+          0
+        ],
+        [
+          "0x6759000",
+          "0xffffffff86759000",
+          true,
+          true,
+          0
+        ]
+      ]
+    },
+    "after_guard": {
+      "free": 20695,
+      "pages": [
+        "0x6756000",
+        "0x6757000",
+        "0x6758000",
+        "0x6759000"
+      ],
+      "sha256": {
+        "0x6756000": "af887a7aecea3f996376a1e4995ae42fe470b25e4214926ee35ac49bc8535664",
+        "0x6757000": "d8aeccbc5c0ac9adecadc5bcaebb0a77e07ebf465bcc6a7975de83424cf20d41",
+        "0x6758000": "ad7facb2586fc6e966c004d7d1d16b024f5805ff7cb47c7a85dabd8b48892ca7",
+        "0x6759000": "b45c7320ca9be3e67c48278c906af78e58a3b78571f86d01196905f1f0e189e7"
+      },
+      "mappings": [
+        [
+          "0x6756000",
+          "0xffffffff86756000",
+          true,
+          true,
+          0
+        ],
+        [
+          "0x6757000",
+          "0xffffffff86757000",
+          true,
+          true,
+          0
+        ],
+        [
+          "0x6758000",
+          "0xffffffff86758000",
+          true,
+          true,
+          0
+        ],
+        [
+          "0x6759000",
+          "0xffffffff86759000",
+          true,
+          true,
+          0
+        ]
+      ]
+    },
+    "end": {
+      "sha256": {
+        "0x6756000": "af887a7aecea3f996376a1e4995ae42fe470b25e4214926ee35ac49bc8535664",
+        "0x6757000": "d8aeccbc5c0ac9adecadc5bcaebb0a77e07ebf465bcc6a7975de83424cf20d41",
+        "0x6758000": "ad7facb2586fc6e966c004d7d1d16b024f5805ff7cb47c7a85dabd8b48892ca7",
+        "0x6759000": "b45c7320ca9be3e67c48278c906af78e58a3b78571f86d01196905f1f0e189e7"
+      },
+      "mappings": [
+        [
+          "0x6756000",
+          "0xffffffff86756000",
+          true,
+          true,
+          0
+        ],
+        [
+          "0x6757000",
+          "0xffffffff86757000",
+          true,
+          true,
+          0
+        ],
+        [
+          "0x6758000",
+          "0xffffffff86758000",
+          true,
+          true,
+          0
+        ],
+        [
+          "0x6759000",
+          "0xffffffff86759000",
+          true,
+          true,
+          0
+        ]
+      ]
+    }
+  },
+  "verdict": "usb2c3b2: CONTAINED: W1 and W2 issued and verified; bus mastering off, controller reset and halted",
+  "contained": true,
+  "execute": {
+    "base": "0xc000004000",
+    "candidates": "0x1",
+    "complete": "0x1",
+    "vendor": "0x1b36",
+    "device": "0xd",
+    "class_revision": "0xc033001",
+    "pci_status": "0x10",
+    "bar_low": "0x4004",
+    "bar_high": "0xc0",
+    "bar_bits": "0x40",
+    "pci_caps": "0x2",
+    "pm_offset": "0x0",
+    "pmcsr_before": "0x0",
+    "power_state": "0x0",
+    "msi_offset": "0x0",
+    "msi_control_before": "0x0",
+    "msix_offset": "0x90",
+    "msix_control_before": "0xf",
+    "msix_table": "0x3000",
+    "msix_pba": "0x3800",
+    "command_before": "0x7",
+    "version": "0x100",
+    "caplength": "0x40",
+    "hcs1": "0x8001040",
+    "hcs2": "0xf",
+    "hcc1": "0x87001",
+    "doorbell": "0x2000",
+    "runtime": "0x1000",
+    "pagesize": "0x1",
+    "xecp_headers": "0x2",
+    "protocol_ports": "0xff",
+    "usb1_compatible": "0x1",
+    "legacy_offset": "0x0",
+    "usblegsup_before": "0x0",
+    "usblegctlsts_before": "0x0",
+    "usblegsup_after": "0x0",
+    "usblegctlsts_after": "0x0",
+    "usbcmd_before": "0x0",
+    "usbsts_before": "0x1",
+    "usbcmd_after": "0x0",
+    "usbsts_after": "0x1",
+    "command_after": "0x3",
+    "bar_low_after": "0x4004",
+    "bar_high_after": "0xc0",
+    "pmcsr_after": "0x0",
+    "msi_control_after": "0x0",
+    "msix_control_after": "0xf",
+    "mmio_reads": "0x329",
+    "lease_acquired": "0x1",
+    "lease_released": "0x1",
+    "state": "0xd",
+    "refusals": "0x0",
+    "environment": "0x0",
+    "writes": "0x2",
+    "polls": "0x1",
+    "w1_old": "0x7",
+    "w1_new": "0x3",
+    "w1_readback": "0x3",
+    "w1_status": "0x10",
+    "usbsts_w1": "0x1",
+    "w2_old": "0x0",
+    "w2_new": "0x2",
+    "usbcmd": "0x0",
+    "usbsts": "0x1",
+    "dnctrl": "0x0",
+    "config": "0x0",
+    "ports_active": "0x0",
+    "irq_regs_clear": "0x1",
+    "command": "0x3",
+    "status": "0x10",
+    "pcie": "0x1",
+    "crcr": "0x0",
+    "dcbaap": "0x0"
+  },
+  "after": {
+    "usable": 20696,
+    "free": 20655
+  },
+  "allocated_after": 41,
+  "low_water": {
+    "watch_hits": 268,
+    "min_free": 20601,
+    "peak_in_use_frames": 95,
+    "peak_in_use_bytes": 389120
+  },
+  "bar0": 824633737216,
+  "register_snapshot": {
+    "0x0000": 16777280,
+    "0x0004": 134221888,
+    "0x0008": 15,
+    "0x000c": 0,
+    "0x0010": 552961,
+    "0x0014": 8192,
+    "0x0018": 4096,
+    "0x001c": 0,
+    "0x0040": 0,
+    "0x0044": 1,
+    "0x0048": 1,
+    "0x004c": 0,
+    "0x0054": 0,
+    "0x0058": 0,
+    "0x005c": 0,
+    "0x0060": 0,
+    "0x0070": 0,
+    "0x0074": 0,
+    "0x0078": 0,
+    "0x1020": 0,
+    "0x1024": 0,
+    "0x1028": 0,
+    "0x102c": 0,
+    "0x1030": 0,
+    "0x1034": 0,
+    "0x1038": 0,
+    "0x103c": 0,
+    "0x3000": 0,
+    "0x3004": 0,
+    "0x3008": 0,
+    "0x300c": 1,
+    "0x3010": 0,
+    "0x3014": 0,
+    "0x3018": 0,
+    "0x301c": 1,
+    "0x3020": 0,
+    "0x3024": 0,
+    "0x3028": 0,
+    "0x302c": 1,
+    "0x3030": 0,
+    "0x3034": 0,
+    "0x3038": 0,
+    "0x303c": 1,
+    "0x3040": 0,
+    "0x3044": 0,
+    "0x3048": 0,
+    "0x304c": 1,
+    "0x3050": 0,
+    "0x3054": 0,
+    "0x3058": 0,
+    "0x305c": 1,
+    "0x3060": 0,
+    "0x3064": 0,
+    "0x3068": 0,
+    "0x306c": 1,
+    "0x3070": 0,
+    "0x3074": 0,
+    "0x3078": 0,
+    "0x307c": 1,
+    "0x3080": 0,
+    "0x3084": 0,
+    "0x3088": 0,
+    "0x308c": 1,
+    "0x3090": 0,
+    "0x3094": 0,
+    "0x3098": 0,
+    "0x309c": 1,
+    "0x30a0": 0,
+    "0x30a4": 0,
+    "0x30a8": 0,
+    "0x30ac": 1,
+    "0x30b0": 0,
+    "0x30b4": 0,
+    "0x30b8": 0,
+    "0x30bc": 1,
+    "0x30c0": 0,
+    "0x30c4": 0,
+    "0x30c8": 0,
+    "0x30cc": 1,
+    "0x30d0": 0,
+    "0x30d4": 0,
+    "0x30d8": 0,
+    "0x30dc": 1,
+    "0x30e0": 0,
+    "0x30e4": 0,
+    "0x30e8": 0,
+    "0x30ec": 1,
+    "0x30f0": 0,
+    "0x30f4": 0,
+    "0x30f8": 0,
+    "0x30fc": 1,
+    "0x3800": 0,
+    "0x3804": 0
+  },
+  "firmware_pointers": {
+    "crcr": "0x0",
+    "dcbaap": "0x0",
+    "erstba": "0x0",
+    "erdp": "0x0",
+    "segment": "0x0",
+    "segment_trbs": 0
+  },
+  "xhci_pages": {
+    "0x6756000": 0,
+    "0x6757000": 0,
+    "0x6758000": 0,
+    "0x6759000": 0
+  },
+  "ahci": {
+    "abar": "0x81010000",
+    "ports": {
+      "0": {
+        "clb": "0x674c000",
+        "fb": "0x674d000",
+        "cmd": 16404,
+        "st": 0,
+        "fre": 1,
+        "cr": 0,
+        "fr": 1
+      },
+      "1": {
+        "clb": "0x674c000",
+        "fb": "0x674d100",
+        "cmd": 16404,
+        "st": 0,
+        "fre": 1,
+        "cr": 0,
+        "fr": 1
+      },
+      "2": {
+        "clb": "0x674c000",
+        "fb": "0x674d200",
+        "cmd": 50331654,
+        "st": 0,
+        "fre": 0,
+        "cr": 0,
+        "fr": 0
+      },
+      "3": {
+        "clb": "0x674c000",
+        "fb": "0x674d300",
+        "cmd": 16404,
+        "st": 0,
+        "fre": 1,
+        "cr": 0,
+        "fr": 1
+      },
+      "4": {
+        "clb": "0x674c000",
+        "fb": "0x674d400",
+        "cmd": 16404,
+        "st": 0,
+        "fre": 1,
+        "cr": 0,
+        "fr": 1
+      },
+      "5": {
+        "clb": "0x674c000",
+        "fb": "0x674d500",
+        "cmd": 16404,
+        "st": 0,
+        "fre": 1,
+        "cr": 0,
+        "fr": 1
+      }
+    },
+    "live_pages": {
+      "0x674c000": 0,
+      "0x674d000": 0
+    }
+  },
+  "serial_sha256": "12cd1391a42362fe852b40e962faaa470c8b40e16aed0fa2da1a00e3871a18d2",
+  "xhci_bdf": [
+    0,
+    2,
+    0
+  ],
+  "trace_sha256": "063aa7b14e48e81f146c29dbf76e477993ee6e7042d1525280c1d0e1c646a4b9",
+  "trace_bytes": 6089978,
+  "trace_vos": {
+    "xhci_mmio_writes": 1,
+    "xhci_mmio_reads": 811,
+    "xhci_cfg_writes": 1,
+    "state_events": 74,
+    "other_cfg_writes": 164,
+    "xhci_read_events": 811
+  },
+  "write_trace": {
+    "boundary_found": true,
+    "xhci_cfg_writes": 1,
+    "xhci_register_writes": 1,
+    "state_events": 82,
+    "ok": true
+  },
+  "write_trace_problems": [],
+  "trace_preservation": {
+    "raw_sha256": "063aa7b14e48e81f146c29dbf76e477993ee6e7042d1525280c1d0e1c646a4b9",
+    "raw_bytes": 6089978,
+    "gz_sha256": "cec5288c61b0748ef51738f40b995233966d0352f3d68bbd4fb5e54409898aba",
+    "gz_bytes": 118098,
+    "roundtrip_verified": true,
+    "restore": "gzip -dk trace.txt.gz"
+  }
+}

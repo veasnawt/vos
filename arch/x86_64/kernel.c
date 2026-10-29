@@ -289,6 +289,10 @@ void kernel_main(uint32_t mb2_magic, uint32_t mb2_info)
         check(xhci_residue_boot(bi.cmdline), "USB.2-C3a firmware residue guard integrity");
         xhci_residue_boot_memory(&bi, &boot_resv);      /* USB.2-C3b.1: the same inputs for its own session */
         check(xhci_contain_boot(bi.cmdline), "USB.2-C3b.1 containment dry-run integrity");
+#ifdef VOS_CONTAIN_TEST
+        xhci_residue_boot_memory(&bi, &boot_resv);      /* USB.2-C3b.2 (QEMU test images only) */
+        check(xhci_contain_execute_boot(bi.cmdline), "USB.2-C3b.2 controlled containment integrity");
+#endif
     }
     /* U1: the screen console (framebuffer, VGA text when positively known, or none). */
     screen_init(&bi);

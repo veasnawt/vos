@@ -227,10 +227,13 @@ memory is excluded from the PMM on every UEFI boot before the first allocation.
 `55f6693a4e537248c912aaed61f0194cc07be811`: bounded, read-only inspection of that
 excluded firmware DMA memory, with reuse protection and inspection completeness
 reported separately. [USB.2-C3b.1](results/usb2c3b1-containment-dry-run.md) is
-implemented and verified in this PR candidate, not yet accepted: a read-only
-rehearsal of controller containment with no write path. C3b.2
-(QEMU-only containment writes) and later require separate authorization; physical
-controller takeover remains unauthorized.
+merged through PR #32 at `6eb9a30be63e29667a75b9a04c4cafe994f25e3c`: a read-only
+rehearsal of controller containment with no write path.
+[USB.2-C3b.2](results/usb2c3b2-controlled-containment.md) is implemented and
+verified in this PR candidate, not yet accepted: the first, QEMU-only, test-image-only
+controller writes (clear Bus Master Enable, then HCRST) for the one eligible idle
+UEFI QEMU xHCI. USB.2-C4 and later, physical-PC activation and USB HID require
+separate authorization; physical controller takeover remains unauthorized.
 This status update grants no implementation authority.
 Unrelated bug fixes, boot-media work and desktop planning need not
 wait for the full migration. Hardware and migration work coordinate when sharing

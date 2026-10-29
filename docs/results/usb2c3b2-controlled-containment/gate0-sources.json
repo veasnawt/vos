@@ -1,0 +1,66 @@
+{
+  "xhci_1_2": {
+    "file": "downloads/xhci/xhci.pdf",
+    "url": "https://www.intel.com/content/dam/www/public/us/en/documents/technical-specifications/extensible-host-controler-interface-usb-xhci.pdf",
+    "identity": "eXtensible Host Controller Interface for Universal Serial Bus (xHCI) Requirements Specification, Revision 1.2, May 2019 (cover page), 645 pages",
+    "provenance": "PRIMARY, publisher-hosted (Intel). Fetched through the web-fetch tool (direct curl got HTTP 403). Standard-handler RC4 permission encryption with empty user password; text extracted read-only by tools/pdftext.py",
+    "sha256": "9257ca24f34bff08e6020623f707c788ca0f0df657aa713309ff489a68b1731e"
+  },
+  "pci_lb_3_0": {
+    "file": "downloads/pci/pci30.pdf",
+    "url": "https://lekensteyn.nl/files/docs/PCI_SPEV_V3_0.pdf",
+    "identity": "PCI Local Bus Specification Revision 3.0, February 3, 2004 (cover), PCI-SIG copyright pages present",
+    "provenance": "PRIMARY TEXT, THIRD-PARTY MIRROR: the official copy is PCI-SIG members-only; authenticity against PCI-SIG not verified",
+    "sha256": "74d05cd79ae9cb1c38e89669c5f5735e521d7e209f03eef11168a5c2f6771019"
+  },
+  "qemu_10_2_1": {
+    "files": [
+      "downloads/qemu/hw_pci_pci.c",
+      "downloads/qemu/hw_pci_pcie.c",
+      "downloads/qemu/hw_usb_hcd-xhci-pci.c",
+      "downloads/qemu/hw_usb_hcd-xhci.c",
+      "downloads/qemu/hw_usb_hcd-xhci.h",
+      "downloads/qemu/include_hw_pci_pci_regs.h",
+      "downloads/qemu/include_standard-headers_linux_pci_regs.h"
+    ],
+    "url": "https://raw.githubusercontent.com/qemu/qemu/v10.2.1/",
+    "provenance": "QEMU model source at the tag matching the installed qemu-system-x86 1:10.2.1+ds-1ubuntu3.2 (Ubuntu patches not reviewed). QEMU-specific behaviour, NOT normative",
+    "sha256": {
+      "downloads/qemu/hw_pci_pci.c": "18ecb6bfa566de71f187d75a7f4ae221b086b96d94f9733d7b01b95a8873538a",
+      "downloads/qemu/hw_pci_pcie.c": "bbfad6f0b631fff5bd5f6b2213ef3b752136d6784421a2a611d83e43bd6b7f24",
+      "downloads/qemu/hw_usb_hcd-xhci-pci.c": "a19e01aeb7ccf44b12d1e642f403e61dadd74d00acf1d24b91b93349f8e97a70",
+      "downloads/qemu/hw_usb_hcd-xhci.c": "70ff6ada6c639b1e875cb65fa92f2a3c279e54f0c204e9afefb6f3720db92546",
+      "downloads/qemu/hw_usb_hcd-xhci.h": "b6fc5a45f422f6c43052645a299fcb17d5e9f9f44230cd4cfadffde49fbbeb43",
+      "downloads/qemu/include_hw_pci_pci_regs.h": "e2b24e08881d657ee166c5e754f0258d0355273b2ae5daeb3c7064dab17e96b5",
+      "downloads/qemu/include_standard-headers_linux_pci_regs.h": "9aa08710fbc0e979e05c9c86c2d78926ae83942a3e7e0068b54f23e016a82c24"
+    }
+  },
+  "edk2_xhcidxe": {
+    "files": [
+      "downloads/edk2/Xhci.c",
+      "downloads/edk2/XhciReg.c"
+    ],
+    "url": "https://raw.githubusercontent.com/tianocore/edk2/master/MdeModulePkg/Bus/Pci/XhciDxe/",
+    "provenance": "EDK2 master on 2026-10-29, NOT the exact source of the installed ovmf 2025.11-3ubuntu7.3. Implementation practice only",
+    "sha256": {
+      "downloads/edk2/Xhci.c": "fe324763a008855d4cf9917609e1627f74157f3c6aaa9150937728b40a5749c3",
+      "downloads/edk2/XhciReg.c": "154b7d6ad152e17b3d9a13c1c4eeab7bddd388f5f03b61a6fa33e0eb0425146c"
+    }
+  },
+  "linux_6_18": {
+    "files": [
+      "downloads/linux/xhci.c",
+      "downloads/linux/xhci.h"
+    ],
+    "url": "https://raw.githubusercontent.com/torvalds/linux/v6.18/drivers/usb/host/",
+    "provenance": "Driver practice (secondary), not normative",
+    "sha256": {
+      "downloads/linux/xhci.c": "dbc5fd193fb9484e24bad429cf30491a2740348502b54817a4b3bb2cebe179a0",
+      "downloads/linux/xhci.h": "a3104068b980f03701b10269ecd1482fe304013f8faf70ab467d8e7852245203"
+    }
+  },
+  "not_obtained": {
+    "PCI Express Base Specification (any revision)": "PCI-SIG members-only; only unverified download sites found (not used)",
+    "UEFI Specification 2.10/2.11 (ExitBootServices)": "uefi.org returned HTTP 403 to automated fetches (not retried)"
+  }
+}

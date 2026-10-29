@@ -1,0 +1,15 @@
+adapter: 32815 checks PASS
+  scenario clean pass, retention and repeat refusal: 32823 checks PASS
+  scenario zeroing failure retains the frame: 32818 checks PASS
+  scenario release failure retains the frame: 32818 checks PASS
+  scenario allocation failure rolls back exactly: 32818 checks PASS
+  scenario bad context refuses everything: 32816 checks PASS
+  scenario null and misaligned report: 32818 checks PASS
+PASS: real PMM + USB DMA adapter C with the bare-metal Rust pool/exercise: allow-list, zeroing, injection, context, exact rollback, zero/free-failure retention, once-per-boot
+sample=0 ns_per_alloc_zero_free=392
+sample=1 ns_per_alloc_zero_free=395
+sample=2 ns_per_alloc_zero_free=378
+sample=3 ns_per_alloc_zero_free=384
+sample=4 ns_per_alloc_zero_free=380
+sample=5 ns_per_alloc_zero_free=385
+sample=6 ns_per_alloc_zero_free=381

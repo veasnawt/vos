@@ -244,7 +244,7 @@ pub unsafe extern "C" fn vos_xhci_residue_v1(
     let mut ran = false;
     let q = xhci_qualify::qualify(candidates, complete != 0, physical_bits, &mut r.q, &mut |w, i| {
         ran = true;
-        inspect(w, i, physical_bits, &mut found)
+        inspect(w, i, physical_bits, &mut found).map(|()| 0)
     });
     if ran {
         finish(r, &found);

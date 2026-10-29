@@ -1,0 +1,17 @@
+error[E0425]: cannot find value `execute` in module `vos_xhci::xhci::containment`
+   --> /home/veasnawt/src/vos-usb2c3b2/build/usb2c3b2-1/final/c3b2-host-3/cf-no-executor-in-production.rs:1:112
+    |
+  1 | fn main() { let mut f = vos_xhci::xhci::containment::Observed::default(); let _ = vos_xhci::xhci::containment::execute; }
+    |                                                                                                                ^^^^^^^ not found in `vos_xhci::xhci::containment`
+    |
+note: found an item that was configured out
+   --> /home/veasnawt/src/vos-usb2c3b2/kernel/rust/usb/xhci/containment.rs:492:8
+    |
+491 | #[cfg(vos_contain_test)]
+    |       ---------------- the item is gated here
+492 | pub fn execute(e: &mut dyn Effects, c: &Context, first: &mut Observed) -> Execution {
+    |        ^^^^^^^
+
+error: aborting due to 1 previous error
+
+For more information about this error, try `rustc --explain E0425`.

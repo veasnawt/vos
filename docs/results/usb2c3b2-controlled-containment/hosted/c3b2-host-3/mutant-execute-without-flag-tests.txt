@@ -1,0 +1,20 @@
+
+running 1 test
+test execution_needs_the_execute_flag_even_when_eligible ... FAILED
+
+failures:
+
+---- execution_needs_the_execute_flag_even_when_eligible stdout ----
+
+thread 'execution_needs_the_execute_flag_even_when_eligible' (30753) panicked at tests/rust/xhci_contain_execute.rs:368:5:
+assertion `left == right` failed
+  left: Contained
+ right: Refused
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    execution_needs_the_execute_flag_even_when_eligible
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 13 filtered out; finished in 0.00s
+

@@ -95,3 +95,13 @@ jobs:
           python3 -I -B scripts/test-usb2c3b1.py \
             --kernel-build build/x86_64 \
             --rustc "$RUSTC" --out build/usb2c3b1-ci
+
+      - name: Verify USB.2-C3b.2 QEMU-only containment executor and production isolation
+        run: |
+          make ARCH=x86_64 VOS_CONTAIN_TEST=1 VOS_CONTAIN_TEST_ACK=QEMU-ONLY-EXPERIMENTAL \
+            BUILD=build/x86_64-contain-test RUSTC="$RUSTC" verify
+          python3 -I -B scripts/test-usb2c3b2-trace.py
+          python3 -I -B scripts/test-usb2c3b2.py \
+            --production-build build/x86_64 --test-build build/x86_64-contain-test \
+            --iso build/x86_64/vos.iso --iso build/x86_64/vos-uefi.iso \
+            --rustc "$RUSTC" --out build/usb2c3b2-ci

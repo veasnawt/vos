@@ -1,0 +1,20 @@
+
+running 1 test
+test stale_software_ticket_rejected_after_pointer_reuse ... FAILED
+
+failures:
+
+---- stale_software_ticket_rejected_after_pointer_reuse stdout ----
+
+thread 'stale_software_ticket_rejected_after_pointer_reuse' (1022) panicked at tests/rust/xhci.rs:274:5:
+assertion `left == right` failed
+  left: Ok(())
+ right: Err(Stale)
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    stale_software_ticket_rejected_after_pointer_reuse
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 45 filtered out; finished in 0.00s
+

@@ -1,0 +1,20 @@
+
+running 1 test
+test eligible_run_issues_exactly_w1_then_w2 ... FAILED
+
+failures:
+
+---- eligible_run_issues_exactly_w1_then_w2 stdout ----
+
+thread 'eligible_run_issues_exactly_w1_then_w2' (30729) panicked at tests/rust/xhci_contain_execute.rs:353:5:
+assertion `left == right` failed
+  left: [Pci { old: 7, new: 2 }, Mmio { old: 0, new: 2 }]
+ right: [Pci { old: 7, new: 3 }, Mmio { old: 0, new: 2 }]
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    eligible_run_issues_exactly_w1_then_w2
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 13 filtered out; finished in 0.00s
+

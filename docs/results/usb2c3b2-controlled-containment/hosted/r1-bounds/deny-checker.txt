@@ -1,0 +1,1 @@
+elfcheck: /home/veasnawt/src/vos-usb2c3a/build/usb2c3a-1/final/r1/user/hello.elf: REJECT: program-header table outside the file

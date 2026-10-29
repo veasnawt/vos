@@ -1,0 +1,34 @@
+{
+  "hardware_operations": false,
+  "production_kernel_inputs_changed": false,
+  "compiler": "rustc 1.100.0-nightly (2e2b193f8 2026-09-02)\nbinary: rustc\ncommit-hash: 2e2b193f8ada105f27608b7be81c293e0d7292cb\ncommit-date: 2026-09-02\nhost: x86_64-unknown-linux-gnu\nrelease: 1.100.0-nightly\nLLVM version: 23.1.1",
+  "host_tests_passed": 46,
+  "non_Send_non_Sync_compile_controls": "2/2 expected compile rejections; Controller and Lease",
+  "freestanding_no_std": true,
+  "freestanding_concrete_controller_codegen": true,
+  "stale_handle_mutation_detected": true,
+  "host_release_benchmark": {
+    "host_simulation_only": true,
+    "iterations_per_sample": 200000,
+    "sample_total_ns": [
+      4631307,
+      4371006,
+      4365306,
+      6019508,
+      4541207
+    ],
+    "checksum": 200000,
+    "sizes": {
+      "Controller": 424,
+      "PermanentSnapshot": 144,
+      "Capabilities": 40,
+      "CommandRing": 64,
+      "EventRing": 24,
+      "Usage": 8,
+      "Trb": 16
+    }
+  },
+  "unsafe_blocks": 0,
+  "status": "PASS",
+  "elapsed_seconds": 7.085
+}

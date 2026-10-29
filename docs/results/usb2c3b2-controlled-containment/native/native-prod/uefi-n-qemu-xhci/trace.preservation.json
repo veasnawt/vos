@@ -1,0 +1,8 @@
+{
+  "raw_sha256": "b9f8653b334945b00841bf85986cfa9d688a4226083408e9cbfa0b992495b4b9",
+  "raw_bytes": 5610912,
+  "gz_sha256": "729e10233780e6d7e1e0ce1bf750e05fdd008fc0c04d2c8946b00faab33266bd",
+  "gz_bytes": 122297,
+  "roundtrip_verified": true,
+  "restore": "gzip -dk trace.txt.gz"
+}
