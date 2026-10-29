@@ -19,3 +19,8 @@ bd22803b8b5635b776c848d08d1494f65b49dd21:docs/results/usb1/execution.json:generi
 4abe69f4ffb12997f3c9ede9ecb20f20f39a610b:docs/results/usb1-rust-migration/native-original-failed.json:generic-api-key:220
 4abe69f4ffb12997f3c9ede9ecb20f20f39a610b:docs/results/usb1-rust-migration/native-original-failed.json:generic-api-key:221
 4abe69f4ffb12997f3c9ede9ecb20f20f39a610b:docs/results/usb1-rust-migration/native-original-failed.json:generic-api-key:278
+
+# USB.2-C2 evidence manifest: SHA-256 of the committed compile-fail control log
+# cf-raw-frame-access.txt (the file name contains the rule keyword "access").
+# Review: docs/results/usb2c2-dma/gitleaks-review.json. Exact immutable entry only.
+73882eecc94ef6428ee9d3eee9baf51e70cebcb4:docs/results/usb2c2-dma/manifest.json:generic-api-key:32

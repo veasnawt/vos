@@ -1,4 +1,5 @@
 .github/workflows/build-smoke.yml
+.gitleaksignore
 README.md
 arch/x86_64/arch.mk
 arch/x86_64/kernel.c
@@ -14,6 +15,7 @@ docs/images/usb/usb2c2/vos-usb2c2-uefi-gui.png
 docs/images/usb/usb2c2/vos-usb2c2-uefi-shell.png
 docs/results/usb2c2-dma.md
 docs/results/usb2c2-dma/changed-files.txt
+docs/results/usb2c2-dma/gitleaks-review.json
 docs/results/usb2c2-dma/history/budget-proposal.json
 docs/results/usb2c2-dma/history/gate-b-first-run.json
 docs/results/usb2c2-dma/history/trial-c2-host-result.json

@@ -3,6 +3,7 @@
   "note": "Non-self manifest; manifest.json excluded. Build-only identities in media.json.",
   "files": {
     ".github/workflows/build-smoke.yml": "68dbe97bc9530da5d631ab1bdef4cfeab630cde6492cb89b957b7ac51ecbcff9",
+    ".gitleaksignore": "176ff98de0089c325bd2764aa07e0a16be57c4774dd4108f218799ab4e3bacb4",
     "README.md": "113adbcb599b90b573aa44e793c11a9c0c2fd7930c8396fed07478186b342637",
     "arch/x86_64/arch.mk": "d9907a5e53f0ca0a17520854d6411547ce43ae95da722664c21dc5de3cab6f5e",
     "arch/x86_64/kernel.c": "21672305c2f9ab2f63b07471c317a24d9bf5c6ca90c303a9fb460b7f3e25d0a5",
@@ -17,7 +18,8 @@
     "docs/images/usb/usb2c2/vos-usb2c2-uefi-gui.png": "7eeaaccc5c63384bc0912e4c24c0637cb71785c16f8934f160d77c9093565d33",
     "docs/images/usb/usb2c2/vos-usb2c2-uefi-shell.png": "5ca7843a0d9f18f23154a691ef3cf0bb0dc8fd1e46bb489c460df904b0a23307",
     "docs/results/usb2c2-dma.md": "878f6a25ae294e2b485b17f46c7d13f0f45be518c7134070fb4055f928690355",
-    "docs/results/usb2c2-dma/changed-files.txt": "33e599b6506b914a30f31e151701b3bceacff6d200c3a70cee55068f2fec74c8",
+    "docs/results/usb2c2-dma/changed-files.txt": "9935ba2b3f8bb3c2458a31506786e433bf7057c5af15c7459e3cd2989c6082cf",
+    "docs/results/usb2c2-dma/gitleaks-review.json": "75ff8b1772a354748c0bba60c0b98cb8de770b79bad3247968c3eec22e4fe5ee",
     "docs/results/usb2c2-dma/history/budget-proposal.json": "8ce98b34b2442aff964c0f4d4f78cd6bce1c30c070ca7bdabe9626c32d7e87d3",
     "docs/results/usb2c2-dma/history/gate-b-first-run.json": "91aeed1c39795ee6f98734a6699a1e2fa25ddf208a3b9541c64a133f67248369",
     "docs/results/usb2c2-dma/history/trial-c2-host-result.json": "879e0d616cf29e878b4bee40c19f328c284fdb3c0880fa144d219dfc1addb8d3",
