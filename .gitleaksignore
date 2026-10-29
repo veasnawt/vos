@@ -24,3 +24,8 @@ bd22803b8b5635b776c848d08d1494f65b49dd21:docs/results/usb1/execution.json:generi
 # cf-raw-frame-access.txt (the file name contains the rule keyword "access").
 # Review: docs/results/usb2c2-dma/gitleaks-review.json. Exact immutable entry only.
 73882eecc94ef6428ee9d3eee9baf51e70cebcb4:docs/results/usb2c2-dma/manifest.json:generic-api-key:32
+
+# USB.2-C3b.2: SHA-256 of an evidence file whose NAME contains "access" (a C2 compile-fail log), not a credential.
+# Bound to the immutable original C3b.2 commit, file, detector and line. No path, rule or future-commit exemption.
+# Review: docs/results/usb2c3b2-controlled-containment/ci-secret-review.json
+a0bf144967d97a853c63249f20e2cbe222029f7f:docs/results/usb2c3b2-controlled-containment/manifest.json:generic-api-key:82
