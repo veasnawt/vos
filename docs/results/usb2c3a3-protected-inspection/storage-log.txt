@@ -1,0 +1,9 @@
+storage before c2-host: 415268864
+storage before c1-host: 449261568
+storage before usb2b-host: 474894336
+storage before usb1-host: 482410496
+storage before r2b-host: 483045376
+storage before r1-bounds: 485478400
+storage before kernel-2-verify: 488103936
+storage before r2b-native: 503386112
+storage end: 546701312

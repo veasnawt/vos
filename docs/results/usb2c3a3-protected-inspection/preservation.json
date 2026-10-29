@@ -1,0 +1,19 @@
+{
+  "baseline": "662a3ccb6d1111393c30c486ca4af657fac5808e",
+  "worktrees": [
+    "/home/veasnawt/src/vos-r2b      4352815 [feat/r2b-ps2-pointer-rust]",
+    "/home/veasnawt/src/vos-usb2c1   1b4c4fb [feat/usb2c1-qualification]",
+    "/home/veasnawt/src/vos-usb2c2   885b9e3 [feat/usb2c2-dma]",
+    "/home/veasnawt/src/vos-usb2c3a  c7bd104 [feat/usb2c3a-residue-guard]",
+    "/home/veasnawt/src/vos-usb2c3a2 dd09cca [feat/usb2c3a2-efi-exclusion]",
+    "/home/veasnawt/src/vos-usb2c3a3 662a3cc [feat/usb2c3a3-protected-inspection] (new, authorized)"
+  ],
+  "stashes": 0,
+  "ref_changes": ["new branch feat/usb2c3a3-protected-inspection at 662a3cc (authorized)", "no local 'main' branch exists in this clone; origin/main was fetched (not modified)"],
+  "existing_worktrees_unchanged": "all five clean at the listed commits; the C3a, C3a.2 builds and the accepted disk and apps were only read",
+  "accepted_evidence_modified": false,
+  "retained_failures": "history/failures.json",
+  "build_tree_retained": "build/usb2c3a3-1 (not committed; protected by the fail-closed root make clean)",
+  "deletions": 0,
+  "history_rewritten": false
+}

@@ -29,6 +29,16 @@ MUTATIONS = {
                             'command_ring_walk_is_bounded'),
     'no-master-off-check': ('lifecycle.rs', '                if !master_off {\n                    return Err(Violation::MissingMasterOff);\n                }\n',
                             '', 'ordering_violations_are_rejected'),
+    # USB.2-C3a.3: boot-excluded frames are read in place, never reserved, and the
+    # two safety results stay separate.
+    'excluded-reserved': ('residue.rs', 'Page::Excluded => self.out.excluded = self.out.excluded.saturating_add(1),',
+                          'Page::Excluded => { let _ = self.m.reserve(frame, role); }',
+                          'excluded_firmware_residue_is_inspected_in_place_never_reserved'),
+    'reuse-ignores-hazard': ('residue.rs', 'self.findings & (HAZARD | EXHAUSTED) == 0', 'self.findings & EXHAUSTED == 0',
+                             'reuse_protection_and_inspection_completeness_are_separate'),
+    'inspection-ignores-uninspected': ('residue.rs', 'self.findings & !RUNNING == 0',
+                                       'self.findings & !(RUNNING | UNINSPECTED) == 0',
+                                       'reuse_protection_and_inspection_completeness_are_separate'),
 }
 COMPILE_FAIL = {
     'plan-cannot-run': ('use vos_xhci::xhci::lifecycle::Step;\nfn main() { let _ = Step::Run; }\n', 'E0599'),
@@ -36,6 +46,8 @@ COMPILE_FAIL = {
                             'fn f(m: &mut impl Memory) { m.write64(0, 0); }\nfn main() {}\n', 'E0599'),
     'plan-only-from-planner': ('use vos_xhci::xhci::lifecycle::{Plan, Step};\n'
                                'fn main() { let _ = Plan { steps: [Step::Reset; 24], len: 1 }; }\n', 'E0451'),
+    'memory-has-no-release': ('use vos_xhci::xhci::residue::Memory;\n'
+                              'fn f(m: &mut impl Memory) { m.release(0); }\nfn main() {}\n', 'E0599'),
 }
 
 

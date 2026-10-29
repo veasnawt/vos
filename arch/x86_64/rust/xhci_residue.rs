@@ -43,9 +43,13 @@ pub struct ResidueReport {
     violation: u32,
     plan_len: u32,
     plan: [u8; PLAN_LIMIT],
+    excluded: u32,
+    /// Bit 0: reuse protected; bit 1: inspection complete (USB.2-C3a.3).
+    inspection: u32,
 }
 const _: () = {
-    assert!(size_of::<ResidueReport>() == 352 && align_of::<ResidueReport>() == 8);
+    assert!(size_of::<ResidueReport>() == 360 && align_of::<ResidueReport>() == 8);
+    assert!(offset_of!(ResidueReport, excluded) == 348 && offset_of!(ResidueReport, inspection) == 352);
     assert!(offset_of!(ResidueReport, crcr) == 224 && offset_of!(ResidueReport, status) == 256);
     assert!(offset_of!(ResidueReport, refusal) == 312 && offset_of!(ResidueReport, plan) == 324);
 };
@@ -69,6 +73,7 @@ impl Memory for Kernel<'_, '_> {
             1 => Page::Owned,
             2 => Page::Allocated,
             4 => Page::Untracked,
+            5 => Page::Excluded,
             _ => Page::Protected,
         }
     }
@@ -152,6 +157,8 @@ fn finish(r: &mut ResidueReport, f: &Found) -> i32 {
     r.protected_pages = u32::from(o.protected);
     r.hazards = u32::from(o.hazards);
     r.pages = u32::from(o.pages);
+    r.excluded = u32::from(o.excluded);
+    r.inspection = u32::from(o.reuse_protected()) | u32::from(o.inspection_complete()) << 1;
     r.interrupters = u32::from(f.regs.interrupters);
     r.interrupter_enables = u32::from(o.interrupter_enables);
     let facts = Facts {
@@ -227,6 +234,8 @@ pub unsafe extern "C" fn vos_xhci_residue_v1(
             violation: 0,
             plan_len: 0,
             plan: [0; PLAN_LIMIT],
+            excluded: 0,
+            inspection: 0,
         });
         &mut *out
     };

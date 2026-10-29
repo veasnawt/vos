@@ -13,6 +13,8 @@ struct Fake {
     mem: BTreeMap<u64, u64>,
     allocated: BTreeSet<u64>,
     protected: BTreeSet<u64>,
+    /// USB.2-C3a.3: frames the boot excluded (readable in place, never reserved).
+    excluded: BTreeSet<u64>,
     owned: Vec<(u64, Role)>,
     interrupters: Vec<Interrupter>,
     reads_outside: u32,
@@ -20,7 +22,8 @@ struct Fake {
 }
 impl Fake {
     fn new() -> Self {
-        Fake { mem: BTreeMap::new(), allocated: BTreeSet::new(), protected: BTreeSet::new(), owned: vec![],
+        Fake { mem: BTreeMap::new(), allocated: BTreeSet::new(), protected: BTreeSet::new(),
+               excluded: BTreeSet::new(), owned: vec![],
                interrupters: vec![Interrupter::default(); 16], reads_outside: 0, fail_reserve: None }
     }
     fn put(&mut self, at: u64, v: u64) {
@@ -39,6 +42,8 @@ impl Memory for Fake {
             Page::Owned
         } else if frame >= 1 << 30 {
             Page::Untracked
+        } else if self.excluded.contains(&frame) {
+            Page::Excluded
         } else if self.protected.contains(&frame) || frame < MB {
             Page::Protected
         } else if self.allocated.contains(&frame) {
@@ -59,7 +64,8 @@ impl Memory for Fake {
         Ok(())
     }
     fn read64(&mut self, phys: u64) -> Result<u64, Error> {
-        if phys % 8 != 0 || !self.owned.iter().any(|o| o.0 == phys & !4095) {
+        let frame = phys & !4095;
+        if phys % 8 != 0 || !(self.owned.iter().any(|o| o.0 == frame) || self.excluded.contains(&frame)) {
             self.reads_outside += 1;
             return Err(Error::Backend);
         }
@@ -311,4 +317,116 @@ fn ordering_violations_are_rejected() {
     assert_eq!(lifecycle::validate(lifecycle::plan(&off).unwrap().steps(), &off), Ok(()));
     let running = Facts { halted: false, run_stop: true, ..f };
     assert_eq!(lifecycle::validate(&[MaskInterrupter(0), AwaitHalted], &running), Err(Violation::MissingHalt));
+}
+
+// ---- USB.2-C3a.3: boot-excluded firmware memory, inspected in place ----
+
+fn ovmf_excluded() -> (Fake, Registers) {
+    let (mut f, r) = ovmf();
+    for p in [0x674a000u64, 0x674b000, 0x674c000, 0x674d000] {
+        f.excluded.insert(p);
+    }
+    (f, r)
+}
+
+#[test]
+fn excluded_firmware_residue_is_inspected_in_place_never_reserved() {
+    let (mut f, r) = ovmf_excluded();
+    let o = assess(&mut f, &r);
+    assert!(o.complete() && o.halted() && o.reuse_protected() && o.inspection_complete(), "{o:?}");
+    assert_eq!((o.reserved, o.owned_again, o.excluded, o.protected, o.hazards, o.pages), (0, 0, 7, 0, 0, 7));
+    assert!(f.owned.is_empty(), "excluded frames are never reserved");
+    assert_eq!(f.reads_outside, 0, "every read was inside an excluded frame");
+    let facts = Facts { residue_complete: o.complete(), ..qemu_facts() };
+    let plan = lifecycle::plan(&facts).unwrap();
+    assert_eq!(lifecycle::validate(plan.steps(), &facts), Ok(()));
+}
+
+#[test]
+fn excluded_and_free_frames_mix_without_double_ownership() {
+    let (mut f, r) = ovmf_excluded();
+    f.excluded.remove(&0x674c000);                      // middle of the event segment is ordinary free RAM
+    let o = assess(&mut f, &r);
+    assert!(o.complete() && o.reuse_protected() && o.inspection_complete(), "{o:?}");
+    assert_eq!(f.frames(), vec![0x674c000]);
+    assert_eq!((o.reserved, o.excluded), (1, 6));
+    assert_eq!(f.reads_outside, 0);
+}
+
+#[test]
+fn excluded_contents_are_still_validated() {
+    // Malformed ERST segment (8 TRBs) inside excluded memory.
+    let (mut f, r) = ovmf_excluded();
+    f.put(0x674d248, 8);
+    let o = assess(&mut f, &r);
+    assert!(!o.complete() && !o.inspection_complete() && o.reuse_protected(), "{o:?}");
+    assert_ne!(o.findings & MALFORMED, 0);
+    // Link TRB with reserved low bits inside an excluded ring.
+    let (mut f, r) = ovmf_excluded();
+    f.put(0x674a240 + 255 * 16, 0x674a248);
+    let o = assess(&mut f, &r);
+    assert!(!o.inspection_complete() && o.findings & RING_OPEN != 0, "{o:?}");
+    // ERDP outside the excluded segment.
+    let (mut f, r) = ovmf_excluded();
+    f.interrupters[0].erdp = 0x674e000;
+    let o = assess(&mut f, &r);
+    assert!(!o.inspection_complete() && o.findings & ERDP_OUTSIDE != 0, "{o:?}");
+    assert_eq!(f.reads_outside, 0);
+}
+
+#[test]
+fn malformed_and_out_of_range_pointers_never_read_outside_excluded_frames() {
+    let cases: [(&str, fn(&mut Fake, &mut Registers), u16); 6] = [
+        ("DCBAA beyond the physical address width", |_, r| r.dcbaap = 1 << 40, MALFORMED),
+        ("DCBAA above 1 GiB (untracked)", |_, r| r.dcbaap = 0x8000_0000, UNINSPECTED),
+        ("command ring wraps the address space", |_, r| r.crcr = 0xffff_ffff_ffff_ffc1, MALFORMED),
+        ("ERST in a map-protected frame next to excluded ones", |f, _| {
+            f.excluded.remove(&0x674d000);
+            f.protected.insert(0x674d000);
+        }, UNINSPECTED),
+        ("segment straddles excluded into allocated RAM", |f, _| {
+            f.excluded.remove(&0x674c000);
+            f.allocated.insert(0x674c000);
+        }, HAZARD),
+        ("event segment pointer beyond RAM", |f, _| f.put(0x674d240, 0x4000_0000 - 0x1000), UNINSPECTED),
+    ];
+    for (what, edit, flag) in cases {
+        let (mut f, mut r) = ovmf_excluded();
+        edit(&mut f, &mut r);
+        let o = assess(&mut f, &r);
+        assert!(!o.complete() && o.findings & flag != 0, "{what}: {o:?}");
+        assert_eq!(f.reads_outside, 0, "{what}: read outside an owned/excluded frame");
+        assert!(f.owned.iter().all(|&(p, _)| !f.excluded.contains(&p)), "{what}: excluded frame reserved");
+    }
+}
+
+#[test]
+fn reuse_protection_and_inspection_completeness_are_separate() {
+    // SeaBIOS: discovered frames map-protected, contents not inspected.
+    let (mut f, mut r) = ovmf();
+    f.protected.insert(0x7fdf000);
+    r.crcr = 0x7fdfc01;
+    r.dcbaap = 0x7fdfd80;
+    f.interrupters[0] = Interrupter { iman: 0, erstsz: 1, erstba: 0x7fdfd40, erdp: 0x7fdfa00 };
+    let o = assess(&mut f, &r);
+    assert!(o.reuse_protected() && !o.inspection_complete() && !o.complete(), "{o:?}");
+    // An allocated firmware frame: neither protected nor complete.
+    let (mut f, r) = ovmf_excluded();
+    f.excluded.remove(&0x674b000);
+    f.allocated.insert(0x674b000);
+    let o = assess(&mut f, &r);
+    assert!(!o.reuse_protected() && !o.inspection_complete(), "{o:?}");
+    // Registry exhaustion: not reuse protected.
+    let (mut f, r) = ovmf();
+    f.owned = (0..RESERVE_LIMIT as u64).map(|i| (0x100000 + i * 4096, Role::Dcbaa)).collect();
+    let o = assess(&mut f, &r);
+    assert!(!o.reuse_protected() && o.findings & EXHAUSTED != 0, "{o:?}");
+    // A running controller with fully inspected excluded residue: inspection is
+    // complete, but the assessment is not (halted alone never implies safety, and
+    // a complete inspection alone never implies a stopped controller).
+    let (mut f, mut r) = ovmf_excluded();
+    r.usbcmd = 1;
+    r.usbsts = 0;
+    let o = assess(&mut f, &r);
+    assert!(o.inspection_complete() && o.reuse_protected() && !o.halted() && !o.complete(), "{o:?}");
 }

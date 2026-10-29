@@ -1,0 +1,17 @@
+{
+  "authority": "USB.2-C3a.3 authorization: existing project resource guardrails (C3a.2 ceilings, limits not entitlements); unchanged during execution",
+  "ceilings": {"text_rodata_growth_bytes": 4096, "permanent_rw_growth_bytes": 64, "largest_stack_frame_bytes": 512,
+               "storage_bytes": 629145600, "storage_stop_bytes": 566231040, "windows_c_reserve_bytes": 21474836480,
+               "new_threads": 0, "heap": 0, "page_tables": 0, "dma_allocations": 0, "device_writes": 0},
+  "estimate_before_implementation": "about 1.5-2 KiB code, 16 B RW (gate0.json)",
+  "measured": {
+    "baseline": "C3a.2 kernel-4 (merged 662a3cc)",
+    "text_rodata_growth_bytes": 1631, "text_growth_bytes": 1469, "rodata_growth_bytes": 162,
+    "data_growth_bytes": 0, "bss_growth_bytes": 16,
+    "pt_load_memsz_growth_bytes": 4096,
+    "largest_rust_frame_bytes": 440, "largest_c_frame_bytes": 448,
+    "new_threads": 0, "heap": 0, "page_tables": 0, "dma_allocations": 0, "device_writes": 0
+  },
+  "within_all_ceilings": true,
+  "rejected_candidate": "kernel-1 1,806 B (carried one redundant check; history/measure-1-measurements.json)"
+}

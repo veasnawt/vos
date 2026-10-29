@@ -1,0 +1,18 @@
+
+running 1 test
+test firmware_frames_require_whole_ram_and_no_unavailable_overlap ... FAILED
+
+failures:
+
+---- firmware_frames_require_whole_ram_and_no_unavailable_overlap stdout ----
+
+thread 'firmware_frames_require_whole_ram_and_no_unavailable_overlap' (120136) panicked at tests/rust/efi_memory.rs:378:5:
+assertion failed: !frame(&t6, &t17, 0x300000) && frame(&t6, &t17, 0x301000)
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    firmware_frames_require_whole_ram_and_no_unavailable_overlap
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 10 filtered out; finished in 0.00s
+

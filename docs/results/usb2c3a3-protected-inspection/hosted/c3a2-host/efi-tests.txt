@@ -1,0 +1,16 @@
+
+running 11 tests
+test allocator_model_never_hands_out_excluded_frames ... ok
+test bios_and_policy_decisions_fail_closed ... ok
+test capacity_coalesces_conservatively_and_fails_closed ... ok
+test exclusions_never_add_allocatable_memory ... ok
+test firmware_frames_are_exactly_the_whole_excluded_ram_frames ... ok
+test firmware_frames_require_whole_ram_and_no_unavailable_overlap ... ok
+test malformed_efi_maps_are_rejected ... ok
+test overlaps_contradictions_and_attributes_resolve_toward_exclusion ... ok
+test ovmf_fixture_excludes_exactly_boot_services_and_firmware_dma_pages ... ok
+test partially_covered_frames_are_excluded_outward ... ok
+test window_and_sink_failures_are_errors ... ok
+
+test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 3.76s
+

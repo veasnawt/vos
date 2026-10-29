@@ -18,7 +18,9 @@
 #include "bootinfo.h"
 #include "resv.h"
 
-#define EFI_MEMORY_WHAT         "firmware memory (EFI)"
+/* One object, so a reservation entry's origin is checked by identity. */
+extern const char efi_memory_what[];
+#define EFI_MEMORY_WHAT         efi_memory_what
 /* Validated floor: the desktop/application run peaks at 57 frames (gdbstub
  * watchpoint low-water); 2048 frames (8 MiB) leaves a >35x margin. */
 #define EFI_MEMORY_FLOOR_FRAMES 2048
@@ -51,5 +53,11 @@ int vos_efi_exclusions_v1(const struct efi_memory_input *in,
 int efi_memory_exclude(const struct boot_info *bi, struct resv_table *t,
                        struct efi_memory_report *report);
 const char *efi_memory_strerror(uint32_t error);
+
+/* USB.2-C3a.3: 1 if `frame` lies in an exclusion this module entered into `t`
+ * and the Rust re-derivation from the EFI map confirms the whole frame is
+ * excluded tag-6 RAM; 0 otherwise (including BIOS and any invalid input). */
+int vos_efi_firmware_frame_v1(const struct efi_memory_input *in, uint64_t frame);
+int efi_memory_firmware_frame(const struct boot_info *bi, const struct resv_table *t, uint64_t frame);
 
 #endif

@@ -1,0 +1,18 @@
+
+running 1 test
+test reuse_protection_and_inspection_completeness_are_separate ... FAILED
+
+failures:
+
+---- reuse_protection_and_inspection_completeness_are_separate stdout ----
+
+thread 'reuse_protection_and_inspection_completeness_are_separate' (119848) panicked at tests/rust/xhci_residue.rs:412:5:
+Outcome { findings: 2, reserved: 0, owned_again: 0, protected: 3, hazards: 0, pages: 3, excluded: 0, interrupter_enables: 0 }
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    reuse_protection_and_inspection_completeness_are_separate
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 16 filtered out; finished in 0.00s
+

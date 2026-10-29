@@ -34,6 +34,8 @@ static uint32_t mmio_model(uint64_t va);
 #include "../../arch/x86_64/devmap.c"
 #include "../../arch/x86_64/usb_resources.c"
 #include "../../arch/x86_64/xhci_qualify.c"
+#include "../../arch/x86_64/resv.c"
+#include "../../arch/x86_64/efi_memory.c"
 
 static uint64_t root;
 uint64_t vmm_kernel_root(void) { return root; }
@@ -232,6 +234,115 @@ static void direct_api(void)
     CHECK(xhci_qualify_conflict("vos.usb_probe=1 vos.usb2-residue=1") && !xhci_qualify_conflict("vos.usb2-residue=1"));
 }
 
+/* ---- USB.2-C3a.3: C3a.2-excluded firmware RAM, inspected in place ---- */
+static struct { struct mb2_tag_mmap header; struct mb2_mmap_entry entries[3]; } em = {
+    .header={.tag={MB2_TAG_MMAP,sizeof(em)},.entry_size=sizeof(struct mb2_mmap_entry)},
+    .entries={{.base=0x100000,.length=0x100000,.type=MB2_MMAP_AVAILABLE},
+              {.base=0x100000000ULL,.length=0x4000,.type=2},
+              {.base=0x1a0800,.length=0,.type=2}}   /* length set to touch the residue */
+};
+static uint8_t efi17[16+3*48] __attribute__((aligned(8)));
+static struct resv_table et;
+static struct boot_info ebi;
+static void desc(int i, uint32_t type, uint64_t start, uint64_t pages)
+{
+    uint8_t *d=efi17+16+48*i; uint64_t wb=8;
+    memset(d,0,48); memcpy(d,&type,4); memcpy(d+8,&start,8); memcpy(d+24,&pages,8); memcpy(d+32,&wb,8);
+}
+/* OVMF-like: boot-services data over [0x1a0000, +bs_pages), conventional around it. */
+static void efi_boot(unsigned bs_pages, int exclude)
+{
+    uint32_t h[4]={MB2_TAG_EFI_MMAP,sizeof efi17,48,1};
+    memcpy(efi17,h,16);
+    desc(0,7,0x100000,0xa0); desc(1,4,0x1a0000,bs_pages); desc(2,7,0x1a0000+bs_pages*4096ULL,0x60-bs_pages);
+    ebi=(struct boot_info){.mmap=&em.header,.mmap_entries=3,.efi=1,.efi_mmap=(const void *)efi17,.efi_mmap_tags=1};
+    resv_init(&et);
+    struct efi_memory_report rep;
+    if (exclude) CHECK(efi_memory_exclude(&ebi,&et,&rep)==EFI_MEMORY_APPLIED && rep.frames>=bs_pages);
+    kernel_pmm.state=PMM_UNINIT; CHECK(pmm_init(&ebi,&et)==0);
+    CHECK(pmm_alloc_frame(&root)==0); uint64_t pdpt; CHECK(pmm_alloc_frame(&pdpt)==0);
+    ((uint64_t *)phys_to_virt(root))[511]=pdpt|PTE_P|PTE_W; cr3=root;
+    memset(&scope,0,sizeof scope); count=0; ready=0; CHECK(devmap_init(&ebi)==0);
+    model(); base=pmm_free_count();
+}
+static uint8_t snap[0x8000];
+static void excluded_inspected(void)
+{
+    efi_boot(8,1);
+    for (uint64_t f=0x1a0000; f<0x1a8000; f+=4096) CHECK(state(f)==PMM_FRAME_UNAVAILABLE);
+    memcpy(snap,ram+0x1a0000,sizeof snap);
+    xhci_residue_boot_memory(&ebi,&et);
+    CHECK(guard()==1 && strstr(out,"usb2c3a: PLAN VALID (dry run, not executed)"));
+    CHECK(strstr(out,"findings=0x0") && strstr(out,"reserved=0x0") && strstr(out,"excluded=0x7"));
+    CHECK(strstr(out,"inspection=0x3") && strstr(out,"reuse_protected=1 inspection_complete=1; firmware memory is never released"));
+    CHECK(!residue.count && pmm_free_count()==base && !memcmp(snap,ram+0x1a0000,sizeof snap));
+    for (uint64_t f=0x1a0000; f<0x1a8000; f+=4096) CHECK(state(f)==PMM_FRAME_UNAVAILABLE);
+    CHECK(!residue.bi && !residue.resv);                     /* session inputs dropped */
+    uint64_t v; CHECK(xhci_residue_read64(DCBAA,&v)==-1 && !v); /* outside a session */
+    CHECK(!devmap_scope_token() && !qual.token && !devmap_audit() && pmm_check_in(pmm_kernel())==PMM_OK);
+}
+static void excluded_without_inputs(void)
+{
+    efi_boot(8,1);                                           /* boot memory never handed to the guard */
+    CHECK(guard()==1 && strstr(out,"REFUSED: residue incomplete") && strstr(out,"findings=0x2"));
+    CHECK(strstr(out,"excluded=0x0") && strstr(out,"inspection=0x1") && !residue.count && pmm_free_count()==base);
+}
+static void protected_not_excluded(void)
+{
+    em.entries[2].base=0x1a0000; em.entries[2].length=0x8000; /* map-reserved, not an EFI exclusion */
+    efi_boot(8,0);
+    xhci_residue_boot_memory(&ebi,&et);
+    CHECK(xhci_residue_page(0x1a0000)==3 && xhci_residue_page(0x1a3000)==3);
+    CHECK(guard()==1 && strstr(out,"REFUSED: residue incomplete") && strstr(out,"excluded=0x0"));
+    CHECK(strstr(out,"findings=0x2") && !residue.count && pmm_free_count()==base);
+}
+static void excluded_touching_reserved(void)
+{
+    em.entries[2].base=0x1a0800; em.entries[2].length=0x100;   /* reserved bytes inside the DCBAA page */
+    efi_boot(8,1);
+    xhci_residue_boot_memory(&ebi,&et);
+    CHECK(xhci_residue_page(0x1a0000)==3 && xhci_residue_page(0x1a1000)==5);
+    memcpy(snap,ram+0x1a0000,sizeof snap);
+    CHECK(guard()==1 && strstr(out,"REFUSED: residue incomplete") && strstr(out,"reserved=0x0"));
+    CHECK(!residue.count && pmm_free_count()==base && !memcmp(snap,ram+0x1a0000,sizeof snap));
+}
+static void corrupted_map(void)
+{
+    efi_boot(8,1);
+    efi17[12]=2;                                             /* EFI map no longer valid at guard time */
+    xhci_residue_boot_memory(&ebi,&et);
+    CHECK(xhci_residue_page(0x1a0000)==3);
+    CHECK(guard()==1 && strstr(out,"REFUSED: residue incomplete") && strstr(out,"excluded=0x0"));
+}
+static void excluded_and_free(void)
+{
+    efi_boot(3,1);                                           /* 0x1a3000 is ordinary free RAM */
+    xhci_residue_boot_memory(&ebi,&et);
+    CHECK(guard()==1 && strstr(out,"usb2c3a: PLAN VALID") && strstr(out,"reserved=0x1") && strstr(out,"owned_again=0x1") && strstr(out,"excluded=0x5"));
+    CHECK(residue.count==1 && residue.frame[0]==0x1a3000 && pmm_free_count()==base-1);
+    CHECK(state(0x1a3000)==PMM_FRAME_ALLOCATED && state(0x1a2000)==PMM_FRAME_UNAVAILABLE);
+}
+static void excluded_direct(void)
+{
+    uint64_t v;
+    efi_boot(8,1);
+    xhci_residue_boot_memory(&ebi,&et);
+    CHECK(xhci_residue_page(0x1a2000)==5 && xhci_residue_page(0x1b0000)==0 && xhci_residue_page(0x1a2001)==3);
+    residue.session=1;
+    CHECK(xhci_residue_read64(SEG+8,&v)==0 && xhci_residue_read64(SEG+4,&v)==-1 && xhci_residue_read64(0x1b0000,&v)==-1);
+    CHECK(xhci_residue_reserve(0x1a2000,4)==-4 && !residue.count);   /* excluded: never reservable */
+    residue.session=0;
+    CHECK(xhci_residue_read64(SEG+8,&v)==-1);
+    ebi.efi=0; ebi.efi_mmap_tags=0;                          /* BIOS view: no EFI exclusion exists */
+    CHECK(xhci_residue_page(0x1a2000)==3);
+    ebi.efi=1; ebi.efi_mmap_tags=2;                          /* contradictory loader evidence */
+    CHECK(xhci_residue_page(0x1a2000)==3);
+    ebi.efi_mmap_tags=1; xhci_residue_boot_memory(NULL,NULL);
+    CHECK(xhci_residue_page(0x1a2000)==3 && efi_memory_firmware_frame(&ebi,NULL,0x1a2000)==0);
+    CHECK(efi_memory_firmware_frame(&ebi,&et,0x1a2000)==1 && vos_efi_firmware_frame_v1(NULL,0x1a2000)==-1);
+    CHECK(pmm_free_count()==base);
+}
+
 int main(void)
 {
     scenario("OVMF-like residue: complete, reserved, plan valid, once per boot", complete);
@@ -245,6 +356,13 @@ int main(void)
     scenario("state change mid-guard: integrity failure, reservations kept", state_change);
     scenario("bad context: lease refused, nothing reserved", bad_context);
     scenario("direct PMM and registry API", direct_api);
+    scenario("C3a.3 excluded firmware RAM: inspected in place, plan valid, nothing reserved or changed", excluded_inspected);
+    scenario("C3a.3 excluded RAM without boot inputs: uninspected, refused", excluded_without_inputs);
+    scenario("C3a.3 map-reserved (not EFI-excluded) residue: uninspected, refused", protected_not_excluded);
+    scenario("C3a.3 excluded page touching reserved bytes: that page uninspected, refused", excluded_touching_reserved);
+    scenario("C3a.3 EFI map invalid at guard time: fail closed", corrupted_map);
+    scenario("C3a.3 excluded and free frames: free one reserved, excluded read in place", excluded_and_free);
+    scenario("C3a.3 direct classification, read gating and loader-evidence refusals", excluded_direct);
     printf("PASS: real PMM/devmap/qualification/residue C with the bare-metal Rust archive; zero PCI writes\n");
     return 0;
 }

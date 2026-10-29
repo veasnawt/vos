@@ -12,6 +12,7 @@
 #include "irq.h"
 #include "boot_option.h"
 #include "console.h"
+#include "efi_memory.h"
 
 _Static_assert(sizeof(struct xhci_qualify_report) == 224 &&
                _Alignof(struct xhci_qualify_report) == 8, "Rust report ABI");
@@ -111,7 +112,15 @@ static struct {
     uint64_t frame[XHCI_RESIDUE_FRAMES];
     uint8_t role[XHCI_RESIDUE_FRAMES];
     unsigned count, session, ran;
+    const struct boot_info *bi;         /* USB.2-C3a.3: C3a.2's inputs, for one session */
+    const struct resv_table *resv;
 } residue;
+
+void xhci_residue_boot_memory(const struct boot_info *bi, const struct resv_table *t)
+{
+    residue.bi = bi;
+    residue.resv = t;
+}
 
 static int residue_owned(uint64_t frame)
 {
@@ -128,7 +137,8 @@ int xhci_residue_page(uint64_t frame)
     switch (pmm_frame_state_in(pmm_kernel(), frame)) {
     case PMM_FRAME_FREE: return 0;
     case PMM_FRAME_ALLOCATED: return 2;
-    default: return 3;
+    default:    /* never allocatable: readable only if C3a.2 excluded it as firmware RAM */
+        return residue.bi && efi_memory_firmware_frame(residue.bi, residue.resv, frame) == 1 ? 5 : 3;
     }
 }
 
@@ -147,8 +157,10 @@ int xhci_residue_read64(uint64_t phys, uint64_t *value)
 {
     if (!value) return -1;
     *value = 0;
-    if (!residue.session || phys & 7 || !residue_owned(phys & ~(PAGE_SIZE - 1))) return -1;
-    /* The frame is RAM this guard now owns; read it through the kernel alias. */
+    uint64_t frame = phys & ~(PAGE_SIZE - 1);
+    if (!residue.session || phys & 7 || (!residue_owned(frame) && xhci_residue_page(frame) != 5)) return -1;
+    /* RAM this guard owns or the boot excluded: loads only, through the
+     * existing write-back kernel alias (no new mapping or alias). */
     *value = *(const volatile uint64_t *)phys_to_virt(phys);
     return 0;
 }
@@ -237,7 +249,7 @@ int xhci_qualify_boot(const char *cmdline)
 static const struct { char name[20]; uint16_t offset; } residue_fields[] = {
     R(usbcmd), R(usbsts), R(config), R(iman0), R(erstsz0), R(findings), R(reserved),
     R(owned_again), R(protected_pages), R(hazards), R(pages), R(interrupters),
-    R(interrupter_enables), R(refusal), R(violation), R(plan_len),
+    R(interrupter_enables), R(refusal), R(violation), R(plan_len), R(excluded), R(inspection),
 };
 #undef R
 
@@ -254,7 +266,7 @@ int xhci_residue_boot(const char *cmdline)
     struct xhci_residue_report r;
     qual.fn = c.first; qual.active = 1; residue.session = 1;
     int32_t status = vos_xhci_residue_v1(c.count, !stopped, devmap_maxphys(), &r);
-    qual.active = 0; residue.session = 0;
+    qual.active = 0; residue.session = 0; residue.bi = NULL; residue.resv = NULL;
     if (status == -2) {
         serial_puts("usb2c3a: FAIL: invalid report interface\r\n");
         return 0;
@@ -274,7 +286,9 @@ int xhci_residue_boot(const char *cmdline)
         serial_puts("\r\nusb2c3a: reserved frame="); serial_hex(residue.frame[i]);
         serial_puts(" role="); serial_dec(residue.role[i]);
     }
-    serial_puts("\r\n");
+    serial_puts("\r\nusb2c3a: reuse_protected="); serial_dec(r.inspection & 1);
+    serial_puts(" inspection_complete="); serial_dec(r.inspection >> 1 & 1);
+    serial_puts("; firmware memory is never released\r\n");
     int restored = !qual.token && !devmap_scope_token() && devmap_count() == maps && !devmap_audit() &&
                    pmm_free_count() + residue.count == free && residue.count == r.reserved;
     if (r.q.status < 0 || !restored) {
