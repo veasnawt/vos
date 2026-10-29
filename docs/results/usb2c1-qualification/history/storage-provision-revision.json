@@ -1,0 +1,9 @@
+{
+  "previous_provision_mib": 400,
+  "revised_provision_mib": 640,
+  "reason": "accumulated candidate kernel builds (~15 MB each, 11 MB Rust archive) and retained regression runs reached 383,188,992 logical bytes before the native matrix",
+  "c_free_bytes_at_revision": 23489953792,
+  "reserve_bytes": 21474836480,
+  "headroom_above_reserve": 2015117312,
+  "deletions": 0
+}

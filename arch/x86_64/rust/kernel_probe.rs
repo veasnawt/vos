@@ -1,11 +1,18 @@
-//! Scalar helpers, read-only USB.1, and opt-in non-device resource fixtures.
-//! C platform services retain allocator/mapping authority; no live xHCI backend.
+//! Scalar helpers, read-only USB.1, opt-in non-device resource fixtures and
+//! USB.2-C1 read-only qualification. C platform services retain allocator and
+//! mapping authority; no live xHCI backend.
 #![no_std]
 
-#[path = "../../../kernel/rust/usb/xhci/discovery_core.rs"]
-mod xhci;
+// The single canonical USB.2 tree: USB.1 discovery, USB.2-B ownership, C1
+// qualification and the linked-only USB.2-A controller share these types.
+// Public at the crate root so the complete model API is retained (not
+// dead-code pruned at the lint level); only C-ABI symbols are exported.
+#[path = "../../../kernel/rust/usb/xhci/mod.rs"]
+pub mod xhci;
 mod xhci_discovery;
 mod resource_ownership;
+mod xhci_qualify;
+mod xhci_link;
 mod ps2_pointer;
 
 // SAFETY: this private kernel symbol is defined exactly once, with the scalar

@@ -19,6 +19,7 @@
 #include "devmap.h"
 #include "boot_option.h"
 #include "xhci.h"
+#include "xhci_qualify.h"
 #include "user_console.h"
 #include "gdt.h"
 #include "idt.h"
@@ -247,7 +248,12 @@ void kernel_main(uint32_t mb2_magic, uint32_t mb2_info)
     /* U1: the screen console (framebuffer, VGA text when positively known, or none). */
     screen_init(&bi);
     user_console_set_diagnostics(boot_option(bi.cmdline, "vos.input_diag=1"));
-    xhci_boot_probe(bi.cmdline);
+    /* USB.2-C1: USB.1's permanent probe mapping and the qualification lease
+     * are mutually exclusive. Refuse the pair before either reads the BAR. */
+    int usb_conflict = xhci_qualify_conflict(bi.cmdline);
+    check(!usb_conflict, "vos.usb_probe=1 and vos.usb2-qualify=1 are mutually exclusive");
+    if (!usb_conflict)
+        xhci_boot_probe(bi.cmdline);
 
     struct vmm_audit audit;
     if (vmm_audit_space(vmm_kernel_root(), 1, &audit) != VMM_OK) {
@@ -293,6 +299,9 @@ void kernel_main(uint32_t mb2_magic, uint32_t mb2_info)
     sched_init();
     if (!usb_resources_verify(bi.cmdline))
         panic("USB.2-B resource ownership verification failed");
+    /* Opt-in, read-only; a fail-closed rejection is a diagnostic, not a fault. */
+    if (!usb_conflict)
+        check(xhci_qualify_boot(bi.cmdline), "USB.2-C1 read-only xHCI qualification integrity");
     /* N3.1: the first virtio-blk device on PCI bus 0, read-only and polled; its absence is not an error. */
     vblk_init();
 

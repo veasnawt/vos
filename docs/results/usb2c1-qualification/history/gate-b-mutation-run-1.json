@@ -1,0 +1,7 @@
+{
+  "run": "build/usb2c1-1/final/c1-host (retained)",
+  "result": "FAIL: duplicate-legacy mutation survived (tests exit 0, expected 101)",
+  "cause": "test vector's second legacy capability linked into the operational registers, so the walk failed on capability ID 0 regardless of the duplicate rule",
+  "correction": "vector rebuilt (legacy 0x20 -> legacy 0x28 -> protocol 0x30) plus a positive twin with an unknown ID; production code unchanged",
+  "pci_cycle_mutation": "detected (exit 101)"
+}

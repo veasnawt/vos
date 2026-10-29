@@ -1,0 +1,20 @@
+{
+  "owner_decision": "Option A approved 2026-10-29: USB.2-C1 loaded text/rodata growth budget raised from 8,192 to 20,480 bytes for USB.2-C1 only",
+  "measured_reason": "first implementation measured 21,110 B; after in-scope reductions 16,600 B; the 8 KiB Stage 0 estimate was based on the 3.3 KiB USB.2-A object and omitted qualification and monomorphized controller code",
+  "unchanged_limits": {
+    "bss_bytes": 256,
+    "stack_frame_bytes": 512,
+    "worker_threads": 0,
+    "dma_allocations": 0,
+    "heap_allocations": 0,
+    "rust_optimization_flags": "unchanged globally"
+  },
+  "final_measurement": {
+    "text_rodata_input_section_growth": 19176,
+    "pt_load_growth_page_rounded": 16384,
+    "bss_growth": 56,
+    "max_rust_frame": 488,
+    "max_c_frame": 304
+  },
+  "note": "final growth rose from 16,600 to 19,176 B because the link anchor was corrected to generate the full controller lifecycle (opaque Result refusals) instead of error paths only"
+}

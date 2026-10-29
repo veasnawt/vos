@@ -1,0 +1,60 @@
+{
+  "status": "STOPPED at Gate F before full verification/publication",
+  "reason": "loaded text/rodata growth exceeds the 8 KiB provisional budget",
+  "baseline": "d8edfcec643e541cc882062e5121175b50778f89",
+  "measurement": "sum of input-section bytes from GNU ld maps (excludes page padding)",
+  "attempt_1": {
+    "kernel": "build/usb2c1-1/kernel-1",
+    "text_delta": 18071,
+    "rodata_delta": 3039,
+    "bss_delta": 56,
+    "text_rodata": 21110
+  },
+  "attempt_2_after_size_reductions": {
+    "kernel": "build/usb2c1-1/kernel-2",
+    "text_delta": 13595,
+    "rodata_delta": 3005,
+    "bss_delta": 56,
+    "text_rodata": 16600,
+    "reductions": [
+      "single dyn instantiation of capabilities::inspect",
+      "table-driven C report printer",
+      "short reason strings",
+      "single header read"
+    ]
+  },
+  "attribution_attempt_2": {
+    "rust_text": 10619,
+    "xhci_qualify.o_text": 2208,
+    "devmap.o_text": 544,
+    "kernel.o_text": 224,
+    "rodata_rust": 659,
+    "rodata_field_table": 1029,
+    "rodata_merged_strings_attributed_to_kernel.o": 1317,
+    "largest_rust_symbols": {
+      "vos_xhci_qualify_v1": 3512,
+      "vos_xhci_controller_link_v1_plus_controller_fns": "~3500",
+      "capabilities::inspect": 1731
+    }
+  },
+  "loaded_segments": {
+    "baseline_text_segment": "0x107000-0x133000",
+    "attempt_2_text_segment": "0x107000-0x136000 (+12 KiB page-granular)"
+  },
+  "budget_targets": {
+    "text_rodata": 8192,
+    "bss": 256
+  },
+  "bss_ok": true,
+  "checks_run": {
+    "usb2a_core_tests": "46 passed (build/usb2c1-1/xhci-core)",
+    "probe_boot_bios": "QUALIFIED, 18 MMIO reads, lease released (build/usb2c1-1/probe-boot-1/serial.txt); trace capture FAILED (malformed -trace arguments; no trace file)"
+  },
+  "not_run": [
+    "Gate B new pure Rust qualification tests",
+    "Gate C hosted ASan/UBSan BAR-lease tests",
+    "Gate D full BIOS/UEFI QMP/trace matrix",
+    "Gate E compatibility matrix"
+  ],
+  "published": false
+}

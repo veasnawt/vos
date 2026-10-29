@@ -1,0 +1,38 @@
+{
+  "baseline": "d8edfcec643e541cc882062e5121175b50778f89",
+  "worktrees": {
+    "/home/veasnawt/src/vos-r2b": "4352815 feat/r2b-ps2-pointer-rust, clean, unchanged",
+    "/home/veasnawt/src/vos-usb2c1": "new authorized C1 worktree"
+  },
+  "stashes": 0,
+  "ref_changes": [
+    "new branch feat/usb2c1-qualification (authorized)",
+    "origin/main d2c0ac2 -> d8edfce via authorized fetch"
+  ],
+  "refs_after": [
+    "4352815d0fd7795af2a3c3e568f730473dc45e7d refs/heads/feat/r2b-ps2-pointer-rust",
+    "1e3d51e16b92a0c2eb8018f3845c638caf97ef34 refs/heads/feat/usb2b-resource-ownership",
+    "d8edfcec643e541cc882062e5121175b50778f89 refs/heads/feat/usb2c1-qualification",
+    "1e3d51e16b92a0c2eb8018f3845c638caf97ef34 refs/remotes/origin/HEAD",
+    "4352815d0fd7795af2a3c3e568f730473dc45e7d refs/remotes/origin/feat/r2b-ps2-pointer-rust",
+    "ced31a9faa4bd5618a7a4030df574b2e44028471 refs/remotes/origin/feat/usb1-rust-migration",
+    "1e3d51e16b92a0c2eb8018f3845c638caf97ef34 refs/remotes/origin/feat/usb2b-resource-ownership",
+    "d8edfcec643e541cc882062e5121175b50778f89 refs/remotes/origin/main"
+  ],
+  "retained_failures": [
+    "history/gate-f-stop-8kib.json (original 8 KiB stop)",
+    "history/gate-b-first-run.json",
+    "history/gate-b-mutation-run-1.json (+ kernel5 files)",
+    "history/kernel5-usb2b-link-failure.txt",
+    "history/native-run-1 (analyzer defect)",
+    "history/native-run-2 (cross-boot snapshot assumption)",
+    "history/probe-boot-1-serial.txt (trace invocation failure)",
+    "history/storage-provision-revision.json"
+  ],
+  "external_inputs_read_only": [
+    "/home/veasnawt/src/myos/build application ELFs and disk.img (hash-checked)",
+    "/home/veasnawt/vos-evidence/.../x86_64-efi GRUB modules",
+    "/home/veasnawt/src/vos-r2b/build/r2b-1/apps.json"
+  ],
+  "protected_or_historical_records_modified": false
+}

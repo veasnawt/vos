@@ -46,7 +46,11 @@ int usb_resource_acquire(unsigned kind, struct usb_resource *out)
 int usb_resource_release(unsigned kind, uint64_t token)
 {
     if (!context()) return DEVMAP_ESTATE;
-    if (kind == USB_RESOURCE_MAPPING) return devmap_scope_release(token);
+    /* The single scope lease is shared with the C1 BAR region: a fixture
+     * handle may release only a fixture lease, never the qualification BAR. */
+    if (kind == USB_RESOURCE_MAPPING)
+        return devmap_scope_kind() == DEVMAP_SCOPE_FIXTURE ? devmap_scope_release(token)
+                                                           : DEVMAP_ESTATE;
     if (kind != USB_RESOURCE_CONTROL || !token || control.token != token)
         return DEVMAP_ESTATE;
     /* A completion flag, DEAD state or cancellation request is insufficient.

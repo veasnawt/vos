@@ -1,13 +1,8 @@
-//! Private non-device adapter. Uses the existing logical Lease as the unique
+//! Private non-device adapter. Uses the canonical logical Lease as the unique
 //! handle; it does NOT implement the live xHCI Backend or assert DMA quiescence.
 #![allow(dead_code)] // Shared model types retain their existing complete API.
 
-#[path = "../../../kernel/rust/usb/xhci/types.rs"]
-mod types;
-use types::*;
-#[path = "../../../kernel/rust/usb/xhci/resources.rs"]
-mod resources;
-use resources::{Kind, Lease};
+use crate::xhci::resources::{Kind, Lease};
 
 #[repr(C)]
 #[derive(Default)]

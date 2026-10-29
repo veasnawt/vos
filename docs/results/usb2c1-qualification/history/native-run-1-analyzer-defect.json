@@ -1,0 +1,15 @@
+{
+  "run": "build/usb2c1-1/final-2/native (retained, result.json passed=false)",
+  "result": "FAIL: 7 of 14 cases (all qemu-xhci normal/qualify/conflict/probe on both firmwares); 7 device negative controls PASS",
+  "failing_assertion": "no xHCI reset/run/doorbell/slot/endpoint/transfer events after VOS start",
+  "cause": [
+    "analyzer prefix usb_xhci_run also matched usb_xhci_runtime_read",
+    "runner disabled memory_region_ops_read but not usb_xhci_*_read before its own HMP register snapshot, so harness reads were logged after the VOS boundary"
+  ],
+  "reanalysis_with_fixed_analyzer": {
+    "bios-normal": "0 writes, 0 cfg writes, 0 state events, 0 VOS MMIO reads, 27 xhci read events = HMP snapshot (8+4+4+3+8)",
+    "bios-qualify": "0/0/0, 18 VOS MMIO reads, 45 read events = 18 + 27",
+    "bios-probe": "0/0/0, 7 USB.1 reads, 34 = 7 + 27"
+  },
+  "correction": "exact event-name classification; xhci read events cross-counted and required to equal MMIO reads; all xhci read events disabled before the HMP snapshot; production code unchanged"
+}

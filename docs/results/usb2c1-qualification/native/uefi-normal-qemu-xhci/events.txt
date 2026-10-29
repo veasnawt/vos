@@ -1,0 +1,5 @@
+pci_cfg_write
+usb_xhci_*
+memory_region_ops_write
+msix_write_config
+serial_write

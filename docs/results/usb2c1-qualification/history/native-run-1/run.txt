@@ -1,0 +1,25 @@
+bios-normal-qemu-xhci FAIL no xHCI reset/run/doorbell/slot/endpoint/transfer events after VOS start
+bios-qualify-qemu-xhci FAIL no xHCI reset/run/doorbell/slot/endpoint/transfer events after VOS start
+bios-conflict-qemu-xhci FAIL no xHCI reset/run/doorbell/slot/endpoint/transfer events after VOS start
+bios-probe-qemu-xhci FAIL no xHCI reset/run/doorbell/slot/endpoint/transfer events after VOS start
+bios-qualify-none PASS
+bios-qualify-two-xhci PASS
+bios-qualify-nec-xhci PASS
+uefi-normal-qemu-xhci FAIL no xHCI reset/run/doorbell/slot/endpoint/transfer events after VOS start
+uefi-qualify-qemu-xhci FAIL no xHCI reset/run/doorbell/slot/endpoint/transfer events after VOS start
+uefi-conflict-qemu-xhci FAIL no xHCI reset/run/doorbell/slot/endpoint/transfer events after VOS start
+uefi-probe-qemu-xhci FAIL no xHCI reset/run/doorbell/slot/endpoint/transfer events after VOS start
+uefi-qualify-none PASS
+uefi-qualify-two-xhci PASS
+uefi-qualify-nec-xhci PASS
+Traceback (most recent call last):
+  File "/home/veasnawt/src/vos-usb2c1/scripts/test-usb2c1-native.py", line 295, in <module>
+    main()
+    ~~~~^^
+  File "/home/veasnawt/src/vos-usb2c1/scripts/test-usb2c1-native.py", line 291, in main
+    need(report['passed'], 'native matrix failures: ' + str(report['failures']))
+    ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/veasnawt/src/vos-usb2c1/scripts/test-usb2c1-native.py", line 56, in need
+    raise RuntimeError(message)
+RuntimeError: native matrix failures: [{'case': 'bios-normal-qemu-xhci', 'error': 'no xHCI reset/run/doorbell/slot/endpoint/transfer events after VOS start'}, {'case': 'bios-qualify-qemu-xhci', 'error': 'no xHCI reset/run/doorbell/slot/endpoint/transfer events after VOS start'}, {'case': 'bios-conflict-qemu-xhci', 'error': 'no xHCI reset/run/doorbell/slot/endpoint/transfer events after VOS start'}, {'case': 'bios-probe-qemu-xhci', 'error': 'no xHCI reset/run/doorbell/slot/endpoint/transfer events after VOS start'}, {'case': 'uefi-normal-qemu-xhci', 'error': 'no xHCI reset/run/doorbell/slot/endpoint/transfer events after VOS start'}, {'case': 'uefi-qualify-qemu-xhci', 'error': 'no xHCI reset/run/doorbell/slot/endpoint/transfer events after VOS start'}, {'case': 'uefi-conflict-qemu-xhci', 'error': 'no xHCI reset/run/doorbell/slot/endpoint/transfer events after VOS start'}, {'case': 'uefi-probe-qemu-xhci', 'error': 'no xHCI reset/run/doorbell/slot/endpoint/transfer events after VOS start'}]
+exit=1

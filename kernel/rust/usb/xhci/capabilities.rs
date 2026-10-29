@@ -53,6 +53,199 @@ fn word(bytes: &[u8], offset: u32) -> Result<u32, Error> {
     Ok(u32::from_le_bytes([s[0], s[1], s[2], s[3]]))
 }
 
+/// A bounded source of copied little-endian register words. The inspector
+/// asks only for DWORD offsets it has proven lie inside the 16 KiB profile
+/// extent; an implementer may refuse further words (budget, mapping state).
+pub trait Words {
+    fn word(&mut self, offset: u32) -> Result<u32, Error>;
+}
+/// Copied bytes, for the operational model and host tests.
+pub struct Bytes<'a>(pub &'a [u8]);
+impl Words for Bytes<'_> {
+    fn word(&mut self, offset: u32) -> Result<u32, Error> {
+        word(self.0, offset)
+    }
+}
+
+/// USB Legacy Support capability (xHCI 1.2b 7.1), observed and never written.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub struct Legacy {
+    pub offset: u32,
+    pub usblegsup: u32,
+    pub usblegctlsts: u32,
+}
+impl Legacy {
+    pub fn bios_owned(self) -> bool {
+        self.usblegsup & (1 << 16) != 0
+    }
+    pub fn os_owned(self) -> bool {
+        self.usblegsup & (1 << 24) != 0
+    }
+}
+
+/// Structural and profile facts from copied registers; no platform facts.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub struct Inspection {
+    pub header: [u32; 7],
+    pub operational: u32,
+    pub doorbell: u32,
+    pub runtime: u32,
+    pub pagesize: u32,
+    pub legacy: Option<Legacy>,
+    pub slots: u8,
+    pub ports: u8,
+    pub interrupters: u16,
+    pub ac64: bool,
+    pub extended: u8,
+    pub protocol_ports: u32,
+}
+
+/// Inspect the initial profile (xHCI 1.0, <=16 ports, no scratchpads, 4 KiB
+/// pages) and walk at most 64 extended capabilities inside the 16 KiB extent.
+/// Each link is a nonzero forward DWORD offset, so offsets strictly increase:
+/// a cycle is unrepresentable and the walk terminates within its bound.
+/// Overlap with register blocks, truncation and duplicate legacy support fail.
+/// One dynamically dispatched instance serves both copied bytes and the C1
+/// register reader, keeping a single parser in the kernel image.
+pub fn inspect(w: &mut dyn Words) -> Result<Inspection, Error> {
+    let mut first = [0u32; 7];
+    for (i, slot) in first.iter_mut().enumerate() {
+        *slot = w.word(i as u32 * 4)?;
+    }
+    let header = Header::from_words(first);
+    let operational = header.operational;
+    if header.version != 0x100 {
+        return Err(Error::Unsupported);
+    }
+    if !header.valid_structure(8) {
+        return Err(Error::InvalidCapability);
+    }
+    let slots = header.slots;
+    let interrupters = header.interrupters;
+    let ports = header.ports;
+    if ports > 16 {
+        return Err(Error::Unsupported);
+    }
+    let hcs2 = header.hcs2;
+    let scratchpads = ((hcs2 >> 27) & 31) | (((hcs2 >> 21) & 31) << 5);
+    if scratchpads != 0 {
+        return Err(Error::Unsupported);
+    }
+    let pagesize = w.word(operational.checked_add(8).ok_or(Error::Overflow)?)?;
+    if pagesize & 1 == 0 {
+        return Err(Error::Unsupported);
+    }
+    let hcc = header.hcc1;
+    let doorbell = header.doorbell;
+    let runtime = header.runtime;
+    header.layout_end(BAR_BYTES)?;
+    let oe = end(operational, 0x400 + u32::from(ports) * 16, BAR_BYTES)?;
+    let de = end(doorbell, (u32::from(slots) + 1) * 4, BAR_BYTES)?;
+    let re = end(runtime, 0x20 + u32::from(interrupters) * 0x20, BAR_BYTES)?;
+    let mut offset = (hcc >> 16) * 4;
+    let mut legacy = None;
+    let mut protocol_ports = 0u32;
+    let mut extended = 0u8;
+    let done = |legacy, protocol_ports, extended| {
+        if protocol_ports == 0 {
+            return Err(Error::InvalidCapability);
+        }
+        Ok(Inspection {
+            header: first,
+            operational,
+            doorbell,
+            runtime,
+            pagesize,
+            legacy,
+            slots,
+            ports,
+            interrupters,
+            ac64: hcc & 1 != 0,
+            extended,
+            protocol_ports,
+        })
+    };
+    for _ in 0..64 {
+        if offset == 0 {
+            return done(legacy, protocol_ports, extended);
+        }
+        if offset < 0x20 {
+            return Err(Error::InvalidCapability);
+        }
+        let header = w.word(offset)?;
+        extended += 1;
+        let id = header & 0xff;
+        if id == 0 {
+            return Err(Error::InvalidCapability);
+        }
+        let next = ((header >> 8) & 0xff) * 4;
+        let size = match id {
+            1 => {
+                if legacy.is_some() {
+                    return Err(Error::InvalidCapability);
+                }
+                legacy = Some(Legacy {
+                    offset,
+                    usblegsup: header,
+                    usblegctlsts: 0,
+                });
+                8
+            }
+            2 => {
+                let major = header >> 24;
+                let minor = (header >> 16) & 0xff;
+                if !matches!(major, 2 | 3)
+                    || minor & 15 > 9
+                    || minor >> 4 > 9
+                    || w.word(offset.checked_add(4).ok_or(Error::Overflow)?)? != 0x2042_5355
+                {
+                    return Err(Error::Unsupported);
+                }
+                let port = w.word(offset.checked_add(8).ok_or(Error::Overflow)?)?;
+                let count = (port >> 8) & 0xff;
+                let first_port = port & 0xff;
+                if count == 0 || first_port == 0 || first_port + count - 1 > u32::from(ports) {
+                    return Err(Error::InvalidCapability);
+                }
+                // Above bounds prove count <= 16 and shift/end representability.
+                let mask = ((1u32 << count) - 1) << (first_port - 1);
+                if protocol_ports & mask != 0 {
+                    return Err(Error::InvalidCapability);
+                }
+                protocol_ports |= mask;
+                16 + ((port >> 28) & 15) * 4
+            }
+            // Unknown capability bodies are not interpreted or dereferenced.
+            _ => 4,
+        };
+        let last = end(offset, size, BAR_BYTES)?;
+        if overlaps(offset, last, operational, oe)
+            || overlaps(offset, last, doorbell, de)
+            || overlaps(offset, last, runtime, re)
+            || (next != 0 && next < size)
+        {
+            return Err(Error::InvalidCapability);
+        }
+        if let Some(l) = legacy.as_mut()
+            && l.offset == offset
+        {
+            // Body read only after its extent is proven inside the profile.
+            l.usblegctlsts = w.word(offset + 4)?;
+        }
+        if next == 0 {
+            offset = 0;
+        } else {
+            offset = offset.checked_add(next).ok_or(Error::Overflow)?;
+        }
+    }
+    // A 64th terminal entry is valid; a 65th traversal is not.
+    if offset == 0 {
+        done(legacy, protocol_ports, extended)
+    } else {
+        Err(Error::InvalidCapability)
+    }
+}
+
 impl Capabilities {
     /// Parse copied bytes only. This function cannot access MMIO.
     pub fn parse(bytes: &[u8], facts: Facts) -> Result<Self, Error> {
@@ -88,138 +281,17 @@ impl Capabilities {
         if bytes.len() < BAR_BYTES as usize {
             return Err(Error::Truncated);
         }
-        let bytes = &bytes[..BAR_BYTES as usize];
-        let header = Header::from_words([
-            word(bytes, 0)?,
-            word(bytes, 4)?,
-            word(bytes, 8)?,
-            word(bytes, 12)?,
-            word(bytes, 16)?,
-            word(bytes, 20)?,
-            word(bytes, 24)?,
-        ]);
-        let operational = header.operational;
-        if header.version != 0x100 {
-            return Err(Error::Unsupported);
-        }
-        if !header.valid_structure(8) {
-            return Err(Error::InvalidCapability);
-        }
-        let slots = header.slots;
-        let interrupters = header.interrupters;
-        let ports = header.ports;
-        if ports > 16 {
-            return Err(Error::Unsupported);
-        }
-        let hcs2 = header.hcs2;
-        let scratchpads = ((hcs2 >> 27) & 31) | (((hcs2 >> 21) & 31) << 5);
-        if scratchpads != 0 {
-            return Err(Error::Unsupported);
-        }
-        if word(bytes, operational.checked_add(8).ok_or(Error::Overflow)?)? & 1 == 0 {
-            return Err(Error::Unsupported);
-        }
-        let hcc = header.hcc1;
-        let doorbell = header.doorbell;
-        let runtime = header.runtime;
-        header.layout_end(BAR_BYTES)?;
-        let oe = end(operational, 0x400 + u32::from(ports) * 16, BAR_BYTES)?;
-        let de = end(doorbell, (u32::from(slots) + 1) * 4, BAR_BYTES)?;
-        let re = end(runtime, 0x20 + u32::from(interrupters) * 0x20, BAR_BYTES)?;
-        let mut offset = (hcc >> 16) * 4;
-        let mut legacy = None;
-        let mut protocol_ports = 0u32;
-        for _ in 0..64 {
-            if offset == 0 {
-                if protocol_ports == 0 {
-                    return Err(Error::InvalidCapability);
-                }
-                return Ok(Self {
-                    bar_base: facts.bar_base,
-                    operational,
-                    doorbell,
-                    runtime,
-                    legacy,
-                    slots,
-                    ports,
-                    interrupters,
-                    ac64: hcc & 1 != 0,
-                });
-            }
-            if offset < 0x20 {
-                return Err(Error::InvalidCapability);
-            }
-            let header = word(bytes, offset)?;
-            let id = header & 0xff;
-            if id == 0 {
-                return Err(Error::InvalidCapability);
-            }
-            let next = ((header >> 8) & 0xff) * 4;
-            let size = match id {
-                1 => {
-                    if legacy.is_some() {
-                        return Err(Error::InvalidCapability);
-                    }
-                    legacy = Some(offset);
-                    8
-                }
-                2 => {
-                    let major = header >> 24;
-                    let minor = (header >> 16) & 0xff;
-                    if !matches!(major, 2 | 3)
-                        || minor & 15 > 9
-                        || minor >> 4 > 9
-                        || word(bytes, offset.checked_add(4).ok_or(Error::Overflow)?)?
-                            != 0x2042_5355
-                    {
-                        return Err(Error::Unsupported);
-                    }
-                    let port = word(bytes, offset.checked_add(8).ok_or(Error::Overflow)?)?;
-                    let count = (port >> 8) & 0xff;
-                    let first_port = port & 0xff;
-                    if count == 0 || first_port == 0 || first_port + count - 1 > u32::from(ports) {
-                        return Err(Error::InvalidCapability);
-                    }
-                    // Above bounds prove count <= 16 and shift/end representability.
-                    let mask = ((1u32 << count) - 1) << (first_port - 1);
-                    if protocol_ports & mask != 0 {
-                        return Err(Error::InvalidCapability);
-                    }
-                    protocol_ports |= mask;
-                    16 + ((port >> 28) & 15) * 4
-                }
-                // Unknown capability bodies are not interpreted or dereferenced.
-                _ => 4,
-            };
-            let last = end(offset, size, BAR_BYTES)?;
-            if overlaps(offset, last, operational, oe)
-                || overlaps(offset, last, doorbell, de)
-                || overlaps(offset, last, runtime, re)
-                || (next != 0 && next < size)
-            {
-                return Err(Error::InvalidCapability);
-            }
-            if next == 0 {
-                offset = 0;
-            } else {
-                offset = offset.checked_add(next).ok_or(Error::Overflow)?;
-            }
-        }
-        // A 64th terminal entry is valid; a 65th traversal is not.
-        if offset == 0 && protocol_ports != 0 {
-            Ok(Self {
-                bar_base: facts.bar_base,
-                operational,
-                doorbell,
-                runtime,
-                legacy,
-                slots,
-                ports,
-                interrupters,
-                ac64: hcc & 1 != 0,
-            })
-        } else {
-            Err(Error::InvalidCapability)
-        }
+        let i = inspect(&mut Bytes(&bytes[..BAR_BYTES as usize]))?;
+        Ok(Self {
+            bar_base: facts.bar_base,
+            operational: i.operational,
+            doorbell: i.doorbell,
+            runtime: i.runtime,
+            legacy: i.legacy.map(|l| l.offset),
+            slots: i.slots,
+            ports: i.ports,
+            interrupters: i.interrupters,
+            ac64: i.ac64,
+        })
     }
 }

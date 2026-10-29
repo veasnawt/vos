@@ -1,0 +1,19 @@
+{
+  "measured": "2026-10-29 Get-PSDrive C (Windows), after all native runs",
+  "windows_c_free_preflight_bytes": 22921506816,
+  "windows_c_free_resume_bytes": 23562231808,
+  "windows_c_free_final_bytes": 23489638400,
+  "reserve_bytes": 21474836480,
+  "headroom_above_reserve_final_bytes": 2014801920,
+  "reserve_satisfied": true,
+  "provision_history_mib": {
+    "initial": 160,
+    "resume": 400,
+    "revision_1": 640
+  },
+  "build_tree_logical_bytes_final": 729526272,
+  "provision_overrun_disclosed": "logical build tree 729,526,272 bytes exceeds the 640 MiB (671,088,640) revised provision by 58,437,632 bytes, mainly full QEMU traces of three native runs (42 boots) and six candidate kernels; Windows C: free fell only ~73 MB net from the resume measurement because the WSL VHDX absorbed it",
+  "deletions": 0,
+  "cleanup_or_compaction": false,
+  "other_storage": "WSL logical space and E: not used for admission"
+}
