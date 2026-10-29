@@ -17,6 +17,7 @@
 #include "console.h"
 #include "cpu.h"
 #include "devmap.h"
+#include "efi_memory.h"
 #include "boot_option.h"
 #include "xhci.h"
 #include "xhci_qualify.h"
@@ -155,6 +156,10 @@ void kernel_main(uint32_t mb2_magic, uint32_t mb2_info)
     resv_init(&boot_resv);
     err = boot_reserve(&bi, (uintptr_t)__kernel_phys_start, (uintptr_t)__kernel_phys_end,
                        &boot_resv);
+    /* USB.2-C3a.2: firmware memory leaves the allocatable set here, before
+     * pmm_init and therefore before the first allocation. */
+    struct efi_memory_report efi = { 0 };
+    int efi_status = err ? EFI_MEMORY_REFUSED : efi_memory_exclude(&bi, &boot_resv, &efi);
     for (size_t i = 0; i < boot_resv.count; i++) {
         serial_puts("boot: reserved ");
         serial_hex(boot_resv.r[i].start);
@@ -166,6 +171,24 @@ void kernel_main(uint32_t mb2_magic, uint32_t mb2_info)
     }
     if (err)
         panic(err);
+    if (efi_status == EFI_MEMORY_APPLIED) {
+        serial_puts("efi: ");
+        serial_dec(efi.frames);
+        serial_puts(" frames excluded in ");
+        serial_dec(efi.ranges);
+        serial_puts(" ranges from ");
+        serial_dec(efi.descriptors);
+        serial_puts(" descriptors, coalesced ");
+        serial_dec(efi.coalesced);
+        serial_puts("\r\n");
+    } else if (efi_status == EFI_MEMORY_NOT_EFI) {
+        serial_puts("efi: no EFI map (BIOS): e820 protection only\r\n");
+    } else {
+        serial_puts("efi: refusing to boot: ");
+        serial_puts(efi_memory_strerror(efi.error));
+        serial_puts("\r\n");
+        panic("efi: firmware memory unclassified");
+    }
 
     int perr = pmm_init(&bi, &boot_resv);
     if (perr != PMM_OK) {
@@ -183,6 +206,15 @@ void kernel_main(uint32_t mb2_magic, uint32_t mb2_info)
     serial_puts(" KiB), ");
     serial_dec(pmm_kernel()->ignored_bytes);
     serial_puts(" bytes of RAM above 1 GiB ignored\r\n");
+    if (efi_status == EFI_MEMORY_APPLIED) {
+        serial_puts("efi: ");
+        serial_dec(pmm_kernel()->usable);
+        serial_puts(" usable frames remain (floor ");
+        serial_dec(EFI_MEMORY_FLOOR_FRAMES);
+        serial_puts(")\r\n");
+        if (pmm_kernel()->usable < EFI_MEMORY_FLOOR_FRAMES)
+            panic("efi: usable memory below floor");
+    }
 
     int verr = vmm_init();
     if (verr != VMM_OK) {

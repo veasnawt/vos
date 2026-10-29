@@ -1,0 +1,20 @@
+
+running 1 test
+test ovmf_fixture_excludes_exactly_boot_services_and_firmware_dma_pages ... FAILED
+
+failures:
+
+---- ovmf_fixture_excludes_exactly_boot_services_and_firmware_dma_pages stdout ----
+
+thread 'ovmf_fixture_excludes_exactly_boot_services_and_firmware_dma_pages' (105429) panicked at tests/rust/efi_memory.rs:122:5:
+assertion `left == right` failed
+  left: 0
+ right: 9765
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    ovmf_fixture_excludes_exactly_boot_services_and_firmware_dma_pages
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 8 filtered out; finished in 0.02s
+

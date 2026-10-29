@@ -1,0 +1,10 @@
+storage after before c3a-host: 370167808
+storage after before c2-host: 413188096
+storage after before c1-host: 447143936
+storage after before usb2b-host: 472756224
+storage after before usb1-host: 480272384
+storage after before r2b-host: 480907264
+storage after before r1-bounds: 483340288
+storage after before kernel-4-verify: 485965824
+storage after before r2b-native: 501231616
+storage after end: 544526336

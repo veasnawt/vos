@@ -218,11 +218,13 @@ qualification of the QEMU xHCI profile through a releasable BAR lease.
 [USB.2-C2](results/usb2c2-dma.md) is merged through PR #28 at
 `62ce8de2b3d4b12e53c465f9ad3bb92fb0bfeffe`: Rust-owned DMA-designated pages with
 publication statically unavailable. [USB.2-C3a](results/usb2c3a-residue.md) is
-implemented and verified in this PR candidate, not yet accepted: a firmware DMA
-residue guard that reserves reusable firmware xHCI pages before any later
-allocator user, and a dry-run halt/reset plan that is validated but never
-executed. C3b (QEMU-only containment writes) and later require separate
-authorization; physical controller takeover remains unauthorized.
+merged through PR #29 at `9c93d549678e37b4857e3a927971972583486983`: an opt-in
+firmware DMA residue guard and a dry-run halt/reset plan that is never executed.
+[USB.2-C3a.2](results/usb2c3a2-efi-exclusion.md) is implemented and verified in
+this PR candidate, not yet accepted: EFI boot-services and other non-RAM memory is
+excluded from the PMM on every UEFI boot before the first allocation. C3b
+(QEMU-only containment writes) and later require separate authorization; physical
+controller takeover remains unauthorized.
 This status update grants no implementation authority.
 Unrelated bug fixes, boot-media work and desktop planning need not
 wait for the full migration. Hardware and migration work coordinate when sharing

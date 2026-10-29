@@ -1,0 +1,22 @@
+{
+  "windows_c_free_preflight_bytes": 23222874112,
+  "windows_c_free_final_bytes": 23226707968,
+  "reserve_bytes": 21474836480,
+  "headroom_above_reserve_final_bytes": 1751871488,
+  "reserve_satisfied": true,
+  "provision_bytes": 629145600,
+  "stop_threshold_bytes": 566231040,
+  "build_tree_disk_bytes_final": 544526336,
+  "within_provision": true,
+  "below_stop_threshold": true,
+  "provision_changed_during_execution": false,
+  "storage_driven_scope_decisions": [
+    "USB.2-A core suite not rerun: kernel/rust/usb/xhci is byte-identical to the C3a merge, so the C3a usb2a-core evidence (46/46) applies by source identity",
+    "R1 user corpus and elfcheck reused from the C3a build (user/ and tools unchanged); R1 bounds/validators rerun against the new archive",
+    "storage reruns reused the validated images of native-run-1 (--iso-dir, hash-checked) and the trace predicate was re-checked offline instead of re-booting",
+    "QEMU traces, ISOs and Multiboot2 dumps stay in build/; only their hashes are committed (media.json)",
+    "regressions ran under a guard that aborts before the 90% line (storage-log.txt)"
+  ],
+  "deletions": 0,
+  "cleanup_or_compaction": false
+}

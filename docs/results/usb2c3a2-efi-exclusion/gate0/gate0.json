@@ -1,0 +1,22 @@
+{
+  "baseline": "9c93d549678e37b4857e3a927971972583486983",
+  "baseline_kernel": "C3a kernel-3 vos.bin 0b1e8f5328ff1fc0 (byte-identical make rebuild of the merged source)",
+  "git": "origin/main == baseline; worktrees vos-r2b 4352815, vos-usb2c1 1b4c4fb, vos-usb2c2 885b9e3, vos-usb2c3a c7bd104 all clean; 0 stashes; new worktree vos-usb2c3a2 on feat/usb2c3a2-efi-exclusion",
+  "storage": {"windows_c_free_preflight_bytes": 23222874112, "reserve_bytes": 21474836480, "headroom_bytes": 1748037632, "provision_bytes": 629145600, "stop_bytes": 566231040},
+  "reproduced_c3a1_conclusions": {
+    "uefi": "tag 17 present (121 descriptors); 9,765 BootServices frames in [1 MiB, 1 GiB) all allocatable at the first allocation; xHCI 0x674a000-0x674d000 and armed AHCI 0x6744000/0x6745000 allocatable; avail bitmap equals the independent oracle without exclusion",
+    "bios": "no tag 17; xHCI 0x7fdf000-0x7fe0000 and the running AHCI port page 0x7fdf000 e820-reserved (avail=0); avail bitmap equals the oracle",
+    "evidence": ["baseline-native/bios-n-qemu-xhci", "baseline-native-2/uefi-n-qemu-xhci", "baseline-native (uefi FAIL: runner expectation defect, retained)"]
+  },
+  "tag17_format": {
+    "layout": "u32 type=17, u32 size, u32 descriptor_size, u32 descriptor_version, then (size-16)/descriptor_size EFI_MEMORY_DESCRIPTORs (u32 Type, u32 pad, u64 PhysicalStart, u64 VirtualStart, u64 NumberOfPages, u64 Attribute)",
+    "observed": {"size": 5824, "descriptor_size": 48, "descriptor_version": 1, "descriptors": 121, "remainder": 0},
+    "observed_properties": "sorted, non-overlapping, page-aligned, no zero-length; allowed types (1,2,7) all carry WB (attr 0xf) and no RUNTIME"
+  },
+  "boot_services_transition": "VOS's Multiboot2 header requests only module alignment (6) and framebuffer (5), never EFI boot services (header tag 7) or the amd64 EFI entry (9); GRUB therefore calls ExitBootServices with the final map and passes that map in tag 17, and no tag 18 (boot services not terminated) appears. After ExitBootServices, UEFI defines BootServicesCode/Data as free for the OS, which is exactly where firmware drivers' DMA buffers (xHCI rings, AHCI command list/FIS) live.",
+  "intersection": "every tag-6 available byte in [1 MiB, 1 GiB) is covered by EFI types {1,2,3,4,7}; every BootServices descriptor lies inside tag-6 type 1; tag 6 merges BootServices memory into 'available' (root cause)",
+  "before_first_allocation": "the first PMM allocation is devmap_init's page directory, after pmm_init; exclusions computed by Rust before pmm_init and entered into the existing reservation table are applied by pmm_init's protect pass (clear-only), so they are active before any allocation by construction. Calling the freestanding Rust archive before pmm_init needs no boot-architecture change (no heap, no PMM, boot stack only).",
+  "other_types_policy": "allowed only: LoaderCode(1), LoaderData(2), Conventional(7) with EFI_MEMORY_WB and without EFI_MEMORY_RUNTIME/EFI_MEMORY_SP; excluded where they overlap tag-6 available RAM: BootServicesCode/Data, Reserved, RuntimeServices*, Unusable, ACPI*, MMIO*, PalCode, Persistent, Unaccepted(15) and any unknown/OEM/OS type; tag-6 available RAM not covered by an allowed descriptor is excluded",
+  "memory_floor_input": "exact gdbstub watchpoint low-water over the desktop/GUI/vsh/apps/Rixie run: peak 57 frames (228 KiB) on BIOS and UEFI; fixed pools GUI 40, block cache 32 frames",
+  "decision": "GO: protection can be enforced before the first allocation without a boot-architecture change"
+}

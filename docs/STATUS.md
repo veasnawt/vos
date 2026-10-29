@@ -6,7 +6,7 @@ Current accepted graphical baseline: owner-merged
 VOS is pre-alpha. **N0-N5 are accepted; N6 is still in progress.**
 No physical-hardware or complete-desktop acceptance is claimed.
 The accepted main used for this review is
-`62ce8de2b3d4b12e53c465f9ad3bb92fb0bfeffe`, following R0/R1,
+`9c93d549678e37b4857e3a927971972583486983`, following R0/R1,
 [USB.1 integration PR #22](https://github.com/veasnawt/vos/pull/22),
 [portable USB.2-A PR #23](https://github.com/veasnawt/vos/pull/23),
 [USB.1 Rust migration PR #24](https://github.com/veasnawt/vos/pull/24) and the
@@ -24,12 +24,15 @@ linked but never activated, and opt-in `vos.usb2-qualify=1` inspects the QEMU
 The [USB.2-C2 DMA ownership foundation](results/usb2c2-dma.md) is merged through
 [PR #28](https://github.com/veasnawt/vos/pull/28): a fixed-table Rust pool for
 DMA-designated pages with publication statically unavailable.
-This branch's [USB.2-C3a firmware residue guard](results/usb2c3a-residue.md) is
-verified for PR review, not accepted or merged. Opt-in `vos.usb2-residue=1` runs
-right after the device window exists, reserves every firmware xHCI DMA page the
-allocator could reuse (OVMF), refuses when the residue cannot be fully inspected
-(SeaBIOS reserved memory), and validates a dry-run halt/reset plan that nothing
-executes. No PCI/xHCI write; physical hardware remains unsupported.
+The [USB.2-C3a firmware residue guard](results/usb2c3a-residue.md) is merged
+through [PR #29](https://github.com/veasnawt/vos/pull/29): opt-in
+`vos.usb2-residue=1` and a dry-run halt/reset plan that nothing executes.
+This branch's [USB.2-C3a.2 early UEFI firmware memory exclusion](results/usb2c3a2-efi-exclusion.md)
+is verified for PR review, not accepted or merged. On every UEFI boot, a Rust
+decision over GRUB's EFI memory map removes BootServicesCode/Data and any other
+non-RAM or unclassified memory from the allocatable set before `pmm_init`, so
+before the first allocation; a UEFI boot without a valid EFI map is refused.
+BIOS boots are unchanged. No PCI/xHCI write; physical hardware remains unsupported.
 
 ## Current accepted components
 
@@ -112,8 +115,9 @@ USB.2-A's [portable Rust core](results/usb2a-rust-core.md) is merged through
 PR #23. It is a tested software lifecycle/ring/resource model without a live
 MMIO/DMA/reset backend. USB.2-B's non-activating ownership foundation is merged
 through PR #25, USB.2-C1 read-only qualification through PR #27 and USB.2-C2
-software DMA ownership through PR #28. The USB.2-C3a residue guard is a review
-candidate on this branch; C3b controller writes and later remain unimplemented.
+software DMA ownership through PR #28 and the USB.2-C3a residue guard through
+PR #29. USB.2-C3a.2 early UEFI firmware memory exclusion is a review candidate on
+this branch; C3b controller writes and later remain unimplemented.
 
 The [USB.1 Rust publication review](results/usb1-rust-publication-review.md)
 records the candidate production migration, preserved read-only behavior,

@@ -1,0 +1,97 @@
+{
+  "case": "bios-n-qemu-xhci+disk",
+  "firmware": "bios",
+  "mode": "n",
+  "device": "qemu-xhci+disk",
+  "expect": "exclusion",
+  "passed": false,
+  "first_allocation": {
+    "avail_ptr": 18446744071563522240,
+    "alloc_ptr": 18446744071563489472,
+    "frames": 262144,
+    "usable": 31926,
+    "free": 31926,
+    "hint": 0,
+    "ignored": 0,
+    "state": 1
+  },
+  "mb2": {
+    "tags": [
+      [
+        21,
+        12
+      ],
+      [
+        1,
+        43
+      ],
+      [
+        2,
+        29
+      ],
+      [
+        10,
+        28
+      ],
+      [
+        3,
+        20
+      ],
+      [
+        3,
+        22
+      ],
+      [
+        3,
+        22
+      ],
+      [
+        3,
+        25
+      ],
+      [
+        6,
+        232
+      ],
+      [
+        9,
+        1428
+      ],
+      [
+        4,
+        16
+      ],
+      [
+        5,
+        20
+      ],
+      [
+        7,
+        784
+      ],
+      [
+        8,
+        38
+      ],
+      [
+        14,
+        28
+      ],
+      [
+        0,
+        8
+      ]
+    ],
+    "efi_header": null,
+    "mmap_entries": 9,
+    "efi_descriptors": 0
+  },
+  "efi": {
+    "boot_services_frames_in_window": 0,
+    "boot_services_frames_allocatable": 0,
+    "excluded_frames_oracle": 0,
+    "excluded_ranges_oracle": [],
+    "excluded_ranges_kernel": []
+  },
+  "serial_sha256": "637976de9f69dd00e17e013056ae78cf63644f2086a501340e5b766bc8991209"
+}

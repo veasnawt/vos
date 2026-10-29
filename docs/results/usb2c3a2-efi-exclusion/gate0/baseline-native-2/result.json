@@ -1,0 +1,315 @@
+{
+  "passed": true,
+  "physical_hardware": false,
+  "expect": "baseline",
+  "inputs": {
+    "/boot/vos.bin": "0b1e8f5328ff1fc0cba50a3cfef27ea72deef6f4eca20d29c5961c348efb651c",
+    "/boot/vsh.elf": "e7af3ee56164f587f7ca1338f7ddfcb202b6f4310f10b4dcba6a2576743cb181",
+    "/boot/hello.elf": "c6c6416195a0f18d680d7f8f19be52ce02ff02912ef3bac45324fbe88006cd06",
+    "/boot/rixie.elf": "77104da3b33caf809daf5e6674ac4e2fa9edf6a9e2e5dd59828514df76490d32",
+    "/boot/gui-demo.elf": "f114dbe666ff479229ce851658847a4b11b5f0e5b61f45b73d8a0ee39fc57faa"
+  },
+  "cases": [
+    {
+      "case": "uefi-n-qemu-xhci",
+      "firmware": "uefi",
+      "mode": "n",
+      "device": "qemu-xhci",
+      "expect": "baseline",
+      "passed": true,
+      "first_allocation": {
+        "avail_ptr": 18446744071563518144,
+        "alloc_ptr": 18446744071563485376,
+        "frames": 262144,
+        "usable": 30479,
+        "free": 30479,
+        "hint": 0,
+        "ignored": 0,
+        "state": 1
+      },
+      "mb2": {
+        "tags": [
+          [
+            21,
+            12
+          ],
+          [
+            1,
+            43
+          ],
+          [
+            2,
+            27
+          ],
+          [
+            3,
+            20
+          ],
+          [
+            3,
+            22
+          ],
+          [
+            3,
+            22
+          ],
+          [
+            3,
+            25
+          ],
+          [
+            6,
+            520
+          ],
+          [
+            9,
+            1428
+          ],
+          [
+            4,
+            16
+          ],
+          [
+            8,
+            38
+          ],
+          [
+            12,
+            16
+          ],
+          [
+            14,
+            28
+          ],
+          [
+            15,
+            44
+          ],
+          [
+            17,
+            5824
+          ],
+          [
+            0,
+            8
+          ]
+        ],
+        "efi_header": {
+          "size": 5824,
+          "descriptor_size": 48,
+          "descriptor_version": 1,
+          "descriptors": 121,
+          "remainder": 0
+        },
+        "mmap_entries": 21,
+        "efi_descriptors": 121
+      },
+      "efi": {
+        "boot_services_frames_in_window": 9765,
+        "boot_services_frames_allocatable": 9765,
+        "excluded_frames_oracle": 0,
+        "excluded_ranges_oracle": [],
+        "excluded_ranges_kernel": []
+      },
+      "after": {
+        "usable": 30479,
+        "free": 30476
+      },
+      "allocated_after": 3,
+      "low_water": {
+        "watch_hits": 231,
+        "min_free": 30422,
+        "peak_in_use_frames": 57,
+        "peak_in_use_bytes": 233472
+      },
+      "bar0": 824633720832,
+      "register_snapshot": {
+        "0x0000": 16777280,
+        "0x0004": 134221888,
+        "0x0008": 15,
+        "0x000c": 0,
+        "0x0010": 552961,
+        "0x0014": 8192,
+        "0x0018": 4096,
+        "0x001c": 0,
+        "0x0040": 0,
+        "0x0044": 1,
+        "0x0048": 1,
+        "0x004c": 0,
+        "0x0054": 0,
+        "0x0058": 108307009,
+        "0x005c": 0,
+        "0x0060": 0,
+        "0x0070": 108306432,
+        "0x0074": 0,
+        "0x0078": 64,
+        "0x1020": 2,
+        "0x1024": 0,
+        "0x1028": 1,
+        "0x102c": 0,
+        "0x1030": 108319296,
+        "0x1034": 0,
+        "0x1038": 108311104,
+        "0x103c": 0,
+        "0x3000": 0,
+        "0x3004": 0,
+        "0x3008": 0,
+        "0x300c": 1,
+        "0x3010": 0,
+        "0x3014": 0,
+        "0x3018": 0,
+        "0x301c": 1,
+        "0x3020": 0,
+        "0x3024": 0,
+        "0x3028": 0,
+        "0x302c": 1,
+        "0x3030": 0,
+        "0x3034": 0,
+        "0x3038": 0,
+        "0x303c": 1,
+        "0x3040": 0,
+        "0x3044": 0,
+        "0x3048": 0,
+        "0x304c": 1,
+        "0x3050": 0,
+        "0x3054": 0,
+        "0x3058": 0,
+        "0x305c": 1,
+        "0x3060": 0,
+        "0x3064": 0,
+        "0x3068": 0,
+        "0x306c": 1,
+        "0x3070": 0,
+        "0x3074": 0,
+        "0x3078": 0,
+        "0x307c": 1,
+        "0x3080": 0,
+        "0x3084": 0,
+        "0x3088": 0,
+        "0x308c": 1,
+        "0x3090": 0,
+        "0x3094": 0,
+        "0x3098": 0,
+        "0x309c": 1,
+        "0x30a0": 0,
+        "0x30a4": 0,
+        "0x30a8": 0,
+        "0x30ac": 1,
+        "0x30b0": 0,
+        "0x30b4": 0,
+        "0x30b8": 0,
+        "0x30bc": 1,
+        "0x30c0": 0,
+        "0x30c4": 0,
+        "0x30c8": 0,
+        "0x30cc": 1,
+        "0x30d0": 0,
+        "0x30d4": 0,
+        "0x30d8": 0,
+        "0x30dc": 1,
+        "0x30e0": 0,
+        "0x30e4": 0,
+        "0x30e8": 0,
+        "0x30ec": 1,
+        "0x30f0": 0,
+        "0x30f4": 0,
+        "0x30f8": 0,
+        "0x30fc": 1,
+        "0x3800": 0,
+        "0x3804": 0
+      },
+      "firmware_pointers": {
+        "crcr": "0x674a240",
+        "dcbaap": "0x674a000",
+        "erstba": "0x674d240",
+        "erdp": "0x674b240",
+        "segment": "0x674b240",
+        "segment_trbs": 512
+      },
+      "xhci_pages": {
+        "0x674a000": 1,
+        "0x674b000": 1,
+        "0x674c000": 1,
+        "0x674d000": 1
+      },
+      "ahci": {
+        "abar": "0x81010000",
+        "ports": {
+          "0": {
+            "clb": "0x6744000",
+            "fb": "0x6745000",
+            "cmd": 16404,
+            "st": 0,
+            "fre": 1,
+            "cr": 0,
+            "fr": 1
+          },
+          "1": {
+            "clb": "0x6744000",
+            "fb": "0x6745100",
+            "cmd": 16404,
+            "st": 0,
+            "fre": 1,
+            "cr": 0,
+            "fr": 1
+          },
+          "2": {
+            "clb": "0x6744000",
+            "fb": "0x6745200",
+            "cmd": 50331654,
+            "st": 0,
+            "fre": 0,
+            "cr": 0,
+            "fr": 0
+          },
+          "3": {
+            "clb": "0x6744000",
+            "fb": "0x6745300",
+            "cmd": 16404,
+            "st": 0,
+            "fre": 1,
+            "cr": 0,
+            "fr": 1
+          },
+          "4": {
+            "clb": "0x6744000",
+            "fb": "0x6745400",
+            "cmd": 16404,
+            "st": 0,
+            "fre": 1,
+            "cr": 0,
+            "fr": 1
+          },
+          "5": {
+            "clb": "0x6744000",
+            "fb": "0x6745500",
+            "cmd": 16404,
+            "st": 0,
+            "fre": 1,
+            "cr": 0,
+            "fr": 1
+          }
+        },
+        "live_pages": {
+          "0x6744000": 1,
+          "0x6745000": 1
+        }
+      },
+      "serial_sha256": "ad602c9ce9084ab91bbeccd1855dc2f9080df3371e060809c8dfb223ec287624",
+      "trace_sha256": "2481d65a8428216a804685dd27283a6b3dbdd842cf7a73661842adda1164e403",
+      "trace_bytes": 5315462,
+      "trace_vos": {
+        "xhci_mmio_writes": 0,
+        "xhci_mmio_reads": 0,
+        "xhci_cfg_writes": 0,
+        "state_events": 0,
+        "other_cfg_writes": 0,
+        "xhci_read_events": 0
+      }
+    }
+  ],
+  "failures": [],
+  "uefi_iso_sha256": "806badd911cb0368fed9a2b38d6e71fc20d2b1d6f001f4839c0da45f4e75721e",
+  "subset": "uefi-n-qemu-xhci",
+  "peak_in_use_frames": 57
+}

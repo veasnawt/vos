@@ -1,0 +1,14 @@
+{
+  "authority": "USB.2-C3a.2 authorization ceilings (limits, not entitlements); unchanged during execution",
+  "ceilings": {"text_rodata_growth_bytes": 4096, "permanent_rw_growth_bytes": 64, "storage_bytes": 629145600, "storage_stop_bytes": 566231040, "windows_c_reserve_bytes": 21474836480},
+  "measured": {
+    "text_rodata_growth_bytes": 3944, "text_growth_bytes": 3216, "rodata_growth_bytes": 728,
+    "data_growth_bytes": 0, "bss_growth_bytes": 0,
+    "pt_load_memsz_growth_bytes": 4096,
+    "largest_new_rust_frame_bytes": 232, "efi_memory_exclude_frame_bytes": 72,
+    "boot_info_stack_growth_bytes": 16, "kernel_main_report_bytes": 32,
+    "new_threads": 0, "heap": 0, "page_tables": 0, "device_writes": 0
+  },
+  "within_all_ceilings": true,
+  "rejected_candidates": "kernel-1 5,385 B, kernel-2 4,785 B, kernel-3 4,219 B (history/measure-1..3)"
+}

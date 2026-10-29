@@ -1,0 +1,17 @@
+
+running 12 tests
+test already_allocated_frame_is_a_hazard_never_reserved ... ok
+test command_ring_walk_is_bounded ... ok
+test device_contexts_and_scratchpads_leave_it_incomplete ... ok
+test duplicate_claims_do_not_double_count ... ok
+test exhaustion_fails_closed ... ok
+test malformed_and_adversarial_pointers ... ok
+test ordering_violations_are_rejected ... ok
+test ovmf_residue_is_bounded_protected_and_complete ... ok
+test plan_matches_the_qemu_profile_and_validates ... ok
+test refusals ... ok
+test running_controller_and_live_flags ... ok
+test seabios_residue_in_reserved_memory_is_uninspected_not_safe ... ok
+
+test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

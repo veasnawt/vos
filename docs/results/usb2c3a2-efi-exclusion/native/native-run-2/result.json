@@ -1,0 +1,30 @@
+{
+  "passed": false,
+  "physical_hardware": false,
+  "expect": "exclusion",
+  "inputs": {
+    "/boot/vos.bin": "e6fbe5c4b7edd266340a769e407df81b0021ccaad5d860e22eb9dbea2b3598fd",
+    "/boot/vsh.elf": "e7af3ee56164f587f7ca1338f7ddfcb202b6f4310f10b4dcba6a2576743cb181",
+    "/boot/hello.elf": "c6c6416195a0f18d680d7f8f19be52ce02ff02912ef3bac45324fbe88006cd06",
+    "/boot/rixie.elf": "77104da3b33caf809daf5e6674ac4e2fa9edf6a9e2e5dd59828514df76490d32",
+    "/boot/gui-demo.elf": "f114dbe666ff479229ce851658847a4b11b5f0e5b61f45b73d8a0ee39fc57faa"
+  },
+  "cases": [],
+  "failures": [
+    {
+      "case": "bios-n-qemu-xhci+disk",
+      "error": "no PCI configuration writes after VOS start"
+    },
+    {
+      "case": "uefi-n-qemu-xhci+disk",
+      "error": "no PCI configuration writes after VOS start"
+    }
+  ],
+  "bios_iso_reused_from": "build/usb2c3a2-1/final/native/bios.iso",
+  "bios_iso_sha256": "d34609f4b1b4a473fcdb1bd72bce4bb89b25e58bdf44d879fb6ad3d8c6737598",
+  "uefi_iso_reused_from": "build/usb2c3a2-1/final/native/uefi.iso",
+  "uefi_iso_sha256": "163aad09596bd93984c35f8f82d9aef9c3136ea83ea0a9baaa05c653e49ea2cd",
+  "subset": "bios-n-qemu-xhci+disk,uefi-n-qemu-xhci+disk",
+  "disk_sha256": "5ef98c6e0b4dd983dfb7db1a8d73d0175cbb86c358e61f2957c689d164890dcc",
+  "peak_in_use_frames": null
+}

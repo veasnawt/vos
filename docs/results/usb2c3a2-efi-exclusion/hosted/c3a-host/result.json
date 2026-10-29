@@ -1,0 +1,220 @@
+{
+  "commands": [
+    [
+      "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+      "--edition=2024",
+      "-Dwarnings",
+      "--crate-name",
+      "vos_xhci",
+      "--crate-type=rlib",
+      "-Coverflow-checks=yes",
+      "-Cdebug-assertions=yes",
+      "/home/veasnawt/src/vos-usb2c3a2/kernel/rust/usb/xhci/lib.rs",
+      "-o",
+      "/home/veasnawt/src/vos-usb2c3a2/build/usb2c3a2-1/final/c3a-host/libvos_xhci.rlib"
+    ],
+    [
+      "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+      "--edition=2024",
+      "-Dwarnings",
+      "--test",
+      "-Copt-level=1",
+      "-Coverflow-checks=yes",
+      "--extern",
+      "vos_xhci=/home/veasnawt/src/vos-usb2c3a2/build/usb2c3a2-1/final/c3a-host/libvos_xhci.rlib",
+      "tests/rust/xhci_residue.rs",
+      "-o",
+      "/home/veasnawt/src/vos-usb2c3a2/build/usb2c3a2-1/final/c3a-host/residue-tests"
+    ],
+    [
+      "/home/veasnawt/src/vos-usb2c3a2/build/usb2c3a2-1/final/c3a-host/residue-tests",
+      "--test-threads=1"
+    ],
+    [
+      "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+      "--edition=2024",
+      "--extern",
+      "vos_xhci=/home/veasnawt/src/vos-usb2c3a2/build/usb2c3a2-1/final/c3a-host/libvos_xhci.rlib",
+      "/home/veasnawt/src/vos-usb2c3a2/build/usb2c3a2-1/final/c3a-host/cf-plan-cannot-run.rs",
+      "-o",
+      "/home/veasnawt/src/vos-usb2c3a2/build/usb2c3a2-1/final/c3a-host/cf-plan-cannot-run"
+    ],
+    [
+      "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+      "--edition=2024",
+      "--extern",
+      "vos_xhci=/home/veasnawt/src/vos-usb2c3a2/build/usb2c3a2-1/final/c3a-host/libvos_xhci.rlib",
+      "/home/veasnawt/src/vos-usb2c3a2/build/usb2c3a2-1/final/c3a-host/cf-memory-has-no-write.rs",
+      "-o",
+      "/home/veasnawt/src/vos-usb2c3a2/build/usb2c3a2-1/final/c3a-host/cf-memory-has-no-write"
+    ],
+    [
+      "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+      "--edition=2024",
+      "--extern",
+      "vos_xhci=/home/veasnawt/src/vos-usb2c3a2/build/usb2c3a2-1/final/c3a-host/libvos_xhci.rlib",
+      "/home/veasnawt/src/vos-usb2c3a2/build/usb2c3a2-1/final/c3a-host/cf-plan-only-from-planner.rs",
+      "-o",
+      "/home/veasnawt/src/vos-usb2c3a2/build/usb2c3a2-1/final/c3a-host/cf-plan-only-from-planner"
+    ],
+    [
+      "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+      "--edition=2024",
+      "--crate-name",
+      "vos_xhci",
+      "--crate-type=rlib",
+      "/home/veasnawt/src/vos-usb2c3a2/build/usb2c3a2-1/final/c3a-host/mutant-reserve-allocated/lib.rs",
+      "-o",
+      "/home/veasnawt/src/vos-usb2c3a2/build/usb2c3a2-1/final/c3a-host/mutant-reserve-allocated/libvos_xhci.rlib"
+    ],
+    [
+      "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+      "--edition=2024",
+      "--test",
+      "--extern",
+      "vos_xhci=/home/veasnawt/src/vos-usb2c3a2/build/usb2c3a2-1/final/c3a-host/mutant-reserve-allocated/libvos_xhci.rlib",
+      "tests/rust/xhci_residue.rs",
+      "-o",
+      "/home/veasnawt/src/vos-usb2c3a2/build/usb2c3a2-1/final/c3a-host/mutant-reserve-allocated/tests"
+    ],
+    [
+      "/home/veasnawt/src/vos-usb2c3a2/build/usb2c3a2-1/final/c3a-host/mutant-reserve-allocated/tests",
+      "--test-threads=1",
+      "already_allocated_frame_is_a_hazard_never_reserved"
+    ],
+    [
+      "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+      "--edition=2024",
+      "--crate-name",
+      "vos_xhci",
+      "--crate-type=rlib",
+      "/home/veasnawt/src/vos-usb2c3a2/build/usb2c3a2-1/final/c3a-host/mutant-inspect-protected/lib.rs",
+      "-o",
+      "/home/veasnawt/src/vos-usb2c3a2/build/usb2c3a2-1/final/c3a-host/mutant-inspect-protected/libvos_xhci.rlib"
+    ],
+    [
+      "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+      "--edition=2024",
+      "--test",
+      "--extern",
+      "vos_xhci=/home/veasnawt/src/vos-usb2c3a2/build/usb2c3a2-1/final/c3a-host/mutant-inspect-protected/libvos_xhci.rlib",
+      "tests/rust/xhci_residue.rs",
+      "-o",
+      "/home/veasnawt/src/vos-usb2c3a2/build/usb2c3a2-1/final/c3a-host/mutant-inspect-protected/tests"
+    ],
+    [
+      "/home/veasnawt/src/vos-usb2c3a2/build/usb2c3a2-1/final/c3a-host/mutant-inspect-protected/tests",
+      "--test-threads=1",
+      "seabios_residue_in_reserved_memory_is_uninspected_not_safe"
+    ],
+    [
+      "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+      "--edition=2024",
+      "--crate-name",
+      "vos_xhci",
+      "--crate-type=rlib",
+      "/home/veasnawt/src/vos-usb2c3a2/build/usb2c3a2-1/final/c3a-host/mutant-masked-link-pointer/lib.rs",
+      "-o",
+      "/home/veasnawt/src/vos-usb2c3a2/build/usb2c3a2-1/final/c3a-host/mutant-masked-link-pointer/libvos_xhci.rlib"
+    ],
+    [
+      "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+      "--edition=2024",
+      "--test",
+      "--extern",
+      "vos_xhci=/home/veasnawt/src/vos-usb2c3a2/build/usb2c3a2-1/final/c3a-host/mutant-masked-link-pointer/libvos_xhci.rlib",
+      "tests/rust/xhci_residue.rs",
+      "-o",
+      "/home/veasnawt/src/vos-usb2c3a2/build/usb2c3a2-1/final/c3a-host/mutant-masked-link-pointer/tests"
+    ],
+    [
+      "/home/veasnawt/src/vos-usb2c3a2/build/usb2c3a2-1/final/c3a-host/mutant-masked-link-pointer/tests",
+      "--test-threads=1",
+      "command_ring_walk_is_bounded"
+    ],
+    [
+      "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+      "--edition=2024",
+      "--crate-name",
+      "vos_xhci",
+      "--crate-type=rlib",
+      "/home/veasnawt/src/vos-usb2c3a2/build/usb2c3a2-1/final/c3a-host/mutant-no-master-off-check/lib.rs",
+      "-o",
+      "/home/veasnawt/src/vos-usb2c3a2/build/usb2c3a2-1/final/c3a-host/mutant-no-master-off-check/libvos_xhci.rlib"
+    ],
+    [
+      "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+      "--edition=2024",
+      "--test",
+      "--extern",
+      "vos_xhci=/home/veasnawt/src/vos-usb2c3a2/build/usb2c3a2-1/final/c3a-host/mutant-no-master-off-check/libvos_xhci.rlib",
+      "tests/rust/xhci_residue.rs",
+      "-o",
+      "/home/veasnawt/src/vos-usb2c3a2/build/usb2c3a2-1/final/c3a-host/mutant-no-master-off-check/tests"
+    ],
+    [
+      "/home/veasnawt/src/vos-usb2c3a2/build/usb2c3a2-1/final/c3a-host/mutant-no-master-off-check/tests",
+      "--test-threads=1",
+      "ordering_violations_are_rejected"
+    ],
+    [
+      "gcc",
+      "-std=gnu11",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-ffunction-sections",
+      "-fdata-sections",
+      "-Wl,--gc-sections",
+      "-fno-pie",
+      "-no-pie",
+      "-Iarch/x86_64",
+      "-O1",
+      "-g",
+      "-fsanitize=address,undefined",
+      "-fno-omit-frame-pointer",
+      "tests/host/usb2c3a-residue.c",
+      "/home/veasnawt/src/vos-usb2c3a2/build/usb2c3a2-1/kernel-4/rust/libvos_kernel.a",
+      "-o",
+      "/home/veasnawt/src/vos-usb2c3a2/build/usb2c3a2-1/final/c3a-host/sanitizer"
+    ],
+    [
+      "/home/veasnawt/src/vos-usb2c3a2/build/usb2c3a2-1/final/c3a-host/sanitizer"
+    ]
+  ],
+  "rust_sanitized": false,
+  "hardware": false,
+  "archive_sha256": "64bb1d7a9fbf9f6a681ad1a0d2fe223f8e89e107e6da93c074118d89f2ba510d",
+  "source_sha256": {
+    "kernel/rust/usb/xhci/capabilities.rs": "e8864394b59f0d8cf42993a7d141e7e75dd98f91788d7ce9c6ffa9fcfe66e03f",
+    "kernel/rust/usb/xhci/controller.rs": "86217a6d2502830ff22b30393338ad5910f8133123aee4e1167390fd06c468a2",
+    "kernel/rust/usb/xhci/discovery.rs": "f3e50289da2afb22900dcd630651ce0ac2690489d22262d963fa962d16661c43",
+    "kernel/rust/usb/xhci/dma.rs": "9aac2669ad22d7c33480a43199ba9d5078c45c39e14e406c609b222af19689c6",
+    "kernel/rust/usb/xhci/header.rs": "4d78fc16c6a52806b3b001e50a28d85b6ba98eecf715b4ac86cb8e415b2a0a3e",
+    "kernel/rust/usb/xhci/lib.rs": "15a8982e2ee49e0e4d9198b061382d3e27549a5867872202148b9bdd7aa232ba",
+    "kernel/rust/usb/xhci/lifecycle.rs": "d4c6a6e7aacf9a368a63231613d8d83f652a0672df3b51e648c484b6d5531c8d",
+    "kernel/rust/usb/xhci/mod.rs": "b38750da24893ffd4ad49f5e4f18c065810230688a0355093f74e3ab6fbcbd3a",
+    "kernel/rust/usb/xhci/qualify.rs": "d2808c0131ca916125f1a27b1b024a2f870cbfc20adeca4bfed553046fdd0052",
+    "kernel/rust/usb/xhci/residue.rs": "2ced4fb54dc641b76e357bfbc53668e029dad3bcaae5486afc1e8461a15dd349",
+    "kernel/rust/usb/xhci/resources.rs": "a46ff4fed32b775e6d03e0fcb85594de6224b484c21183bb2a13a4b83502f372",
+    "kernel/rust/usb/xhci/ring.rs": "87b575a4a9e4353a00eeb1bbe23ec7452e978c413566d8b2cff98d71ba2fd3c2",
+    "kernel/rust/usb/xhci/types.rs": "27eddcb969ef2ab87a056910b76b47a1865c7d464130d04095824ea0625a724a"
+  },
+  "kernel_link_rust_members": [
+    "libvos_kernel.vos_kernel.45b20e7284a592af-cgu.0.rcgu.o"
+  ],
+  "residue_tests": "test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+  "compile_fail_controls": {
+    "plan-cannot-run": "rejected with E0599",
+    "memory-has-no-write": "rejected with E0599",
+    "plan-only-from-planner": "rejected with E0451"
+  },
+  "mutation_controls": {
+    "reserve-allocated": "detected by already_allocated_frame_is_a_hazard_never_reserved (exit 101)",
+    "inspect-protected": "detected by seabios_residue_in_reserved_memory_is_uninspected_not_safe (exit 101)",
+    "masked-link-pointer": "detected by command_ring_walk_is_bounded (exit 101)",
+    "no-master-off-check": "detected by ordering_violations_are_rejected (exit 101)"
+  },
+  "sanitizer": "OVMF-like residue: complete, reserved, plan valid, once per boot: 18 checks PASS\n  already-allocated frame: hazard, not reserved: 8 checks PASS\n  residue in a reserved map entry: uninspected, refused: 10 checks PASS\n  registry exhaustion fails closed: 7 checks PASS\n  running controller refused, structures protected: 5 checks PASS\n  device context present: protected, incomplete: 6 checks PASS\n  unsupported controller: refused, no MMIO, nothing reserved: 6 checks PASS\n  no controller: refused, nothing reserved: 5 checks PASS\n  state change mid-guard: integrity failure, reservations kept: 6 checks PASS\n  bad context: lease refused, nothing reserved: 5 checks PASS\n  direct PMM and registry API: 15 checks PASS\nPASS: real PMM/devmap/qualification/residue C with the bare-metal Rust archive; zero PCI writes",
+  "status": "PASS"
+}

@@ -31,6 +31,10 @@ struct boot_info {
     const struct mb2_tag_framebuffer *fb;   /* the first framebuffer tag (validated by boot_framebuffer) */
     uint32_t fb_tags;                       /* how many framebuffer tags there were */
     int efi;                                /* an EFI system-table tag was present: UEFI firmware */
+    /* USB.2-C3a.2: the EFI memory map, validated by efi_memory.c (Rust), not here. */
+    const struct mb2_tag *efi_mmap;         /* the first EFI memory-map tag (17), or NULL */
+    uint32_t efi_mmap_tags;                 /* how many there were */
+    int efi_bs_active;                      /* tag 18: the loader did not exit boot services */
 };
 
 /* U1: a validated framebuffer (boot_framebuffer). */

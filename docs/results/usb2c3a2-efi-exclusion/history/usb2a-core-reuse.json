@@ -1,0 +1,6 @@
+{
+  "suite": "USB.2-A portable core (pure Rust, 46 tests)",
+  "decision": "not rerun; C3a evidence reused by source identity",
+  "justification": "the suite compiles only kernel/rust/usb/xhci/*.rs and its tests, which are byte-identical between the C3a merge 9c93d54 and this branch (git diff 9c93d54 -- kernel/rust/usb tests/rust/xhci* is empty); it does not link the kernel archive",
+  "reused_evidence": "docs/results/usb2c3a-residue/hosted/usb2a-core/tests.txt (46 passed)"
+}

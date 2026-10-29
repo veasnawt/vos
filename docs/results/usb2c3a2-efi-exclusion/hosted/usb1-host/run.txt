@@ -1,0 +1,10 @@
+{
+  "passed": true,
+  "physical_hardware_tested": false,
+  "host": {
+    "xhci": "xhci host: 45713 assertions PASS; bounded read-only probing, malformed input, mapping and opt-in coverage\n",
+    "keyboard": "PASS: decoder modifiers, repeat, release, extended/Pause and unsupported keys\nPASS: acknowledged setup, bounded timeouts/drain, aux/errors and fail-closed readiness\nPASS: exact opt-in token, prompt boundary, 128-cell limit, editing, Enter and overflow rejection\n",
+    "diagnostics": "input diagnostics: default silent, explicit enable, stage/results and disable PASS\n",
+    "console": "console-handoff: 49499 assertions PASS; actual console+keyboard+editor; bounded modeled hardware/scheduler; transfers=1007 restored=1003\n"
+  }
+}

@@ -1,0 +1,1 @@
+PASS: 76 assertions; actual PMM/devmap/USB resource/xhci_qualify C with the bare-metal Rust archive: profile, rejections, overlap/RAM, PT failure, CR3/IF/IRQ, stale/double/cross-kind tokens, bounds, state-change integrity, retention and recovery; zero PCI writes

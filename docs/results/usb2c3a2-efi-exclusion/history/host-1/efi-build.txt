@@ -1,0 +1,19 @@
+error[E0716]: temporary value dropped while borrowed
+   --> tests/rust/efi_memory.rs:186:31
+    |
+186 |     let wide = EfiMap::parse(&tag17(64, 1, &[(7, 0x100000, 16, WB), (4, 0x200000, 0, WB)])).unwrap();
+    |                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^          - temporary value is freed at the end of this statement
+    |                               |
+    |                               creates a temporary value which is freed while still in use
+187 |     assert_eq!(wide.descriptor(0), Some(Descriptor { kind: 7, start: 0x100000, end: 0x110000, attribute: WB }));
+    |                ---- borrow later used here
+    |
+help: consider using a `let` binding to create a longer lived value
+    |
+186 ~     let binding = tag17(64, 1, &[(7, 0x100000, 16, WB), (4, 0x200000, 0, WB)]);
+187 ~     let wide = EfiMap::parse(&binding).unwrap();
+    |
+
+error: aborting due to 1 previous error
+
+For more information about this error, try `rustc --explain E0716`.

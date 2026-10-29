@@ -1,0 +1,20 @@
+
+running 1 test
+test capacity_coalesces_conservatively_and_fails_closed ... FAILED
+
+failures:
+
+---- capacity_coalesces_conservatively_and_fails_closed stdout ----
+
+thread 'capacity_coalesces_conservatively_and_fails_closed' (105498) panicked at tests/rust/efi_memory.rs:293:5:
+assertion `left == right` failed: the last slot widens over the gap
+  left: [(2097152, 2162688), (4194304, 4259840)]
+ right: [(2097152, 2162688), (4194304, 6356992)]
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    capacity_coalesces_conservatively_and_fails_closed
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 8 filtered out; finished in 0.00s
+
