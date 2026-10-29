@@ -96,6 +96,21 @@ int devmap_scope_release(uint64_t token);
 uint64_t devmap_scope_token(void);
 unsigned devmap_scope_tables(void);
 
+/* USB.2-C1 read-only qualification BAR: the same exclusive scope lease, bound
+ * to a descriptor the qualifier builds from the selected function's current
+ * BAR. Only the fixed 16 KiB QEMU xHCI profile extent, naturally aligned, UC.
+ * devmap_check still rejects RAM, existing mappings (USB.1) and MAXPHYADDR.
+ * One fresh page table; the following guard page stays unmapped. Mapping is
+ * not device access: the caller reads registers only and never writes. */
+#define DEVMAP_SCOPE_XHCI_BAR   2u
+#define DEVMAP_XHCI_BAR_BYTES   16384ULL
+struct devmap_scope_region { unsigned kind; uint64_t pa, length; };
+int devmap_scope_acquire_region(const struct devmap_scope_region *r, int attr,
+                                uint64_t *token, uint64_t *va);
+/* Kind of the live scope lease (0 when none) and its window for that token. */
+unsigned devmap_scope_kind(void);
+int devmap_scope_extent(uint64_t token, uint64_t *va, uint64_t *length);
+
 /* Fault budgets apply only to the explicitly invoked fixture acquisition:
  * -1 unlimited; 0 fail before the next allocation. No legacy-map effects. */
 void devmap_scope_budget(int allocations);

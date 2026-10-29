@@ -46,13 +46,17 @@ def main():
         report['sanitizer'] = run([out/'sanitizer'], 'sanitizer.txt').strip()
         run(base + ['-O2', '-DUSB2B_BENCH'] + sources + ['-o', out/'release'], 'release-build.txt')
         report['release'] = run([out/'release'], 'release.txt').strip()
+        # USB.2-C1: the adapter uses the canonical crate::xhci tree, so tests
+        # mount both through a root exactly as the kernel crate does.
         module = ROOT/'arch/x86_64/rust/resource_ownership.rs'
-        run([args.rustc, '--edition=2024', '-Dwarnings', '--test', module, '-o', out/'rust-tests'],
-            'rust-build.txt')
+        tree = ROOT/'kernel/rust/usb/xhci/mod.rs'
+        run([args.rustc, '--edition=2024', '-Dwarnings', '--test', ROOT/'tests/rust/usb_platform.rs',
+             '-o', out/'rust-tests'], 'rust-build.txt')
         report['rust'] = run([out/'rust-tests'], 'rust-tests.txt').strip()
         for bound in ('Copy', 'Send', 'Sync'):
             src = out/(bound.lower()+'.rs')
-            src.write_text(f'#[path="{module}"] mod resource_ownership;\n'
+            src.write_text(f'#![allow(dead_code)]\n#[path="{tree}"] mod xhci;\n'
+                           f'#[path="{module}"] mod resource_ownership;\n'
                            f'fn require<T: {bound}>() {{}}\n'
                            'fn main(){require::<resource_ownership::Owned>();}\n')
             log = run([args.rustc, '--edition=2024', '-Dwarnings', src, '-o', out/bound],

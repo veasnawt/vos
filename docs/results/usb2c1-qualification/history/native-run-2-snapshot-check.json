@@ -1,0 +1,25 @@
+{
+  "run": "build/usb2c1-1/final-2/native-2 (retained, result.json passed=false)",
+  "result": "all 14 cases PASS; matrix-level uefi normal-vs-qualify register comparison FAIL",
+  "differences": {
+    "0x0058 CRCR": [
+      "0x674a241",
+      "0x6756241"
+    ],
+    "0x0070 DCBAAP": [
+      "0x674a000",
+      "0x6756000"
+    ],
+    "0x1030 ERSTBA": [
+      "0x674d240",
+      "0x6759240"
+    ],
+    "0x1038 ERDP": [
+      "0x674b240",
+      "0x6757240"
+    ]
+  },
+  "attribution": "in each UEFI boot every differing register equals the last value OVMF wrote before the VOS serial boundary; zero VOS register writes; OVMF placed its rings 0xC000 apart in the two boots",
+  "cause": "check assumed deterministic firmware ring placement across boots",
+  "correction": "per-boot provenance (snapshot == last firmware write, no VOS writes); cross-boot differences accepted only for firmware-written registers; production code unchanged"
+}

@@ -1,0 +1,24 @@
+{
+  "events": 45982,
+  "boundary_found": true,
+  "serial_bytes_reconstructed": 5451,
+  "boundary_event_index": 30319,
+  "before": {
+    "xhci_mmio_writes": 0,
+    "xhci_mmio_reads": 0,
+    "xhci_cfg_writes": 0,
+    "state_events": 0,
+    "other_cfg_writes": 290,
+    "xhci_read_events": 0,
+    "examples": {}
+  },
+  "vos": {
+    "xhci_mmio_writes": 0,
+    "xhci_mmio_reads": 0,
+    "xhci_cfg_writes": 0,
+    "state_events": 0,
+    "other_cfg_writes": 0,
+    "xhci_read_events": 0,
+    "examples": {}
+  }
+}

@@ -35,12 +35,13 @@ static int ready, pat_wc;
 static uint64_t uc_bits = PTE_PCD | PTE_PWT;
 
 /* Scope ownership survives caller errors/abandoned Rust handles. Newly owned
- * PTs occupy a fresh two-PDE span; shared preexisting tables are never freed.
- * No resources in this non-access fixture can become device-visible. */
+ * PTs occupy fresh PDEs; shared preexisting tables are never freed. The fixture
+ * spans two PDEs; the C1 qualification BAR occupies one. No scoped region
+ * publishes memory to a device; the BAR region is read-only by contract. */
 static struct {
     uint64_t token, generation, previous_va, va, pa, length;
     uint64_t tables[2];
-    unsigned indices[2], ntables, slot;
+    unsigned indices[2], ntables, slot, kind;
 } scope;
 static int scope_budget = -1;
 
@@ -53,6 +54,16 @@ static int scope_context(void)
 void devmap_scope_budget(int n) { scope_budget = n; }
 uint64_t devmap_scope_token(void) { return scope.token; }
 unsigned devmap_scope_tables(void) { return scope.ntables; }
+unsigned devmap_scope_kind(void) { return scope.token ? scope.kind : 0; }
+
+int devmap_scope_extent(uint64_t token, uint64_t *va, uint64_t *length)
+{
+    if (!va || !length) return DEVMAP_EINVAL;
+    *va = *length = 0;
+    if (!token || token != scope.token) return DEVMAP_ESTATE;
+    *va = scope.va; *length = scope.length;
+    return DEVMAP_OK;
+}
 
 static uint64_t page_down(uint64_t x)
 {
@@ -285,30 +296,21 @@ int devmap_scope_release(uint64_t token)
     return DEVMAP_OK;
 }
 
-int devmap_scope_acquire(unsigned region, uint64_t offset, uint64_t length,
-                         int attr, uint64_t *token, uint64_t *va)
+/* Common tail of both scoped regions, after region-specific validation and
+ * devmap_check. `start` selects fresh PDEs above every existing mapping. */
+static int scope_install(unsigned kind, uint64_t pa, uint64_t length, uint64_t start,
+                         const char *what, uint64_t *token, uint64_t *va)
 {
-    if (!token || !va) return DEVMAP_EINVAL;
-    *token = *va = 0;
-    if (!scope_context() || !ready || scope.token) return DEVMAP_ESTATE;
-    if (region != DEVMAP_SCOPE_FIXTURE || attr != DEVMAP_UC || !length ||
-        offset % PAGE_SIZE || length % PAGE_SIZE || offset > 16384 || length > 16384 - offset)
-        return DEVMAP_EINVAL;
-    uint64_t pa = 0x100000000ULL + offset;
-    int err = devmap_check(pa, length);
-    if (err) return err; /* includes RAM, aliases, MAXPHYADDR and overflow */
     if (count == DEVMAP_MAX || scope.generation == UINT64_MAX ||
         used_bytes + length > DEVMAP_MAX_BYTES)
         return DEVMAP_EFULL;
-    /* Fresh PTs give exact ownership, independent of framebuffer table sharing.
-     * At most two 4 KiB tables, even when the 16 KiB fixture straddles a PDE. */
-    uint64_t start = ((next_va + 0x1fffff) & ~0x1fffffULL) + 0x1ff000;
     if (start + length + PAGE_SIZE > DEVMAP_VA_END) return DEVMAP_EFULL;
     uint64_t *pd = phys_to_virt(pd_pa);
     unsigned first = (start >> 21) & 511, last = ((start + length - 1) >> 21) & 511;
     for (unsigned i = first; i <= last; i++) if (pd[i]) return DEVMAP_ESTATE;
     scope.previous_va = next_va;
     scope.va = start; scope.pa = pa; scope.length = length; scope.slot = count;
+    scope.kind = kind;
     /* Register before acquisition: even a failed rollback retains identifiers. */
     scope.token = ++scope.generation;
     for (unsigned i = first; i <= last; i++) {
@@ -335,10 +337,48 @@ int devmap_scope_acquire(unsigned region, uint64_t offset, uint64_t length,
         *pte_slot(start + off, 0) = (pa + off) | PTE_P | PTE_W | PTE_NX | uc_bits;
         invlpg(start + off);
     }
-    map[count++] = (struct devmap_entry){pa, pa + length, start, uc_bits, "USB.2-B no-access fixture"};
+    map[count++] = (struct devmap_entry){pa, pa + length, start, uc_bits, what};
     next_va = start + length + PAGE_SIZE; used_bytes += length;
     *token = scope.token; *va = start;
     return DEVMAP_OK;
+}
+
+int devmap_scope_acquire(unsigned region, uint64_t offset, uint64_t length,
+                         int attr, uint64_t *token, uint64_t *va)
+{
+    if (!token || !va) return DEVMAP_EINVAL;
+    *token = *va = 0;
+    if (!scope_context() || !ready || scope.token) return DEVMAP_ESTATE;
+    if (region != DEVMAP_SCOPE_FIXTURE || attr != DEVMAP_UC || !length ||
+        offset % PAGE_SIZE || length % PAGE_SIZE || offset > 16384 || length > 16384 - offset)
+        return DEVMAP_EINVAL;
+    uint64_t pa = 0x100000000ULL + offset;
+    int err = devmap_check(pa, length);
+    if (err) return err; /* includes RAM, aliases, MAXPHYADDR and overflow */
+    /* Fresh PTs give exact ownership, independent of framebuffer table sharing.
+     * At most two 4 KiB tables, even when the 16 KiB fixture straddles a PDE. */
+    uint64_t start = ((next_va + 0x1fffff) & ~0x1fffffULL) + 0x1ff000;
+    return scope_install(DEVMAP_SCOPE_FIXTURE, pa, length, start,
+                         "USB.2-B no-access fixture", token, va);
+}
+
+int devmap_scope_acquire_region(const struct devmap_scope_region *r, int attr,
+                                uint64_t *token, uint64_t *va)
+{
+    if (!token || !va) return DEVMAP_EINVAL;
+    *token = *va = 0;
+    if (!scope_context() || !ready || scope.token) return DEVMAP_ESTATE;
+    /* Only the fixed qualification profile extent, naturally aligned as a
+     * PCI BAR of that size must be. No arbitrary length or WC mapping. */
+    if (!r || r->kind != DEVMAP_SCOPE_XHCI_BAR || attr != DEVMAP_UC ||
+        r->length != DEVMAP_XHCI_BAR_BYTES || !r->pa || r->pa % r->length)
+        return DEVMAP_EINVAL;
+    int err = devmap_check(r->pa, r->length);
+    if (err) return err; /* RAM, existing mappings (USB.1), MAXPHYADDR, overflow */
+    /* One fresh 2 MiB-aligned PDE: exactly one owned PT, guard page included. */
+    uint64_t start = (next_va + 0x1fffff) & ~0x1fffffULL;
+    return scope_install(DEVMAP_SCOPE_XHCI_BAR, r->pa, r->length, start,
+                         "USB.2-C1 xHCI BAR read-only qualification", token, va);
 }
 
 uint64_t devmap_expected_pte(uint64_t va)

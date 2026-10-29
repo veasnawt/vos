@@ -1,0 +1,30 @@
+{
+  "commands": [
+    [
+      "gcc",
+      "-std=gnu11",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-ffunction-sections",
+      "-fdata-sections",
+      "-Wl,--gc-sections",
+      "-fno-pie",
+      "-no-pie",
+      "-Iarch/x86_64",
+      "-O1",
+      "-g",
+      "-fsanitize=address,undefined",
+      "-fno-omit-frame-pointer",
+      "tests/host/usb-resources.c",
+      "build/usb2c1-1/kernel-5/rust/libvos_kernel.a",
+      "-o",
+      "/home/veasnawt/src/vos-usb2c1/build/usb2c1-1/final/usb2b-host/sanitizer"
+    ]
+  ],
+  "rust_sanitized": false,
+  "native_hardware": false,
+  "archive_sha256": "c866b65a842d6585dcf39bb0fff8e877706e2ecf92350349ca949564d5acbfc1",
+  "status": "FAIL",
+  "error": "sanitizer-build.txt: exit 1, expected 0"
+}

@@ -1,0 +1,207 @@
+[2J[001;001H[=3h[2J[001;001H[2J[001;001H[8;040;128t[2J[001;001H[2J[001;001H[8;056;240t[2J[001;001HBdsDxe: loading Boot0002 "UEFI QEMU DVD-ROM QM00005 " from PciRoot(0x0)/Pci(0x1F,0x2)/Sata(0x2,0xFFFF,0x0)
+BdsDxe: starting Boot0002 "UEFI QEMU DVD-ROM QM00005 " from PciRoot(0x0)/Pci(0x1F,0x2)/Sata(0x2,0xFFFF,0x0)
+[H[J[1;1HHello from VOS!
+boot: x86_64 long mode, cs=0x8 efer=0xd00 rip=0xffffffff801072a8
+gdt: loaded cs=0x8 ss=0x10 tr=0x28 tss=busy
+tss: rsp0=0xffffffff80155000 ist1=0xffffffff8014c000 ist2=0xffffffff8014e000 ist3=0xffffffff80150000 iomap=104 limit=103
+idt: 32 exception vectors loaded, df ist=1, nmi ist=2, mc ist=3
+idt: IRQ vectors 0x20-0x2f present, DPL 0, interrupt gates
+idt: vector 0x80 present, DPL 3 (system calls, ABI v0)
+cpu: wp=on nx=on smep=unsupported umip=unsupported smap=unsupported x87=off(em)
+cpu: inherited cr0=0x80010033 cr4=0x668 efer=0xd00; set cr0=0x80010035 cr4=0x68 efer=0xd00
+boot: loader "GRUB 2.14-2ubuntu1", memory map 21 entries, 127713280 bytes usable
+boot: multiboot2 info at 0x9a000-0x9c050
+boot: kernel command line "vos.apps=1 vos.desktop=1 vos.gui=1 vos.pointer=1 vos.gui-verify=1"
+boot: modules 7
+boot: module 0 0x236000-0x2d7dc8 "vsh"
+boot: module 1 0x83000-0x86348 "hello"
+boot: module 2 0x2d8000-0x379b68 "rixie"
+boot: module 3 0x88000-0x8b840 "gui-demo"
+boot: module 4 0x8c000-0x91b30 "pointer-demo"
+boot: module 5 0x92000-0x95580 "gui-probe"
+boot: module 6 0x96000-0x99678 "pointer-probe"
+boot: reserved 0x0-0x100000 low 1 MiB
+boot: reserved 0x100000-0x1e0000 kernel image
+boot: reserved 0x9a000-0x9d000 multiboot2 info
+boot: reserved 0x236000-0x2d8000 module
+boot: reserved 0x83000-0x87000 module
+boot: reserved 0x2d8000-0x37a000 module
+boot: reserved 0x88000-0x8c000 module
+boot: reserved 0x8c000-0x92000 module
+boot: reserved 0x92000-0x96000 module
+boot: reserved 0x96000-0x9a000 module
+pmm: 262144 frames tracked below 1 GiB, 30472 usable (121888 KiB), 0 bytes of RAM above 1 GiB ignored
+vmm: identity map removed
+kmap: phys 0-4 MiB as 4 KiB pages: 48 text R-X, 13 R NX, 943 RW NX, 20 guard pages unmapped; 510 x 2 MiB RW NX
+kmap: text 0xffffffff80107000-0xffffffff80137000, rodata 0xffffffff80137000-0xffffffff80143000
+kmap: PDPT[510] 0x105000 -> 0x16a000, checked before and after the switch; boot directory retired
+kmap: after the TLB flush the CPU refused a text write (#PF err=0x3) and a guard read (#PF err=0x0)
+devmap: window at 0xffffffff40000000, 40-bit physical addresses, write-combining via PAT entry 4
+screen: framebuffer 1024x768 BGRX at 0x80000000, pitch 4096, write-combining, MTRR type 0, 124x39 cells
+vmm: audit passed: kernel alias 1004 x 4 KiB + 510 x 2 MiB supervisor pages, 48 ring-0 executable (all kernel text, none writable), 0 lower-half tables
+rust: kernel probe PASS; fn=0xffffffff801359e0 seed=0xffffffffb6c71021 salt=0xffffffff8004a910 result=0xde303edc75575663
+irq: 8259 master 0x20-0x27, slave 0x28-0x2f (cascade IRQ2); masks 0xfffe (IRQ0 only); level-triggered lines (ELCR) 0x0
+pit: channel 0 mode 2, divisor 11932 (99.998 Hz)
+sched: 16 thread records, 15 guarded stacks of 16 KiB at 0xffffffff8016d000; boot thread id 1, idle thread id 2
+vblk: virtio-blk at 00:0x2.0 id 0x1042 (modern), ready, 16384 sectors, queue 16 of 256, features VERSION_1 RO (offered 0x10130006e74), polled (interrupt line not level triggered (ELCR)), DMA pool 6 frames, no IOMMU
+catalog: ready 7 entries, 392 bytes; all executable source pages reserved
+catalog: vsh id=4097 ABI=4 policy=1 size=662984
+catalog: hello id=4098 ABI=0 policy=2 size=13128
+catalog: rixie id=4099 ABI=3 policy=3 size=662376
+catalog: gui-demo id=4100 ABI=5 policy=4 size=14400
+catalog: pointer-demo id=4102 ABI=5 policy=4 size=23344
+catalog: gui-probe id=4101 ABI=5 policy=4 size=13696
+catalog: pointer-probe id=4103 ABI=5 policy=4 size=13944
+app: module "hello" at 0x83000-0x86348, 13128 bytes
+elf: hello: ET_EXEC entry 0x400000, 3 PT_LOAD, 3 pages, VOS ABI 0
+user[hello]: Hello from VOS!
+proc: exit status 0 (cs=0x23 rip=0x40002a)
+proc[hello]: exited status 0, all frames reclaimed
+boot: checks passed
+desktop: scene ready; kernel-owned BGRX surface, bounded console viewport
+gui-bootstrap: rejected ELF 0 PASS; worker blocked, awakened and reaped; resources restored
+gui-bootstrap: rejected ELF 1 PASS; worker blocked, awakened and reaped; resources restored
+gui-bootstrap: rejected ELF 2 PASS; worker blocked, awakened and reaped; resources restored
+gui-bootstrap: rejected ELF 3 PASS; worker blocked, awakened and reaped; resources restored
+gui-bootstrap: rejected ELF 4 PASS; worker blocked, awakened and reaped; resources restored
+gui-bootstrap: rejected ELF 5 PASS; worker blocked, awakened and reaped; resources restored
+gui-bootstrap: rejected ELF 6 PASS; worker blocked, awakened and reaped; resources restored
+gui-bootstrap: rejected ELF 7 PASS; worker blocked, awakened and reaped; resources restored
+gui-bootstrap: rejected ELF 8 PASS; worker blocked, awakened and reaped; resources restored
+gui-bootstrap: rejected ELF 9 PASS; worker blocked, awakened and reaped; resources restored
+gui-bootstrap: rejected ELF 10 PASS; worker blocked, awakened and reaped; resources restored
+gui-bootstrap: rejected ELF 11 PASS; worker blocked, awakened and reaped; resources restored
+gui-bootstrap: rejected ELF 12 PASS; worker blocked, awakened and reaped; resources restored
+gui-bootstrap: rejected ELF 13 PASS; worker blocked, awakened and reaped; resources restored
+gui-bootstrap: rejected ELF 14 PASS; worker blocked, awakened and reaped; resources restored
+gui-bootstrap: rejected ELF 15 PASS; worker blocked, awakened and reaped; resources restored
+gui-bootstrap: rejected ELF 16 PASS; worker blocked, awakened and reaped; resources restored
+gui-bootstrap: rejected ELF 17 PASS; worker blocked, awakened and reaped; resources restored
+gui-bootstrap: 18 repeated load failures PASS; no retained workers
+user[gui-probe]: gui-probe: actual ABI5 ring-3 invocation
+proc: exit status 0 (cs=0x23 rip=0x40002a)
+gui-verify: case 0 PASS; no leaked frames/processes/threads
+user[gui-probe]: gui-probe: actual ABI5 ring-3 invocation
+proc: exit status 0 (cs=0x23 rip=0x40002a)
+gui-verify: case 1 PASS; no leaked frames/processes/threads
+user[gui-probe]: gui-probe: actual ABI5 ring-3 invocation
+proc: exit status 0 (cs=0x23 rip=0x40002a)
+gui-verify: case 2 PASS; no leaked frames/processes/threads
+user[gui-probe]: gui-probe: actual ABI5 ring-3 invocation
+proc: exit status 0 (cs=0x23 rip=0x40002a)
+gui-verify: case 3 PASS; no leaked frames/processes/threads
+user[gui-probe]: gui-probe: actual ABI5 ring-3 invocation
+proc: exit status 0 (cs=0x23 rip=0x40002a)
+gui-verify: case 4 PASS; no leaked frames/processes/threads
+user[gui-probe]: gui-probe: actual ABI5 ring-3 invocation
+proc: killed by #UD invalid opcode err=0x0 (cs=0x23 rip=0x4005ea)
+gui-verify: case 5 PASS; no leaked frames/processes/threads
+user[gui-probe]: gui-probe: actual ABI5 ring-3 invocation
+proc[gui-probe]: killed: GUI verification cancellation while blocked
+gui-verify: case 6 PASS; no leaked frames/processes/threads
+user[gui-probe]: gui-probe: actual ABI5 ring-3 invocation
+proc: exit status 0 (cs=0x23 rip=0x40002a)
+gui-verify: case 7 PASS; no leaked frames/processes/threads
+user[gui-probe]: gui-probe: actual ABI5 ring-3 invocation
+user[gui-probe]: gui-probe: OVERFLOW INPUT WINDOW
+user[gui-probe]: gui-probe: native overflow reported
+proc: exit status 0 (cs=0x23 rip=0x40002a)
+gui-verify: case 8 PASS; no leaked frames/processes/threads
+user[gui-probe]: gui-probe: actual ABI5 ring-3 invocation
+proc: exit status 0 (cs=0x23 rip=0x40002a)
+gui-verify: case 9 PASS; no leaked frames/processes/threads
+proc: exit status 0 (cs=0x23 rip=0x40023a)
+gui-verify: case 10 PASS; no leaked frames/processes/threads
+proc: exit status 0 (cs=0x23 rip=0x40023a)
+gui-verify: case 11 PASS; no leaked frames/processes/threads
+user[pointer-probe]: pointer-probe: OVERFLOW WINDOW
+user[pointer-probe]: pointer-probe: overflow snapshot PASS
+proc: exit status 0 (cs=0x23 rip=0x40023a)
+gui-verify: case 12 PASS; no leaked frames/processes/threads
+proc[pointer-probe]: killed: GUI verification cancellation while blocked
+gui-verify: case 13 PASS; no leaked frames/processes/threads
+proc: exit status 0 (cs=0x23 rip=0x40023a)
+gui-verify: case 14 PASS; no leaked frames/processes/threads
+user[gui-demo]: gui-demo: PRESENTED; Rust ring 3; a/b changes pixels; q exits
+user[gui-demo]: gui-demo: KEY a PRESENTED
+user[gui-demo]: gui-demo: KEY b PRESENTED
+user[gui-demo]: gui-demo: RELEASED; clean exit
+proc: exit status 0 (cs=0x23 rip=0x40002a)
+gui-verify: case 15 PASS; no leaked frames/processes/threads
+gui-verify: process exhaustion rollback PASS
+gui: native ABI5 demo; one surface <=163840 bytes; upload <=4096 bytes; event queue=16
+user[pointer-demo]: pointer-demo: READY; move mouse; left click changes panel; a/b palette; q exits
+user[pointer-demo]: pointer-demo: x=140 y=72 down=0 inside=1
+user[pointer-demo]: pointer-demo: LEFT DOWN
+user[pointer-demo]: pointer-demo: x=140 y=72 down=1 inside=1
+user[pointer-demo]: pointer-demo: LEFT UP
+user[pointer-demo]: pointer-demo: x=140 y=72 down=0 inside=1
+user[pointer-demo]: pointer-demo: x=124 y=80 down=0 inside=1
+user[pointer-demo]: pointer-demo: x=128 y=80 down=0 inside=1
+user[pointer-demo]: pointer-demo: x=129 y=80 down=0 inside=1
+user[pointer-demo]: pointer-demo: LEFT DOWN
+user[pointer-demo]: pointer-demo: x=129 y=80 down=1 inside=1
+user[pointer-demo]: pointer-demo: LEFT UP
+user[pointer-demo]: pointer-demo: x=129 y=80 down=0 inside=1
+user[pointer-demo]: pointer-demo: LEFT DOWN
+user[pointer-demo]: pointer-demo: x=129 y=80 down=1 inside=1
+user[pointer-demo]: pointer-demo: LEFT UP
+user[pointer-demo]: pointer-demo: x=129 y=80 down=0 inside=1
+user[pointer-demo]: pointer-demo: LEFT DOWN
+user[pointer-demo]: pointer-demo: x=129 y=80 down=1 inside=1
+user[pointer-demo]: pointer-demo: LEFT UP
+user[pointer-demo]: pointer-demo: x=129 y=80 down=0 inside=1
+user[pointer-demo]: pointer-demo: LEFT DOWN
+user[pointer-demo]: pointer-demo: x=129 y=80 down=1 inside=1
+user[pointer-demo]: pointer-demo: LEFT UP
+user[pointer-demo]: pointer-demo: x=129 y=80 down=0 inside=1
+user[pointer-demo]: pointer-demo: KEY a
+user[pointer-demo]: pointer-demo: KEY b
+user[pointer-demo]: pointer-demo: LEFT DOWN
+user[pointer-demo]: pointer-demo: x=129 y=80 down=1 inside=1
+user[pointer-demo]: pointer-demo: RELEASED
+proc: exit status 0 (cs=0x23 rip=0x4005cc)
+gui: PASS; kernel-CR3 reclamation, all resources restored
+user[vsh]: VOS native vsh (Rust, ring 3)
+user[vsh]: Type help for commands.
+user[vsh]: 
+user[vsh]: VOS> 
+apps
+user[vsh]: hello
+user[vsh]: 
+user[vsh]: rixie
+user[vsh]: 
+user[vsh]: VOS> 
+hello
+console: foreground child 28
+user[hello]: Hello from VOS!
+proc: exit status 0 (cs=0x23 rip=0x40002a)
+console: restored parent 27
+user[vsh]: VOS> 
+rixie
+console: foreground child 29
+user[rixie]: Rixie Core v0 - deterministic offline prototype
+user[rixie]: I use predefined replies, not a conversational AI model.
+user[rixie]: Type help for topics; exit ends this session.
+user[rixie]: 
+user[rixie]: Rixie> 
+about
+user[rixie]: Rixie Core v0 is an independent Rust ring-3 application in VOS.
+user[rixie]: I am a deterministic prototype with no conversational AI model or network.
+user[rixie]: Rixie> 
+exit
+user[rixie]: Goodbye from Rixie.
+proc: exit status 0 (cs=0x23 rip=0x40002a)
+console: restored parent 27
+user[vsh]: VOS> 
+echo input restored
+user[vsh]: input restored
+user[vsh]: 
+user[vsh]: VOS> 
+pwd
+user[vsh]: /
+user[vsh]: 
+user[vsh]: VOS> 
+exit
+proc: exit status 0 (cs=0x23 rip=0x40002a)
+native: vsh PASS, process reclaimed

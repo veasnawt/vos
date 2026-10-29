@@ -128,10 +128,13 @@ Current limits include QEMU-only BIOS/OVMF validation, RAM tracked below 1 GiB,
 read-only trusted media, bounded single-endpoint networking, polling limitations
 and standard PS/2 keyboard/primary-button mouse input. USB input, production
 networking, writable storage, installation and Secure Boot are not implemented.
-This branch's [R2-B Rust PS/2 pointer decoder](docs/results/r2b-ps2-pointer-rust.md)
-is verified in QEMU for review; it does not add USB input or fix physical
-USB-keyboard/mouse PCs. Further Rust kernel migration and broader hardware
-portability remain proposed tracks requiring separate authorization.
+The [R2-B Rust PS/2 pointer decoder](docs/results/r2b-ps2-pointer-rust.md) is
+merged through PR #26; it does not add USB input or fix physical
+USB-keyboard/mouse PCs. This branch's
+[USB.2-C1 read-only xHCI qualification](docs/results/usb2c1-qualification.md)
+is verified in QEMU for review: it inspects the emulated QEMU controller only and
+writes no PCI or controller register. Further Rust kernel migration and broader
+hardware portability remain proposed tracks requiring separate authorization.
 
 The separate [Veasna OS React/Electron prototype](https://github.com/veasnawt/veasna-os)
 is not a graphical environment running on this kernel. Design mockups are not

@@ -207,9 +207,15 @@ activation remains separately authorized future work. USB.1's original evidence
 is preserved.
 
 The first R2 increment, the [R2-B Rust PS/2 pointer decoder](results/r2b-ps2-pointer-rust.md),
-is implemented and verified in this PR candidate, not yet accepted. Only the
+is merged through PR #26 at `d8edfcec643e541cc882062e5121175b50778f89`. Only the
 pure packet/idle decoder moved to Rust; the PS/2 controller, routing and GUI
 delivery remain C. Further R2 drivers and R3-R5 remain separately authorized.
+
+[USB.2-C1](results/usb2c1-qualification.md), the first USB.2-C increment, is
+implemented and verified in this PR candidate, not yet accepted: one canonical
+Rust USB tree, the USB.2-A controller linked but never instantiated, and opt-in
+read-only qualification of the QEMU xHCI profile through a releasable BAR lease.
+C2 (DMA ownership) and later increments require separate authorization.
 This status update grants no implementation authority.
 Unrelated bug fixes, boot-media work and desktop planning need not
 wait for the full migration. Hardware and migration work coordinate when sharing

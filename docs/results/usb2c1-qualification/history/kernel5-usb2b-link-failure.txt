@@ -1,0 +1,3 @@
+/usr/bin/x86_64-linux-gnu-ld.bfd: build/usb2c1-1/kernel-5/rust/libvos_kernel.a(libvos_kernel.vos_kernel.45b20e7284a592af-cgu.0.rcgu.o): in function `core::ptr::drop_glue::<vos_kernel::resource_ownership::Owned>':
+vos_kernel.45b20e7284a592af-cgu.0:(.text._RINvNtCs5DY3uuhqWn8_4core3ptr9drop_glueNtNtCs5YZeFliBs6N_10vos_kernel18resource_ownership5OwnedEBF_+0x18): undefined reference to `xhci_qualify_bar_retain'
+collect2: error: ld returned 1 exit status

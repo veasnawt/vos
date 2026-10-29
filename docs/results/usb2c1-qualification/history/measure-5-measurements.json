@@ -1,0 +1,340 @@
+{
+  "budget_text_rodata_bytes": 20480,
+  "input_sections_baseline": {
+    ".text": 176913,
+    ".rodata": 41655,
+    ".data": 184,
+    ".bss": 582448
+  },
+  "input_sections_candidate": {
+    ".text": 193263,
+    ".rodata": 44660,
+    ".data": 184,
+    ".bss": 582504
+  },
+  "input_section_delta": {
+    ".text": 16350,
+    ".rodata": 3005,
+    ".data": 0,
+    ".bss": 56
+  },
+  "text_rodata_growth_bytes": 19355,
+  "within_budget": true,
+  "bss_growth_bytes": 56,
+  "bss_within_256": true,
+  "per_object_delta": {
+    ".bss devmap.o": 32,
+    ".bss xhci_qualify.o": 24,
+    ".rodata kernel.o": 1317,
+    ".rodata rust": 659,
+    ".rodata xhci_qualify.o": 1029,
+    ".text devmap.o": 544,
+    ".text kernel.o": 224,
+    ".text rust": 13374,
+    ".text xhci_qualify.o": 2208
+  },
+  "pt_load_baseline": [
+    {
+      "vaddr": "0x0000000000100000",
+      "filesz": 4096,
+      "memsz": 4096,
+      "flags": "R E"
+    },
+    {
+      "vaddr": "0x0000000000101000",
+      "filesz": 40,
+      "memsz": 24576,
+      "flags": "RW"
+    },
+    {
+      "vaddr": "0xffffffff80107000",
+      "filesz": 180224,
+      "memsz": 180224,
+      "flags": "R E"
+    },
+    {
+      "vaddr": "0xffffffff80133000",
+      "filesz": 45056,
+      "memsz": 45056,
+      "flags": "R"
+    },
+    {
+      "vaddr": "0xffffffff8013e000",
+      "filesz": 184,
+      "memsz": 598016,
+      "flags": "RW"
+    }
+  ],
+  "pt_load_candidate": [
+    {
+      "vaddr": "0x0000000000100000",
+      "filesz": 4096,
+      "memsz": 4096,
+      "flags": "R E"
+    },
+    {
+      "vaddr": "0x0000000000101000",
+      "filesz": 40,
+      "memsz": 24576,
+      "flags": "RW"
+    },
+    {
+      "vaddr": "0xffffffff80107000",
+      "filesz": 196608,
+      "memsz": 196608,
+      "flags": "R E"
+    },
+    {
+      "vaddr": "0xffffffff80137000",
+      "filesz": 45056,
+      "memsz": 45056,
+      "flags": "R"
+    },
+    {
+      "vaddr": "0xffffffff80142000",
+      "filesz": 216,
+      "memsz": 598016,
+      "flags": "RW"
+    }
+  ],
+  "pt_load_delta": [
+    {
+      "filesz": 0,
+      "memsz": 0,
+      "flags": "R E"
+    },
+    {
+      "filesz": 0,
+      "memsz": 0,
+      "flags": "RW"
+    },
+    {
+      "filesz": 16384,
+      "memsz": 16384,
+      "flags": "R E"
+    },
+    {
+      "filesz": 0,
+      "memsz": 0,
+      "flags": "R"
+    },
+    {
+      "filesz": 32,
+      "memsz": 0,
+      "flags": "RW"
+    }
+  ],
+  "pt_load_total_memsz_delta": 16384,
+  "linked_controller_symbols": [
+    "_RINvMs0_NtNtCs5YZeFliBs6N_10vos_kernel4xhci10controllerNtB6_10Controller4joinNtNtBa_9xhci_link8RefusingEBa_",
+    "_RINvMs0_NtNtCs5YZeFliBs6N_10vos_kernel4xhci10controllerNtB6_10Controller4pollNtNtBa_9xhci_link8RefusingEBa_",
+    "_RINvMs0_NtNtCs5YZeFliBs6N_10vos_kernel4xhci10controllerNtB6_10Controller4stopNtNtBa_9xhci_link8RefusingEBa_",
+    "_RINvMs0_NtNtCs5YZeFliBs6N_10vos_kernel4xhci10controllerNtB6_10Controller7acquireNtNtBa_9xhci_link8RefusingEBa_",
+    "_RINvMs0_NtNtCs5YZeFliBs6N_10vos_kernel4xhci10controllerNtB6_10Controller7prepareNtNtBa_9xhci_link8RefusingEBa_",
+    "_RINvMs0_NtNtCs5YZeFliBs6N_10vos_kernel4xhci10controllerNtB6_10Controller7releaseNtNtBa_9xhci_link8RefusingEBa_",
+    "_RNCINvMs0_NtNtCs5YZeFliBs6N_10vos_kernel4xhci10controllerNtB8_10Controller4stepNtNtBc_9xhci_link8RefusingE0Bc_",
+    "_RNCINvMs0_NtNtCs5YZeFliBs6N_10vos_kernel4xhci10controllerNtB8_10Controller4stepNtNtBc_9xhci_link8RefusingEs3_0Bc_",
+    "_RNCINvMs0_NtNtCs5YZeFliBs6N_10vos_kernel4xhci10controllerNtB8_10Controller4stepNtNtBc_9xhci_link8RefusingEs_0Bc_",
+    "_RNvNtCs5YZeFliBs6N_10vos_kernel9xhci_link4step",
+    "_RNvNtCs5YZeFliBs6N_10vos_kernel9xhci_link4stop",
+    "_RNvNtCs5YZeFliBs6N_10vos_kernel9xhci_link5start",
+    "_RNvNtCs5YZeFliBs6N_10vos_kernel9xhci_link6submit",
+    "_RNvNtCs5YZeFliBs6N_10vos_kernel9xhci_link7qualify",
+    "vos_xhci_controller_link_v1"
+  ],
+  "controller_symbol_bytes": 6546,
+  "kernel_map_excerpt": [
+    " .text.vos_xhci_controller_link_v1",
+    "                0xffffffff801353d0      0x188 build/usb2c1-1/kernel-5/rust/libvos_kernel.a(libvos_kernel.vos_kernel.45b20e7284a592af-cgu.0.rcgu.o)",
+    "                0xffffffff801353d0                vos_xhci_controller_link_v1",
+    " .text.vos_xhci_qualify_v1",
+    "                0xffffffff80135560      0xc86 build/usb2c1-1/kernel-5/rust/libvos_kernel.a(libvos_kernel.vos_kernel.45b20e7284a592af-cgu.0.rcgu.o)",
+    "                0xffffffff80135560                vos_xhci_qualify_v1"
+  ],
+  "rust_stack_frames_bytes": {
+    "vos_xhci_controller_link_v1": 488,
+    "_RNvNtNtCs5YZeFliBs6N_10vos_kernel4xhci12capabilities7inspect": 328,
+    "vos_xhci_qualify_v1": 312,
+    "xhci_qualify_boot": 296,
+    "_RNvNtCs5YZeFliBs6N_10vos_kernel9xhci_link7qualify": 152,
+    "scope_install": 120,
+    "_RINvMs0_NtNtCs5YZeFliBs6N_10vos_kernel4xhci10controllerNtB6_10Controller4pollNtNtBa_9xhci_link8RefusingEBa_": 112,
+    "_RINvMs0_NtNtCs5YZeFliBs6N_10vos_kernel4xhci10controllerNtB6_10Controller7acquireNtNtBa_9xhci_link8RefusingEBa_": 104,
+    "_RNCNvNtNtCs5YZeFliBs6N_10vos_kernel4xhci12capabilities7inspect0B7_": 96,
+    "devmap_scope_acquire": 80,
+    "_RINvNtNtCs5YZeFliBs6N_10vos_kernel4xhci7qualify4walkNtNtB6_12xhci_qualify9PciConfigEB6_": 72,
+    "xhci_qualify_bar_acquire": 72,
+    "bring_up.isra.0": 64,
+    "devmap_scope_acquire_region": 64,
+    "_RINvNtNtCs5YZeFliBs6N_10vos_kernel4xhci7qualify7observeNtNtB6_12xhci_qualify9PciConfigEB6_": 56,
+    "xhci_qualify_bar_read32": 56,
+    "_RINvMs0_NtNtCs5YZeFliBs6N_10vos_kernel4xhci10controllerNtB6_10Controller7releaseNtNtBa_9xhci_link8RefusingEBa_": 49,
+    "devmap_scope_release": 40,
+    "vos_xhci_copy_caps": 40,
+    "_RINvMs0_NtNtCs5YZeFliBs6N_10vos_kernel4xhci10controllerNtB6_10Controller4joinNtNtBa_9xhci_link8RefusingEBa_": 24,
+    "_RINvMs0_NtNtCs5YZeFliBs6N_10vos_kernel4xhci10controllerNtB6_10Controller7prepareNtNtBa_9xhci_link8RefusingEBa_": 24,
+    "xhci_qualify_config32": 24,
+    "_RINvMs0_NtNtCs5YZeFliBs6N_10vos_kernel4xhci10controllerNtB6_10Controller4stopNtNtBa_9xhci_link8RefusingEBa_": 8,
+    "_RNCINvMs0_NtNtCs5YZeFliBs6N_10vos_kernel4xhci10controllerNtB8_10Controller4stepNtNtBc_9xhci_link8RefusingEs3_0Bc_": 8,
+    "_RNvXNtCs5YZeFliBs6N_10vos_kernel12xhci_qualifyNtB2_9PciConfigNtNtNtB4_4xhci7qualify6Config6read32": 8,
+    "_RNvXs_NtCs5YZeFliBs6N_10vos_kernel12xhci_qualifyNtB4_8BarWordsNtNtNtB6_4xhci12capabilities5Words4word": 8,
+    "xhci_qualify_bar_release": 8,
+    "_RNCINvMs0_NtNtCs5YZeFliBs6N_10vos_kernel4xhci10controllerNtB8_10Controller4stepNtNtBc_9xhci_link8RefusingEs_0Bc_": 2,
+    "_RNCINvMs0_NtNtCs5YZeFliBs6N_10vos_kernel4xhci10controllerNtB8_10Controller4stepNtNtBc_9xhci_link8RefusingE0Bc_": 1,
+    "_RNvNtCs5YZeFliBs6N_10vos_kernel12xhci_qualify6finish": 0,
+    "_RNvNtNtCs5YZeFliBs6N_10vos_kernel4xhci7qualify13check_profile": 0,
+    "_RNvXs_NtNtCs5YZeFliBs6N_10vos_kernel4xhci12capabilitiesNtB4_5BytesNtB4_5Words4word": 0,
+    "devmap_scope_budget": 0,
+    "devmap_scope_extent": 0,
+    "devmap_scope_kind": 0,
+    "devmap_scope_tables": 0,
+    "devmap_scope_token": 0,
+    "scope_install.cold": 0,
+    "xhci_qualify_bar_retain": 0,
+    "xhci_qualify_conflict": 0
+  },
+  "rust_max_frame_bytes": 488,
+  "c_stack_usage_bytes": {
+    "xhci_qualify_boot (xhci_qualify.c)": [
+      304,
+      "static"
+    ],
+    "devmap_map (devmap.c)": [
+      144,
+      "static"
+    ],
+    "scope_install (devmap.c)": [
+      128,
+      "static"
+    ],
+    "devmap_scope_acquire (devmap.c)": [
+      96,
+      "dynamic,bounded"
+    ],
+    "usb_resources_verify (usb_resources.c)": [
+      96,
+      "static"
+    ],
+    "xhci_qualify_bar_acquire (xhci_qualify.c)": [
+      80,
+      "static"
+    ],
+    "devmap_scope_acquire_region (devmap.c)": [
+      80,
+      "dynamic,bounded"
+    ],
+    "xhci_qualify_bar_read32 (xhci_qualify.c)": [
+      64,
+      "static"
+    ],
+    "usb_resource_acquire (usb_resources.c)": [
+      64,
+      "static"
+    ],
+    "devmap_audit.part.0 (devmap.c)": [
+      48,
+      "static"
+    ],
+    "devmap_scope_release (devmap.c)": [
+      48,
+      "static"
+    ],
+    "worker_start (usb_resources.c)": [
+      48,
+      "static"
+    ],
+    "devmap_mtrr_type (devmap.c)": [
+      40,
+      "static"
+    ],
+    "visit (xhci_qualify.c)": [
+      32,
+      "static"
+    ],
+    "xhci_qualify_config32 (xhci_qualify.c)": [
+      32,
+      "static"
+    ],
+    "devmap_init (devmap.c)": [
+      32,
+      "static"
+    ],
+    "usb_resource_release (usb_resources.c)": [
+      32,
+      "static"
+    ],
+    "xhci_qualify_bar_release (xhci_qualify.c)": [
+      16,
+      "static"
+    ],
+    "fixture_worker (usb_resources.c)": [
+      16,
+      "static"
+    ],
+    "xhci_qualify_bar_retain (xhci_qualify.c)": [
+      8,
+      "static"
+    ],
+    "xhci_qualify_conflict (xhci_qualify.c)": [
+      8,
+      "static"
+    ],
+    "devmap_scope_budget (devmap.c)": [
+      8,
+      "static"
+    ],
+    "devmap_scope_token (devmap.c)": [
+      8,
+      "static"
+    ],
+    "devmap_scope_tables (devmap.c)": [
+      8,
+      "static"
+    ],
+    "devmap_scope_kind (devmap.c)": [
+      8,
+      "static"
+    ],
+    "devmap_scope_extent (devmap.c)": [
+      8,
+      "static"
+    ],
+    "devmap_strerror (devmap.c)": [
+      8,
+      "static"
+    ],
+    "devmap_maxphys (devmap.c)": [
+      8,
+      "static"
+    ],
+    "devmap_wc_available (devmap.c)": [
+      8,
+      "static"
+    ],
+    "devmap_count (devmap.c)": [
+      8,
+      "static"
+    ],
+    "devmap_table_frames (devmap.c)": [
+      8,
+      "static"
+    ],
+    "devmap_check (devmap.c)": [
+      8,
+      "static"
+    ],
+    "devmap_expected_pte (devmap.c)": [
+      8,
+      "static"
+    ],
+    "devmap_audit (devmap.c)": [
+      8,
+      "static"
+    ],
+    "usb_resource_retain (usb_resources.c)": [
+      8,
+      "static"
+    ]
+  },
+  "c_max_frame_bytes": 304
+}
