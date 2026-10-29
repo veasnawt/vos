@@ -1,0 +1,15 @@
+bios-normal-qemu-xhci PASS
+bios-qualify-qemu-xhci PASS
+bios-conflict-qemu-xhci PASS
+bios-probe-qemu-xhci PASS
+bios-qualify-none PASS
+bios-qualify-two-xhci PASS
+bios-qualify-nec-xhci PASS
+uefi-normal-qemu-xhci PASS
+uefi-qualify-qemu-xhci PASS
+uefi-conflict-qemu-xhci PASS
+uefi-probe-qemu-xhci PASS
+uefi-qualify-none PASS
+uefi-qualify-two-xhci PASS
+uefi-qualify-nec-xhci PASS
+exit=0

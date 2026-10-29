@@ -1,0 +1,10 @@
+{
+  "run": "first hosted C2 harness run (stdout only)",
+  "result": "FAIL: clean scenario expectation; adapter 32,815 checks PASS",
+  "cause": "harness expected allocated=11/prepared=10/released=10; the exercise correctly reports 12/12/11 (4 set + 6 injection-round pages + 1 transition + 1 quarantine; 11 released)",
+  "earlier": [
+    "linker error: missing boot_mmap_entry stub in the new harness",
+    "pure Rust test file compile error (double mutable borrow in a test helper call)"
+  ],
+  "production_code_changed": false
+}

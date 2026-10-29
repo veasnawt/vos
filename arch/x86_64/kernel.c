@@ -35,6 +35,7 @@
 #include "resv.h"
 #include "rust_kernel.h"
 #include "usb_resources.h"
+#include "usb_dma.h"
 #include "screen.h"
 #include "desktop.h"
 #include "gui_verify.h"
@@ -302,6 +303,8 @@ void kernel_main(uint32_t mb2_magic, uint32_t mb2_info)
     /* Opt-in, read-only; a fail-closed rejection is a diagnostic, not a fault. */
     if (!usb_conflict)
         check(xhci_qualify_boot(bi.cmdline), "USB.2-C1 read-only xHCI qualification integrity");
+    /* Opt-in, software-only DMA ownership exercise; no device access. */
+    check(usb_dma_boot(bi.cmdline), "USB.2-C2 DMA ownership exercise");
     /* N3.1: the first virtio-blk device on PCI bus 0, read-only and polled; its absence is not an error. */
     vblk_init();
 

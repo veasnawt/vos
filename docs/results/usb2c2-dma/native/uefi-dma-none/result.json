@@ -1,0 +1,56 @@
+{
+  "case": "uefi-dma-none",
+  "firmware": "uefi",
+  "mode": "dma",
+  "device": "none",
+  "passed": true,
+  "report": {
+    "set_frame": "0x1dd000",
+    "retained_frame": "0x1da000",
+    "allocated": "0xc",
+    "prepared": "0xc",
+    "released": "0xb",
+    "quarantined": "0x1",
+    "active_now": "0x0",
+    "retained_now": "0x1",
+    "allocation_failures": "0x5",
+    "rollback_failures": "0x0",
+    "violations": "0x2",
+    "budget_refused": "0x1",
+    "nondma_refused": "0x1",
+    "wrong_state_refused": "0x1",
+    "injected_steps": "0x4",
+    "retained_state": "0x5",
+    "frames_held": "0x1",
+    "pmm_before": "0x770e",
+    "pmm_after": "0x770d",
+    "cs": "0x23",
+    "rip": "0x40002a"
+  },
+  "set_frames": [
+    1941504,
+    1945600,
+    1949696,
+    1953792
+  ],
+  "xhci_functions": [],
+  "serial_sha256": "759826afa5d2d5d9d1eb17ef5f2b01788c0f4fec7198db46ecbdfe7c221dac53",
+  "trace_sha256": "11ad50b541fe12352cc46540f1a74701b8aeadb25fd1223310c9482ce7b93ad7",
+  "trace_bytes": 4954370,
+  "trace_vos": {
+    "xhci_mmio_writes": 0,
+    "xhci_mmio_reads": 0,
+    "xhci_cfg_writes": 0,
+    "state_events": 0,
+    "other_cfg_writes": 0,
+    "xhci_read_events": 0
+  },
+  "trace_before_positive_control": {
+    "xhci_mmio_writes": 0,
+    "xhci_mmio_reads": 0,
+    "xhci_cfg_writes": 0,
+    "state_events": 0,
+    "other_cfg_writes": 290,
+    "xhci_read_events": 0
+  }
+}

@@ -1,0 +1,121 @@
+{
+  "case": "uefi-qualify-two-xhci",
+  "firmware": "uefi",
+  "mode": "qualify",
+  "device": "two-xhci",
+  "passed": true,
+  "verdict": [
+    "REJECTED",
+    "ambiguous xHCI candidates"
+  ],
+  "report": {
+    "base": "0x0",
+    "candidates": "0x2",
+    "complete": "0x1",
+    "vendor": "0x0",
+    "device": "0x0",
+    "class_revision": "0x0",
+    "pci_status": "0x0",
+    "bar_low": "0x0",
+    "bar_high": "0x0",
+    "bar_bits": "0x0",
+    "pci_caps": "0x0",
+    "pm_offset": "0x0",
+    "pmcsr_before": "0x0",
+    "power_state": "0x0",
+    "msi_offset": "0x0",
+    "msi_control_before": "0x0",
+    "msix_offset": "0x0",
+    "msix_control_before": "0x0",
+    "msix_table": "0x0",
+    "msix_pba": "0x0",
+    "command_before": "0x0",
+    "version": "0x0",
+    "caplength": "0x0",
+    "hcs1": "0x0",
+    "hcs2": "0x0",
+    "hcc1": "0x0",
+    "doorbell": "0x0",
+    "runtime": "0x0",
+    "pagesize": "0x0",
+    "xecp_headers": "0x0",
+    "protocol_ports": "0x0",
+    "usb1_compatible": "0x0",
+    "legacy_offset": "0x0",
+    "usblegsup_before": "0x0",
+    "usblegctlsts_before": "0x0",
+    "usblegsup_after": "0x0",
+    "usblegctlsts_after": "0x0",
+    "usbcmd_before": "0x0",
+    "usbsts_before": "0x0",
+    "usbcmd_after": "0x0",
+    "usbsts_after": "0x0",
+    "command_after": "0x0",
+    "bar_low_after": "0x0",
+    "bar_high_after": "0x0",
+    "pmcsr_after": "0x0",
+    "msi_control_after": "0x0",
+    "msix_control_after": "0x0",
+    "mmio_reads": "0x0",
+    "lease_acquired": "0x0",
+    "lease_released": "0x0",
+    "cs": "0x23",
+    "rip": "0x40002a"
+  },
+  "xhci_functions": [
+    {
+      "bus": 0,
+      "slot": 2,
+      "function": 0,
+      "vendor": 6966,
+      "device": 13,
+      "regions": [
+        {
+          "prefetch": false,
+          "mem_type_64": true,
+          "bar": 0,
+          "size": 16384,
+          "address": 824633737216,
+          "type": "memory"
+        }
+      ]
+    },
+    {
+      "bus": 0,
+      "slot": 3,
+      "function": 0,
+      "vendor": 6966,
+      "device": 13,
+      "regions": [
+        {
+          "prefetch": false,
+          "mem_type_64": true,
+          "bar": 0,
+          "size": 16384,
+          "address": 824633720832,
+          "type": "memory"
+        }
+      ]
+    }
+  ],
+  "passed_guest": true,
+  "serial_sha256": "fa059baba3c0c71420b44c91d56d947169a745fac075926733633c90945bada0",
+  "trace_sha256": "db2cc27e6696c92e53b50b22f9e7a8024a1169f43dc1fe4eb7fcf24906d3df5f",
+  "trace_bytes": 4269163,
+  "trace_vos": {
+    "xhci_mmio_writes": 0,
+    "xhci_mmio_reads": 0,
+    "xhci_cfg_writes": 0,
+    "state_events": 0,
+    "other_cfg_writes": 0,
+    "xhci_read_events": 0
+  },
+  "trace_before_positive_control": {
+    "xhci_mmio_writes": 110,
+    "xhci_mmio_reads": 36,
+    "xhci_cfg_writes": 58,
+    "state_events": 406,
+    "other_cfg_writes": 348,
+    "xhci_read_events": 306
+  }
+}

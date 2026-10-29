@@ -1,0 +1,18 @@
+{
+  "vsh": {
+    "path": "/home/veasnawt/src/myos/build/app-console-20261025T051241Z/attempt-1/image/user/vsh.elf",
+    "sha256": "e7af3ee56164f587f7ca1338f7ddfcb202b6f4310f10b4dcba6a2576743cb181"
+  },
+  "hello": {
+    "path": "/home/veasnawt/src/myos/build/app-console-20261025T051241Z/attempt-1/image/user/hello.elf",
+    "sha256": "c6c6416195a0f18d680d7f8f19be52ce02ff02912ef3bac45324fbe88006cd06"
+  },
+  "rixie": {
+    "path": "/home/veasnawt/src/myos/build/app-console-20261025T051241Z/attempt-1/image/user/rixie.elf",
+    "sha256": "77104da3b33caf809daf5e6674ac4e2fa9edf6a9e2e5dd59828514df76490d32"
+  },
+  "gui-demo": {
+    "path": "/home/veasnawt/src/myos/build/n6-gui-20261025T083036Z/image-recipe-recovery-1/image/user/gui-demo.elf",
+    "sha256": "f114dbe666ff479229ce851658847a4b11b5f0e5b61f45b73d8a0ee39fc57faa"
+  }
+}

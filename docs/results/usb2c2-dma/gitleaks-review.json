@@ -1,0 +1,17 @@
+{
+  "first_CI_run": "https://github.com/veasnawt/vos/actions/runs/40796550859",
+  "pull_request": "https://github.com/veasnawt/vos/pull/28",
+  "initial_outcome": "FAIL, one generic-api-key finding (Gitleaks 8.30.1, redacted CI output reports the count only)",
+  "identification": "The pinned Gitleaks binary was not run locally (blocked by the session permission policy). The generic-api-key pattern with its 3.5 entropy threshold was applied to the C2 diff and matched exactly one line, consistent with the CI count.",
+  "reviewed_findings": [
+    {
+      "fingerprint": "73882eecc94ef6428ee9d3eee9baf51e70cebcb4:docs/results/usb2c2-dma/manifest.json:generic-api-key:32",
+      "line": 32,
+      "trigger": "the evidence file name cf-raw-frame-access.txt contains the rule keyword \"access\"; the value after it is that file's SHA-256 digest",
+      "sha256": "1114571bd07367d2599f53cb0810d8fcbe3d9b5c154dde6131f9d1f931c90114",
+      "matches_committed_file": true,
+      "classification": "false positive: SHA-256 of a committed compile-fail control log, not a credential"
+    }
+  ],
+  "remedy": "exact immutable commit/file/rule/line entry in .gitleaksignore, following the USB.1 precedent; no path, rule or future-commit exemption; history not rewritten"
+}

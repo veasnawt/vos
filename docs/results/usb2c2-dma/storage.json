@@ -1,0 +1,16 @@
+{
+  "windows_c_free_preflight_bytes": 23466467328,
+  "windows_c_free_final_bytes": 23463133184,
+  "reserve_bytes": 21474836480,
+  "headroom_above_reserve_final_bytes": 1988296704,
+  "reserve_satisfied": true,
+  "provision_bytes": 734003200,
+  "stop_threshold_bytes": 660602880,
+  "build_tree_logical_bytes_final": 415657984,
+  "within_provision": true,
+  "below_stop_threshold": true,
+  "provision_changed_during_execution": false,
+  "basis": "C1 unit costs (kernel 15 MB, 14-boot native 101 MB, R2-B native 43 MB, hosted ~80 MB); recorded before implementation",
+  "deletions": 0,
+  "cleanup_or_compaction": false
+}

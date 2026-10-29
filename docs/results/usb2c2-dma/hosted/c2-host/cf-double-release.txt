@@ -1,0 +1,11 @@
+error[E0382]: use of moved value: `page`
+  --> /home/veasnawt/src/vos-usb2c2/build/usb2c2-1/final/c2-host/cf-double-release.rs:10:61
+   |
+ 9 |  let page = p.allocate(&mut f, Kind::Command).unwrap();
+   |      ---- move occurs because `page` has type `Page`, which does not implement the `Copy` trait
+10 |  let _ = p.release(&mut f, page); let _ = p.release(&mut f, page); }
+   |                            ---- value moved here            ^^^^ value used here after move
+
+error: aborting due to 1 previous error
+
+For more information about this error, try `rustc --explain E0382`.

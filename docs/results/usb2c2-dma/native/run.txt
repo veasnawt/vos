@@ -1,0 +1,9 @@
+bios-normal-qemu-xhci PASS
+bios-dma-qemu-xhci PASS
+bios-both-qemu-xhci PASS
+bios-dma-none PASS
+uefi-normal-qemu-xhci PASS
+uefi-dma-qemu-xhci PASS
+uefi-both-qemu-xhci PASS
+uefi-dma-none PASS
+exit=0
