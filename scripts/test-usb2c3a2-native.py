@@ -22,6 +22,7 @@ SP, removed from tag-6 available RAM. Firmware xHCI and AHCI DMA pointers are
 read through HMP with read tracing off and checked against the PMM bits.
 """
 import argparse
+import gzip
 import hashlib
 import importlib.util
 import json
@@ -31,6 +32,7 @@ import shutil
 import subprocess
 import threading
 import time
+import traceback
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -46,7 +48,49 @@ def load(name, file):
 C3A = load('usb2c3a_native', 'test-usb2c3a-native.py')
 G = load('vos_gdbstub', 'vos_gdbstub.py')
 C1, H, V, T = C3A.C1, C3A.H, C3A.V, C3A.T
-need, sha, APPS, EVENTS, DEVICES, EXTRA = C3A.need, C3A.sha, C3A.APPS, C3A.EVENTS, C3A.DEVICES, C3A.EXTRA
+need, sha, APPS, EVENTS, DEVICES = C3A.need, C3A.sha, C3A.APPS, C3A.EVENTS, C3A.DEVICES
+# USB.2-C3b.1: 't' runs the read-only containment dry-run.
+EXTRA = {**C3A.EXTRA, 't': 'vos.usb2-contain=1'}
+COMPRESS = False   # --compress-traces: verified, hash-recorded gzip of each analysed raw trace
+
+
+def device_args(device):
+    """QEMU arguments for 'base+extra+...': +disk (read-only ext2 on virtio-blk),
+    +kbd (USB keyboard on the xHCI), +kbd2 (USB keyboard and tablet)."""
+    base, *extras = device.split('+')
+    args = list(DEVICES[base])
+    for e in extras:
+        if e == 'disk':
+            args += ['-drive', f'file={DISK},if=none,id=vs0,format=raw,readonly=on',
+                     '-device', 'virtio-blk-pci,drive=vs0,disable-legacy=on']
+        elif e in ('kbd', 'kbd2'):
+            args += ['-device', 'usb-kbd,bus=xhci.0'] + (['-device', 'usb-tablet,bus=xhci.0'] if e == 'kbd2' else [])
+        else:
+            raise SystemExit('unknown device extra ' + e)
+    return args
+
+
+def running_firmware(fw, device):
+    """SeaBIOS leaves the xHCI running when it drives a USB keyboard (observed)."""
+    return fw == 'bios' and '+kbd' in device
+
+
+def preserve(trace):
+    """Evidence-preserving trace compression: gzip deterministically, prove the
+    round trip reproduces the original bytes, record both hashes, then (and only
+    then) remove the raw file."""
+    raw = trace.read_bytes()
+    digest = hashlib.sha256(raw).hexdigest()
+    gz = trace.with_name(trace.name + '.gz')
+    with gz.open('xb') as f, gzip.GzipFile(filename='', mode='wb', fileobj=f, compresslevel=9, mtime=0) as z:
+        z.write(raw)
+    back = gzip.decompress(gz.read_bytes())
+    need(len(back) == len(raw) and hashlib.sha256(back).hexdigest() == digest, 'compressed trace reproduces the original')
+    record = {'raw_sha256': digest, 'raw_bytes': len(raw), 'gz_sha256': sha(gz), 'gz_bytes': gz.stat().st_size,
+              'roundtrip_verified': True, 'restore': 'gzip -dk trace.txt.gz'}
+    (trace.parent / 'trace.preservation.json').write_text(json.dumps(record, indent=2) + '\n')
+    trace.unlink()
+    return record
 words, u64, KVMA = C3A.words, C3A.u64, C3A.KVMA
 LO, HI, PAGE = 1 << 20, 1 << 30, 4096
 NFRAMES = HI // PAGE
@@ -266,13 +310,10 @@ def boot(out, fw, iso, variables, mode, device, syms, expect):
     events = folder / 'events.txt'
     events.write_text('\n'.join(EVENTS) + '\n')
     argv = ['qemu-system-x86_64', '-machine', 'q35', '-accel', 'tcg', '-m', '128M', '-cdrom', str(iso),
-            '-boot', 'd', '-display', 'none', '-nic', 'none', *DEVICES[device.removesuffix('+disk')],
+            '-boot', 'd', '-display', 'none', '-nic', 'none', *device_args(device),
             '-serial', 'file:' + str(serial), '-qmp', 'unix:' + str(sock) + ',server=on,wait=off',
             '-gdb', 'unix:' + str(gsock) + ',server=on,wait=off',
             '-no-reboot', '-no-shutdown', '-trace', f'events={events},file={trace}']
-    if device.endswith('+disk'):
-        argv += ['-drive', f'file={DISK},if=none,id=vs0,format=raw,readonly=on',
-                 '-device', 'virtio-blk-pci,drive=vs0,disable-legacy=on']
     if fw == 'uefi':
         argv += ['-drive', 'if=pflash,format=raw,unit=0,readonly=on,file=/usr/share/OVMF/OVMF_CODE_4M.fd',
                  '-drive', f'if=pflash,format=raw,unit=1,file={variables}']
@@ -359,7 +400,7 @@ def boot(out, fw, iso, variables, mode, device, syms, expect):
                      'baseline: BootServices frames allocatable (the hazard)')
             else:
                 need(not mb2['efi_header'] and not printed, 'BIOS: no EFI map, no EFI exclusion')
-            if expect == 'inspection' and mode != 'c' and functions and device.startswith('qemu-xhci'):
+            if expect in ('inspection', 'containment') and mode != 'c' and functions and device.startswith('qemu-xhci'):
                 # USB.2-C3a.3: observe the guard window from outside: stop at the
                 # guard's entry and at screen_init (its successor), compare PMM
                 # bitmaps, firmware page bytes and every page-table mapping of them.
@@ -379,7 +420,9 @@ def boot(out, fw, iso, variables, mode, device, syms, expect):
                 need(g0['pages'] == g1['pages'] and g0['pages'], 'firmware pointers stable across the guard')
                 need(g0['avail'] == avail0 == g1['avail'], 'avail bitmap unchanged across the guard')
                 need(g0['alloc'] == g1['alloc'], 'no frame allocated, reserved or freed by the inspection')
-                need(g0['sha256'] == g1['sha256'], 'firmware page bytes unchanged by the inspection')
+                # A controller the firmware left running may change its own rings (firmware-originated DMA).
+                need(running_firmware(fw, device) or g0['sha256'] == g1['sha256'], 'firmware page bytes unchanged by the inspection')
+                result['firmware_dma_changed_pages'] = sorted(k for k in g1['sha256'] if g0['sha256'].get(k) != g1['sha256'][k])
                 for label in window:
                     maps = window[label]['mappings']
                     need(sorted(m[0] for m in maps) == sorted(window[label]['pages']), f'{label}: one mapping per page')
@@ -409,12 +452,12 @@ def boot(out, fw, iso, variables, mode, device, syms, expect):
                     g = result['guard']
                     if device.startswith('qemu-xhci') and fw == 'uefi' and expect == 'baseline':
                         need('PLAN VALID' in m[0] and result['reserved'], 'baseline UEFI guard reserves (C3a)')
-                    elif device.startswith('qemu-xhci') and fw == 'uefi' and expect == 'inspection':
+                    elif device.startswith('qemu-xhci') and fw == 'uefi' and expect in ('inspection', 'containment'):
                         need('PLAN VALID' in m[0] and not result['reserved'] and g.get('findings') == '0x0' and
                              g.get('excluded') == '0x7' and g.get('inspection') == '0x3' and g.get('hazards') == '0x0' and
                              'reuse_protected=1 inspection_complete=1; firmware memory is never released' in text + s,
                              'excluded firmware residue inspected in place: complete, nothing reserved')
-                    elif device.startswith('qemu-xhci') and expect == 'inspection':
+                    elif device.startswith('qemu-xhci') and expect in ('inspection', 'containment'):
                         need('REFUSED: residue incomplete' in m[0] and not result['reserved'] and g.get('hazards') == '0x0'
                              and g.get('excluded') == '0x0' and g.get('inspection') == '0x1',
                              'BIOS: map-protected residue, reuse protected, inspection incomplete, refused')
@@ -424,50 +467,81 @@ def boot(out, fw, iso, variables, mode, device, syms, expect):
                              'firmware residue already protected (map/EFI): uninspected, refused, nothing reserved')
                     else:
                         need('REFUSED' in m[0] and not result['reserved'], 'unsupported controller refused')
+                elif mode == 't':
+                    need('usb2c3a:' not in s, 'no guard output in a dry-run-only boot')
+                    m = re.search(r'usb2c3b1: (DRY-RUN COMPLETE|REFUSED)[^\r\n]*', s)
+                    need(m, 'containment dry-run verdict')
+                    text = s[s.index('usb2c3b1:'):m.end()]
+                    result['verdict'] = m[0]
+                    result['contain'] = dict(re.findall(r'\b(\w+)=(0x[0-9a-f]+)', text))
+                    result['contain_trace'] = re.findall(r'usb2c3b1: trace=[^\r\n]*', text)
+                    c = result['contain']
+                    if fw == 'uefi' and device in ('qemu-xhci', 'qemu-xhci+disk'):
+                        need('DRY-RUN COMPLETE' in m[0] and all(c.get(k) == v for k, v in (
+                            ('state', '0x6'), ('refusals', '0x0'), ('command', '0x7'), ('status', '0x10'), ('usbcmd', '0x0'),
+                            ('usbsts', '0x1'), ('findings', '0x0'), ('irq_off', '0x1'), ('plan_len', '0x5'), ('trace_len', '0x6'))),
+                             'eligible idle UEFI profile: dry-run complete')
+                        joined = '\n'.join(result['contain_trace'])
+                        need('trace=2 pci-write NOT-ISSUED width=16 offset=0x4 old=0x7 new=0x3' in joined and
+                             'trace=4 mmio-write NOT-ISSUED width=32 offset=0x40 old=0x0 new=0x2' in joined and
+                             joined.count('revalidate ok') == 2, 'exact proposed writes after two clean revalidations, none issued')
+                    else:
+                        names = set(m[0].split('REFUSED:')[1].split(';')[0].split())
+                        result['refused_for'] = sorted(names)
+                        required = ({'unqualified'} if not device.startswith('qemu-xhci') else
+                                {'not-uefi', 'running'} if running_firmware(fw, device) else
+                                {'not-uefi'} if fw == 'bios' else {'slots', 'usbsts', 'interrupts'})
+                        need('nothing written' in m[0] and 'NOT-ISSUED' not in text and required <= names,
+                             f'refused for {sorted(required)} before proposing anything (got {sorted(names)})')
                 else:
                     need('usb2c3a:' not in s, 'guard absent unless selected')
+                if mode != 't':
+                    need('usb2c3b1:' not in s, 'containment dry-run absent unless selected')
                 if mode == 'q':
                     need('usb2c1: QUALIFIED: profile qualified' in s, 'C1 qualification alongside the guard')
                 if mode == 'd':
                     need('usb2c2: PASS' in s, 'C2 exercise alongside the guard')
                 if mode == 'p':
                     need('usb: summary inspected=1' in s and 'usb: PCI command and BAR unchanged' in s, 'USB.1 probe')
-                q.key('a'); wait('gui-demo: KEY a PRESENTED')
-                q.key('b'); wait('gui-demo: KEY b PRESENTED')
-                shots = mode == 'n' and device == 'qemu-xhci'
-                if shots:
-                    q.command('screendump', {'filename': str(folder / 'gui.png'), 'format': 'png'})
-                q.key('q'); wait('user[vsh]: VOS>')
-                need('gui: PASS; kernel-CR3 reclamation, all resources restored' in data(), 'GUI cleanup')
+                light = '+kbd' in device   # QMP key events may go to the USB keyboard, not VOS's PS/2 driver
+                if not light:
+                    q.key('a'); wait('gui-demo: KEY a PRESENTED')
+                    q.key('b'); wait('gui-demo: KEY b PRESENTED')
+                    shots = mode == 'n' and device == 'qemu-xhci'
+                    if shots:
+                        q.command('screendump', {'filename': str(folder / 'gui.png'), 'format': 'png'})
+                    q.key('q'); wait('user[vsh]: VOS>')
+                    need('gui: PASS; kernel-CR3 reclamation, all resources restored' in data(), 'GUI cleanup')
 
-                def command(line, expected, prompt='user[vsh]: VOS>'):
-                    start = len(data())
-                    for c in line + '\n':      # QMP qcodes for every character typed here
-                        q.key({' ': 'spc', '\n': 'ret', '-': 'minus', '.': 'dot', '/': 'slash'}.get(c, c))
-                        time.sleep(.04)
-                    s = wait(prompt, start)
-                    need(expected in s[start:], 'application ' + line)
-                command('apps', 'rixie'); command('hello', 'Hello from VOS!')
-                command('rixie', 'deterministic', 'user[rixie]: Rixie>')
-                command('help', 'Topics:', 'user[rixie]: Rixie>')
-                command('exit', 'Goodbye from Rixie.')
-                command('echo restored', 'user[vsh]: restored')
-                if device.endswith('+disk'):
-                    need('vblk: no virtio-blk' not in s and 'vblk:' in s, 'virtio-blk device registered')
-                    command('ls', 'docs'); command('cd docs', '', 'user[vsh]: VOS>docs>')
-                    command('pwd', '/docs', 'user[vsh]: VOS>docs>')
-                    command('cat welcome.txt', 'Unified apps: real read-only filesystem.', 'user[vsh]: VOS>docs>')
-                    command('cd /', '')
-                if shots:
-                    q.command('screendump', {'filename': str(folder / 'shell.png'), 'format': 'png'})
-                q.text('exit\n'); wait('native: vsh PASS, process reclaimed')
+                    def command(line, expected, prompt='user[vsh]: VOS>'):
+                        start = len(data())
+                        for c in line + '\n':      # QMP qcodes for every character typed here
+                            q.key({' ': 'spc', '\n': 'ret', '-': 'minus', '.': 'dot', '/': 'slash'}.get(c, c))
+                            time.sleep(.04)
+                        s = wait(prompt, start)
+                        need(expected in s[start:], 'application ' + line)
+                    command('apps', 'rixie'); command('hello', 'Hello from VOS!')
+                    command('rixie', 'deterministic', 'user[rixie]: Rixie>')
+                    command('help', 'Topics:', 'user[rixie]: Rixie>')
+                    command('exit', 'Goodbye from Rixie.')
+                    command('echo restored', 'user[vsh]: restored')
+                    if device.endswith('+disk'):
+                        need('vblk: no virtio-blk' not in s and 'vblk:' in s, 'virtio-blk device registered')
+                        command('ls', 'docs'); command('cd docs', '', 'user[vsh]: VOS>docs>')
+                        command('pwd', '/docs', 'user[vsh]: VOS>docs>')
+                        command('cat welcome.txt', 'Unified apps: real read-only filesystem.', 'user[vsh]: VOS>docs>')
+                        command('cd /', '')
+                    if shots:
+                        q.command('screendump', {'filename': str(folder / 'shell.png'), 'format': 'png'})
+                    q.text('exit\n'); wait('native: vsh PASS, process reclaimed')
             watch.halt()
             gdb.remove(2, syms['kernel_pmm'] + 32, 8)
             last, avail1, alloc1 = snapshot(gdb, syms)
             need(avail1 == avail0 and last['usable'] == first['usable'], 'avail bitmap unchanged since initialization')
             if 'guard_window' in result:
                 after = {hex(p): hashlib.sha256(gdb.read(KVMA + p, PAGE)).hexdigest() for p in window['after_guard']['pages']}
-                need(after == window['after_guard']['sha256'], 'firmware page bytes unchanged through the GUI run')
+                need(running_firmware(fw, device) or after == window['after_guard']['sha256'],
+                     'firmware page bytes unchanged through the GUI run')
                 maps = mappings(gdb, gdb.u64(syms['kernel_root']), window['after_guard']['pages'])
                 need(len(maps) == len(after) and all(va == KVMA + f and w and nx and c == 0 for f, va, w, nx, c in maps),
                      'after the GUI run: still only the kernel alias')
@@ -532,7 +606,9 @@ def boot(out, fw, iso, variables, mode, device, syms, expect):
     analysis = T.analyze(trace, bdf)
     (folder / 'trace-analysis.json').write_text(json.dumps(analysis, indent=2) + '\n')
     result['trace_sha256'], result['trace_bytes'] = sha(trace), trace.stat().st_size
-    trace_checks(result, trace, analysis, mode, device)
+    trace_checks(result, trace, analysis, mode, device, fw)
+    if COMPRESS:
+        result['trace_preservation'] = preserve(trace)
     result['passed'] = True
     (folder / 'result.json').write_text(json.dumps(result, indent=2) + '\n')
     return result
@@ -549,7 +625,7 @@ def cfg_writes_by_device(trace, first):
     return out
 
 
-def trace_checks(result, trace, analysis, mode, device):
+def trace_checks(result, trace, analysis, mode, device, fw=''):
     """Zero device-write predicates on one boot's trace. Storage boots run the
     accepted N3 virtio-blk driver, whose configuration writes must target only
     that function; xHCI writes are never allowed."""
@@ -565,17 +641,26 @@ def trace_checks(result, trace, analysis, mode, device):
              'configuration writes only to the virtio-blk function (accepted N3 storage driver)')
     else:
         need(vos['other_cfg_writes'] == 0 and not by, 'no PCI configuration writes after VOS start')
-    need(vos['state_events'] == 0, 'no reset/run/doorbell/ring fetch/event/slot/transfer after VOS start')
+    if running_firmware(fw, device):
+        # The firmware left this controller running: its own ring activity is
+        # firmware-originated. VOS-originated writes are still excluded above
+        # and by register provenance below.
+        result['firmware_originated_state_events'] = vos['state_events']
+        result['firmware_state_event_examples'] = analysis['vos'].get('examples', {}).get('state_events', [])[:6]
+    else:
+        need(vos['state_events'] == 0, 'no reset/run/doorbell/ring fetch/event/slot/transfer after VOS start')
     need(vos['xhci_read_events'] == vos['xhci_mmio_reads'], 'usb_xhci read events agree with MMIO reads')
     guard_reads = int(result.get('guard', {}).get('mmio_reads', '0x0'), 16)
-    expected = {'n': 0, 'c': 0, 'p': 7, 'r': guard_reads, 'd': guard_reads, 'q': guard_reads + 18}[mode]
+    contain_reads = int(result.get('contain', {}).get('mmio_reads', '0x0'), 16)
+    expected = {'n': 0, 'c': 0, 'p': 7, 'r': guard_reads, 'd': guard_reads, 'q': guard_reads + 18, 't': contain_reads}[mode]
     need(vos['xhci_mmio_reads'] == expected, f'register reads {vos["xhci_mmio_reads"]} == expected {expected}')
     if 'register_snapshot' in result:
         firmware, by_vos = T.register_writes(trace, result['bar0'], analysis['boundary_event_index'])
         need(not by_vos, 'no VOS register writes (provenance)')
         stale = {k: (v, result['register_snapshot'][k]) for k, v in firmware.items()
                  if k in result['register_snapshot'] and result['register_snapshot'][k] != v}
-        need(not stale, f'snapshot equals last firmware write: {stale}')
+        # With a USB device attached the hardware itself updates status registers.
+        need(not stale or '+kbd' in device, f'snapshot equals last firmware write: {stale}')
 
 
 def reanalyze(folder):
@@ -590,7 +675,7 @@ def reanalyze(folder):
     out = {'case': result['case'], 'original_passed': result['passed'], 'trace_sha256': sha(trace),
            **{k: result[k] for k in ('guard', 'register_snapshot', 'bar0') if k in result}}
     try:
-        trace_checks(out, trace, analysis, result['mode'], result['device'])
+        trace_checks(out, trace, analysis, result['mode'], result['device'], result['firmware'])
         out['passed'] = True
     except Exception as error:
         out['passed'], out['error'] = False, str(error)
@@ -604,7 +689,8 @@ def main():
     ap.add_argument('--apps', type=Path, required=True)
     ap.add_argument('--efi', type=Path, required=True)
     ap.add_argument('--out', type=Path, required=True)
-    ap.add_argument('--expect', choices=('baseline', 'exclusion', 'inspection'), required=True)
+    ap.add_argument('--expect', choices=('baseline', 'exclusion', 'inspection', 'containment'), required=True)
+    ap.add_argument('--compress-traces', action='store_true', help='verified gzip of analysed traces (raw hash kept)')
     ap.add_argument('--cases', help='comma-separated fw-mode-device subset')
     ap.add_argument('--disk', type=Path, required=True, help='read-only ext2 fixture (accepted N6.3 disk)')
     ap.add_argument('--iso-dir', type=Path, help='reuse validated images of an earlier run of the same inputs')
@@ -627,14 +713,14 @@ def main():
              if len(l.split()) == 3}
     syms = {k: table[k] for k in ('kernel_pmm', 'pmm_alloc_frame', 'xhci_residue_boot', 'screen_init', 'kernel_root')
             if k in table}
-    need(len(syms) == 5 or args.expect != 'inspection', 'symbols for the guard window')
+    need(len(syms) == 5 or args.expect not in ('inspection', 'containment'), 'symbols for the guard window')
     inputs = {'/boot/vos.bin': kernel}
     for n in APPS:
         inputs[f'/boot/{n}.elf'] = (args.apps / f'{n}.elf').resolve()
     need(all(p.is_file() and not p.is_symlink() for p in inputs.values()), 'explicit regular inputs')
     cfg = out / 'grub.cfg'
     cfg.write_text('serial --unit=0 --speed=115200\nterminal_output console serial\n'
-                   'echo "USB2C3A CHOICE: n r q d p c"\nread selection\nset extra=""\n' +
+                   'echo "USB2C3A CHOICE: n r q d p c t"\nread selection\nset extra=""\n' +
                    ''.join(f'if [ "$selection" = "{k}" ]; then set extra="{v}"; fi\n' for k, v in EXTRA.items() if v) +
                    'set gfxpayload=1024x768x32,auto\n'
                    'multiboot2 /boot/vos.bin vos.apps=1 vos.desktop=1 vos.gui=1 $extra\n' +
@@ -646,6 +732,13 @@ def main():
                       ('n', 'qemu-xhci+disk')],
              'uefi': [('n', 'qemu-xhci'), ('r', 'qemu-xhci'), ('q', 'qemu-xhci'), ('d', 'qemu-xhci'),
                       ('p', 'qemu-xhci'), ('c', 'qemu-xhci'), ('n', 'qemu-xhci+disk')]}
+    if args.expect == 'containment':
+        cases['uefi'] += [('t', 'qemu-xhci'), ('t', 'qemu-xhci+disk'), ('t', 'qemu-xhci+kbd'), ('t', 'qemu-xhci+kbd2'),
+                          ('n', 'qemu-xhci+kbd'), ('t', 'none'), ('t', 'nec-xhci'), ('t', 'two-xhci')]
+        cases['bios'] += [('t', 'qemu-xhci'), ('t', 'qemu-xhci+disk'), ('t', 'qemu-xhci+kbd'), ('n', 'qemu-xhci+kbd'),
+                          ('t', 'none'), ('t', 'nec-xhci'), ('t', 'two-xhci')]
+    global COMPRESS
+    COMPRESS = args.compress_traces
     try:
         tmp = out / 'producer-tmp'; tmp.mkdir()
         for fw in ('bios', 'uefi'):
@@ -682,7 +775,8 @@ def main():
                     report['cases'].append(r)
                     print(r['case'], 'PASS', flush=True)
                 except Exception as error:
-                    report['failures'].append({'case': f'{fw}-{mode}-{device}', 'error': str(error)})
+                    report['failures'].append({'case': f'{fw}-{mode}-{device}', 'error': str(error),
+                                               'where': traceback.format_exc(limit=-3)})
                     print(f'{fw}-{mode}-{device}', 'FAIL', error, flush=True)
         wanted = len(args.cases.split(',')) if args.cases else sum(map(len, cases.values()))
         report['passed'] = not report['failures'] and len(report['cases']) == wanted

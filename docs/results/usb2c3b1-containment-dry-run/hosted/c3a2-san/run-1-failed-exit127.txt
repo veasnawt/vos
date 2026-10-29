@@ -1,0 +1,1 @@
+build/usb2c3b1-1/final/guard.sh: 13: c3a2_san: not found

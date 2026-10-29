@@ -56,7 +56,7 @@ void serial_dec(uint64_t v) { char b[24]; snprintf(b,sizeof b,"%llu",(unsigned l
 #define FUNCTIONS 2
 static struct { int present; struct pci_addr a; uint32_t w[64]; } fn[FUNCTIONS];
 static uint32_t bar[4096];
-static unsigned change_after, mmio_reads;
+static unsigned change_after, mmio_reads, flip_at;   /* flip_at: USB.2-C3b.1 mid-session PORTSC change */
 uint32_t pci_read32(struct pci_addr a, unsigned off)
 {
     assert(off < 256 && !(off & 3));
@@ -80,6 +80,7 @@ static uint32_t mmio_model(uint64_t va)
     uint64_t sva,len;
     assert(!devmap_scope_extent(devmap_scope_token(),&sva,&len) && va>=sva && va<sva+len && !(va&3));
     if (++mmio_reads==change_after) fn[0].w[1]=0x00100103;   /* another agent clears BME */
+    if (flip_at && mmio_reads==flip_at) bar[(0x440+16*7)/4]=0x2a1;  /* a device connects on the last port */
     return bar[(va-sva)/4];
 }
 
@@ -107,7 +108,8 @@ static void model(void)
     memset(ram+0x1a0000,0,0x8000);
     put64(RING+255*16,RING); put64(RING+255*16+8,(uint64_t)(6u<<10|2)<<32);
     put64(ERST,SEG); put64(ERST+8,512);
-    change_after=0; mmio_reads=0; outlen=0; out[0]=0;
+    for (unsigned p=0;p<8;p++) bar[(0x440+16*p)/4]=0x2a0;      /* idle PORTSC: PP, RxDetect */
+    change_after=0; mmio_reads=0; flip_at=0; outlen=0; out[0]=0;
 }
 
 static unsigned checks;
@@ -343,6 +345,106 @@ static void excluded_direct(void)
     CHECK(pmm_free_count()==base);
 }
 
+/* ---- USB.2-C3b.1: containment dry-run against the same model ---- */
+static uint32_t pci_snap[FUNCTIONS][64], bar_snap[4096];
+static int contain(void) { outlen=0; out[0]=0; return xhci_contain_boot("vos.usb2-contain=1"); }
+/* Eligible profile: OVMF-like excluded residue, command 0x0007, PCIe present. */
+static void contain_setup(void)
+{
+    efi_boot(8,1);
+    fn[0].w[1]=0x00100007;
+    xhci_residue_boot_memory(&ebi,&et);
+}
+/* After any verdict: nothing written, reserved, leased or left frozen. */
+static void contain_after(void)
+{
+    for (unsigned i=0;i<FUNCTIONS;i++) CHECK(!memcmp(pci_snap[i],fn[i].w,sizeof pci_snap[i]));
+    CHECK(!residue.frozen && !residue.session && !residue.bi && !residue.resv && !residue.count);
+    CHECK(pmm_free_count()==base && pmm_check_in(pmm_kernel())==PMM_OK);
+    CHECK(!devmap_scope_token() && !qual.token && !devmap_audit());
+}
+static void snap_device(void) { for (unsigned i=0;i<FUNCTIONS;i++) memcpy(pci_snap[i],fn[i].w,sizeof pci_snap[i]); memcpy(bar_snap,bar,sizeof bar); }
+static void contain_eligible(void)
+{
+    contain_setup(); snap_device();
+    memcpy(snap,ram+0x1a0000,sizeof snap);
+    CHECK(xhci_contain_boot("")==1 && !outlen);                       /* not requested: no effect, no output */
+    CHECK(contain()==1 && strstr(out,"usb2c3b1: DRY-RUN COMPLETE: eligible; every proposed write is listed above and NONE was issued"));
+    CHECK(strstr(out,"refusals=0x0") && strstr(out,"command=0x7") && strstr(out,"usbsts=0x1") && strstr(out,"excluded=0x7"));
+    CHECK(strstr(out,"irq_off=0x1") && strstr(out,"plan_len=0x5") && strstr(out,"trace_len=0x6"));
+    CHECK(strstr(out,"trace=2 pci-write NOT-ISSUED width=16 offset=0x4 old=0x7 new=0x3"));
+    CHECK(strstr(out,"trace=4 mmio-write NOT-ISSUED width=32 offset=0x40 old=0x0 new=0x2"));
+    CHECK(strstr(out,"trace=5 reset-poll NOT-RUN width=32 offset=0x44 old=0x400 new=0x800"));
+    CHECK(strstr(out,"trace=1 revalidate ok") && strstr(out,"trace=3 revalidate ok") && strstr(out,"trace=6 verify NOT-RUN"));
+    CHECK(!memcmp(bar,bar_snap,sizeof bar) && !memcmp(snap,ram+0x1a0000,sizeof snap));
+    contain_after();
+    CHECK(contain()==0 && residue.count==0);                             /* once per boot */
+}
+#define CONTAIN_REFUSED(fname, edit, reason) \
+    static void fname(void) { contain_setup(); edit; snap_device(); \
+        CHECK(contain()==1 && strstr(out,"usb2c3b1: REFUSED:") && strstr(out,reason) && strstr(out,"; nothing written")); \
+        CHECK(!strstr(out,"pci-write NOT-ISSUED") && !memcmp(bar,bar_snap,sizeof bar)); contain_after(); }
+CONTAIN_REFUSED(c_bios,       (ebi.efi=0),                                   " not-uefi")
+CONTAIN_REFUSED(c_seabios_cmd,(fn[0].w[1]=0x00100107),                       " pci-command")
+CONTAIN_REFUSED(c_status,     (fn[0].w[1]=0x00180007),                       " pci-status")
+CONTAIN_REFUSED(c_running,    (bar[0x40/4]=1, bar[0x44/4]=0),                " running")
+CONTAIN_REFUSED(c_eint,       (bar[0x44/4]=9),                               " usbsts")
+CONTAIN_REFUSED(c_inte,       (bar[0x40/4]=4),                               " interrupts")
+CONTAIN_REFUSED(c_ip,         (bar[0x1020/4]=3),                             " interrupts")
+CONTAIN_REFUSED(c_msix,       (fn[0].w[0x90/4]|=0x80000000u),                " interrupts")
+CONTAIN_REFUSED(c_slot,       (put64(DCBAA+8,0x1c0000)),                     " slots")
+CONTAIN_REFUSED(c_port,       (bar[0x450/4]=0x202a0),                        " ports")
+CONTAIN_REFUSED(c_pcie_busy,  (fn[0].w[0xa8/4]=1u<<21),                      " pcie-busy")
+CONTAIN_REFUSED(c_pcie_none,  (fn[0].w[0x90/4]&=~0xff00u),                   " pcie-unknown")
+CONTAIN_REFUSED(c_profile,    (bar[4]=0x00087005),                           " profile")
+CONTAIN_REFUSED(c_scratch,    (bar[2]=0x0800000f),                           " unqualified")
+CONTAIN_REFUSED(c_nec,        (fn[0].w[0]=0x01941033),                       " unqualified")
+CONTAIN_REFUSED(c_none,       (fn[0].present=0),                             " unqualified")
+CONTAIN_REFUSED(c_two,        (fn[1]=fn[0], fn[1].a.dev=3),                  " unqualified")
+CONTAIN_REFUSED(c_cap_cycle,  (fn[0].w[0x90/4]=(fn[0].w[0x90/4]&~0xff00u)|0x9000u), " unqualified")
+CONTAIN_REFUSED(c_xecp,       (bar[0x20/4]=0),                               " unqualified")
+CONTAIN_REFUSED(c_context,    (flags=RFLAGS_IF),                             " unqualified")
+/* Residue in ordinary free RAM: the frozen session may not reserve, so it is a
+ * hazard and refused; afterwards the guard (not frozen) still reserves. */
+static void c_freeze(void)
+{
+    efi_boot(8,0); fn[0].w[1]=0x00100007; xhci_residue_boot_memory(&ebi,&et); snap_device();
+    for (uint64_t f=0x1a0000; f<0x1a4000; f+=4096) CHECK(state(f)==PMM_FRAME_FREE);
+    CHECK(contain()==1 && strstr(out,"usb2c3b1: REFUSED:") && strstr(out," memory") && strstr(out,"hazard")==NULL);
+    contain_after();
+    for (uint64_t f=0x1a0000; f<0x1a4000; f+=4096) CHECK(state(f)==PMM_FRAME_FREE);  /* nothing reserved */
+    residue.session=1; residue.frozen=1; qual.active=1;
+    CHECK(xhci_residue_reserve(0x1a0000,1)==-4 && !residue.count);    /* frozen: refused even in session */
+    residue.session=0; residue.frozen=0; qual.active=0;
+    xhci_residue_boot_memory(&ebi,&et);
+    CHECK(guard()==1 && residue.count==4 && pmm_free_count()==base-4);  /* the guard is unaffected */
+}
+/* A port changes between passes: the revalidation catches it. Pass sizes are
+ * measured from an unchanged run in the same child (once-per-boot reset). */
+static void c_drift(void)
+{
+    contain_setup(); snap_device();
+    CHECK(contain()==1 && strstr(out,"DRY-RUN COMPLETE"));
+    unsigned total=mmio_reads;
+    for (unsigned k=0;k<2;k++) {
+        unsigned at = k ? total-3 : total/2;
+        contain_ran=0; model(); fn[0].w[1]=0x00100007; xhci_residue_boot_memory(&ebi,&et);
+        flip_at=at;
+        CHECK(contain()==1 && strstr(out,"usb2c3b1: REFUSED: changed; nothing written"));
+        CHECK(strstr(out,"revalidate CHANGED"));
+        CHECK(k ? strstr(out,"pci-write NOT-ISSUED")!=NULL : strstr(out,"pci-write")==NULL);
+        CHECK(!residue.frozen && !residue.count && pmm_free_count()==base);
+    }
+}
+/* The PCI command changes during the session: C1's state check makes it an
+ * integrity failure; nothing is retained and the freeze is released. */
+static void c_integrity(void)
+{
+    contain_setup(); change_after=40; snap_device();
+    CHECK(contain()==0 && strstr(out,"usb2c3b1: FAIL: integrity"));
+    CHECK(!residue.frozen && !residue.session && !residue.count && pmm_free_count()==base);
+}
+
 int main(void)
 {
     scenario("OVMF-like residue: complete, reserved, plan valid, once per boot", complete);
@@ -363,6 +465,20 @@ int main(void)
     scenario("C3a.3 EFI map invalid at guard time: fail closed", corrupted_map);
     scenario("C3a.3 excluded and free frames: free one reserved, excluded read in place", excluded_and_free);
     scenario("C3a.3 direct classification, read gating and loader-evidence refusals", excluded_direct);
+    scenario("C3b.1 eligible idle UEFI profile: dry-run complete, exact proposed writes, nothing written", contain_eligible);
+    void (*refusals[])(void) = { c_bios, c_seabios_cmd, c_status, c_running, c_eint, c_inte, c_ip, c_msix, c_slot, c_port,
+        c_pcie_busy, c_pcie_none, c_profile, c_scratch, c_nec, c_none, c_two, c_cap_cycle, c_xecp, c_context };
+    static const char *const names[] = { "BIOS", "command 0x107", "PCI status INTx", "running controller", "USBSTS.EINT",
+        "USBCMD.INTE", "IMAN.IP", "MSI-X enabled", "active slot", "port connected", "PCIe transactions pending",
+        "no PCIe capability", "profile mismatch", "scratchpads", "NEC controller", "no controller", "two controllers",
+        "PCI capability cycle", "malformed extended capability", "bad context" };
+    for (unsigned i=0;i<sizeof refusals/sizeof refusals[0];i++) {
+        char title[96]; snprintf(title,sizeof title,"C3b.1 refused, nothing written: %s",names[i]);
+        scenario(title, refusals[i]);
+    }
+    scenario("C3b.1 freeze: free-RAM residue is never reserved by the dry-run; the guard still reserves", c_freeze);
+    scenario("C3b.1 revalidation catches a port change in pass 2 and pass 3", c_drift);
+    scenario("C3b.1 PCI command change mid-session: integrity failure, freeze released", c_integrity);
     printf("PASS: real PMM/devmap/qualification/residue C with the bare-metal Rust archive; zero PCI writes\n");
     return 0;
 }

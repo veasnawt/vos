@@ -1,0 +1,10 @@
+{
+  "owner": "Antigravity (storage management, backup, cleanup, recovery). Nothing was cleaned, moved or pruned; the only removals were raw QEMU traces replaced by verified compressed copies through the approved preservation workflow (preservation.json)",
+  "stop_line_bytes": 566231040,
+  "c_reserve_bytes": 21474836480,
+  "build_tree_bytes_final": 513239794,
+  "c_free_bytes_final": 23272427520,
+  "evidence_dir_bytes": 1932396,
+  "per_step_admission": "storage-log.txt (guard.sh: tree + projection <= stop line and C: free - projection >= reserve before every step)",
+  "note": "precheck/ (165 MB) holds the hosted C3b.1 trial reused as final evidence and earlier sanitizer/test builds"
+}

@@ -1,0 +1,9 @@
+error[E0425]: cannot find function `execute` in module `vos_xhci::xhci::containment`
+ --> /home/veasnawt/src/vos-usb2c3b1/build/usb2c3b1-1/precheck/c3b1-host-trial/cf-no-executor.rs:1:42
+  |
+1 | fn main() { vos_xhci::xhci::containment::execute(); }
+  |                                          ^^^^^^^ not found in `vos_xhci::xhci::containment`
+
+error: aborting due to 1 previous error
+
+For more information about this error, try `rustc --explain E0425`.

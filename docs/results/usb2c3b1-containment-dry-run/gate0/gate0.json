@@ -1,0 +1,52 @@
+{
+  "baseline": "55f6693a4e537248c912aaed61f0194cc07be811 (merge of PR #31; tree identical to verified candidate 9a6ea23)",
+  "worktrees": "vos-r2b 4352815, vos-usb2c1 1b4c4fb, vos-usb2c2 885b9e3, vos-usb2c3a c7bd104, vos-usb2c3a2 dd09cca, vos-usb2c3a3 9a6ea23 all clean, 0 stashes; new worktree vos-usb2c3b1 on feat/usb2c3b1-containment-dry-run",
+  "authorized_scope": "C3b.1 only: read-only dry-run. C3b.2 hardware writes NOT authorized. No operational PCI or MMIO write path may be created.",
+  "decisions_applied": {
+    "D1": "mask step omitted only when interrupts are already disabled (USBCMD.INTE=0, USBSTS.EINT=0, every IMAN.IP=0, MSI-X and MSI disabled, PCI status INTx=0), revalidated at every simulated operation; lifecycle::Facts gains interrupts_disabled (default false = unchanged behaviour); the mask requirement is untouched for every other state",
+    "D2": "bus master cleared before HCRST, provisionally; re-reviewed against spec sources (see spec_review); no writes",
+    "D3": "strict eligibility bitmask: UEFI, one supported qemu-xhci, halted, USBCMD 0, USBSTS exactly 1, no slots/devices/transfer rings/scratchpads, ports idle, validated firmware-memory ownership (excluded-only residue), complete inspection, verified interrupt state, PCIe transactions-pending clear",
+    "D4": "no storage increase requested; plan below",
+    "D5": "implement and verify C3b.1 before asking for C3b.2",
+    "D6": "AHCI outside xHCI scope; every native boot checks armed AHCI command/FIS pages stay unallocatable; any armed engine whose pages are allocatable is a NO-GO"
+  },
+  "storage": {
+    "windows_c_free_bytes": 23208464384,
+    "reserve_bytes": 21474836480,
+    "headroom_above_reserve_bytes": 1733627904,
+    "provision_bytes": 629145600,
+    "stop_threshold_bytes": 566231040,
+    "headroom_if_provision_fully_used_bytes": 1104482304,
+    "existing_build_trees_bytes": {"vos-r2b": 166477824, "vos-usb2c1": 729534464, "vos-usb2c2": 415666176, "vos-usb2c3a": 500350976, "vos-usb2c3a2": 544530432, "vos-usb2c3a3": 546705408},
+    "owner_of_storage_management": "Antigravity; nothing is deleted, moved, compacted or cleaned",
+    "measured_unit_costs_bytes": {
+      "kernel_build": 15212544,
+      "native_matrix_17_boots_uncompressed": 130973696,
+      "of_which_raw_qemu_traces": 108500000,
+      "trace_gzip_ratio_sample": 0.023,
+      "hosted_c3a_suite": 69419008,
+      "hosted_efi_suite": 61161472,
+      "hosted_c2": 33984512, "hosted_c1": 25632768, "hosted_usb2b": 7516160, "hosted_usb1": 630784, "hosted_r2b": 2428928, "hosted_r1": 2621440,
+      "r2b_native": 43311104, "usb2a_core_full_script": 22888448
+    },
+    "projected_peak_bytes": {
+      "kernels (candidate, final, verify)": 45600000,
+      "hosted suites once each on the final candidate (incl. new C3b.1 suite ~60 MB)": 263000000,
+      "r2b_native + usb2a full": 66000000,
+      "native 30 boots + 2 ISOs, traces gzip-compressed after analysis": 32000000,
+      "scratchpad and misc": 15000000,
+      "total_with_trace_compression": 421600000,
+      "total_without_trace_compression": 630000000
+    },
+    "conclusion": "with fresh-run traces gzip-compressed after analysis (raw SHA-256 recorded, .gz retained) the projected peak is about 422 MB, 67% of the provision and 74% of the stop line; without compression it would exceed the stop line. No increase is requested. Every step runs under a guard that aborts before the stop line."
+  },
+  "resource_ceilings": {"text_rodata_growth_bytes": 4096, "permanent_rw_growth_bytes": 96, "largest_stack_frame_bytes": 512, "threads": 0, "heap": 0, "page_tables": 0, "dma_allocations": 0, "device_writes": 0, "source": "C3b Gate 0 stage C3b.1 proposal; unchanged"},
+  "spec_review": {
+    "caveat": "the primary xHCI and PCIe specification PDFs could not be retrieved in this environment (one fetch hit an anti-bot page); points below come from secondary sources found by search and from established driver practice, and are labelled accordingly",
+    "xhci_hcrst": "HCRST is cleared by the controller when reset completes; software must not end it early by writing 0 and must not write operational or runtime registers while it is 1; completion is HCRST=0 and USBSTS.CNR=0 (secondary source quoting xHCI 5.4.1)",
+    "xhci_timeout": "no timeout is specified; some controllers need over 100 ms, some need about 1 ms before CNR can be polled (secondary sources: SeaBIOS list, 9front); real-hardware timing is therefore out of scope for QEMU-only evidence and the dry-run defines only an iteration bound",
+    "pci_bus_master": "clearing Bus Master Enable stops a function issuing new memory requests including MSI/MSI-X but does not by itself guarantee that requests already issued have completed; the PCIe Device Status Transactions Pending bit and a flushing read are the usual way to confirm (secondary sources); some hardware has been reported to send MSI regardless",
+    "order_conclusion": "bus-master-first remains acceptable for a halted, idle controller, with three additions adopted in C3b.1: (1) PCIe Transactions Pending must read 0 at every revalidation, (2) USBSTS must remain exactly 1 (HSE clear) after the clear, (3) the proposed read-back is a non-posted config read. Reset-first would also be safe for a halted controller (a completed reset zeroes the pointers) but leaves a window if the reset hangs; bus-master-first closes it.",
+    "unverified": "that HCRST leaves PCI configuration (including BME) untouched is the expected architectural separation but was not confirmed from the specification text"
+  }
+}

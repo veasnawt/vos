@@ -12,6 +12,8 @@ use core::mem::{align_of, offset_of, size_of};
 /// Header (7), PAGESIZE, at most 64 xECP headers with legacy (2) or protocol
 /// (3) bodies, USBCMD/USBSTS and legacy words twice: well below 256 DWORDs.
 const READ_LIMIT: u32 = 256;
+/// Revalidation passes (USB.2-C3b.1) each get their own `READ_LIMIT`; at most this many.
+const PHASE_LIMIT: u8 = 4;
 
 unsafe extern "C" {
     // xhci_qualify.h: valid only inside the qualification session.
@@ -166,7 +168,7 @@ const _: () = {
     assert!(offset_of!(Report, usb1_compatible) == 220);
 };
 
-struct PciConfig;
+pub(crate) struct PciConfig;
 impl Config for PciConfig {
     fn read32(&mut self, offset: u8) -> Result<u32, Reason> {
         let mut value = 0u32;
@@ -184,6 +186,24 @@ impl Config for PciConfig {
 pub(crate) struct BarWords<'a> {
     lease: &'a BarLease,
     reads: u32,
+    /// Reads of finished phases and the number of phases begun after the first.
+    done: u32,
+    phases: u8,
+}
+impl BarWords<'_> {
+    /// Begin a revalidation pass with a fresh per-pass budget; false after `PHASE_LIMIT` passes.
+    pub(crate) fn next_phase(&mut self) -> bool {
+        if self.phases + 1 >= PHASE_LIMIT {
+            return false;
+        }
+        self.phases += 1;
+        self.done += self.reads;
+        self.reads = 0;
+        true
+    }
+    pub(crate) fn total_reads(&self) -> u32 {
+        self.done + self.reads
+    }
 }
 impl Words for BarWords<'_> {
     fn word(&mut self, offset: u32) -> Result<u32, Error> {
@@ -308,9 +328,9 @@ pub(crate) fn qualify(candidates: u32, complete: bool, physical_bits: u32, r: &m
         }
     };
     r.lease_acquired = 1;
-    let mut words = BarWords { lease: &lease, reads: 0 };
+    let mut words = BarWords { lease: &lease, reads: 0, done: 0, phases: 0 };
     let inspected = inspect_bar(&mut words, r, hook);
-    r.mmio_reads = words.reads;
+    r.mmio_reads = words.total_reads();
     // Release before any PCI re-observation; failure retains the lease (Drop).
     if lease.release().is_err() {
         return finish(r, -1, Reason::Release);

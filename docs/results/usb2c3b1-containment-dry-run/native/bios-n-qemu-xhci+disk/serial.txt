@@ -1,0 +1,115 @@
+[H[J[1;1HUSB2C3A CHOICE: n r q d p c t
+nHello from VOS!
+boot: x86_64 long mode, cs=0x8 efer=0x500 rip=0xffffffff801072ab
+gdt: loaded cs=0x8 ss=0x10 tr=0x28 tss=busy
+tss: rsp0=0xffffffff8015c000 ist1=0xffffffff80153000 ist2=0xffffffff80155000 ist3=0xffffffff80157000 iomap=104 limit=103
+idt: 32 exception vectors loaded, df ist=1, nmi ist=2, mc ist=3
+idt: IRQ vectors 0x20-0x2f present, DPL 0, interrupt gates
+idt: vector 0x80 present, DPL 3 (system calls, ABI v0)
+cpu: wp=on nx=on smep=unsupported umip=unsupported smap=unsupported x87=off(em)
+cpu: inherited cr0=0x80000011 cr4=0x20 efer=0x500; set cr0=0x80010035 cr4=0x68 efer=0xd00
+boot: loader "GRUB 2.14-2ubuntu2.1", memory map 9 entries, 133676032 bytes usable
+boot: multiboot2 info at 0x35a350-0x35ae48
+boot: kernel command line "vos.apps=1 vos.desktop=1 vos.gui=1"
+boot: modules 4
+boot: module 0 0x2b5000-0x356dc8 "vsh"
+boot: module 1 0x357000-0x35a348 "hello"
+boot: module 2 0x35b000-0x3fcb68 "rixie"
+boot: module 3 0x3fd000-0x400840 "gui-demo"
+boot: reserved 0x0-0x100000 low 1 MiB
+boot: reserved 0x100000-0x1dc000 kernel image
+boot: reserved 0x35a000-0x35b000 multiboot2 info
+boot: reserved 0x2b5000-0x357000 module
+boot: reserved 0x357000-0x35b000 module
+boot: reserved 0x35b000-0x3fd000 module
+boot: reserved 0x3fd000-0x401000 module
+efi: no EFI map (BIOS): e820 protection only
+pmm: 262144 frames tracked below 1 GiB, 31924 usable (127696 KiB), 0 bytes of RAM above 1 GiB ignored
+vmm: identity map removed
+kmap: phys 0-4 MiB as 4 KiB pages: 55 text R-X, 13 R NX, 936 RW NX, 20 guard pages unmapped; 510 x 2 MiB RW NX
+kmap: text 0xffffffff80107000-0xffffffff8013e000, rodata 0xffffffff8013e000-0xffffffff8014a000
+kmap: PDPT[510] 0x105000 -> 0x171000, checked before and after the switch; boot directory retired
+kmap: after the TLB flush the CPU refused a text write (#PF err=0x3) and a guard read (#PF err=0x0)
+devmap: window at 0xffffffff40000000, 40-bit physical addresses, write-combining via PAT entry 4
+screen: framebuffer 1280x800 BGRX at 0xfd000000, pitch 5120, write-combining, MTRR type 0, 156x41 cells
+vmm: audit passed: kernel alias 1004 x 4 KiB + 510 x 2 MiB supervisor pages, 55 ring-0 executable (all kernel text, none writable), 0 lower-half tables
+rust: kernel probe PASS; fn=0xffffffff8013b9e0 seed=0xffffffffb6c71022 salt=0xffffffff8004d8e0 result=0x26303edc7555565b
+irq: 8259 master 0x20-0x27, slave 0x28-0x2f (cascade IRQ2); masks 0xfffe (IRQ0 only); level-triggered lines (ELCR) 0xc00
+pit: channel 0 mode 2, divisor 11932 (99.998 Hz)
+sched: 16 thread records, 15 guarded stacks of 16 KiB at 0xffffffff80174000; boot thread id 1, idle thread id 2
+vblk: virtio-blk at 00:0x3.0 id 0x1042 (modern), ready, 16384 sectors, queue 16 of 256, features VERSION_1 RO (offered 0x10130006e74), interrupts on IRQ 11 (INTA, level), DMA pool 6 frames, no IOMMU
+catalog: ready 4 entries, 392 bytes; all executable source pages reserved
+catalog: vsh id=4097 ABI=4 policy=1 size=662984
+catalog: hello id=4098 ABI=0 policy=2 size=13128
+catalog: rixie id=4099 ABI=3 policy=3 size=662376
+catalog: gui-demo id=4100 ABI=5 policy=4 size=14400
+app: module "hello" at 0x357000-0x35a348, 13128 bytes
+elf: hello: ET_EXEC entry 0x400000, 3 PT_LOAD, 3 pages, VOS ABI 0
+user[hello]: Hello from VOS!
+proc: exit status 0 (cs=0x23 rip=0x40002a)
+proc[hello]: exited status 0, all frames reclaimed
+boot: checks passed
+desktop: scene ready; kernel-owned BGRX surface, bounded console viewport
+gui: native ABI5 demo; one surface <=163840 bytes; upload <=4096 bytes; event queue=16
+user[gui-demo]: gui-demo: PRESENTED; Rust ring 3; a/b changes pixels; q exits
+user[gui-demo]: gui-demo: KEY a PRESENTED
+user[gui-demo]: gui-demo: KEY b PRESENTED
+user[gui-demo]: gui-demo: RELEASED; clean exit
+proc: exit status 0 (cs=0x23 rip=0x40002a)
+gui: PASS; kernel-CR3 reclamation, all resources restored
+user[vsh]: VOS native vsh (Rust, ring 3)
+user[vsh]: Type help for commands.
+user[vsh]: 
+user[vsh]: VOS> 
+apps
+user[vsh]: hello
+user[vsh]: 
+user[vsh]: rixie
+user[vsh]: 
+user[vsh]: VOS> 
+hello
+console: foreground child 4
+user[hello]: Hello from VOS!
+proc: exit status 0 (cs=0x23 rip=0x40002a)
+console: restored parent 3
+user[vsh]: VOS> 
+rixie
+console: foreground child 5
+user[rixie]: Rixie Core v0 - deterministic offline prototype
+user[rixie]: I use predefined replies, not a conversational AI model.
+user[rixie]: Type help for topics; exit ends this session.
+user[rixie]: 
+user[rixie]: Rixie> 
+help
+user[rixie]: Topics: hello, help, about, questions, explain <command>, exit
+user[rixie]: Explain vsh commands: help, clear, echo, pwd, ls, cd, cat, exit
+user[rixie]: Explanations are text only; Rixie does not execute shell commands.
+user[rixie]: Rixie> 
+exit
+user[rixie]: Goodbye from Rixie.
+proc: exit status 0 (cs=0x23 rip=0x40002a)
+console: restored parent 3
+user[vsh]: VOS> 
+echo restored
+user[vsh]: restored
+user[vsh]: 
+user[vsh]: VOS> 
+ls
+user[vsh]: docs
+user[vsh]: 
+user[vsh]: VOS> 
+cd docs
+user[vsh]: VOS>docs> 
+pwd
+user[vsh]: /docs
+user[vsh]: 
+user[vsh]: VOS>docs> 
+cat welcome.txt
+user[vsh]: Unified apps: real read-only filesystem.
+user[vsh]: 
+user[vsh]: VOS>docs> 
+cd /
+user[vsh]: VOS> 
+exit
+proc: exit status 0 (cs=0x23 rip=0x40002a)
+native: vsh PASS, process reclaimed

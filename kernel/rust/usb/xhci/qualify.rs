@@ -133,6 +133,8 @@ pub struct Pci {
     pub power_state: u8,
     pub msi: u8,
     pub msix: u8,
+    /// PCI Express capability offset (0 if absent); read-only, for Transactions Pending.
+    pub pcie: u8,
     pub msix_table: u32,
     pub msix_pba: u32,
     pub state: State,
@@ -251,6 +253,12 @@ fn walk<C: Config>(c: &mut C, p: &mut Pci) -> Result<(), Reason> {
                 }
                 p.msi = at;
                 p.state.msi_control = (header >> 16) as u16;
+            }
+            0x10 => {
+                if p.pcie != 0 {
+                    return Err(Reason::DuplicateCapability);
+                }
+                p.pcie = at;
             }
             0x11 => {
                 if p.msix != 0 {

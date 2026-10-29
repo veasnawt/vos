@@ -14,6 +14,7 @@
 #include "console.h"
 #include "efi_memory.h"
 
+_Static_assert(sizeof(struct xhci_contain_report) == 376, "Rust containment report ABI");
 _Static_assert(sizeof(struct xhci_qualify_report) == 224 &&
                _Alignof(struct xhci_qualify_report) == 8, "Rust report ABI");
 _Static_assert(offsetof(struct xhci_qualify_report, base) == 8 &&
@@ -103,7 +104,8 @@ void xhci_qualify_bar_retain(uint64_t token)
 int xhci_qualify_conflict(const char *cmdline)
 {
     return boot_option(cmdline, "vos.usb_probe=1") &&
-           (boot_option(cmdline, "vos.usb2-qualify=1") || boot_option(cmdline, "vos.usb2-residue=1"));
+           (boot_option(cmdline, "vos.usb2-qualify=1") || boot_option(cmdline, "vos.usb2-residue=1") ||
+            boot_option(cmdline, "vos.usb2-contain=1"));
 }
 
 /* USB.2-C3a registry: firmware-owned frames reserved for the whole boot.
@@ -112,6 +114,7 @@ static struct {
     uint64_t frame[XHCI_RESIDUE_FRAMES];
     uint8_t role[XHCI_RESIDUE_FRAMES];
     unsigned count, session, ran;
+    unsigned frozen;                    /* USB.2-C3b.1: no reservation may be made */
     const struct boot_info *bi;         /* USB.2-C3a.3: C3a.2's inputs, for one session */
     const struct resv_table *resv;
 } residue;
@@ -144,7 +147,7 @@ int xhci_residue_page(uint64_t frame)
 
 int xhci_residue_reserve(uint64_t frame, uint32_t role)
 {
-    if (!residue.session || !qualify_context()) return -4;
+    if (!residue.session || residue.frozen || !qualify_context()) return -4;
     if (residue_owned(frame)) return -3;
     if (residue.count == XHCI_RESIDUE_FRAMES) return -2;  /* fail closed */
     if (pmm_reserve_frame(frame) != PMM_OK) return -4;    /* allocated or protected */
@@ -298,5 +301,78 @@ int xhci_residue_boot(const char *cmdline)
     serial_puts(r.status == 0 ? "usb2c3a: PLAN VALID (dry run, not executed); residue complete and protected\r\n"
                 : r.status > 0 ? "usb2c3a: REFUSED: residue incomplete or controller unqualified; protected pages kept\r\n"
                                : "usb2c3a: REFUSED: HAZARD: firmware frame already allocated; activation refused\r\n");
+    return 1;
+}
+
+/* ---- USB.2-C3b.1 containment dry-run: reports only, writes nothing ---- */
+static unsigned contain_ran;
+
+/* Packed names in bit/index order; the report fields are contiguous u32s. */
+static const char contain_fields[] =
+    "state\0refusals\0uefi\0command\0status\0usbcmd\0usbsts\0findings\0excluded\0irq_off\0plan_len\0trace_len";
+static const char contain_refusals[] =
+    "not-uefi\0unqualified\0profile\0pci-command\0pci-status\0pcie-unknown\0pcie-busy\0interrupts\0running\0"
+    "usbcmd\0usbsts\0ports\0slots\0scratchpads\0residue\0memory\0changed\0plan\0unreadable";
+static const char contain_kinds[] = "?\0revalidate\0pci-write\0mmio-write\0reset-poll\0verify";
+static const char contain_results[] = "ok\0CHANGED\0NOT-ISSUED\0NOT-RUN";
+
+static const char *nth(const char *list, unsigned n)
+{
+    while (n--) while (*list++) ;
+    return list;
+}
+
+int xhci_contain_boot(const char *cmdline)
+{
+    if (!boot_option(cmdline, "vos.usb2-contain=1")) return 1; /* no effects or output */
+    if (contain_ran++) return 0;
+    serial_puts("usb2c3b1: containment DRY-RUN (read-only rehearsal); this build has no PCI or xHCI write path\r\n");
+    struct candidates c = {0};
+    struct pci_addr unused;
+    int stopped = pci_scan_bus0(visit, &c, &unused);
+    uint64_t free = pmm_free_count();
+    unsigned maps = devmap_count(), owned = residue.count;
+    const struct boot_info *bi = residue.bi;
+    uint32_t uefi = bi && bi->efi && bi->efi_mmap_tags == 1 && !bi->efi_bs_active;
+    struct xhci_contain_report r;
+    qual.fn = c.first; qual.active = 1; residue.session = 1; residue.frozen = 1;
+    int32_t status = vos_xhci_contain_v1(c.count, !stopped, devmap_maxphys(), uefi, &r);
+    qual.active = 0; residue.session = 0; residue.frozen = 0; residue.bi = NULL; residue.resv = NULL;
+    if (status == -2) {
+        serial_puts("usb2c3b1: FAIL: invalid report interface\r\n");
+        return 0;
+    }
+    print(&r.q);
+    const uint32_t *f = &r.state;
+    const char *name = contain_fields;
+    for (unsigned i = 0; i < 12; i++, name += 1) {
+        serial_puts(i % 8 ? " " : "\r\nusb2c3b1: ");
+        serial_puts(name); serial_puts("="); serial_hex(f[i]);
+        while (*name) name++;
+    }
+    for (unsigned i = 0; i < r.trace_len && i < 6; i++) {
+        const uint32_t *t = r.trace[i];
+        serial_puts("\r\nusb2c3b1: trace="); serial_dec(t[0] >> 24);
+        serial_puts(" "); serial_puts(nth(contain_kinds, t[0] & 0xff));
+        serial_puts(" "); serial_puts(nth(contain_results, t[0] >> 8 & 0xff));
+        serial_puts(" width="); serial_dec(t[0] >> 16 & 0xff);
+        serial_puts(" offset="); serial_hex(t[1]); serial_puts(" old="); serial_hex(t[2]);
+        serial_puts(" new="); serial_hex(t[3]);
+    }
+    serial_puts("\r\n");
+    int restored = !qual.token && !devmap_scope_token() && devmap_count() == maps && !devmap_audit() &&
+                   pmm_free_count() == free && residue.count == owned && pmm_check_in(pmm_kernel()) == PMM_OK;
+    if (r.q.status < 0 || !restored) {
+        serial_puts("usb2c3b1: FAIL: integrity (lease, mapping, reservation or PMM state)\r\n");
+        return 0;
+    }
+    if (status == 0) {
+        serial_puts("usb2c3b1: DRY-RUN COMPLETE: eligible; every proposed write is listed above and NONE was issued\r\n");
+        return 1;
+    }
+    serial_puts("usb2c3b1: REFUSED:");
+    for (unsigned b = 0; b < 19; b++)
+        if (r.refusals >> b & 1) { serial_puts(" "); serial_puts(nth(contain_refusals, b)); }
+    serial_puts("; nothing written\r\n");
     return 1;
 }

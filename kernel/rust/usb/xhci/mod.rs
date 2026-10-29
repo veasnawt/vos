@@ -2,6 +2,7 @@
 #![forbid(unsafe_code)]
 
 pub mod capabilities;
+pub mod containment;
 pub mod controller;
 pub mod discovery;
 pub mod dma;

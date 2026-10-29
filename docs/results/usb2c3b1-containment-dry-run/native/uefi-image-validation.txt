@@ -1,0 +1,65 @@
+xorriso 1.5.6 : RockRidge filesystem manipulator, libburnia project.
+
+xorriso : NOTE : Loading ISO image tree from LBA 0
+xorriso : UPDATE :     330 nodes read in 1 seconds
+xorriso : NOTE : Detected El-Torito boot information which currently is set to be discarded
+Drive current: -indev '/home/veasnawt/src/vos-usb2c3b1/build/usb2c3b1-1/smoke-native-3/uefi.iso'
+Media current: stdio file, overwriteable
+Media status : is written , is appendable
+Boot record  : El Torito , MBR protective-msdos-label cyl-align-off GPT APM
+Media summary: 1 session, 6156 data blocks, 12.0m data,  935g free
+Volume id    : 'ISOIMAGE'
+El Torito catalog  : 1555  1
+El Torito cat path : /boot.catalog
+El Torito images   :   N  Pltf  B   Emul  Ld_seg  Hdpt  Ldsiz         LBA
+El Torito boot img :   1  UEFI  y   none  0x0000  0x00   5760          54
+El Torito img path :   1  /efi.img
+System area options: 0x00000201
+System area summary: MBR protective-msdos-label cyl-align-off GPT APM
+ISO image size/512 : 24624
+Partition offset   : 0
+MBR heads per cyl  : 64
+MBR secs per head  : 32
+MBR partition table:   N Status  Type        Start       Blocks
+MBR partition      :   1   0x00  0xee            1        24623
+GPT                :   N  Info
+GPT disk GUID      :      0da38a3a58894b4c87c6b851e79b81fa
+GPT entry array    :      20  176  separated
+GPT lba range      :      64  24578  24623
+GPT partition name :   1  4700610070003000
+GPT partname local :   1  Gap0
+GPT partition GUID :   1  0da38a3a58894b4c87c7b851e79b81fa
+GPT type GUID      :   1  a2a0d0ebe5b9334487c068b6b72699c7
+GPT partition flags:   1  0x1000000000000001
+GPT start and size :   1  64  152
+GPT partition name :   2  450046004900200062006f006f007400200070006100720074006900740069006f006e00
+GPT partname local :   2  EFI boot partition
+GPT partition GUID :   2  0da38a3a58894b4c87c4b851e79b81fa
+GPT type GUID      :   2  28732ac11ff8d211ba4b00a0c93ec93b
+GPT partition flags:   2  0x1000000000000001
+GPT start and size :   2  216  5760
+GPT partition path :   2  /efi.img
+GPT partition name :   3  48004600530050004c0055005300
+GPT partname local :   3  HFSPLUS
+GPT partition GUID :   3  0da38a3a58894b4c87c5b851e79b81fa
+GPT type GUID      :   3  005346480000aa11aa1100306543ecac
+GPT partition flags:   3  0x1000000000000001
+GPT start and size :   3  5976  18000
+GPT partition name :   4  4700610070003100
+GPT partname local :   4  Gap1
+GPT partition GUID :   4  0da38a3a58894b4c87c2b851e79b81fa
+GPT type GUID      :   4  a2a0d0ebe5b9334487c068b6b72699c7
+GPT partition flags:   4  0x1000000000000001
+GPT start and size :   4  23976  600
+APM                :   N  Info
+APM block size     :      2048
+APM gap fillers    :      2
+APM partition name :   1  Gap0
+APM partition type :   1  ISO9660_data
+APM start and size :   1  16  1478
+APM partition name :   2  HFSPLUS_Hybrid
+APM partition type :   2  Apple_HFS
+APM start and size :   2  1494  4500
+APM partition name :   3  Gap1
+APM partition type :   3  ISO9660_data
+APM start and size :   3  5994  162

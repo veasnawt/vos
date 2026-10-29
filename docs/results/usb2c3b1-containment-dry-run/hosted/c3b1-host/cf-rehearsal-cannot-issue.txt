@@ -1,0 +1,9 @@
+error[E0599]: no method named `issue` found for reference `&Rehearsal` in the current scope
+ --> /home/veasnawt/src/vos-usb2c3b1/build/usb2c3b1-1/precheck/c3b1-host-trial/cf-rehearsal-cannot-issue.rs:2:25
+  |
+2 | fn f(r: &Rehearsal) { r.issue(); }
+  |                         ^^^^^ method not found in `&Rehearsal`
+
+error: aborting due to 1 previous error
+
+For more information about this error, try `rustc --explain E0599`.

@@ -58,6 +58,11 @@ pub struct Facts {
     pub bus_master: bool,
     pub controller_ready: bool,
     pub interrupter_enables: u16,
+    /// The platform verified that no interrupt can be raised: INTE, EINT and
+    /// every IP clear, MSI/MSI-X disabled, INTx not asserted. Only then is the
+    /// per-interrupter mask unnecessary (USB.2-C3b.1, D1). `false` keeps the
+    /// original requirement for every other state.
+    pub interrupts_disabled: bool,
     pub legacy_present: bool,
     pub legacy_os_owned: bool,
 }
@@ -101,6 +106,12 @@ impl Violation {
             Self::Trailing => 9,
         }
     }
+}
+
+/// Interrupters whose IE must be cleared first: all enabled ones, unless the
+/// platform has verified interrupts are already disabled.
+fn mask_needed(f: &Facts) -> u16 {
+    if f.interrupts_disabled { 0 } else { f.interrupter_enables }
 }
 
 /// Preconditions shared by planning and validation.
@@ -147,7 +158,7 @@ pub fn plan(f: &Facts) -> Result<Plan, Refusal> {
         }
     };
     for i in 0..INTERRUPTERS {
-        if f.interrupter_enables & (1 << i) != 0 {
+        if mask_needed(f) & (1 << i) != 0 {
             push(Step::MaskInterrupter(i));
         }
     }
@@ -180,7 +191,7 @@ pub fn validate(steps: &[Step], f: &Facts) -> Result<(), Violation> {
         match s {
             Step::MaskInterrupter(i) => {
                 let bit = if i < INTERRUPTERS { 1u16 << i } else { 0 };
-                if bit == 0 || f.interrupter_enables & bit == 0 {
+                if bit == 0 || mask_needed(f) & bit == 0 {
                     return Err(Violation::Unneeded);
                 }
                 if masked & bit != 0 {
@@ -198,7 +209,7 @@ pub fn validate(steps: &[Step], f: &Facts) -> Result<(), Violation> {
                 if halt {
                     return Err(Violation::Duplicate);
                 }
-                if masked != f.interrupter_enables {
+                if masked != mask_needed(f) {
                     return Err(Violation::MissingMask);
                 }
                 halt = true;
@@ -210,7 +221,7 @@ pub fn validate(steps: &[Step], f: &Facts) -> Result<(), Violation> {
                 if f.run_stop && !halt {
                     return Err(Violation::MissingHalt);
                 }
-                if masked != f.interrupter_enables {
+                if masked != mask_needed(f) {
                     return Err(Violation::MissingMask);
                 }
                 halted = true;

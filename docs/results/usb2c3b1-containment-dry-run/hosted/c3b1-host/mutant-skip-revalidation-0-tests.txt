@@ -1,0 +1,20 @@
+
+running 1 test
+test revalidation_detects_every_change_and_unreadable_pass ... FAILED
+
+failures:
+
+---- revalidation_detects_every_change_and_unreadable_pass stdout ----
+
+thread 'revalidation_detects_every_change_and_unreadable_pass' (1697) panicked at tests/rust/xhci_containment.rs:302:9:
+assertion `left == right` failed: BAR moved at R0: Rehearsal { state: DryRunComplete, refusals: 0, len: 6, plan_len: 5, trace: [Trace { kind: 1, result: 0, width: 0, step: 1, offset: 0, old: 3511423140, new: 3948206881 }, Trace { kind: 2, result: 2, width: 16, step: 2, offset: 4, old: 7, new: 3 }, Trace { kind: 1, result: 0, width: 0, step: 3, offset: 0, old: 3511423140, new: 3511423140 }, Trace { kind: 3, result: 2, width: 32, step: 4, offset: 64, old: 0, new: 2 }, Trace { kind: 4, result: 3, width: 32, step: 5, offset: 68, old: 1024, new: 2048 }, Trace { kind: 5, result: 3, width: 32, step: 6, offset: 68, old: 1, new: 0 }] }
+  left: (DryRunComplete, 0, 3, 6)
+ right: (Refused, 65536, 2, 1)
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    revalidation_detects_every_change_and_unreadable_pass
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 10 filtered out; finished in 0.00s
+

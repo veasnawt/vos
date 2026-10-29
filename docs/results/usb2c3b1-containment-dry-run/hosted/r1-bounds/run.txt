@@ -1,0 +1,9 @@
+{
+  "archive_sha256": "4baf4f8e63b65fa3d95fa112cc57b8554fb09683f6df2c5c41458ac2c26b8b55",
+  "primary_checker_Rust_symbol": true,
+  "bounds": "R1 Rust bounds: 497127 cases PASS; original C and u128 oracles; exact 0/1",
+  "validators": "R1 validator differential: 283 files PASS (197 accepted, 86 rejected); codes and all image fields agree",
+  "host_tool_exact_output_comparisons": 283,
+  "fail_closed_mutation_controls": "2/2 PASS: deny-all cannot pass bounds vectors or accept valid hello",
+  "status": "PASS"
+}

@@ -287,6 +287,8 @@ void kernel_main(uint32_t mb2_magic, uint32_t mb2_info)
     if (!usb_conflict) {
         xhci_residue_boot_memory(&bi, &boot_resv);      /* USB.2-C3a.3: excluded firmware RAM */
         check(xhci_residue_boot(bi.cmdline), "USB.2-C3a firmware residue guard integrity");
+        xhci_residue_boot_memory(&bi, &boot_resv);      /* USB.2-C3b.1: the same inputs for its own session */
+        check(xhci_contain_boot(bi.cmdline), "USB.2-C3b.1 containment dry-run integrity");
     }
     /* U1: the screen console (framebuffer, VGA text when positively known, or none). */
     screen_init(&bi);

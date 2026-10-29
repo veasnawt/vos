@@ -1,0 +1,24 @@
+{
+  "passed": false,
+  "physical_hardware": false,
+  "expect": "containment",
+  "inputs": {
+    "/boot/vos.bin": "2bf50222f843dcf599bfc8d910f1fd2afb75cc1a3ec89f4c8b30beca2050f145",
+    "/boot/vsh.elf": "e7af3ee56164f587f7ca1338f7ddfcb202b6f4310f10b4dcba6a2576743cb181",
+    "/boot/hello.elf": "c6c6416195a0f18d680d7f8f19be52ce02ff02912ef3bac45324fbe88006cd06",
+    "/boot/rixie.elf": "77104da3b33caf809daf5e6674ac4e2fa9edf6a9e2e5dd59828514df76490d32",
+    "/boot/gui-demo.elf": "f114dbe666ff479229ce851658847a4b11b5f0e5b61f45b73d8a0ee39fc57faa"
+  },
+  "cases": [],
+  "failures": [
+    {
+      "case": "uefi-t-qemu-xhci+kbd",
+      "error": "'set' object is not subscriptable",
+      "where": "Traceback (most recent call last):\n  File \"/home/veasnawt/src/vos-usb2c3b1/scripts/test-usb2c3a2-native.py\", line 774, in main\n    r = boot(out, fw, iso, variables, mode, device, syms, args.expect)\n  File \"/home/veasnawt/src/vos-usb2c3b1/scripts/test-usb2c3a2-native.py\", line 550, in boot\n    need(not any(a1[f] for f in range(NFRAMES) if not want[f]), 'no unavailable frame ever allocated')\n             ^^^\n  File \"/home/veasnawt/src/vos-usb2c3b1/scripts/test-usb2c3a2-native.py\", line 550, in <genexpr>\n    need(not any(a1[f] for f in range(NFRAMES) if not want[f]), 'no unavailable frame ever allocated')\n                                                      ~~~~^^^\nTypeError: 'set' object is not subscriptable\n"
+    }
+  ],
+  "uefi_iso_sha256": "d8ce43c725e3c5c09e1dc4f255d03b5440718af4888c7a91f0c81fa452d22cf2",
+  "subset": "uefi-t-qemu-xhci+kbd",
+  "disk_sha256": "5ef98c6e0b4dd983dfb7db1a8d73d0175cbb86c358e61f2957c689d164890dcc",
+  "peak_in_use_frames": null
+}

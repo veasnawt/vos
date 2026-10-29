@@ -1,0 +1,20 @@
+
+running 1 test
+test proposed_writes_have_exact_widths_offsets_masks_and_preserve_reserved_bits ... FAILED
+
+failures:
+
+---- proposed_writes_have_exact_widths_offsets_masks_and_preserve_reserved_bits stdout ----
+
+thread 'proposed_writes_have_exact_widths_offsets_masks_and_preserve_reserved_bits' (1927) panicked at tests/rust/xhci_containment.rs:329:5:
+assertion `left == right` failed
+  left: (4, 32, 4)
+ right: (4, 16, 4)
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    proposed_writes_have_exact_widths_offsets_masks_and_preserve_reserved_bits
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 10 filtered out; finished in 0.00s
+

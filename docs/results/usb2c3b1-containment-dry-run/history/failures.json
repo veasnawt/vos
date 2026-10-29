@@ -1,0 +1,35 @@
+{
+  "retained_failures": [
+    {
+      "run": "kernel-1 / kernel-2 / kernel-3 measurements (history/measure-1,3,4)",
+      "what": "code+rodata growth 9,674 / 8,860 / 8,899 B over the 4,096 B ceiling then in force",
+      "outcome": "work stopped at the budget gate before any test, commit or publication; owner approved a C3b.1-only ceiling of 9,728 B; no safety check was removed to reduce size"
+    },
+    {
+      "run": "measure-2 (empty)",
+      "what": "kernel-2's first build failed on an unused import (ZERO)",
+      "outcome": "import removed; empty directory retained in build/"
+    },
+    {
+      "run": "blackout (history/blackout-incident.json)",
+      "what": "power loss wiped the session scratch directory (throwaway smoke outputs, budget request copy)",
+      "outcome": "source verified intact (14/14 files equal to the saved patch; byte-identical rebuild); later artifacts kept under build/"
+    },
+    {
+      "run": "pre-final test development",
+      "what": "revalidation-0 conflated unreadable with changed; the trace lacked its verify entry (trace_len 5); a C drift test flipped an already-read port",
+      "outcome": "fixed before kernel-3; the drift test now flips the last port"
+    },
+    {
+      "run": "smoke-native-1/2 uefi-t-qemu-xhci+kbd (FAIL)",
+      "what": "runner defect: the refusal check rebound the name of the PMM oracle 'want', so the later PMM check failed with \"'set' object is not subscriptable\"; the kernel verdict was correct (REFUSED 0x5c80)",
+      "outcome": "renamed to 'required'; tracebacks now recorded per case; smoke-native-3 and the final matrix PASS; both failed traces preserved as verified gzip"
+    },
+    {
+      "run": "final/c3a2-san (exit 127)",
+      "what": "runner defect: a bash function was invoked through guard.sh's /bin/sh exec",
+      "outcome": "re-run as c3a2-san-2 through bash -c: PASS 262,450 checks"
+    }
+  ],
+  "production_code_changed_by_failures": "only before kernel-3 (budget optimization and the two state-machine fixes); none after"
+}
