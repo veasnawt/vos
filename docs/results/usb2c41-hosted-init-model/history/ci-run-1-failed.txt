@@ -1,0 +1,8 @@
+CI run 1 on PR #34 head 533a7d4 (Build smoke, step "Verify USB.2-C4.1 hosted initialization protocol model"): FAILED.
+Gitleaks passed. Failure, from the job log:
+  RuntimeError: kernel, build or ISO inputs mention the model: scripts/measure-usb2c41.py
+Cause: the static-isolation gate of scripts/test-usb2c41.py scans TRACKED files; its allow-list named the oracle and the gate
+script but not scripts/measure-usb2c41.py. Locally the file was still untracked when the gate ran, so the check passed.
+Not a model or kernel defect: the measurement script legitimately names the model. Fix: add scripts/measure-usb2c41.py to the
+allow-list. The local evidence run (gates-3) used the script before this one-line change; its recorded hash is
+4ee570c6a1d0d191... The CI run on the fix is the verification of the changed script.

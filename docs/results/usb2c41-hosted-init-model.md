@@ -192,6 +192,11 @@ Development-time defects the checks caught (all fixed; none were in a kernel):
 3. A refused `ObserveStatus` still overwrote the halted belief (found by the refusals-preserve-state assertion).
 4. After `RequestOsOwnership` the machine did not record that it owns the semaphore.
 
+CI run 1 on the PR **failed** (kept in `history/ci-run-1-failed.txt`): the gate's static-isolation scan checks tracked files and its
+allow-list omitted `scripts/measure-usb2c41.py`, which legitimately names the model; locally that file was still untracked, so the
+check passed. Not a model or kernel defect. The one-line allow-list fix is verified in isolation locally and by the full gate in CI;
+the local evidence run used the script before that change (hash below). Lesson: run the gate after `git add`.
+
 Gate run 1 **failed** (kept in `history/gates-1-failed`): 91 of 94 mutants killed, 3 survived. Two exposed real test gaps
 (no test for `ClearRunStop` on an idle controller; none advanced time past a completed command's deadline) and one was
 masked by a second check (defense in depth); directed tests were added rather than any check weakened. Run 2 passed
@@ -260,7 +265,8 @@ the verified files (full hashes in the manifest and `gates-3/result.json`):
 | `tests/rust/xhci_init_support.rs` | `be7bdd5bde329fb8…` |
 | `tests/rust/xhci_init_model.rs` | `fc9c91a0249fdad4…` |
 | `scripts/xhci_init_oracle.py` | `fa7da1b2dd4da3ca…` |
-| `scripts/test-usb2c41.py` | `4ee570c6a1d0d191…` |
+| `scripts/test-usb2c41.py` (evidence run `gates-3`) | `4ee570c6a1d0d191…` |
+| `scripts/test-usb2c41.py` (current, after the CI allow-list fix) | `2fc1567d6267f872…` |
 | exported oracle trace (kept in `build/`) | `d61a72830eead5e2…` |
 
 ## 12. Not tested and not claimed

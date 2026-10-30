@@ -9,10 +9,10 @@
   "be7bdd5bde329fb8fff63d48fa4c4aefa639314779a58e28554bac1cb53f77ba  tests/rust/xhci_init_support.rs",
   "fc9c91a0249fdad46756f6a573e385abe84bd6c85c3805bcc61f6734065594ba  tests/rust/xhci_init_model.rs",
   "fa7da1b2dd4da3ca34aaab58835498272fc0e672feed414760668d21be023725  scripts/xhci_init_oracle.py",
-  "4ee570c6a1d0d1917e15b2a37424109df4b221ae0a41167fa589eceada2c82a3  scripts/test-usb2c41.py",
+  "2fc1567d6267f872da8d9d8f18bd09fd176c12fd51a7aa0aaee01a5efc0e649f  scripts/test-usb2c41.py",
   "4bcc36ecd8c68e74b3cf465d271b1ea6984e887fca09a8940123e58ecbba9974  scripts/measure-usb2c41.py",
   "873cf52151d44e6835d1335fafb447dc25db1f424368e5eb4094e5c2674b39a9  .github/workflows/build-smoke.yml",
-  "6a11d5448ca87a0314044b93fc40ab8e7f3a6ee9d3d5f783ec269221e083f59d  docs/results/usb2c41-hosted-init-model.md"
+  "c94c438ce43a33f660d2cc2909004b6289b245afc1146bb2a5f4b48e52bc4b89  docs/results/usb2c41-hosted-init-model.md"
  ],
  "oracle_trace_sha256": "d61a72830eead5e2b8fa9484cabfb82f3b08988ebe921c39a8ccdcaa05866abe (trace.txt kept in build/usb2c41-1/gates-3, not in the repository)",
  "production_kernel_identity": {
@@ -46,6 +46,7 @@
   "404e6c0fcd4c1a2c966156b2170eae267b3d803916fb239aa3b7f6cee4a9d9c5  gates-3/run.txt",
   "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  gates-3/tests-build.txt",
   "756d25417082ae76bfe686fd32e6dc13f50b8339d26a4890037c846397f30bdd  gates-3/tests.txt",
+  "bf85cdc38803fdbefdb8d690192013d1d8041b36cd30b38ad3536b918d83cb4e  history/ci-run-1-failed.txt",
   "dbdd0efbb85c32f3913c385387a6633291e50aa1b98d27b45a2a98f7261ad3fd  history/gates-1-failed/result.json",
   "8046a4deff3d1423873cb01dc7ad672afeeb9d0848805594bf40577a797afb54  history/gates-1-failed/run.txt",
   "687f7d143af93b1987affa496ae2310fcbea98cb989bdb5f48e3b051088c6dec  history/gates-2-superseded/result.json",
@@ -63,5 +64,6 @@
   "87438324c87d1308900682de68c0f9bb7947b8d061259ba52dd4afc4c7aec43e  storage/guard.sh",
   "b86981241602d8d779bd372ef99220d2e5be8752b23e559785472facb1980021  storage/storage-forecast.md",
   "05df21c18d47ee32f04ff9886ff3430a38c836ad4127fbd082364b5aa6440afa  storage/storage-log.txt"
- ]
+ ],
+ "evidence_run_script_note": "gates-3/result.json records scripts/test-usb2c41.py as 4ee570c6a1d0d191...; the committed script differs by one allow-list entry added after CI run 1 (history/ci-run-1-failed.txt)"
 }

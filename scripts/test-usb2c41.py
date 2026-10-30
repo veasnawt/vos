@@ -208,7 +208,7 @@ def main():
             raise RuntimeError('model crate must be #![no_std] and #![forbid(unsafe_code)]')
         mentions = []
         tracked = subprocess.run(['git', 'ls-files'], cwd=ROOT, capture_output=True, text=True, check=True).stdout.split()
-        allowed = re.compile(r'^(kernel/rust/usb/xhci_init/|tests/rust/xhci_init_|scripts/(xhci_init_oracle|test-usb2c41)|docs/|README\.md|\.github/workflows/build-smoke\.yml|\.gitleaksignore)')
+        allowed = re.compile(r'^(kernel/rust/usb/xhci_init/|tests/rust/xhci_init_|scripts/(xhci_init_oracle|test-usb2c41|measure-usb2c41)|docs/|README\.md|\.github/workflows/build-smoke\.yml|\.gitleaksignore)')
         for f in tracked:
             if allowed.match(f) or not (ROOT / f).is_file() or (ROOT / f).stat().st_size > 2_000_000:
                 continue
