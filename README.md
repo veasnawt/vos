@@ -113,7 +113,11 @@ For standalone shell and Rust application builds, see
 [the shell record](docs/results/n4-native-vsh.md) and [Rust applications](docs/rust-apps.md).
 
 Use focused checks appropriate to a change. Build smoke and full-history secret
-audit run in GitHub CI. Historical sanitizer, native runtime, PCAP, mutation and
+audit run in GitHub CI, on pull requests and on pushes to `main`. Build smoke runs
+the hosted USB gates (including the firmware-table lease gate) and has a separate
+`QEMU runtime smoke (BIOS and UEFI)` job that boots a representative subset of the
+generated images in QEMU; it is QEMU evidence only, not physical-hardware evidence,
+and is not yet a required check. Historical sanitizer, native runtime, PCAP, mutation and
 storage results remain in their linked reports; they are not all rerun for a
 documentation update. Existing storage admission and preservation rules still
 apply to local builds. Do not run broad cleanup over protected evidence.
