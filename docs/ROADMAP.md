@@ -12,7 +12,9 @@ following R0/R1 and USB.1 integration PR #22.
 
 The accepted milestone sequence is preserved below. Proposed desktop,
 Rust-kernel and portability work is **not implementation authorization**.
-VOS is pre-alpha and targets independent physical x86_64 computers; current
+VOS is pre-alpha and targets independent physical x86_64 computers, with UEFI as the primary long-term boot target
+and Legacy BIOS a supported compatibility path (USB, DMA, memory-management and HID logic stay firmware-independent);
+current
 recorded acceptance verification is QEMU SeaBIOS/OVMF only; the partial physical
 boot observation below is not hardware acceptance. See [STATUS](STATUS.md) for precise limits.
 Historical publication and branch narratives remain in their existing reports.

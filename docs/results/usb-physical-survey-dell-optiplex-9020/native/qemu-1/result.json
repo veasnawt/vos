@@ -1,0 +1,62 @@
+{
+ "results": [
+  {
+   "case": "dual-bios-cd-survey",
+   "passed": true,
+   "summary": [
+    "usb: SUMMARY xhci 00:02.0 1b36:000d v0100 ports 8 connected 1 slots 64 spad 0"
+   ],
+   "seconds": 21.3
+  },
+  {
+   "case": "dual-bios-usb-survey",
+   "passed": true,
+   "summary": [
+    "usb: SUMMARY xhci 00:02.0 1b36:000d v0100 ports 8 connected 1 slots 64 spad 0"
+   ],
+   "seconds": 21.3
+  },
+  {
+   "case": "dual-uefi-cd-survey",
+   "passed": true,
+   "summary": [
+    "usb: SUMMARY xhci 00:02.0 1b36:000d v0100 ports 8 connected 1 slots 64 spad 0"
+   ],
+   "seconds": 29.5
+  },
+  {
+   "case": "dual-uefi-usb-survey",
+   "passed": false,
+   "failure": "no \"usb: survey complete\"",
+   "seconds": 200.3
+  },
+  {
+   "case": "dual-bios-cd-default",
+   "passed": true,
+   "seconds": 32.0
+  },
+  {
+   "case": "dual-uefi-cd-default",
+   "passed": true,
+   "seconds": 36.0
+  },
+  {
+   "case": "biosonly-bios-cd-survey",
+   "passed": true,
+   "summary": [
+    "usb: SUMMARY xhci 00:02.0 1b36:000d v0100 ports 8 connected 1 slots 64 spad 0"
+   ],
+   "seconds": 21.3
+  },
+  {
+   "case": "biosonly-bios-usb-survey",
+   "passed": true,
+   "summary": [
+    "usb: SUMMARY xhci 00:02.0 1b36:000d v0100 ports 8 connected 1 slots 64 spad 0"
+   ],
+   "seconds": 21.3
+  }
+ ],
+ "passed": 7,
+ "cases": 8
+}

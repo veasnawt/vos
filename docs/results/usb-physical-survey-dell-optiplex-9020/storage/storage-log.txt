@@ -1,0 +1,17 @@
+S0 checkout: tree=21269807 (projected 22000000, limit 27500000); ADMISSION 2026-10-30: forecast 90000000 stop 120000000 cap 135000000 accepted (owner confirmation of Antigravity acceptance), separate from earlier approvals
+BEFORE sv-kernel-iso: tree=21270030 projected=25000000 c_free=22867443712
+AFTER  sv-kernel-iso: rc=0 tree=44282619 growth=23012589 projected=25000000 limit(1.25x)=31250000
+BEFORE sv-dual-iso-try1: tree=45509295 projected=15000000 c_free=22867406848
+AFTER  sv-dual-iso-try1: rc=0 tree=56810914 growth=11301619 projected=15000000 limit(1.25x)=18750000
+BEFORE sv-bios-comp: tree=56811015 projected=9000000 c_free=22867210240
+AFTER  sv-bios-comp: rc=0 tree=63639950 growth=6828935 projected=9000000 limit(1.25x)=11250000
+BEFORE sv-dual-assemble: tree=63641368 projected=32000000 c_free=22867066880
+AFTER  sv-dual-assemble: rc=0 tree=89901480 growth=26260112 projected=32000000 limit(1.25x)=40000000
+BEFORE sv-qemu-1: tree=89907144 projected=8000000 c_free=22867132416
+AFTER  sv-qemu-1: rc=1 tree=91667762 growth=1760618 projected=8000000 limit(1.25x)=10000000
+BEFORE sv-dual-assemble-2: tree=91668223 projected=16000000 c_free=22870908928
+AFTER  sv-dual-assemble-2: rc=0 tree=105355776 growth=13687553 projected=16000000 limit(1.25x)=20000000
+NOTE: tree above 85% of the stop line
+BEFORE sv-qemu-2: tree=105355918 projected=6000000 c_free=22870908928
+AFTER  sv-qemu-2: rc=0 tree=107147744 growth=1791826 projected=6000000 limit(1.25x)=7500000
+NOTE: tree above 85% of the stop line
