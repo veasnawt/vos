@@ -1,7 +1,7 @@
 /*
- * Host build of the kernel's ELF validator (arch/x86_64/elf.c).
- * Make selects VOS_ELF_USE_RUST and links the actual kernel Rust archive.
- * Direct C-only builds use its documented, equivalence-tested hosted reference.
+ * Host build of the kernel's ELF validator. Since A1 the validator is Rust: Make selects VOS_ELF_USE_RUST and links
+ * the actual kernel Rust archive, which defines elf_validate itself (arch/x86_64/elf.c is not compiled).
+ * Direct C-only builds compile elf.c, the frozen, equivalence-tested C reference.
  * usage: elfcheck FILE
  * Exit 0: accepted; 1: rejected (reason printed); 2: usage or I/O error.
  * The tests compare its verdicts with scripts/check-user-elf.sh.
