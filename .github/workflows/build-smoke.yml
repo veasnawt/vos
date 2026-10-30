@@ -2,19 +2,26 @@ name: Build smoke
 
 on:
   pull_request:
+  push:
+    branches: [main]
   workflow_dispatch:
 
 permissions:
   contents: read
 
+# A newer push to a pull request supersedes the older run; runs on main and manual runs are never cancelled.
+concurrency:
+  group: build-smoke-${{ github.event_name }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
 jobs:
   build-smoke:
     name: Freestanding builds and user ELF static tests
     runs-on: ubuntu-24.04
-    timeout-minutes: 20
+    timeout-minutes: 25
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
         with:
           persist-credentials: false
 
@@ -36,6 +43,24 @@ jobs:
         run: |
           rustup toolchain install nightly-2026-09-03 --profile minimal --target x86_64-unknown-none
           echo "RUSTC=$(rustup which --toolchain nightly-2026-09-03 rustc)" >> "$GITHUB_ENV"
+
+      - name: Record tool versions
+        shell: bash
+        run: |
+          set -euo pipefail
+          {
+            grep -E '^(NAME|VERSION)=' /etc/os-release
+            echo "runner image: ${ImageOS:-unknown} ${ImageVersion:-unknown}"
+            gcc --version | sed -n 1p
+            ld --version | sed -n 1p
+            make --version | sed -n 1p
+            python3 --version
+            "$RUSTC" --version
+            qemu-system-x86_64 --version | sed -n 1p
+            grub-mkrescue --version
+            xorriso --version 2>&1 | sed -n 1p
+            dpkg-query -W -f='${Package} ${Version}\n' ovmf qemu-system-x86 grub-pc-bin grub-efi-amd64-bin xorriso mtools gcc-multilib binutils e2fsprogs
+          } | tee -a "$GITHUB_STEP_SUMMARY"
 
       - name: Build x86_64 BIOS and UEFI ISOs
         run: |
@@ -120,3 +145,123 @@ jobs:
           if nm -C build/x86_64/vos.bin | grep -E 'core::(panicking|fmt)'; then
             echo "the production kernel must stay free of Rust panic and formatting machinery"; exit 1
           fi
+
+      - name: Verify the read-only firmware-table lease (hosted, real devmap.c, sanitizers, mutation controls)
+        run: python3 -I -B scripts/test-usb-firmware-lease.py --out build/usb-firmware-lease-ci
+
+      # Failure only, text only (result.json and logs of the gates, never binaries, images or mutant workers), kept 7 days.
+      - name: Keep the text logs of a failed run
+        if: failure()
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
+        with:
+          name: build-smoke-logs
+          path: |
+            build/*-ci/result.json
+            build/*-ci/*.txt
+          retention-days: 7
+          if-no-files-found: ignore
+
+  # Boots the generated images in QEMU (TCG, no KVM, no devices of the host): a representative subset of the native USB
+  # survey matrix under SeaBIOS and OVMF, and the BIOS regression boots. It is deliberately NOT a required check yet; it
+  # becomes one only after its stability has been shown and the "Protect main" ruleset is changed by the repository owner.
+  # Timeouts come from measured runs: the required job needed 9.7-14.1 minutes (limit 25), this job 3.5-4.7 minutes (limit 25);
+  # a hung boot is failed by the harness after 180 s per case, and the step limits (18 and 5 minutes) end a stuck run.
+  qemu-runtime-smoke:
+    name: QEMU runtime smoke (BIOS and UEFI)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+        with:
+          persist-credentials: false
+
+      - name: Install build prerequisites
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            gcc-multilib binutils make python3 \
+            grub-pc-bin grub-efi-amd64-bin xorriso mtools \
+            qemu-system-x86 ovmf e2fsprogs
+
+      - name: Prepare the existing bare-metal Rust toolchain
+        shell: bash
+        run: |
+          rustup toolchain install nightly-2026-09-03 --profile minimal --target x86_64-unknown-none
+          echo "RUSTC=$(rustup which --toolchain nightly-2026-09-03 rustc)" >> "$GITHUB_ENV"
+
+      - name: Record tool versions
+        shell: bash
+        run: |
+          set -euo pipefail
+          {
+            grep -E '^(NAME|VERSION)=' /etc/os-release
+            echo "runner image: ${ImageOS:-unknown} ${ImageVersion:-unknown}"
+            gcc --version | sed -n 1p
+            ld --version | sed -n 1p
+            make --version | sed -n 1p
+            python3 --version
+            "$RUSTC" --version
+            qemu-system-x86_64 --version | sed -n 1p
+            grub-mkrescue --version
+            xorriso --version 2>&1 | sed -n 1p
+            dpkg-query -W -f='${Package} ${Version}\n' ovmf qemu-system-x86 grub-pc-bin grub-efi-amd64-bin xorriso mtools gcc-multilib binutils e2fsprogs
+          } | tee -a "$GITHUB_STEP_SUMMARY"
+
+      - name: Build the production and survey images (BIOS and UEFI)
+        run: |
+          make ARCH=x86_64 iso
+          make ARCH=x86_64 uefi-iso
+          make ARCH=x86_64 usb-survey-iso
+          make ARCH=x86_64 usb-survey-uefi-iso
+          sha256sum build/x86_64/vos.iso build/x86_64/vos-uefi.iso build/x86_64/vos-usb-survey.iso build/x86_64/vos-uefi-usb-survey.iso build/x86_64/vos.bin
+
+      # Each case boots an image in QEMU and checks the guest's own serial output; a missing marker, a guest panic, an
+      # integrity message or a timeout fails the step. Nothing is retried.
+      - name: Boot default and read-only survey images under SeaBIOS and OVMF (QEMU)
+        timeout-minutes: 18
+        run: |
+          python3 -I -B scripts/test-usb-survey-native.py \
+            --kernel-dir build/x86_64 --out build/usb-survey-native-ci \
+            --cases bios-default-boot-with-xhci,uefi-default-boot-with-xhci,bios-default-boot-2gib-iommu,uefi-default-boot-2gib-iommu,bios-survey-one-xhci,uefi-survey-one-xhci,bios-survey-ehci-keyboard,uefi-survey-ehci-keyboard,bios-survey-intel-iommu,uefi-survey-intel-iommu,bios-survey-tables-above-1gib,uefi-survey-tables-above-1gib
+
+      - name: Boot the shared-path regression entries under SeaBIOS (QEMU)
+        timeout-minutes: 5
+        run: |
+          python3 -I -B scripts/test-usb-inc2-regression.py \
+            --kernel build/x86_64/vos.bin --hello build/x86_64/user/hello.elf --out build/usb-inc2-regression-ci
+
+      # Evidence that the images really booted (not only built) and that no healthy boot shows a fault marker.
+      - name: Check that every case produced a VOS boot log without fault markers
+        shell: bash
+        run: |
+          set -euo pipefail
+          shopt -s nullglob
+          logs=(build/usb-survey-native-ci/*/serial.txt build/usb-inc2-regression-ci/*/serial.txt)
+          echo "serial logs: ${#logs[@]} (12 native cases + 4 regression entries expected)"
+          [ "${#logs[@]}" -eq 16 ] || { echo "unexpected number of serial logs"; exit 1; }
+          if grep -L 'boot: kernel command line' "${logs[@]}" | grep .; then
+            echo "a log above is not a VOS boot log"; exit 1
+          fi
+          if grep -En '^exc: |panic:|triple fault|INTEGRITY|FAILURE|VOS-TEST: FAIL' "${logs[@]}"; then
+            echo "fault marker in a boot that must be healthy"; exit 1
+          fi
+          for f in "${logs[@]}"; do printf '%s: ' "$f"; tail -n 1 "$f" | cut -c1-120; done
+
+      # Failure only, text only (serial and QEMU logs, command lines and result files; no images, screenshots or firmware
+      # variable stores), kept 7 days.
+      - name: Keep the text logs of a failed run
+        if: failure()
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
+        with:
+          name: qemu-runtime-smoke-logs
+          path: |
+            build/usb-survey-native-ci/**/*.txt
+            build/usb-survey-native-ci/**/*.json
+            build/usb-inc2-regression-ci/**/*.txt
+            build/usb-inc2-regression-ci/**/*.json
+            build/usb-inc2-regression-ci/grub.cfg
+          retention-days: 7
+          if-no-files-found: ignore
