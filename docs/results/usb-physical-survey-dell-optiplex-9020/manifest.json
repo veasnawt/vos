@@ -11,7 +11,7 @@
  "changed_source_sha256": [
   "33f4d145730610566f0882eb51adaa02d10463443e7653e8296babfa22b5f8fc  docs/plans/MASTER-PLAN.md",
   "87341f5f4e6f43b2bf8905d4af2c484e2684e198f16dcd304d0542601e3d50fb  docs/ROADMAP.md",
-  "354a40626b7d58f55c82fd899ab55bde811b6ff0d4d4a0940fa99f9d98702a0f  docs/results/usb-physical-survey-dell-optiplex-9020.md",
+  "0a60f5e4ce2333c6625e860fe1591a8ae9a72b48afe17eb4db505ce1db5031a3  docs/results/usb-physical-survey-dell-optiplex-9020.md",
   "b0422101c999a99a859030fd2a2e70c393f8e97cf4fe3b632e1fbbbce0d39a35  docs/results/usb-physical-survey-dell-optiplex-9020-procedure.md"
  ],
  "evidence_sha256_format": "<sha256>  <path relative to this directory> (manifest.json and secret-audit.json excluded)",
@@ -74,7 +74,24 @@
   "c1c2577965906cbe0d8eca35e35a125f28955142ca4bf9f047aab261ff79efce  native/qemu-2/dual-uefi-usb-survey/screen.png",
   "727e830573764b0a31f54b9e69cc77a67951c45e043ea93d6a04c52364f1c5c6  native/qemu-2/dual-uefi-usb-survey/serial.txt",
   "01d993b05939e962a76166fa34969c4f42534d935c33e79d2e487d7bad599c2f  native/qemu-2/result.json",
+  "a2002bd71cccd27322c1c15a02e95dad43fea8afe6494a876fd5c495c0d54603  physical/README.md",
+  "54fe60fbbd29dd4ef2357bf3fffba93534955e652cfbace56ad3773d54889111  physical/original-sha256.txt",
+  "579c7d746a92eaa2171c99f49e4ce5ea51fc78254161c1459ff49c6cb8c4e7c8  physical/photos/photo_2026-10-30_13-50-58.jpg",
+  "cb0b223c9f86fb9a30fbc0dee5519b3d128a431a3234248743fb21fbb6deaffb  physical/photos/photo_2026-10-30_13-51-28.jpg",
+  "59868589d3a71b23457bee07850c1ed2b48f96c2bd006a513c1876eee62fa03d  physical/photos/photo_2026-10-30_13-55-09.jpg",
   "5097d364271e992d2308e9637db7508f560ecda6807b530028b351611393660e  storage/guard.sh",
   "ccc9cfd9149682214cb29bb5e2ac463973bd49e84fad25a0d4d888a61351d41d  storage/storage-log.txt"
- ]
+ ],
+ "physical_evidence": {
+  "originals": [
+   "579c7d746a92eaa2171c99f49e4ce5ea51fc78254161c1459ff49c6cb8c4e7c8  physical/photos/photo_2026-10-30_13-50-58.jpg",
+   "cb0b223c9f86fb9a30fbc0dee5519b3d128a431a3234248743fb21fbb6deaffb  physical/photos/photo_2026-10-30_13-51-28.jpg",
+   "59868589d3a71b23457bee07850c1ed2b48f96c2bd006a513c1876eee62fa03d  physical/photos/photo_2026-10-30_13-55-09.jpg"
+  ],
+  "associated_survey_iso": "736e5fdeb8b6b32c28374d6dee5b5be4bedef18d39cbede05517e69e0a887535  vos-usb-survey-dual.iso (owner-stated; not provable from a photo)",
+  "build": "6d6a941a04fe31b318d184408e3c1a55e7d63f8d",
+  "evidence_commit": "88c64fb322072ca406729b3251c1f213246646e2 (merged as 496cc29d18886d2f88a0c8bce2848d2a3a2995a9)",
+  "normal_boot_photo_provenance": "separate: consistent with the default entry of the tested image (kernel layout equal to the tested kernel QEMU log), image not confirmable from the photo",
+  "capture_times": "unknown: no EXIF; file names are export times"
+ }
 }
