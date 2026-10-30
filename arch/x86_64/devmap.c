@@ -302,6 +302,7 @@ int devmap_scope_release(uint64_t token)
 static int scope_install(unsigned kind, uint64_t pa, uint64_t length, uint64_t start,
                          const char *what, uint64_t *token, uint64_t *va, int ro)
 {
+    ro = 0; /* ci negative control: the read-only request is silently dropped */
     if (count == DEVMAP_MAX || scope.generation == UINT64_MAX ||
         used_bytes + length > DEVMAP_MAX_BYTES)
         return DEVMAP_EFULL;
