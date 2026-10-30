@@ -1034,3 +1034,150 @@ fn the_new_survey_code_never_writes_and_reads_nothing_beyond_its_documented_regi
     let rs = include_str!("../../arch/x86_64/rust/xhci_survey.rs");
     assert!(!rs.contains("xusb2pr =") && !rs.contains("XUSB2PR ="), "routing is never assigned");
 }
+
+// ---- USB survey v2.1: final-summary rendering of values the survey already captured -------------------------------------
+
+fn summary_ehci(f: &UsbFn, e: &Ehci) -> String {
+    let mut out = Capture::default();
+    render_summary_ehci(f, e, &mut out);
+    out.text()
+}
+
+#[test]
+fn the_summary_shows_the_four_raw_routing_registers_and_tells_zero_from_not_read() {
+    let r = Routing { xusb2pr: 0x0000_0000, xusb2prm: 0x0000_3fff, usb3_pssen: 0x0000_0000, usb3prm: 0x0000_000f };
+    let mut out = Capture::default();
+    render_summary_routing(&Some(r), &mut out);
+    assert_eq!(out.text(), "usb: SUMMARY routing raw: xusb2pr 0x00000000 xusb2prm 0x00003fff pssen 0x00000000 usb3prm 0x0000000f\r\n");
+    // every register zero is a value that was read, and prints as zeros
+    let mut out = Capture::default();
+    render_summary_routing(&Some(Routing::default()), &mut out);
+    assert_eq!(out.text(), "usb: SUMMARY routing raw: xusb2pr 0x00000000 xusb2prm 0x00000000 pssen 0x00000000 usb3prm 0x00000000\r\n");
+    // not read is a different line, and never contains a register value
+    let mut out = Capture::default();
+    render_summary_routing(&None, &mut out);
+    assert_eq!(out.text(), "usb: SUMMARY routing raw: not read\r\n");
+    // extreme values: 32-bit all ones in some registers (the all-ones function is the None case, so keep one different), no truncation
+    let mut out = Capture::default();
+    render_summary_routing(&Some(Routing { xusb2pr: u32::MAX, xusb2prm: u32::MAX, usb3_pssen: u32::MAX, usb3prm: 0x8000_0001 }), &mut out);
+    let text = out.text();
+    assert_eq!(text, "usb: SUMMARY routing raw: xusb2pr 0xffffffff xusb2prm 0xffffffff pssen 0xffffffff usb3prm 0x80000001\r\n");
+    assert!(text.trim_end().len() <= 118);
+    // the derived line the existing summary prints is unchanged by the raw one
+    assert_eq!(r.usb2_to_xhci(), 0);
+}
+
+#[test]
+fn the_ehci_summary_reports_controller_status_and_every_captured_port() {
+    let (mut t, f) = ehci_pci();
+    let mut r = ehci_regs();
+    let e = inspect_ehci(&mut r, &mut t, &f);
+    assert_eq!(
+        summary_ehci(&f, &e),
+        "usb: SUMMARY ehci 8c2d cmd 0x00010001 sts 0x00000000 halted 0 configflag 1 ports 6 legacy bios 1 os 0\r\n\
+         usb: SUMMARY ehci 8c2d portsc: p1=00001005 p2=00001000 p3=00003001 p4=00000000 p5=00000000 p6=00000000\r\n"
+    );
+    // halted and a cleared CONFIGFLAG are shown as such
+    let mut r2 = ehci_regs();
+    r2.set(0x24, 0x0000_1000).set(0x60, 0);
+    let e2 = inspect_ehci(&mut r2, &mut t, &f);
+    assert!(summary_ehci(&f, &e2).contains(" sts 0x00001000 halted 1 configflag 0 ports 6 "), "{}", summary_ehci(&f, &e2));
+    // no legacy capability is "no-legacy", not a legacy line of zeros
+    let mut r3 = ehci_regs();
+    r3.set(8, 0);
+    let mut bare = Tree::default();
+    bare.func(0, 0x1a, 0, 0x8086, 0x8c2d, 0x0c0320, 0x80);
+    let e3 = inspect_ehci(&mut r3, &mut bare, &f);
+    assert_eq!(e3.legacy, None);
+    let text = summary_ehci(&f, &e3);
+    assert!(text.contains(" ports 6 no-legacy\r\n") && !text.contains("legacy bios"), "{text}");
+    // zero root ports is a completed walk with nothing to list, not a failure
+    let mut r4 = ehci_regs();
+    r4.set(4, 0);
+    let e4 = inspect_ehci(&mut r4, &mut t, &f);
+    assert_eq!(e4.stopped, None);
+    let text = summary_ehci(&f, &e4);
+    assert!(text.contains(" ports 0 legacy bios 1 os 0\r\n") && text.ends_with("usb: SUMMARY ehci 8c2d portsc: none\r\n"), "{text}");
+}
+
+#[test]
+fn an_ehci_walk_that_stopped_is_not_summarised_as_zeros() {
+    let (mut t, f) = ehci_pci();
+    let full = {
+        let mut r = ehci_regs();
+        inspect_ehci(&mut r, &mut t, &f);
+        r.reads
+    };
+    // a refusal at every read position: always the single NOT READ line, never a register value or a port row
+    for k in 0..full {
+        let mut r = ehci_regs();
+        r.fail_after = Some(k);
+        let e = inspect_ehci(&mut r, &mut t, &f);
+        let text = summary_ehci(&f, &e);
+        assert_eq!(text, format!("usb: SUMMARY ehci 8c2d status NOT READ: read refused after {} reads\r\n", k + 1), "fail_after {k}");
+    }
+    let mut r = Regs::default();
+    r.set(0, 0xffff_ffff);
+    let e = inspect_ehci(&mut r, &mut t, &f);
+    assert_eq!(summary_ehci(&f, &e), "usb: SUMMARY ehci 8c2d status NOT READ: reads as all ones after 1 reads\r\n");
+    let mut r = ehci_regs();
+    r.set(0, 0x0100_0044);
+    let e = inspect_ehci(&mut r, &mut t, &f);
+    assert_eq!(summary_ehci(&f, &e), "usb: SUMMARY ehci 8c2d status NOT READ: bad CAPLENGTH after 3 reads\r\n");
+    // an EHCI that was never inspected is a default value with no stop reason; it is not rendered by the survey, which
+    // only passes controllers it walked, so the renderer itself needs no such case
+}
+
+#[test]
+fn the_ehci_summary_keeps_extreme_values_whole_within_118_columns() {
+    let (mut t, f) = ehci_pci();
+    // fifteen ports, every PORTSC and status register all ones: widest possible content
+    let mut r = ehci_regs();
+    r.set(0, 0x0100_0040).set(4, 15);
+    let op = 0x40;
+    r.set(op, u32::MAX).set(op + 4, u32::MAX).set(op + 0x40, u32::MAX);
+    for i in 0..15 {
+        r.set(op + 0x44 + 4 * i, u32::MAX);
+    }
+    let e = inspect_ehci(&mut r, &mut t, &f);
+    assert_eq!((e.stopped, e.ports), (None, 15));
+    let text = summary_ehci(&f, &e);
+    let lines: Vec<&str> = text.lines().collect();
+    assert_eq!(lines.len(), 4, "status plus ceil(15 / 6) port rows: {text}");
+    assert_eq!(lines[0], "usb: SUMMARY ehci 8c2d cmd 0xffffffff sts 0xffffffff halted 1 configflag 1 ports 15 legacy bios 1 os 0");
+    assert_eq!(lines[1], "usb: SUMMARY ehci 8c2d portsc: p1=ffffffff p2=ffffffff p3=ffffffff p4=ffffffff p5=ffffffff p6=ffffffff");
+    assert_eq!(lines[3], "usb: SUMMARY ehci 8c2d portsc: p13=ffffffff p14=ffffffff p15=ffffffff");
+    assert!(lines.iter().all(|l| l.len() <= 118), "{text}");
+    // the widest row (rows 7-12 carry two-digit port numbers) is still whole, and the ports are numbered 1..=15 once each
+    assert_eq!(lines[2], "usb: SUMMARY ehci 8c2d portsc: p7=ffffffff p8=ffffffff p9=ffffffff p10=ffffffff p11=ffffffff p12=ffffffff");
+    assert!(lines[2].len() <= 118 && lines[2].len() >= 100, "{}", lines[2].len());
+    // a device id of four digits at the top of its range
+    let mut f2 = f;
+    f2.device = 0xffff;
+    assert!(summary_ehci(&f2, &e).starts_with("usb: SUMMARY ehci ffff cmd "));
+}
+
+#[test]
+fn the_summary_renderers_take_only_captured_values_and_the_block_order_is_kept() {
+    // Their signatures take no Pci or Mmio, so they cannot read; the source checks pin that and the call site.
+    let hosted = include_str!("../../kernel/rust/usb/xhci/survey.rs");
+    for name in ["pub fn render_summary_routing(r: &Option<Routing>, out: &mut dyn Out)", "pub fn render_summary_ehci(f: &UsbFn, e: &Ehci, out: &mut dyn Out)"] {
+        assert_eq!(hosted.matches(name).count(), 1, "{name}");
+    }
+    let rs = include_str!("../../arch/x86_64/rust/xhci_survey.rs");
+    let start = rs.find("fn summary_lines(").unwrap();
+    let body = &rs[start..rs[start..].find("\n}\n").unwrap() + start];
+    let at = |needle: &str| body.find(needle).unwrap_or_else(|| panic!("summary_lines lacks {needle:?}"));
+    // existing markers keep their order; the new lines sit after the EHCI count and before the DMA lines, and the
+    // never-established statement is still the last thing printed
+    assert!(at("SUMMARY usb2 routing: ") < at("SUMMARY ehci connected root ports:"));
+    assert!(at("SUMMARY ehci connected root ports:") < at("render_summary_routing"));
+    assert!(at("render_summary_routing") < at("render_summary_ehci"));
+    assert!(at("render_summary_ehci") < at("SUMMARY dma: table"));
+    assert!(at("SUMMARY dma: table") < at("SUMMARY DMA isolation NOT ESTABLISHED"));
+    assert!(body.trim_end().ends_with("l.flush(out);") && body.rfind("SUMMARY DMA isolation NOT ESTABLISHED").unwrap() > body.rfind("render_summary_ehci").unwrap());
+    // no controller access in the function: it receives captured values only
+    for bad in ["inspect_", "intel_routing(", "read32", "Mmio", "Pci"] {
+        assert!(!body.contains(bad), "summary_lines mentions {bad}");
+    }
+}

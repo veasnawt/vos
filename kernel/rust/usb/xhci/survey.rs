@@ -975,3 +975,60 @@ pub fn render_ehci(f: &UsbFn, e: &Ehci, out: &mut dyn Out) {
         l.flush(out);
     }
 }
+
+/// Final-summary line for the four Intel routing registers, exactly as `intel_routing` captured them. `None` means they
+/// were not read (not an Intel xHCI, or the function reads all ones), which is different from a register that is zero.
+/// Presentation only: it takes the captured values, never a `Pci`, so it cannot read hardware.
+pub fn render_summary_routing(r: &Option<Routing>, out: &mut dyn Out) {
+    let mut l = Line::new();
+    l.s("usb: SUMMARY routing raw: ");
+    match r {
+        Some(r) => {
+            l.s("xusb2pr ").x(u64::from(r.xusb2pr), 8).s(" xusb2prm ").x(u64::from(r.xusb2prm), 8);
+            l.s(" pssen ").x(u64::from(r.usb3_pssen), 8).s(" usb3prm ").x(u64::from(r.usb3prm), 8);
+        }
+        None => {
+            l.s("not read");
+        }
+    }
+    l.flush(out);
+}
+
+/// Root ports shown per final-summary row: six `" pNN=xxxxxxxx"` entries stay within the 118 visible columns.
+const SUMMARY_PORTS_PER_ROW: usize = 6;
+
+/// Final-summary lines for one EHCI: controller status, then the captured PORTSC words. A walk that stopped leaves the
+/// registers after the stop at their default zero, so those values are reported as unavailable instead of as zeros.
+/// Presentation only: it takes the captured `Ehci`, never an `Mmio` or `Pci`, so it cannot read hardware.
+pub fn render_summary_ehci(f: &UsbFn, e: &Ehci, out: &mut dyn Out) {
+    let mut l = Line::new();
+    l.s("usb: SUMMARY ehci ").hx(u64::from(f.device), 4);
+    if let Some(why) = e.stopped {
+        l.s(" status NOT READ: ").s(why).s(" after ").d(u64::from(e.reads)).s(" reads");
+        l.flush(out);
+        return;
+    }
+    l.s(" cmd ").x(u64::from(e.usbcmd), 8).s(" sts ").x(u64::from(e.usbsts), 8).s(" halted ").d(u64::from(e.halted()));
+    l.s(" configflag ").d(u64::from(e.configflag & 1)).s(" ports ").d(u64::from(e.ports));
+    match e.legacy {
+        Some((_, sup, _)) => {
+            l.s(" legacy bios ").d(u64::from(sup >> 16 & 1)).s(" os ").d(u64::from(sup >> 24 & 1));
+        }
+        None => {
+            l.s(" no-legacy");
+        }
+    }
+    l.flush(out);
+    let shown = usize::from(e.ports).min(e.portsc.len());
+    if shown == 0 {
+        l.s("usb: SUMMARY ehci ").hx(u64::from(f.device), 4).s(" portsc: none");
+        l.flush(out);
+    }
+    for (row, chunk) in e.portsc.get(..shown).unwrap_or(&[]).chunks(SUMMARY_PORTS_PER_ROW).enumerate() {
+        l.s("usb: SUMMARY ehci ").hx(u64::from(f.device), 4).s(" portsc:");
+        for (k, sc) in chunk.iter().enumerate() {
+            l.s(" p").d((row * SUMMARY_PORTS_PER_ROW + k + 1) as u64).s("=").hx(u64::from(*sc), 8);
+        }
+        l.flush(out);
+    }
+}

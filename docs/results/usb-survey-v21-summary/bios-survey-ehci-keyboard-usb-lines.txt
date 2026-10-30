@@ -1,0 +1,23 @@
+usb: USB input survey v2: PCI configuration, xHCI, EHCI and firmware tables are only read; nothing is written
+usb: survey (read-only) pci functions 6 buses 1 bridges 0 usb 1 iommu-fn 0
+usb: ehci 00:02.0 0x8086:0x24cd cls 0x0c0320 rev 0x10 sub 0x11001af4 cmd 0x0107
+usb: no xHCI controller found on the buses that were scanned
+usb: ehci 00:02.0 8086:24cd hci 0x0100 ports 6 companions 0 x 0 cmd 0x00080031 sts 0x0000c00c halted 0 configflag 1
+usb:     p1=00001005 p2=00001000 p3=00001000 p4=00001000 p5=00001000 p6=00001000
+usb:   connected 1 companion-owned 0 legacy@0x68 bios 0 os 0 smi 0xc0000000
+usb:   ehci root port 1 connected hs enabled 1 owner ehci (a hub behind it? devices below it are not visible)
+usb: acpi rsdp revision 0 rsdt 0x07fe2351 xsdt 0x00000000 root rsdt tables 5
+usb:   signatures FACP APIC HPET MCFG WAET
+usb: dma-protection facts (separate claims): table present no, hardware answers unknown
+usb:   translation enabled unknown, xhci translated unknown
+usb:   DMA isolation NOT ESTABLISHED: translation state is not a proof (translation tables are not read)
+usb: i8042 status 0x1c (output buffer 0, input buffer 0)
+usb: IOMMU: 0 PCI IOMMU function(s) of class 08/06; ACPI IOMMU tables are reported above
+usb: SUMMARY usb2 routing: not read
+usb: SUMMARY ehci connected root ports: 24cd=1
+usb: SUMMARY routing raw: not read
+usb: SUMMARY ehci 24cd cmd 0x00080031 sts 0x0000c00c halted 0 configflag 1 ports 6 legacy bios 0 os 0
+usb: SUMMARY ehci 24cd portsc: p1=00001005 p2=00001000 p3=00001000 p4=00001000 p5=00001000 p6=00001000
+usb: SUMMARY dma: table no hw unknown on unknown xhci unknown
+usb: SUMMARY DMA isolation NOT ESTABLISHED
+usb: survey complete. Nothing was written. The machine is halted: power it off.
