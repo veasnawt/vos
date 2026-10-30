@@ -1,0 +1,153 @@
+{
+ "hosted_only": true,
+ "device_access": false,
+ "sources_sha256": {
+  "arch/x86_64/devmap.c": "beb02d670326f3e216af323375eaa278168ab881d7449dd14a3b8646410211cd",
+  "tests/host/usb-firmware-lease.c": "988f278ad9d0172133958f049cfe1fcd053c5580a89025eda156e13f2f91566c",
+  "scripts/test-usb-firmware-lease.py": "4d64d7bca157a532f49554ac300eb304a64db1ab9df0d8c9d4204a47d09fc8bc",
+  "arch/x86_64/xhci_survey.c": "a82f50756e0f77e21ecf5eb118b1426d6dc859931407c1424a432c9810b62144",
+  "arch/x86_64/pmm.c": "fb02c276cc23ae010c86c1c5deb274b0411d31153db7e03c5aa3e6a85353137b"
+ },
+ "commands": [
+  [
+   "gcc",
+   "-std=gnu11",
+   "-Wall",
+   "-Wextra",
+   "-ffunction-sections",
+   "-fdata-sections",
+   "-Wl,--gc-sections",
+   "-fno-pie",
+   "-no-pie",
+   "-Iarch/x86_64",
+   "-Werror",
+   "-O1",
+   "-g",
+   "-fsanitize=address,undefined",
+   "-fno-sanitize-recover=all",
+   "-fno-omit-frame-pointer",
+   "tests/host/usb-firmware-lease.c",
+   "-o",
+   "/home/veasnawt/src/vos-usb-inc2/build/i2-1/r3-2/sanitizer"
+  ]
+ ],
+ "required_mutants": 8,
+ "sanitizer": "PASS: 595 checks; real PMM/devmap/xhci_survey C: firmware lease acceptance and every rejection, read-only NX supervisor UC leaves equal to the registry, audit and VMM device-leaf tamper detection, restoration, adapter refusals; zero PCI writes",
+ "mutation_controls": [
+  {
+   "name": "leaf-writable",
+   "breaks": "the lease leaf is writable",
+   "killed_by": [
+    "test"
+   ],
+   "exit": -6,
+   "first_failure": "FAIL tests/host/usb-firmware-lease.c:138 (e & PTE_P) && !(e & PTE_W) && (e & PTE_NX) && !(e & PTE_U)"
+  },
+  {
+   "name": "drop-1gib-rule",
+   "breaks": "a lease below the direct map is accepted",
+   "killed_by": [
+    "test"
+   ],
+   "exit": -6,
+   "first_failure": "rejected(0x3f000000,0x1000): got 0 want 1 (below 1 GiB)"
+  },
+  {
+   "name": "drop-memory-map-rule",
+   "breaks": "a lease outside firmware memory is accepted",
+   "killed_by": [
+    "test"
+   ],
+   "exit": -6,
+   "first_failure": "rejected(0x100100000,0x1000): got 0 want 1 (RAM above 1 GiB)"
+  },
+  {
+   "name": "drop-ram-overlap",
+   "breaks": "a page that RAM also claims counts as firmware memory",
+   "killed_by": [
+    "test"
+   ],
+   "exit": -6,
+   "first_failure": "FAIL tests/host/usb-firmware-lease.c:185 !devmap_firmware_range_ok(E_PA, 0x2000) && devmap_firmware_range_ok(E_PA, 0x1000)"
+  },
+  {
+   "name": "bad-memory-is-firmware",
+   "breaks": "bad memory counts as firmware memory",
+   "killed_by": [
+    "test"
+   ],
+   "exit": -6,
+   "first_failure": "FAIL tests/host/usb-firmware-lease.c:188 !devmap_firmware_range_ok(H_PA, 0x2000) && !devmap_firmware_range_ok(H_PA + 0x1000, 0x1000) && !devmap_firmware_range_ok(H_PA + 0xfff, 2) && !devmap_firmware_range_ok(H_PA + 0x1fff, 1)"
+  },
+  {
+   "name": "drop-devmap-overlap",
+   "breaks": "a lease may overlap an existing mapping",
+   "killed_by": [
+    "test"
+   ],
+   "exit": -6,
+   "first_failure": "rejected(0x100020000,0x2000): got 0 want 5 (overlaps an existing mapping)"
+  },
+  {
+   "name": "drop-maxphys",
+   "breaks": "a lease beyond MAXPHYADDR is accepted",
+   "killed_by": [
+    "test"
+   ],
+   "exit": -6,
+   "first_failure": "rejected(0x10000000000,0x1000): got 0 want 3 (beyond MAXPHYADDR)"
+  },
+  {
+   "name": "drop-size-bound",
+   "breaks": "a lease larger than 16 KiB is accepted",
+   "killed_by": [
+    "test"
+   ],
+   "exit": -6,
+   "first_failure": "rejected(0x100000000,0x5000): got 0 want 1 (above 16 KiB)"
+  },
+  {
+   "name": "registry-ignores-ro",
+   "breaks": "the registry expects a writable leaf",
+   "killed_by": [
+    "test"
+   ],
+   "exit": -6,
+   "first_failure": "FAIL tests/host/usb-firmware-lease.c:141 e == devmap_expected_pte(va + off)"
+  },
+  {
+   "name": "range-ok-overflow",
+   "breaks": "a range that wraps counts as firmware memory",
+   "killed_by": [
+    "test"
+   ],
+   "exit": -6,
+   "first_failure": "FAIL tests/host/usb-firmware-lease.c:181 !devmap_firmware_range_ok(UINT64_MAX - 0xfff, 0x2000) && !devmap_firmware_range_ok(UINT64_MAX, 1)"
+  },
+  {
+   "name": "range-ok-empty",
+   "breaks": "an empty range counts as firmware memory",
+   "killed_by": [
+    "test"
+   ],
+   "exit": -6,
+   "first_failure": "FAIL tests/host/usb-firmware-lease.c:180 !devmap_firmware_range_ok(A_PA, 0) && !devmap_firmware_range_ok(A_PA, (1ULL << 20) + 1)"
+  },
+  {
+   "name": "registry-not-recorded-ro",
+   "breaks": "the registry does not record the lease as read-only",
+   "killed_by": [
+    "test"
+   ],
+   "exit": -6,
+   "first_failure": "FAIL tests/host/usb-firmware-lease.c:135 devmap_count() == maps + 1 && map[maps].pa == pa && map[maps].end == pa + len && map[maps].va == va && map[maps].ro == 1"
+  }
+ ],
+ "mutation_summary": {
+  "total": 12,
+  "killed": 12,
+  "survived": [],
+  "invalid": []
+ },
+ "pass": true
+}

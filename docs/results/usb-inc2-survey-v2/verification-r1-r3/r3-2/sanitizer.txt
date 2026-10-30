@@ -1,0 +1,1 @@
+PASS: 595 checks; real PMM/devmap/xhci_survey C: firmware lease acceptance and every rejection, read-only NX supervisor UC leaves equal to the registry, audit and VMM device-leaf tamper detection, restoration, adapter refusals; zero PCI writes

@@ -1,0 +1,92 @@
+{
+ "archive_sha256": "c626b50e7ef6d4221a553789b063fa53e0492faa87e55b568f4564c91fe927e4",
+ "cases": {
+  "usb-resources": {
+   "build_rc": 0,
+   "run_rc": 0,
+   "last_line": [
+    "PASS: 1016 assertions; actual PMM/devmap/C-Rust ownership, rollback, stale tokens, context and retention"
+   ]
+  },
+  "usb2c1-qualify": {
+   "build_rc": 0,
+   "run_rc": 0,
+   "last_line": [
+    "PASS: 76 assertions; actual PMM/devmap/USB resource/xhci_qualify C with the bare-metal Rust archive: profile, rejections, overlap/RAM, PT failure, CR3/IF/IRQ, stale/double/cross-kind tokens, bounds, state-change integrity, retention and recovery; zero PCI writes"
+   ]
+  },
+  "usb2c3a-residue": {
+   "build_rc": 0,
+   "run_rc": 0,
+   "last_line": [
+    "PASS: real PMM/devmap/qualification/residue C with the bare-metal Rust archive; zero PCI writes"
+   ]
+  }
+ },
+ "commands": [
+  [
+   "gcc",
+   "-std=gnu11",
+   "-Wall",
+   "-Wextra",
+   "-Werror",
+   "-ffunction-sections",
+   "-fdata-sections",
+   "-Wl,--gc-sections",
+   "-fno-pie",
+   "-no-pie",
+   "-Iarch/x86_64",
+   "-O1",
+   "-g",
+   "-fsanitize=address,undefined",
+   "-fno-omit-frame-pointer",
+   "tests/host/usb-resources.c",
+   "/home/veasnawt/src/vos-usb-inc2/build/i2-1/kernel/rust/libvos_kernel.a",
+   "-o",
+   "/home/veasnawt/src/vos-usb-inc2/build/i2-1/r1/usb-resources-sanitizer"
+  ],
+  [
+   "gcc",
+   "-std=gnu11",
+   "-Wall",
+   "-Wextra",
+   "-Werror",
+   "-ffunction-sections",
+   "-fdata-sections",
+   "-Wl,--gc-sections",
+   "-fno-pie",
+   "-no-pie",
+   "-Iarch/x86_64",
+   "-O1",
+   "-g",
+   "-fsanitize=address,undefined",
+   "-fno-omit-frame-pointer",
+   "tests/host/usb2c1-qualify.c",
+   "/home/veasnawt/src/vos-usb-inc2/build/i2-1/kernel/rust/libvos_kernel.a",
+   "-o",
+   "/home/veasnawt/src/vos-usb-inc2/build/i2-1/r1/usb2c1-qualify-sanitizer"
+  ],
+  [
+   "gcc",
+   "-std=gnu11",
+   "-Wall",
+   "-Wextra",
+   "-Werror",
+   "-ffunction-sections",
+   "-fdata-sections",
+   "-Wl,--gc-sections",
+   "-fno-pie",
+   "-no-pie",
+   "-Iarch/x86_64",
+   "-O1",
+   "-g",
+   "-fsanitize=address,undefined",
+   "-fno-omit-frame-pointer",
+   "tests/host/usb2c3a-residue.c",
+   "/home/veasnawt/src/vos-usb-inc2/build/i2-1/kernel/rust/libvos_kernel.a",
+   "-o",
+   "/home/veasnawt/src/vos-usb-inc2/build/i2-1/r1/usb2c3a-residue-sanitizer"
+  ]
+ ],
+ "pass": true
+}
