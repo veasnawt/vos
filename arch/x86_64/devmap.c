@@ -335,7 +335,7 @@ static int scope_install(unsigned kind, uint64_t pa, uint64_t length, uint64_t s
         pd[i] = frame | PTE_P | PTE_W;
     }
     for (uint64_t off = 0; off < length; off += PAGE_SIZE) {
-        *pte_slot(start + off, 0) = (pa + off) | PTE_P | (ro ? 0 : PTE_W) | PTE_NX | uc_bits;
+        *pte_slot(start + off, 0) = (pa + off) | PTE_P | PTE_W | PTE_NX | uc_bits;
         invlpg(start + off);
     }
     map[count++] = (struct devmap_entry){pa, pa + length, start, uc_bits, what, ro};
