@@ -82,3 +82,9 @@ BEFORE i2-evidence-final: tree=239833453 projected=500000 c_free=23664762880
 AFTER  i2-evidence-final: rc=0 tree=239837914 growth=4461 projected=500000 limit(1.25x)=625000
 NOTE: tree above 85% of the stop line
 BEFORE i2-publication-supplement: tree=239806769 projected=500000 c_free=23662379008
+AFTER  i2-publication-supplement: rc=0 tree=239842244 growth=35475 projected=500000 limit(1.25x)=625000
+NOTE: tree above 85% of the stop line
+BEFORE i2-correction-evidence: tree=239844467 projected=400000 c_free=23657312256
+AFTER  i2-correction-evidence: rc=0 tree=239845148 growth=681 projected=400000 limit(1.25x)=500000
+NOTE: tree above 85% of the stop line
+BEFORE i2-correction-evidence-2: tree=239845510 projected=400000 c_free=23657439232

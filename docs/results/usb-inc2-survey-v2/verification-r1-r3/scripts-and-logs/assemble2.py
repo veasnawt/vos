@@ -30,6 +30,7 @@ else:
         'base_commit': head, 'worktree_changes_uncommitted': True, 'physical_hardware': False,
         'original_manifest_sha256_unchanged': sha(old),
         'report_sha256_in_original_manifest_at_210d25f': json.loads(old.read_text())['files']['../usb-inc2-survey-v2.md'],
+        'report_sha256_at_fe74e85_supplement_commit': hashlib.sha256(subprocess.run(['git', '-C', str(R), 'show', 'fe74e85:docs/results/usb-inc2-survey-v2.md'], capture_output=True).stdout).hexdigest(),
         'report_sha256_now': sha(R / 'docs/results/usb-inc2-survey-v2.md'),
         'new_sources_sha256': {t: sha(R / t) for t in tracked},
         'not_copied_hashes': {'test-kernel/vos.bin': sha(B / 'test-kernel/vos.bin'), 'test-kernel/vos.iso': sha(B / 'test-kernel/vos.iso'),

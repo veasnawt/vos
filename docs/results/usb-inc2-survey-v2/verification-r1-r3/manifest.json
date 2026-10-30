@@ -1,10 +1,11 @@
 {
- "base_commit": "210d25f28afb46dc6f73fa77605ba1587df851d4",
+ "base_commit": "fe74e8500327df55877b504b5ba471d246cd9460",
  "worktree_changes_uncommitted": true,
  "physical_hardware": false,
  "original_manifest_sha256_unchanged": "929aec5205053dd9b3b1b21467e7a07d395e2c3aebe9bbe7e855d881bdc6d2d6",
  "report_sha256_in_original_manifest_at_210d25f": "c7effde93c6470cefe08f728b231baaac048b140838f1aab7a3701d3a7e1ff8e",
- "report_sha256_now": "0035635b94495f414c634e0d742874f42743cfb053eab0f9dc480e591d873eed",
+ "report_sha256_at_fe74e85_supplement_commit": "0035635b94495f414c634e0d742874f42743cfb053eab0f9dc480e591d873eed",
+ "report_sha256_now": "476163c09389cfc59342e986b35295140a7fd656e1d0dab7316777ac0a78c98d",
  "new_sources_sha256": {
   "tests/host/usb-firmware-lease.c": "988f278ad9d0172133958f049cfe1fcd053c5580a89025eda156e13f2f91566c",
   "scripts/test-usb-firmware-lease.py": "4d64d7bca157a532f49554ac300eb304a64db1ab9df0d8c9d4204a47d09fc8bc"
@@ -16,7 +17,9 @@
   "kernel/vos.bin (production, unchanged)": "c60d498b6e72f381cb26b875595ffeaecd70388fb91c86092b38bcfdaa09986d"
  },
  "files": {
-  "README.md": "6879e3a8e5653f862122c62377c729d1c9b4bdd676e505a687974ad118adb8f3",
+  "README.md": "4c9836f28d2f7747ccb49e2d7f2203c1f8cd87b5e650b9ee92220a1464006c86",
+  "leak-audit-correction.json": "19593076f74ad54d5e8790d02da2a53bd94d51a98aeae9bacbcf8cc05b109d30",
+  "leak-audit-full-pr.json": "c8662becca8147e7f9b425d4a0de85d709b996e3c3cf361d2510f5ceec3586d9",
   "leak-audit.json": "9c9e519e5318f202baae9b430a20c90e49c7a589480281939390bd17c0a9f0a4",
   "r1/result.json": "3d0ece4bb063380d0a24114c6fb4265b8e917e94fd36bb5c85c12254b05365a5",
   "r1/usb-resources-build.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
@@ -40,12 +43,12 @@
   "r3-2/result.json": "59e8b9f76f215e170525fa29b264a4bc7336f453a0f13e2caa2860c3430a61a3",
   "r3-2/sanitizer-build.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
   "r3-2/sanitizer.txt": "eca11b04bd7867e7a4154bc8935f8ad38695dfc3c4cb479285ef89b2dad4f333",
-  "scripts-and-logs/assemble2.py": "dd2f0af29477a83fa4e525e77b3014eea324dd425ac4ed81b33407ab669e16a8",
+  "scripts-and-logs/assemble2.py": "36ffd4cddbf029219e61d10715b00832885cddc7260f5f1a6c8f2267c5113b1d",
   "scripts-and-logs/r1.py": "9e9ef29960c76aadd71efc46563931a67cfb74945423357b94afeaf34d53f616",
   "scripts-and-logs/r2b-build.txt": "8c7ab4cddef012dd9aef169d73a44ccec3baf96f020c4f81ec2b96e5f994e013",
   "scripts-and-logs/r2b-run-128M.txt": "900e3d9e56fb06a2950523f14fa38729b560e7596b599982c1e67105170f9b71",
   "scripts-and-logs/r2b-run-2G.txt": "7418caaf68327ed691da25e13266af6fa9f84d8c87ae573a6cae72caee3dc6fa",
   "scripts-and-logs/r2b-run.sh": "b84bdc90cfb11baf2ce322ff3ee6c529e63a259c4ee24c9b045f15b01a4f0d70",
-  "scripts-and-logs/storage-log.txt": "9e13419826a4022a0872799a181097b84828e9b6c9b481d7283e1895a075758f"
+  "scripts-and-logs/storage-log.txt": "7eea941ed328b6163c710fbc0285b9568786b2be724b56c7e407b35fab713f9e"
  }
 }
