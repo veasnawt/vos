@@ -1,0 +1,47 @@
+baseline = Increment 2 survey ISOs (survey sources byte-identical to main d67e3cd); v2.1 = this branch. usb: lines of each case, unified diff, no context.
+== bios-survey-one-xhci
+-usb:   dcbaap 0x07fdfd80 [reserved] crcr(lo) 0x07fdfc01 ir0 erstba 0x07fdfd40 [reserved] erdp 0x07fdfab8 [reserved]
++usb:   dcbaap 0x07fdfd80 [reserved] crcr(lo) 0x07fdfc01 ir0 erstba 0x07fdfd40 [reserved] erdp 0x07fdfa78 [reserved]
++usb: SUMMARY routing raw: not read
+== bios-survey-two-xhci-bridge-ehci
+-usb:   dcbaap 0x07fdfd80 [reserved] crcr(lo) 0x07fdfc01 ir0 erstba 0x07fdfd40 [reserved] erdp 0x07fdfae8 [reserved]
++usb:   dcbaap 0x07fdfd80 [reserved] crcr(lo) 0x07fdfc01 ir0 erstba 0x07fdfd40 [reserved] erdp 0x07fdfac8 [reserved]
++usb: SUMMARY routing raw: not read
++usb: SUMMARY ehci 24cd cmd 0x00080000 sts 0x00001000 halted 1 configflag 1 ports 6 legacy bios 0 os 0
++usb: SUMMARY ehci 24cd portsc: p1=00001000 p2=00001000 p3=00001000 p4=00001000 p5=00001000 p6=00001000
+== bios-survey-no-usb
++usb: SUMMARY routing raw: not read
+== bios-survey-ehci-keyboard
++usb: SUMMARY routing raw: not read
++usb: SUMMARY ehci 24cd cmd 0x00080031 sts 0x0000c00c halted 0 configflag 1 ports 6 legacy bios 0 os 0
++usb: SUMMARY ehci 24cd portsc: p1=00001005 p2=00001000 p3=00001000 p4=00001000 p5=00001000 p6=00001000
+== bios-survey-intel-iommu
+-usb:   dcbaap 0x07fdfd80 [reserved] crcr(lo) 0x07fdfc01 ir0 erstba 0x07fdfd40 [reserved] erdp 0x07fdfab8 [reserved]
++usb:   dcbaap 0x07fdfd80 [reserved] crcr(lo) 0x07fdfc01 ir0 erstba 0x07fdfd40 [reserved] erdp 0x07fdfaa8 [reserved]
++usb: SUMMARY routing raw: not read
+== bios-survey-amd-iommu
+-usb:   dcbaap 0x07fdfd80 [reserved] crcr(lo) 0x07fdfc01 ir0 erstba 0x07fdfd40 [reserved] erdp 0x07fdfa58 [reserved]
++usb:   dcbaap 0x07fdfd80 [reserved] crcr(lo) 0x07fdfc01 ir0 erstba 0x07fdfd40 [reserved] erdp 0x07fdfa88 [reserved]
++usb: SUMMARY routing raw: not read
+== bios-survey-tables-above-1gib
+-usb:   dcbaap 0x7ffdfd80 [reserved] crcr(lo) 0x7ffdfc01 ir0 erstba 0x7ffdfd40 [reserved] erdp 0x7ffdfa68 [reserved]
++usb:   dcbaap 0x7ffdfd80 [reserved] crcr(lo) 0x7ffdfc01 ir0 erstba 0x7ffdfd40 [reserved] erdp 0x7ffdfa78 [reserved]
++usb: SUMMARY routing raw: not read
+== uefi-survey-one-xhci
++usb: SUMMARY routing raw: not read
+== uefi-survey-two-xhci-bridge-ehci
++usb: SUMMARY routing raw: not read
++usb: SUMMARY ehci 24cd cmd 0x00080000 sts 0x00001000 halted 1 configflag 0 ports 6 legacy bios 0 os 0
++usb: SUMMARY ehci 24cd portsc: p1=00001000 p2=00001000 p3=00001000 p4=00001000 p5=00001000 p6=00001000
+== uefi-survey-no-usb
++usb: SUMMARY routing raw: not read
+== uefi-survey-ehci-keyboard
++usb: SUMMARY routing raw: not read
++usb: SUMMARY ehci 24cd cmd 0x00080000 sts 0x00001004 halted 1 configflag 0 ports 6 legacy bios 0 os 0
++usb: SUMMARY ehci 24cd portsc: p1=00001003 p2=00001000 p3=00001000 p4=00001000 p5=00001000 p6=00001000
+== uefi-survey-intel-iommu
++usb: SUMMARY routing raw: not read
+== uefi-survey-amd-iommu
++usb: SUMMARY routing raw: not read
+== uefi-survey-tables-above-1gib
++usb: SUMMARY routing raw: not read

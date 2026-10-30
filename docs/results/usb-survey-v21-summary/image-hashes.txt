@@ -1,0 +1,5 @@
+8a87168e21b112f6ee19be408f99c7a1b1e12c4fbf13b209b13df9bb12afbfd4  build/v21/kernel/vos.bin
+05ff1d3cea263d14a41838cc46b16b2ffde6179fa69e0819e55c5de627dac2f3  build/v21/kernel/vos-usb-survey.iso
+d4373dd435acaf6b6d569c8cd112fec336f9278da023e667ab00eced384e5c48  build/v21/kernel/vos-uefi-usb-survey.iso
+4c71c08f928f883bfe52a1cbb5f9a41b74c4e1db2c4970da5006445892e0d72a  /home/veasnawt/src/vos-usb-inc2/build/i2-1/kernel/vos-usb-survey.iso
+c124ab943f780948a7e88aee2ddda5facbc92deaabc7e141732ef152fa93c226  /home/veasnawt/src/vos-usb-inc2/build/i2-1/kernel/vos-uefi-usb-survey.iso

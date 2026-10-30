@@ -1,0 +1,49 @@
+usb: USB input survey v2: PCI configuration, xHCI, EHCI and firmware tables are only read; nothing is written
+usb: survey (read-only) pci functions 9 buses 2 bridges 1 usb 3 iommu-fn 0
+usb: xhci 00:02.0 0x1b36:0x000d cls 0x0c0330 rev 0x01 sub 0x11001af4 cmd 0x0007
+usb: ehci 00:04.0 0x8086:0x24cd cls 0x0c0320 rev 0x10 sub 0x11001af4 cmd 0x0007
+usb: xhci 01:00.0 0x1b36:0x000d cls 0x0c0330 rev 0x01 sub 0x11001af4 cmd 0x0007
+usb: 00:02.0 bar0 0xc020000000 irq 11/pin1 pm D0 msi 0 msix 0 caps 2 pcie-devctl 0x0000 nosnoop 0
+usb: 00:02.0 hci 0x0100 caplen 0x40 slots 64 intr 16 ports 8 scratchpads 0 ac64 1 csz 0 ppc 0
+usb:   hcs1 0x08001040 hcs2 0x0000000f hcs3 0x00000000 hcc1 0x00087001 hcc2 0x00000000
+usb:   usbcmd 0x00000000 usbsts 0x00000009 (R/S 0 HCH 1 HSE 0 HCE 0) pagesize 0x0001 config 0x0040
+usb:   ports read 8 connected 1 p5=0x00000e03
+usb:   ext caps 2 ids 2 2 no-legacy
+usb:   protocols usb2.00 ports 5+4 usb3.00 ports 1+4
+usb:   portsc of 8 of 8 ports: connected 1 enabled 1 powered 8 over-current 0
+usb:     p1=000002a0 p2=000002a0 p3=000002a0 p4=000002a0 p5=00000e03 p6=000002a0 p7=000002a0 p8=000002a0
+usb:   dcbaap 0x06748000 [ram] crcr(lo) 0x06748241 ir0 erstba 0x0674b240 [ram] erdp 0x06749480 [ram]
+usb:   ir0 iman 0x00000003 erstsz 0x00000001
+usb: 01:00.0 bar0 0x81000000 irq 11/pin1 pm D0 msi 0 msix 0 caps 2 pcie-devctl 0x0000 nosnoop 0
+usb: 01:00.0 hci 0x0100 caplen 0x40 slots 64 intr 16 ports 8 scratchpads 0 ac64 1 csz 0 ppc 0
+usb:   hcs1 0x08001040 hcs2 0x0000000f hcs3 0x00000000 hcc1 0x00087001 hcc2 0x00000000
+usb:   usbcmd 0x00000000 usbsts 0x00000009 (R/S 0 HCH 1 HSE 0 HCE 0) pagesize 0x0001 config 0x0040
+usb:   ports read 8 connected 1 p5=0x00000e03
+usb:   ext caps 2 ids 2 2 no-legacy
+usb:   protocols usb2.00 ports 5+4 usb3.00 ports 1+4
+usb:   portsc of 8 of 8 ports: connected 1 enabled 1 powered 8 over-current 0
+usb:     p1=000002a0 p2=000002a0 p3=000002a0 p4=000002a0 p5=00000e03 p6=000002a0 p7=000002a0 p8=000002a0
+usb:   dcbaap 0x0671c000 [ram] crcr(lo) 0x0671c241 ir0 erstba 0x0671f240 [ram] erdp 0x0671d3d0 [ram]
+usb:   ir0 iman 0x00000003 erstsz 0x00000001
+usb: ehci 00:04.0 8086:24cd hci 0x0100 ports 6 companions 0 x 0 cmd 0x00080000 sts 0x00001000 halted 1 configflag 0
+usb:     p1=00001000 p2=00001000 p3=00001000 p4=00001000 p5=00001000 p6=00001000
+usb:   connected 0 companion-owned 0 legacy@0x68 bios 0 os 0 smi 0xc0000000
+usb: acpi rsdp revision 2 rsdt 0x0777d074 xsdt 0x0777d0e8 root xsdt tables 6
+usb:   signatures FACP APIC HPET MCFG WAET BGRT
+usb: dma-protection facts (separate claims): table present no, hardware answers unknown
+usb:   translation enabled unknown, xhci translated unknown
+usb:   DMA isolation NOT ESTABLISHED: translation state is not a proof (translation tables are not read)
+usb: i8042 status 0x1c (output buffer 0, input buffer 0)
+usb: IOMMU: 0 PCI IOMMU function(s) of class 08/06; ACPI IOMMU tables are reported above
+usb: SUMMARY xhci 00:02.0 1b36:000d v0100 ports 8 connected 1 slots 64 spad 0
+usb:   no legacy-handoff capability running 0 halted 1
+usb: SUMMARY xhci 01:00.0 1b36:000d v0100 ports 8 connected 1 slots 64 spad 0
+usb:   no legacy-handoff capability running 0 halted 1
+usb: SUMMARY usb2 routing: not read
+usb: SUMMARY ehci connected root ports: 24cd=0
+usb: SUMMARY routing raw: not read
+usb: SUMMARY ehci 24cd cmd 0x00080000 sts 0x00001000 halted 1 configflag 0 ports 6 legacy bios 0 os 0
+usb: SUMMARY ehci 24cd portsc: p1=00001000 p2=00001000 p3=00001000 p4=00001000 p5=00001000 p6=00001000
+usb: SUMMARY dma: table no hw unknown on unknown xhci unknown
+usb: SUMMARY DMA isolation NOT ESTABLISHED
+usb: survey complete. Nothing was written. The machine is halted: power it off.

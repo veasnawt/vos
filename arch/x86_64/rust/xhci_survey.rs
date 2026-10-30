@@ -269,6 +269,11 @@ fn summary_lines(routing: &Option<Routing>, ehci: &[(UsbFn, Ehci)], facts: &firm
         l.s(" none");
     }
     l.flush(out);
+    // v2.1: the registers and observations behind the two lines above, from values already captured (no further reads).
+    survey::render_summary_routing(routing, out);
+    for (f, e) in ehci {
+        survey::render_summary_ehci(f, e, out);
+    }
     l.s("usb: SUMMARY dma: table ").s(facts.table_present.name()).s(" hw ").s(facts.hardware_responds.name()).s(" on ").s(facts.translation_enabled.name());
     l.s(" xhci ").s(facts.xhci_translated.name());
     l.flush(out);

@@ -1,0 +1,137 @@
+{
+ "cases": 14,
+ "passed": 14,
+ "results": [
+  {
+   "case": "bios-survey-one-xhci",
+   "passed": true,
+   "xhci": 1,
+   "table_present": "no",
+   "hardware_answers": "unknown",
+   "translation_enabled": "unknown",
+   "xhci_translated": "unknown",
+   "seconds": 22.2
+  },
+  {
+   "case": "bios-survey-two-xhci-bridge-ehci",
+   "passed": true,
+   "xhci": 2,
+   "behind_bridge": true,
+   "seconds": 22.1
+  },
+  {
+   "case": "bios-survey-no-usb",
+   "passed": true,
+   "xhci": 0,
+   "table_present": "no",
+   "hardware_answers": "unknown",
+   "translation_enabled": "unknown",
+   "xhci_translated": "unknown",
+   "seconds": 20.1
+  },
+  {
+   "case": "bios-survey-ehci-keyboard",
+   "passed": true,
+   "ehci_connected": 1,
+   "table_present": "no",
+   "hardware_answers": "unknown",
+   "translation_enabled": "unknown",
+   "xhci_translated": "unknown",
+   "seconds": 22.2
+  },
+  {
+   "case": "bios-survey-intel-iommu",
+   "passed": true,
+   "table_present": "yes",
+   "hardware_answers": "yes",
+   "translation_enabled": "no",
+   "xhci_translated": "no",
+   "seconds": 21.1
+  },
+  {
+   "case": "bios-survey-amd-iommu",
+   "passed": true,
+   "table_present": "yes",
+   "hardware_answers": "yes",
+   "translation_enabled": "no",
+   "xhci_translated": "unknown",
+   "seconds": 21.0
+  },
+  {
+   "case": "bios-survey-tables-above-1gib",
+   "passed": true,
+   "root": "0x7ffe23c9",
+   "table_present": "yes",
+   "hardware_answers": "yes",
+   "translation_enabled": "no",
+   "xhci_translated": "no",
+   "seconds": 21.0
+  },
+  {
+   "case": "uefi-survey-one-xhci",
+   "passed": true,
+   "xhci": 1,
+   "table_present": "no",
+   "hardware_answers": "unknown",
+   "translation_enabled": "unknown",
+   "xhci_translated": "unknown",
+   "seconds": 25.2
+  },
+  {
+   "case": "uefi-survey-two-xhci-bridge-ehci",
+   "passed": true,
+   "xhci": 2,
+   "behind_bridge": true,
+   "seconds": 24.1
+  },
+  {
+   "case": "uefi-survey-no-usb",
+   "passed": true,
+   "xhci": 0,
+   "table_present": "no",
+   "hardware_answers": "unknown",
+   "translation_enabled": "unknown",
+   "xhci_translated": "unknown",
+   "seconds": 23.1
+  },
+  {
+   "case": "uefi-survey-ehci-keyboard",
+   "passed": true,
+   "ehci_connected": 1,
+   "table_present": "no",
+   "hardware_answers": "unknown",
+   "translation_enabled": "unknown",
+   "xhci_translated": "unknown",
+   "seconds": 24.1
+  },
+  {
+   "case": "uefi-survey-intel-iommu",
+   "passed": true,
+   "table_present": "yes",
+   "hardware_answers": "yes",
+   "translation_enabled": "no",
+   "xhci_translated": "no",
+   "seconds": 24.1
+  },
+  {
+   "case": "uefi-survey-amd-iommu",
+   "passed": true,
+   "table_present": "yes",
+   "hardware_answers": "yes",
+   "translation_enabled": "no",
+   "xhci_translated": "unknown",
+   "seconds": 24.1
+  },
+  {
+   "case": "uefi-survey-tables-above-1gib",
+   "passed": true,
+   "root": "0x7f77d0e8",
+   "table_present": "yes",
+   "hardware_answers": "yes",
+   "translation_enabled": "no",
+   "xhci_translated": "no",
+   "seconds": 24.1
+  }
+ ],
+ "qemu": "QEMU emulator version 10.2.1 (Debian 1:10.2.1+ds-1ubuntu3.2)"
+}

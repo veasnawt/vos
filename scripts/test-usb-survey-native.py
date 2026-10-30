@@ -114,6 +114,11 @@ def common(text):
     need('usb: dma-protection facts (separate claims): table present ' in u, 'the four DMA facts are reported')
     need('DMA isolation NOT ESTABLISHED' in u and 'usb: SUMMARY DMA isolation NOT ESTABLISHED' in u, 'isolation is never claimed')
     need(re.search(r'usb: acpi (rsdp revision \d|: )', u), 'the ACPI root was looked for')
+    # v2.1: the raw routing registers sit between the existing EHCI count and the DMA lines; the isolation statement stays last
+    summary = [l.rstrip('\r') for l in u.splitlines() if 'SUMMARY' in l]
+    need(summary[-1] == 'usb: SUMMARY DMA isolation NOT ESTABLISHED', 'the isolation statement is the last summary line')
+    need(len([l for l in summary if l.startswith('usb: SUMMARY routing raw: ')]) == 1, 'one raw routing summary line')
+    need(max(map(len, summary)) <= 118, 'every summary line fits the 118 visible columns')
     need('INTEGRITY' not in text and 'ERROR' not in u and 'CHANGED' not in u and 'WARNING' not in u, 'no integrity error, change or warning')
     return u
 
@@ -158,6 +163,13 @@ def check_ehci_kbd(text):
     need(re.search(r'usb:   connected 1 companion-owned 0', u), 'the keyboard is a connected EHCI root port')
     need(re.search(r'usb:   ehci root port \d connected \S+ enabled \d owner ehci \(a hub behind it\? devices below it are not visible\)', u), 'the hub caveat is stated')
     need(re.search(r'usb: SUMMARY ehci connected root ports: [0-9a-f]{4}=1', u), 'the summary names the EHCI with the connected port')
+    # v2.1: the EHCI status and its captured PORTSC words in the summary agree with the connected count
+    m = re.search(r'usb: SUMMARY ehci ([0-9a-f]{4}) cmd 0x[0-9a-f]{8} sts 0x[0-9a-f]{8} halted [01] configflag [01] ports (\d+) (?:legacy bios [01] os [01]|no-legacy)', u)
+    need(m, 'the EHCI status summary line')
+    ports = re.findall(r'usb: SUMMARY ehci %s portsc:((?: p\d+=[0-9a-f]{8})+)' % m.group(1), u)
+    words = [int(w, 16) for row in ports for w in re.findall(r'=([0-9a-f]{8})', row)]
+    need(len(words) == int(m.group(2)) and sum(w & 1 for w in words) == 1, 'every port is listed once and exactly one is connected')
+    need(re.search(r'usb: SUMMARY routing raw: not read', u), 'no Intel xHCI, so the raw routing registers are not read')
     need('no xHCI controller found' in u and 'usb: SUMMARY usb2 routing: not read' in u, 'no xHCI, so no routing')
     return {'ehci_connected': 1, **facts(u)}
 
