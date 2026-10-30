@@ -1,0 +1,32 @@
+{
+ "rust_tests": "test result: ok. 48 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.56s",
+ "oracle": {
+  "traces": 600,
+  "steps": 156000,
+  "accepted": 19757,
+  "refused": 136243,
+  "mismatches": 0,
+  "first_mismatches": [],
+  "rules_seen": 63,
+  "reasons_seen": 63
+ },
+ "oracle_corruption_controls": {
+  "refusal-reason": 1,
+  "rule-name": 1,
+  "write-value": 1,
+  "terminal-cause": 1,
+  "transition-target": 1
+ },
+ "mutation_summary": {
+  "total": 94,
+  "killed": 94,
+  "survived": [],
+  "invalid": [],
+  "killed_by_rust_tests": 94,
+  "killed_by_oracle": 47,
+  "killed_by_oracle_only": [],
+  "killed_by_rust_tests_only": 47
+ },
+ "pass": true,
+ "seconds": 149.1
+}

@@ -1,0 +1,9 @@
+error[E0616]: field `fresh` of struct `vos_xhci_init::Session` is private
+ --> /home/veasnawt/src/vos-usb2c42a/build/usb2c42a-1/gates-3/cf-session-state-is-private.rs:2:41
+  |
+2 | fn f<B: Backend>(mut s: Session<B>) { s.fresh = [true; 5]; }
+  |                                         ^^^^^ private field
+
+error: aborting due to 1 previous error
+
+For more information about this error, try `rustc --explain E0616`.

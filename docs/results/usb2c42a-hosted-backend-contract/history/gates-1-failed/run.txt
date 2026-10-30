@@ -1,0 +1,7 @@
+Traceback (most recent call last):
+  File "/home/veasnawt/src/vos-usb2c42a/scripts/test-usb2c42a.py", line 437, in <module>
+    main()
+    ~~~~^^
+  File "/home/veasnawt/src/vos-usb2c42a/scripts/test-usb2c42a.py", line 424, in main
+    raise RuntimeError(f'mutation controls: survived={survived} invalid={invalid}')
+RuntimeError: mutation controls: survived=['close-forced-status-trusts-halt', 'dbc-enable-bit', 'legacy-bios-bit', 'pci-belief-not-recorded', 'pci-msi-ignored', 'reset-port-connection-ignored', 'ports-bit', 'pre-static-cnr-dropped', 'readback-register-unchecked', 'prepare-dcbaa-array-dependency-dropped'] invalid=[]

@@ -233,7 +233,9 @@ rehearsal of controller containment with no write path.
 `03e7532aba739c636438c887e8aa9d6169f4cfcb`: the first, QEMU-only, test-image-only
 controller writes (clear Bus Master Enable, then HCRST) for the one eligible idle
 UEFI QEMU xHCI. [USB.2-C4.1](results/usb2c41-hosted-init-model.md) is a hosted-only Rust
-protocol model in this PR candidate (no kernel, no device, no new write path). Native USB.2-C4
+protocol model merged through PR #34 at `dbb7d1d06452414c9674d9f9bb4b6e08d859da59`.
+[USB.2-C4.2a](results/usb2c42a-hosted-backend-contract.md) is the hosted backend contract for it in
+this PR candidate (no kernel, no device, no new write path). USB.2-C4.2b and later, native USB.2-C4
 stages, physical-PC activation and USB HID require separate authorization; physical
 controller takeover remains unauthorized.
 This status update grants no implementation authority.

@@ -1,0 +1,6 @@
+First oracle run on the exported session traces (preserved failed attempt; not the evidence of record).
+Result: 300 traces, 66,000 requests, 2 mismatches, both in the "reset" observation (trace 170 and trace 228).
+Cause: a defect in the ORACLE, not in the Rust session. The Python expression `quiet = quiet and (read port)` short-circuits and
+stops reading ports after the first non-quiet one, while the session (correctly, by its rule) reads every port. The oracle's call-sequence
+check exposed the difference ("expected L, recorded R portsc 5" and "unexpected backend calls portsc 5..7"). Fixed in the oracle by reading
+each port before combining; rerun: 66,000 requests, 0 mismatches. The Rust session was not changed.
