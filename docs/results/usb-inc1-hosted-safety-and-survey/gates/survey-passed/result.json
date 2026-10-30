@@ -1,0 +1,691 @@
+{
+ "hosted_only": true,
+ "device_access": false,
+ "source_sha256": {
+  "kernel/rust/usb/xhci/capabilities.rs": "e8864394b59f0d8cf42993a7d141e7e75dd98f91788d7ce9c6ffa9fcfe66e03f",
+  "kernel/rust/usb/xhci/containment.rs": "4e8479d5f5ee8ff516d24eaad9c8379edc28ecd96ea21ff546b357aff3054644",
+  "kernel/rust/usb/xhci/controller.rs": "86217a6d2502830ff22b30393338ad5910f8133123aee4e1167390fd06c468a2",
+  "kernel/rust/usb/xhci/discovery.rs": "f3e50289da2afb22900dcd630651ce0ac2690489d22262d963fa962d16661c43",
+  "kernel/rust/usb/xhci/dma.rs": "9aac2669ad22d7c33480a43199ba9d5078c45c39e14e406c609b222af19689c6",
+  "kernel/rust/usb/xhci/header.rs": "4d78fc16c6a52806b3b001e50a28d85b6ba98eecf715b4ac86cb8e415b2a0a3e",
+  "kernel/rust/usb/xhci/lib.rs": "15a8982e2ee49e0e4d9198b061382d3e27549a5867872202148b9bdd7aa232ba",
+  "kernel/rust/usb/xhci/lifecycle.rs": "218a7f138102033aa6d9bfd9e2229db84ffed467d6a4acf67870b43957f5d40c",
+  "kernel/rust/usb/xhci/mod.rs": "a68a2bb79dafd58a1adf5cffc1ca471a2e17057cc37a622ff4a71efc3f8f8629",
+  "kernel/rust/usb/xhci/qualify.rs": "a6e81b33736f3e698175b88f18d80f9d06ae8d8574d2c2079c7cae8240e3815d",
+  "kernel/rust/usb/xhci/residue.rs": "bcce659b2deb0895082097580f9f3591c56bd8dd76dc97d082d868f746594ec0",
+  "kernel/rust/usb/xhci/resources.rs": "a46ff4fed32b775e6d03e0fcb85594de6224b484c21183bb2a13a4b83502f372",
+  "kernel/rust/usb/xhci/ring.rs": "87b575a4a9e4353a00eeb1bbe23ec7452e978c413566d8b2cff98d71ba2fd3c2",
+  "kernel/rust/usb/xhci/survey.rs": "c246aefeff6aae2263dce77901716ae204d0d714fc83b6a21848d624378e0905",
+  "kernel/rust/usb/xhci/types.rs": "27eddcb969ef2ab87a056910b76b47a1865c7d464130d04095824ea0625a724a",
+  "tests/rust/xhci_survey.rs": "90e5ba38f61f954bc780908cb17bf717f0d031ac0ffb4c0ab93baf45d2cad763",
+  "scripts/test-usb-survey.py": "938b8db4f066c1e175980f6b24fae442fa33096b3f4001ecb167f2471a653f94",
+  "arch/x86_64/xhci_survey.c": "38f9c0ccf9e554d14e5694b7c25653f9d50843e403821dbac0cfd24877d57509",
+  "arch/x86_64/rust/xhci_survey.rs": "d68a78f27b18116b66f70e131bee809106437dd00628004000b519c7401b518e"
+ },
+ "commands": [
+  [
+   "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+   "--edition=2024",
+   "-Dwarnings",
+   "--crate-name",
+   "vos_xhci",
+   "--crate-type=rlib",
+   "-Coverflow-checks=yes",
+   "-Cstrip=symbols",
+   "/home/veasnawt/src/vos-usb-inc1/kernel/rust/usb/xhci/lib.rs",
+   "-o",
+   "/home/veasnawt/src/vos-usb-inc1/build/inc1-1/survey-gate-3/libvos_xhci.rlib"
+  ],
+  [
+   "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+   "--edition=2024",
+   "-Dwarnings",
+   "--test",
+   "-Copt-level=1",
+   "-Coverflow-checks=yes",
+   "-Cstrip=symbols",
+   "--extern",
+   "vos_xhci=/home/veasnawt/src/vos-usb-inc1/build/inc1-1/survey-gate-3/libvos_xhci.rlib",
+   "/home/veasnawt/src/vos-usb-inc1/tests/rust/xhci_survey.rs",
+   "-o",
+   "/home/veasnawt/src/vos-usb-inc1/build/inc1-1/survey-gate-3/survey-tests"
+  ],
+  [
+   "/home/veasnawt/src/vos-usb-inc1/build/inc1-1/survey-gate-3/survey-tests",
+   "--test-threads=1"
+  ],
+  [
+   "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+   "--edition=2024",
+   "--extern",
+   "vos_xhci=/home/veasnawt/src/vos-usb-inc1/build/inc1-1/survey-gate-3/libvos_xhci.rlib",
+   "/home/veasnawt/src/vos-usb-inc1/build/inc1-1/survey-gate-3/cf-pci-trait-has-no-write.rs",
+   "-o",
+   "/home/veasnawt/src/vos-usb-inc1/build/inc1-1/survey-gate-3/cf-pci-trait-has-no-write"
+  ],
+  [
+   "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+   "--edition=2024",
+   "--extern",
+   "vos_xhci=/home/veasnawt/src/vos-usb-inc1/build/inc1-1/survey-gate-3/libvos_xhci.rlib",
+   "/home/veasnawt/src/vos-usb-inc1/build/inc1-1/survey-gate-3/cf-mmio-trait-has-no-write.rs",
+   "-o",
+   "/home/veasnawt/src/vos-usb-inc1/build/inc1-1/survey-gate-3/cf-mmio-trait-has-no-write"
+  ],
+  [
+   "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+   "--edition=2024",
+   "--extern",
+   "vos_xhci=/home/veasnawt/src/vos-usb-inc1/build/inc1-1/survey-gate-3/libvos_xhci.rlib",
+   "/home/veasnawt/src/vos-usb-inc1/build/inc1-1/survey-gate-3/cf-scan-needs-a-pci-reader.rs",
+   "-o",
+   "/home/veasnawt/src/vos-usb-inc1/build/inc1-1/survey-gate-3/cf-scan-needs-a-pci-reader"
+  ]
+ ],
+ "tests_passed": 24,
+ "compile_fail_controls": {
+  "pci-trait-has-no-write": "E0599",
+  "mmio-trait-has-no-write": "E0599",
+  "scan-needs-a-pci-reader": "E0277"
+ },
+ "workers_dir_reused": "build/inc1-1/workers",
+ "mutation_controls": [
+  {
+   "name": "scan-multifunction-ignored",
+   "breaks": "every device is probed for eight functions",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "absent_garbage_and_vendor_zero_functions_are_ignored"
+   ]
+  },
+  {
+   "name": "scan-vendor-zero-accepted",
+   "breaks": "a function with vendor 0 is real",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "absent_garbage_and_vendor_zero_functions_are_ignored"
+   ]
+  },
+  {
+   "name": "scan-all-ones-accepted",
+   "breaks": "a function that answers all ones is real",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "absent_garbage_and_vendor_zero_functions_are_ignored",
+    "the_bus_and_function_bounds_stop_the_walk",
+    "the_report_lines_are_short_printable_and_complete",
+    "the_scan_finds_controllers_on_bus_zero_and_behind_nested_bridges"
+   ]
+  },
+  {
+   "name": "scan-function-limit-moved",
+   "breaks": "the function bound is not the bound",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "the_bus_and_function_bounds_stop_the_walk"
+   ]
+  },
+  {
+   "name": "scan-usb-class",
+   "breaks": "the wrong class is called USB",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "absent_garbage_and_vendor_zero_functions_are_ignored",
+    "bridge_cycles_unassigned_and_reversed_bus_numbers_are_not_followed",
+    "more_controllers_than_the_recording_limit_are_counted_not_hidden",
+    "only_type_one_headers_are_bridges_and_only_upward_buses_are_followed",
+    "pci_capabilities_are_summarised_and_malformed_lists_stop",
+    "the_report_lines_are_short_printable_and_complete"
+   ]
+  },
+  {
+   "name": "scan-iommu-class",
+   "breaks": "the wrong class is called an IOMMU",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "the_report_lines_are_short_printable_and_complete",
+    "the_scan_finds_controllers_on_bus_zero_and_behind_nested_bridges"
+   ]
+  },
+  {
+   "name": "scan-bridge-type",
+   "breaks": "any header type is followed as a bridge",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "only_type_one_headers_are_bridges_and_only_upward_buses_are_followed"
+   ]
+  },
+  {
+   "name": "scan-bridge-upward-only",
+   "breaks": "a bridge may send the walk back to a lower bus",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "only_type_one_headers_are_bridges_and_only_upward_buses_are_followed"
+   ]
+  },
+  {
+   "name": "scan-bridge-subordinate",
+   "breaks": "a reversed bus range is followed",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "bridge_cycles_unassigned_and_reversed_bus_numbers_are_not_followed"
+   ]
+  },
+  {
+   "name": "scan-bridge-queued-twice",
+   "breaks": "a bus named by two bridges is scanned twice",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "bridge_cycles_unassigned_and_reversed_bus_numbers_are_not_followed"
+   ]
+  },
+  {
+   "name": "scan-bridge-unmarked",
+   "breaks": "a followed bus is not marked as queued",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "bridge_cycles_unassigned_and_reversed_bus_numbers_are_not_followed"
+   ]
+  },
+  {
+   "name": "scan-queue-bound",
+   "breaks": "the bus queue is larger than its array",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "the_bus_and_function_bounds_stop_the_walk"
+   ]
+  },
+  {
+   "name": "scan-skip-count",
+   "breaks": "unusable bridges are not counted",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "bridge_cycles_unassigned_and_reversed_bus_numbers_are_not_followed",
+    "only_type_one_headers_are_bridges_and_only_upward_buses_are_followed"
+   ]
+  },
+  {
+   "name": "scan-record-bound",
+   "breaks": "controllers beyond the recording limit overwrite the last entry",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "more_controllers_than_the_recording_limit_are_counted_not_hidden",
+    "random_pci_trees_terminate_within_the_bounds"
+   ]
+  },
+  {
+   "name": "bar-memory-decoding-ignored",
+   "breaks": "a controller with memory decoding off is read",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "bar_decoding_names_every_reason_a_controller_cannot_be_read"
+   ]
+  },
+  {
+   "name": "bar-io-accepted",
+   "breaks": "an I/O BAR is treated as memory",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "bar_decoding_names_every_reason_a_controller_cannot_be_read"
+   ]
+  },
+  {
+   "name": "bar-64bit-high-ignored",
+   "breaks": "the high half of a 64-bit BAR is dropped",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "bar_decoding_names_every_reason_a_controller_cannot_be_read"
+   ]
+  },
+  {
+   "name": "bar-below-1mib",
+   "breaks": "a BAR below 1 MiB is read",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "bar_decoding_names_every_reason_a_controller_cannot_be_read"
+   ]
+  },
+  {
+   "name": "bar-unaligned",
+   "breaks": "an unaligned BAR is read",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "bar_decoding_names_every_reason_a_controller_cannot_be_read"
+   ]
+  },
+  {
+   "name": "bar-header-type",
+   "breaks": "a bridge header is read as a controller",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "bar_decoding_names_every_reason_a_controller_cannot_be_read"
+   ]
+  },
+  {
+   "name": "pci-cap-cycle",
+   "breaks": "a looping capability list is followed to the bound",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "pci_capabilities_are_summarised_and_malformed_lists_stop"
+   ]
+  },
+  {
+   "name": "pci-cap-devctl-offset",
+   "breaks": "Device Control is read from the wrong offset",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "pci_capabilities_are_summarised_and_malformed_lists_stop"
+   ]
+  },
+  {
+   "name": "pci-cap-msix-bit",
+   "breaks": "the MSI-X enable bit is wrong",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "pci_capabilities_are_summarised_and_malformed_lists_stop"
+   ]
+  },
+  {
+   "name": "pci-cap-msi-bit",
+   "breaks": "the MSI enable bit is wrong",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "pci_capabilities_are_summarised_and_malformed_lists_stop"
+   ]
+  },
+  {
+   "name": "pci-cap-pm-end",
+   "breaks": "a PM capability at the end of the space is read past it",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "pci_capabilities_are_summarised_and_malformed_lists_stop"
+   ]
+  },
+  {
+   "name": "pci-cap-below-header",
+   "breaks": "a capability pointer inside the header is followed",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "pci_capabilities_are_summarised_and_malformed_lists_stop"
+   ]
+  },
+  {
+   "name": "pci-cap-status-bit",
+   "breaks": "the capability-list status bit is ignored",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "pci_capabilities_are_summarised_and_malformed_lists_stop"
+   ]
+  },
+  {
+   "name": "xhci-caplength-low",
+   "breaks": "a CAPLENGTH below the register block is accepted",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "a_controller_that_reads_as_all_ones_or_has_a_bad_caplength_is_reported_not_trusted"
+   ]
+  },
+  {
+   "name": "xhci-caplength-alignment",
+   "breaks": "an unaligned CAPLENGTH is accepted",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "a_controller_that_reads_as_all_ones_or_has_a_bad_caplength_is_reported_not_trusted"
+   ]
+  },
+  {
+   "name": "xhci-all-ones",
+   "breaks": "a controller that reads all ones is decoded",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "a_controller_that_reads_as_all_ones_or_has_a_bad_caplength_is_reported_not_trusted"
+   ]
+  },
+  {
+   "name": "xhci-scratchpad-hi",
+   "breaks": "the scratchpad high field is read from the wrong bits",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "scratchpad_counts_combine_the_high_and_low_fields"
+   ]
+  },
+  {
+   "name": "xhci-scratchpad-lo",
+   "breaks": "the scratchpad low field is read from the wrong bits",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "an_intel_style_controller_is_decoded_completely",
+    "scratchpad_counts_combine_the_high_and_low_fields",
+    "the_report_lines_are_short_printable_and_complete",
+    "the_summary_fits_an_80_column_display_and_says_when_nothing_was_read"
+   ]
+  },
+  {
+   "name": "xhci-port-limit",
+   "breaks": "the port count is not bounded",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "a_huge_port_count_is_bounded_and_registers_past_the_window_are_not_asked_for"
+   ]
+  },
+  {
+   "name": "xhci-port-connect-bit",
+   "breaks": "the connection bit is wrong",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "an_intel_style_controller_is_decoded_completely",
+    "the_report_lines_are_short_printable_and_complete",
+    "the_summary_fits_an_80_column_display_and_says_when_nothing_was_read"
+   ]
+  },
+  {
+   "name": "xhci-port-ordinal",
+   "breaks": "ports are numbered from the wrong base",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "an_intel_style_controller_is_decoded_completely",
+    "the_report_lines_are_short_printable_and_complete"
+   ]
+  },
+  {
+   "name": "xhci-xecp-shift",
+   "breaks": "the extended capability pointer is in bytes",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "a_refused_or_truncated_read_ends_the_walk_with_what_was_read",
+    "an_intel_style_controller_is_decoded_completely",
+    "capability_chains_that_run_on_or_off_the_window_are_cut",
+    "legacy_debug_and_protocol_capabilities_are_recorded_once_and_by_name",
+    "the_report_lines_are_short_printable_and_complete",
+    "the_summary_fits_an_80_column_display_and_says_when_nothing_was_read"
+   ]
+  },
+  {
+   "name": "xhci-next-units",
+   "breaks": "the next-capability pointer is in bytes",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "a_refused_or_truncated_read_ends_the_walk_with_what_was_read",
+    "an_intel_style_controller_is_decoded_completely",
+    "capability_chains_that_run_on_or_off_the_window_are_cut",
+    "legacy_debug_and_protocol_capabilities_are_recorded_once_and_by_name",
+    "the_report_lines_are_short_printable_and_complete",
+    "the_summary_fits_an_80_column_display_and_says_when_nothing_was_read"
+   ]
+  },
+  {
+   "name": "xhci-cap-limit",
+   "breaks": "the capability chain is one longer than its bound",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "capability_chains_that_run_on_or_off_the_window_are_cut",
+    "random_register_files_never_panic_and_never_exceed_the_read_budget"
+   ]
+  },
+  {
+   "name": "xhci-legacy-first-only",
+   "breaks": "a second legacy capability replaces the first",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "legacy_debug_and_protocol_capabilities_are_recorded_once_and_by_name"
+   ]
+  },
+  {
+   "name": "xhci-debug-first-only",
+   "breaks": "a second debug capability replaces the first",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "legacy_debug_and_protocol_capabilities_are_recorded_once_and_by_name"
+   ]
+  },
+  {
+   "name": "xhci-debug-offset",
+   "breaks": "the debug control register is read from the wrong offset",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "legacy_debug_and_protocol_capabilities_are_recorded_once_and_by_name"
+   ]
+  },
+  {
+   "name": "xhci-protocol-name",
+   "breaks": "a protocol capability with another name is listed",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "legacy_debug_and_protocol_capabilities_are_recorded_once_and_by_name"
+   ]
+  },
+  {
+   "name": "xhci-protocol-major",
+   "breaks": "the protocol major revision is wrong",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "an_intel_style_controller_is_decoded_completely",
+    "legacy_debug_and_protocol_capabilities_are_recorded_once_and_by_name",
+    "the_report_lines_are_short_printable_and_complete"
+   ]
+  },
+  {
+   "name": "xhci-protocol-count",
+   "breaks": "the protocol port count is wrong",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "an_intel_style_controller_is_decoded_completely",
+    "legacy_debug_and_protocol_capabilities_are_recorded_once_and_by_name",
+    "the_report_lines_are_short_printable_and_complete"
+   ]
+  },
+  {
+   "name": "xhci-window-bound",
+   "breaks": "a register past the window end is requested",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "capability_chains_that_run_on_or_off_the_window_are_cut"
+   ]
+  },
+  {
+   "name": "xhci-second-read-skipped",
+   "breaks": "the second reading of USBCMD is not a reading",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "a_controller_that_changes_by_itself_between_two_reads_is_caught_by_the_reader"
+   ]
+  },
+  {
+   "name": "xhci-second-status-skipped",
+   "breaks": "the second reading of USBSTS is not a reading",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "a_controller_that_changes_by_itself_between_two_reads_is_caught_by_the_reader"
+   ]
+  },
+  {
+   "name": "xhci-refusal-continues",
+   "breaks": "a refused port read does not end the walk",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "a_refused_or_truncated_read_ends_the_walk_with_what_was_read"
+   ]
+  },
+  {
+   "name": "line-capacity",
+   "breaks": "a line can outgrow the room kept for its terminator",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "random_register_files_never_panic_and_never_exceed_the_read_budget",
+    "unprintable_bytes_and_overlong_lines_are_neutralised"
+   ]
+  },
+  {
+   "name": "line-printable",
+   "breaks": "unprintable bytes reach the console",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "unprintable_bytes_and_overlong_lines_are_neutralised"
+   ]
+  },
+  {
+   "name": "line-terminator",
+   "breaks": "a line is not terminated",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "random_pci_trees_terminate_within_the_bounds",
+    "random_register_files_never_panic_and_never_exceed_the_read_budget",
+    "the_report_lines_are_short_printable_and_complete",
+    "the_summary_fits_an_80_column_display_and_says_when_nothing_was_read",
+    "unprintable_bytes_and_overlong_lines_are_neutralised"
+   ]
+  },
+  {
+   "name": "hex-width",
+   "breaks": "hexadecimal values lose their leading zeros",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "the_report_lines_are_short_printable_and_complete",
+    "the_summary_fits_an_80_column_display_and_says_when_nothing_was_read",
+    "unprintable_bytes_and_overlong_lines_are_neutralised"
+   ]
+  },
+  {
+   "name": "render-changed-warning",
+   "breaks": "a controller that changes by itself is not flagged",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "a_controller_that_changes_by_itself_between_two_reads_is_caught_by_the_reader",
+    "a_controller_that_changes_while_it_is_read_is_flagged"
+   ]
+  },
+  {
+   "name": "render-incomplete-note",
+   "breaks": "an incomplete scan is not flagged",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "more_controllers_than_the_recording_limit_are_counted_not_hidden"
+   ]
+  },
+  {
+   "name": "summary-not-read",
+   "breaks": "a controller that was not read is summarised as if it were",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "the_summary_fits_an_80_column_display_and_says_when_nothing_was_read"
+   ]
+  }
+ ],
+ "mutation_summary": {
+  "total": 55,
+  "killed": 55,
+  "survived": [],
+  "invalid": []
+ },
+ "pass": true
+}

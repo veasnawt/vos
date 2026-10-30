@@ -403,6 +403,8 @@ pub struct Entry {
     pub req: Req,
     pub res: Result<Done, Refusal>,
     pub io: Vec<String>,
+    /// `ledger_text` after the request.
+    pub ledger: String,
 }
 
 pub struct SH {
@@ -412,8 +414,52 @@ pub struct SH {
 }
 
 pub fn snapshot(s: &Session<Fake>) -> String {
-    format!("{:?}|{:?}|{:?}|{}|{:?}|{:?}|{}|{}", s.machine().phase(), s.closed(), s.last_seq(), s.last_write_seq(),
-            (0..5).map(|k| s.fresh(k)).collect::<Vec<_>>(), s.knowledge(), s.backend().calls, s.backend().expect_nonce)
+    format!("{:?}|{:?}|{:?}|{}|{:?}|{:?}|{}|{}|{}", s.machine().phase(), s.closed(), s.last_seq(), s.last_write_seq(),
+            (0..5).map(|k| s.fresh(k)).collect::<Vec<_>>(), s.knowledge(), s.backend().calls, s.backend().expect_nonce, ledger_text(s))
+}
+
+/// Scratchpad pages sit above the four core pages (0x40_0000 .. 0x40_3000), one page each.
+pub const SP_ARRAY: u64 = 0x50_0000;
+pub fn scratch_addr(it: Item) -> u64 {
+    match it {
+        Item::Buffer(i) => SP_ARRAY + 0x1000 * (1 + u64::from(i)),
+        _ => SP_ARRAY,
+    }
+}
+/// One character per ledger record (the four core pages, the array, then the buffers): the index in `DState::ALL`
+/// as a hexadecimal digit, `-` where the item does not exist.
+pub fn ledger_text(s: &Session<Fake>) -> String {
+    let Some(l) = s.ledger() else { return "-".into() };
+    let items = [Item::Core(PageKind::Command), Item::Core(PageKind::Event), Item::Core(PageKind::Dcbaa), Item::Core(PageKind::Erst), Item::Array]
+        .into_iter()
+        .chain((0..l.spec().scratchpads.min(64) as u8).map(Item::Buffer));
+    items.map(|it| l.state(it).map_or('-', |st| char::from_digit(DState::ALL.iter().position(|x| *x == st).unwrap() as u32, 16).unwrap())).collect()
+}
+pub fn item_text(it: Item) -> String {
+    match it {
+        Item::Core(k) => format!("core:{}", k.name()),
+        Item::Array => "array".into(),
+        Item::Buffer(i) => format!("buf:{i}"),
+    }
+}
+
+/// Next scratchpad request the canonical session needs: allocate and zero every buffer and the array, then prepare the
+/// buffers before the array (the array holds their addresses). `None` when the plan has no scratchpads or is done.
+fn scratch_step(s: &Session<Fake>) -> Option<Req> {
+    let l = s.ledger()?;
+    let n = l.spec().scratchpads.min(64) as u8;
+    let order = || (0..n).map(Item::Buffer).chain(std::iter::once(Item::Array));
+    if n == 0 {
+        return None;
+    }
+    for it in order() {
+        match l.state(it) {
+            Some(DState::Free) => return Some(Req::Scratch(Scratch::Allocate { item: it, addr: scratch_addr(it) })),
+            Some(DState::Allocated) => return Some(Req::Scratch(Scratch::Zero(it))),
+            _ => {}
+        }
+    }
+    order().find(|it| l.state(*it) == Some(DState::Zeroed)).map(|it| Req::Scratch(Scratch::Prepare(it)))
 }
 
 impl SH {
@@ -470,7 +516,8 @@ impl SH {
             }
         }
         record_session(&res, &self.s);
-        self.log.push(Entry { req: r, res, io });
+        let ledger = ledger_text(&self.s);
+        self.log.push(Entry { req: r, res, io, ledger });
         res
     }
 
@@ -510,6 +557,9 @@ impl SH {
             }
             Phase::Resetting => return wait(Req::Reset),
             Phase::Contained | Phase::Programming => {
+                if let Some(r) = scratch_step(s) {
+                    return Some(r);
+                }
                 for k in pages {
                     match m.page(k).state {
                         PageState::Free => return Some(Req::Op(O::DmaAllocate { kind: k, addr: page_addr(k) })),
@@ -522,7 +572,7 @@ impl SH {
                         return Some(Req::Op(match k {
                             PageKind::Command => O::PrepareCommandRing,
                             PageKind::Event => O::PrepareEventRing,
-                            PageKind::Dcbaa => O::PrepareDcbaa { entry0: 0 },
+                            PageKind::Dcbaa => O::PrepareDcbaa { entry0: if s.ledger().is_some_and(|l| l.spec().scratchpads > 0) { SP_ARRAY } else { 0 } },
                             PageKind::Erst => O::PrepareErst { segment: EVT, size: 256 },
                         }));
                     }
@@ -573,6 +623,14 @@ impl SH {
                 }
             }
             Phase::Quiesced | Phase::Failed => {
+                if let Some(l) = s.ledger() {
+                    let n = l.spec().scratchpads.min(64) as u8;
+                    for it in (0..n).map(Item::Buffer).chain(std::iter::once(Item::Array)) {
+                        if l.state(it).is_some_and(|st| st != DState::Free) {
+                            return Some(Req::Scratch(Scratch::Release(it)));
+                        }
+                    }
+                }
                 for k in pages {
                     if m.page(k).state != PageState::Free {
                         return Some(Req::Op(O::DmaRelease(k)));
@@ -630,6 +688,7 @@ fn record_session(res: &Result<Done, Refusal>, s: &Session<Fake>) {
             }
         }
         Err(Refusal::Session(r)) => cov(1, r.name()),
+        Err(Refusal::Ledger(r)) => cov(2, r.name()),
         Err(Refusal::Machine(r)) => {
             COVERAGE.lock().unwrap().get_or_insert_with(Default::default).1.insert(r.name());
         }
@@ -637,6 +696,12 @@ fn record_session(res: &Result<Done, Refusal>, s: &Session<Fake>) {
     if let Some(c) = s.closed() {
         cov(0, c.name());
     }
+}
+pub fn rec_abandon(r: Result<usize, SReason>) -> Result<usize, SReason> {
+    if let Err(e) = &r {
+        cov(1, e.name());
+    }
+    r
 }
 pub fn rec_d<T>(r: Result<T, DReason>) -> Result<T, DReason> {
     if let Err(e) = &r {
@@ -659,6 +724,10 @@ pub fn req_text(r: &Req) -> String {
         Req::Ports => "ports".into(),
         Req::Event => "event".into(),
         Req::Op(o) => format!("op {}", encode(o)),
+        Req::Scratch(Scratch::Allocate { item, addr }) => format!("scratch alloc {} {addr}", item_text(*item)),
+        Req::Scratch(Scratch::Zero(it)) => format!("scratch zero {}", item_text(*it)),
+        Req::Scratch(Scratch::Prepare(it)) => format!("scratch prepare {}", item_text(*it)),
+        Req::Scratch(Scratch::Release(it)) => format!("scratch release {}", item_text(*it)),
     }
 }
 
@@ -667,6 +736,7 @@ pub fn done_text(res: &Result<Done, Refusal>) -> String {
         Ok(d) => format!("done {} closed={}", d.accepted.map_or("-".to_string(), |a| outcome(&Ok(a))), d.closed.map_or("-", |c| c.name())),
         Err(Refusal::Machine(r)) => format!("err m:{}", r.name()),
         Err(Refusal::Session(r)) => format!("err s:{}", r.name()),
+        Err(Refusal::Ledger(r)) => format!("err l:{}", r.name()),
     }
 }
 
@@ -691,6 +761,16 @@ pub fn random_req(r: &mut Rng, h: &SH) -> Req {
             Req::Op(Operation::Qualify(h2.s.backend().d.facts()))
         }
         17 => Req::Op(Operation::ConsumeEvent(None)),
+        18 | 19 => {
+            let it = r.pick(&[Item::Array, Item::Buffer(0), Item::Buffer(1), Item::Buffer(63), Item::Buffer(70), Item::Core(PageKind::Command)]);
+            let addr = if r.chance(5, 6) { scratch_addr(it) } else { r.pick(&[0, 0x50_0800, 0x40_0000, 0x8_0000, 1 << 40, scratch_addr(Item::Buffer(0))]) };
+            Req::Scratch(match r.below(4) {
+                0 => Scratch::Allocate { item: it, addr },
+                1 => Scratch::Zero(it),
+                2 => Scratch::Prepare(it),
+                _ => Scratch::Release(it),
+            })
+        }
         _ => {
             // reuse the C4.1 random operation generator for everything else
             let hh = Harness::new(h.s.backend().q.clone(), ReleasePolicy::AfterQuiesce);

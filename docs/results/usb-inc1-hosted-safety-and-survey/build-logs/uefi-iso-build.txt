@@ -1,0 +1,32 @@
+grub-file --is-x86-multiboot2 build/inc1-1/kernel/vos.bin
+x86_64: Multiboot header OK
+python3 -I -B scripts/check-contain-image.py --expect production build/inc1-1/kernel/vos.bin
+rm -rf build/inc1-1/kernel/isodir
+mkdir -p build/inc1-1/kernel/isodir/boot/grub
+cp build/inc1-1/kernel/vos.bin build/inc1-1/kernel/isodir/boot/vos.bin
+cp arch/x86_64/grub.cfg build/inc1-1/kernel/isodir/boot/grub/grub.cfg
+for f in build/inc1-1/user/hello.elf:boot/hello.elf ; do \
+    mkdir -p build/inc1-1/kernel/isodir/$(dirname ${f#*:}); cp ${f%%:*} build/inc1-1/kernel/isodir/${f#*:}; \
+done
+grub-mkrescue -o build/inc1-1/kernel/vos.iso build/inc1-1/kernel/isodir
+xorriso 1.5.6 : RockRidge filesystem manipulator, libburnia project.
+
+Drive current: -outdev 'stdio:build/inc1-1/kernel/vos.iso'
+Media current: stdio file, overwriteable
+Media status : is blank
+Media summary: 0 sessions, 0 data blocks, 0 data,  933g free
+Added to ISO image: directory '/'='/tmp/grub.QbHte8'
+xorriso : UPDATE :     316 files added in 1 seconds
+Added to ISO image: directory '/'='/home/veasnawt/src/vos-usb-inc1/build/inc1-1/kernel/isodir'
+xorriso : UPDATE :     321 files added in 1 seconds
+xorriso : NOTE : Copying to System Area: 512 bytes from file '/usr/lib/grub/i386-pc/boot_hybrid.img'
+ISO image produced: 3781 sectors
+Written to medium : 3781 sectors at LBA 0
+Writing to 'stdio:build/inc1-1/kernel/vos.iso' completed successfully.
+
+uefi-iso: no GRUB x86_64-efi files in /usr/lib/grub/x86_64-efi (see docs/plans/uefi.md)
+make: *** [Makefile:110: uefi-iso] Error 1
+
+real	0m0.582s
+user	0m0.289s
+sys	0m0.230s

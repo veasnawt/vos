@@ -107,6 +107,13 @@ unsigned devmap_scope_tables(void);
 struct devmap_scope_region { unsigned kind; uint64_t pa, length; };
 int devmap_scope_acquire_region(const struct devmap_scope_region *r, int attr,
                                 uint64_t *token, uint64_t *va);
+/* USB input bring-up, Increment 1: the read-only survey of a physical controller. The same exclusive scope lease,
+ * but a 64 KiB window at a page-aligned BAR base: a physical controller's extended capabilities sit beyond the
+ * QEMU profile's 16 KiB, and its BAR size cannot be learned without writing the BAR. Reads only, UC, never WC; the
+ * survey confines its reads to the structures the controller itself declares. Same checks: RAM, existing mappings
+ * and MAXPHYADDR are refused by devmap_check. */
+#define DEVMAP_SCOPE_XHCI_SURVEY    3u
+#define DEVMAP_XHCI_SURVEY_BYTES    65536ULL
 /* Kind of the live scope lease (0 when none) and its window for that token. */
 unsigned devmap_scope_kind(void);
 int devmap_scope_extent(uint64_t token, uint64_t *va, uint64_t *length);

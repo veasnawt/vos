@@ -1,0 +1,46 @@
+Hello from VOS!
+boot: x86_64 long mode, cs=0x8 efer=0x500 rip=0xffffffff801072ab
+gdt: loaded cs=0x8 ss=0x10 tr=0x28 tss=busy
+tss: rsp0=0xffffffff80162000 ist1=0xffffffff80159000 ist2=0xffffffff8015b000 ist3=0xffffffff8015d000 iomap=104 limit=103
+idt: 32 exception vectors loaded, df ist=1, nmi ist=2, mc ist=3
+idt: IRQ vectors 0x20-0x2f present, DPL 0, interrupt gates
+idt: vector 0x80 present, DPL 3 (system calls, ABI v0)
+cpu: wp=on nx=on smep=unsupported umip=unsupported smap=unsupported x87=off(em)
+cpu: inherited cr0=0x80000011 cr4=0x20 efer=0x500; set cr0=0x80010035 cr4=0x68 efer=0xd00
+boot: loader "GRUB 2.14-2ubuntu2.1", memory map 9 entries, 133684224 bytes usable
+boot: multiboot2 info at 0x2c1350-0x2c1df8
+boot: kernel command line "vos.usb-survey=1 vos.usb_probe=1"
+boot: modules 1
+boot: module 0 0x2be000-0x2c1348 "hello"
+boot: reserved 0x0-0x100000 low 1 MiB
+boot: reserved 0x100000-0x1e2000 kernel image
+boot: reserved 0x2c1000-0x2c2000 multiboot2 info
+boot: reserved 0x2be000-0x2c2000 module
+efi: no EFI map (BIOS): e820 protection only
+pmm: 262144 frames tracked below 1 GiB, 32248 usable (128992 KiB), 0 bytes of RAM above 1 GiB ignored
+vmm: identity map removed
+kmap: phys 0-4 MiB as 4 KiB pages: 60 text R-X, 14 R NX, 930 RW NX, 20 guard pages unmapped; 510 x 2 MiB RW NX
+kmap: text 0xffffffff80107000-0xffffffff80143000, rodata 0xffffffff80143000-0xffffffff80150000
+kmap: PDPT[510] 0x105000 -> 0x177000, checked before and after the switch; boot directory retired
+kmap: after the TLB flush the CPU refused a text write (#PF err=0x3) and a guard read (#PF err=0x0)
+devmap: window at 0xffffffff40000000, 40-bit physical addresses, write-combining via PAT entry 4
+screen: framebuffer 1280x800 BGRX at 0xfd000000, pitch 5120, write-combining, MTRR type 0, 156x41 cells
+usb: USB.1 read-only probe; PCI bus 0 only; other buses NOT SCANNED
+usb: xhci bus=0 dev=2 fn=0 vendor=0x1b36 device=0xd command=0x107 status=0x10 bar=0xfebf0000 bits=64
+usb: inspected version=0x100 caplength=64 ports=8 slots=64 interrupters=16 dboff=0x2000 rtsoff=0x1000 hcs1=0x8001040 hcs2=0xf hcs3=0x0 hcc1=0x87001
+usb: PCI command and BAR unchanged
+usb: summary inspected=1 unsupported=0 invalid=0; bus-0 scan complete
+usb: no reset, ownership transfer, DMA, PCI writes or USB transfers
+usb: survey is exclusive with the other vos.usb options; not run
+vmm: audit passed: kernel alias 1004 x 4 KiB + 510 x 2 MiB supervisor pages, 60 ring-0 executable (all kernel text, none writable), 0 lower-half tables
+rust: kernel probe PASS; fn=0xffffffff8013c900 seed=0xffffffffb6c71022 salt=0xffffffff800578e0 result=0x26303edc7555568b
+irq: 8259 master 0x20-0x27, slave 0x28-0x2f (cascade IRQ2); masks 0xfffe (IRQ0 only); level-triggered lines (ELCR) 0xc00
+pit: channel 0 mode 2, divisor 11932 (99.998 Hz)
+sched: 16 thread records, 15 guarded stacks of 16 KiB at 0xffffffff8017a000; boot thread id 1, idle thread id 2
+vblk: no virtio-blk device on PCI bus 0; block storage unavailable
+app: module "hello" at 0x2be000-0x2c1348, 13128 bytes
+elf: hello: ET_EXEC entry 0x400000, 3 PT_LOAD, 3 pages, VOS ABI 0
+user[hello]: Hello from VOS!
+proc: exit status 0 (cs=0x23 rip=0x40002a)
+proc[hello]: exited status 0, all frames reclaimed
+boot: checks passed

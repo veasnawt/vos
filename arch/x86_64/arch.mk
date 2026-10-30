@@ -16,7 +16,7 @@ CONTAIN_FLAVOUR  = production
 ARCH_OBJS       := boot.o entry.o usermode.o kernel.o bootinfo.o console.o cpu.o exception.o gdt.o idt.o \
                    lib.o loader.o panic.o pmm.o process.o resv.o syscall.o usercopy.o vmm.o kmap.o irq.o pic.o pit.o thread.o thread_switch.o channel.o elf.o app.o app_catalog.o app_payload.o exec.o \
                    pci.o xhci.o xhci_boot.o blockdev.o virtio_blk.o ext2.o io_scope.o file.o devmap.o screen.o desktop.o gui.o gui_verify.o font8x16.o keyboard.o input_console.o user_console.o vsh_boot.o virtio_net.o net_boot.o net_arp.o net_arp_boot.o net_ipv4.o net_ipv4_boot.o net_udp.o net_udp_boot.o net_tcp.o net_tcp_boot.o net_tcp_data_boot.o net_tcp_retry_boot.o net_tcp_close_boot.o
-ARCH_OBJS += usb_resources.o xhci_qualify.o usb_dma.o efi_memory.o
+ARCH_OBJS += usb_resources.o xhci_qualify.o usb_dma.o efi_memory.o xhci_survey.o
 ifeq ($(EXEC_VERIFY),1)
 ARCH_OBJS += exec_verify.o
 endif

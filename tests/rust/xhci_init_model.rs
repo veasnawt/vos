@@ -234,8 +234,10 @@ fn qualification_refusals_are_named_prioritised_and_terminal() {
         (bad_facts(|f| f.msi = true), Reason::MsiEnabled),
         (bad_facts(|f| f.dbc = Dbc::Enabled), Reason::DbcEnabled),
         (bad_facts(|f| f.dbc = Dbc::Unknown), Reason::DbcUnresolved),
-        (bad_facts(|f| f.scratchpads = 1), Reason::ScratchpadsRequired),
-        (bad_facts(|f| f.scratchpads = 1023), Reason::ScratchpadsRequired),
+        (bad_facts(|f| f.scratchpads = 65), Reason::ScratchpadsExceedBudget),
+        (bad_facts(|f| f.scratchpads = 1023), Reason::ScratchpadsExceedBudget),
+        (bad_facts(|f| f.scratchpads = 1024), Reason::ScratchpadsInvalid),
+        (bad_facts(|f| f.scratchpads = u16::MAX), Reason::ScratchpadsInvalid),
         (bad_facts(|f| f.legacy = Legacy::Present { bios: true, os: true }), Reason::OwnershipConflict),
         (bad_facts(|f| f.connected = 1), Reason::DeviceAttached),
     ];
@@ -249,14 +251,14 @@ fn qualification_refusals_are_named_prioritised_and_terminal() {
         assert_eq!(rec(&mut m, Operation::Qualify(Device::new(Quirks::qemu()).facts())), Err(Reason::AfterTerminal));
     }
     // Priority: the earlier rule wins when several defects are present.
-    let f = bad_facts(|f| { f.profile = Profile::Unqualified; f.scratchpads = 4; f.connected = 1; f.msi = true });
+    let f = bad_facts(|f| { f.profile = Profile::Unqualified; f.scratchpads = 65; f.connected = 1; f.msi = true });
     let mut m = Machine::new(ReleasePolicy::AfterQuiesce);
     rec(&mut m, Operation::Qualify(f)).unwrap();
     assert_eq!(m.terminal_reason(), Some(Reason::UnqualifiedPlatform));
-    let f = bad_facts(|f| { f.scratchpads = 4; f.connected = 1; f.legacy = Legacy::Present { bios: true, os: true } });
+    let f = bad_facts(|f| { f.scratchpads = 65; f.connected = 1; f.legacy = Legacy::Present { bios: true, os: true } });
     let mut m = Machine::new(ReleasePolicy::AfterQuiesce);
     rec(&mut m, Operation::Qualify(f)).unwrap();
-    assert_eq!(m.terminal_reason(), Some(Reason::ScratchpadsRequired));
+    assert_eq!(m.terminal_reason(), Some(Reason::ScratchpadsExceedBudget));
 }
 
 #[test]
@@ -390,19 +392,57 @@ fn static_registers_need_containment_prepared_pages_and_valid_values() {
 
 #[test]
 fn scratchpad_and_dcbaa_eligibility() {
-    // Scratchpads required: refused at qualification, nothing written, no page ever allocated.
+    // Increment 1: scratchpads are a resource policy, not a refusal. 31 is not a limit; the budget is.
+    for n in [1u16, 4, 31, 32, 33, 63, 64] {
+        let mut h = with(|q| q.scratchpads = n);
+        { let f = h.d.facts(); ok(&mut h, Operation::Qualify(f)); }
+        assert!(!h.m.phase().terminal() && h.m.phase() != Phase::Idle, "{n}: {}", h.m.phase().name());
+        assert_eq!(h.m.terminal_reason(), None, "{n}");
+        assert!(h.d.writes.is_empty());
+    }
+    // A controller that needs scratchpads and has none planned is not a DCBAA the machine will accept.
     let mut h = with(|q| q.scratchpads = 4);
-    { let f = h.d.facts(); ok(&mut h, Operation::Qualify(f)); }
-    assert_eq!((h.m.phase(), h.m.terminal_reason()), (Phase::Refused, Some(Reason::ScratchpadsRequired)));
-    assert!(h.d.writes.is_empty());
-    assert_eq!(h.apply(Operation::DmaAllocate { kind: PageKind::Dcbaa, addr: DCB }), Err(Reason::AfterTerminal));
-    // A DCBAA entry 0 that would point at a scratchpad array is refused by the page builder.
+    goto(&mut h, Phase::Contained);
+    ok(&mut h, Operation::DmaAllocate { kind: PageKind::Dcbaa, addr: DCB });
+    ok(&mut h, Operation::DmaZero(PageKind::Dcbaa));
+    refused(&mut h, Operation::PrepareDcbaa { entry0: 0 }, Reason::ScratchpadArrayRequired);
+    refused(&mut h, Operation::PrepareDcbaa { entry0: 0x50_0800 }, Reason::Misaligned);
+    refused(&mut h, Operation::PrepareDcbaa { entry0: 0x8_0000 }, Reason::AddressRange);
+    refused(&mut h, Operation::PrepareDcbaa { entry0: 0x4000_0000 }, Reason::AddressRange);
+    refused(&mut h, Operation::PrepareDcbaa { entry0: u64::MAX & !0xfff }, Reason::AddressRange);
+    ok(&mut h, Operation::DmaAllocate { kind: PageKind::Command, addr: CMD });
+    refused(&mut h, Operation::PrepareDcbaa { entry0: DCB }, Reason::PageOverlap);
+    refused(&mut h, Operation::PrepareDcbaa { entry0: CMD }, Reason::PageOverlap);
+    ok(&mut h, Operation::PrepareDcbaa { entry0: 0x50_0000 });
+    // Without scratchpads a DCBAA entry 0 that would point at an array is still refused by the page builder.
     let mut h = qemu();
     goto(&mut h, Phase::Contained);
     ok(&mut h, Operation::DmaAllocate { kind: PageKind::Dcbaa, addr: DCB });
     ok(&mut h, Operation::DmaZero(PageKind::Dcbaa));
     refused(&mut h, Operation::PrepareDcbaa { entry0: 0x20_0000 }, Reason::ScratchpadPointerUnsupported);
     ok(&mut h, Operation::PrepareDcbaa { entry0: 0 });
+}
+
+#[test]
+fn a_backend_fault_is_terminal_with_its_own_reason() {
+    // Idle: nothing to fail.
+    let mut h = qemu();
+    assert_eq!(h.apply(Operation::BackendFault), Err(Reason::NotQualified));
+    // Unexposed: a clean failure; the quarantine tail is not needed.
+    let mut h = qemu();
+    goto(&mut h, Phase::Contained);
+    let a = ok(&mut h, Operation::BackendFault);
+    assert_eq!((a.to, a.why), (Phase::Failed, Rule::FaultBackend));
+    assert_eq!(h.m.terminal_reason(), Some(Reason::BackendFault));
+    assert_eq!(h.apply(Operation::BackendFault), Err(Reason::AfterTerminal));
+    assert!(h.d.violations.is_empty());
+    // Exposed (a page is published): the quarantine path, with the same reason.
+    let mut h = qemu();
+    goto(&mut h, Phase::BusMastering);
+    assert!(h.m.exposed());
+    let a = ok(&mut h, Operation::BackendFault);
+    assert_eq!((a.to, a.why), (Phase::Quarantined, Rule::FaultBackend));
+    assert_eq!(h.m.terminal_reason(), Some(Reason::BackendFault));
 }
 
 #[test]

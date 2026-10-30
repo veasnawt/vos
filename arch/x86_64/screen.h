@@ -54,6 +54,9 @@ void screen_erase_previous(void);
  * Serial boot diagnostics remain intact. No-op without an initialized screen.
  */
 void screen_begin_input(void);
+/* USB input survey: blank the log area and start the (circular) log again at its top, so that a long report is not
+ * split across the wrap. Touches nothing but the log area; no effect on serial, in input mode or without a screen. */
+void screen_restart_log(void);
 /* Opt-in N6 scene around the existing exclusive foreground console. Falls back
  * without changing mode when no validated >=640x480 BGRX framebuffer exists. */
 int screen_desktop_begin(void);

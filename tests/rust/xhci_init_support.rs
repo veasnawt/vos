@@ -856,7 +856,7 @@ pub fn random_op(r: &mut Rng, h: &Harness) -> Operation {
         36 => O::PublishLink { index: if r.chance(3, 4) { enq } else { 255 }, cycle: if r.chance(3, 4) { pcs } else { !pcs }, toggle: r.chance(5, 6), target: if r.chance(5, 6) { CMD } else { addr(r) } },
         37 => O::RingCommandDoorbell,
         38 => O::BeginPollStep,
-        _ => if r.chance(1, 3) { O::Cancel } else { O::Forbidden(r.pick(&[Forbidden::InterruptEnable, Forbidden::PortWrite, Forbidden::SlotDoorbell, Forbidden::Command])) },
+        _ => if r.chance(1, 3) { O::Cancel } else if r.chance(1, 40) { O::BackendFault } else { O::Forbidden(r.pick(&[Forbidden::InterruptEnable, Forbidden::PortWrite, Forbidden::SlotDoorbell, Forbidden::Command])) },
     }
 }
 
@@ -912,6 +912,7 @@ pub fn encode(op: &Operation) -> String {
         O::RingCommandDoorbell => "RingCommandDoorbell".into(),
         O::BeginPollStep => "BeginPollStep".into(),
         O::Cancel => "Cancel".into(),
+        O::BackendFault => "BackendFault".into(),
         O::Forbidden(f) => format!("Forbidden {}", f.name()),
     }
 }

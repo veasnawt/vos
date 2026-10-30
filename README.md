@@ -157,12 +157,16 @@ about physical xHCI hardware. The
 is merged through PR #34 at `dbb7d1d06452414c9674d9f9bb4b6e08d859da59`: a host-only Rust state
 machine for the future controller bring-up (typed operations, register writes as model events,
 bus-master ordering, DMA ownership, refusal and quarantine rules) with an independent oracle and
-mutation controls. This branch's
-[USB.2-C4.2a hosted backend contract](docs/results/usb2c42a-hosted-backend-contract.md) adds,
-also host-only, typed register observations with sequence numbers, a validating session that is
-the only path for observations to reach that model, write tickets and read-back checks, and a
+mutation controls. The
+[USB.2-C4.2a hosted backend contract](docs/results/usb2c42a-hosted-backend-contract.md), merged through
+PR #35, adds, also host-only, typed register observations with sequence numbers, a validating session that
+is the only path for observations to reach that model, write tickets and read-back checks, and a
 model-only DMA ownership ledger. Neither is linked into any kernel or ISO and neither touches a
-device. Further Rust
+device. [USB input bring-up Increment 1](docs/results/usb-inc1-hosted-safety-and-survey.md), a candidate on
+this branch, resolves the scratchpad policy against the xHCI specification, wires the ledger to the model and
+adds an opt-in `vos.usb-survey=1` / `vos.usb-survey=hold` production survey that only reads PCI configuration
+space and xHCI registers and prints what a physical computer's controllers are, on the screen as well as on
+serial. It enables no USB input and proves nothing about physical hardware. Further Rust
 kernel migration and broader
 hardware portability remain proposed tracks requiring separate authorization.
 

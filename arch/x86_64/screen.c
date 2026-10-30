@@ -343,6 +343,20 @@ void screen_begin_input(void)
     busy = 0;
 }
 
+void screen_restart_log(void)
+{
+    if (!inited || kind == SCREEN_NONE || busy || panicked || input_mode || gui_active)
+        return;
+    busy = 1;
+    cx = cy = 0;
+    if (kind == SCREEN_FB)
+        screen_fill(&fb, desktop_mode ? clear_x : 0, log_y, desktop_mode ? clear_w : fb.width,
+                    (desktop_mode ? clear_bottom : fb.height) - log_y, COLOR_BG);
+    for (unsigned r = 0; r < rows; r++)
+        clear_line(r);
+    busy = 0;
+}
+
 void screen_status(int state, const char *text)
 {
     if (state < SCREEN_BOOTING || state > SCREEN_FAIL)

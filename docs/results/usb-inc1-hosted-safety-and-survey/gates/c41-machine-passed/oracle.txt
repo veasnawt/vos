@@ -1,0 +1,10 @@
+{
+ "traces": 600,
+ "steps": 156000,
+ "accepted": 20003,
+ "refused": 135997,
+ "mismatches": 0,
+ "first_mismatches": [],
+ "rules_seen": 64,
+ "reasons_seen": 64
+}

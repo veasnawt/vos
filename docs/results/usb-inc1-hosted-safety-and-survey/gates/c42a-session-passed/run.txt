@@ -1,0 +1,44 @@
+{
+ "rust_tests": "test result: ok. 58 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.66s",
+ "oracle": {
+  "traces": 200,
+  "requests": 44000,
+  "refused": 24804,
+  "closed": 135,
+  "accepted": 19061,
+  "mismatches": 0,
+  "first_mismatches": []
+ },
+ "oracle_corruption_controls": {
+  "refusal-reason": 1,
+  "accepted-rule": 1,
+  "closure-cause": 1,
+  "write-event": 1,
+  "missing-backend-call": 1,
+  "extra-backend-call": 1
+ },
+ "mutation_summary": {
+  "total": 163,
+  "killed": 163,
+  "survived": [],
+  "invalid": [],
+  "killed_by_rust_tests": 156,
+  "killed_by_oracle": 69,
+  "killed_by_oracle_only": [
+   "stamped-fault-unchecked",
+   "width-of-64bit-registers",
+   "pre-reset-bme-dropped",
+   "pre-setbme-bme-dropped",
+   "pre-erstba-bme-dropped",
+   "pre-setrs-error-dropped",
+   "pre-doorbell-dropped"
+  ],
+  "killed_by_rust_tests_only": 94
+ },
+ "pass": true,
+ "seconds": 297.7
+}
+
+real	4m57.879s
+user	17m57.230s
+sys	0m47.647s

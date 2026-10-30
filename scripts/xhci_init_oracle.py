@@ -118,6 +118,8 @@ class Oracle:
             return err('not-qualified')
         if name == 'Qualify':
             return err('already-qualified')
+        if name == 'BackendFault':
+            return self.fail('fault.backend', 'backend-fault')
         return getattr(self, 'op_' + name)(*a)
 
     # ---- terminal tail ----
@@ -166,7 +168,8 @@ class Oracle:
             (msi, 'msi-enabled'),
             (dbc == 2, 'dbc-enabled'),
             (dbc == 3, 'dbc-unresolved'),
-            (scratch > 0, 'scratchpads-required'),
+            (scratch > 1023, 'scratchpads-invalid'),
+            (scratch > 64, 'scratchpads-exceed-budget'),
             (lp and lb and lo, 'ownership-conflict'),
             (connected != 0, 'device-attached'),
         ]
@@ -175,7 +178,7 @@ class Oracle:
                 self.cause = reason
                 self.phase = 'refused'
                 return ok('idle', 'refused', 'fault.qualification-refused')
-        self.f = dict(ports=ports, limit=limit)
+        self.f = dict(ports=ports, limit=limit, scratch=scratch)
         self.legacy = [bool(lb), bool(lo)] if lp else None
         self.bme, self.ver, self.rs, self.hch = bool(bme), True, bool(running), bool(halted)
         if self.legacy is None:
@@ -654,9 +657,20 @@ class Oracle:
         return self.prepare('event')
 
     def op_PrepareDcbaa(self, entry0):
+        entry0 = int(entry0)
+
         def chk():
-            if int(entry0) != 0:
-                raise Out(err('scratchpad-pointer-unsupported'))
+            if self.f['scratch'] == 0:
+                if entry0 != 0:
+                    raise Out(err('scratchpad-pointer-unsupported'))
+            elif entry0 == 0:
+                raise Out(err('scratchpad-array-required'))
+            elif entry0 % PAGE:
+                raise Out(err('misaligned'))
+            elif not (entry0 >= 0x100000 and entry0 + PAGE <= self.f['limit']):
+                raise Out(err('address-range'))
+            elif any(p[0] != 'free' and abs(p[1] - entry0) < PAGE for p in self.pages.values()):
+                raise Out(err('page-overlap'))
         return self.prepare('dcbaa', chk)
 
     def op_PrepareErst(self, segment, size):

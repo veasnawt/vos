@@ -1,0 +1,31 @@
+Hello from VOS!
+boot: x86_64 long mode, cs=0x8 efer=0x500 rip=0xffffffff801072ab
+gdt: loaded cs=0x8 ss=0x10 tr=0x28 tss=busy
+tss: rsp0=0xffffffff80162000 ist1=0xffffffff80159000 ist2=0xffffffff8015b000 ist3=0xffffffff8015d000 iomap=104 limit=103
+idt: 32 exception vectors loaded, df ist=1, nmi ist=2, mc ist=3
+idt: IRQ vectors 0x20-0x2f present, DPL 0, interrupt gates
+idt: vector 0x80 present, DPL 3 (system calls, ABI v0)
+cpu: wp=on nx=on smep=unsupported umip=unsupported smap=unsupported x87=off(em)
+cpu: inherited cr0=0x80000011 cr4=0x20 efer=0x500; set cr0=0x80010035 cr4=0x68 efer=0xd00
+boot: loader "GRUB 2.14-2ubuntu2.1", memory map 9 entries, 133688320 bytes usable
+boot: multiboot2 info at 0x2bd5f0-0x2be070
+boot: kernel command line "vos.usb-survey=hold"
+boot: modules 0
+boot: reserved 0x0-0x100000 low 1 MiB
+boot: reserved 0x100000-0x1e2000 kernel image
+boot: reserved 0x2bd000-0x2bf000 multiboot2 info
+efi: no EFI map (BIOS): e820 protection only
+pmm: 262144 frames tracked below 1 GiB, 32251 usable (129004 KiB), 0 bytes of RAM above 1 GiB ignored
+vmm: identity map removed
+kmap: phys 0-4 MiB as 4 KiB pages: 60 text R-X, 14 R NX, 930 RW NX, 20 guard pages unmapped; 510 x 2 MiB RW NX
+kmap: text 0xffffffff80107000-0xffffffff80143000, rodata 0xffffffff80143000-0xffffffff80150000
+kmap: PDPT[510] 0x105000 -> 0x177000, checked before and after the switch; boot directory retired
+kmap: after the TLB flush the CPU refused a text write (#PF err=0x3) and a guard read (#PF err=0x0)
+devmap: window at 0xffffffff40000000, 40-bit physical addresses, write-combining via PAT entry 4
+screen: framebuffer 1280x800 BGRX at 0xfd000000, pitch 5120, write-combining, MTRR type 0, 156x41 cells
+usb: USB input survey: PCI configuration and xHCI registers are only read; nothing is written
+usb: survey (read-only) pci functions 5 buses 1 bridges 0 usb 0 iommu-fn 0
+usb: no xHCI controller found on the buses that were scanned
+usb: i8042 status 0x1c (output buffer 0, input buffer 0)
+usb: IOMMU: 0 PCI IOMMU function(s); ACPI DMAR and IVRS are NOT read, so an Intel or AMD IOMMU is UNKNOWN
+usb: survey complete. Nothing was written. The machine is halted: power it off.

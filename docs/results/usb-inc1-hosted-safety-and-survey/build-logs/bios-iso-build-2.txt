@@ -1,0 +1,58 @@
+gcc -std=gnu11 -ffreestanding -fno-pic -fno-pie -fno-stack-protector -fno-builtin -fno-asynchronous-unwind-tables -mno-sse -mno-mmx -O2 -Wall -Wextra -g -m64 -mcmodel=kernel -mno-red-zone -mgeneral-regs-only -fcf-protection=none -fno-stack-clash-protection  -MMD -MP -c arch/x86_64/xhci_survey.c -o build/inc1-1/kernel/xhci_survey.o
+ld -m elf_x86_64 -z max-page-size=0x1000 -Map=build/inc1-1/kernel/kernel.map -nostdlib -T arch/x86_64/linker.ld -o build/inc1-1/kernel/vos.bin build/inc1-1/kernel/boot.o build/inc1-1/kernel/entry.o build/inc1-1/kernel/usermode.o build/inc1-1/kernel/kernel.o build/inc1-1/kernel/bootinfo.o build/inc1-1/kernel/console.o build/inc1-1/kernel/cpu.o build/inc1-1/kernel/exception.o build/inc1-1/kernel/gdt.o build/inc1-1/kernel/idt.o build/inc1-1/kernel/lib.o build/inc1-1/kernel/loader.o build/inc1-1/kernel/panic.o build/inc1-1/kernel/pmm.o build/inc1-1/kernel/process.o build/inc1-1/kernel/resv.o build/inc1-1/kernel/syscall.o build/inc1-1/kernel/usercopy.o build/inc1-1/kernel/vmm.o build/inc1-1/kernel/kmap.o build/inc1-1/kernel/irq.o build/inc1-1/kernel/pic.o build/inc1-1/kernel/pit.o build/inc1-1/kernel/thread.o build/inc1-1/kernel/thread_switch.o build/inc1-1/kernel/channel.o build/inc1-1/kernel/elf.o build/inc1-1/kernel/app.o build/inc1-1/kernel/app_catalog.o build/inc1-1/kernel/app_payload.o build/inc1-1/kernel/exec.o build/inc1-1/kernel/pci.o build/inc1-1/kernel/xhci.o build/inc1-1/kernel/xhci_boot.o build/inc1-1/kernel/blockdev.o build/inc1-1/kernel/virtio_blk.o build/inc1-1/kernel/ext2.o build/inc1-1/kernel/io_scope.o build/inc1-1/kernel/file.o build/inc1-1/kernel/devmap.o build/inc1-1/kernel/screen.o build/inc1-1/kernel/desktop.o build/inc1-1/kernel/gui.o build/inc1-1/kernel/gui_verify.o build/inc1-1/kernel/font8x16.o build/inc1-1/kernel/keyboard.o build/inc1-1/kernel/input_console.o build/inc1-1/kernel/user_console.o build/inc1-1/kernel/vsh_boot.o build/inc1-1/kernel/virtio_net.o build/inc1-1/kernel/net_boot.o build/inc1-1/kernel/net_arp.o build/inc1-1/kernel/net_arp_boot.o build/inc1-1/kernel/net_ipv4.o build/inc1-1/kernel/net_ipv4_boot.o build/inc1-1/kernel/net_udp.o build/inc1-1/kernel/net_udp_boot.o build/inc1-1/kernel/net_tcp.o build/inc1-1/kernel/net_tcp_boot.o build/inc1-1/kernel/net_tcp_data_boot.o build/inc1-1/kernel/net_tcp_retry_boot.o build/inc1-1/kernel/net_tcp_close_boot.o build/inc1-1/kernel/usb_resources.o build/inc1-1/kernel/xhci_qualify.o build/inc1-1/kernel/usb_dma.o build/inc1-1/kernel/efi_memory.o build/inc1-1/kernel/xhci_survey.o build/inc1-1/kernel/rust/libvos_kernel.a
+python3 -I -B scripts/check-kernel-layout.py build/inc1-1/kernel/vos.bin || { rm -f build/inc1-1/kernel/vos.bin; exit 1; } && python3 -I -B scripts/check-contain-image.py --expect production build/inc1-1/kernel/vos.bin || { rm -f build/inc1-1/kernel/vos.bin; exit 1; }
+kernel layout OK [build/inc1-1/kernel/vos.bin]: 0x100000-0x101000/5 0x101000-0x107000/6 0x107000-0x16a000/5 0x16a000-0x180000/4 0x180000-0x213000/6
+grub-file --is-x86-multiboot2 build/inc1-1/kernel/vos.bin
+x86_64: Multiboot header OK
+gcc -m64 -Iuser/include -MMD -MP -c user/lib/crt0.S -o build/inc1-1/user/lib/crt0.o
+gcc -m64 -Iuser/include -MMD -MP -c user/lib/syscall.S -o build/inc1-1/user/lib/syscall.o
+gcc -m64 -Iuser/include -MMD -MP -c user/lib/abi_note.S -o build/inc1-1/user/lib/abi_note.o
+gcc -std=gnu11 -O2 -Wall -Wextra -m64 -mcmodel=small -ffreestanding -fno-builtin -nostdinc -isystem /usr/lib/gcc/x86_64-linux-gnu/15/include -Iuser/include -fno-pic -fno-pie -fno-stack-protector -fno-stack-clash-protection -fcf-protection=none -fno-asynchronous-unwind-tables -fno-unwind-tables -mgeneral-regs-only -MMD -MP -c user/hello/hello.c -o build/inc1-1/user/hello/hello.o
+ld -m elf_x86_64 -nostdlib -static -z noexecstack -z max-page-size=0x1000 -z norelro --build-id=none -T user/lib/user.ld -o build/inc1-1/user/hello.elf build/inc1-1/user/lib/crt0.o build/inc1-1/user/lib/syscall.o build/inc1-1/user/lib/abi_note.o build/inc1-1/user/hello/hello.o
+python3 -I -B scripts/check-contain-image.py --expect production build/inc1-1/kernel/vos.bin
+rm -rf build/inc1-1/kernel/isodir
+mkdir -p build/inc1-1/kernel/isodir/boot/grub
+cp build/inc1-1/kernel/vos.bin build/inc1-1/kernel/isodir/boot/vos.bin
+cp arch/x86_64/grub.cfg build/inc1-1/kernel/isodir/boot/grub/grub.cfg
+for f in build/inc1-1/user/hello.elf:boot/hello.elf ; do \
+    mkdir -p build/inc1-1/kernel/isodir/$(dirname ${f#*:}); cp ${f%%:*} build/inc1-1/kernel/isodir/${f#*:}; \
+done
+grub-mkrescue -o build/inc1-1/kernel/vos.iso build/inc1-1/kernel/isodir
+xorriso 1.5.6 : RockRidge filesystem manipulator, libburnia project.
+
+Drive current: -outdev 'stdio:build/inc1-1/kernel/vos.iso'
+Media current: stdio file, overwriteable
+Media status : is blank
+Media summary: 0 sessions, 0 data blocks, 0 data,  933g free
+Added to ISO image: directory '/'='/tmp/grub.KKhOpZ'
+xorriso : UPDATE :     316 files added in 1 seconds
+Added to ISO image: directory '/'='/home/veasnawt/src/vos-usb-inc1/build/inc1-1/kernel/isodir'
+xorriso : UPDATE :     321 files added in 1 seconds
+xorriso : NOTE : Copying to System Area: 512 bytes from file '/usr/lib/grub/i386-pc/boot_hybrid.img'
+ISO image produced: 3781 sectors
+Written to medium : 3781 sectors at LBA 0
+Writing to 'stdio:build/inc1-1/kernel/vos.iso' completed successfully.
+
+rm -rf build/inc1-1/kernel/isodir-usb-survey
+cp -r build/inc1-1/kernel/isodir build/inc1-1/kernel/isodir-usb-survey
+cp arch/x86_64/grub-usb-survey.cfg build/inc1-1/kernel/isodir-usb-survey/boot/grub/grub.cfg
+grub-mkrescue -o build/inc1-1/kernel/vos-usb-survey.iso build/inc1-1/kernel/isodir-usb-survey
+xorriso 1.5.6 : RockRidge filesystem manipulator, libburnia project.
+
+Drive current: -outdev 'stdio:build/inc1-1/kernel/vos-usb-survey.iso'
+Media current: stdio file, overwriteable
+Media status : is blank
+Media summary: 0 sessions, 0 data blocks, 0 data,  933g free
+Added to ISO image: directory '/'='/tmp/grub.liFBNB'
+xorriso : UPDATE :     316 files added in 1 seconds
+Added to ISO image: directory '/'='/home/veasnawt/src/vos-usb-inc1/build/inc1-1/kernel/isodir-usb-survey'
+xorriso : UPDATE :     321 files added in 1 seconds
+xorriso : NOTE : Copying to System Area: 512 bytes from file '/usr/lib/grub/i386-pc/boot_hybrid.img'
+ISO image produced: 3781 sectors
+Written to medium : 3781 sectors at LBA 0
+Writing to 'stdio:build/inc1-1/kernel/vos-usb-survey.iso' completed successfully.
+
+
+real	0m1.700s
+user	0m0.660s
+sys	0m0.622s

@@ -1,0 +1,22 @@
+[
+ "qemu-system-x86_64",
+ "-machine",
+ "q35",
+ "-accel",
+ "tcg",
+ "-m",
+ "128M",
+ "-cdrom",
+ "/home/veasnawt/src/vos-usb-inc1/build/inc1-1/kernel/vos-usb-survey.iso",
+ "-boot",
+ "d",
+ "-display",
+ "none",
+ "-nic",
+ "none",
+ "-serial",
+ "file:/home/veasnawt/src/vos-usb-inc1/build/inc1-1/native-4/bios-survey-no-usb/serial.txt",
+ "-qmp",
+ "unix:/home/veasnawt/src/vos-usb-inc1/build/inc1-1/native-4/bios-survey-no-usb/qmp,server=on,wait=off",
+ "-no-reboot"
+]

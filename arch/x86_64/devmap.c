@@ -368,17 +368,19 @@ int devmap_scope_acquire_region(const struct devmap_scope_region *r, int attr,
     if (!token || !va) return DEVMAP_EINVAL;
     *token = *va = 0;
     if (!scope_context() || !ready || scope.token) return DEVMAP_ESTATE;
-    /* Only the fixed qualification profile extent, naturally aligned as a
-     * PCI BAR of that size must be. No arbitrary length or WC mapping. */
-    if (!r || r->kind != DEVMAP_SCOPE_XHCI_BAR || attr != DEVMAP_UC ||
-        r->length != DEVMAP_XHCI_BAR_BYTES || !r->pa || r->pa % r->length)
-        return DEVMAP_EINVAL;
+    /* Only two fixed extents: the qualification profile (naturally aligned as a PCI BAR of that size must be) and
+     * the survey window (page aligned). No arbitrary length or WC mapping. */
+    if (!r || attr != DEVMAP_UC || !r->pa) return DEVMAP_EINVAL;
+    int profile = r->kind == DEVMAP_SCOPE_XHCI_BAR && r->length == DEVMAP_XHCI_BAR_BYTES && r->pa % r->length == 0;
+    int survey = r->kind == DEVMAP_SCOPE_XHCI_SURVEY && r->length == DEVMAP_XHCI_SURVEY_BYTES && r->pa % PAGE_SIZE == 0;
+    if (!profile && !survey) return DEVMAP_EINVAL;
     int err = devmap_check(r->pa, r->length);
     if (err) return err; /* RAM, existing mappings (USB.1), MAXPHYADDR, overflow */
     /* One fresh 2 MiB-aligned PDE: exactly one owned PT, guard page included. */
     uint64_t start = (next_va + 0x1fffff) & ~0x1fffffULL;
-    return scope_install(DEVMAP_SCOPE_XHCI_BAR, r->pa, r->length, start,
-                         "USB.2-C1 xHCI BAR read-only qualification", token, va);
+    return scope_install(r->kind, r->pa, r->length, start,
+                         survey ? "USB input survey xHCI BAR (read only)" : "USB.2-C1 xHCI BAR read-only qualification",
+                         token, va);
 }
 
 uint64_t devmap_expected_pte(uint64_t va)
