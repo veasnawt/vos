@@ -1,0 +1,41 @@
+Boot record  : El Torito , MBR protective-msdos-label grub2-mbr cyl-align-off GPT
+Volume id    : 'VOS_USB_SURVEY'
+System area options: 0x00004201
+System area summary: MBR protective-msdos-label grub2-mbr cyl-align-off GPT
+ISO image size/512 : 26732
+Partition offset   : 0
+MBR heads per cyl  : 64
+MBR secs per head  : 32
+MBR partition table:   N Status  Type        Start       Blocks
+MBR partition      :   1   0x00  0xee            1        26731
+GPT                :   N  Info
+GPT disk GUID      :      6402ef833947ad488a7614d9d91df4d3
+GPT entry array    :      2  248  separated
+GPT lba range      :      64  26668  26731
+GPT partition name :   1  4700610070003000
+GPT partname local :   1  Gap0
+GPT partition GUID :   1  6402ef833947ad488a7714d9d91df4d3
+GPT type GUID      :   1  a2a0d0ebe5b9334487c068b6b72699c7
+GPT partition flags:   1  0x1000000000000001
+GPT start and size :   1  64  220
+GPT partition name :   2  450046004900200062006f006f007400200070006100720074006900740069006f006e00
+GPT partname local :   2  EFI boot partition
+GPT partition GUID :   2  6402ef833947ad488a7414d9d91df4d3
+GPT type GUID      :   2  28732ac11ff8d211ba4b00a0c93ec93b
+GPT partition flags:   2  0x1000000000000001
+GPT start and size :   2  284  5760
+GPT partition path :   2  /efi.img
+GPT partition name :   3  4700610070003100
+GPT partname local :   3  Gap1
+GPT partition GUID :   3  6402ef833947ad488a7514d9d91df4d3
+GPT type GUID      :   3  a2a0d0ebe5b9334487c068b6b72699c7
+GPT partition flags:   3  0x1000000000000001
+GPT start and size :   3  6044  20624
+El Torito catalog  : 1512  1
+El Torito cat path : /boot.catalog
+El Torito images   :   N  Pltf  B   Emul  Ld_seg  Hdpt  Ldsiz         LBA
+El Torito boot img :   1  BIOS  y   none  0x0000  0x00      4        1513
+El Torito boot img :   2  UEFI  y   none  0x0000  0x00   5760          71
+El Torito img path :   1  /boot/grub/i386-pc/eltorito.img
+El Torito img opts :   1  boot-info-table grub2-boot-info
+El Torito img path :   2  /efi.img

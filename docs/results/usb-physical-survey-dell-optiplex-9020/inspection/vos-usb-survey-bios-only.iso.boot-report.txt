@@ -1,0 +1,16 @@
+Boot record  : El Torito , MBR protective-msdos-label grub2-mbr cyl-align-off
+Volume id    : 'ISOIMAGE'
+System area options: 0x00004201
+System area summary: MBR protective-msdos-label grub2-mbr cyl-align-off
+ISO image size/512 : 13188
+Partition offset   : 0
+MBR heads per cyl  : 64
+MBR secs per head  : 32
+MBR partition table:   N Status  Type        Start       Blocks
+MBR partition      :   1   0x80  0xcd            1        13187
+El Torito catalog  : 49  1
+El Torito cat path : /boot.catalog
+El Torito images   :   N  Pltf  B   Emul  Ld_seg  Hdpt  Ldsiz         LBA
+El Torito boot img :   1  BIOS  y   none  0x0000  0x00      4        1464
+El Torito img path :   1  /boot/grub/i386-pc/eltorito.img
+El Torito img opts :   1  boot-info-table grub2-boot-info

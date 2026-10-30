@@ -1,0 +1,11 @@
+Disk vos-usb-survey-dual.iso: 13.05 MiB, 13686784 bytes, 26732 sectors
+Units: sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 512 bytes / 512 bytes
+Disklabel type: gpt
+Disk identifier: 83EF0264-4739-48AD-8A76-14D9D91DF4D3
+
+Device                   Start   End Sectors  Size Type
+vos-usb-survey-dual.iso1    64   283     220  110K Microsoft basic data
+vos-usb-survey-dual.iso2   284  6043    5760  2.8M EFI System
+vos-usb-survey-dual.iso3  6044 26667   20624 10.1M Microsoft basic data
