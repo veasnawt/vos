@@ -1,0 +1,19 @@
+{
+ "pass": true,
+ "tests_passed": 24,
+ "compile_fail_controls": {
+  "pci-trait-has-no-write": "E0599",
+  "mmio-trait-has-no-write": "E0599",
+  "scan-needs-a-pci-reader": "E0277"
+ },
+ "mutation_summary": {
+  "total": 54,
+  "killed": 54,
+  "survived": [],
+  "invalid": []
+ }
+}
+
+real	0m58.599s
+user	2m12.804s
+sys	0m10.551s

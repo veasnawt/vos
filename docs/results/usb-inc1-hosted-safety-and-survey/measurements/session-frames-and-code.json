@@ -1,0 +1,206 @@
+{
+ "kernel_target": "x86_64-unknown-none",
+ "linked_into_kernel": false,
+ "artifacts": "objects only; no staticlib",
+ "rustc": [
+  "rustc 1.100.0-nightly (2e2b193f8 2026-09-02)",
+  "binary: rustc",
+  "commit-hash: 2e2b193f8ada105f27608b7be81c293e0d7292cb"
+ ],
+ "model_object_members": [
+  "libvos_xhci_init.vos_xhci_init.511f4d73b5a3a0e1-cgu.0.rcgu.o"
+ ],
+ "model_object_bytes": {
+  ".text": 11741,
+  ".rodata": 12121
+ },
+ "session_over_stub_backend_object_bytes": {
+  ".text": 15052,
+  ".rodata": 1634
+ },
+ "worst_call_chain_bytes": 1200,
+ "worst_call_chain": [
+  "vos_measure_session"
+ ],
+ "worst_chain_from_dispatch_bytes": 888,
+ "worst_chain_from_dispatch": [
+  "<vos_xhci_init::session::Session<anchor::Stub>>::dispatch",
+  "<vos_xhci_init::session::Session<anchor::Stub>>::run::<<vos_xhci_init::session::Session<anchor::Stub",
+  "<vos_xhci_init::session::Session<anchor::Stub>>::rd"
+ ],
+ "named_text_bytes": 26793,
+ "named_rodata_bytes": 2616,
+ "largest_symbols": [
+  {
+   "bytes": 2279,
+   "kind": "t",
+   "name": "<vos_xhci_init::session::Session<anchor::Stub>>::run::<<vos_xhci_init::session::Session<anchor::Stub>>::qualify::{closure#0}>"
+  },
+  {
+   "bytes": 2082,
+   "kind": "T",
+   "name": "<vos_xhci_init::machine::Machine>::apply"
+  },
+  {
+   "bytes": 1596,
+   "kind": "T",
+   "name": "<vos_xhci_init::session::Session<anchor::Stub>>::dispatch"
+  },
+  {
+   "bytes": 1389,
+   "kind": "t",
+   "name": "<vos_xhci_init::session::Session<anchor::Stub>>::write"
+  },
+  {
+   "bytes": 1179,
+   "kind": "t",
+   "name": "<vos_xhci_init::session::Session<anchor::Stub>>::run::<<vos_xhci_init::session::Session<anchor::Stub>>::dispatch::{closure#2}>"
+  },
+  {
+   "bytes": 880,
+   "kind": "R",
+   "name": "<vos_xhci_init::types::Reason as core::fmt::Debug>::fmt::__OFFSET"
+  },
+  {
+   "bytes": 799,
+   "kind": "t",
+   "name": "<vos_xhci_init::session::Session<anchor::Stub>>::tick"
+  },
+  {
+   "bytes": 748,
+   "kind": "T",
+   "name": "<vos_xhci_init::session::Session<anchor::Stub>>::revalidate"
+  },
+  {
+   "bytes": 708,
+   "kind": "T",
+   "name": "vos_measure_session"
+  },
+  {
+   "bytes": 671,
+   "kind": "t",
+   "name": "<vos_xhci_init::session::Session<anchor::Stub>>::run::<<vos_xhci_init::session::Session<anchor::Stub>>::dispatch::{closure#5}>"
+  },
+  {
+   "bytes": 629,
+   "kind": "T",
+   "name": "<vos_xhci_init::session::Session<anchor::Stub>>::perform_checked"
+  },
+  {
+   "bytes": 555,
+   "kind": "t",
+   "name": "<vos_xhci_init::machine::Machine>::observe_handoff"
+  },
+  {
+   "bytes": 528,
+   "kind": "R",
+   "name": "<vos_xhci_init::types::Rule as core::fmt::Debug>::fmt::__OFFSET"
+  },
+  {
+   "bytes": 513,
+   "kind": "t",
+   "name": "<vos_xhci_init::machine::Machine>::consume"
+  }
+ ],
+ "largest_frames_bytes": [
+  {
+   "bytes": 376,
+   "function": "<vos_xhci_init::session::Session<anchor::Stub>>::dispatch"
+  },
+  {
+   "bytes": 328,
+   "function": "<vos_xhci_init::session::Session<anchor::Stub>>::run::<<vos_xhci_init::session::Session<anchor::Stub>>::qualify::{closur"
+  },
+  {
+   "bytes": 328,
+   "function": "<vos_xhci_init::session::Session<anchor::Stub>>::tick"
+  },
+  {
+   "bytes": 296,
+   "function": "<vos_xhci_init::session::Session<anchor::Stub>>::write"
+  },
+  {
+   "bytes": 264,
+   "function": "<vos_xhci_init::session::Session<anchor::Stub>>::revalidate"
+  },
+  {
+   "bytes": 184,
+   "function": "<vos_xhci_init::session::Session<anchor::Stub>>::run::<<vos_xhci_init::session::Session<anchor::Stub>>::dispatch::{closu"
+  },
+  {
+   "bytes": 168,
+   "function": "<vos_xhci_init::session::Session<anchor::Stub>>::run::<<vos_xhci_init::session::Session<anchor::Stub>>::dispatch::{closu"
+  },
+  {
+   "bytes": 136,
+   "function": "<vos_xhci_init::session::Session<anchor::Stub>>::run::<<vos_xhci_init::session::Session<anchor::Stub>>::dispatch::{closu"
+  }
+ ],
+ "max_frame_bytes": 376,
+ "measurement_harness_frames_bytes": {
+  "vos_measure_ledger": 1224,
+  "vos_measure_session": 1184
+ },
+ "type_sizes_bytes": {
+  "Done": 48,
+  "Facts": 40,
+  "Identity": 56,
+  "Ledger": 640,
+  "Machine": 200,
+  "Operation": 40,
+  "PlatformFacts": 16,
+  "PoolSpec": 16,
+  "Receipt": 40,
+  "Refusal": 2,
+  "RegRead": 32,
+  "Session<Stub>": 1032,
+  "Stamped<Identity>": 80,
+  "Stamped<PlatformFacts>": 40,
+  "Stamped<Topology>": 24,
+  "Stamped<core::option::Option<EventTrb>>": 48,
+  "WriteTicket": 24,
+  "core::ops::ControlFlow<core::result::Result<!, Cause>, (Identity, Topology, u32)>": 64,
+  "core::ops::ControlFlow<core::result::Result<!, Cause>, Identity>": 64,
+  "core::ops::ControlFlow<core::result::Result<!, Cause>, PlatformFacts>": 16,
+  "core::ops::ControlFlow<core::result::Result<!, Refusal>, Accepted>": 40,
+  "core::ops::ControlFlow<core::result::Result<!, Refusal>>": 2,
+  "core::option::Option<&Ledger>": 8,
+  "core::option::Option<&mut Ledger>": 8,
+  "core::option::Option<(Identity, Topology, u32)>": 64,
+  "core::option::Option<Facts>": 40,
+  "core::option::Option<Ledger>": 640,
+  "core::result::Result<!, Refusal>": 2,
+  "core::result::Result<(), Refusal>": 2,
+  "core::result::Result<(Identity, Topology, u32), Cause>": 64,
+  "core::result::Result<Accepted, Refusal>": 40,
+  "core::result::Result<Done, Refusal>": 48,
+  "core::result::Result<Identity, Cause>": 64,
+  "core::result::Result<Ledger, DReason>": 640,
+  "core::result::Result<PlatformFacts, Cause>": 16,
+  "core::result::Result<Receipt, WriteErr>": 40,
+  "core::result::Result<RegRead, ReadErr>": 32,
+  "core::result::Result<Stamped<Identity>, ReadErr>": 88,
+  "core::result::Result<Stamped<PlatformFacts>, ReadErr>": 40,
+  "core::result::Result<Stamped<Topology>, ReadErr>": 32,
+  "core::result::Result<Stamped<core::option::Option<EventTrb>>, ReadErr>": 48,
+  "{closure@Session<Stub>::bind::{closure#0}}": 24,
+  "{closure@Session<Stub>::dispatch::{closure#0}}": 0,
+  "{closure@Session<Stub>::dispatch::{closure#1}}": 0,
+  "{closure@Session<Stub>::dispatch::{closure#2}}": 0,
+  "{closure@Session<Stub>::dispatch::{closure#3}}": 0,
+  "{closure@Session<Stub>::dispatch::{closure#4}}": 0,
+  "{closure@Session<Stub>::dispatch::{closure#5}}": 0,
+  "{closure@Session<Stub>::qualify::{closure#0}}": 0
+ },
+ "source_lines": {
+  "backend.rs": 240,
+  "dma_model.rs": 328,
+  "lib.rs": 23,
+  "machine.rs": 1172,
+  "session.rs": 1057,
+  "types.rs": 475
+ },
+ "c42a_added_source_lines": 1625,
+ "model_plus_session_text_bytes": 26793,
+ "model_plus_session_rodata_bytes": 13755
+}

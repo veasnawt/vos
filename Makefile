@@ -65,7 +65,7 @@ ifeq ($(ARCH),x86_64)
 include user/user.mk
 endif
 
-.PHONY: all verify iso uefi-iso run debug test test-all arch-test test-uefi clean
+.PHONY: all verify iso uefi-iso usb-survey-iso usb-survey-uefi-iso run debug test test-all arch-test test-uefi clean
 all: $(KERNEL)
 
 $(BUILD):
@@ -114,6 +114,25 @@ uefi-iso: iso
 	cp -r $(BUILD)/isodir $(BUILD)/isodir-uefi$(UEFI_TAG)
 	cat $(UEFI_HEAD) $(GRUB_CFG) > $(BUILD)/isodir-uefi$(UEFI_TAG)/boot/grub/grub.cfg
 	grub-mkrescue -d $(GRUB_EFI_DIR) -o $(UEFI_ISO) $(BUILD)/isodir-uefi$(UEFI_TAG)
+
+# USB input bring-up, Increment 1: the same kernel and modules as `iso`/`uefi-iso`, with a visible menu whose first
+# entries run the read-only USB survey (arch/x86_64/grub-usb-survey.cfg). They only add an ISO beside the default one.
+USB_SURVEY_CFG := $(ARCH_DIR)/grub-usb-survey.cfg
+usb-survey-iso: iso
+	@test "$(ARCH)" = x86_64 || { echo "usb-survey-iso: x86_64 only"; exit 1; }
+	rm -rf $(BUILD)/isodir-usb-survey
+	cp -r $(BUILD)/isodir $(BUILD)/isodir-usb-survey
+	cp $(USB_SURVEY_CFG) $(BUILD)/isodir-usb-survey/boot/grub/grub.cfg
+	grub-mkrescue -o $(BUILD)/vos-usb-survey.iso $(BUILD)/isodir-usb-survey
+usb-survey-uefi-iso: iso
+	@test "$(ARCH)" = x86_64 || { echo "usb-survey-uefi-iso: x86_64 only"; exit 1; }
+	@test -f $(GRUB_EFI_DIR)/kernel.img -a -f $(GRUB_EFI_DIR)/multiboot2.mod || \
+	    { echo "usb-survey-uefi-iso: no GRUB x86_64-efi files in $(GRUB_EFI_DIR) (see docs/plans/uefi.md)"; exit 1; }
+	@command -v mformat >/dev/null || { echo "usb-survey-uefi-iso: mtools (mformat) not on PATH"; exit 1; }
+	rm -rf $(BUILD)/isodir-uefi-usb-survey
+	cp -r $(BUILD)/isodir $(BUILD)/isodir-uefi-usb-survey
+	cat $(UEFI_HEAD) $(USB_SURVEY_CFG) > $(BUILD)/isodir-uefi-usb-survey/boot/grub/grub.cfg
+	grub-mkrescue -d $(GRUB_EFI_DIR) -o $(BUILD)/vos-uefi-usb-survey.iso $(BUILD)/isodir-uefi-usb-survey
 
 run: iso
 	$(QEMU) -cdrom $(ISO)

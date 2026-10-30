@@ -16,7 +16,8 @@
 
 use crate::backend::*;
 use crate::backend::named;
-use crate::machine::Machine;
+use crate::dma_model::{DReason, DState, Item, Ledger, PoolSpec, PublishProof, QuiescenceProof};
+use crate::machine::{Machine, Page};
 use crate::types::*;
 
 named! {
@@ -28,6 +29,9 @@ named! {
         UseBackendObservation => "use-backend-observation",
         StaleObservation => "stale-observation",
         Closed => "closed",
+        CorePageViaOperation => "core-page-via-operation",
+        ScratchpadArrayNotReady => "scratchpad-array-not-ready",
+        NotClosed => "not-closed",
     }
 }
 
@@ -64,6 +68,7 @@ named! {
         WriteMismatch => "write-mismatch",
         WriteBadTicket => "write-bad-ticket",
         WriteFailed => "write-failed",
+        LedgerDisagrees => "ledger-disagrees",
     }
 }
 
@@ -78,6 +83,7 @@ pub enum Fact<T: Copy> {
 pub enum Refusal {
     Machine(Reason),
     Session(SReason),
+    Ledger(DReason),
 }
 
 /// What the session did for one request.
@@ -100,6 +106,17 @@ pub enum Req {
     Ports,
     Event,
     Op(Operation),
+    /// A scratchpad array or buffer page (the four core pages go through `Op`).
+    Scratch(Scratch),
+}
+
+/// Scratchpad page lifecycle. Allocation, zeroing and preparation follow the machine's allocation window.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum Scratch {
+    Allocate { item: Item, addr: u64 },
+    Zero(Item),
+    Prepare(Item),
+    Release(Item),
 }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -244,7 +261,15 @@ pub struct Session<B: Backend> {
     closed: Option<Cause>,
     latched: bool,
     tail_dead: bool,
+    ledger: Option<Ledger>,
+    mirrored: [Page; 4],
+    quiesced: bool,
 }
+
+const KINDS: [PageKind; 4] = [PageKind::Command, PageKind::Event, PageKind::Dcbaa, PageKind::Erst];
+/// Enough for every page the plan can hold (4 core, the array and up to the scratchpad budget), so a single failed
+/// session can always be fully quarantined; the cap only bounds a pool that is reused.
+const QUARANTINE_CAP: u8 = 80;
 
 fn bit(v: u64, n: u32) -> bool {
     v >> n & 1 != 0
@@ -271,6 +296,9 @@ impl<B: Backend> Session<B> {
             closed: None,
             latched: false,
             tail_dead: false,
+            ledger: None,
+            mirrored: [Page { state: PageState::Free, addr: 0 }; 4],
+            quiesced: false,
         }
     }
 
@@ -305,13 +333,35 @@ impl<B: Backend> Session<B> {
     pub fn ports(&self) -> u8 {
         self.ports
     }
+    /// The model-only DMA ownership ledger, once the machine has accepted qualification.
+    pub fn ledger(&self) -> Option<&Ledger> {
+        self.ledger.as_ref()
+    }
     fn sealed(&self) -> bool {
         self.closed.is_some() || self.m.phase().terminal()
     }
 
     // ---- request dispatch -----------------------------------------------------------------
 
+    /// One request. After it, the DMA ledger is brought in line with whatever the machine accepted; a ledger that
+    /// cannot follow the machine is a model inconsistency and closes the session.
     pub fn request(&mut self, r: Req) -> Result<Done, Refusal> {
+        let out = self.dispatch(r);
+        match self.sync() {
+            Ok(()) => out,
+            Err(c) => {
+                let closed = self.close(c);
+                match out {
+                    Ok(d) if d.closed.is_none() => Ok(Done { accepted: d.accepted, closed: closed.closed }),
+                    Ok(d) => Ok(d),
+                    Err(_) => Ok(closed),
+                }
+            }
+        }
+    }
+
+    #[inline(never)]
+    fn dispatch(&mut self, r: Req) -> Result<Done, Refusal> {
         match r {
             Req::Bind => return self.bind(),
             Req::Op(Operation::Qualify(_) | Operation::Tick(_) | Operation::ObserveHandoff { .. } | Operation::ObserveStatus(_)
@@ -323,7 +373,11 @@ impl<B: Backend> Session<B> {
         if self.bound.is_none() {
             return Err(Refusal::Session(if self.closed.is_some() { SReason::Closed } else { SReason::NotBound }));
         }
-        let tail_ok = matches!(r, Req::Status | Req::Pci | Req::Op(Operation::ClearRunStop | Operation::ClearBusMaster | Operation::DmaRelease(_)));
+        let tail_ok = matches!(
+            r,
+            Req::Status | Req::Pci | Req::Scratch(Scratch::Release(_))
+                | Req::Op(Operation::ClearRunStop | Operation::ClearBusMaster | Operation::DmaRelease(_))
+        );
         if self.sealed() && !(tail_ok && self.m.phase() != Phase::Idle && !self.tail_dead) {
             return Err(Refusal::Session(SReason::Closed));
         }
@@ -343,13 +397,25 @@ impl<B: Backend> Session<B> {
                     _ => self.run(|s| s.obs_event()),
                 }
             }
+            Req::Scratch(s) => self.scratch(s),
             Req::Op(op) => {
+                if let Operation::PrepareDcbaa { entry0 } = op
+                    && !self.array_ready(entry0)
+                {
+                    return Err(Refusal::Session(SReason::ScratchpadArrayNotReady));
+                }
                 let classified = if self.m.phase() == Phase::Idle { None } else { classify(&op, self.m.phase()) };
                 if let Some(w) = classified {
                     self.write(op, w)
                 } else {
                     let mut trial = self.m.clone();
                     let a = trial.apply(op).map_err(Refusal::Machine)?;
+                    // The machine cannot see scratchpad pages: a core page may not land on one.
+                    if let Operation::DmaAllocate { addr, .. } = op
+                        && self.ledger.as_ref().is_some_and(|l| l.scratch_overlaps(addr))
+                    {
+                        return Err(Refusal::Ledger(DReason::Overlap));
+                    }
                     self.m = trial;
                     self.settle(&a);
                     Ok(Done { accepted: Some(a), closed: None })
@@ -378,24 +444,101 @@ impl<B: Backend> Session<B> {
     }
 
     /// Fail closed: record the cause, latch the backend and drive the machine into its terminal path.
+    #[inline(never)]
     fn close(&mut self, c: Cause) -> Done {
         if self.sealed() {
+            // A fault inside the quarantine tail ends the tail: nothing can still quiesce the controller, so
+            // every page it may be using is kept forever.
             self.tail_dead = true;
+            if let Some(l) = self.ledger.as_mut() {
+                l.quarantine_all();
+            }
             return Done { accepted: None, closed: Some(c) };
         }
         self.closed = Some(c);
         let mut accepted = None;
         if self.m.phase() != Phase::Idle {
-            // The machine has no backend-fault reason (a C4.2b+ decision): a forced controller-fault
-            // observation reaches its terminal path with the halted belief left unchanged.
-            let s = Status { hch: self.m.halt_observed(), hse: true, hce: false };
-            accepted = self.m.apply(Operation::ObserveStatus(s)).ok();
+            accepted = self.m.apply(Operation::BackendFault).ok();
         }
         if !self.latched {
             self.latched = true;
             self.b.latch_terminal();
         }
         Done { accepted, closed: Some(c) }
+    }
+
+    // ---- DMA ledger ---------------------------------------------------------------------------------------
+
+    /// DCBAA entry 0 must be the prepared scratchpad array when the controller needs scratchpads, and 0 otherwise.
+    fn array_ready(&self, entry0: u64) -> bool {
+        let Some(l) = &self.ledger else { return true };
+        if l.spec().scratchpads == 0 {
+            return true;
+        }
+        l.state(Item::Array) == Some(DState::Prepared) && l.address(Item::Array) == Some(entry0)
+    }
+
+    fn scratch(&mut self, s: Scratch) -> Result<Done, Refusal> {
+        let item = match s {
+            Scratch::Allocate { item, .. } | Scratch::Zero(item) | Scratch::Prepare(item) | Scratch::Release(item) => item,
+        };
+        if matches!(item, Item::Core(_)) {
+            return Err(Refusal::Session(SReason::CorePageViaOperation));
+        }
+        let Some(l) = self.ledger.as_mut() else { return Err(Refusal::Session(SReason::NotQualified)) };
+        if !matches!(s, Scratch::Release(_)) && !self.m.allocation_open() {
+            return Err(Refusal::Machine(Reason::AllocationClosed));
+        }
+        let r = match s {
+            Scratch::Allocate { item, addr } => l.allocate(item, addr),
+            Scratch::Zero(item) => l.zero(item),
+            Scratch::Prepare(item) => l.prepare(item),
+            Scratch::Release(item) => l.release(item),
+        };
+        r.map_err(Refusal::Ledger)?;
+        Ok(Done { accepted: None, closed: None })
+    }
+
+    /// Replay what the machine accepted onto the ledger. Every legal machine step has exactly one ledger step; any
+    /// other change, or a ledger that refuses one, is a disagreement.
+    #[inline(never)]
+    fn sync(&mut self) -> Result<(), Cause> {
+        let Some(l) = self.ledger.as_mut() else { return Ok(()) };
+        for (i, &k) in KINDS.iter().enumerate() {
+            let (a, b) = (self.mirrored[i], self.m.page(k));
+            if a == b {
+                continue;
+            }
+            let item = Item::Core(k);
+            let r = match (a.state, b.state) {
+                (PageState::Free, PageState::Allocated) => l.allocate(item, b.addr),
+                (PageState::Allocated, PageState::Zeroed) => l.zero(item),
+                (PageState::Zeroed, PageState::Prepared) => l.prepare(item),
+                (PageState::Prepared, PageState::Published) if k == PageKind::Dcbaa => l.publish_dcbaa(&PublishProof::new()),
+                (PageState::Prepared, PageState::Published) => l.publish(k, &PublishProof::new()),
+                (_, PageState::Free) => l.release(item),
+                _ => Err(DReason::BadState),
+            };
+            if r.is_err() {
+                return Err(Cause::LedgerDisagrees);
+            }
+            self.mirrored[i] = b;
+        }
+        if self.m.phase() == Phase::Quiesced && !self.quiesced {
+            self.quiesced = true;
+            // `NothingToQuiesce` (nothing was ever published) is the only way this can fail, and it is not a fault.
+            let _ = l.quiesce(&QuiescenceProof::new());
+        }
+        Ok(())
+    }
+
+    /// Give up on the DMA pages of a closed session: every live page is kept forever (the device may still own
+    /// them). Returns how many were newly quarantined; the pool closes if the quarantine bound is exceeded.
+    pub fn abandon(&mut self) -> Result<usize, SReason> {
+        if !self.sealed() {
+            return Err(SReason::NotClosed);
+        }
+        Ok(self.ledger.as_mut().map_or(0, Ledger::quarantine_all))
     }
 
     // ---- stamped, typed reads -----------------------------------------------------------------
@@ -513,6 +656,7 @@ impl<B: Backend> Session<B> {
         }
     }
 
+    #[inline(never)]
     fn revalidate(&mut self) -> Result<(), Cause> {
         let (id0, topo0, _) = self.bound.ok_or(Cause::ReadOther)?;
         let r = self.b.read_identity();
@@ -538,7 +682,7 @@ impl<B: Backend> Session<B> {
             let ver = s.rd_need(Reg::Hciversion, 0)?;
             let hcs1 = s.rd_need(Reg::Hcsparams1, 0)?;
             let hcs2 = s.rd_need(Reg::Hcsparams2, 0)?;
-            let _hcc1 = s.rd_need(Reg::Hccparams1, 0)?;
+            let hcc1 = s.rd_need(Reg::Hccparams1, 0)?;
             let pagesize = s.rd_need(Reg::Pagesize, 0)?;
             let cmd = s.rd_need(Reg::PciCommand, 0)?;
             let devctl = s.rd(Reg::PcieDevCtl, 0)?;
@@ -590,6 +734,20 @@ impl<B: Backend> Session<B> {
                 s.know_hch = Fact::Known(facts.halted);
                 s.last_cnr = Some(usbsts & CNR != 0);
                 s.fresh = [true, true, facts.legacy != Legacy::Absent, true, false];
+            }
+            // A refused qualification plans no DMA at all, so only an accepted one gets a ledger.
+            if a.is_ok() && !s.m.phase().terminal() {
+                let spec = PoolSpec {
+                    device_limit: facts.dma_limit,
+                    ac64: bit(hcc1, 0),
+                    scratchpads: facts.scratchpads,
+                    quarantine_cap: QUARANTINE_CAP,
+                    release: s.m.policy(),
+                };
+                match Ledger::new(spec) {
+                    Ok(l) => s.ledger = Some(l),
+                    Err(_) => return Err(Cause::LedgerDisagrees),
+                }
             }
             Ok(a)
         })
@@ -755,52 +913,10 @@ impl<B: Backend> Session<B> {
             self.m = trial;
             return Ok(Done { accepted: Some(acc), closed: None });
         };
-        let pre = (|| {
-            if !sealed {
-                self.revalidate()?;
-                for &(reg, mask, expect) in preconditions(w) {
-                    let v = self.rd_need(reg, 0)?;
-                    if v & mask != expect {
-                        return Err(Cause::PreconditionChanged);
-                    }
-                }
-            }
-            Ok(())
-        })();
-        if let Err(c) = pre {
+        if let Err(c) = self.precheck(w, sealed) {
             return Ok(self.close(c));
         }
-        let ticket = WriteTicket::new(self.nonce, ev.id);
-        self.nonce += 1;
-        let outcome: Result<(), Cause> = match self.b.perform(&ev, ticket) {
-            Err(e) => match self.stamp(e.stamp, e.session) {
-                Err(c) => Err(c),
-                Ok(()) => {
-                    self.last_write_seq = e.stamp.seq;
-                    Err(match e.kind {
-                    WriteFault::Refused => Cause::WriteRefused,
-                    WriteFault::BadTicket => Cause::WriteBadTicket,
-                    WriteFault::Unverified => Cause::WriteUnverified,
-                    WriteFault::Fault => Cause::WriteFailed,
-                    })
-                }
-            },
-            Ok(r) => match self.stamp(r.stamp, r.session) {
-                Err(c) => Err(c),
-                Ok(()) => {
-                    self.last_write_seq = r.stamp.seq;
-                    match readback_expect(w, &ev) {
-                        None => Ok(()),
-                        Some((reg, mask, expect)) => match r.readback {
-                            None => Err(Cause::WriteUnverified),
-                            Some(rb) if rb.reg != reg || rb.width != reg.width() => Err(Cause::WriteMismatch),
-                            Some(rb) if rb.value & mask != expect => Err(Cause::WriteMismatch),
-                            Some(_) => Ok(()),
-                        },
-                    }
-                }
-            },
-        };
+        let outcome = self.perform_checked(&ev, w);
         // Whatever happened, the observations this write can change are no longer valid.
         for &k in invalidates(w) {
             self.fresh[k] = false;
@@ -822,6 +938,56 @@ impl<B: Backend> Session<B> {
         }
     }
 
+    /// Identity, topology and the write's own preconditions, re-read immediately before the write. Kept out of
+    /// `write` so that its temporaries do not add to the frame of the function that also holds the trial machine.
+    #[inline(never)]
+    fn precheck(&mut self, w: W, sealed: bool) -> Result<(), Cause> {
+        if sealed {
+            return Ok(());
+        }
+        self.revalidate()?;
+        for &(reg, mask, expect) in preconditions(w) {
+            let v = self.rd_need(reg, 0)?;
+            if v & mask != expect {
+                return Err(Cause::PreconditionChanged);
+            }
+        }
+        Ok(())
+    }
+
+    /// Issue the single-use ticket, perform the write and check the receipt and the read-back.
+    #[inline(never)]
+    fn perform_checked(&mut self, ev: &ModelEvent, w: W) -> Result<(), Cause> {
+        let ticket = WriteTicket::new(self.nonce, ev.id);
+        self.nonce += 1;
+        match self.b.perform(ev, ticket) {
+            Err(e) => {
+                self.stamp(e.stamp, e.session)?;
+                self.last_write_seq = e.stamp.seq;
+                Err(match e.kind {
+                    WriteFault::Refused => Cause::WriteRefused,
+                    WriteFault::BadTicket => Cause::WriteBadTicket,
+                    WriteFault::Unverified => Cause::WriteUnverified,
+                    WriteFault::Fault => Cause::WriteFailed,
+                })
+            }
+            Ok(r) => {
+                self.stamp(r.stamp, r.session)?;
+                self.last_write_seq = r.stamp.seq;
+                match readback_expect(w, ev) {
+                    None => Ok(()),
+                    Some((reg, mask, expect)) => match r.readback {
+                        None => Err(Cause::WriteUnverified),
+                        Some(rb) if rb.reg != reg || rb.width != reg.width() => Err(Cause::WriteMismatch),
+                        Some(rb) if rb.value & mask != expect => Err(Cause::WriteMismatch),
+                        Some(_) => Ok(()),
+                    },
+                }
+            }
+        }
+    }
+
+    #[inline(never)]
     fn after_write(&mut self, w: W, verified: bool) {
         let known = |v: bool| if verified { Fact::Known(v) } else { Fact::Unknown };
         match w {

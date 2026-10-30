@@ -1,0 +1,2206 @@
+{
+ "hosted_only": true,
+ "device_access": false,
+ "pci_mmio_physical_memory_access": false,
+ "source_sha256": {
+  "kernel/rust/usb/xhci_init/backend.rs": "24d3e06c3534ed739c76356dfe06d3cd659406213c7869e52453b48d83ac93d4",
+  "kernel/rust/usb/xhci_init/dma_model.rs": "8633a054eaa0b8fda2fad7ed77de941f366f9da04268507291ba52b445b8fa17",
+  "kernel/rust/usb/xhci_init/lib.rs": "82a948724fb685950d3b10fb06f781fc0c50f3eaa8516b46bb6ae240758fe1a2",
+  "kernel/rust/usb/xhci_init/machine.rs": "21250ea2e7edd74fc77e956854cbcc9c425d57a97064b100aa54f59b1689e5ae",
+  "kernel/rust/usb/xhci_init/session.rs": "788119d60c6cb72622c154b8a6f74ed25704bc9ee13f7593e18dcf49b2ca3d40",
+  "kernel/rust/usb/xhci_init/types.rs": "35d8db08cbc6d228ec2d97d7589e66c0bb3af4bbf2d0b851034c20280ce00889",
+  "tests/rust/xhci_init_backend_support.rs": "702ff25f634cc124755755056d44e25260e6fa6e85ecd60dd6a393fcfbe0c83a",
+  "tests/rust/xhci_init_backend.rs": "31b92e4c414ba76efdebbd33aaf541533d892b42beb76b966e06bb7890958474",
+  "scripts/xhci_init_oracle_session.py": "1232baa9e1897792e1dc4afb32ffdadb249af0d28cf6e4ca63ab354939287978",
+  "scripts/test-usb2c42a.py": "60e36e11da0f0c70e14f32005bf83db105e3a6b16e2d703666b65ff161001ab0"
+ },
+ "commands": [
+  [
+   "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+   "--edition=2024",
+   "-Dwarnings",
+   "--crate-name",
+   "vos_xhci_init",
+   "--crate-type=rlib",
+   "-Coverflow-checks=yes",
+   "-Cdebug-assertions=yes",
+   "/home/veasnawt/src/vos-usb-inc1/kernel/rust/usb/xhci_init/lib.rs",
+   "-o",
+   "/home/veasnawt/src/vos-usb-inc1/build/inc1-1/gate42-1/libvos_xhci_init.rlib"
+  ],
+  [
+   "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+   "--edition=2024",
+   "-Dwarnings",
+   "--test",
+   "-Copt-level=1",
+   "-Coverflow-checks=yes",
+   "--extern",
+   "vos_xhci_init=/home/veasnawt/src/vos-usb-inc1/build/inc1-1/gate42-1/libvos_xhci_init.rlib",
+   "/home/veasnawt/src/vos-usb-inc1/tests/rust/xhci_init_backend.rs",
+   "-o",
+   "/home/veasnawt/src/vos-usb-inc1/build/inc1-1/gate42-1/backend-tests"
+  ],
+  [
+   "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+   "--edition=2024",
+   "--extern",
+   "vos_xhci_init=/home/veasnawt/src/vos-usb-inc1/build/inc1-1/gate42-1/libvos_xhci_init.rlib",
+   "/home/veasnawt/src/vos-usb-inc1/build/inc1-1/gate42-1/cf-publish-proof-tuple-cannot-be-forged.rs",
+   "-o",
+   "/home/veasnawt/src/vos-usb-inc1/build/inc1-1/gate42-1/cf-publish-proof-tuple-cannot-be-forged"
+  ],
+  [
+   "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+   "--edition=2024",
+   "--extern",
+   "vos_xhci_init=/home/veasnawt/src/vos-usb-inc1/build/inc1-1/gate42-1/libvos_xhci_init.rlib",
+   "/home/veasnawt/src/vos-usb-inc1/build/inc1-1/gate42-1/cf-publish-proof-constructor-is-private.rs",
+   "-o",
+   "/home/veasnawt/src/vos-usb-inc1/build/inc1-1/gate42-1/cf-publish-proof-constructor-is-private"
+  ],
+  [
+   "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+   "--edition=2024",
+   "--extern",
+   "vos_xhci_init=/home/veasnawt/src/vos-usb-inc1/build/inc1-1/gate42-1/libvos_xhci_init.rlib",
+   "/home/veasnawt/src/vos-usb-inc1/build/inc1-1/gate42-1/cf-quiescence-proof-constructor-is-private.rs",
+   "-o",
+   "/home/veasnawt/src/vos-usb-inc1/build/inc1-1/gate42-1/cf-quiescence-proof-constructor-is-private"
+  ],
+  [
+   "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+   "--edition=2024",
+   "--extern",
+   "vos_xhci_init=/home/veasnawt/src/vos-usb-inc1/build/inc1-1/gate42-1/libvos_xhci_init.rlib",
+   "/home/veasnawt/src/vos-usb-inc1/build/inc1-1/gate42-1/cf-write-ticket-cannot-be-forged.rs",
+   "-o",
+   "/home/veasnawt/src/vos-usb-inc1/build/inc1-1/gate42-1/cf-write-ticket-cannot-be-forged"
+  ],
+  [
+   "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+   "--edition=2024",
+   "--extern",
+   "vos_xhci_init=/home/veasnawt/src/vos-usb-inc1/build/inc1-1/gate42-1/libvos_xhci_init.rlib",
+   "/home/veasnawt/src/vos-usb-inc1/build/inc1-1/gate42-1/cf-session-state-is-private.rs",
+   "-o",
+   "/home/veasnawt/src/vos-usb-inc1/build/inc1-1/gate42-1/cf-session-state-is-private"
+  ],
+  [
+   "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+   "--edition=2024",
+   "--extern",
+   "vos_xhci_init=/home/veasnawt/src/vos-usb-inc1/build/inc1-1/gate42-1/libvos_xhci_init.rlib",
+   "/home/veasnawt/src/vos-usb-inc1/build/inc1-1/gate42-1/cf-machine-state-is-still-private.rs",
+   "-o",
+   "/home/veasnawt/src/vos-usb-inc1/build/inc1-1/gate42-1/cf-machine-state-is-still-private"
+  ],
+  [
+   "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+   "--edition=2024",
+   "--crate-name",
+   "cf_unsafe",
+   "--crate-type=rlib",
+   "/home/veasnawt/src/vos-usb-inc1/build/inc1-1/gate42-1/cf-unsafe-model/lib.rs",
+   "-o",
+   "/home/veasnawt/src/vos-usb-inc1/build/inc1-1/gate42-1/cf-unsafe.rlib"
+  ],
+  [
+   "/home/veasnawt/src/vos-usb-inc1/build/inc1-1/gate42-1/backend-tests",
+   "--test-threads=1"
+  ],
+  [
+   "/home/veasnawt/src/vos-usb-inc1/build/inc1-1/gate42-1/backend-tests",
+   "--test-threads=1",
+   "export_session_traces_for_the_oracle"
+  ],
+  [
+   "/usr/bin/python3",
+   "-I",
+   "-B",
+   "/home/veasnawt/src/vos-usb-inc1/scripts/xhci_init_oracle_session.py",
+   "/home/veasnawt/src/vos-usb-inc1/build/inc1-1/gate42-1/trace.txt"
+  ]
+ ],
+ "static_isolation": {
+  "model_files": [
+   "backend.rs",
+   "dma_model.rs",
+   "lib.rs",
+   "machine.rs",
+   "session.rs",
+   "types.rs"
+  ],
+  "unsafe_free_no_std": true,
+  "files_outside_allowed_set_mentioning_model": [],
+  "kernel_crate_root_mentions_model": false
+ },
+ "compile_fail_controls": {
+  "publish-proof-tuple-cannot-be-forged": "E0423",
+  "publish-proof-constructor-is-private": "E0624",
+  "quiescence-proof-constructor-is-private": "E0624",
+  "write-ticket-cannot-be-forged": "E0624",
+  "session-state-is-private": "E0616",
+  "machine-state-is-still-private": "E0616",
+  "unsafe-rejected": "forbid(unsafe_code)"
+ },
+ "rust_tests": "test result: ok. 57 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.36s",
+ "rust_test_names": [
+  "a_caller_cannot_supply_observations",
+  "a_controller_with_more_than_16_ports_is_refused_without_reading_ports",
+  "a_device_attached_during_reset_is_unverified_and_port_observation_reads_the_connection_bit",
+  "a_doorbell_needs_a_status_read_after_the_previous_doorbell",
+  "a_duplicated_observation_replayed_from_a_cache_is_rejected",
+  "a_failed_reset_write_leaves_the_exposed_belief_and_a_quarantine",
+  "a_failure_while_the_controller_may_still_be_running_keeps_the_halt_unconfirmed",
+  "a_fault_inside_the_quarantine_tail_quarantines_the_pages_automatically",
+  "a_fault_inside_the_tail_ends_the_tail",
+  "a_halted_report_is_corroborated_and_a_contradiction_is_caught",
+  "a_pci_read_turns_an_unknown_bus_master_fact_into_a_known_one",
+  "a_readback_of_another_register_is_a_mismatch",
+  "a_session_closed_with_pages_the_device_may_use_quarantines_them_and_never_frees_them",
+  "a_session_completes_260_noops_with_consecutive_sequence_numbers_and_one_ticket_per_write",
+  "a_session_with_scratchpads_runs_to_quiescence_and_the_ledger_follows_every_step",
+  "a_slow_legacy_firmware_running_controller_completes",
+  "a_write_invalidates_the_observations_it_can_change_and_later_writes_refuse_stale_inputs",
+  "after_a_terminal_error_only_the_quarantine_tail_is_possible",
+  "an_incomplete_scratchpad_set_cannot_be_published",
+  "an_uncertain_bus_master_enable_is_assumed_to_have_happened_and_the_tail_clears_it",
+  "an_uncertain_run_stop_clear_keeps_the_exposed_belief_and_marks_the_facts_unknown",
+  "an_uncertain_run_stop_set_is_assumed_to_have_happened_and_the_tail_halts_first",
+  "bind_requires_one_complete_topology_and_is_required_first",
+  "contradictory_observations_are_faults",
+  "dcbaa_entry_zero_must_be_the_prepared_array_when_the_controller_needs_scratchpads",
+  "debug_capability_firmware_ownership_msi_snoop_and_attachment_are_decoded_at_qualification",
+  "every_read_fault_closes_with_its_own_cause_and_an_absent_optional_register_does_not",
+  "export_session_traces_for_the_oracle",
+  "firmware_regaining_ownership_is_a_conflict_or_a_precondition_failure",
+  "firmware_that_never_releases_ends_in_a_clean_failure_after_one_write",
+  "identity_and_topology_changes_stop_a_write_before_it_happens",
+  "ledger_address_and_lifetime_rules_are_named",
+  "ledger_dependencies_and_publication_proofs",
+  "limitation_a_change_after_the_last_check_is_not_prevented",
+  "limitation_a_consistent_liar_is_not_detected",
+  "msi_enabled_after_qualification_is_a_machine_fault",
+  "qualification_cannot_be_repeated_and_writes_before_it_are_a_machine_refusal",
+  "qualification_decodes_registers_into_facts_and_marks_observations_valid",
+  "quarantine_all_is_bounded_and_an_exhausted_pool_closes",
+  "quarantine_is_bounded_and_exhaustion_closes_the_pool",
+  "randomized_requests_against_a_truthful_backend_keep_every_invariant_and_never_violate_the_device",
+  "randomized_requests_with_injected_backend_faults_stay_fail_closed",
+  "responses_about_the_wrong_register_or_width_are_rejected",
+  "scratchpad_counts_are_decoded_from_hcsparams2_and_judged_by_policy_not_by_a_31_limit",
+  "scratchpad_pages_become_device_owned_and_are_never_touched_or_freed_until_quiescence",
+  "scratchpad_requests_are_bounded_by_the_session_and_the_ledger",
+  "sequence_and_session_defects_close_the_session_fail_closed",
+  "state_that_changes_between_validation_and_the_write_precondition_is_refused",
+  "static_register_writes_recheck_cnr_at_write_time",
+  "the_backend_refuses_writes_after_the_terminal_latch_and_forged_tickets",
+  "the_crcr_read_quirk_is_a_configuration_not_an_assumption",
+  "the_dcbaa_waits_for_the_scratchpad_array",
+  "the_last_write_sequence_number_follows_every_write",
+  "the_ledger_agrees_with_the_machine_through_a_whole_session",
+  "the_scratchpad_policy_separates_the_specification_limit_from_the_resource_budget",
+  "the_write_sequence_matches_the_inventory",
+  "zz_every_cause_session_refusal_and_ledger_reason_is_exercised"
+ ],
+ "oracle": {
+  "traces": 200,
+  "requests": 44000,
+  "refused": 24804,
+  "closed": 135,
+  "accepted": 19061,
+  "mismatches": 0,
+  "first_mismatches": []
+ },
+ "oracle_trace_sha256": "e381b3d0225ca726a21802497d11beca741803b81d6bcaea74fec28170afb9dd",
+ "oracle_corruption_controls": {
+  "refusal-reason": 1,
+  "accepted-rule": 1,
+  "closure-cause": 1,
+  "write-event": 1,
+  "missing-backend-call": 1,
+  "extra-backend-call": 1
+ },
+ "workers_dir_reused": "build/inc1-1/workers",
+ "mutants": [
+  {
+   "name": "stamp-session-unchecked",
+   "breaks": "a foreign session id is accepted",
+   "killed_by": [
+    "rust-tests",
+    "oracle"
+   ],
+   "failing_tests": [
+    "sequence_and_session_defects_close_the_session_fail_closed",
+    "zz_every_cause_session_refusal_and_ledger_reason_is_exercised"
+   ]
+  },
+  {
+   "name": "stamp-duplicate-allowed",
+   "breaks": "a repeated sequence number is accepted",
+   "killed_by": [
+    "rust-tests",
+    "oracle"
+   ],
+   "failing_tests": [
+    "a_duplicated_observation_replayed_from_a_cache_is_rejected",
+    "a_fault_inside_the_tail_ends_the_tail",
+    "after_a_terminal_error_only_the_quarantine_tail_is_possible",
+    "sequence_and_session_defects_close_the_session_fail_closed",
+    "zz_every_cause_session_refusal_and_ledger_reason_is_exercised"
+   ]
+  },
+  {
+   "name": "stamp-reorder-allowed",
+   "breaks": "a decreasing sequence number is accepted",
+   "killed_by": [
+    "rust-tests",
+    "oracle"
+   ],
+   "failing_tests": [
+    "sequence_and_session_defects_close_the_session_fail_closed",
+    "zz_every_cause_session_refusal_and_ledger_reason_is_exercised"
+   ]
+  },
+  {
+   "name": "stamp-gap-allowed",
+   "breaks": "a skipped sequence number is accepted",
+   "killed_by": [
+    "rust-tests",
+    "oracle"
+   ],
+   "failing_tests": [
+    "bind_requires_one_complete_topology_and_is_required_first",
+    "sequence_and_session_defects_close_the_session_fail_closed",
+    "zz_every_cause_session_refusal_and_ledger_reason_is_exercised"
+   ]
+  },
+  {
+   "name": "stamp-gap-off-by-one",
+   "breaks": "a gap of one is tolerated",
+   "killed_by": [
+    "rust-tests",
+    "oracle"
+   ],
+   "failing_tests": [
+    "bind_requires_one_complete_topology_and_is_required_first",
+    "sequence_and_session_defects_close_the_session_fail_closed",
+    "zz_every_cause_session_refusal_and_ledger_reason_is_exercised"
+   ]
+  },
+  {
+   "name": "stamp-clock-unchecked",
+   "breaks": "a backward tick is accepted",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "sequence_and_session_defects_close_the_session_fail_closed",
+    "zz_every_cause_session_refusal_and_ledger_reason_is_exercised"
+   ]
+  },
+  {
+   "name": "stamp-not-recorded",
+   "breaks": "the last sequence number is never remembered",
+   "killed_by": [
+    "rust-tests",
+    "oracle"
+   ],
+   "failing_tests": [
+    "a_caller_cannot_supply_observations",
+    "a_device_attached_during_reset_is_unverified_and_port_observation_reads_the_connection_bit",
+    "a_doorbell_needs_a_status_read_after_the_previous_doorbell",
+    "a_duplicated_observation_replayed_from_a_cache_is_rejected",
+    "a_failed_reset_write_leaves_the_exposed_belief_and_a_quarantine",
+    "a_failure_while_the_controller_may_still_be_running_keeps_the_halt_unconfirmed"
+   ]
+  },
+  {
+   "name": "fault-stamp-unchecked",
+   "breaks": "a failed read need not carry a valid stamp",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "a_caller_cannot_supply_observations",
+    "a_device_attached_during_reset_is_unverified_and_port_observation_reads_the_connection_bit",
+    "a_doorbell_needs_a_status_read_after_the_previous_doorbell",
+    "a_duplicated_observation_replayed_from_a_cache_is_rejected",
+    "a_failed_reset_write_leaves_the_exposed_belief_and_a_quarantine",
+    "a_failure_while_the_controller_may_still_be_running_keeps_the_halt_unconfirmed"
+   ]
+  },
+  {
+   "name": "not-present-closes",
+   "breaks": "an absent optional register closes the session",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "a_caller_cannot_supply_observations",
+    "a_controller_with_more_than_16_ports_is_refused_without_reading_ports",
+    "a_device_attached_during_reset_is_unverified_and_port_observation_reads_the_connection_bit",
+    "a_doorbell_needs_a_status_read_after_the_previous_doorbell",
+    "a_duplicated_observation_replayed_from_a_cache_is_rejected",
+    "a_failed_reset_write_leaves_the_exposed_belief_and_a_quarantine"
+   ]
+  },
+  {
+   "name": "wrong-register-unchecked",
+   "breaks": "a response about another register is accepted",
+   "killed_by": [
+    "rust-tests",
+    "oracle"
+   ],
+   "failing_tests": [
+    "responses_about_the_wrong_register_or_width_are_rejected",
+    "zz_every_cause_session_refusal_and_ledger_reason_is_exercised"
+   ]
+  },
+  {
+   "name": "wrong-index-unchecked",
+   "breaks": "a response about another port is accepted",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "responses_about_the_wrong_register_or_width_are_rejected",
+    "zz_every_cause_session_refusal_and_ledger_reason_is_exercised"
+   ]
+  },
+  {
+   "name": "width-unchecked",
+   "breaks": "a response with the wrong width is accepted",
+   "killed_by": [
+    "rust-tests",
+    "oracle"
+   ],
+   "failing_tests": [
+    "responses_about_the_wrong_register_or_width_are_rejected",
+    "zz_every_cause_session_refusal_and_ledger_reason_is_exercised"
+   ]
+  },
+  {
+   "name": "all-ones-unchecked",
+   "breaks": "an all-ones read is accepted",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "responses_about_the_wrong_register_or_width_are_rejected",
+    "zz_every_cause_session_refusal_and_ledger_reason_is_exercised"
+   ]
+  },
+  {
+   "name": "fault-torn-as-other",
+   "breaks": "a torn read is reported as another fault",
+   "killed_by": [
+    "rust-tests",
+    "oracle"
+   ],
+   "failing_tests": [
+    "a_failure_while_the_controller_may_still_be_running_keeps_the_halt_unconfirmed",
+    "every_read_fault_closes_with_its_own_cause_and_an_absent_optional_register_does_not",
+    "qualification_decodes_registers_into_facts_and_marks_observations_valid",
+    "zz_every_cause_session_refusal_and_ledger_reason_is_exercised"
+   ]
+  },
+  {
+   "name": "fault-lease-as-budget",
+   "breaks": "a lost lease is reported as a budget fault",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "every_read_fault_closes_with_its_own_cause_and_an_absent_optional_register_does_not",
+    "zz_every_cause_session_refusal_and_ledger_reason_is_exercised"
+   ]
+  },
+  {
+   "name": "stamped-fault-unchecked",
+   "breaks": "a failed identity/topology read need not carry a valid stamp",
+   "killed_by": [
+    "oracle"
+   ],
+   "failing_tests": []
+  },
+  {
+   "name": "rd-need-absent-accepted",
+   "breaks": "a required register that is absent reads as zero",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "every_read_fault_closes_with_its_own_cause_and_an_absent_optional_register_does_not"
+   ]
+  },
+  {
+   "name": "width-ones-wrong",
+   "breaks": "the all-ones value of a width is wrong",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "responses_about_the_wrong_register_or_width_are_rejected",
+    "zz_every_cause_session_refusal_and_ledger_reason_is_exercised"
+   ]
+  },
+  {
+   "name": "width-of-64bit-registers",
+   "breaks": "64-bit registers claim 32-bit width",
+   "killed_by": [
+    "oracle"
+   ],
+   "failing_tests": []
+  },
+  {
+   "name": "caller-observation-accepted",
+   "breaks": "a caller can hand the machine an observation",
+   "killed_by": [
+    "rust-tests",
+    "oracle"
+   ],
+   "failing_tests": [
+    "a_caller_cannot_supply_observations",
+    "randomized_requests_against_a_truthful_backend_keep_every_invariant_and_never_violate_the_device",
+    "zz_every_cause_session_refusal_and_ledger_reason_is_exercised"
+   ]
+  },
+  {
+   "name": "bound-check-removed",
+   "breaks": "requests are served before a controller is bound",
+   "killed_by": [
+    "rust-tests",
+    "oracle"
+   ],
+   "failing_tests": [
+    "bind_requires_one_complete_topology_and_is_required_first",
+    "randomized_requests_against_a_truthful_backend_keep_every_invariant_and_never_violate_the_device",
+    "scratchpad_requests_are_bounded_by_the_session_and_the_ledger",
+    "zz_every_cause_session_refusal_and_ledger_reason_is_exercised"
+   ]
+  },
+  {
+   "name": "sealed-allows-everything",
+   "breaks": "a closed session still accepts every request",
+   "killed_by": [
+    "rust-tests",
+    "oracle"
+   ],
+   "failing_tests": [
+    "a_fault_inside_the_tail_ends_the_tail",
+    "after_a_terminal_error_only_the_quarantine_tail_is_possible",
+    "randomized_requests_with_injected_backend_faults_stay_fail_closed",
+    "sequence_and_session_defects_close_the_session_fail_closed",
+    "zz_every_cause_session_refusal_and_ledger_reason_is_exercised"
+   ]
+  },
+  {
+   "name": "tail-dead-ignored",
+   "breaks": "a dead tail keeps serving requests",
+   "killed_by": [
+    "rust-tests",
+    "oracle"
+   ],
+   "failing_tests": [
+    "a_fault_inside_the_tail_ends_the_tail",
+    "randomized_requests_with_injected_backend_faults_stay_fail_closed",
+    "zz_every_cause_session_refusal_and_ledger_reason_is_exercised"
+   ]
+  },
+  {
+   "name": "tail-allows-reset-observation",
+   "breaks": "the tail may run a reset observation",
+   "killed_by": [
+    "rust-tests",
+    "oracle"
+   ],
+   "failing_tests": [
+    "after_a_terminal_error_only_the_quarantine_tail_is_possible"
+   ]
+  },
+  {
+   "name": "idle-not-qualified-removed",
+   "breaks": "observations are served before qualification",
+   "killed_by": [
+    "rust-tests",
+    "oracle"
+   ],
+   "failing_tests": [
+    "bind_requires_one_complete_topology_and_is_required_first",
+    "zz_every_cause_session_refusal_and_ledger_reason_is_exercised"
+   ]
+  },
+  {
+   "name": "op-in-idle-classified",
+   "breaks": "writes in the idle machine are treated as writes",
+   "killed_by": [
+    "rust-tests",
+    "oracle"
+   ],
+   "failing_tests": [
+    "qualification_cannot_be_repeated_and_writes_before_it_are_a_machine_refusal"
+   ]
+  },
+  {
+   "name": "settle-never-latches",
+   "breaks": "the backend is never told the machine ended",
+   "killed_by": [
+    "rust-tests",
+    "oracle"
+   ],
+   "failing_tests": [
+    "a_session_completes_260_noops_with_consecutive_sequence_numbers_and_one_ticket_per_write"
+   ]
+  },
+  {
+   "name": "close-skips-forced-fault",
+   "breaks": "closing does not drive the machine to its terminal path",
+   "killed_by": [
+    "rust-tests",
+    "oracle"
+   ],
+   "failing_tests": [
+    "a_failed_reset_write_leaves_the_exposed_belief_and_a_quarantine",
+    "a_failure_while_the_controller_may_still_be_running_keeps_the_halt_unconfirmed",
+    "a_fault_inside_the_quarantine_tail_quarantines_the_pages_automatically",
+    "a_session_closed_with_pages_the_device_may_use_quarantines_them_and_never_frees_them",
+    "after_a_terminal_error_only_the_quarantine_tail_is_possible",
+    "an_uncertain_bus_master_enable_is_assumed_to_have_happened_and_the_tail_clears_it"
+   ]
+  },
+  {
+   "name": "close-wrong-fault-reason",
+   "breaks": "closing reports the fault as a controller error",
+   "killed_by": [
+    "rust-tests",
+    "oracle"
+   ],
+   "failing_tests": [
+    "a_session_closed_with_pages_the_device_may_use_quarantines_them_and_never_frees_them",
+    "sequence_and_session_defects_close_the_session_fail_closed",
+    "zz_every_cause_session_refusal_and_ledger_reason_is_exercised"
+   ]
+  },
+  {
+   "name": "close-no-latch",
+   "breaks": "closing does not latch the backend",
+   "killed_by": [
+    "rust-tests",
+    "oracle"
+   ],
+   "failing_tests": [
+    "sequence_and_session_defects_close_the_session_fail_closed",
+    "zz_every_cause_session_refusal_and_ledger_reason_is_exercised"
+   ]
+  },
+  {
+   "name": "close-sealed-keeps-going",
+   "breaks": "a fault inside the tail does not end the tail",
+   "killed_by": [
+    "rust-tests",
+    "oracle"
+   ],
+   "failing_tests": [
+    "a_fault_inside_the_tail_ends_the_tail",
+    "randomized_requests_with_injected_backend_faults_stay_fail_closed",
+    "zz_every_cause_session_refusal_and_ledger_reason_is_exercised"
+   ]
+  },
+  {
+   "name": "bind-topology-unchecked",
+   "breaks": "ambiguous topology is accepted",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "bind_requires_one_complete_topology_and_is_required_first",
+    "zz_every_cause_session_refusal_and_ledger_reason_is_exercised"
+   ]
+  },
+  {
+   "name": "bind-incomplete-scan-accepted",
+   "breaks": "an incomplete scan is accepted",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "bind_requires_one_complete_topology_and_is_required_first"
+   ]
+  },
+  {
+   "name": "bind-failure-not-latched",
+   "breaks": "a failed bind does not latch the backend",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "bind_requires_one_complete_topology_and_is_required_first"
+   ]
+  },
+  {
+   "name": "bind-twice",
+   "breaks": "a second bind is accepted",
+   "killed_by": [
+    "rust-tests",
+    "oracle"
+   ],
+   "failing_tests": [
+    "bind_requires_one_complete_topology_and_is_required_first",
+    "zz_every_cause_session_refusal_and_ledger_reason_is_exercised"
+   ]
+  },
+  {
+   "name": "revalidate-identity-unchecked",
+   "breaks": "a changed identity is accepted",
+   "killed_by": [
+    "rust-tests",
+    "oracle"
+   ],
+   "failing_tests": [
+    "identity_and_topology_changes_stop_a_write_before_it_happens",
+    "zz_every_cause_session_refusal_and_ledger_reason_is_exercised"
+   ]
+  },
+  {
+   "name": "revalidate-topology-unchecked",
+   "breaks": "a changed topology is accepted",
+   "killed_by": [
+    "rust-tests",
+    "oracle"
+   ],
+   "failing_tests": [
+    "identity_and_topology_changes_stop_a_write_before_it_happens",
+    "zz_every_cause_session_refusal_and_ledger_reason_is_exercised"
+   ]
+  },
+  {
+   "name": "revalidate-skipped",
+   "breaks": "identity and topology are not re-read before a write",
+   "killed_by": [
+    "rust-tests",
+    "oracle"
+   ],
+   "failing_tests": [
+    "firmware_regaining_ownership_is_a_conflict_or_a_precondition_failure",
+    "identity_and_topology_changes_stop_a_write_before_it_happens",
+    "state_that_changes_between_validation_and_the_write_precondition_is_refused",
+    "static_register_writes_recheck_cnr_at_write_time",
+    "zz_every_cause_session_refusal_and_ledger_reason_is_exercised"
+   ]
+  },
+  {
+   "name": "qualify-twice",
+   "breaks": "a second qualification is attempted",
+   "killed_by": [
+    "rust-tests",
+    "oracle"
+   ],
+   "failing_tests": [
+    "qualification_cannot_be_repeated_and_writes_before_it_are_a_machine_refusal"
+   ]
+  },
+  {
+   "name": "qualify-reserved-unchecked",
+   "breaks": "reserved USBSTS bits at qualification are accepted",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "contradictory_observations_are_faults"
+   ]
+  },
+  {
+   "name": "qualify-port-bound",
+   "breaks": "more than 16 ports are read",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "a_controller_with_more_than_16_ports_is_refused_without_reading_ports"
+   ]
+  },
+  {
+   "name": "scratchpad-hi-shift",
+   "breaks": "the scratchpad high field is decoded from the wrong bits",
+   "killed_by": [
+    "rust-tests",
+    "oracle"
+   ],
+   "failing_tests": [
+    "a_session_with_scratchpads_runs_to_quiescence_and_the_ledger_follows_every_step",
+    "scratchpad_counts_are_decoded_from_hcsparams2_and_judged_by_policy_not_by_a_31_limit"
+   ]
+  },
+  {
+   "name": "scratchpad-lo-shift",
+   "breaks": "the scratchpad low field is decoded from the wrong bits",
+   "killed_by": [
+    "rust-tests",
+    "oracle"
+   ],
+   "failing_tests": [
+    "a_session_with_scratchpads_runs_to_quiescence_and_the_ledger_follows_every_step",
+    "dcbaa_entry_zero_must_be_the_prepared_array_when_the_controller_needs_scratchpads",
+    "scratchpad_counts_are_decoded_from_hcsparams2_and_judged_by_policy_not_by_a_31_limit",
+    "scratchpad_requests_are_bounded_by_the_session_and_the_ledger"
+   ]
+  },
+  {
+   "name": "no-snoop-bit",
+   "breaks": "Enable No Snoop is read from the wrong bit",
+   "killed_by": [
+    "rust-tests",
+    "oracle"
+   ],
+   "failing_tests": [
+    "debug_capability_firmware_ownership_msi_snoop_and_attachment_are_decoded_at_qualification"
+   ]
+  },
+  {
+   "name": "dbc-enable-bit",
+   "breaks": "the Debug Capability enable bit is wrong",
+   "killed_by": [
+    "rust-tests",
+    "oracle"
+   ],
+   "failing_tests": [
+    "debug_capability_firmware_ownership_msi_snoop_and_attachment_are_decoded_at_qualification"
+   ]
+  },
+  {
+   "name": "legacy-bios-bit",
+   "breaks": "the BIOS-owned semaphore bit is wrong",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "debug_capability_firmware_ownership_msi_snoop_and_attachment_are_decoded_at_qualification"
+   ]
+  },
+  {
+   "name": "msi-enable-bit",
+   "breaks": "the MSI enable bit is wrong",
+   "killed_by": [
+    "rust-tests",
+    "oracle"
+   ],
+   "failing_tests": [
+    "debug_capability_firmware_ownership_msi_snoop_and_attachment_are_decoded_at_qualification"
+   ]
+  },
+  {
+   "name": "running-bit",
+   "breaks": "the run/stop bit is wrong",
+   "killed_by": [
+    "rust-tests",
+    "oracle"
+   ],
+   "failing_tests": [
+    "a_halted_report_is_corroborated_and_a_contradiction_is_caught",
+    "a_slow_legacy_firmware_running_controller_completes",
+    "a_write_invalidates_the_observations_it_can_change_and_later_writes_refuse_stale_inputs",
+    "an_uncertain_run_stop_clear_keeps_the_exposed_belief_and_marks_the_facts_unknown",
+    "identity_and_topology_changes_stop_a_write_before_it_happens",
+    "limitation_a_consistent_liar_is_not_detected"
+   ]
+  },
+  {
+   "name": "bme-bit-qualify",
+   "breaks": "the bus-master bit is wrong at qualification",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "a_caller_cannot_supply_observations",
+    "a_device_attached_during_reset_is_unverified_and_port_observation_reads_the_connection_bit",
+    "a_doorbell_needs_a_status_read_after_the_previous_doorbell",
+    "a_duplicated_observation_replayed_from_a_cache_is_rejected",
+    "a_failed_reset_write_leaves_the_exposed_belief_and_a_quarantine",
+    "a_failure_while_the_controller_may_still_be_running_keeps_the_halt_unconfirmed"
+   ]
+  },
+  {
+   "name": "pagesize-bit",
+   "breaks": "the 4 KiB page-size bit is wrong",
+   "killed_by": [
+    "rust-tests",
+    "oracle"
+   ],
+   "failing_tests": [
+    "a_caller_cannot_supply_observations",
+    "a_controller_with_more_than_16_ports_is_refused_without_reading_ports",
+    "a_device_attached_during_reset_is_unverified_and_port_observation_reads_the_connection_bit",
+    "a_doorbell_needs_a_status_read_after_the_previous_doorbell",
+    "a_duplicated_observation_replayed_from_a_cache_is_rejected",
+    "a_failed_reset_write_leaves_the_exposed_belief_and_a_quarantine"
+   ]
+  },
+  {
+   "name": "connected-bit",
+   "breaks": "the connection bit is wrong at qualification",
+   "killed_by": [
+    "rust-tests",
+    "oracle"
+   ],
+   "failing_tests": [
+    "debug_capability_firmware_ownership_msi_snoop_and_attachment_are_decoded_at_qualification"
+   ]
+  },
+  {
+   "name": "tick-clock-unchecked",
+   "breaks": "a backward clock is accepted by the tick",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "sequence_and_session_defects_close_the_session_fail_closed"
+   ]
+  },
+  {
+   "name": "tick-clock-not-recorded",
+   "breaks": "the tick clock is never remembered",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "sequence_and_session_defects_close_the_session_fail_closed"
+   ]
+  },
+  {
+   "name": "status-reserved-unchecked",
+   "breaks": "reserved USBSTS bits are accepted",
+   "killed_by": [
+    "rust-tests",
+    "oracle"
+   ],
+   "failing_tests": [
+    "contradictory_observations_are_faults"
+   ]
+  },
+  {
+   "name": "halt-transition-unchecked",
+   "breaks": "halted-to-running without a write is accepted",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "contradictory_observations_are_faults",
+    "zz_every_cause_session_refusal_and_ledger_reason_is_exercised"
+   ]
+  },
+  {
+   "name": "halt-transition-too-strict",
+   "breaks": "halted-to-running is refused even after R/S was set",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "a_slow_legacy_firmware_running_controller_completes",
+    "randomized_requests_against_a_truthful_backend_keep_every_invariant_and_never_violate_the_device"
+   ]
+  },
+  {
+   "name": "cnr-transition-unchecked",
+   "breaks": "CNR appearing without a reset is accepted",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "contradictory_observations_are_faults"
+   ]
+  },
+  {
+   "name": "cnr-baseline-kept-after-reset",
+   "breaks": "the CNR baseline survives a reset",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "a_slow_legacy_firmware_running_controller_completes",
+    "randomized_requests_against_a_truthful_backend_keep_every_invariant_and_never_violate_the_device"
+   ]
+  },
+  {
+   "name": "corroboration-removed",
+   "breaks": "a halted report is not corroborated",
+   "killed_by": [
+    "rust-tests",
+    "oracle"
+   ],
+   "failing_tests": [
+    "a_halted_report_is_corroborated_and_a_contradiction_is_caught",
+    "zz_every_cause_session_refusal_and_ledger_reason_is_exercised"
+   ]
+  },
+  {
+   "name": "corroboration-ignores-usbcmd",
+   "breaks": "corroboration ignores USBCMD.R/S",
+   "killed_by": [
+    "rust-tests",
+    "oracle"
+   ],
+   "failing_tests": [
+    "a_halted_report_is_corroborated_and_a_contradiction_is_caught"
+   ]
+  },
+  {
+   "name": "corroboration-ignores-second-read",
+   "breaks": "corroboration ignores the second USBSTS read",
+   "killed_by": [
+    "rust-tests",
+    "oracle"
+   ],
+   "failing_tests": [
+    "a_halted_report_is_corroborated_and_a_contradiction_is_caught"
+   ]
+  },
+  {
+   "name": "corroboration-always",
+   "breaks": "corroboration also runs when the controller is believed running",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "a_slow_legacy_firmware_running_controller_completes",
+    "randomized_requests_against_a_truthful_backend_keep_every_invariant_and_never_violate_the_device"
+   ]
+  },
+  {
+   "name": "status-not-fresh",
+   "breaks": "a status read does not make the status observation valid",
+   "killed_by": [
+    "rust-tests",
+    "oracle"
+   ],
+   "failing_tests": [
+    "a_caller_cannot_supply_observations",
+    "a_device_attached_during_reset_is_unverified_and_port_observation_reads_the_connection_bit",
+    "a_doorbell_needs_a_status_read_after_the_previous_doorbell",
+    "a_duplicated_observation_replayed_from_a_cache_is_rejected",
+    "a_failed_reset_write_leaves_the_exposed_belief_and_a_quarantine",
+    "a_failure_while_the_controller_may_still_be_running_keeps_the_halt_unconfirmed"
+   ]
+  },
+  {
+   "name": "pci-change-unchecked",
+   "breaks": "a bus-master change behind our back is accepted",
+   "killed_by": [
+    "rust-tests",
+    "oracle"
+   ],
+   "failing_tests": [
+    "contradictory_observations_are_faults",
+    "zz_every_cause_session_refusal_and_ledger_reason_is_exercised"
+   ]
+  },
+  {
+   "name": "pci-belief-not-recorded",
+   "breaks": "the read bus-master state is not remembered",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "a_pci_read_turns_an_unknown_bus_master_fact_into_a_known_one"
+   ]
+  },
+  {
+   "name": "pci-msi-ignored",
+   "breaks": "an enabled MSI/MSI-X is not passed to the machine",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "msi_enabled_after_qualification_is_a_machine_fault"
+   ]
+  },
+  {
+   "name": "pci-not-fresh",
+   "breaks": "a PCI read does not make the PCI observation valid",
+   "killed_by": [
+    "rust-tests",
+    "oracle"
+   ],
+   "failing_tests": [
+    "a_caller_cannot_supply_observations",
+    "a_device_attached_during_reset_is_unverified_and_port_observation_reads_the_connection_bit",
+    "a_doorbell_needs_a_status_read_after_the_previous_doorbell",
+    "a_duplicated_observation_replayed_from_a_cache_is_rejected",
+    "a_failed_reset_write_leaves_the_exposed_belief_and_a_quarantine",
+    "a_failure_while_the_controller_may_still_be_running_keeps_the_halt_unconfirmed"
+   ]
+  },
+  {
+   "name": "reset-ports-skipped",
+   "breaks": "ports are not read after a reset",
+   "killed_by": [
+    "rust-tests",
+    "oracle"
+   ],
+   "failing_tests": [
+    "a_device_attached_during_reset_is_unverified_and_port_observation_reads_the_connection_bit"
+   ]
+  },
+  {
+   "name": "reset-port-connection-ignored",
+   "breaks": "a connected port is not noticed after reset",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "a_device_attached_during_reset_is_unverified_and_port_observation_reads_the_connection_bit"
+   ]
+  },
+  {
+   "name": "reset-crcr-quirk-ignored",
+   "breaks": "the CRCR read quirk configuration is ignored",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "the_crcr_read_quirk_is_a_configuration_not_an_assumption"
+   ]
+  },
+  {
+   "name": "handoff-bios-bit",
+   "breaks": "the handoff observation reads the wrong bit",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "a_slow_legacy_firmware_running_controller_completes",
+    "firmware_regaining_ownership_is_a_conflict_or_a_precondition_failure",
+    "firmware_that_never_releases_ends_in_a_clean_failure_after_one_write",
+    "randomized_requests_against_a_truthful_backend_keep_every_invariant_and_never_violate_the_device"
+   ]
+  },
+  {
+   "name": "ports-bit",
+   "breaks": "the ports observation reads the wrong bit",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "a_device_attached_during_reset_is_unverified_and_port_observation_reads_the_connection_bit"
+   ]
+  },
+  {
+   "name": "event-index-unchecked",
+   "breaks": "an event read for another slot is accepted",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "responses_about_the_wrong_register_or_width_are_rejected",
+    "zz_every_cause_session_refusal_and_ledger_reason_is_exercised"
+   ]
+  },
+  {
+   "name": "stale-check-removed",
+   "breaks": "a write is allowed on stale observations",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "a_doorbell_needs_a_status_read_after_the_previous_doorbell",
+    "a_write_invalidates_the_observations_it_can_change_and_later_writes_refuse_stale_inputs",
+    "randomized_requests_against_a_truthful_backend_keep_every_invariant_and_never_violate_the_device",
+    "randomized_requests_with_injected_backend_faults_stay_fail_closed",
+    "zz_every_cause_session_refusal_and_ledger_reason_is_exercised"
+   ]
+  },
+  {
+   "name": "requires-ignored-when-live",
+   "breaks": "live sessions skip the requirement table",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "a_doorbell_needs_a_status_read_after_the_previous_doorbell",
+    "a_write_invalidates_the_observations_it_can_change_and_later_writes_refuse_stale_inputs",
+    "randomized_requests_against_a_truthful_backend_keep_every_invariant_and_never_violate_the_device",
+    "randomized_requests_with_injected_backend_faults_stay_fail_closed",
+    "zz_every_cause_session_refusal_and_ledger_reason_is_exercised"
+   ]
+  },
+  {
+   "name": "requires-pci-dropped",
+   "breaks": "bus-master writes do not need a fresh PCI read",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "a_write_invalidates_the_observations_it_can_change_and_later_writes_refuse_stale_inputs",
+    "randomized_requests_against_a_truthful_backend_keep_every_invariant_and_never_violate_the_device",
+    "randomized_requests_with_injected_backend_faults_stay_fail_closed",
+    "zz_every_cause_session_refusal_and_ledger_reason_is_exercised"
+   ]
+  },
+  {
+   "name": "requires-doorbell-dropped",
+   "breaks": "the doorbell does not need a fresh status",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "a_doorbell_needs_a_status_read_after_the_previous_doorbell",
+    "randomized_requests_against_a_truthful_backend_keep_every_invariant_and_never_violate_the_device",
+    "randomized_requests_with_injected_backend_faults_stay_fail_closed",
+    "zz_every_cause_session_refusal_and_ledger_reason_is_exercised"
+   ]
+  },
+  {
+   "name": "requires-ack-dropped",
+   "breaks": "an acknowledgment does not need a fresh event read",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "a_doorbell_needs_a_status_read_after_the_previous_doorbell",
+    "randomized_requests_against_a_truthful_backend_keep_every_invariant_and_never_violate_the_device",
+    "randomized_requests_with_injected_backend_faults_stay_fail_closed",
+    "zz_every_cause_session_refusal_and_ledger_reason_is_exercised"
+   ]
+  },
+  {
+   "name": "requires-static-dropped",
+   "breaks": "static registers do not need a fresh status",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "randomized_requests_against_a_truthful_backend_keep_every_invariant_and_never_violate_the_device",
+    "randomized_requests_with_injected_backend_faults_stay_fail_closed",
+    "zz_every_cause_session_refusal_and_ledger_reason_is_exercised"
+   ]
+  },
+  {
+   "name": "requires-handoff-dropped",
+   "breaks": "ownership writes do not need a fresh handoff read",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "randomized_requests_against_a_truthful_backend_keep_every_invariant_and_never_violate_the_device",
+    "randomized_requests_with_injected_backend_faults_stay_fail_closed",
+    "zz_every_cause_session_refusal_and_ledger_reason_is_exercised"
+   ]
+  },
+  {
+   "name": "invalidates-reset-ports",
+   "breaks": "a reset leaves port and event observations valid",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "a_write_invalidates_the_observations_it_can_change_and_later_writes_refuse_stale_inputs",
+    "randomized_requests_against_a_truthful_backend_keep_every_invariant_and_never_violate_the_device",
+    "randomized_requests_with_injected_backend_faults_stay_fail_closed",
+    "zz_every_cause_session_refusal_and_ledger_reason_is_exercised"
+   ]
+  },
+  {
+   "name": "invalidates-doorbell-event",
+   "breaks": "a doorbell leaves the event observation valid",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "randomized_requests_against_a_truthful_backend_keep_every_invariant_and_never_violate_the_device",
+    "randomized_requests_with_injected_backend_faults_stay_fail_closed",
+    "zz_every_cause_session_refusal_and_ledger_reason_is_exercised"
+   ]
+  },
+  {
+   "name": "invalidates-bme-pci",
+   "breaks": "a bus-master write leaves the PCI observation valid",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "a_write_invalidates_the_observations_it_can_change_and_later_writes_refuse_stale_inputs",
+    "randomized_requests_against_a_truthful_backend_keep_every_invariant_and_never_violate_the_device",
+    "randomized_requests_with_injected_backend_faults_stay_fail_closed",
+    "zz_every_cause_session_refusal_and_ledger_reason_is_exercised"
+   ]
+  },
+  {
+   "name": "invalidates-erstba-status",
+   "breaks": "ERSTBA leaves the status observation valid",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "randomized_requests_against_a_truthful_backend_keep_every_invariant_and_never_violate_the_device",
+    "randomized_requests_with_injected_backend_faults_stay_fail_closed",
+    "zz_every_cause_session_refusal_and_ledger_reason_is_exercised"
+   ]
+  },
+  {
+   "name": "invalidates-ack-event",
+   "breaks": "an acknowledgment leaves the event observation valid",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "randomized_requests_against_a_truthful_backend_keep_every_invariant_and_never_violate_the_device",
+    "randomized_requests_with_injected_backend_faults_stay_fail_closed",
+    "zz_every_cause_session_refusal_and_ledger_reason_is_exercised"
+   ]
+  },
+  {
+   "name": "invalidates-handoff",
+   "breaks": "ownership writes leave the handoff observation valid",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "randomized_requests_against_a_truthful_backend_keep_every_invariant_and_never_violate_the_device",
+    "randomized_requests_with_injected_backend_faults_stay_fail_closed",
+    "zz_every_cause_session_refusal_and_ledger_reason_is_exercised"
+   ]
+  },
+  {
+   "name": "invalidation-not-applied",
+   "breaks": "writes never invalidate observations",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "a_doorbell_needs_a_status_read_after_the_previous_doorbell",
+    "a_write_invalidates_the_observations_it_can_change_and_later_writes_refuse_stale_inputs",
+    "an_uncertain_run_stop_clear_keeps_the_exposed_belief_and_marks_the_facts_unknown",
+    "randomized_requests_against_a_truthful_backend_keep_every_invariant_and_never_violate_the_device",
+    "randomized_requests_with_injected_backend_faults_stay_fail_closed",
+    "zz_every_cause_session_refusal_and_ledger_reason_is_exercised"
+   ]
+  },
+  {
+   "name": "pre-clearrs-wrong",
+   "breaks": "the run/stop precondition expects the wrong value",
+   "killed_by": [
+    "rust-tests",
+    "oracle"
+   ],
+   "failing_tests": [
+    "a_failed_reset_write_leaves_the_exposed_belief_and_a_quarantine",
+    "a_failure_while_the_controller_may_still_be_running_keeps_the_halt_unconfirmed",
+    "a_halted_report_is_corroborated_and_a_contradiction_is_caught",
+    "a_session_completes_260_noops_with_consecutive_sequence_numbers_and_one_ticket_per_write",
+    "a_session_with_scratchpads_runs_to_quiescence_and_the_ledger_follows_every_step",
+    "a_slow_legacy_firmware_running_controller_completes"
+   ]
+  },
+  {
+   "name": "pre-clearbme-halt-dropped",
+   "breaks": "the bus-master clear does not recheck halt",
+   "killed_by": [
+    "rust-tests",
+    "oracle"
+   ],
+   "failing_tests": [
+    "state_that_changes_between_validation_and_the_write_precondition_is_refused"
+   ]
+  },
+  {
+   "name": "pre-reset-bme-dropped",
+   "breaks": "the reset does not recheck bus master",
+   "killed_by": [
+    "oracle"
+   ],
+   "failing_tests": []
+  },
+  {
+   "name": "pre-static-cnr-dropped",
+   "breaks": "static registers do not recheck CNR",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "static_register_writes_recheck_cnr_at_write_time"
+   ]
+  },
+  {
+   "name": "pre-setbme-bme-dropped",
+   "breaks": "the bus-master set does not recheck that it is clear",
+   "killed_by": [
+    "oracle"
+   ],
+   "failing_tests": []
+  },
+  {
+   "name": "pre-erstba-bme-dropped",
+   "breaks": "ERSTBA does not recheck bus master",
+   "killed_by": [
+    "oracle"
+   ],
+   "failing_tests": []
+  },
+  {
+   "name": "pre-setrs-error-dropped",
+   "breaks": "run does not recheck controller errors",
+   "killed_by": [
+    "oracle"
+   ],
+   "failing_tests": []
+  },
+  {
+   "name": "pre-doorbell-dropped",
+   "breaks": "the doorbell does not recheck status",
+   "killed_by": [
+    "oracle"
+   ],
+   "failing_tests": []
+  },
+  {
+   "name": "pre-smi-bios-ignored",
+   "breaks": "the SMI write ignores a BIOS that regained ownership",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "firmware_regaining_ownership_is_a_conflict_or_a_precondition_failure"
+   ]
+  },
+  {
+   "name": "pre-compare-inverted",
+   "breaks": "a precondition mismatch is accepted",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "a_caller_cannot_supply_observations",
+    "a_device_attached_during_reset_is_unverified_and_port_observation_reads_the_connection_bit",
+    "a_doorbell_needs_a_status_read_after_the_previous_doorbell",
+    "a_duplicated_observation_replayed_from_a_cache_is_rejected",
+    "a_failed_reset_write_leaves_the_exposed_belief_and_a_quarantine",
+    "a_failure_while_the_controller_may_still_be_running_keeps_the_halt_unconfirmed"
+   ]
+  },
+  {
+   "name": "readback-clearbme-wrong",
+   "breaks": "the bus-master clear verifies the wrong value",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "a_failed_reset_write_leaves_the_exposed_belief_and_a_quarantine",
+    "a_session_completes_260_noops_with_consecutive_sequence_numbers_and_one_ticket_per_write",
+    "a_session_with_scratchpads_runs_to_quiescence_and_the_ledger_follows_every_step",
+    "a_slow_legacy_firmware_running_controller_completes",
+    "a_write_invalidates_the_observations_it_can_change_and_later_writes_refuse_stale_inputs",
+    "after_a_terminal_error_only_the_quarantine_tail_is_possible"
+   ]
+  },
+  {
+   "name": "readback-missing-accepted",
+   "breaks": "a missing read-back is accepted",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "an_uncertain_bus_master_enable_is_assumed_to_have_happened_and_the_tail_clears_it",
+    "an_uncertain_run_stop_clear_keeps_the_exposed_belief_and_marks_the_facts_unknown"
+   ]
+  },
+  {
+   "name": "readback-register-unchecked",
+   "breaks": "a read-back of another register is accepted",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "a_readback_of_another_register_is_a_mismatch"
+   ]
+  },
+  {
+   "name": "readback-value-unchecked",
+   "breaks": "a wrong read-back value is accepted",
+   "killed_by": [
+    "rust-tests",
+    "oracle"
+   ],
+   "failing_tests": [
+    "an_uncertain_bus_master_enable_is_assumed_to_have_happened_and_the_tail_clears_it",
+    "an_uncertain_run_stop_clear_keeps_the_exposed_belief_and_marks_the_facts_unknown"
+   ]
+  },
+  {
+   "name": "ticket-nonce-reused",
+   "breaks": "tickets are not single-use",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "a_caller_cannot_supply_observations",
+    "a_device_attached_during_reset_is_unverified_and_port_observation_reads_the_connection_bit",
+    "a_doorbell_needs_a_status_read_after_the_previous_doorbell",
+    "a_duplicated_observation_replayed_from_a_cache_is_rejected",
+    "a_failed_reset_write_leaves_the_exposed_belief_and_a_quarantine",
+    "a_failure_while_the_controller_may_still_be_running_keeps_the_halt_unconfirmed"
+   ]
+  },
+  {
+   "name": "write-stamp-unchecked",
+   "breaks": "the stamp of a write receipt is not validated",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "a_caller_cannot_supply_observations",
+    "a_device_attached_during_reset_is_unverified_and_port_observation_reads_the_connection_bit",
+    "a_doorbell_needs_a_status_read_after_the_previous_doorbell",
+    "a_duplicated_observation_replayed_from_a_cache_is_rejected",
+    "a_failed_reset_write_leaves_the_exposed_belief_and_a_quarantine",
+    "a_failure_while_the_controller_may_still_be_running_keeps_the_halt_unconfirmed"
+   ]
+  },
+  {
+   "name": "write-refused-cause",
+   "breaks": "a refused write is reported as a failed write",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "a_failed_reset_write_leaves_the_exposed_belief_and_a_quarantine",
+    "an_uncertain_bus_master_enable_is_assumed_to_have_happened_and_the_tail_clears_it",
+    "an_uncertain_run_stop_clear_keeps_the_exposed_belief_and_marks_the_facts_unknown",
+    "zz_every_cause_session_refusal_and_ledger_reason_is_exercised"
+   ]
+  },
+  {
+   "name": "write-last-seq-not-recorded",
+   "breaks": "a receipt does not update the last write sequence",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "the_last_write_sequence_number_follows_every_write"
+   ]
+  },
+  {
+   "name": "write-fail-last-seq-not-recorded",
+   "breaks": "a failed write does not update the last write sequence",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "the_last_write_sequence_number_follows_every_write"
+   ]
+  },
+  {
+   "name": "commit-reducing-writes",
+   "breaks": "a reducing write that is uncertain is assumed to have happened",
+   "killed_by": [
+    "rust-tests",
+    "oracle"
+   ],
+   "failing_tests": [
+    "an_uncertain_run_stop_clear_keeps_the_exposed_belief_and_marks_the_facts_unknown"
+   ]
+  },
+  {
+   "name": "commit-increasing-never",
+   "breaks": "an increasing write that is uncertain is assumed not to have happened",
+   "killed_by": [
+    "rust-tests",
+    "oracle"
+   ],
+   "failing_tests": [
+    "an_uncertain_bus_master_enable_is_assumed_to_have_happened_and_the_tail_clears_it",
+    "an_uncertain_run_stop_set_is_assumed_to_have_happened_and_the_tail_halts_first"
+   ]
+  },
+  {
+   "name": "unknown-facts-ignored",
+   "breaks": "uncertain writes still leave facts known",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "a_pci_read_turns_an_unknown_bus_master_fact_into_a_known_one",
+    "an_uncertain_bus_master_enable_is_assumed_to_have_happened_and_the_tail_clears_it",
+    "an_uncertain_run_stop_clear_keeps_the_exposed_belief_and_marks_the_facts_unknown",
+    "zz_every_cause_session_refusal_and_ledger_reason_is_exercised"
+   ]
+  },
+  {
+   "name": "halt-belief-kept-after-clear",
+   "breaks": "the halted belief survives a run/stop clear",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "an_uncertain_run_stop_clear_keeps_the_exposed_belief_and_marks_the_facts_unknown"
+   ]
+  },
+  {
+   "name": "sealed-preconditions",
+   "breaks": "the tail repeats the live write checks",
+   "killed_by": [
+    "rust-tests",
+    "oracle"
+   ],
+   "failing_tests": [
+    "an_uncertain_bus_master_enable_is_assumed_to_have_happened_and_the_tail_clears_it",
+    "an_uncertain_run_stop_set_is_assumed_to_have_happened_and_the_tail_halts_first"
+   ]
+  },
+  {
+   "name": "publish-proof-always",
+   "breaks": "a publication proof exists for pages that are not published",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "ledger_dependencies_and_publication_proofs"
+   ]
+  },
+  {
+   "name": "quiescence-proof-always",
+   "breaks": "a quiescence proof exists before quiescence",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "ledger_dependencies_and_publication_proofs",
+    "scratchpad_pages_become_device_owned_and_are_never_touched_or_freed_until_quiescence",
+    "zz_every_cause_session_refusal_and_ledger_reason_is_exercised"
+   ]
+  },
+  {
+   "name": "scratch-budget-off-by-one",
+   "breaks": "one scratchpad more than the budget is accepted",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "the_scratchpad_policy_separates_the_specification_limit_from_the_resource_budget",
+    "zz_every_cause_session_refusal_and_ledger_reason_is_exercised"
+   ]
+  },
+  {
+   "name": "scratch-invalid-unchecked",
+   "breaks": "a count beyond the specification maximum is only a budget refusal",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "the_scratchpad_policy_separates_the_specification_limit_from_the_resource_budget",
+    "zz_every_cause_session_refusal_and_ledger_reason_is_exercised"
+   ]
+  },
+  {
+   "name": "scratch-limit-31",
+   "breaks": "the old 31-entry array limit is applied to the budget",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "a_session_with_scratchpads_runs_to_quiescence_and_the_ledger_follows_every_step",
+    "randomized_requests_against_a_truthful_backend_keep_every_invariant_and_never_violate_the_device",
+    "randomized_requests_with_injected_backend_faults_stay_fail_closed",
+    "scratchpad_counts_are_decoded_from_hcsparams2_and_judged_by_policy_not_by_a_31_limit",
+    "the_scratchpad_policy_separates_the_specification_limit_from_the_resource_budget",
+    "zz_every_cause_session_refusal_and_ledger_reason_is_exercised"
+   ]
+  },
+  {
+   "name": "limit-floor-removed",
+   "breaks": "a device limit below the minimum is accepted",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "the_scratchpad_policy_separates_the_specification_limit_from_the_resource_budget",
+    "zz_every_cause_session_refusal_and_ledger_reason_is_exercised"
+   ]
+  },
+  {
+   "name": "alloc-closed-ignored",
+   "breaks": "a closed pool still allocates",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "quarantine_all_is_bounded_and_an_exhausted_pool_closes",
+    "quarantine_is_bounded_and_exhaustion_closes_the_pool",
+    "zz_every_cause_session_refusal_and_ledger_reason_is_exercised"
+   ]
+  },
+  {
+   "name": "alloc-owned-unchecked",
+   "breaks": "a page can be allocated twice",
+   "killed_by": [
+    "rust-tests",
+    "oracle"
+   ],
+   "failing_tests": [
+    "ledger_address_and_lifetime_rules_are_named",
+    "scratchpad_requests_are_bounded_by_the_session_and_the_ledger",
+    "zz_every_cause_session_refusal_and_ledger_reason_is_exercised"
+   ]
+  },
+  {
+   "name": "alloc-misaligned-unchecked",
+   "breaks": "an unaligned page is accepted",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "ledger_address_and_lifetime_rules_are_named",
+    "scratchpad_requests_are_bounded_by_the_session_and_the_ledger",
+    "zz_every_cause_session_refusal_and_ledger_reason_is_exercised"
+   ]
+  },
+  {
+   "name": "alloc-low-accepted",
+   "breaks": "a page below 1 MiB is accepted",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "ledger_address_and_lifetime_rules_are_named",
+    "scratchpad_requests_are_bounded_by_the_session_and_the_ledger",
+    "zz_every_cause_session_refusal_and_ledger_reason_is_exercised"
+   ]
+  },
+  {
+   "name": "alloc-high-accepted",
+   "breaks": "a page beyond the limit is accepted",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "ledger_address_and_lifetime_rules_are_named"
+   ]
+  },
+  {
+   "name": "alloc-overlap-accepted",
+   "breaks": "overlapping pages are accepted",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "ledger_address_and_lifetime_rules_are_named",
+    "scratchpad_requests_are_bounded_by_the_session_and_the_ledger",
+    "zz_every_cause_session_refusal_and_ledger_reason_is_exercised"
+   ]
+  },
+  {
+   "name": "alloc-ac64-ignored",
+   "breaks": "the 32-bit address limit is ignored",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "ledger_address_and_lifetime_rules_are_named"
+   ]
+  },
+  {
+   "name": "state-unchecked",
+   "breaks": "a page in the wrong state is accepted",
+   "killed_by": [
+    "rust-tests",
+    "oracle"
+   ],
+   "failing_tests": [
+    "ledger_address_and_lifetime_rules_are_named",
+    "ledger_dependencies_and_publication_proofs",
+    "scratchpad_pages_become_device_owned_and_are_never_touched_or_freed_until_quiescence",
+    "scratchpad_requests_are_bounded_by_the_session_and_the_ledger",
+    "zz_every_cause_session_refusal_and_ledger_reason_is_exercised"
+   ]
+  },
+  {
+   "name": "prepare-erst-dependency-dropped",
+   "breaks": "the ERST is prepared before the event ring",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "ledger_dependencies_and_publication_proofs"
+   ]
+  },
+  {
+   "name": "prepare-array-dependency-dropped",
+   "breaks": "the scratchpad array is prepared before its buffers",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "dcbaa_entry_zero_must_be_the_prepared_array_when_the_controller_needs_scratchpads",
+    "scratchpad_pages_become_device_owned_and_are_never_touched_or_freed_until_quiescence",
+    "zz_every_cause_session_refusal_and_ledger_reason_is_exercised"
+   ]
+  },
+  {
+   "name": "prepare-dcbaa-array-dependency-dropped",
+   "breaks": "the DCBAA is prepared before the scratchpad array",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "the_dcbaa_waits_for_the_scratchpad_array"
+   ]
+  },
+  {
+   "name": "publish-incomplete-scratchpads",
+   "breaks": "the DCBAA is published with incomplete scratchpads",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "an_incomplete_scratchpad_set_cannot_be_published",
+    "zz_every_cause_session_refusal_and_ledger_reason_is_exercised"
+   ]
+  },
+  {
+   "name": "publish-buffers-cpu-visible",
+   "breaks": "published scratchpad buffers stay CPU-accessible",
+   "killed_by": [
+    "rust-tests",
+    "oracle"
+   ],
+   "failing_tests": [
+    "a_session_with_scratchpads_runs_to_quiescence_and_the_ledger_follows_every_step",
+    "scratchpad_pages_become_device_owned_and_are_never_touched_or_freed_until_quiescence",
+    "zz_every_cause_session_refusal_and_ledger_reason_is_exercised"
+   ]
+  },
+  {
+   "name": "publish-core-state",
+   "breaks": "a core page is published from the wrong state",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "a_caller_cannot_supply_observations",
+    "a_device_attached_during_reset_is_unverified_and_port_observation_reads_the_connection_bit",
+    "a_doorbell_needs_a_status_read_after_the_previous_doorbell",
+    "a_duplicated_observation_replayed_from_a_cache_is_rejected",
+    "a_failed_reset_write_leaves_the_exposed_belief_and_a_quarantine",
+    "a_failure_while_the_controller_may_still_be_running_keeps_the_halt_unconfirmed"
+   ]
+  },
+  {
+   "name": "publish-dcbaa-via-publish",
+   "breaks": "the DCBAA is published without its scratchpads",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "ledger_dependencies_and_publication_proofs"
+   ]
+  },
+  {
+   "name": "cpu-touch-device-owned",
+   "breaks": "the CPU may touch device-owned pages",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "a_session_with_scratchpads_runs_to_quiescence_and_the_ledger_follows_every_step",
+    "scratchpad_pages_become_device_owned_and_are_never_touched_or_freed_until_quiescence",
+    "zz_every_cause_session_refusal_and_ledger_reason_is_exercised"
+   ]
+  },
+  {
+   "name": "quiesce-nothing-accepted",
+   "breaks": "quiescing with nothing published is accepted",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "scratchpad_pages_become_device_owned_and_are_never_touched_or_freed_until_quiescence",
+    "zz_every_cause_session_refusal_and_ledger_reason_is_exercised"
+   ]
+  },
+  {
+   "name": "release-published",
+   "breaks": "a published page can be released",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "scratchpad_pages_become_device_owned_and_are_never_touched_or_freed_until_quiescence",
+    "zz_every_cause_session_refusal_and_ledger_reason_is_exercised"
+   ]
+  },
+  {
+   "name": "release-policy-ignored",
+   "breaks": "the never-release policy is ignored",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "scratchpad_pages_become_device_owned_and_are_never_touched_or_freed_until_quiescence",
+    "zz_every_cause_session_refusal_and_ledger_reason_is_exercised"
+   ]
+  },
+  {
+   "name": "quarantine-cap-off-by-one",
+   "breaks": "the quarantine holds one more than its capacity",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "quarantine_all_is_bounded_and_an_exhausted_pool_closes",
+    "quarantine_is_bounded_and_exhaustion_closes_the_pool",
+    "zz_every_cause_session_refusal_and_ledger_reason_is_exercised"
+   ]
+  },
+  {
+   "name": "quarantine-exhaustion-open",
+   "breaks": "an exhausted quarantine does not close the pool",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "quarantine_all_is_bounded_and_an_exhausted_pool_closes",
+    "quarantine_is_bounded_and_exhaustion_closes_the_pool",
+    "zz_every_cause_session_refusal_and_ledger_reason_is_exercised"
+   ]
+  },
+  {
+   "name": "sync-skipped",
+   "breaks": "the ledger is never brought in line with the machine",
+   "killed_by": [
+    "rust-tests",
+    "oracle"
+   ],
+   "failing_tests": [
+    "a_session_closed_with_pages_the_device_may_use_quarantines_them_and_never_frees_them",
+    "a_session_with_scratchpads_runs_to_quiescence_and_the_ledger_follows_every_step",
+    "dcbaa_entry_zero_must_be_the_prepared_array_when_the_controller_needs_scratchpads",
+    "scratchpad_requests_are_bounded_by_the_session_and_the_ledger"
+   ]
+  },
+  {
+   "name": "sync-allocate-not-mirrored",
+   "breaks": "a machine allocation is not recorded in the ledger",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "a_caller_cannot_supply_observations",
+    "a_device_attached_during_reset_is_unverified_and_port_observation_reads_the_connection_bit",
+    "a_doorbell_needs_a_status_read_after_the_previous_doorbell",
+    "a_duplicated_observation_replayed_from_a_cache_is_rejected",
+    "a_failed_reset_write_leaves_the_exposed_belief_and_a_quarantine",
+    "a_failure_while_the_controller_may_still_be_running_keeps_the_halt_unconfirmed"
+   ]
+  },
+  {
+   "name": "sync-prepare-not-mirrored",
+   "breaks": "a machine preparation is not recorded in the ledger",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "a_caller_cannot_supply_observations",
+    "a_device_attached_during_reset_is_unverified_and_port_observation_reads_the_connection_bit",
+    "a_doorbell_needs_a_status_read_after_the_previous_doorbell",
+    "a_duplicated_observation_replayed_from_a_cache_is_rejected",
+    "a_failed_reset_write_leaves_the_exposed_belief_and_a_quarantine",
+    "a_failure_while_the_controller_may_still_be_running_keeps_the_halt_unconfirmed"
+   ]
+  },
+  {
+   "name": "sync-dcbaa-publish-plain",
+   "breaks": "the DCBAA is published without its scratchpads",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "a_caller_cannot_supply_observations",
+    "a_device_attached_during_reset_is_unverified_and_port_observation_reads_the_connection_bit",
+    "a_doorbell_needs_a_status_read_after_the_previous_doorbell",
+    "a_duplicated_observation_replayed_from_a_cache_is_rejected",
+    "a_failed_reset_write_leaves_the_exposed_belief_and_a_quarantine",
+    "a_failure_while_the_controller_may_still_be_running_keeps_the_halt_unconfirmed"
+   ]
+  },
+  {
+   "name": "sync-release-not-mirrored",
+   "breaks": "a machine release is not recorded in the ledger",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "a_session_with_scratchpads_runs_to_quiescence_and_the_ledger_follows_every_step",
+    "randomized_requests_against_a_truthful_backend_keep_every_invariant_and_never_violate_the_device",
+    "randomized_requests_with_injected_backend_faults_stay_fail_closed",
+    "zz_every_cause_session_refusal_and_ledger_reason_is_exercised"
+   ]
+  },
+  {
+   "name": "sync-unknown-step-accepted",
+   "breaks": "an illegal page step is accepted by the mirror",
+   "killed_by": [],
+   "failing_tests": []
+  },
+  {
+   "name": "sync-quiesce-skipped",
+   "breaks": "the ledger is not quiesced when the machine is",
+   "killed_by": [
+    "rust-tests",
+    "oracle"
+   ],
+   "failing_tests": [
+    "a_session_with_scratchpads_runs_to_quiescence_and_the_ledger_follows_every_step",
+    "zz_every_cause_session_refusal_and_ledger_reason_is_exercised"
+   ]
+  },
+  {
+   "name": "sync-quiesce-error-ignored",
+   "breaks": "a ledger that cannot quiesce is ignored",
+   "killed_by": [],
+   "failing_tests": []
+  },
+  {
+   "name": "array-ready-always",
+   "breaks": "the DCBAA may be prepared before the array is",
+   "killed_by": [
+    "rust-tests",
+    "oracle"
+   ],
+   "failing_tests": [
+    "dcbaa_entry_zero_must_be_the_prepared_array_when_the_controller_needs_scratchpads",
+    "zz_every_cause_session_refusal_and_ledger_reason_is_exercised"
+   ]
+  },
+  {
+   "name": "array-address-unchecked",
+   "breaks": "the DCBAA may point anywhere while an array exists",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "dcbaa_entry_zero_must_be_the_prepared_array_when_the_controller_needs_scratchpads"
+   ]
+  },
+  {
+   "name": "array-state-unchecked",
+   "breaks": "the DCBAA may point at an unprepared array",
+   "killed_by": [
+    "rust-tests",
+    "oracle"
+   ],
+   "failing_tests": [
+    "dcbaa_entry_zero_must_be_the_prepared_array_when_the_controller_needs_scratchpads"
+   ]
+  },
+  {
+   "name": "array-needed-without-scratchpads",
+   "breaks": "a controller without scratchpads needs an array",
+   "killed_by": [
+    "rust-tests",
+    "oracle"
+   ],
+   "failing_tests": [
+    "a_caller_cannot_supply_observations",
+    "a_device_attached_during_reset_is_unverified_and_port_observation_reads_the_connection_bit",
+    "a_doorbell_needs_a_status_read_after_the_previous_doorbell",
+    "a_duplicated_observation_replayed_from_a_cache_is_rejected",
+    "a_failed_reset_write_leaves_the_exposed_belief_and_a_quarantine",
+    "a_failure_while_the_controller_may_still_be_running_keeps_the_halt_unconfirmed"
+   ]
+  },
+  {
+   "name": "scratch-core-item-accepted",
+   "breaks": "a core page can be driven through the scratchpad request",
+   "killed_by": [
+    "rust-tests",
+    "oracle"
+   ],
+   "failing_tests": [
+    "randomized_requests_against_a_truthful_backend_keep_every_invariant_and_never_violate_the_device",
+    "randomized_requests_with_injected_backend_faults_stay_fail_closed",
+    "scratchpad_requests_are_bounded_by_the_session_and_the_ledger",
+    "zz_every_cause_session_refusal_and_ledger_reason_is_exercised"
+   ]
+  },
+  {
+   "name": "scratch-window-ignored",
+   "breaks": "scratchpad pages can be allocated after exposure",
+   "killed_by": [
+    "rust-tests",
+    "oracle"
+   ],
+   "failing_tests": [
+    "a_session_with_scratchpads_runs_to_quiescence_and_the_ledger_follows_every_step"
+   ]
+  },
+  {
+   "name": "scratch-window-blocks-release",
+   "breaks": "scratchpad pages cannot be released when the window is closed",
+   "killed_by": [
+    "rust-tests",
+    "oracle"
+   ],
+   "failing_tests": [
+    "a_session_closed_with_pages_the_device_may_use_quarantines_them_and_never_frees_them",
+    "a_session_with_scratchpads_runs_to_quiescence_and_the_ledger_follows_every_step"
+   ]
+  },
+  {
+   "name": "scratch-overlap-core-unchecked",
+   "breaks": "a core page may land on a scratchpad page",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "scratchpad_requests_are_bounded_by_the_session_and_the_ledger",
+    "zz_every_cause_session_refusal_and_ledger_reason_is_exercised"
+   ]
+  },
+  {
+   "name": "scratch-overlap-skips-array",
+   "breaks": "a core page may land on the scratchpad array",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "scratchpad_requests_are_bounded_by_the_session_and_the_ledger",
+    "zz_every_cause_session_refusal_and_ledger_reason_is_exercised"
+   ]
+  },
+  {
+   "name": "ledger-for-refused-qualification",
+   "breaks": "a refused qualification still plans DMA pages",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "randomized_requests_with_injected_backend_faults_stay_fail_closed",
+    "scratchpad_counts_are_decoded_from_hcsparams2_and_judged_by_policy_not_by_a_31_limit",
+    "zz_every_cause_session_refusal_and_ledger_reason_is_exercised"
+   ]
+  },
+  {
+   "name": "ledger-limit-from-nothing",
+   "breaks": "the ledger limit is not the platform DMA limit",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "a_caller_cannot_supply_observations",
+    "a_device_attached_during_reset_is_unverified_and_port_observation_reads_the_connection_bit",
+    "a_doorbell_needs_a_status_read_after_the_previous_doorbell",
+    "a_duplicated_observation_replayed_from_a_cache_is_rejected",
+    "a_failed_reset_write_leaves_the_exposed_belief_and_a_quarantine",
+    "a_failure_while_the_controller_may_still_be_running_keeps_the_halt_unconfirmed"
+   ]
+  },
+  {
+   "name": "ledger-policy-forced",
+   "breaks": "the ledger ignores the machine release policy",
+   "killed_by": [],
+   "failing_tests": []
+  },
+  {
+   "name": "abandon-while-live",
+   "breaks": "a live session can abandon its pages",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "a_session_closed_with_pages_the_device_may_use_quarantines_them_and_never_frees_them",
+    "zz_every_cause_session_refusal_and_ledger_reason_is_exercised"
+   ]
+  },
+  {
+   "name": "tail-dead-keeps-pages",
+   "breaks": "a dead tail leaves its pages releasable",
+   "killed_by": [
+    "rust-tests",
+    "oracle"
+   ],
+   "failing_tests": [
+    "a_fault_inside_the_quarantine_tail_quarantines_the_pages_automatically"
+   ]
+  },
+  {
+   "name": "quarantine-cap-too-small",
+   "breaks": "the quarantine cannot hold a failed plan",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "a_session_closed_with_pages_the_device_may_use_quarantines_them_and_never_frees_them"
+   ]
+  },
+  {
+   "name": "quarantine-all-skips-device-owned",
+   "breaks": "device-owned pages are not quarantined",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "a_fault_inside_the_quarantine_tail_quarantines_the_pages_automatically",
+    "a_session_closed_with_pages_the_device_may_use_quarantines_them_and_never_frees_them"
+   ]
+  },
+  {
+   "name": "quarantine-all-ignores-exhaustion",
+   "breaks": "quarantine_all never closes an exhausted pool",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "quarantine_all_is_bounded_and_an_exhausted_pool_closes"
+   ]
+  },
+  {
+   "name": "array-without-scratchpads",
+   "breaks": "a scratchpad array exists with no scratchpads",
+   "killed_by": [
+    "rust-tests",
+    "oracle"
+   ],
+   "failing_tests": [
+    "ledger_address_and_lifetime_rules_are_named"
+   ]
+  },
+  {
+   "name": "buffer-index-bound",
+   "breaks": "one buffer beyond the plan exists",
+   "killed_by": [
+    "rust-tests",
+    "oracle"
+   ],
+   "failing_tests": [
+    "ledger_address_and_lifetime_rules_are_named",
+    "scratchpad_requests_are_bounded_by_the_session_and_the_ledger",
+    "zz_every_cause_session_refusal_and_ledger_reason_is_exercised"
+   ]
+  }
+ ],
+ "mutation_summary": {
+  "total": 165,
+  "killed": 162,
+  "survived": [
+   "sync-unknown-step-accepted",
+   "sync-quiesce-error-ignored",
+   "ledger-policy-forced"
+  ],
+  "invalid": [],
+  "killed_by_rust_tests": 155,
+  "killed_by_oracle": 69,
+  "killed_by_oracle_only": [
+   "stamped-fault-unchecked",
+   "width-of-64bit-registers",
+   "pre-reset-bme-dropped",
+   "pre-setbme-bme-dropped",
+   "pre-erstba-bme-dropped",
+   "pre-setrs-error-dropped",
+   "pre-doorbell-dropped"
+  ],
+  "killed_by_rust_tests_only": 93
+ },
+ "pass": false,
+ "failure": "mutation controls: survived=['sync-unknown-step-accepted', 'sync-quiesce-error-ignored', 'ledger-policy-forced'] invalid=[]",
+ "seconds": 382.1
+}

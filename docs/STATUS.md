@@ -64,12 +64,19 @@ is merged through [PR #34](https://github.com/veasnawt/vos/pull/34) at
 `kernel/rust/usb/xhci_init/` that no kernel, ISO or Makefile input references, verified by
 Rust tests, an independent Python oracle and mutation controls. It performs no I/O, enables no
 bus mastering and writes no register; its register writes are values returned to a test.
-This branch's [USB.2-C4.2a hosted backend contract](results/usb2c42a-hosted-backend-contract.md) is
-also hosted-only and unmerged: typed, sequence-stamped register observations, a validating session
-through which alone observations reach the model, write tickets with read-back, identity continuity,
-fail-closed quarantine and a model-only DMA ownership ledger with a provisional 31-scratchpad policy
-(xHCI 1.2 Table 6-1 and HCSPARAMS2 disagree; unresolved). Sequence numbers are not proof of freshness
-against asynchronous hardware or firmware. No kernel, ISO or Makefile input references it.
+The [USB.2-C4.2a hosted backend contract](results/usb2c42a-hosted-backend-contract.md) is merged through
+[PR #35](https://github.com/veasnawt/vos/pull/35) at `c909a7f334809080fae47377ff8c3b1e3f3b51e3` and is hosted-only:
+typed, sequence-stamped register observations, a validating session through which alone observations reach the
+model, write tickets with read-back, identity continuity, fail-closed quarantine and a model-only DMA ownership
+ledger. Sequence numbers are not proof of freshness against asynchronous hardware or firmware. No kernel, ISO or
+Makefile input references it. Its provisional 31-scratchpad policy is superseded by the next paragraph.
+The [USB input bring-up Increment 1](results/usb-inc1-hosted-safety-and-survey.md) (a candidate on this branch)
+resolves the scratchpad discrepancy against the primary specification (HCSPARAMS2 allows 0-1023 buffers, 31 is the
+superseded pre-1.1 array limit; the policy is now a 64-buffer resource budget), wires the DMA ledger to the model,
+gives backend faults their own terminal reason, brings the session's largest stack frame from 632 to 296 bytes, and
+adds an opt-in, strictly read-only production survey of the PCI bus tree and every xHCI controller
+(`vos.usb-survey=1` or `=hold`). It writes nothing, starts no USB driver and proves nothing about physical
+hardware; ACPI IOMMU tables are not read, so IOMMU state stays unknown.
 
 ## Current accepted components
 
@@ -157,9 +164,10 @@ PR #29 and the USB.2-C3a.2 early UEFI firmware memory exclusion through PR #30
 and the USB.2-C3a.3 protected firmware DMA inspection through PR #31.
 The USB.2-C3b.1 read-only containment dry-run is merged through PR #32. The
 USB.2-C3b.2 QEMU-only controlled containment is merged through PR #33. The USB.2-C4.1 hosted
-protocol model is merged through PR #34. The USB.2-C4.2a hosted backend contract is a review
-candidate on this branch and executes nowhere; native USB.2-C4 controller initialization,
-physical-PC activation and USB HID remain unimplemented.
+protocol model is merged through PR #34 and the USB.2-C4.2a hosted backend contract through PR #35
+(both execute nowhere); native USB.2-C4 controller initialization, physical-PC activation and USB HID remain
+unimplemented. USB input bring-up Increment 1 (read-only survey and hosted safety fixes) is a candidate on this
+branch, see its [report](results/usb-inc1-hosted-safety-and-survey.md).
 
 The [USB.1 Rust publication review](results/usb1-rust-publication-review.md)
 records the candidate production migration, preserved read-only behavior,

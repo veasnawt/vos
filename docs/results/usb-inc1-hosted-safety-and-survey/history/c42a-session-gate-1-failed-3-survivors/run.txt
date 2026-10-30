@@ -1,0 +1,11 @@
+Traceback (most recent call last):
+  File "/home/veasnawt/src/vos-usb-inc1/scripts/test-usb2c42a.py", line 465, in <module>
+    main()
+    ~~~~^^
+  File "/home/veasnawt/src/vos-usb-inc1/scripts/test-usb2c42a.py", line 452, in main
+    raise RuntimeError(f'mutation controls: survived={survived} invalid={invalid}')
+RuntimeError: mutation controls: survived=['sync-unknown-step-accepted', 'sync-quiesce-error-ignored', 'ledger-policy-forced'] invalid=[]
+
+real	6m22.323s
+user	23m2.943s
+sys	1m15.960s

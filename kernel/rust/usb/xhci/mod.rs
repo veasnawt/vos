@@ -12,6 +12,7 @@ pub mod qualify;
 pub mod residue;
 pub mod resources;
 pub mod ring;
+pub mod survey;
 
 mod types;
 pub use types::*;

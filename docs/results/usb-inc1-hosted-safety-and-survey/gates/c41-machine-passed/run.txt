@@ -1,0 +1,37 @@
+{
+ "rust_tests": "test result: ok. 49 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.54s",
+ "oracle": {
+  "traces": 600,
+  "steps": 156000,
+  "accepted": 20003,
+  "refused": 135997,
+  "mismatches": 0,
+  "first_mismatches": [],
+  "rules_seen": 64,
+  "reasons_seen": 64
+ },
+ "oracle_corruption_controls": {
+  "refusal-reason": 1,
+  "rule-name": 1,
+  "write-value": 1,
+  "terminal-cause": 1,
+  "transition-target": 1
+ },
+ "mutation_summary": {
+  "total": 102,
+  "killed": 102,
+  "survived": [],
+  "invalid": [],
+  "killed_by_rust_tests": 102,
+  "killed_by_oracle": 47,
+  "killed_by_oracle_only": [],
+  "killed_by_rust_tests_only": 55
+ },
+ "pass": true,
+ "seconds": 151.3
+}
+STOP: inc1-gate41-1 grew 57984114 B, over 1.25 x its projection (38000000); investigation required
+
+real	2m31.452s
+user	8m48.573s
+sys	0m35.486s

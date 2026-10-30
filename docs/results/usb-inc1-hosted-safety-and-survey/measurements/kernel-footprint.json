@@ -1,0 +1,77 @@
+{
+ "baseline": "vos-usb2c42a/build/usb2c42a-1/kernel-iso/vos.bin",
+ "image": "build/inc1-1/kernel/vos.bin",
+ "sections_baseline": {
+  ".text": 225280,
+  ".rodata": 49152,
+  ".data": 464,
+  ".bss": 597504
+ },
+ "sections_now": {
+  ".text": 245760,
+  ".rodata": 53248,
+  ".data": 464,
+  ".bss": 597504
+ },
+ "new_symbols": 17,
+ "new_symbol_code_bytes": 18464,
+ "new_symbol_rodata_bytes": 0,
+ "new_symbol_rw_bytes": 16,
+ "changed_symbols_bytes_delta": {
+  "devmap_scope_acquire_region": 166,
+  "kernel_main": 80
+ },
+ "new_largest": [
+  {
+   "bytes": 14933,
+   "name": "vos_xhci_survey_v1"
+  },
+  {
+   "bytes": 1725,
+   "name": "xhci_survey_boot"
+  },
+  {
+   "bytes": 390,
+   "name": "xhci_survey_bar_acquire"
+  },
+  {
+   "bytes": 218,
+   "name": "xhci_survey_bar_read32"
+  },
+  {
+   "bytes": 216,
+   "name": "screen_restart_log"
+  },
+  {
+   "bytes": 212,
+   "name": "<vos_kernel::xhci::survey::Line>::d"
+  },
+  {
+   "bytes": 166,
+   "name": "<vos_kernel::xhci::survey::Reader<vos_kernel::xhci_survey::Window>>::word"
+  },
+  {
+   "bytes": 135,
+   "name": "<vos_kernel::xhci::survey::Line>::hx"
+  },
+  {
+   "bytes": 86,
+   "name": "xhci_survey_pci32"
+  },
+  {
+   "bytes": 83,
+   "name": "<vos_kernel::xhci::survey::Line>::flush"
+  }
+ ],
+ "survey_frames_bytes": {
+  "vos_xhci_survey_v1": 2168,
+  "xhci_survey_bar_acquire": 64,
+  "xhci_survey_pci32": 24,
+  "xhci_survey_bar_read32": 24,
+  "<vos_kernel::xhci::survey::Line>::d": 24,
+  "xhci_survey_boot": 16,
+  "<vos_kernel::xhci::survey::Reader<vos_kernel::xhci_survey::Window>>::word": 16
+ },
+ "panic_or_fmt_symbols_in_image": 0,
+ "panic_or_fmt_symbols_in_baseline": 0
+}

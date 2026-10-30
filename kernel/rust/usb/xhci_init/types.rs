@@ -103,6 +103,7 @@ named! {
         QuarantineVerified => "quarantine.verified",
         QuarantineBmeStuck => "quarantine.bme-stuck",
         FaultStatus => "fault.status-error",
+        FaultBackend => "fault.backend",
         FaultTimeout => "fault.timeout",
         FaultOwnership => "fault.ownership",
         FaultBmeMismatch => "fault.bme-mismatch",
@@ -138,7 +139,8 @@ named! {
         MsiEnabled => "msi-enabled",
         DbcEnabled => "dbc-enabled",
         DbcUnresolved => "dbc-unresolved",
-        ScratchpadsRequired => "scratchpads-required",
+        ScratchpadsInvalid => "scratchpads-invalid",
+        ScratchpadsExceedBudget => "scratchpads-exceed-budget",
         OwnershipConflict => "ownership-conflict",
         DeviceAttached => "device-attached",
         // sequencing
@@ -220,6 +222,8 @@ named! {
         ErstSegmentTooSmall => "erst-segment-too-small",
         ErstSegmentSizeUnsupported => "erst-segment-size-unsupported",
         ScratchpadPointerUnsupported => "scratchpad-pointer-unsupported",
+        ScratchpadArrayRequired => "scratchpad-array-required",
+        BackendFault => "backend-fault",
         ReleaseForbiddenByPolicy => "release-forbidden-by-policy",
         // forbidden writes
         ForbiddenInterruptEnable => "forbidden-interrupt-enable",
@@ -428,6 +432,8 @@ pub enum Operation {
     // control
     BeginPollStep,
     Cancel,
+    /// The backend that supplies observations failed: terminal path (a session injects this, never a caller).
+    BackendFault,
     Forbidden(Forbidden),
 }
 

@@ -66,6 +66,155 @@ def bit(v, n):
     return bool(v >> n & 1)
 
 
+DSTATES = ['free', 'allocated', 'zeroed', 'prepared', 'published', 'device-owned', 'quiesced', 'quarantined', 'retained']
+CORE = ['command', 'event', 'dcbaa', 'erst']
+ARRAY, BUF0, BUDGET, SPEC_MAX, PAGE_BYTES, MIN_ADDR, CAP = 4, 5, 64, 1023, 4096, 0x100000, 80
+MAX_RECORDS = BUF0 + BUDGET
+
+
+class Refused(Exception):
+    def __init__(self, reason):
+        super().__init__(reason)
+        self.reason = reason
+
+
+class LedgerOracle:
+    """Written from the ownership rules (software ownership of DMA pages), not from the Rust ledger."""
+
+    def __init__(self, limit, ac64, scratch, policy):
+        if scratch > SPEC_MAX:
+            raise Refused('scratchpads-invalid')
+        if scratch > BUDGET:
+            raise Refused('scratchpads-exceed-budget')
+        if limit < 2 * MIN_ADDR or limit > 1 << 48:
+            raise Refused('bad-limit')
+        self.limit, self.ac64, self.scratch, self.policy = limit, ac64, scratch, policy
+        self.st = ['free'] * MAX_RECORDS
+        self.ad = [0] * MAX_RECORDS
+        self.quarantined = 0
+        self.closed = False
+
+    def slot(self, item):
+        if item[0] == 'core':
+            return CORE.index(item[1])
+        if item[0] == 'array' and self.scratch > 0:
+            return ARRAY
+        if item[0] == 'buf' and item[1] < self.scratch:
+            return BUF0 + item[1]
+        raise Refused('no-such-item')
+
+    def text(self):
+        out = [self.st[i] for i in range(4)] + [self.st[ARRAY] if self.scratch else '-']
+        out += [self.st[BUF0 + b] for b in range(self.scratch)]
+        return ''.join('-' if s == '-' else format(DSTATES.index(s), 'x') for s in out)
+
+    def allocate(self, item, addr):
+        i = self.slot(item)
+        if self.closed:
+            raise Refused('pool-closed')
+        if self.st[i] != 'free':
+            raise Refused('already-owned')
+        if addr % PAGE_BYTES:
+            raise Refused('misaligned')
+        limit = self.limit if self.ac64 else min(self.limit, 1 << 32)
+        if not (addr >= MIN_ADDR and addr + PAGE_BYTES < 1 << 64 and addr + PAGE_BYTES <= limit):
+            raise Refused('address-range')
+        if any(self.st[j] != 'free' and abs(self.ad[j] - addr) < PAGE_BYTES for j in range(MAX_RECORDS)):
+            raise Refused('overlap')
+        self.st[i], self.ad[i] = 'allocated', addr
+
+    def expect(self, item, want):
+        i = self.slot(item)
+        s = self.st[i]
+        if s == 'free':
+            raise Refused('not-owned')
+        if s in ('quarantined', 'retained'):
+            raise Refused('quarantined')
+        if s != want:
+            raise Refused('bad-state')
+        return i
+
+    def zero(self, item):
+        self.st[self.expect(item, 'allocated')] = 'zeroed'
+
+    def buffers(self, st):
+        return all(self.st[BUF0 + b] == st for b in range(self.scratch))
+
+    def prepare(self, item):
+        i = self.expect(item, 'zeroed')
+        if item == ('core', 'erst'):
+            ready = self.st[1] in ('prepared', 'published')
+        elif item[0] == 'array':
+            ready = self.buffers('prepared')
+        elif item == ('core', 'dcbaa') and self.scratch > 0:
+            ready = self.st[ARRAY] == 'prepared'
+        else:
+            ready = True
+        if not ready:
+            raise Refused('dependency-not-ready')
+        self.st[i] = 'prepared'
+
+    def publish(self, kind):
+        if kind == 'dcbaa':
+            raise Refused('bad-state')
+        self.st[self.expect(('core', kind), 'prepared')] = 'published'
+
+    def publish_dcbaa(self):
+        d = self.expect(('core', 'dcbaa'), 'prepared')
+        if self.scratch > 0:
+            if self.st[ARRAY] != 'prepared' or not self.buffers('prepared'):
+                raise Refused('scratchpad-incomplete')
+            self.st[ARRAY] = 'device-owned'
+            for b in range(self.scratch):
+                self.st[BUF0 + b] = 'device-owned'
+        self.st[d] = 'published'
+
+    def quiesce(self):
+        any_ = False
+        for i in range(MAX_RECORDS):
+            if self.st[i] in ('published', 'device-owned'):
+                self.st[i] = 'quiesced'
+                any_ = True
+        if not any_:
+            raise Refused('nothing-to-quiesce')
+
+    def release(self, item):
+        i = self.slot(item)
+        s = self.st[i]
+        if s == 'free':
+            raise Refused('not-owned')
+        if s in ('quarantined', 'retained'):
+            raise Refused('quarantined')
+        if s in ('published', 'device-owned'):
+            raise Refused('still-published')
+        if s == 'quiesced' and self.policy == 'never':
+            raise Refused('release-forbidden-by-policy')
+        self.st[i], self.ad[i] = 'free', 0
+
+    def quarantine_all(self):
+        for i in range(MAX_RECORDS):
+            if self.st[i] not in ('free', 'quarantined', 'retained'):
+                if self.quarantined < CAP:
+                    self.st[i] = 'quarantined'
+                    self.quarantined += 1
+                else:
+                    self.st[i] = 'retained'
+                    self.closed = True
+
+    def scratch_overlaps(self, addr):
+        return any(self.st[j] != 'free' and abs(self.ad[j] - addr) < PAGE_BYTES for j in range(ARRAY, MAX_RECORDS))
+
+    def array_ready(self, entry0):
+        return self.scratch == 0 or (self.st[ARRAY] == 'prepared' and self.ad[ARRAY] == entry0)
+
+
+def parse_item(text):
+    if text == 'array':
+        return ('array',)
+    kind, _, v = text.partition(':')
+    return ('core', v) if kind == 'core' else ('buf', int(v))
+
+
 class SessionOracle:
     def __init__(self, policy, crcr_reads_zero=False):
         self.m = C41.Oracle(policy)
@@ -83,6 +232,10 @@ class SessionOracle:
         self.closed = None
         self.latched = False
         self.tail_dead = False
+        self.led = None
+        self.policy = policy
+        self.mirrored = {k: ('free', 0) for k in CORE}
+        self.quiesced = False
         self.io = []
         self.pos = 0
 
@@ -174,12 +327,13 @@ class SessionOracle:
     def close(self, cause):
         if self.sealed():
             self.tail_dead = True
+            if self.led is not None:
+                self.led.quarantine_all()
             return f'done - closed={cause}'
         self.closed = cause
         acc = None
         if self.m.phase != 'idle':
-            hch = '1' if self.m.hch else '0'
-            r = self.m.apply('ObserveStatus', [hch, '1', '0'])
+            r = self.m.apply('BackendFault', [])
             acc = r if r.startswith('ok') else None
         if not self.latched:
             self.latched = True
@@ -193,8 +347,72 @@ class SessionOracle:
             out = self._request(req)
         except Cause as c:  # an uncaught cause means the oracle forgot a close(); treat as that close
             out = self.close(c.cause)
+        c = self.sync()
+        if c is not None:
+            closed = self.close(c)
+            if out.startswith('done') and 'closed=-' in out:
+                out = out.split(' closed=')[0] + ' closed=' + c
+            elif not out.startswith('done'):
+                out = closed
         self.done()
         return out
+
+    def ledger_text(self):
+        return '-' if self.led is None else self.led.text()
+
+    def sync(self):
+        """Replay what the machine accepted onto the ledger; a ledger that cannot follow is a model inconsistency."""
+        if self.led is None:
+            return None
+        try:
+            for k in CORE:
+                a, b = self.mirrored[k], tuple(self.m.pages[k])
+                if a == b:
+                    continue
+                if a[0] == 'free' and b[0] == 'allocated':
+                    self.led.allocate(('core', k), b[1])
+                elif a[0] == 'allocated' and b[0] == 'zeroed':
+                    self.led.zero(('core', k))
+                elif a[0] == 'zeroed' and b[0] == 'prepared':
+                    self.led.prepare(('core', k))
+                elif a[0] == 'prepared' and b[0] == 'published':
+                    self.led.publish_dcbaa() if k == 'dcbaa' else self.led.publish(k)
+                elif b[0] == 'free':
+                    self.led.release(('core', k))
+                else:
+                    raise Refused('bad-state')
+                self.mirrored[k] = b
+            if self.m.phase == 'quiesced' and not self.quiesced:
+                self.quiesced = True
+                try:
+                    self.led.quiesce()
+                except Refused as r:
+                    if r.reason != 'nothing-to-quiesce':
+                        raise
+        except Refused:
+            return 'ledger-disagrees'
+        return None
+
+    def scratch(self, parts):
+        verb, item = parts[0], parse_item(parts[1])
+        if item[0] == 'core':
+            return 'err s:core-page-via-operation'
+        if self.led is None:
+            return 'err s:not-qualified'
+        if verb != 'release' and not (self.m.phase in C41.ALLOC_OPEN and not self.m.exposed()):
+            return 'err m:allocation-closed'
+        try:
+            if verb == 'alloc':
+                self.led.allocate(item, int(parts[2]))
+            elif verb == 'zero':
+                self.led.zero(item)
+            elif verb == 'prepare':
+                self.led.prepare(item)
+            else:
+                self.led.release(item)
+        except Refused as r:
+            return 'err l:' + r.reason
+        return 'done - closed=-'
 
     def _request(self, req):
         parts = req.split()
@@ -205,7 +423,8 @@ class SessionOracle:
             return 'err s:use-backend-observation'
         if self.bound is None:
             return 'err s:' + ('closed' if self.closed else 'not-bound')
-        tail_ok = head in ('status', 'pci') or (head == 'op' and parts[1] in ('ClearRunStop', 'ClearBusMaster', 'DmaRelease'))
+        tail_ok = (head in ('status', 'pci') or (head == 'op' and parts[1] in ('ClearRunStop', 'ClearBusMaster', 'DmaRelease'))
+                   or (head == 'scratch' and parts[1] == 'release'))
         if self.sealed() and not (tail_ok and self.m.phase != 'idle' and not self.tail_dead):
             return 'err s:closed'
         if head == 'qualify':
@@ -216,7 +435,11 @@ class SessionOracle:
             if self.m.phase == 'idle':
                 return 'err s:not-qualified'
             return self.run(getattr(self, 'obs_' + head))
+        if head == 'scratch':
+            return self.scratch(parts[1:])
         name, args = parts[1], parts[2:]
+        if name == 'PrepareDcbaa' and self.led is not None and not self.led.array_ready(int(args[0])):
+            return 'err s:scratchpad-array-not-ready'
         kind = OPKIND.get(name)
         if name == 'SetEventDequeue':
             kind = 'ack' if self.m.phase == 'running' else 'erdpinit'
@@ -226,6 +449,8 @@ class SessionOracle:
         r = trial.apply(name, args)
         if r.startswith('err'):
             return 'err m:' + r.split()[1]
+        if name == 'DmaAllocate' and self.led is not None and self.led.scratch_overlaps(int(args[1])):
+            return 'err l:overlap'
         self.m = trial
         self.settle(r)
         return self.text(r)
@@ -273,7 +498,7 @@ class SessionOracle:
             ver = self.rd_need('hciversion')
             hcs1 = self.rd_need('hcsparams1')
             hcs2 = self.rd_need('hcsparams2')
-            self.rd_need('hccparams1')
+            hcc1 = self.rd_need('hccparams1')
             pagesize = self.rd_need('pagesize')
             cmd = self.rd_need('pci.command')
             devctl = self.rd('pcie.device-control', 0)
@@ -305,6 +530,11 @@ class SessionOracle:
             self.know_bme, self.know_rs, self.know_hch = bool(facts[15]), bool(facts[16]), bool(facts[17])
             self.last_cnr = bool(usbsts & CNR)
             self.fresh = [True, True, facts[7] == 1, True, False]
+            if self.m.phase not in TERMINAL:
+                try:
+                    self.led = LedgerOracle(plat[3], bit(hcc1, 0), scratch, self.policy)
+                except Refused:
+                    return self.close('ledger-disagrees')
             self.settle(r)
             return self.text(r)
         return 'err m:' + r.split()[1]
@@ -505,7 +735,7 @@ def main(argv):
     if len(argv) < 2:
         sys.exit('usage: xhci_init_oracle_session.py TRACE')
     st = {'traces': 0, 'requests': 0, 'refused': 0, 'closed': 0, 'accepted': 0, 'mismatches': 0, 'first_mismatches': []}
-    o, bad, req, io = None, False, None, []
+    o, bad, req, io, got, expect = None, False, None, [], None, None
     for line in open(argv[1]):
         line = line.rstrip('\n')
         if line.startswith('T '):
@@ -519,6 +749,7 @@ def main(argv):
         elif line.startswith('=> '):
             expect = line[3:]
             st['requests'] += 1
+            got = None
             if bad:
                 continue
             try:
@@ -531,11 +762,14 @@ def main(argv):
                 st['closed'] += 1
             else:
                 st['accepted'] += 1
-            if got != expect:
+        elif line.startswith('L '):
+            if bad or got is None:
+                continue
+            if got != expect or o.ledger_text() != line[2:]:
                 st['mismatches'] += 1
                 bad = True
                 if len(st['first_mismatches']) < 5:
-                    st['first_mismatches'].append({'trace': st['traces'], 'request': req, 'oracle': got, 'session': expect})
+                    st['first_mismatches'].append({'trace': st['traces'], 'request': req, 'oracle': got + ' L ' + o.ledger_text(), 'session': expect + ' L ' + line[2:]})
     print(json.dumps(st, indent=1))
     sys.exit(0 if st['mismatches'] == 0 and st['requests'] else 1)
 

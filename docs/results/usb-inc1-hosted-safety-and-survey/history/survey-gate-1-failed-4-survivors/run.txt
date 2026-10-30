@@ -1,0 +1,12 @@
+Traceback (most recent call last):
+  File "/home/veasnawt/src/vos-usb-inc1/scripts/test-usb-survey.py", line 223, in <module>
+    main()
+    ~~~~^^
+  File "/home/veasnawt/src/vos-usb-inc1/scripts/test-usb-survey.py", line 214, in main
+    raise RuntimeError(f'mutation controls: survived={survived} invalid={invalid}')
+RuntimeError: mutation controls: survived=['scan-vendor-zero-accepted', 'scan-bridge-type', 'scan-bridge-upward-only', 'xhci-window-bound'] invalid=[]
+STOP: inc1-survey-gate-1 grew 26436894 B, over 1.25 x its projection (16000000); investigation required
+
+real	1m11.393s
+user	2m46.490s
+sys	0m14.337s

@@ -1,0 +1,29 @@
+
+running 24 tests
+test a_controller_that_changes_by_itself_between_two_reads_is_caught_by_the_reader ... ok
+test a_controller_that_changes_while_it_is_read_is_flagged ... ok
+test a_controller_that_reads_as_all_ones_or_has_a_bad_caplength_is_reported_not_trusted ... ok
+test a_huge_port_count_is_bounded_and_registers_past_the_window_are_not_asked_for ... ok
+test a_refused_or_truncated_read_ends_the_walk_with_what_was_read ... ok
+test a_walk_that_stopped_early_says_where_and_why ... ok
+test absent_garbage_and_vendor_zero_functions_are_ignored ... ok
+test an_intel_style_controller_is_decoded_completely ... ok
+test bar_decoding_names_every_reason_a_controller_cannot_be_read ... ok
+test bridge_cycles_unassigned_and_reversed_bus_numbers_are_not_followed ... ok
+test capability_chains_that_run_on_or_off_the_window_are_cut ... ok
+test legacy_debug_and_protocol_capabilities_are_recorded_once_and_by_name ... ok
+test more_controllers_than_the_recording_limit_are_counted_not_hidden ... ok
+test only_type_one_headers_are_bridges_and_only_upward_buses_are_followed ... ok
+test pci_capabilities_are_summarised_and_malformed_lists_stop ... ok
+test random_pci_trees_terminate_within_the_bounds ... ok
+test random_register_files_never_panic_and_never_exceed_the_read_budget ... ok
+test scratchpad_counts_combine_the_high_and_low_fields ... ok
+test the_bus_and_function_bounds_stop_the_walk ... ok
+test the_platform_sources_contain_no_pci_or_port_or_register_write ... ok
+test the_report_lines_are_short_printable_and_complete ... ok
+test the_scan_finds_controllers_on_bus_zero_and_behind_nested_bridges ... ok
+test the_summary_fits_an_80_column_display_and_says_when_nothing_was_read ... ok
+test unprintable_bytes_and_overlong_lines_are_neutralised ... ok
+
+test result: ok. 24 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.31s
+

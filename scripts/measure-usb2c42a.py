@@ -117,6 +117,69 @@ def main():
             m = re.search(r'sub\s+\$0x([0-9a-f]+),%rsp', line)
             if m and cur:
                 frames[cur] = max(frames.get(cur, 0), int(m.group(1), 16))
+    # Static worst-case call chain over the model and the anchor: frame = sub rsp + pushed registers + return address.
+    # Cross-section calls are relocations against `.text.<mangled>` section symbols, so the graph is built on the
+    # mangled names and the demangled names (same order in `objdump -C`) are only used for display.
+    graph, frame, pretty = {}, {}, {}
+    hdr = re.compile(r'^[0-9a-f]+ <(.+)>:$')
+    for o in model_obj + [anchor_obj]:
+        plain = sh(['objdump', '-dr', '--no-show-raw-insn', o]).stdout.splitlines()
+        heads = [m.group(1) for m in map(hdr.match, plain) if m]
+        names = [m.group(1) for m in map(hdr.match, sh(['objdump', '-d', '--no-show-raw-insn', '-C', o]).stdout.splitlines()) if m]
+        pretty.update(zip(heads, names))
+        cur, pend = None, None
+        for line in plain:
+            m = hdr.match(line)
+            if m:
+                cur, pend = m.group(1), None
+                graph.setdefault(cur, set())
+                frame[cur] = 8
+                continue
+            if cur is None:
+                continue
+            if pend:
+                # A call to another section is followed by its relocation; an in-section call carries its target.
+                r = re.search(r'R_X86_64_(?:PLT32|PC32)\s+\.text\.(\S+?)(?:[-+]0x[0-9a-f]+)?$', line)
+                if r:
+                    graph[cur].add(r.group(1))
+                    pend = None
+                    continue
+                if pend[1] != cur:
+                    graph[cur].add(pend[1])
+                pend = None
+            if re.search(r'\bpush\s', line):
+                frame[cur] += 8
+            m = re.search(r'sub\s+\$0x([0-9a-f]+),%rsp', line)
+            if m:
+                frame[cur] += int(m.group(1), 16)
+            m = re.search(r'\b(?:call|jmp)\s+[0-9a-f]+ <(.+?)(?:\+0x[0-9a-f]+)?>$', line)
+            if m:
+                pend = ('x', m.group(1))
+    memo, onpath = {}, set()
+
+    def depth(f):
+        if f in memo:
+            return memo[f]
+        if f in onpath:
+            return (0, [f + ' (recursion)'])
+        onpath.add(f)
+        best = (0, [])
+        for c in graph.get(f, ()):
+            if c in frame:
+                d = depth(c)
+                if d[0] > best[0]:
+                    best = d
+        onpath.discard(f)
+        memo[f] = (frame.get(f, 0) + best[0], [f] + best[1])
+        return memo[f]
+    entry = [(depth(f), f) for f in graph if 'vos_measure_session' in pretty.get(f, f)]
+    report['worst_call_chain_bytes'] = entry[0][0][0] if entry else None
+    report['worst_call_chain'] = [pretty.get(n, n)[:100] for n in entry[0][0][1]] if entry else None
+    # The anchor holds a Session by value; a kernel keeps it in static storage, so the chain that matters starts at the
+    # session's own entry point.
+    disp = [(depth(f), f) for f in graph if pretty.get(f, '').endswith('Session<anchor::Stub>>::dispatch')]
+    report['worst_chain_from_dispatch_bytes'] = disp[0][0][0] if disp else None
+    report['worst_chain_from_dispatch'] = [pretty.get(n, n)[:100] for n in disp[0][0][1]] if disp else None
     syms.sort(reverse=True)
     report['named_text_bytes'] = sum(s for s, t, _ in syms if t in 'tT')
     report['named_rodata_bytes'] = sum(s for s, t, _ in syms if t in 'rR')
@@ -143,7 +206,7 @@ def main():
     report['model_plus_session_rodata_bytes'] = totalro
     (out / 'measurements.json').write_text(json.dumps(report, indent=1))
     print(json.dumps({k: report[k] for k in ('model_object_bytes', 'session_over_stub_backend_object_bytes', 'named_text_bytes',
-                                              'named_rodata_bytes', 'max_frame_bytes', 'type_sizes_bytes', 'c42a_added_source_lines')}, indent=1))
+                                              'named_rodata_bytes', 'max_frame_bytes', 'worst_chain_from_dispatch_bytes', 'worst_chain_from_dispatch', 'worst_call_chain_bytes', 'type_sizes_bytes', 'c42a_added_source_lines')}, indent=1))
 
 
 if __name__ == '__main__':

@@ -15,6 +15,7 @@
 //! BME because QEMU 10.2.1 fetches the ERST inside that write (see the hosted device model);
 //! the specification does not say when the fetch happens, so the protocol is conservative.
 
+use crate::dma_model::{SCRATCHPAD_BUDGET, SPEC_MAX_SCRATCHPADS};
 use crate::types::*;
 
 pub const HANDOFF_TICKS: u64 = 100;
@@ -142,6 +143,14 @@ impl Machine {
     }
     pub fn page(&self, kind: PageKind) -> Page {
         self.pages[kind as usize]
+    }
+    /// Qualification facts, once accepted.
+    pub fn facts(&self) -> Option<Facts> {
+        self.facts
+    }
+    /// May host DMA pages be allocated, zeroed and prepared in the current phase?
+    pub fn allocation_open(&self) -> bool {
+        self.alloc_open().is_ok()
     }
     pub fn exposed(&self) -> bool {
         self.armed || self.pages.iter().any(|p| p.state == PageState::Published)
@@ -293,8 +302,22 @@ impl Machine {
             Operation::DmaZero(kind) => self.zero(kind),
             Operation::PrepareCommandRing => self.prepare(PageKind::Command, |_| Ok(())),
             Operation::PrepareEventRing => self.prepare(PageKind::Event, |_| Ok(())),
-            Operation::PrepareDcbaa { entry0 } => self.prepare(PageKind::Dcbaa, move |_| {
-                if entry0 != 0 { Err(Reason::ScratchpadPointerUnsupported) } else { Ok(()) }
+            Operation::PrepareDcbaa { entry0 } => self.prepare(PageKind::Dcbaa, move |m| {
+                let scratchpads = m.facts.map_or(0, |f| f.scratchpads);
+                let limit = m.facts.map_or(0, |f| f.dma_limit);
+                if scratchpads == 0 {
+                    if entry0 != 0 { Err(Reason::ScratchpadPointerUnsupported) } else { Ok(()) }
+                } else if entry0 == 0 {
+                    Err(Reason::ScratchpadArrayRequired)
+                } else if entry0 % PAGE != 0 {
+                    Err(Reason::Misaligned)
+                } else if !matches!(entry0.checked_add(PAGE), Some(end) if entry0 >= MIN_ADDR && end <= limit) {
+                    Err(Reason::AddressRange)
+                } else if m.pages.iter().any(|p| p.state != PageState::Free && p.addr.abs_diff(entry0) < PAGE) {
+                    Err(Reason::PageOverlap)
+                } else {
+                    Ok(())
+                }
             }),
             Operation::PrepareErst { segment, size } => self.prepare(PageKind::Erst, move |m| {
                 let event = m.pages[PageKind::Event as usize];
@@ -333,6 +356,7 @@ impl Machine {
                 self.stay(Rule::PollStep)
             }
             Operation::Cancel => self.cancel(),
+            Operation::BackendFault => self.fail(Reason::BackendFault, Rule::FaultBackend),
             Operation::Forbidden(_) => Err(Reason::WrongPhase),
         }
     }
@@ -427,8 +451,10 @@ impl Machine {
             Some(Reason::DbcEnabled)
         } else if f.dbc == Dbc::Unknown {
             Some(Reason::DbcUnresolved)
-        } else if f.scratchpads > 0 {
-            Some(Reason::ScratchpadsRequired)
+        } else if f.scratchpads > SPEC_MAX_SCRATCHPADS {
+            Some(Reason::ScratchpadsInvalid)
+        } else if f.scratchpads > SCRATCHPAD_BUDGET {
+            Some(Reason::ScratchpadsExceedBudget)
         } else if matches!(f.legacy, Legacy::Present { bios: true, os: true }) {
             Some(Reason::OwnershipConflict)
         } else if f.connected != 0 {

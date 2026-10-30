@@ -234,10 +234,14 @@ rehearsal of controller containment with no write path.
 controller writes (clear Bus Master Enable, then HCRST) for the one eligible idle
 UEFI QEMU xHCI. [USB.2-C4.1](results/usb2c41-hosted-init-model.md) is a hosted-only Rust
 protocol model merged through PR #34 at `dbb7d1d06452414c9674d9f9bb4b6e08d859da59`.
-[USB.2-C4.2a](results/usb2c42a-hosted-backend-contract.md) is the hosted backend contract for it in
-this PR candidate (no kernel, no device, no new write path). USB.2-C4.2b and later, native USB.2-C4
-stages, physical-PC activation and USB HID require separate authorization; physical
-controller takeover remains unauthorized.
+[USB.2-C4.2a](results/usb2c42a-hosted-backend-contract.md) is the hosted backend contract for it, merged
+through PR #35 at `c909a7f334809080fae47377ff8c3b1e3f3b51e3` (no kernel, no device, no new write path).
+[USB input bring-up Increment 1](results/usb-inc1-hosted-safety-and-survey.md) is a candidate on this branch:
+hosted safety fixes (scratchpad policy from the primary specification, ledger wiring, backend-fault reason,
+smaller session frames) and an opt-in, read-only survey of the PCI tree and every xHCI controller, so that the
+physical target can be identified before any controller write is designed. USB.2-C4.2b and later, native
+USB.2-C4 stages, physical-PC activation and USB HID require separate authorization; physical controller takeover
+remains unauthorized.
 This status update grants no implementation authority.
 Unrelated bug fixes, boot-media work and desktop planning need not
 wait for the full migration. Hardware and migration work coordinate when sharing

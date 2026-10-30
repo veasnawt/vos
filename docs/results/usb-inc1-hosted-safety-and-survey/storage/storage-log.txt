@@ -1,0 +1,70 @@
+S0 checkout: tree=20520198 (projected 21000000, limit 26250000) c_free_before=22961090560 after=22960873472
+BEFORE inc1-compile-tests: tree=21760443 projected=20000000 c_free=22868062208
+AFTER  inc1-compile-tests: rc=0 tree=21760522 growth=79 projected=20000000 limit(1.25x)=25000000
+BEFORE inc1-model-tests: tree=21762833 projected=12000000 c_free=22867857408
+AFTER  inc1-model-tests: rc=0 tree=29271398 growth=7508565 projected=12000000 limit(1.25x)=15000000
+BEFORE inc1-backend-tests-compile: tree=29271909 projected=10000000 c_free=22867791872
+AFTER  inc1-backend-tests-compile: rc=0 tree=29271996 growth=87 projected=10000000 limit(1.25x)=12500000
+BEFORE inc1-measure-1: tree=36999928 projected=3000000 c_free=22866407424
+AFTER  inc1-measure-1: rc=0 tree=38379925 growth=1379997 projected=3000000 limit(1.25x)=3750000
+BEFORE inc1-measure-2: tree=38381172 projected=3000000 c_free=22866472960
+AFTER  inc1-measure-2: rc=0 tree=39760525 growth=1379353 projected=3000000 limit(1.25x)=3750000
+BEFORE inc1-measure-3: tree=39762651 projected=3000000 c_free=22866153472
+AFTER  inc1-measure-3: rc=0 tree=41142390 growth=1379739 projected=3000000 limit(1.25x)=3750000
+BEFORE inc1-measure-4: tree=41142948 projected=3000000 c_free=22866153472
+AFTER  inc1-measure-4: rc=0 tree=42522897 growth=1379949 projected=3000000 limit(1.25x)=3750000
+BEFORE inc1-measure-5: tree=42523234 projected=3000000 c_free=22866153472
+AFTER  inc1-measure-5: rc=0 tree=43902982 growth=1379748 projected=3000000 limit(1.25x)=3750000
+BEFORE inc1-measure-6: tree=43903552 projected=3000000 c_free=22865514496
+AFTER  inc1-measure-6: rc=0 tree=45283501 growth=1379949 projected=3000000 limit(1.25x)=3750000
+BEFORE inc1-measure-7: tree=45283582 projected=3000000 c_free=22865543168
+AFTER  inc1-measure-7: rc=0 tree=46663656 growth=1380074 projected=3000000 limit(1.25x)=3750000
+BEFORE inc1-oracle-trace-60: tree=46674768 projected=3000000 c_free=22941974528
+AFTER  inc1-oracle-trace-60: rc=0 tree=48048412 growth=1373644 projected=3000000 limit(1.25x)=3750000
+BEFORE inc1-gate41-1: tree=48065105 projected=38000000 c_free=22926856192
+AFTER  inc1-gate41-1: rc=0 tree=106049219 growth=57984114 projected=38000000 limit(1.25x)=47500000
+STOP: inc1-gate41-1 grew 57984114 B, over 1.25 x its projection (38000000); investigation required
+INVESTIGATION 1 recorded: projection error (workers 4x counted instead of full gate); actual 57,984,114 vs unit-cost 56,373,642 (1.03x). Waiting for owner acceptance.
+ACCEPTED 2026-10-30: owner accepted investigation 1; limits unchanged; resuming.
+BEFORE inc1-gate42-1: tree=106051242 projected=18000000 c_free=22921281536
+AFTER  inc1-gate42-1: rc=1 tree=122373949 growth=16322707 projected=18000000 limit(1.25x)=22500000
+BEFORE inc1-bios-iso: tree=131123263 projected=28000000 c_free=22904844288
+AFTER  inc1-bios-iso: rc=2 tree=145311109 growth=14187846 projected=28000000 limit(1.25x)=35000000
+BEFORE inc1-bios-iso-2: tree=145311198 projected=20000000 c_free=22904127488
+AFTER  inc1-bios-iso-2: rc=0 tree=167457264 growth=22146066 projected=20000000 limit(1.25x)=25000000
+BEFORE inc1-uefi-isos: tree=167457407 projected=27000000 c_free=22904180736
+AFTER  inc1-uefi-isos: rc=2 tree=167459015 growth=1608 projected=27000000 limit(1.25x)=33750000
+BEFORE inc1-uefi-isos-2: tree=167459153 projected=27000000 c_free=22905835520
+AFTER  inc1-uefi-isos-2: rc=0 tree=196481050 growth=29021897 projected=27000000 limit(1.25x)=33750000
+BEFORE inc1-native-1: tree=196495965 projected=6000000 c_free=22904401920
+AFTER  inc1-native-1: rc=0 tree=198832417 growth=2336452 projected=6000000 limit(1.25x)=7500000
+BEFORE inc1-survey-gate-1: tree=198873965 projected=16000000 c_free=22903635968
+AFTER  inc1-survey-gate-1: rc=1 tree=225310859 growth=26436894 projected=16000000 limit(1.25x)=20000000
+STOP: inc1-survey-gate-1 grew 26436894 B, over 1.25 x its projection (16000000); investigation required
+INVESTIGATION 2 recorded: test binaries are 7.5 MB each (unit-cost table); tree 225,310,859; projected final 251-253 MB > stop line 243 MB; owner approval required to cross.
+ACCEPTED: owner approved crossing the 243 MB stop line to 262,000,000 B (cap 270,000,000 B, per-step 1.25x STOP unchanged) after investigation 2.
+BEFORE inc1-rebuild-isos: tree=225319536 projected=6000000 c_free=22901260288
+AFTER  inc1-rebuild-isos: rc=0 tree=225421624 growth=102088 projected=6000000 limit(1.25x)=7500000
+NOTE: tree above 85% of the stop line
+BEFORE inc1-native-2: tree=225421803 projected=4000000 c_free=22901391360
+AFTER  inc1-native-2: rc=1 tree=227718479 growth=2296676 projected=4000000 limit(1.25x)=5000000
+NOTE: tree above 85% of the stop line
+BEFORE inc1-native-3: tree=227718904 projected=4000000 c_free=22896635904
+AFTER  inc1-native-3: rc=0 tree=230015474 growth=2296570 projected=4000000 limit(1.25x)=5000000
+NOTE: tree above 85% of the stop line
+BEFORE inc1-survey-gate-2: tree=230015652 projected=9500000 c_free=22896107520
+AFTER  inc1-survey-gate-2: rc=0 tree=238762050 growth=8746398 projected=9500000 limit(1.25x)=11875000
+NOTE: tree above 85% of the stop line
+BEFORE inc1-gate42-2: tree=238762235 projected=14500000 c_free=22895005696
+AFTER  inc1-gate42-2: rc=0 tree=252672230 growth=13909995 projected=14500000 limit(1.25x)=18125000
+NOTE: tree above 85% of the stop line
+BEFORE inc1-survey-gate-3: tree=251350384 projected=5000000 c_free=22893969408
+AFTER  inc1-survey-gate-3: rc=0 tree=241206256 growth=-10144128 projected=5000000 limit(1.25x)=6250000
+NOTE: tree above 85% of the stop line
+BEFORE inc1-rebuild-isos-2: tree=241206440 projected=4000000 c_free=22893731840
+AFTER  inc1-rebuild-isos-2: rc=0 tree=233213614 growth=-7992826 projected=4000000 limit(1.25x)=5000000
+NOTE: tree above 85% of the stop line
+BEFORE inc1-native-4: tree=233213755 projected=4000000 c_free=22893731840
+AFTER  inc1-native-4: rc=0 tree=235510315 growth=2296560 projected=4000000 limit(1.25x)=5000000
+NOTE: tree above 85% of the stop line
+UNGUARDED (disclosed): manual regression ISOs build/inc1-1/reg (qualification and survey-conflict, two BIOS ISOs): +13,506,672 B, tree 249,030,573 after; run by hand with the commands in docs evidence regression/README.

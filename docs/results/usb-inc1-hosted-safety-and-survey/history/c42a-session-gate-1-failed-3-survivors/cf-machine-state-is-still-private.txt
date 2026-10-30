@@ -1,0 +1,9 @@
+error[E0616]: field `phase` of struct `vos_xhci_init::Machine` is private
+ --> /home/veasnawt/src/vos-usb-inc1/build/inc1-1/gate42-1/cf-machine-state-is-still-private.rs:2:63
+  |
+2 | fn main() { let mut m = Machine::new(ReleasePolicy::Never); m.phase = Phase::Running; }
+  |                                                               ^^^^^ private field
+
+error: aborting due to 1 previous error
+
+For more information about this error, try `rustc --explain E0616`.

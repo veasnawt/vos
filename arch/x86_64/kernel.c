@@ -21,6 +21,7 @@
 #include "boot_option.h"
 #include "xhci.h"
 #include "xhci_qualify.h"
+#include "xhci_survey.h"
 #include "user_console.h"
 #include "gdt.h"
 #include "idt.h"
@@ -300,6 +301,8 @@ void kernel_main(uint32_t mb2_magic, uint32_t mb2_info)
     check(!usb_conflict, "vos.usb_probe=1 is exclusive with vos.usb2-qualify=1 and vos.usb2-residue=1");
     if (!usb_conflict)
         xhci_boot_probe(bi.cmdline);
+    /* USB input bring-up, Increment 1: opt-in, read-only; never returns with vos.usb-survey=hold. */
+    check(xhci_survey_boot(bi.cmdline), "USB input survey integrity");
 
     struct vmm_audit audit;
     if (vmm_audit_space(vmm_kernel_root(), 1, &audit) != VMM_OK) {

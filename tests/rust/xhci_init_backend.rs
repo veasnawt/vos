@@ -38,7 +38,8 @@ fn closes(h: &mut SH, r: Req) -> Cause {
     }
 }
 fn refuses(h: &mut SH, r: Req, why: Refusal) {
-    assert_eq!(h.req(r).unwrap_err(), why, "{r:?} in {}", h.s.machine().phase().name());
+    let res = h.req(r);
+    assert_eq!(res, Err(why), "{r:?} in {}", h.s.machine().phase().name());
 }
 /// Schedule an injection for the k-th upcoming stamped backend call (1 = the next one).
 fn inj(h: &mut SH, k: u64, i: Inj) {
@@ -149,18 +150,29 @@ fn qualification_decodes_registers_into_facts_and_marks_observations_valid() {
 // ---- scratchpads (provisional policy) ----------------------------------------------------------------------------------
 
 #[test]
-fn scratchpad_counts_are_decoded_from_hcsparams2_and_refused_by_the_machine() {
-    for s in [0u16, 1, 4, 31, 32, 63, 1023] {
+fn scratchpad_counts_are_decoded_from_hcsparams2_and_judged_by_policy_not_by_a_31_limit() {
+    for s in [0u16, 1, 4, 31, 32, 63, 64, 65, 512, 1023] {
         let hcs2 = 0xfu64 | (u64::from(s >> 5) << 21) | (u64::from(s & 31) << 27);
         assert_eq!(scratchpads(hcs2), s, "{s}");
     }
-    for s in [1u16, 4, 31, 32, 1023] {
+    // 31 is not special: 32 and 64 qualify exactly like 31; the resource budget (64) is the boundary.
+    for s in [1u16, 4, 31, 32, 63, 64] {
+        let mut h = SH::with(|q| q.scratchpads = s);
+        ok(&mut h, Req::Bind);
+        let d = ok(&mut h, Req::Qualify);
+        assert_ne!(d.accepted.unwrap().to, Phase::Refused, "{s}");
+        assert_eq!(h.s.machine().terminal_reason(), None, "{s}");
+        assert_eq!(h.s.ledger().unwrap().spec().scratchpads, s);
+        assert!(h.fake().d.writes.is_empty());
+    }
+    for s in [65u16, 512, 1023] {
         let mut h = SH::with(|q| q.scratchpads = s);
         ok(&mut h, Req::Bind);
         let d = ok(&mut h, Req::Qualify);
         assert_eq!(d.accepted.unwrap().to, Phase::Refused);
-        assert_eq!(h.s.machine().terminal_reason(), Some(Reason::ScratchpadsRequired), "{s}");
+        assert_eq!(h.s.machine().terminal_reason(), Some(Reason::ScratchpadsExceedBudget), "{s}");
         assert!(h.s.closed().is_none(), "a machine refusal is not a session closure");
+        assert!(h.s.ledger().is_none());
         assert!(h.fake().d.writes.is_empty());
     }
 }
@@ -215,7 +227,7 @@ fn sequence_and_session_defects_close_the_session_fail_closed() {
         assert_eq!(closes(&mut h, Req::Status), cause, "{i:?}");
         assert_eq!(h.s.closed(), Some(cause));
         assert_eq!(h.s.machine().phase(), Phase::Quarantined, "an exposed controller is quarantined");
-        assert_eq!(h.s.machine().terminal_reason(), Some(Reason::ControllerFault));
+        assert_eq!(h.s.machine().terminal_reason(), Some(Reason::BackendFault));
         assert!(h.fake().terminal);
         assert_eq!(writes(&mut h), before, "closing writes nothing");
         refuses(&mut h, Req::Tick, Refusal::Session(SReason::Closed));
@@ -769,16 +781,22 @@ fn session_at_programmed() -> SH {
 }
 
 #[test]
-fn the_scratchpad_policy_is_provisional_at_31_and_documented() {
-    assert_eq!(PROVISIONAL_MAX_SCRATCHPADS, 31);
-    assert_eq!(d(Ledger::new(spec(32))).unwrap_err(), DReason::ScratchpadsExceedPolicy);
-    assert_eq!(d(Ledger::new(spec(1023))).unwrap_err(), DReason::ScratchpadsExceedPolicy);
+fn the_scratchpad_policy_separates_the_specification_limit_from_the_resource_budget() {
+    assert_eq!((SPEC_MAX_SCRATCHPADS, SCRATCHPAD_BUDGET), (1023, 64));
     assert_eq!(Ledger::new(spec(31)).unwrap().planned_pages(), 36);
+    assert_eq!(Ledger::new(spec(32)).unwrap().planned_pages(), 37);
+    assert_eq!(Ledger::new(spec(64)).unwrap().planned_pages(), 69);
+    assert_eq!(d(Ledger::new(spec(65))).unwrap_err(), DReason::ScratchpadsExceedBudget);
+    assert_eq!(d(Ledger::new(spec(1023))).unwrap_err(), DReason::ScratchpadsExceedBudget);
+    assert_eq!(d(Ledger::new(spec(1024))).unwrap_err(), DReason::ScratchpadsInvalid);
     assert_eq!(Ledger::new(spec(0)).unwrap().planned_pages(), 4);
     assert_eq!(d(Ledger::new(PoolSpec { device_limit: 0x10_0000, ..spec(0) })).unwrap_err(), DReason::BadLimit);
+    // The array holds eight bytes per buffer, so the budget keeps it inside the one 4 KiB page Table 6-1 gives it.
+    assert!(u64::from(SCRATCHPAD_BUDGET) * 8 <= DMA_PAGE);
     let src = include_str!("../../kernel/rust/usb/xhci_init/dma_model.rs");
-    assert!(src.contains("248 bytes") && src.contains("1,023") && src.contains("PROVISIONAL"), "the discrepancy is documented next to the policy");
-    assert!(include_str!("../../docs/results/usb2c42a-hosted-backend-contract.md").contains("Table 6-1"), "and in the report");
+    assert!(src.contains("5.3.4") && src.contains("0-1023") && src.contains("NOT a hardware limit"), "the resolution is documented next to the policy");
+    assert!(!src.contains("PROVISIONAL"), "no provisional wording remains");
+    assert!(include_str!("../../docs/results/usb2c42a-hosted-backend-contract.md").contains("Table 6-1"));
 }
 
 #[test]
@@ -1007,8 +1025,12 @@ fn kinds_invalidated(op: &Operation) -> &'static [usize] {
 fn walk(seed: u64, steps: usize, faults: bool) -> SH {
     let mut r = Rng(seed.wrapping_mul(0x9E37_79B9_7F4A_7C15) | 1);
     let mut q = random_quirks(&mut r);
+    // Scratchpad plans of every size the policy distinguishes (65 exceeds the budget and is refused).
+    q.scratchpads = if r.chance(1, 4) { r.pick(&[1, 4, 31, 32, 64, 65]) } else { 0 };
     if !faults {
-        q.scratchpads = 0;
+        if q.scratchpads > 64 {
+            q.scratchpads = 64;
+        }
         q.dbc = Dbc::Absent;
         q.iommu = Tri::No;
         q.identity = Tri::Yes;
@@ -1035,6 +1057,7 @@ fn walk(seed: u64, steps: usize, faults: bool) -> SH {
         let fresh0: Vec<bool> = (0..5).map(|k| h.s.fresh(k)).collect();
         let performed0 = h.fake().performed.len();
         let res = h.req(req);
+        assert_ne!(h.s.closed(), Some(Cause::LedgerDisagrees), "seed {seed}: the ledger fell out of step after {req:?}");
         // freshness contract, checked against an independent table
         if let Req::Op(op) = &req
             && h.s.is_bound()
@@ -1125,8 +1148,165 @@ fn export_session_traces_for_the_oracle() {
                 writeln!(out, "  {l}").unwrap();
             }
             writeln!(out, "=> {}", done_text(&e.res)).unwrap();
+            writeln!(out, "L {}", e.ledger).unwrap();
         }
     }
+}
+
+// ---- Increment 1: scratchpad plans wired to the machine and the ledger ---------------------------------------------------
+
+fn states(h: &SH, items: &[Item]) -> Vec<DState> {
+    items.iter().map(|it| h.s.ledger().unwrap().state(*it).unwrap()).collect()
+}
+
+#[test]
+fn a_session_with_scratchpads_runs_to_quiescence_and_the_ledger_follows_every_step() {
+    for n in [1u16, 4, 31, 32, 64] {
+        let mut h = SH::with(|q| q.scratchpads = n);
+        h.goto(Phase::Programmed);
+        let l = h.s.ledger().unwrap();
+        assert_eq!(l.live(), l.planned_pages(), "{n}: every planned page is owned before the first device write");
+        assert_eq!(l.state(Item::Core(PageKind::Dcbaa)), Some(DState::Published), "{n}: the DCBAA is published by SetDcbaap");
+        // SetDcbaap published the DCBAA and, atomically, the array and every buffer: the device owns them.
+        assert_eq!(states(&h, &[Item::Array, Item::Buffer(0), Item::Buffer(n as u8 - 1)]), [DState::DeviceOwned; 3], "{n}");
+        assert_eq!(l.cpu_access(Item::Buffer(0)), Err(DReason::CpuTouchOfDeviceOwned));
+        assert_eq!(l.cpu_access(Item::Array), Err(DReason::CpuTouchOfDeviceOwned));
+        // Once a page is published the allocation window is closed, for scratchpad pages as well.
+        refuses(&mut h, Req::Scratch(Scratch::Allocate { item: Item::Buffer(0), addr: 0x60_0000 }), Refusal::Machine(Reason::AllocationClosed));
+        h.run(5, 100_000);
+        assert_eq!(h.s.machine().phase(), Phase::Quiesced, "{n}: {:?}", h.s.machine().terminal_reason());
+        assert!(h.s.closed().is_none());
+        let l = h.s.ledger().unwrap();
+        assert_eq!(l.live(), 0, "{n}: everything was quiesced and released: {}", ledger_text(&h.s));
+        assert!(h.fake().d.violations.is_empty());
+    }
+}
+
+#[test]
+fn dcbaa_entry_zero_must_be_the_prepared_array_when_the_controller_needs_scratchpads() {
+    let mut h = qualified(|q| q.scratchpads = 4);
+    h.goto(Phase::Contained);
+    for k in [PageKind::Dcbaa] {
+        ok(&mut h, Req::Op(Operation::DmaAllocate { kind: k, addr: DCB }));
+        ok(&mut h, Req::Op(Operation::DmaZero(k)));
+    }
+    // No array yet: the session refuses before the machine is asked.
+    refuses(&mut h, Req::Op(Operation::PrepareDcbaa { entry0: SP_ARRAY }), Refusal::Session(SReason::ScratchpadArrayNotReady));
+    refuses(&mut h, Req::Op(Operation::PrepareDcbaa { entry0: 0 }), Refusal::Session(SReason::ScratchpadArrayNotReady));
+    let items: Vec<Item> = (0..4u8).map(Item::Buffer).chain([Item::Array]).collect();
+    for it in &items {
+        ok(&mut h, Req::Scratch(Scratch::Allocate { item: *it, addr: scratch_addr(*it) }));
+        ok(&mut h, Req::Scratch(Scratch::Zero(*it)));
+    }
+    // The array may not be prepared before the buffers it lists.
+    refuses(&mut h, Req::Scratch(Scratch::Prepare(Item::Array)), Refusal::Ledger(DReason::DependencyNotReady));
+    refuses(&mut h, Req::Op(Operation::PrepareDcbaa { entry0: SP_ARRAY }), Refusal::Session(SReason::ScratchpadArrayNotReady));
+    for b in 0..4u8 {
+        ok(&mut h, Req::Scratch(Scratch::Prepare(Item::Buffer(b))));
+    }
+    ok(&mut h, Req::Scratch(Scratch::Prepare(Item::Array)));
+    // A prepared array at another address, a zero pointer and an unaligned pointer are all refused.
+    for e in [0, SP_ARRAY + 0x1000 * 9, SP_ARRAY + 8] {
+        refuses(&mut h, Req::Op(Operation::PrepareDcbaa { entry0: e }), Refusal::Session(SReason::ScratchpadArrayNotReady));
+    }
+    ok(&mut h, Req::Op(Operation::PrepareDcbaa { entry0: SP_ARRAY }));
+    assert_eq!(h.s.ledger().unwrap().state(Item::Core(PageKind::Dcbaa)), Some(DState::Prepared));
+    // Nothing reached the controller during any of this.
+    assert!(h.fake().d.writes.is_empty() || h.fake().performed.iter().all(|e| e.id != "N-07"));
+}
+
+#[test]
+fn scratchpad_requests_are_bounded_by_the_session_and_the_ledger() {
+    let mut h = SH::with(|q| q.scratchpads = 2);
+    refuses(&mut h, Req::Scratch(Scratch::Zero(Item::Array)), Refusal::Session(SReason::NotBound));
+    ok(&mut h, Req::Bind);
+    refuses(&mut h, Req::Scratch(Scratch::Zero(Item::Array)), Refusal::Session(SReason::NotQualified));
+    ok(&mut h, Req::Qualify);
+    refuses(&mut h, Req::Scratch(Scratch::Zero(Item::Core(PageKind::Event))), Refusal::Session(SReason::CorePageViaOperation));
+    refuses(&mut h, Req::Scratch(Scratch::Allocate { item: Item::Core(PageKind::Event), addr: EVT }), Refusal::Session(SReason::CorePageViaOperation));
+    h.goto(Phase::Contained);
+    let a = Item::Array;
+    refuses(&mut h, Req::Scratch(Scratch::Allocate { item: Item::Buffer(2), addr: SP_ARRAY }), Refusal::Ledger(DReason::NoSuchItem));
+    refuses(&mut h, Req::Scratch(Scratch::Allocate { item: a, addr: SP_ARRAY + 8 }), Refusal::Ledger(DReason::Misaligned));
+    refuses(&mut h, Req::Scratch(Scratch::Allocate { item: a, addr: 0x8_0000 }), Refusal::Ledger(DReason::AddressRange));
+    refuses(&mut h, Req::Scratch(Scratch::Zero(a)), Refusal::Ledger(DReason::NotOwned));
+    ok(&mut h, Req::Scratch(Scratch::Allocate { item: a, addr: SP_ARRAY }));
+    refuses(&mut h, Req::Scratch(Scratch::Allocate { item: a, addr: SP_ARRAY + 0x1000 }), Refusal::Ledger(DReason::AlreadyOwned));
+    refuses(&mut h, Req::Scratch(Scratch::Prepare(a)), Refusal::Ledger(DReason::BadState));
+    // Scratchpad and core pages may not share a page, in either order.
+    refuses(&mut h, Req::Scratch(Scratch::Allocate { item: Item::Buffer(0), addr: SP_ARRAY }), Refusal::Ledger(DReason::Overlap));
+    refuses(&mut h, Req::Op(Operation::DmaAllocate { kind: PageKind::Event, addr: SP_ARRAY }), Refusal::Ledger(DReason::Overlap));
+    assert_eq!(h.s.machine().page(PageKind::Event).state, PageState::Free, "the refused allocation left no trace in the machine");
+    ok(&mut h, Req::Op(Operation::DmaAllocate { kind: PageKind::Event, addr: EVT }));
+    refuses(&mut h, Req::Scratch(Scratch::Allocate { item: Item::Buffer(0), addr: EVT }), Refusal::Ledger(DReason::Overlap));
+    // Release is allowed any time the ledger allows it.
+    ok(&mut h, Req::Scratch(Scratch::Release(a)));
+    refuses(&mut h, Req::Scratch(Scratch::Release(a)), Refusal::Ledger(DReason::NotOwned));
+}
+
+#[test]
+fn a_session_closed_with_pages_the_device_may_use_quarantines_them_and_never_frees_them() {
+    let mut h = SH::with(|q| q.scratchpads = 4);
+    h.goto(Phase::Programmed);
+    // Not closed: nothing to abandon.
+    assert_eq!(rec_abandon(h.s.abandon()), Err(SReason::NotClosed));
+    inj(&mut h, 1, Inj::Fault(ReadFault::Torn));
+    closes(&mut h, Req::Status);
+    assert_eq!(h.s.machine().terminal_reason(), Some(Reason::BackendFault));
+    let live = h.s.ledger().unwrap().live();
+    assert!(live >= 9, "{live}");
+    assert_eq!(h.s.abandon(), Ok(live), "every live page is kept");
+    assert_eq!(h.s.abandon(), Ok(0), "and abandoning twice changes nothing");
+    let l = h.s.ledger().unwrap();
+    assert_eq!(l.state(Item::Buffer(0)), Some(DState::Quarantined));
+    assert_eq!(l.state(Item::Array), Some(DState::Quarantined));
+    assert_eq!(l.state(Item::Core(PageKind::Dcbaa)), Some(DState::Quarantined));
+    assert!(!l.closed(), "the quarantine bound covers the whole plan");
+    refuses(&mut h, Req::Scratch(Scratch::Release(Item::Buffer(0))), Refusal::Ledger(DReason::Quarantined));
+}
+
+#[test]
+fn a_fault_inside_the_quarantine_tail_quarantines_the_pages_automatically() {
+    let mut h = SH::with(|q| q.scratchpads = 4);
+    h.goto(Phase::BusMastering);
+    inj(&mut h, 1, Inj::Fault(ReadFault::Torn));
+    closes(&mut h, Req::Pci);
+    assert_eq!(h.s.machine().phase(), Phase::Quarantined);
+    assert_ne!(h.s.ledger().unwrap().state(Item::Buffer(0)), Some(DState::Quarantined), "the tail is still possible");
+    inj(&mut h, 1, Inj::Fault(ReadFault::Torn));
+    closes(&mut h, Req::Status);
+    assert_eq!(h.s.ledger().unwrap().state(Item::Buffer(0)), Some(DState::Quarantined), "the tail died: nothing can quiesce the device");
+    assert_eq!(h.s.ledger().unwrap().state(Item::Array), Some(DState::Quarantined));
+}
+
+#[test]
+fn quarantine_all_is_bounded_and_an_exhausted_pool_closes() {
+    let mut l = Ledger::new(PoolSpec { quarantine_cap: 2, ..spec(3) }).unwrap();
+    let items = [Item::Core(PageKind::Command), Item::Array, Item::Buffer(0), Item::Buffer(1)];
+    for (i, it) in items.iter().enumerate() {
+        d(l.allocate(*it, 0x40_0000 + 0x1000 * i as u64)).unwrap();
+    }
+    assert!(!l.closed());
+    assert_eq!(l.quarantine_all(), 4, "every live page is dealt with");
+    assert_eq!(items.map(|it| l.state(it).unwrap()), [DState::Quarantined, DState::Quarantined, DState::Retained, DState::Retained]);
+    assert!(l.closed(), "the bound was exceeded: the pool is closed");
+    assert_eq!(l.quarantine_all(), 0, "nothing is left to give up");
+    assert_eq!(d(l.allocate(Item::Buffer(2), 0x50_0000)).unwrap_err(), DReason::PoolClosed);
+    assert_eq!(d(l.release(Item::Array)).unwrap_err(), DReason::Quarantined);
+    assert_eq!(d(l.release(Item::Buffer(0))).unwrap_err(), DReason::Quarantined);
+}
+
+#[test]
+fn the_never_release_policy_applies_to_scratchpad_pages_too() {
+    let mut h = SH::new(Quirks { scratchpads: 4, ..Quirks::qemu() }, ReleasePolicy::Never);
+    h.run(3, 100_000);
+    assert_eq!(h.s.machine().phase(), Phase::Quiesced);
+    assert_eq!(h.s.ledger().unwrap().state(Item::Buffer(0)), Some(DState::Quiesced));
+    assert_eq!(h.s.ledger().unwrap().spec().release, ReleasePolicy::Never);
+    refuses(&mut h, Req::Scratch(Scratch::Release(Item::Buffer(0))), Refusal::Ledger(DReason::ReleaseForbiddenByPolicy));
+    refuses(&mut h, Req::Scratch(Scratch::Release(Item::Array)), Refusal::Ledger(DReason::ReleaseForbiddenByPolicy));
+    refuses(&mut h, Req::Op(Operation::DmaRelease(PageKind::Dcbaa)), Refusal::Machine(Reason::ReleaseForbiddenByPolicy));
+    assert_eq!(h.s.ledger().unwrap().state(Item::Core(PageKind::Dcbaa)), Some(DState::Quiesced), "and the pages stay recorded");
 }
 
 // ---- completeness ----------------------------------------------------------------------------------------------------------------------
@@ -1138,8 +1318,10 @@ fn zz_every_cause_session_refusal_and_ledger_reason_is_exercised() {
     }
     let g = COV2.lock().unwrap();
     let [causes, sreasons, dreasons] = g.as_ref().unwrap();
+    // `ledger-disagrees` is the defensive cause for a model inconsistency (the ledger cannot follow the machine). A
+    // correct session never produces it, which `walk` asserts on every step; the mutation controls make it appear.
     let missing: Vec<_> = Cause::ALL.iter().map(|c| c.name()).filter(|n| !causes.contains(n)).collect();
-    assert!(missing.is_empty(), "causes never produced: {missing:?}");
+    assert_eq!(missing, ["ledger-disagrees"], "causes never produced");
     let missing: Vec<_> = SReason::ALL.iter().map(|c| c.name()).filter(|n| !sreasons.contains(n)).collect();
     assert!(missing.is_empty(), "session refusals never produced: {missing:?}");
     let missing: Vec<_> = DReason::ALL.iter().map(|c| c.name()).filter(|n| !dreasons.contains(n)).collect();

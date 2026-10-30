@@ -1,0 +1,9 @@
+error[E0599]: no method named `write32` found for mutable reference `&mut impl Mmio` in the current scope
+ --> /home/veasnawt/src/vos-usb-inc1/build/inc1-1/survey-gate-3/cf-mmio-trait-has-no-write.rs:2:29
+  |
+2 | fn f(m: &mut impl Mmio) { m.write32(0, 1); }
+  |                             ^^^^^^^ method not found in `&mut impl Mmio`
+
+error: aborting due to 1 previous error
+
+For more information about this error, try `rustc --explain E0599`.
