@@ -16,6 +16,7 @@ fn idle() -> Observed {
         bar: 0xc0_0000_0000,
         id: ID,
         class_revision: CLASS_REVISION,
+        subsystem: SUBSYSTEM_ID,
         command: 0x0007,
         status: 0x0010,
         msix_control: 0x000f,
@@ -43,7 +44,7 @@ fn idle() -> Observed {
     }
 }
 fn ctx() -> Context {
-    Context { uefi: true, qualified: true, operational: OP }
+    Context { uefi: true, qualified: true, operational: OP, execute: false, environment: 0 }
 }
 
 /// Scripted observations: pass `k` returns `script[k]` (None = unreadable).
@@ -228,7 +229,7 @@ fn refusal_mask_equals_an_independent_oracle_on_random_observations() {
                 _ => o.hazards = rnd(2) as u8,
             }
         }
-        let c = Context { uefi: rnd(5) != 0, qualified: rnd(7) != 0, operational: OP };
+        let c = Context { uefi: rnd(5) != 0, qualified: rnd(7) != 0, operational: OP, execute: false, environment: 0 };
         let (got, want) = (refusals(&o, &c), oracle(&o, &c));
         assert_eq!(got, want, "round {round}: {o:?}");
         let (r, calls, _) = run(steady(o), &c);

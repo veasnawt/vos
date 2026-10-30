@@ -86,6 +86,7 @@ verify: $(KERNEL)
 	@echo "$(ARCH): Multiboot header OK"
 
 iso: verify $(foreach f,$(ARCH_ISO_FILES) $(ISO_FILES),$(firstword $(subst :, ,$(f))))
+	python3 -I -B scripts/check-contain-image.py --expect production $(KERNEL)
 	rm -rf $(BUILD)/isodir
 	mkdir -p $(BUILD)/isodir/boot/grub
 	cp $(KERNEL) $(BUILD)/isodir/boot/vos.bin

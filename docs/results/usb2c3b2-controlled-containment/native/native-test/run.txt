@@ -1,0 +1,33 @@
+bios-n-qemu-xhci PASS
+bios-x-qemu-xhci PASS
+bios-x-qemu-xhci+disk PASS
+bios-x-qemu-xhci+kbd PASS
+bios-x-none PASS
+uefi-n-qemu-xhci PASS
+uefi-r-qemu-xhci FAIL timed out
+uefi-t-qemu-xhci PASS
+uefi-x-qemu-xhci PASS
+uefi-x-qemu-xhci+disk PASS
+uefi-x-qemu-xhci+kbd PASS
+uefi-x-qemu-xhci+kbd2 PASS
+uefi-x-none FAIL timed out
+uefi-x-nec-xhci PASS
+uefi-x-two-xhci PASS
+uefi-x-qemu-xhci+nohv PASS
+uefi-x-qemu-xhci+oem FAIL timed out
+uefi-x-qemu-xhci+subsys FAIL owned QEMU exited
+uefi-y-qemu-xhci FAIL containment dry-run absent unless selected
+uefi-z-qemu-xhci FAIL register reads 127 == expected 0
+uefi-w-qemu-xhci FAIL register reads 7 == expected 0
+uefi-u-qemu-xhci FAIL register reads 18 == expected 0
+uefi-v-qemu-xhci PASS
+Traceback (most recent call last):
+  File "/home/veasnawt/src/vos-usb2c3b2/scripts/test-usb2c3a2-native.py", line 920, in <module>
+    main()
+    ~~~~^^
+  File "/home/veasnawt/src/vos-usb2c3b2/scripts/test-usb2c3a2-native.py", line 916, in main
+    need(report['passed'], 'native matrix failures: ' + str(report['failures']))
+    ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/veasnawt/src/vos-usb2c3b2/scripts/test-usb2c1-native.py", line 56, in need
+    raise RuntimeError(message)
+RuntimeError: native matrix failures: [{'case': 'uefi-r-qemu-xhci', 'error': 'timed out', 'where': 'Traceback (most recent call last):\n  File "/home/veasnawt/src/vos-usb2c3b2/scripts/vos_gdbstub.py", line 18, in __init__\n    self.command(\'QStartNoAckMode\')\n    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^\n  File "/home/veasnawt/src/vos-usb2c3b2/scripts/vos_gdbstub.py", line 51, in command\n    reply = self._packet()\n  File "/home/veasnawt/src/vos-usb2c3b2/scripts/vos_gdbstub.py", line 44, in _packet\n    chunk = self.s.recv(65536)\nTimeoutError: timed out\n'}, {'case': 'uefi-x-none', 'error': 'timed out', 'where': 'Traceback (most recent call last):\n  File "/home/veasnawt/src/vos-usb2c3b2/scripts/vos_gdbstub.py", line 18, in __init__\n    self.command(\'QStartNoAckMode\')\n    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^\n  File "/home/veasnawt/src/vos-usb2c3b2/scripts/vos_gdbstub.py", line 51, in command\n    reply = self._packet()\n  File "/home/veasnawt/src/vos-usb2c3b2/scripts/vos_gdbstub.py", line 44, in _packet\n    chunk = self.s.recv(65536)\nTimeoutError: timed out\n'}, {'case': 'uefi-x-qemu-xhci+oem', 'error': 'timed out', 'where': 'Traceback (most recent call last):\n  File "/home/veasnawt/src/vos-usb2c3b2/scripts/vos_gdbstub.py", line 18, in __init__\n    self.command(\'QStartNoAckMode\')\n    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^\n  File "/home/veasnawt/src/vos-usb2c3b2/scripts/vos_gdbstub.py", line 51, in command\n    reply = self._packet()\n  File "/home/veasnawt/src/vos-usb2c3b2/scripts/vos_gdbstub.py", line 44, in _packet\n    chunk = self.s.recv(65536)\nTimeoutError: timed out\n'}, {'case': 'uefi-x-qemu-xhci+subsys', 'error': 'owned QEMU exited', 'where': 'Traceback (most recent call last):\n  File "/home/veasnawt/src/vos-usb2c3b2/scripts/test-usb2c3a2-native.py", line 397, in wait\n    s = data()\n  File "/home/veasnawt/src/vos-usb2c3b2/scripts/test-usb2c3a2-native.py", line 389, in data\n    need(process.poll() is None, \'owned QEMU exited\')\n    ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "/home/veasnawt/src/vos-usb2c3b2/scripts/test-usb2c1-native.py", line 56, in need\n    raise RuntimeError(message)\nRuntimeError: owned QEMU exited\n'}, {'case': 'uefi-y-qemu-xhci', 'error': 'containment dry-run absent unless selected', 'where': 'Traceback (most recent call last):\n  File "/home/veasnawt/src/vos-usb2c3b2/scripts/test-usb2c3a2-native.py", line 900, in main\n    r = boot(out, fw, iso, variables, mode, device, syms, args.expect)\n  File "/home/veasnawt/src/vos-usb2c3b2/scripts/test-usb2c3a2-native.py", line 568, in boot\n    need(\'usb2c3b1:\' not in s, \'containment dry-run absent unless selected\')\n    ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "/home/veasnawt/src/vos-usb2c3b2/scripts/test-usb2c1-native.py", line 56, in need\n    raise RuntimeError(message)\nRuntimeError: containment dry-run absent unless selected\n'}, {'case': 'uefi-z-qemu-xhci', 'error': 'register reads 127 == expected 0', 'where': 'Traceback (most recent call last):\n  File "/home/veasnawt/src/vos-usb2c3b2/scripts/test-usb2c3a2-native.py", line 718, in trace_checks\n    return execute_trace_checks(result, trace, analysis, mode, device, fw)\n  File "/home/veasnawt/src/vos-usb2c3b2/scripts/test-usb2c3a2-native.py", line 767, in execute_trace_checks\n    need(vos[\'xhci_mmio_reads\'] == expected, f\'register reads {vos["xhci_mmio_reads"]} == expected {expected}\')\n    ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "/home/veasnawt/src/vos-usb2c3b2/scripts/test-usb2c1-native.py", line 56, in need\n    raise RuntimeError(message)\nRuntimeError: register reads 127 == expected 0\n'}, {'case': 'uefi-w-qemu-xhci', 'error': 'register reads 7 == expected 0', 'where': 'Traceback (most recent call last):\n  File "/home/veasnawt/src/vos-usb2c3b2/scripts/test-usb2c3a2-native.py", line 718, in trace_checks\n    return execute_trace_checks(result, trace, analysis, mode, device, fw)\n  File "/home/veasnawt/src/vos-usb2c3b2/scripts/test-usb2c3a2-native.py", line 767, in execute_trace_checks\n    need(vos[\'xhci_mmio_reads\'] == expected, f\'register reads {vos["xhci_mmio_reads"]} == expected {expected}\')\n    ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "/home/veasnawt/src/vos-usb2c3b2/scripts/test-usb2c1-native.py", line 56, in need\n    raise RuntimeError(message)\nRuntimeError: register reads 7 == expected 0\n'}, {'case': 'uefi-u-qemu-xhci', 'error': 'register reads 18 == expected 0', 'where': 'Traceback (most recent call last):\n  File "/home/veasnawt/src/vos-usb2c3b2/scripts/test-usb2c3a2-native.py", line 718, in trace_checks\n    return execute_trace_checks(result, trace, analysis, mode, device, fw)\n  File "/home/veasnawt/src/vos-usb2c3b2/scripts/test-usb2c3a2-native.py", line 767, in execute_trace_checks\n    need(vos[\'xhci_mmio_reads\'] == expected, f\'register reads {vos["xhci_mmio_reads"]} == expected {expected}\')\n    ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "/home/veasnawt/src/vos-usb2c3b2/scripts/test-usb2c1-native.py", line 56, in need\n    raise RuntimeError(message)\nRuntimeError: register reads 18 == expected 0\n'}]

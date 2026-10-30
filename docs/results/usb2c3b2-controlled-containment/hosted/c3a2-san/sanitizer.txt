@@ -1,0 +1,9 @@
+  OVMF map: boot-services frames excluded before the first allocation, exact vs model: 31 checks PASS
+  allocate until exhausted: no excluded frame; reserving one is refused (reference hands all out): 9 checks PASS
+  SeaBIOS map: not EFI, PMM identical to the e820-only reference: 12 checks PASS
+  UEFI without a map, boot services active, duplicate map: refused, nothing entered: 44 checks PASS
+  malformed EFI maps (version, size, alignment, overflow, empty): refused, nothing entered: 70 checks PASS
+  one free table slot: one widened range (superset); full table: refused: 87 checks PASS
+  EFI map can only remove: conventional claims add nothing; BS + runtime RAM removed exactly: 262183 checks PASS
+  direct ABI: null/misaligned report, null input/sink, policy codes: 7 checks PASS
+PASS: 262450 checks; real bootinfo/resv/pmm/efi_memory C with the bare-metal Rust archive

@@ -1,0 +1,31 @@
+grub-file --is-x86-multiboot2 build/usb2c3b2-1/kernel-4/vos.bin
+x86_64: Multiboot header OK
+gcc -m64 -Iuser/include -MMD -MP -c user/lib/crt0.S -o build/usb2c3b2-1/user-probe/lib/crt0.o
+gcc -m64 -Iuser/include -MMD -MP -c user/lib/syscall.S -o build/usb2c3b2-1/user-probe/lib/syscall.o
+gcc -m64 -Iuser/include -MMD -MP -c user/lib/abi_note.S -o build/usb2c3b2-1/user-probe/lib/abi_note.o
+gcc -std=gnu11 -O2 -Wall -Wextra -m64 -mcmodel=small -ffreestanding -fno-builtin -nostdinc -isystem /usr/lib/gcc/x86_64-linux-gnu/15/include -Iuser/include -fno-pic -fno-pie -fno-stack-protector -fno-stack-clash-protection -fcf-protection=none -fno-asynchronous-unwind-tables -fno-unwind-tables -mgeneral-regs-only -MMD -MP -c user/hello/hello.c -o build/usb2c3b2-1/user-probe/hello/hello.o
+ld -m elf_x86_64 -nostdlib -static -z noexecstack -z max-page-size=0x1000 -z norelro --build-id=none -T user/lib/user.ld -o build/usb2c3b2-1/user-probe/hello.elf build/usb2c3b2-1/user-probe/lib/crt0.o build/usb2c3b2-1/user-probe/lib/syscall.o build/usb2c3b2-1/user-probe/lib/abi_note.o build/usb2c3b2-1/user-probe/hello/hello.o
+python3 -I -B scripts/check-contain-image.py --expect production build/usb2c3b2-1/kernel-4/vos.bin
+rm -rf build/usb2c3b2-1/kernel-4/isodir
+mkdir -p build/usb2c3b2-1/kernel-4/isodir/boot/grub
+cp build/usb2c3b2-1/kernel-4/vos.bin build/usb2c3b2-1/kernel-4/isodir/boot/vos.bin
+cp arch/x86_64/grub.cfg build/usb2c3b2-1/kernel-4/isodir/boot/grub/grub.cfg
+for f in build/usb2c3b2-1/user-probe/hello.elf:boot/hello.elf ; do \
+    mkdir -p build/usb2c3b2-1/kernel-4/isodir/$(dirname ${f#*:}); cp ${f%%:*} build/usb2c3b2-1/kernel-4/isodir/${f#*:}; \
+done
+grub-mkrescue -o build/usb2c3b2-1/kernel-4/vos.iso build/usb2c3b2-1/kernel-4/isodir
+xorriso 1.5.6 : RockRidge filesystem manipulator, libburnia project.
+
+Drive current: -outdev 'stdio:build/usb2c3b2-1/kernel-4/vos.iso'
+Media current: stdio file, overwriteable
+Media status : is blank
+Media summary: 0 sessions, 0 data blocks, 0 data,  934g free
+Added to ISO image: directory '/'='/tmp/grub.rwPQam'
+xorriso : UPDATE :     316 files added in 1 seconds
+Added to ISO image: directory '/'='/home/veasnawt/src/vos-usb2c3b2/build/usb2c3b2-1/kernel-4/isodir'
+xorriso : UPDATE :     321 files added in 1 seconds
+xorriso : NOTE : Copying to System Area: 512 bytes from file '/usr/lib/grub/i386-pc/boot_hybrid.img'
+ISO image produced: 3279 sectors
+Written to medium : 3279 sectors at LBA 0
+Writing to 'stdio:build/usb2c3b2-1/kernel-4/vos.iso' completed successfully.
+

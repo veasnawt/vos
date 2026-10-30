@@ -1,0 +1,9 @@
+{
+  "text_rodata_growth_bytes": 117,
+  "within_budget": true,
+  "bss_growth_bytes": 0,
+  "pt_load_total_memsz_delta": 0,
+  "rust_max_frame_bytes": 472,
+  "c_max_frame_bytes": 480,
+  "controller_symbol_bytes": 6546
+}

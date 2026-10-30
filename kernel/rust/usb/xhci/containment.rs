@@ -13,6 +13,11 @@
 //!   W2  xHCI USBCMD (BAR0 + CAPLENGTH), 32-bit write: HCRST only
 //! with a bounded poll for HCRST = 0 and CNR = 0, then a pointer-zero check.
 //! Interrupts are not masked: eligibility requires them to be disabled already.
+//!
+//! USB.2-C3b.2 adds `execute` (below), compiled only with `--cfg vos_contain_test`,
+//! which explicitly named QEMU test images pass and production images never do.
+//! It performs exactly W1 then W2 through an `Effects` platform, verifies each,
+//! and ends in a terminal state; nothing in it re-enables bus mastering.
 use super::lifecycle::{self, Facts, Step};
 use super::residue::{DEVICES, SCRATCHPADS, fold};
 
@@ -59,6 +64,11 @@ pub const MEMORY: u32 = 1 << 15;
 pub const CHANGED: u32 = 1 << 16;
 pub const PLAN: u32 = 1 << 17;
 pub const UNREADABLE: u32 = 1 << 18;
+/// USB.2-C3b.2, evaluated only when executing: the xHCI PCI subsystem is not
+/// QEMU's default 1af4:1100, or an independent QEMU test-environment check failed.
+pub const SUBSYSTEM: u32 = 1 << 19;
+pub const ENVIRONMENT: u32 = 1 << 20;
+pub const SUBSYSTEM_ID: u32 = 0x1100_1af4;
 
 /// Everything read at one point in time. Constructed by the platform; `rest` of
 /// the fields must be equal at every revalidation.
@@ -67,6 +77,8 @@ pub struct Observed {
     pub bar: u64,
     pub id: u32,
     pub class_revision: u32,
+    /// PCI subsystem vendor (low half) and device (high half), offset 0x2C.
+    pub subsystem: u32,
     pub command: u16,
     pub status: u16,
     pub msix_control: u16,
@@ -127,6 +139,10 @@ pub struct Context {
     pub qualified: bool,
     /// Operational register base (CAPLENGTH), for the proposed USBCMD offset.
     pub operational: u32,
+    /// USB.2-C3b.2: the writes will really be issued (test image, execute option).
+    pub execute: bool,
+    /// Failed QEMU test-environment checks (platform bit mask); 0 when all pass.
+    pub environment: u32,
 }
 
 /// Every reason the controller is not eligible; 0 means eligible.
@@ -155,6 +171,8 @@ pub fn refusals(o: &Observed, c: &Context) -> u32 {
     set(SCRATCH, o.findings & SCRATCHPADS != 0 || (o.header[2] >> 21) & 0x1f != 0 || o.header[2] >> 27 != 0);
     set(RESIDUE, o.findings != 0);
     set(MEMORY, o.reserved | o.owned_again | o.protected | o.hazards != 0 || o.excluded == 0);
+    set(SUBSYSTEM, c.execute && o.subsystem != SUBSYSTEM_ID);
+    set(ENVIRONMENT, c.execute && c.environment != 0);
     m
 }
 
@@ -202,6 +220,13 @@ pub enum State {
     ResetUnverified = 12,
     Contained = 13,
     IntegrityFault = 14,
+    // USB.2-C3b.2 terminal states of `execute`. From W1 on, every one is final
+    // for the boot and leaves bus mastering off.
+    PreW1Drift = 15,
+    W1Failed = 16,
+    PciChanged = 17,
+    ControllerError = 18,
+    PreW2Drift = 19,
 }
 
 pub const K_REVALIDATE: u8 = 1;
@@ -275,8 +300,9 @@ pub fn expected_command(before: u16, issued: bool) -> u16 {
 
 /// Rehearse the sequence against live observations: eligibility, revalidation
 /// before each simulated write, and the auditable trace. `first` receives the
-/// initial observation.
-pub fn rehearse<S: Source>(s: &mut S, c: &Context, first: &mut Observed) -> Rehearsal {
+/// initial observation. One copy serves the dry-run and the C3b.2 execution.
+#[inline(never)]
+pub fn rehearse(s: &mut dyn Source, c: &Context, first: &mut Observed) -> Rehearsal {
     let mut r = Rehearsal { state: State::Refused, refusals: 0, len: 0, plan_len: 0, trace: [Trace::default(); TRACE_LIMIT] };
     if !s.observe(first) {
         return r.refuse(UNREADABLE);
@@ -373,4 +399,174 @@ pub fn after_revalidation_failure() -> State {
 /// PORTSC value that makes a port unusable for the eligible profile.
 pub fn port_busy(portsc: u32) -> bool {
     portsc & PORT_BUSY != 0
+}
+
+// ---- USB.2-C3b.2: controlled execution (QEMU test images only) ----
+
+/// One immediate read of the values every write depends on. `ports_busy` is
+/// read only when asked (before each write); the reset poll skips the ports.
+#[cfg(vos_contain_test)]
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+pub struct Quick {
+    pub command: u16,
+    pub status: u16,
+    pub usbcmd: u32,
+    pub usbsts: u32,
+    pub ports_busy: bool,
+}
+
+/// Registers read once after the reset completed. IMOD is not read: its
+/// specification default is 4000h and QEMU resets it to 0. PORTSC change bits
+/// are ignored: QEMU sets CSC on every port during reset.
+#[cfg(vos_contain_test)]
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+pub struct AfterReset {
+    pub usbcmd: u32,
+    pub usbsts: u32,
+    pub dnctrl: u32,
+    pub config: u32,
+    /// Reads 0 on a compliant controller whatever the pointer (xHCI 1.2
+    /// 5.4.5); QEMU returns its internal value. Either way it must read 0.
+    pub crcr: u64,
+    pub dcbaap: u64,
+    /// Some port reports CCS, PED, PR or OCA.
+    pub ports_active: bool,
+    /// Every interrupter reads IMAN = ERSTSZ = ERSTBA = ERDP = 0.
+    pub interrupters_clear: bool,
+    pub command: u16,
+    pub status: u16,
+    pub msix_control: u16,
+    pub msi_control: u16,
+    pub pcie: u8,
+    pub bar: u64,
+}
+
+/// The hardware the executor drives. Implemented only by the QEMU test-image
+/// platform, whose adapters enforce order and once-only again on their side.
+/// A write method returns false when its adapter refused and wrote nothing.
+#[cfg(vos_contain_test)]
+pub trait Effects: Source {
+    /// W1: 16-bit PCI command write at 0x04 of `value` (= `old` & !BUS_MASTER).
+    fn write_command(&mut self, old: u16, value: u16) -> bool;
+    /// W2: 32-bit USBCMD write of `value` (= `old` | HCRST).
+    fn write_usbcmd(&mut self, old: u32, value: u32) -> bool;
+    fn quick(&mut self, out: &mut Quick, ports: bool) -> bool;
+    /// Start a new read budget of `reads` register reads.
+    fn phase(&mut self, reads: u32) -> bool;
+    fn after_reset(&mut self, out: &mut AfterReset) -> bool;
+}
+
+#[cfg(vos_contain_test)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub struct Execution {
+    pub rehearsal: Rehearsal,
+    pub state: State,
+    /// Writes the adapters confirmed issuing (0, 1 or 2).
+    pub writes: u8,
+    pub polls: u32,
+    /// W1 old and new command, and the command and status read back.
+    pub w1: [u16; 4],
+    pub usbsts_after_w1: u32,
+    /// W2 old and new USBCMD.
+    pub w2: [u32; 2],
+    pub after: AfterReset,
+}
+
+/// Every check of the completed reset (xHCI 1.2 4.23.1: operational and
+/// runtime registers at their defaults; 5.4.1: PCI configuration unaffected).
+#[cfg(vos_contain_test)]
+pub fn reset_verified(first: &Observed, a: &AfterReset) -> bool {
+    a.usbcmd == 0 && a.usbsts == IDLE_USBSTS && a.dnctrl == 0 && a.config == 0 && a.crcr == 0 && a.dcbaap == 0
+        && !a.ports_active && a.interrupters_clear && a.command == first.command & !BUS_MASTER
+        && a.status == first.status && a.msix_control == first.msix_control && a.msi_control == first.msi_control
+        && a.pcie == PCIE_IDLE && a.bar == first.bar
+}
+
+/// The C3b.2 sequence: a complete C3b.1 rehearsal (eligibility and two
+/// revalidations), then a fresh pass and immediate re-read, W1, its read-back
+/// and a full re-observation, an immediate re-read, W2, a bounded poll and the
+/// post-reset verification. Each failure is a distinct terminal state; after
+/// W1 there is no path that writes anything except W2, and W2 only after W1
+/// was verified.
+#[cfg(vos_contain_test)]
+pub fn execute(e: &mut dyn Effects, c: &Context, first: &mut Observed) -> Execution {
+    let rehearsal = rehearse(e, c, first);
+    let mut x = Execution { rehearsal, state: rehearsal.state, writes: 0, polls: 0, w1: [0; 4], usbsts_after_w1: 0,
+                            w2: [0; 2], after: AfterReset::default() };
+    if rehearsal.state != State::DryRunComplete || !c.execute {
+        x.state = State::Refused;
+        return x;
+    }
+    x.state = stages(e, first, &mut x);
+    x
+}
+
+#[cfg(vos_contain_test)]
+#[inline(never)]
+fn stages(e: &mut dyn Effects, first: &Observed, x: &mut Execution) -> State {
+    let mut now = Observed::default();
+    let mut q = Quick::default();
+    let idle = Quick { command: first.command, status: first.status, usbcmd: first.usbcmd, usbsts: first.usbsts,
+                       ports_busy: false };
+    if !e.observe(&mut now) || now != *first || !e.quick(&mut q, true) || q != idle {
+        return State::PreW1Drift;
+    }
+    let off = first.command & !BUS_MASTER;
+    x.w1[0] = first.command;
+    x.w1[1] = off;
+    if !e.write_command(first.command, off) {
+        return State::W1Failed;
+    }
+    x.writes = 1;
+    // From here every return is final and leaves bus mastering off. The read-back is lean; the full
+    // pass that follows covers the ports.
+    if !e.quick(&mut q, false) {
+        return State::W1Failed;
+    }
+    x.w1[2] = q.command;
+    x.w1[3] = q.status;
+    x.usbsts_after_w1 = q.usbsts;
+    if q.command & BUS_MASTER != 0 {
+        return State::BusMasterStuck;
+    }
+    if q.command != off || q.status != first.status {
+        return State::PciChanged;
+    }
+    // HCE (QEMU: a DMA attempt after the clear), HSE, CNR or a running controller.
+    if q.usbsts != IDLE_USBSTS || q.usbcmd != first.usbcmd {
+        return State::ControllerError;
+    }
+    if !e.observe(&mut now) || now.command != off {
+        return State::ContainedBmeOnly;
+    }
+    now.command = first.command;
+    if now != *first {
+        return State::ContainedBmeOnly;
+    }
+    if !e.quick(&mut q, true) || q != (Quick { command: off, ..idle }) {
+        return State::PreW2Drift;
+    }
+    x.w2 = [q.usbcmd, q.usbcmd | HCRST];
+    if !e.write_usbcmd(q.usbcmd, q.usbcmd | HCRST) {
+        return State::PreW2Drift;
+    }
+    x.writes = 2;
+    // Reads only while HCRST is 1 (xHCI 1.2 5.4.1). QEMU completes the reset
+    // inside the write, so the first poll suffices; the bound is a backstop.
+    if !e.phase(2 * POLL_BOUND) {
+        return State::ResetStuck;
+    }
+    loop {
+        if x.polls == POLL_BOUND || !e.quick(&mut q, false) {
+            return State::ResetStuck;
+        }
+        x.polls += 1;
+        if q.usbcmd & HCRST == 0 && q.usbsts & CNR == 0 {
+            break;
+        }
+    }
+    if !e.phase(256) || !e.after_reset(&mut x.after) || !reset_verified(first, &x.after) {
+        return State::ResetUnverified;
+    }
+    State::Contained
 }

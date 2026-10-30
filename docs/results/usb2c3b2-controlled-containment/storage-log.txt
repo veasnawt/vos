@@ -1,0 +1,82 @@
+storage before kernel-1: tree=840 c_free=23284224000 projected=20000000
+kernel-1 exit 0 tree_after=14886650
+storage before contain-test-1: tree=14886686 c_free=23284092928 projected=20000000
+contain-test-1 exit 0 tree_after=29844639
+storage before kernel-2: tree=30275902 c_free=23257997312 projected=20000000
+kernel-2 exit 0 tree_after=45162360
+storage before contain-test-2: tree=45377871 c_free=23258103808 projected=20000000
+contain-test-2 exit 0 tree_after=60337230
+storage before contain-test-3: tree=60554388 c_free=23252979712 projected=20000000
+contain-test-3 exit 0 tree_after=75513898
+storage before kernel-3: tree=75777402 c_free=23248855040 projected=20000000
+kernel-3 exit 0 tree_after=90664018
+storage before contain-test-4: tree=90664054 c_free=23248764928 projected=20000000
+contain-test-4 exit 0 tree_after=105624434
+storage before smuggle-2: tree=119353124 c_free=23248842752 projected=20000000
+smuggle-2 exit 2 tree_after=133107438
+storage before contain-test-5: tree=133107476 c_free=23245942784 projected=20000000
+contain-test-5 exit 0 tree_after=148067984
+storage before san-build: tree=148068027 c_free=23245877248 projected=10000000
+san-build exit 1 tree_after=148068106
+storage before san-build: tree=148068144 c_free=23245942784 projected=10000000
+san-build exit 0 tree_after=148644599
+storage before san-build: tree=148644637 c_free=23245877248 projected=10000000
+san-build exit 0 tree_after=148647268
+storage before san-build: tree=148647306 c_free=23245705216 projected=10000000
+san-build exit 0 tree_after=148649281
+storage before contain-test-6: tree=148649319 c_free=23245705216 projected=20000000
+contain-test-6 exit 0 tree_after=163611346
+storage before contain-test-7: tree=163625341 c_free=23250292736 projected=20000000
+contain-test-7 exit 0 tree_after=178587544
+storage before kernel-4: tree=178587587 c_free=23250141184 projected=20000000
+kernel-4 exit 0 tree_after=193474204
+storage before c3b2-host: tree=193474241 c_free=23250092032 projected=80000000
+c3b2-host exit 1 tree_after=219807020
+storage before c3b2-host-2: tree=219807058 c_free=23249682432 projected=60000000
+c3b2-host-2 exit 1 tree_after=246144129
+storage before c3b2-host-3: tree=246144169 c_free=23248932864 projected=40000000
+c3b2-host-3 exit 0 tree_after=263855010
+storage before smoke-x-1: tree=263855050 c_free=23248662528 projected=60000000
+smoke-x-1 exit 1 tree_after=281723742
+storage before smoke-x-2: tree=281723780 c_free=23248596992 projected=60000000
+smoke-x-2 exit 0 tree_after=295116431
+storage before native-test: tree=295117625 c_free=23247687680 projected=45000000
+native-test exit 1 tree_after=346719458
+storage before native-prod: tree=346719517 c_free=23247204352 projected=45000000
+native-prod exit 0 tree_after=374092290
+storage before native-test-rerun: tree=374092349 c_free=23246823424 projected=40000000
+native-test-rerun exit 1 tree_after=377868704
+storage before native-test-rerun-2: tree=377868750 c_free=23246561280 projected=20000000
+native-test-rerun-2 exit 0 tree_after=378595981
+storage before iso-production: tree=378596029 c_free=23246393344 projected=45000000
+iso-production exit 0 tree_after=386519777
+storage before c3a-host: tree=387722090 c_free=23246188544 projected=70000000
+c3a-host exit 0 tree_after=458544809
+storage before c1-host: tree=458544862 c_free=23246188544 projected=28000000
+c1-host exit 0 tree_after=484691930
+storage before c3b1-host: tree=484691981 c_free=23246188544 projected=30000000
+c3b1-host exit 0 tree_after=493178187
+storage before c3a2-san: tree=493178242 c_free=23246188544 projected=6000000
+c3a2-san exit 0 tree_after=493423021
+storage before c2-host: tree=493423074 c_free=23246188544 projected=36000000
+c2-host exit 0 tree_after=528038686
+storage before usb2b-host: tree=528038737 c_free=23246057472 projected=9000000
+usb2b-host exit 0 tree_after=535527502
+storage before usb1-host: tree=535527559 c_free=23246057472 projected=2000000
+usb1-host exit 0 tree_after=536119571
+storage before r2b-host: tree=536119626 c_free=23246057472 projected=4000000
+r2b-host exit 0 tree_after=538481236
+storage before r1-bounds: tree=538481289 c_free=23245922304 projected=4000000
+r1-bounds exit 0 tree_after=540609646
+storage before usb2a-core: tree=540609701 c_free=23319846912 projected=25000000
+usb2a-core exit 0 tree_after=564016688
+owner decision (2026-10-30, AskUserQuestion): cross the 566,231,040 B stop line, stay within 600 MiB (629,145,600 B) to run the R2-B native matrix; nothing deleted, moved or cleaned
+storage before r2b-native-normal: tree=564019125 c_free=23318802432 projected=30000000
+r2b-native-normal exit 0 tree_after=585553548
+storage before kernel-4-verify: tree=585553619 c_free=23318163456 projected=20000000
+kernel-4-verify exit 0 tree_after=600490012
+storage before r2b-native-verify: tree=600490079 c_free=23318077440 projected=30000000
+STOP: r2b-native-verify would cross a storage line (tree=600490079 proj=30000000 c_free=23318077440)
+r2b-native-verify: first attempt refused by the guard (30 MB projection vs the 600 MiB cap); rerun with the measured 24 MB projection (verify ISOs 7.8 + 13 MB), still guarded
+storage before r2b-native-verify-2: tree=600490569 c_free=23317499904 projected=24000000
+r2b-native-verify-2 exit 0 tree_after=622167989

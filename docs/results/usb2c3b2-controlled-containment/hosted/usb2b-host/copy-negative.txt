@@ -1,0 +1,20 @@
+error[E0277]: the trait bound `resource_ownership::Owned: Copy` is not satisfied
+  --> /home/veasnawt/src/vos-usb2c3b2/build/usb2c3b2-1/final/usb2b-host/copy.rs:5:21
+   |
+ 5 | fn main(){require::<resource_ownership::Owned>();}
+   |                     ^^^^^^^^^^^^^^^^^^^^^^^^^ unsatisfied trait bound
+   |
+help: the trait `Copy` is not implemented for `resource_ownership::Owned`
+  --> /home/veasnawt/src/vos-usb2c3b2/arch/x86_64/rust/resource_ownership.rs:24:1
+   |
+24 | pub(crate) struct Owned {
+   | ^^^^^^^^^^^^^^^^^^^^^^^
+note: required by a bound in `require`
+  --> /home/veasnawt/src/vos-usb2c3b2/build/usb2c3b2-1/final/usb2b-host/copy.rs:4:15
+   |
+ 4 | fn require<T: Copy>() {}
+   |               ^^^^ required by this bound in `require`
+
+error: aborting due to 1 previous error
+
+For more information about this error, try `rustc --explain E0277`.

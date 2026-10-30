@@ -1,0 +1,1 @@
+/home/veasnawt/src/vos-usb2c3b2/build/usb2c3b2-1/contain-test-7/vos.bin: NOT a production image: {'marker': True, 'option': True, 'symbols': ['vos_contain_test_image', 'vos_xhci_contain_execute_v1', 'xhci_contain_execute_boot', 'xhci_contain_w1', 'xhci_contain_w2'], 'rust_executor': True}

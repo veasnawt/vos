@@ -1,0 +1,213 @@
+error[E0425]: cannot find type `AfterReset` in this scope
+  --> tests/rust/xhci_contain_execute.rs:51:33
+   |
+51 | fn clean_after(o: &Observed) -> AfterReset {
+   |                                 ^^^^^^^^^^ not found in this scope
+
+error[E0422]: cannot find struct, variant or union type `AfterReset` in this scope
+  --> tests/rust/xhci_contain_execute.rs:52:5
+   |
+52 |     AfterReset {
+   |     ^^^^^^^^^^ not found in this scope
+
+error[E0405]: cannot find trait `Effects` in this scope
+   --> tests/rust/xhci_contain_execute.rs:145:6
+    |
+145 | impl Effects for Dev {
+    |      ^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `Quick` in this scope
+   --> tests/rust/xhci_contain_execute.rs:189:33
+    |
+189 |     fn quick(&mut self, q: &mut Quick, ports: bool) -> bool {
+    |                                 ^^^^^ not found in this scope
+
+error[E0422]: cannot find struct, variant or union type `Quick` in this scope
+   --> tests/rust/xhci_contain_execute.rs:211:18
+    |
+211 |             *q = Quick { command: self.cmd, status: self.status, usbcmd, usbsts, ports_busy: false };
+    |                  ^^^^^ not found in this scope
+
+error[E0422]: cannot find struct, variant or union type `Quick` in this scope
+   --> tests/rust/xhci_contain_execute.rs:218:14
+    |
+218 |         *q = Quick { command: self.cmd, status: self.status, usbcmd: self.usbcmd, usbsts: self.usbsts, ports_busy: false };
+    |              ^^^^^ not found in this scope
+
+error[E0425]: cannot find type `AfterReset` in this scope
+   --> tests/rust/xhci_contain_execute.rs:240:39
+    |
+240 |     fn after_reset(&mut self, a: &mut AfterReset) -> bool {
+    |                                       ^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `Execution` in this scope
+   --> tests/rust/xhci_contain_execute.rs:266:48
+    |
+266 | fn run_with(faults: &[Fault], c: &Context) -> (Execution, Dev) {
+    |                                                ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `Execution` in this scope
+   --> tests/rust/xhci_contain_execute.rs:273:30
+    |
+273 | fn run(faults: &[Fault]) -> (Execution, Dev) {
+    |                              ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `Execution` in this scope
+   --> tests/rust/xhci_contain_execute.rs:319:19
+    |
+319 | fn invariants(x: &Execution, d: &Dev, faults: &[Fault]) {
+    |                   ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `AfterReset` in this scope
+   --> tests/rust/xhci_contain_execute.rs:491:25
+    |
+491 |     let bad: Vec<(&str, AfterReset)> = vec![
+    |                         ^^^^^^^^^^ not found in this scope
+    |
+help: you might be missing a type parameter
+    |
+487 | fn reset_verification_checks_every_field_individually<AfterReset>() {
+    |                                                      ++++++++++++
+
+error[E0422]: cannot find struct, variant or union type `AfterReset` in this scope
+   --> tests/rust/xhci_contain_execute.rs:492:20
+    |
+492 |         ("usbcmd", AfterReset { usbcmd: 1, ..good }), ("usbcmd 2", AfterReset { usbcmd: 2, ..good }),
+    |                    ^^^^^^^^^^ not found in this scope
+
+error[E0422]: cannot find struct, variant or union type `AfterReset` in this scope
+   --> tests/rust/xhci_contain_execute.rs:492:68
+    |
+492 |         ("usbcmd", AfterReset { usbcmd: 1, ..good }), ("usbcmd 2", AfterReset { usbcmd: 2, ..good }),
+    |                                                                    ^^^^^^^^^^ not found in this scope
+
+error[E0422]: cannot find struct, variant or union type `AfterReset` in this scope
+   --> tests/rust/xhci_contain_execute.rs:493:20
+    |
+493 |         ("usbsts", AfterReset { usbsts: 0, ..good }), ("usbsts hce", AfterReset { usbsts: 0x1001, ..good }),
+    |                    ^^^^^^^^^^ not found in this scope
+
+error[E0422]: cannot find struct, variant or union type `AfterReset` in this scope
+   --> tests/rust/xhci_contain_execute.rs:493:70
+    |
+493 |         ("usbsts", AfterReset { usbsts: 0, ..good }), ("usbsts hce", AfterReset { usbsts: 0x1001, ..good }),
+    |                                                                      ^^^^^^^^^^ not found in this scope
+
+error[E0422]: cannot find struct, variant or union type `AfterReset` in this scope
+   --> tests/rust/xhci_contain_execute.rs:494:24
+    |
+494 |         ("usbsts cnr", AfterReset { usbsts: 0x801, ..good }), ("dnctrl", AfterReset { dnctrl: 2, ..good }),
+    |                        ^^^^^^^^^^ not found in this scope
+
+error[E0422]: cannot find struct, variant or union type `AfterReset` in this scope
+   --> tests/rust/xhci_contain_execute.rs:494:74
+    |
+494 |         ("usbsts cnr", AfterReset { usbsts: 0x801, ..good }), ("dnctrl", AfterReset { dnctrl: 2, ..good }),
+    |                                                                          ^^^^^^^^^^ not found in this scope
+
+error[E0422]: cannot find struct, variant or union type `AfterReset` in this scope
+   --> tests/rust/xhci_contain_execute.rs:495:20
+    |
+495 |         ("config", AfterReset { config: 1, ..good }), ("crcr", AfterReset { crcr: 0x40, ..good }),
+    |                    ^^^^^^^^^^ not found in this scope
+
+error[E0422]: cannot find struct, variant or union type `AfterReset` in this scope
+   --> tests/rust/xhci_contain_execute.rs:495:64
+    |
+495 |         ("config", AfterReset { config: 1, ..good }), ("crcr", AfterReset { crcr: 0x40, ..good }),
+    |                                                                ^^^^^^^^^^ not found in this scope
+
+error[E0422]: cannot find struct, variant or union type `AfterReset` in this scope
+   --> tests/rust/xhci_contain_execute.rs:496:22
+    |
+496 |         ("crcr crr", AfterReset { crcr: 8, ..good }), ("dcbaap", AfterReset { dcbaap: 0x1000, ..good }),
+    |                      ^^^^^^^^^^ not found in this scope
+
+error[E0422]: cannot find struct, variant or union type `AfterReset` in this scope
+   --> tests/rust/xhci_contain_execute.rs:496:66
+    |
+496 |         ("crcr crr", AfterReset { crcr: 8, ..good }), ("dcbaap", AfterReset { dcbaap: 0x1000, ..good }),
+    |                                                                  ^^^^^^^^^^ not found in this scope
+
+error[E0422]: cannot find struct, variant or union type `AfterReset` in this scope
+   --> tests/rust/xhci_contain_execute.rs:497:19
+    |
+497 |         ("ports", AfterReset { ports_active: true, ..good }), ("interrupters", AfterReset { interrupters_clear: false, ..good }),
+    |                   ^^^^^^^^^^ not found in this scope
+
+error[E0422]: cannot find struct, variant or union type `AfterReset` in this scope
+   --> tests/rust/xhci_contain_execute.rs:497:80
+    |
+497 |         ("ports", AfterReset { ports_active: true, ..good }), ("interrupters", AfterReset { interrupters_clear: false, ..good }),
+    |                                                                                ^^^^^^^^^^ not found in this scope
+
+error[E0422]: cannot find struct, variant or union type `AfterReset` in this scope
+   --> tests/rust/xhci_contain_execute.rs:498:22
+    |
+498 |         ("bme back", AfterReset { command: first.command, ..good }), ("command other", AfterReset { command: 0x0001, ..good }),
+    |                      ^^^^^^^^^^ not found in this scope
+
+error[E0422]: cannot find struct, variant or union type `AfterReset` in this scope
+   --> tests/rust/xhci_contain_execute.rs:498:88
+    |
+498 |         ("bme back", AfterReset { command: first.command, ..good }), ("command other", AfterReset { command: 0x0001, ..good }),
+    |                                                                                        ^^^^^^^^^^ not found in this scope
+
+error[E0422]: cannot find struct, variant or union type `AfterReset` in this scope
+   --> tests/rust/xhci_contain_execute.rs:499:20
+    |
+499 |         ("status", AfterReset { status: 0x0018, ..good }), ("msix", AfterReset { msix_control: 0x800f, ..good }),
+    |                    ^^^^^^^^^^ not found in this scope
+
+error[E0422]: cannot find struct, variant or union type `AfterReset` in this scope
+   --> tests/rust/xhci_contain_execute.rs:499:69
+    |
+499 |         ("status", AfterReset { status: 0x0018, ..good }), ("msix", AfterReset { msix_control: 0x800f, ..good }),
+    |                                                                     ^^^^^^^^^^ not found in this scope
+
+error[E0422]: cannot find struct, variant or union type `AfterReset` in this scope
+   --> tests/rust/xhci_contain_execute.rs:500:17
+    |
+500 |         ("msi", AfterReset { msi_control: 1, ..good }), ("pcie", AfterReset { pcie: PCIE_PENDING, ..good }),
+    |                 ^^^^^^^^^^ not found in this scope
+
+error[E0422]: cannot find struct, variant or union type `AfterReset` in this scope
+   --> tests/rust/xhci_contain_execute.rs:500:66
+    |
+500 |         ("msi", AfterReset { msi_control: 1, ..good }), ("pcie", AfterReset { pcie: PCIE_PENDING, ..good }),
+    |                                                                  ^^^^^^^^^^ not found in this scope
+
+error[E0422]: cannot find struct, variant or union type `AfterReset` in this scope
+   --> tests/rust/xhci_contain_execute.rs:501:25
+    |
+501 |         ("pcie absent", AfterReset { pcie: PCIE_ABSENT, ..good }), ("bar", AfterReset { bar: first.bar + 1, ..good }),
+    |                         ^^^^^^^^^^ not found in this scope
+
+error[E0422]: cannot find struct, variant or union type `AfterReset` in this scope
+   --> tests/rust/xhci_contain_execute.rs:501:76
+    |
+501 |         ("pcie absent", AfterReset { pcie: PCIE_ABSENT, ..good }), ("bar", AfterReset { bar: first.bar + 1, ..good }),
+    |                                                                            ^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `execute` in this scope
+   --> tests/rust/xhci_contain_execute.rs:270:13
+    |
+270 |     let x = execute(&mut d, &c, &mut first);
+    |             ^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `reset_verified` in this scope
+   --> tests/rust/xhci_contain_execute.rs:490:13
+    |
+490 |     assert!(reset_verified(&first, &good));
+    |             ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `reset_verified` in this scope
+   --> tests/rust/xhci_contain_execute.rs:504:18
+    |
+504 |         assert!(!reset_verified(&first, &a), "{name}");
+    |                  ^^^^^^^^^^^^^^ not found in this scope
+
+error: aborting due to 34 previous errors
+
+Some errors have detailed explanations: E0405, E0422, E0425.
+For more information about an error, try `rustc --explain E0405`.

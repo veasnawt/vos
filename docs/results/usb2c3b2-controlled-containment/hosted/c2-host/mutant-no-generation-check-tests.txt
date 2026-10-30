@@ -1,0 +1,18 @@
+
+running 1 test
+test stale_and_foreign_handles_are_refused ... FAILED
+
+failures:
+
+---- stale_and_foreign_handles_are_refused stdout ----
+
+thread 'stale_and_foreign_handles_are_refused' (43446) panicked at tests/rust/xhci_dma.rs:150:43:
+called `Result::unwrap_err()` on an `Ok` value: ()
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    stale_and_foreign_handles_are_refused
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 8 filtered out; finished in 0.00s
+

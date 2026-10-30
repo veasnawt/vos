@@ -1,0 +1,20 @@
+
+running 1 test
+test reset_timeout_is_bounded_and_exact ... FAILED
+
+failures:
+
+---- reset_timeout_is_bounded_and_exact stdout ----
+
+thread 'reset_timeout_is_bounded_and_exact' (30556) panicked at tests/rust/xhci_contain_execute.rs:422:5:
+assertion `left == right` failed
+  left: (ResetStuck, 1024, 1025)
+ right: (ResetStuck, 1024, 1024)
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    reset_timeout_is_bounded_and_exact
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 13 filtered out; finished in 0.00s
+

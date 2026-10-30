@@ -1,0 +1,18 @@
+
+running 1 test
+test reset_verification_checks_every_field_individually ... FAILED
+
+failures:
+
+---- reset_verification_checks_every_field_individually stdout ----
+
+thread 'reset_verification_checks_every_field_individually' (30705) panicked at tests/rust/xhci_contain_execute.rs:504:9:
+ports
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    reset_verification_checks_every_field_individually
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 13 filtered out; finished in 0.00s
+

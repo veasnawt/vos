@@ -25,7 +25,7 @@ MUTATIONS = {
     'reset-before-bus-master': (C, '[Step::AwaitHalted, Step::DisableMaster, Step::Reset,',
                                 '[Step::AwaitHalted, Step::Reset, Step::DisableMaster,',
                                 'eligible_idle_uefi_completes_and_issues_nothing'),
-    'skip-revalidation-0': (C, '    if now != *first {\n', '    if false {\n',
+    'skip-revalidation-0': (C, '    if now != *first {\n        r.push(K_REVALIDATE, R_CHANGED', '    if false {\n        r.push(K_REVALIDATE, R_CHANGED',
                             'revalidation_detects_every_change_and_unreadable_pass'),
     'skip-revalidation-1': (C, 'if !command_ok || now != *first {', 'if false {',
                             'revalidation_detects_every_change_and_unreadable_pass'),
@@ -75,6 +75,8 @@ def main():
     ap.add_argument('--kernel-build', type=Path, required=True, help='build directory of this checkout')
     ap.add_argument('--rustc', required=True)
     ap.add_argument('--out', type=Path, required=True)
+    ap.add_argument('--prune-mutants', action='store_true',
+                    help='remove each mutant build tree after its result and logs are recorded (saves storage; off by default)')
     args = ap.parse_args()
     out = args.out.resolve()
     if out.exists() or not out.is_relative_to(ROOT / 'build'):
@@ -154,6 +156,8 @@ def main():
             if f'{test} ... FAILED' not in mlog:
                 raise RuntimeError('mutation control failed for an unrelated reason: ' + name)
             report['mutation_controls'][name] = f'detected by {test} (exit 101)'
+            if args.prune_mutants:
+                shutil.rmtree(tree)   # this script's own temporary build; its logs and result stay
         report['status'] = 'PASS'
     except Exception as error:
         report['status'] = 'FAIL'

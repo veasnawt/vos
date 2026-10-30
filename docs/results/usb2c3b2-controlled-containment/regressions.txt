@@ -1,0 +1,16 @@
+native-test exit 1
+native-prod exit 0
+c3a-host exit 0
+c1-host exit 0
+c3b1-host exit 0
+c3a2-san exit 0
+c2-host exit 0
+usb2b-host exit 0
+usb1-host exit 0
+r2b-host exit 0
+r1-bounds exit 0
+usb2a-core exit 0
+r2b-native-normal exit 0
+kernel-4-verify exit 0
+r2b-native-verify exit 99
+r2b-native-verify-2 exit 0

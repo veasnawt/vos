@@ -312,7 +312,8 @@ static const char contain_fields[] =
     "state\0refusals\0uefi\0command\0status\0usbcmd\0usbsts\0findings\0excluded\0irq_off\0plan_len\0trace_len";
 static const char contain_refusals[] =
     "not-uefi\0unqualified\0profile\0pci-command\0pci-status\0pcie-unknown\0pcie-busy\0interrupts\0running\0"
-    "usbcmd\0usbsts\0ports\0slots\0scratchpads\0residue\0memory\0changed\0plan\0unreadable";
+    "usbcmd\0usbsts\0ports\0slots\0scratchpads\0residue\0memory\0changed\0plan\0unreadable\0"
+    "subsystem\0environment";
 static const char contain_kinds[] = "?\0revalidate\0pci-write\0mmio-write\0reset-poll\0verify";
 static const char contain_results[] = "ok\0CHANGED\0NOT-ISSUED\0NOT-RUN";
 
@@ -322,11 +323,21 @@ static const char *nth(const char *list, unsigned n)
     return list;
 }
 
+static void refusal_names(uint32_t m)
+{
+    for (unsigned b = 0; b < 21; b++)
+        if (m >> b & 1) { serial_puts(" "); serial_puts(nth(contain_refusals, b)); }
+}
+
 int xhci_contain_boot(const char *cmdline)
 {
     if (!boot_option(cmdline, "vos.usb2-contain=1")) return 1; /* no effects or output */
     if (contain_ran++) return 0;
+#ifdef VOS_CONTAIN_TEST
+    serial_puts("usb2c3b1: containment DRY-RUN (read-only rehearsal); this QEMU test image's C3b.2 write path is not reachable from it\r\n");
+#else
     serial_puts("usb2c3b1: containment DRY-RUN (read-only rehearsal); this build has no PCI or xHCI write path\r\n");
+#endif
     struct candidates c = {0};
     struct pci_addr unused;
     int stopped = pci_scan_bus0(visit, &c, &unused);
@@ -371,8 +382,153 @@ int xhci_contain_boot(const char *cmdline)
         return 1;
     }
     serial_puts("usb2c3b1: REFUSED:");
-    for (unsigned b = 0; b < 19; b++)
-        if (r.refusals >> b & 1) { serial_puts(" "); serial_puts(nth(contain_refusals, b)); }
+    refusal_names(r.refusals);
     serial_puts("; nothing written\r\n");
     return 1;
 }
+
+#ifdef VOS_CONTAIN_TEST
+/* ---- USB.2-C3b.2 controlled containment: QEMU test images only ---- */
+#include "lib.h"
+#ifndef XHCI_CONTAIN_WRITE32
+/* The one aligned 32-bit uncached store. Hosted tests substitute a model. */
+#define XHCI_CONTAIN_WRITE32(va, v) (*(volatile uint32_t *)(uintptr_t)(va) = (v))
+#endif
+
+static struct { unsigned ran, armed, w1, w2; } exe;
+
+/* The image's identity. scripts/check-contain-image.py demands this exact string
+ * in a test image and forbids it (and every executor symbol) in any other. */
+const char vos_contain_test_image[] = "VOS-CONTAIN-TEST-IMAGE: QEMU-ONLY EXPERIMENTAL; NEVER FOR PHYSICAL PCS";
+
+/* W1, the only PCI configuration write: the qualified function's command
+ * register, 16 bits (a 32-bit write would also write the RW1C status), with
+ * Bus Master Enable cleared and every other bit as read. Once per boot. */
+int xhci_contain_w1(uint16_t old, uint16_t value)
+{
+    if (!exe.armed || exe.w1 || !qual.active || !qualify_context() || !(old & 4) || value != (old & ~4u) ||
+        pci_read16(qual.fn, 4) != old)
+        return DEVMAP_ESTATE;
+    exe.w1 = 1;
+    pci_write16(qual.fn, 4, value);
+    return DEVMAP_OK;
+}
+
+/* W2, the only register write: USBCMD of the leased BAR (CAPLENGTH read
+ * again), HCRST added to the value read, and only once W1 left bus mastering
+ * off as read now. Once per boot; never before W1. */
+int xhci_contain_w2(uint64_t token, uint32_t offset, uint32_t old, uint32_t value)
+{
+    uint64_t va, length;
+    if (!exe.armed || !exe.w1 || exe.w2 || !qual.active || !qualify_context() || !token || token != qual.token ||
+        devmap_scope_kind() != DEVMAP_SCOPE_XHCI_BAR || devmap_scope_extent(token, &va, &length) ||
+        (pci_read16(qual.fn, 4) & 4) || value != (old | 2u) || offset & 3 || (uint64_t)offset + 4 > length ||
+        offset != (XHCI_QUALIFY_READ32(va, 0) & 0xff) || XHCI_QUALIFY_READ32(va + offset, 0) != old)
+        return DEVMAP_ESTATE;
+    exe.w2 = 1;
+    XHCI_CONTAIN_WRITE32(va + offset, value);
+    return DEVMAP_OK;
+}
+
+/* Independent QEMU (TCG) test-environment evidence; bit set = check failed.
+ * 1 CPUID hypervisor bit and TCG signature, 2 ACPI RSDP OEM ID "BOCHS ",
+ * 4 Q35 host bridge 8086:29c0 with QEMU subsystem 1af4:1100. Reads only. */
+static uint32_t contain_environment(const struct boot_info *bi)
+{
+    uint32_t a, b, c, d, bad = 7;   /* memcmp: lib.h */
+    cpuid(1, 0, &a, &b, &c, &d);
+    if (c >> 31) {
+        cpuid(0x40000000, 0, &a, &b, &c, &d);
+        if (b == 0x54474354 && c == 0x43544743 && d == 0x47435447) bad &= ~1u;   /* "TCGTCGTCGTCG" */
+    }
+    if (bi && bi->info_end > bi->info_start + 8) {
+        const uint8_t *p = phys_to_virt(bi->info_start), *end = phys_to_virt(bi->info_end);
+        for (p += 8; p + 8 <= end; ) {
+            uint32_t type = *(const uint32_t *)p, size = *(const uint32_t *)(p + 4);
+            if (!type || size < 8 || size > (uint64_t)(end - p)) break;
+            if ((type == 14 || type == 15) && size >= 8 + 15 && !memcmp(p + 8, "RSD PTR ", 8) &&
+                !memcmp(p + 8 + 9, "BOCHS ", 6))
+                bad &= ~2u;
+            p += (size + 7) & ~7u;
+        }
+    }
+    struct pci_addr host = {0, 0, 0};
+    if (pci_read32(host, 0) == 0x29c08086 && pci_read32(host, 0x2c) == 0x11001af4) bad &= ~4u;
+    return bad;
+}
+
+static const char execute_fields[] =
+    "state\0refusals\0environment\0writes\0polls\0w1_old\0w1_new\0w1_readback\0w1_status\0usbsts_w1\0w2_old\0w2_new\0"
+    "usbcmd\0usbsts\0dnctrl\0config\0ports_active\0irq_regs_clear\0command\0status\0pcie";
+/* Indexed by state - 8 (states 1-7 are the rehearsal's and print as "refused"). */
+static const char execute_states[] =
+    "bus-master-off\0bus-master-stuck\0contained-bme-only\0reset-stuck\0reset-unverified\0contained\0"
+    "integrity-fault\0pre-W1-drift\0W1-failed\0PCI-changed\0controller-error\0pre-W2-drift";
+static const char *const execute_conflicts[] = {
+    "vos.usb2-contain=1", "vos.usb2-residue=1", "vos.usb2-qualify=1", "vos.usb2c2-dma=1", "vos.usb_probe=1" };
+
+static void state_text(uint32_t s)
+{
+    serial_puts("state "); serial_dec(s);
+    if (s >= 8) { serial_puts(" "); serial_puts(nth(execute_states, s - 8)); }
+}
+
+int xhci_contain_execute_boot(const char *cmdline)
+{
+    serial_puts("usb2c3b2: "); serial_puts(vos_contain_test_image); serial_puts("\r\n");
+    if (!boot_option(cmdline, "vos.usb2-contain-execute=1")) return 1;
+    if (exe.ran++) return 0;
+    for (unsigned i = 0; i < sizeof execute_conflicts / sizeof execute_conflicts[0]; i++)
+        if (boot_option(cmdline, execute_conflicts[i])) {
+            serial_puts("usb2c3b2: REFUSED: conflicting option "); serial_puts(execute_conflicts[i]);
+            serial_puts("; nothing written\r\n");
+            return 1;
+        }
+    struct candidates c = {0};
+    struct pci_addr unused;
+    int stopped = pci_scan_bus0(visit, &c, &unused);
+    uint64_t free = pmm_free_count();
+    unsigned maps = devmap_count(), owned = residue.count;
+    const struct boot_info *bi = residue.bi;
+    uint32_t uefi = bi && bi->efi && bi->efi_mmap_tags == 1 && !bi->efi_bs_active;
+    struct xhci_contain_execute_report r;
+    qual.fn = c.first; qual.active = 1; residue.session = 1; residue.frozen = 1; exe.armed = 1;
+    int32_t status = vos_xhci_contain_execute_v1(c.count, !stopped, devmap_maxphys(), uefi,
+                                                 contain_environment(bi), &r);
+    exe.armed = 0; qual.active = 0; residue.session = 0; residue.frozen = 0; residue.bi = NULL; residue.resv = NULL;
+    if (status == -2) {
+        serial_puts("usb2c3b2: FAIL: invalid report interface\r\n");
+        return 0;
+    }
+    print(&r.q);
+    const uint32_t *f = &r.state;
+    const char *name = execute_fields;
+    for (unsigned i = 0; i < 21; i++, name++) {
+        serial_puts(i % 7 ? " " : "\r\nusb2c3b2: ");
+        serial_puts(name); serial_puts("="); serial_hex(f[i]);
+        while (*name) name++;
+    }
+    serial_puts(" crcr="); serial_hex(r.crcr); serial_puts(" dcbaap="); serial_hex(r.dcbaap); serial_puts("\r\n");
+    int restored = !qual.token && !devmap_scope_token() && devmap_count() == maps && !devmap_audit() &&
+                   pmm_free_count() == free && residue.count == owned && pmm_check_in(pmm_kernel()) == PMM_OK;
+    if (r.q.status < 0 || !restored) {
+        serial_puts("usb2c3b2: FAIL: integrity (lease, mapping, reservation, PMM or PCI/xHCI state); ");
+        state_text(r.state); serial_puts("; bus mastering stays off\r\n");
+        return 0;
+    }
+    if (r.state == 13) {
+        serial_puts("usb2c3b2: CONTAINED: W1 and W2 issued and verified; bus mastering off, controller reset and halted\r\n");
+        return 1;
+    }
+    if (!r.writes) {
+        serial_puts("usb2c3b2: REFUSED:");
+        refusal_names(r.refusals);
+        if (r.state >= 8) { serial_puts(" "); serial_puts(nth(execute_states, r.state - 8)); }
+        serial_puts("; nothing written\r\n");
+        return 1;
+    }
+    serial_puts("usb2c3b2: STOPPED: ");
+    state_text(r.state); serial_puts("; writes final, bus mastering stays off\r\n");
+    return 1;
+}
+#endif

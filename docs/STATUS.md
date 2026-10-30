@@ -40,13 +40,23 @@ reads that excluded firmware memory in place through the existing kernel alias
 reuse protection and inspection completeness separately; a complete inspection
 never makes firmware memory releasable. BIOS residue (e820-reserved) stays
 protected but uninspected. No PCI/xHCI write; physical hardware remains unsupported.
-This branch's [USB.2-C3b.1 containment dry-run](results/usb2c3b1-containment-dry-run.md)
-is verified for PR review, not accepted or merged. Opt-in `vos.usb2-contain=1`
-admits only an idle QEMU xHCI left by UEFI (no slots, devices, scratchpads,
-pending interrupts, ambiguous ownership or residue hazards), re-observes it twice,
-and records the proposed bus-master clear and HCRST as `NOT-ISSUED` trace data. The
-build contains no PCI-write or register-write path; it establishes nothing about
-real reset behavior. C3b.2 (actual writes) requires separate authorization.
+The [USB.2-C3b.1 containment dry-run](results/usb2c3b1-containment-dry-run.md)
+is merged through [PR #32](https://github.com/veasnawt/vos/pull/32): opt-in
+`vos.usb2-contain=1` admits only an idle QEMU xHCI left by UEFI, re-observes it
+twice and records the proposed bus-master clear and HCRST as `NOT-ISSUED` trace
+data, with no PCI-write or register-write path.
+This branch's [USB.2-C3b.2 controlled containment](results/usb2c3b2-controlled-containment.md)
+is verified for PR review, not accepted or merged. **It exists only in a
+separately built, explicitly QEMU-only test image** (`VOS_CONTAIN_TEST=1` plus an
+acknowledgement token on the make command line, a `contain-test` build directory,
+a goal whitelist, and a per-link binary check that production kernels carry no
+trace of it). Behind the one-shot `vos.usb2-contain-execute=1`, and only for the
+strictly eligible idle UEFI QEMU xHCI in a verified QEMU 10.2.1 TCG environment,
+it makes exactly two writes: a 16-bit PCI Command write clearing Bus Master
+Enable, then a 32-bit USBCMD read-modify-write requesting HCRST, each verified,
+with every later outcome final and bus mastering never re-enabled. Real xHCI
+reset behavior, timing, Transactions Pending and DMA drain remain unverified;
+physical hardware is NOT TESTED and unauthorized.
 
 ## Current accepted components
 
@@ -132,8 +142,9 @@ through PR #25, USB.2-C1 read-only qualification through PR #27 and USB.2-C2
 software DMA ownership through PR #28 and the USB.2-C3a residue guard through
 PR #29 and the USB.2-C3a.2 early UEFI firmware memory exclusion through PR #30
 and the USB.2-C3a.3 protected firmware DMA inspection through PR #31.
-The USB.2-C3b.1 read-only containment dry-run is a review candidate on this
-branch; C3b.2 controller writes and later remain unimplemented.
+The USB.2-C3b.1 read-only containment dry-run is merged through PR #32. The
+USB.2-C3b.2 QEMU-only controlled containment is a review candidate on this branch;
+USB.2-C4, physical-PC activation and USB HID remain unimplemented.
 
 The [USB.1 Rust publication review](results/usb1-rust-publication-review.md)
 records the candidate production migration, preserved read-only behavior,

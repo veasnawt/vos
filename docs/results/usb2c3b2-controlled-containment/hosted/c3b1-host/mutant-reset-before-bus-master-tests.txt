@@ -1,0 +1,20 @@
+
+running 1 test
+test eligible_idle_uefi_completes_and_issues_nothing ... FAILED
+
+failures:
+
+---- eligible_idle_uefi_completes_and_issues_nothing stdout ----
+
+thread 'eligible_idle_uefi_completes_and_issues_nothing' (42843) panicked at tests/rust/xhci_containment.rs:82:5:
+assertion `left == right` failed: Rehearsal { state: Refused, refusals: 131072, len: 0, plan_len: 0, trace: [Trace { kind: 0, result: 0, width: 0, step: 0, offset: 0, old: 0, new: 0 }, Trace { kind: 0, result: 0, width: 0, step: 0, offset: 0, old: 0, new: 0 }, Trace { kind: 0, result: 0, width: 0, step: 0, offset: 0, old: 0, new: 0 }, Trace { kind: 0, result: 0, width: 0, step: 0, offset: 0, old: 0, new: 0 }, Trace { kind: 0, result: 0, width: 0, step: 0, offset: 0, old: 0, new: 0 }, Trace { kind: 0, result: 0, width: 0, step: 0, offset: 0, old: 0, new: 0 }] }
+  left: (Refused, 131072, 0, 1)
+ right: (DryRunComplete, 0, 5, 3)
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    eligible_idle_uefi_completes_and_issues_nothing
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 10 filtered out; finished in 0.00s
+

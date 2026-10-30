@@ -1,0 +1,281 @@
+{
+  "case": "uefi-y-qemu-xhci",
+  "firmware": "uefi",
+  "mode": "y",
+  "device": "qemu-xhci",
+  "expect": "execution",
+  "passed": false,
+  "first_allocation": {
+    "avail_ptr": 18446744071563542720,
+    "alloc_ptr": 18446744071563509952,
+    "frames": 262144,
+    "usable": 20708,
+    "free": 20708,
+    "hint": 0,
+    "ignored": 0,
+    "state": 1
+  },
+  "mb2": {
+    "tags": [
+      [
+        21,
+        12
+      ],
+      [
+        1,
+        89
+      ],
+      [
+        2,
+        27
+      ],
+      [
+        3,
+        20
+      ],
+      [
+        3,
+        22
+      ],
+      [
+        3,
+        22
+      ],
+      [
+        3,
+        25
+      ],
+      [
+        6,
+        520
+      ],
+      [
+        9,
+        1428
+      ],
+      [
+        4,
+        16
+      ],
+      [
+        8,
+        38
+      ],
+      [
+        12,
+        16
+      ],
+      [
+        14,
+        28
+      ],
+      [
+        15,
+        44
+      ],
+      [
+        17,
+        5968
+      ],
+      [
+        0,
+        8
+      ]
+    ],
+    "efi_header": {
+      "size": 5968,
+      "descriptor_size": 48,
+      "descriptor_version": 1,
+      "descriptors": 124,
+      "remainder": 0
+    },
+    "mmap_entries": 21,
+    "efi_descriptors": 124
+  },
+  "efi": {
+    "boot_services_frames_in_window": 9765,
+    "boot_services_frames_allocatable": 0,
+    "excluded_frames_oracle": 9765,
+    "excluded_ranges_oracle": [
+      [
+        "0x900000",
+        "0x1780000"
+      ],
+      [
+        "0x3b6c000",
+        "0x3b8c000"
+      ],
+      [
+        "0x6326000",
+        "0x66ea000"
+      ],
+      [
+        "0x66eb000",
+        "0x673f000"
+      ],
+      [
+        "0x6743000",
+        "0x6749000"
+      ],
+      [
+        "0x674a000",
+        "0x693f000"
+      ],
+      [
+        "0x6a00000",
+        "0x74ed000"
+      ],
+      [
+        "0x77ff000",
+        "0x7e00000"
+      ],
+      [
+        "0x7e6f000",
+        "0x7ec5000"
+      ],
+      [
+        "0x7ec6000",
+        "0x7ef4000"
+      ]
+    ],
+    "excluded_ranges_kernel": [
+      [
+        "0x900000",
+        "0x1780000"
+      ],
+      [
+        "0x3b6c000",
+        "0x3b8c000"
+      ],
+      [
+        "0x6326000",
+        "0x66ea000"
+      ],
+      [
+        "0x66eb000",
+        "0x673f000"
+      ],
+      [
+        "0x6743000",
+        "0x6749000"
+      ],
+      [
+        "0x674a000",
+        "0x693f000"
+      ],
+      [
+        "0x6a00000",
+        "0x74ed000"
+      ],
+      [
+        "0x77ff000",
+        "0x7e00000"
+      ],
+      [
+        "0x7e6f000",
+        "0x7ec5000"
+      ],
+      [
+        "0x7ec6000",
+        "0x7ef4000"
+      ]
+    ]
+  },
+  "firmware_dma_changed_pages": [],
+  "guard_window": {
+    "guard_entry": {
+      "free": 20707,
+      "pages": [
+        "0x6756000",
+        "0x6757000",
+        "0x6758000",
+        "0x6759000"
+      ],
+      "sha256": {
+        "0x6756000": "af887a7aecea3f996376a1e4995ae42fe470b25e4214926ee35ac49bc8535664",
+        "0x6757000": "d8aeccbc5c0ac9adecadc5bcaebb0a77e07ebf465bcc6a7975de83424cf20d41",
+        "0x6758000": "ad7facb2586fc6e966c004d7d1d16b024f5805ff7cb47c7a85dabd8b48892ca7",
+        "0x6759000": "b45c7320ca9be3e67c48278c906af78e58a3b78571f86d01196905f1f0e189e7"
+      },
+      "mappings": [
+        [
+          "0x6756000",
+          "0xffffffff86756000",
+          true,
+          true,
+          0
+        ],
+        [
+          "0x6757000",
+          "0xffffffff86757000",
+          true,
+          true,
+          0
+        ],
+        [
+          "0x6758000",
+          "0xffffffff86758000",
+          true,
+          true,
+          0
+        ],
+        [
+          "0x6759000",
+          "0xffffffff86759000",
+          true,
+          true,
+          0
+        ]
+      ]
+    },
+    "after_guard": {
+      "free": 20707,
+      "pages": [
+        "0x6756000",
+        "0x6757000",
+        "0x6758000",
+        "0x6759000"
+      ],
+      "sha256": {
+        "0x6756000": "af887a7aecea3f996376a1e4995ae42fe470b25e4214926ee35ac49bc8535664",
+        "0x6757000": "d8aeccbc5c0ac9adecadc5bcaebb0a77e07ebf465bcc6a7975de83424cf20d41",
+        "0x6758000": "ad7facb2586fc6e966c004d7d1d16b024f5805ff7cb47c7a85dabd8b48892ca7",
+        "0x6759000": "b45c7320ca9be3e67c48278c906af78e58a3b78571f86d01196905f1f0e189e7"
+      },
+      "mappings": [
+        [
+          "0x6756000",
+          "0xffffffff86756000",
+          true,
+          true,
+          0
+        ],
+        [
+          "0x6757000",
+          "0xffffffff86757000",
+          true,
+          true,
+          0
+        ],
+        [
+          "0x6758000",
+          "0xffffffff86758000",
+          true,
+          true,
+          0
+        ],
+        [
+          "0x6759000",
+          "0xffffffff86759000",
+          true,
+          true,
+          0
+        ]
+      ]
+    }
+  },
+  "verdict": "usb2c3b2: REFUSED: conflicting option vos.usb2-contain=1; nothing written",
+  "contained": false,
+  "execute": {},
+  "serial_sha256": "7726c6582c09c2c5b3be8f435ebae82921a45589e4c2eb0a438dfe63a4750268"
+}

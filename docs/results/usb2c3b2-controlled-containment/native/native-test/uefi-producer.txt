@@ -1,0 +1,19 @@
+xorriso 1.5.6 : RockRidge filesystem manipulator, libburnia project.
+
+Drive current: -outdev 'stdio:/home/veasnawt/src/vos-usb2c3b2/build/usb2c3b2-1/final/native-test/uefi.iso'
+Media current: stdio file, overwriteable
+Media status : is blank
+Media summary: 0 sessions, 0 data blocks, 0 data,  934g free
+Added to ISO image: directory '/'='/home/veasnawt/src/vos-usb2c3b2/build/usb2c3b2-1/final/native-test/producer-tmp/grub.cTrLID'
+xorriso : UPDATE :     323 files added in 1 seconds
+Added to ISO image: file '/boot/vos.bin'='/home/veasnawt/src/vos-usb2c3b2/build/usb2c3b2-1/contain-test-7/vos.bin'
+Added to ISO image: file '/boot/vsh.elf'='/home/veasnawt/src/vos-usb2c3a/build/usb2c3a-1/final/apps/vsh.elf'
+Added to ISO image: file '/boot/hello.elf'='/home/veasnawt/src/vos-usb2c3a/build/usb2c3a-1/final/apps/hello.elf'
+Added to ISO image: file '/boot/rixie.elf'='/home/veasnawt/src/vos-usb2c3a/build/usb2c3a-1/final/apps/rixie.elf'
+Added to ISO image: file '/boot/gui-demo.elf'='/home/veasnawt/src/vos-usb2c3a/build/usb2c3a-1/final/apps/gui-demo.elf'
+Added to ISO image: file '/boot/grub/grub.cfg'='/home/veasnawt/src/vos-usb2c3b2/build/usb2c3b2-1/final/native-test/grub-uefi.cfg'
+xorriso : UPDATE :     329 files added in 1 seconds
+ISO image produced: 6168 sectors
+Written to medium : 6168 sectors at LBA 0
+Writing to 'stdio:/home/veasnawt/src/vos-usb2c3b2/build/usb2c3b2-1/final/native-test/uefi.iso' completed successfully.
+

@@ -1,0 +1,20 @@
+
+running 1 test
+test duplicate_and_malformed_extended_capabilities ... FAILED
+
+failures:
+
+---- duplicate_and_malformed_extended_capabilities stdout ----
+
+thread 'duplicate_and_malformed_extended_capabilities' (42741) panicked at tests/rust/xhci_qualify.rs:312:5:
+assertion `left == right` failed
+  left: Ok(Inspection { header: [16777280, 134221888, 15, 0, 552961, 8192, 4096], operational: 64, doorbell: 8192, runtime: 4096, pagesize: 1, legacy: Some(Legacy { offset: 40, usblegsup: 513, usblegctlsts: 0 }), slots: 64, ports: 8, interrupters: 16, ac64: true, extended: 3, protocol_ports: 255 })
+ right: Err(InvalidCapability)
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    duplicate_and_malformed_extended_capabilities
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 16 filtered out; finished in 0.00s
+

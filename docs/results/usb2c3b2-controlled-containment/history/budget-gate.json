@@ -1,0 +1,108 @@
+{
+  "event": "C3b.2 stopped at the code-size gate before any hosted test, QEMU execution, commit or publication",
+  "authorization_rule": "If a limit is exceeded, STOP, retain measurements and request approval. Do not silently optimize away safety checks",
+  "baseline": {
+    "commit": "6eb9a30be63e29667a75b9a04c4cafe994f25e3c",
+    "measured_build": "/home/veasnawt/src/vos-usb2c3b1/build/usb2c3b1-1/kernel-3 (accepted C3b.1 build; tree-identical to the merge; same toolchain nightly-2026-09-03)"
+  },
+  "ceilings": {
+    "code_rodata_growth": 3072,
+    "permanent_rw_growth": 32,
+    "largest_stack_frame": 512,
+    "cumulative_c3b_code_rodata": 12288,
+    "tree": "600 MiB (stop 566,231,040 B)"
+  },
+  "builds": {
+    "kernel-1 (production, first draft)": {
+      "text_rodata_growth_bytes": 375,
+      "bss_growth_bytes": 0,
+      "data_growth_bytes": 0,
+      "pt_load_memsz_delta": 0,
+      "rust_max_frame": 472,
+      "c_max_frame": 480,
+      "per_object_delta": {
+        ".rodata rust": 88,
+        ".text rust": 287
+      },
+      "measurements": "build/usb2c3b2-1/measure-kernel-1/measurements.json"
+    },
+    "contain-test-1 (test image, first draft)": {
+      "text_rodata_growth_bytes": 10226,
+      "bss_growth_bytes": 0,
+      "data_growth_bytes": 0,
+      "pt_load_memsz_delta": 12288,
+      "rust_max_frame": 696,
+      "c_max_frame": 480,
+      "per_object_delta": {
+        ".rodata kernel.o": 619,
+        ".rodata rust": 128,
+        ".rodata xhci_qualify.o": 352,
+        ".text kernel.o": 90,
+        ".text rust": 6358,
+        ".text xhci_qualify.o": 2679
+      },
+      "measurements": "build/usb2c3b2-1/measure-contain-test-1/measurements.json"
+    },
+    "kernel-2 (production, final candidate)": {
+      "text_rodata_growth_bytes": 117,
+      "bss_growth_bytes": 0,
+      "data_growth_bytes": 0,
+      "pt_load_memsz_delta": 0,
+      "rust_max_frame": 472,
+      "c_max_frame": 480,
+      "per_object_delta": {
+        ".rodata rust": 88,
+        ".rodata xhci_qualify.o": 32,
+        ".text rust": 2,
+        ".text xhci_qualify.o": -5
+      },
+      "measurements": "build/usb2c3b2-1/measure-kernel-2/measurements.json"
+    },
+    "contain-test-2 (test image: shared dyn rehearse, non-inlined stages, compact reads, shared refusal names)": {
+      "text_rodata_growth_bytes": 8281,
+      "bss_growth_bytes": 0,
+      "data_growth_bytes": 0,
+      "pt_load_memsz_delta": 12288,
+      "rust_max_frame": 472,
+      "c_max_frame": 480,
+      "per_object_delta": {
+        ".rodata kernel.o": 597,
+        ".rodata rust": 232,
+        ".rodata xhci_qualify.o": 384,
+        ".text kernel.o": 90,
+        ".text rust": 4474,
+        ".text xhci_qualify.o": 2504
+      },
+      "measurements": "build/usb2c3b2-1/measure-contain-test-2/measurements.json"
+    },
+    "contain-test-3 (test image, final candidate: plus non-inlined register read and session helper)": {
+      "text_rodata_growth_bytes": 7468,
+      "bss_growth_bytes": 0,
+      "data_growth_bytes": 0,
+      "pt_load_memsz_delta": 12288,
+      "rust_max_frame": 472,
+      "c_max_frame": 480,
+      "per_object_delta": {
+        ".rodata kernel.o": 597,
+        ".rodata rust": 232,
+        ".rodata xhci_qualify.o": 384,
+        ".text kernel.o": 90,
+        ".text rust": 3661,
+        ".text xhci_qualify.o": 2504
+      },
+      "measurements": "build/usb2c3b2-1/measure-contain-test-3/measurements.json"
+    }
+  },
+  "exceeded": {
+    "code_rodata_growth": "test image 7,468 B vs 3,072 B (2.43x); cumulative C3b 8,899 + 7,468 = 16,367 B vs 12,288 B",
+    "within": "production growth 117 B; RW growth 0 B (no .data/.bss change); largest frames 472 B Rust / 480 B C"
+  },
+  "isolation_verified": {
+    "production kernel-2": "no execute symbols, no pci_write reference from xhci_qualify.o, option string absent",
+    "test contain-test-3": "4 execute symbols, exactly one pci_write16 reference (W1 adapter), option string present",
+    "make guard": "VOS_CONTAIN_TEST=1 without a contain-test BUILD directory and VOS_CONTAIN_TEST=yes both refused by make"
+  },
+  "not_done": "no hosted tests, sanitizer runs, mutation/compile-fail controls, QEMU boots, write traces, commit, push or PR. No PCI or xHCI write was executed anywhere.",
+  "candidate_patch": "build/usb2c3b2-1/history/candidate-at-budget-gate.patch (sha256 54b6089951a0c63d936ea362f82407d8152c71b643e8a38edadde67c470e4f92); also uncommitted in the worktree",
+  "gate0_estimate_error": "Gate 0 estimated 1.7-2.7 KiB; the measured 7.3 KiB includes the duplicated defense the authorization requires (two independently revalidating C adapters, immediate re-reads, a full post-W1 re-observation, a 112-read post-reset verification, three QEMU environment checks, conflict refusal) plus the evidence output."
+}

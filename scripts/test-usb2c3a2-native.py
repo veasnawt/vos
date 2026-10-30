@@ -47,10 +47,20 @@ def load(name, file):
 
 C3A = load('usb2c3a_native', 'test-usb2c3a-native.py')
 G = load('vos_gdbstub', 'vos_gdbstub.py')
+V2 = load('usb2c3b2_trace', 'usb2c3b2_trace.py')
 C1, H, V, T = C3A.C1, C3A.H, C3A.V, C3A.T
 need, sha, APPS, EVENTS, DEVICES = C3A.need, C3A.sha, C3A.APPS, C3A.EVENTS, C3A.DEVICES
 # USB.2-C3b.1: 't' runs the read-only containment dry-run.
 EXTRA = {**C3A.EXTRA, 't': 'vos.usb2-contain=1'}
+# USB.2-C3b.2 (QEMU test-image kernels only; a production kernel must ignore every one of these):
+# 'x' is the single authorized execute option; the rest are the execute option plus one conflicting option.
+CONFLICTS = {'y': 'vos.usb2-contain=1', 'z': 'vos.usb2-residue=1', 'w': 'vos.usb_probe=1', 'u': 'vos.usb2-qualify=1',
+             'v': 'vos.usb2c2-dma=1'}
+EXTRA['x'] = 'vos.usb2-contain-execute=1'
+EXTRA.update({k: 'vos.usb2-contain-execute=1 ' + v for k, v in CONFLICTS.items()})
+XMODES = 'xyzwuv'
+FLAVOUR = 'production'   # --flavour test: the kernel under test is the QEMU-only containment image
+MARKER = 'VOS-CONTAIN-TEST-IMAGE: QEMU-ONLY EXPERIMENTAL; NEVER FOR PHYSICAL PCS'
 COMPRESS = False   # --compress-traces: verified, hash-recorded gzip of each analysed raw trace
 
 
@@ -60,7 +70,9 @@ def device_args(device):
     base, *extras = device.split('+')
     args = list(DEVICES[base])
     for e in extras:
-        if e == 'disk':
+        if e in ('nohv', 'oem'):   # environment variants: handled by machine_args
+            continue
+        elif e == 'disk':
             args += ['-drive', f'file={DISK},if=none,id=vs0,format=raw,readonly=on',
                      '-device', 'virtio-blk-pci,drive=vs0,disable-legacy=on']
         elif e in ('kbd', 'kbd2'):
@@ -68,6 +80,56 @@ def device_args(device):
         else:
             raise SystemExit('unknown device extra ' + e)
     return args
+
+
+def usb_conflict_boot(mode):
+    """The kernel skips the whole USB.2 block when the probe is combined with an observation option (mode c)."""
+    return mode == 'c'
+
+
+def verdict_execute(s, result, fw, device, mode):
+    """The guest's account of a boot with the execute option: authorized, refused, or ignored (production)."""
+    # Every observation session that ran alongside reports its own register-read count; the trace must equal their sum.
+    result['mmio_reads_reported'] = sum(int(x, 16) for x in re.findall(r'mmio_reads=(0x[0-9a-f]+)', s))
+    if FLAVOUR == 'production':
+        need('usb2c3b2' not in s and 'CONTAIN-TEST' not in s, 'production image: the execute option is unknown; nothing printed')
+        result['verdict'] = 'production image ignores the execute option'
+        result['contained'] = False
+        return
+    m = re.search(r'usb2c3b2: (CONTAINED|REFUSED|STOPPED|FAIL)[^\r\n]*', s)
+    need(m and 'usb2c3b2: ' + MARKER in s, 'test-image banner and an execution verdict')
+    text = s[s.index('usb2c3b2: ' + MARKER):m.end()]
+    result['verdict'] = m[0]
+    result['contained'] = m[1] == 'CONTAINED'
+    result['execute'] = dict(re.findall(r'\b(\w+)=(0x[0-9a-f]+)', text))
+    c = result['execute']
+    if mode in CONFLICTS:
+        need(m[1] == 'REFUSED' and f'conflicting option {CONFLICTS[mode]}; nothing written' in m[0], f'conflicting option {CONFLICTS[mode]} refused')
+        return
+    extras = device.split('+')[1:]
+    if fw == 'uefi' and device in ('qemu-xhci', 'qemu-xhci+disk'):
+        need(m[1] == 'CONTAINED' and all(c.get(k) == v for k, v in (
+            ('state', '0xd'), ('refusals', '0x0'), ('environment', '0x0'), ('writes', '0x2'), ('polls', '0x1'),
+            ('w1_old', '0x7'), ('w1_new', '0x3'), ('w1_readback', '0x3'), ('w1_status', '0x10'), ('usbsts_w1', '0x1'),
+            ('w2_old', '0x0'), ('w2_new', '0x2'), ('usbcmd', '0x0'), ('usbsts', '0x1'), ('dnctrl', '0x0'), ('config', '0x0'),
+            ('ports_active', '0x0'), ('irq_regs_clear', '0x1'), ('command', '0x3'), ('status', '0x10'), ('crcr', '0x0'),
+            ('dcbaap', '0x0'))), 'eligible idle UEFI QEMU profile: both writes issued and every read-back verified')
+        return
+    names = set(m[0].split('REFUSED:')[1].split(';')[0].split()) if m[1] == 'REFUSED' else set()
+    result['refused_for'] = sorted(names)
+    want = ({'unqualified'} if not device.startswith('qemu-xhci') else
+            {'environment'} if set(extras) & {'nohv', 'oem'} else
+            {'not-uefi', 'running'} if running_firmware(fw, device) else {'not-uefi'} if fw == 'bios' else {'slots', 'usbsts', 'interrupts'})
+    need(m[1] == 'REFUSED' and 'nothing written' in m[0] and want <= names, f'refused for {sorted(want)}, nothing written (got {sorted(names)})')
+    if fw == 'bios' and not device.startswith('qemu-xhci+kbd'):
+        need('not-uefi' in names, 'BIOS controllers are never contained')
+
+
+def machine_args(device):
+    """-machine/-accel/-cpu: q35 under TCG. '+oem' changes the ACPI OEM ID, '+nohv' hides the hypervisor CPUID bit."""
+    extras = device.split('+')[1:]
+    machine = 'q35' + (',x-oem-id=EVILRS' if 'oem' in extras else '')
+    return ['-machine', machine, '-accel', 'tcg'] + (['-cpu', 'qemu64,-hypervisor'] if 'nohv' in extras else [])
 
 
 def running_firmware(fw, device):
@@ -309,7 +371,7 @@ def boot(out, fw, iso, variables, mode, device, syms, expect):
     serial, sock, gsock, trace = folder / 'serial.txt', folder / 'qmp', folder / 'gdb', folder / 'trace.txt'
     events = folder / 'events.txt'
     events.write_text('\n'.join(EVENTS) + '\n')
-    argv = ['qemu-system-x86_64', '-machine', 'q35', '-accel', 'tcg', '-m', '128M', '-cdrom', str(iso),
+    argv = ['qemu-system-x86_64', *machine_args(device), '-m', '128M', '-cdrom', str(iso),
             '-boot', 'd', '-display', 'none', '-nic', 'none', *device_args(device),
             '-serial', 'file:' + str(serial), '-qmp', 'unix:' + str(sock) + ',server=on,wait=off',
             '-gdb', 'unix:' + str(gsock) + ',server=on,wait=off',
@@ -400,7 +462,7 @@ def boot(out, fw, iso, variables, mode, device, syms, expect):
                      'baseline: BootServices frames allocatable (the hazard)')
             else:
                 need(not mb2['efi_header'] and not printed, 'BIOS: no EFI map, no EFI exclusion')
-            if expect in ('inspection', 'containment') and mode != 'c' and functions and device.startswith('qemu-xhci'):
+            if expect in ('inspection', 'containment', 'execution') and mode != 'c' and functions and device.startswith('qemu-xhci'):
                 # USB.2-C3a.3: observe the guard window from outside: stop at the
                 # guard's entry and at screen_init (its successor), compare PMM
                 # bitmaps, firmware page bytes and every page-table mapping of them.
@@ -413,6 +475,11 @@ def boot(out, fw, iso, variables, mode, device, syms, expect):
                     gdb.remove(0, syms[symbol], 1)
                     state, av, al = snapshot(gdb, syms)
                     pointers, pages = quiet_pages(q, bar)
+                    if label == 'after_guard' and mode == 'x' and not pages and window.get('guard_entry', {}).get('pages'):
+                        # The authorized reset cleared the controller's pointers. The firmware's pages are the ones it
+                        # had at the guard's entry: hash and map those, and keep the cleared pointers as evidence.
+                        result['pointers_at_guard_exit'] = pointers
+                        pages = window['guard_entry']['pages']
                     window[label] = {'state': state, 'avail': av, 'alloc': al, 'pages': pages,
                                      'sha256': {hex(p): hashlib.sha256(gdb.read(KVMA + p, PAGE)).hexdigest() for p in pages},
                                      'mappings': mappings(gdb, gdb.u64(syms['kernel_root']), pages)}
@@ -452,12 +519,12 @@ def boot(out, fw, iso, variables, mode, device, syms, expect):
                     g = result['guard']
                     if device.startswith('qemu-xhci') and fw == 'uefi' and expect == 'baseline':
                         need('PLAN VALID' in m[0] and result['reserved'], 'baseline UEFI guard reserves (C3a)')
-                    elif device.startswith('qemu-xhci') and fw == 'uefi' and expect in ('inspection', 'containment'):
+                    elif device.startswith('qemu-xhci') and fw == 'uefi' and expect in ('inspection', 'containment', 'execution'):
                         need('PLAN VALID' in m[0] and not result['reserved'] and g.get('findings') == '0x0' and
                              g.get('excluded') == '0x7' and g.get('inspection') == '0x3' and g.get('hazards') == '0x0' and
                              'reuse_protected=1 inspection_complete=1; firmware memory is never released' in text + s,
                              'excluded firmware residue inspected in place: complete, nothing reserved')
-                    elif device.startswith('qemu-xhci') and expect in ('inspection', 'containment'):
+                    elif device.startswith('qemu-xhci') and expect in ('inspection', 'containment', 'execution'):
                         need('REFUSED: residue incomplete' in m[0] and not result['reserved'] and g.get('hazards') == '0x0'
                              and g.get('excluded') == '0x0' and g.get('inspection') == '0x1',
                              'BIOS: map-protected residue, reuse protected, inspection incomplete, refused')
@@ -493,10 +560,16 @@ def boot(out, fw, iso, variables, mode, device, syms, expect):
                                 {'not-uefi'} if fw == 'bios' else {'slots', 'usbsts', 'interrupts'})
                         need('nothing written' in m[0] and 'NOT-ISSUED' not in text and required <= names,
                              f'refused for {sorted(required)} before proposing anything (got {sorted(names)})')
+                elif mode in XMODES:
+                    verdict_execute(s, result, fw, device, mode)
                 else:
                     need('usb2c3a:' not in s, 'guard absent unless selected')
-                if mode != 't':
+                if mode not in ('t', 'y'):   # 'y' selects the dry-run together with the execute option
                     need('usb2c3b1:' not in s, 'containment dry-run absent unless selected')
+                if mode not in XMODES:
+                    need(not re.search(r'usb2c3b2: (CONTAINED|REFUSED|STOPPED|FAIL)', s), 'the execute path is silent unless selected')
+                need((MARKER in s) == (FLAVOUR == 'test' and 'usb2c3b2:' in s and not usb_conflict_boot(mode)),
+                     'only the QEMU test image carries (and prints) the experimental marker')
                 if mode == 'q':
                     need('usb2c1: QUALIFIED: profile qualified' in s, 'C1 qualification alongside the guard')
                 if mode == 'd':
@@ -507,7 +580,7 @@ def boot(out, fw, iso, variables, mode, device, syms, expect):
                 if not light:
                     q.key('a'); wait('gui-demo: KEY a PRESENTED')
                     q.key('b'); wait('gui-demo: KEY b PRESENTED')
-                    shots = mode == 'n' and device == 'qemu-xhci'
+                    shots = (mode == 'n' or result.get('contained')) and device == 'qemu-xhci'
                     if shots:
                         q.command('screendump', {'filename': str(folder / 'gui.png'), 'format': 'png'})
                     q.key('q'); wait('user[vsh]: VOS>')
@@ -565,6 +638,14 @@ def boot(out, fw, iso, variables, mode, device, syms, expect):
                 result['bar0'] = base
                 result['register_snapshot'] = C1.snapshot(q, base)
                 result['firmware_pointers'], pages = C3A.firmware_pages(q, base)
+                result['contained'] = mode == 'x' and 'usb2c3b2: CONTAINED' in data()
+                if result['contained']:
+                    # The reset cleared the controller's pointers; the pages themselves are the firmware's, as seen
+                    # (and hashed) at the guard's entry, and they must still be unallocatable.
+                    fp = result['firmware_pointers']
+                    need(not pages and fp['crcr'] == fp['dcbaap'] == fp['erstba'] == fp['erdp'] == '0x0',
+                         'the reset cleared the command ring, DCBAA and event ring pointers')
+                    pages = window['guard_entry']['pages']
                 result['xhci_pages'] = {hex(p): got[p // PAGE] for p in pages}
                 need(pages, 'firmware xHCI ring/context pointers present')
                 if fw == 'uefi' and expect == 'baseline':
@@ -603,6 +684,7 @@ def boot(out, fw, iso, variables, mode, device, syms, expect):
             result['serial_sha256'] = sha(serial) if serial.exists() else None
             (folder / 'result.json').write_text(json.dumps(result, indent=2) + '\n')
     bdf = (functions[0]['bus'], functions[0]['slot'], functions[0]['function']) if functions else (255, 255, 255)
+    result['xhci_bdf'] = list(bdf)
     analysis = T.analyze(trace, bdf)
     (folder / 'trace-analysis.json').write_text(json.dumps(analysis, indent=2) + '\n')
     result['trace_sha256'], result['trace_bytes'] = sha(trace), trace.stat().st_size
@@ -632,6 +714,8 @@ def trace_checks(result, trace, analysis, mode, device, fw=''):
     need(analysis.get('boundary_found'), 'VOS serial boundary found in trace')
     vos = analysis['vos']
     result['trace_vos'] = {k: v for k, v in vos.items() if k != 'examples'}
+    if mode in XMODES:
+        return execute_trace_checks(result, trace, analysis, mode, device, fw)
     need(vos['xhci_mmio_writes'] == 0, 'no xHCI MMIO writes after VOS start')
     need(vos['xhci_cfg_writes'] == 0, 'no xHCI PCI configuration writes after VOS start')
     by = cfg_writes_by_device(trace, analysis['boundary_event_index'])
@@ -663,6 +747,36 @@ def trace_checks(result, trace, analysis, mode, device, fw=''):
         need(not stale or '+kbd' in device, f'snapshot equals last firmware write: {stale}')
 
 
+def execute_trace_checks(result, trace, analysis, mode, device, fw):
+    """Boots with the execute option, judged by the independent verifier (usb2c3b2_trace.py): a contained boot has exactly
+    W1 then W2 and the documented reset consequences; every other boot has no xHCI write and no VOS-caused state event."""
+    contained = bool(result.get('contained'))
+    bdf = tuple(result.get('xhci_bdf', (255, 255, 255)))
+    verdict = V2.verify(V2.load(trace), bdf, result.get('bar0', 0), slots=0x40, ports=8, contained=contained,
+                        firmware_driven=running_firmware(fw, device),
+                        other_cfg_allowed=('virtio-blk-pci',) if device.endswith('+disk') else ())
+    result['write_trace'] = {k: v for k, v in verdict.items() if k != 'problems'}
+    result['write_trace_problems'] = verdict['problems']
+    need(verdict['ok'], f'independent write-trace verdict: {verdict["problems"]}')
+    vos = analysis['vos']
+    if not device.endswith('+disk'):
+        need(vos['other_cfg_writes'] == 0, 'no other PCI configuration writes after VOS start')
+    need(vos['xhci_read_events'] == vos['xhci_mmio_reads'], 'usb_xhci read events agree with MMIO reads')
+    # Reported reads of every session that ran, the USB.1 probe's fixed 7 (mode w), and the W2 adapter's own two
+    # re-reads of CAPLENGTH and USBCMD when W2 was issued.
+    expected = result.get('mmio_reads_reported', 0) + (7 if mode == 'w' else 0) + (2 if contained else 0)
+    need(vos['xhci_mmio_reads'] == expected, f'register reads {vos["xhci_mmio_reads"]} == expected {expected}')
+    if 'register_snapshot' in result:
+        firmware, by_vos = T.register_writes(trace, result['bar0'], analysis['boundary_event_index'])
+        snap = result['register_snapshot']
+        if contained:
+            need(by_vos == {'0x0040': [2]}, f'the only register VOS wrote is USBCMD, once, with HCRST: {by_vos}')
+            need(all(snap[k] == 0 for k in ('0x0058', '0x005c', '0x0070', '0x0074', '0x0078', '0x1030', '0x1038')) and
+                 snap['0x0040'] == 0 and snap['0x0044'] == 1, 'registers read at the end are the reset defaults')
+        else:
+            need(not by_vos, 'no VOS register writes (provenance)')
+
+
 def reanalyze(folder):
     """Re-check a retained boot whose guest-side checks all passed, from its raw
     trace and recorded analysis; the original result.json is left untouched."""
@@ -689,8 +803,9 @@ def main():
     ap.add_argument('--apps', type=Path, required=True)
     ap.add_argument('--efi', type=Path, required=True)
     ap.add_argument('--out', type=Path, required=True)
-    ap.add_argument('--expect', choices=('baseline', 'exclusion', 'inspection', 'containment'), required=True)
+    ap.add_argument('--expect', choices=('baseline', 'exclusion', 'inspection', 'containment', 'execution'), required=True)
     ap.add_argument('--compress-traces', action='store_true', help='verified gzip of analysed traces (raw hash kept)')
+    ap.add_argument('--flavour', choices=('production', 'test'), default='production', help='kernel flavour under test')
     ap.add_argument('--cases', help='comma-separated fw-mode-device subset')
     ap.add_argument('--disk', type=Path, required=True, help='read-only ext2 fixture (accepted N6.3 disk)')
     ap.add_argument('--iso-dir', type=Path, help='reuse validated images of an earlier run of the same inputs')
@@ -713,14 +828,14 @@ def main():
              if len(l.split()) == 3}
     syms = {k: table[k] for k in ('kernel_pmm', 'pmm_alloc_frame', 'xhci_residue_boot', 'screen_init', 'kernel_root')
             if k in table}
-    need(len(syms) == 5 or args.expect not in ('inspection', 'containment'), 'symbols for the guard window')
+    need(len(syms) == 5 or args.expect not in ('inspection', 'containment', 'execution'), 'symbols for the guard window')
     inputs = {'/boot/vos.bin': kernel}
     for n in APPS:
         inputs[f'/boot/{n}.elf'] = (args.apps / f'{n}.elf').resolve()
     need(all(p.is_file() and not p.is_symlink() for p in inputs.values()), 'explicit regular inputs')
     cfg = out / 'grub.cfg'
     cfg.write_text('serial --unit=0 --speed=115200\nterminal_output console serial\n'
-                   'echo "USB2C3A CHOICE: n r q d p c t"\nread selection\nset extra=""\n' +
+                   'echo "USB2C3A CHOICE: n r q d p c t x y z w u v"\nread selection\nset extra=""\n' +
                    ''.join(f'if [ "$selection" = "{k}" ]; then set extra="{v}"; fi\n' for k, v in EXTRA.items() if v) +
                    'set gfxpayload=1024x768x32,auto\n'
                    'multiboot2 /boot/vos.bin vos.apps=1 vos.desktop=1 vos.gui=1 $extra\n' +
@@ -737,8 +852,20 @@ def main():
                           ('n', 'qemu-xhci+kbd'), ('t', 'none'), ('t', 'nec-xhci'), ('t', 'two-xhci')]
         cases['bios'] += [('t', 'qemu-xhci'), ('t', 'qemu-xhci+disk'), ('t', 'qemu-xhci+kbd'), ('n', 'qemu-xhci+kbd'),
                           ('t', 'none'), ('t', 'nec-xhci'), ('t', 'two-xhci')]
-    global COMPRESS
+    if args.expect == 'execution':
+        need(args.flavour == 'test', '--expect execution runs the QEMU test-image kernel (--flavour test)')
+        cases = {'uefi': [('n', 'qemu-xhci'), ('r', 'qemu-xhci'), ('t', 'qemu-xhci'), ('x', 'qemu-xhci'), ('x', 'qemu-xhci+disk'),
+                          ('x', 'qemu-xhci+kbd'), ('x', 'qemu-xhci+kbd2'), ('x', 'none'), ('x', 'nec-xhci'), ('x', 'two-xhci'),
+                          ('x', 'qemu-xhci+nohv'), ('x', 'qemu-xhci+oem')] +
+                         [(k, 'qemu-xhci') for k in CONFLICTS],
+                 'bios': [('n', 'qemu-xhci'), ('x', 'qemu-xhci'), ('x', 'qemu-xhci+disk'), ('x', 'qemu-xhci+kbd'), ('x', 'none')]}
+    elif args.expect == 'containment' and args.flavour == 'production':
+        # The production kernel must ignore the execute option completely.
+        cases['uefi'] += [('x', 'qemu-xhci')]
+        cases['bios'] += [('x', 'qemu-xhci')]
+    global COMPRESS, FLAVOUR
     COMPRESS = args.compress_traces
+    FLAVOUR = args.flavour
     try:
         tmp = out / 'producer-tmp'; tmp.mkdir()
         for fw in ('bios', 'uefi'):

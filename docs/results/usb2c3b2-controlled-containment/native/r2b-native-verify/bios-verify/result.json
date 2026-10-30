@@ -1,0 +1,100 @@
+{
+  "passed": true,
+  "firmware": "bios",
+  "mode": "verify",
+  "screenshots": {
+    "checkerboard-initial": {
+      "path": "/home/veasnawt/src/vos-usb2c3b2/build/usb2c3b2-1/final/r2b-native-verify/bios-verify/checkerboard-regression-initial.png",
+      "sha256": "236ab33329494f770d3a05cc74bbfa4d3226f265c25798907d81733782f6af17"
+    },
+    "checkerboard-a": {
+      "path": "/home/veasnawt/src/vos-usb2c3b2/build/usb2c3b2-1/final/r2b-native-verify/bios-verify/checkerboard-regression-a.png",
+      "sha256": "f2d193fb15ad4348fe1c026ab89c9cedfb1a57ba0d33de886c7c148f6d9b575e"
+    },
+    "initial": {
+      "path": "/home/veasnawt/src/vos-usb2c3b2/build/usb2c3b2-1/final/r2b-native-verify/bios-verify/initial.png",
+      "sha256": "ab3b32706c100da094a11718b7b1c119c01d7cfbfbe045a9770bad91bc897af0"
+    },
+    "movement": {
+      "path": "/home/veasnawt/src/vos-usb2c3b2/build/usb2c3b2-1/final/r2b-native-verify/bios-verify/movement.png",
+      "sha256": "3addb95d8518f541cc51d635d17424468844821e79674f6b3e1b98ff3904f150"
+    },
+    "press": {
+      "path": "/home/veasnawt/src/vos-usb2c3b2/build/usb2c3b2-1/final/r2b-native-verify/bios-verify/press.png",
+      "sha256": "c5693b7d21df304a00a42260fa2efa5eab72d95caef9da1f15be844fc90fb929"
+    },
+    "click": {
+      "path": "/home/veasnawt/src/vos-usb2c3b2/build/usb2c3b2-1/final/r2b-native-verify/bios-verify/click.png",
+      "sha256": "2d74c8424da262ee4eb18aefb2237d84ffe1bf9113d5c4417bf853a48e64c12a"
+    },
+    "top-left": {
+      "path": "/home/veasnawt/src/vos-usb2c3b2/build/usb2c3b2-1/final/r2b-native-verify/bios-verify/top-left.png",
+      "sha256": "b9b42d93c19c7d462edda7c2aa8858aacfb17e299022404ba8c4890b0dc17959"
+    },
+    "top-right": {
+      "path": "/home/veasnawt/src/vos-usb2c3b2/build/usb2c3b2-1/final/r2b-native-verify/bios-verify/top-right.png",
+      "sha256": "7525261f59686c2b2b615f9e3385f313392cfec700447b3c72c3fa6a22add46e"
+    },
+    "bottom-right": {
+      "path": "/home/veasnawt/src/vos-usb2c3b2/build/usb2c3b2-1/final/r2b-native-verify/bios-verify/bottom-right.png",
+      "sha256": "75d708b8f3afb5cb386ea6d7b75a43a4adbd1744964e54f606b0c24c9a03d431"
+    },
+    "bottom-left": {
+      "path": "/home/veasnawt/src/vos-usb2c3b2/build/usb2c3b2-1/final/r2b-native-verify/bios-verify/bottom-left.png",
+      "sha256": "d85b3a11489333ba4c3ad306ef52c5f179cb73f19b10e8a914e2652c9501c955"
+    },
+    "final": {
+      "path": "/home/veasnawt/src/vos-usb2c3b2/build/usb2c3b2-1/final/r2b-native-verify/bios-verify/final.png",
+      "sha256": "b840dcc416b45f8d26efacf8b1559fa0f8c548b6fd673d93ada8e5662f4e641b"
+    }
+  },
+  "pixels": {
+    "initial": {
+      "passed": true,
+      "cursor": [
+        512,
+        390
+      ],
+      "panel_rgb": "0x409ddd",
+      "width": 1024,
+      "height": 768
+    },
+    "movement": {
+      "passed": true,
+      "cursor": [
+        524,
+        382
+      ],
+      "panel_rgb": "0x409ddd",
+      "width": 1024,
+      "height": 768
+    },
+    "press": {
+      "passed": true,
+      "cursor": [
+        524,
+        382
+      ],
+      "panel_rgb": "0xe8b34e",
+      "width": 1024,
+      "height": 768
+    },
+    "click": {
+      "passed": true,
+      "cursor": [
+        524,
+        382
+      ],
+      "panel_rgb": "0x42c497",
+      "width": 1024,
+      "height": 768
+    }
+  },
+  "exact_corners": true,
+  "keyboard_mouse": true,
+  "held_exit_cleanup": true,
+  "shell_hello_rixie": true,
+  "native_cases": 16,
+  "elapsed_seconds": 24.373524761,
+  "serial_sha256": "4acc3acad00e779daa33000c0543a69ba21b877a3bbc95eb9b3ad12ed2b01482"
+}

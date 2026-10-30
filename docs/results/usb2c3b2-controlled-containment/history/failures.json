@@ -1,0 +1,64 @@
+{
+  "retained_failures": [
+    {
+      "run": "budget gate (history/budget-gate.json)",
+      "what": "the first complete candidate exceeded the 3,072 B code ceiling: test image 10,226 B (first draft), 8,281 B, 7,468 B; production 117 B",
+      "outcome": "work stopped before any test, commit or publication; no safety check was removed; the owner approved Option A (separate production and test-image budgets); final test image 7,720 B"
+    },
+    {
+      "run": "final/c3b2-host (hosted verification, first run)",
+      "what": "mutation control 'w1-clears-more' was NOT detected (exit 0, expected 101)",
+      "cause": "an equivalent mutant: it cleared bit 0x400, which the eligible profile (command 0x0007) never has set, so it changed no behavior",
+      "correction": "the control now clears a bit that is set (bit 0); the executor was not changed. The failed run is retained"
+    },
+    {
+      "run": "final/c3b2-host-2 (second run)",
+      "what": "mutation control 'writes-not-counted' was NOT detected",
+      "cause": "it was pointed at a test whose run ends in full success, where the counter is masked",
+      "correction": "mapped to the fault-oracle test, which has runs that stop after W1; detected. Retained"
+    },
+    {
+      "run": "pre-check of the C and platform mutation controls (scratch)",
+      "what": "three C-adapter mutations survived (the W1 'BME already clear' check, W1's once-only flag, W2's 'W1 was issued' check) and two platform mutations did not compile under -D warnings",
+      "cause": "defense in depth: a second check masked each removed one (the device compare, the bus-master check); two mutants were written with unused variables",
+      "correction": "directed tests now exercise each layer on its own (device holding BME clear; state looking eligible again after W1; BME already off but W1 never issued); mutants rewritten to compile. All detected. Executor unchanged"
+    },
+    {
+      "run": "host harness development",
+      "what": "a drift-sweep expectation assumed 24 port reads after W1; measured 32 (the post-W1 read-back also read the ports)",
+      "cause": "a redundant port read in the read-back",
+      "correction": "the read-back is lean (ports=false); the full pass after it covers the ports. The directed test pins 72 port reads to their guarding stages"
+    },
+    {
+      "run": "final/native-test (test-image matrix, first run): 15 passed, 8 failed",
+      "what": "uefi-r, uefi-x-none and uefi-x-qemu-xhci+oem timed out; uefi-x-qemu-xhci+subsys: QEMU exited; uefi-y/z/w/u failed on runner expectations",
+      "cause": "the three timeouts were gdb-stub handshake timeouts (30 s) before VOS started, while analysis jobs were running concurrently; +subsys used a QEMU property that does not exist in 10.2.1 ('x-pci-sub-vendor-id' not found on qemu-xhci); y/z/w/u failed the runner's own expectations (a dry-run legitimately runs with option y; the expected register-read count ignored the other option's reads). The kernel's verdicts in all of them were correct",
+      "correction": "runner expectations fixed; +subsys removed (no native test possible; covered hosted); six cases rerun explicitly into final/native-test-rerun with no concurrent load: all PASS"
+    },
+    {
+      "run": "final/native-test-rerun",
+      "what": "uefi-x-qemu-xhci+oem timed out again (gdb handshake)",
+      "cause": "transient: a manual QEMU run of the same configuration booted and was correctly refused for 'environment'",
+      "correction": "third explicit attempt, final/native-test-rerun-2: PASS. All three attempts are retained; no automatic retry exists in the runner"
+    },
+    {
+      "run": "CI-script audit (scripts/test-usb2c3b1.py)",
+      "what": "the accepted C3b.1 CI script's mutation anchor 'skip-revalidation-0' ('    if now != *first {') became ambiguous: the C3b.2 executor's stage code contains the same line, so CI would have failed with 'mutation anchor not unique'",
+      "cause": "two lines of identical text in containment.rs",
+      "correction": "found by checking all 17 anchors before publication; the anchor is now specific to the dry-run's revalidation (identical mutation semantics, no check weakened); all 17 anchors unique; the same script gained an opt-in --prune-mutants flag (default off) used only to save storage"
+    },
+    {
+      "run": "final/r2b-native-verify (first attempt)",
+      "what": "refused by the storage guard (exit 99): its 30 MB projection would have crossed the 600 MiB cap",
+      "cause": "a conservative projection",
+      "correction": "rerun as r2b-native-verify-2 with the measured 24 MB projection, still guarded: PASS. Both are recorded in storage-log.txt"
+    },
+    {
+      "run": "ISO inspection of the native runner's images",
+      "what": "the production runner ISOs were flagged by the raw 'option string' scan",
+      "cause": "the runner's boot-menu configuration lists vos.usb2-contain-execute=1 on purpose (to prove the production kernel ignores it); the kernel inside was clean",
+      "correction": "production-ISO evidence is an ordinary make iso of the production kernel (clean, with no executor trace anywhere), plus a refused attempt to package a test kernel; the runner ISOs are documented as harness images"
+    }
+  ],
+  "production_code_changed_by_failures": "only before the final candidates: none of these failures changed production code; the test image changed (port re-reads, state names) before contain-test-7, the final candidate"
+}

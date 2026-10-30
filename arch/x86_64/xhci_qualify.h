@@ -90,6 +90,31 @@ int32_t vos_xhci_contain_v1(uint32_t candidates, uint32_t complete, uint32_t phy
 /* 1 if not requested or assessed (whatever the verdict) with everything
  * restored; 0 for an integrity failure. Once per boot. */
 int xhci_contain_boot(const char *cmdline);
+#ifdef VOS_CONTAIN_TEST
+/* USB.2-C3b.2 controlled containment, compiled ONLY into explicitly named QEMU
+ * test images (VOS_CONTAIN_TEST=1; production images contain none of this).
+ * vos.usb2-contain-execute=1, once per boot, exclusive with every other C-series
+ * option: a full C3b.1 rehearsal, then W1 (16-bit PCI command write clearing Bus
+ * Master Enable only) and W2 (USBCMD.HCRST by read-modify-write), each verified.
+ * Bus mastering is never re-enabled; firmware memory is never released. */
+struct xhci_contain_execute_report {
+    struct xhci_qualify_report q;
+    int32_t status;                 /* 0 contained, 1 refused or stopped, -1 integrity failure */
+    uint32_t state, refusals, environment, writes, polls;
+    uint32_t w1[4];                 /* old, new, command and status read back */
+    uint32_t usbsts_after_w1, w2[2];
+    uint32_t usbcmd, usbsts, dnctrl, config, ports_active, interrupters_clear, command, pci_status, pcie;
+    uint64_t crcr, dcbaap;          /* after the reset */
+};
+int32_t vos_xhci_contain_execute_v1(uint32_t candidates, uint32_t complete, uint32_t physical_bits,
+                                    uint32_t uefi, uint32_t environment, struct xhci_contain_execute_report *out);
+/* The only two write adapters: 0 written, otherwise refused and nothing written. */
+int xhci_contain_w1(uint16_t old, uint16_t value);
+int xhci_contain_w2(uint64_t token, uint32_t offset, uint32_t old, uint32_t value);
+/* 1 if not requested, refused or terminal with the kernel intact; 0 for an
+ * integrity failure. Always prints the test-image banner. */
+int xhci_contain_execute_boot(const char *cmdline);
+#endif
 /* Frame class: 0 free, 1 owned by this guard, 2 allocated, 3 protected,
  * 4 untracked, 5 excluded firmware RAM (readable in place, never reserved).
  * Reserve: 0, -2 registry full, -3 duplicate, -4 not reservable.

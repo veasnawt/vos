@@ -1,0 +1,358 @@
+{
+ "xhci_contain_execute_boot": {
+  "worst_case_bytes": 4288,
+  "path": [
+   {
+    "function": "xhci_contain_execute_boot",
+    "frame": 440
+   },
+   {
+    "function": "vos_xhci_contain_execute_v1",
+    "frame": 424
+   },
+   {
+    "function": "_RNvNtCs5YZeFliBs6N_10vos_kernel12xhci_qualify7qualify",
+    "frame": 440
+   },
+   {
+    "function": "_RNSNvYNCNvNtCs5YZeFliBs6N_10vos_kernel12xhci_contain19vos_xhci_contain_v10INtNtNtCs5DY3uuhqWn8_4core3ops8function6FnOnceTQNtNtBa_12xhci_qualify8BarWordsRNtNtNtBa_4xhci12capabilities10InspectionEE9call_once6vtableBa_",
+    "frame": 152
+   },
+   {
+    "function": "_RNvNtNtCs5YZeFliBs6N_10vos_kernel4xhci11containment8rehearse",
+    "frame": 296
+   },
+   {
+    "function": "_RNvNtNtCs5YZeFliBs6N_10vos_kernel4xhci11containment8refusals",
+    "frame": 24
+   },
+   {
+    "function": "_RNSNvYNCNvNtNtCs5YZeFliBs6N_10vos_kernel12xhci_contain7execute27vos_xhci_contain_execute_v10INtNtNtCs5DY3uuhqWn8_4core3ops8function6FnOnceTQNtNtBc_12xhci_qualify8BarWordsRNtNtNtBc_4xhci12capabilities10InspectionEE9call_once6vtableBc_",
+    "frame": 216
+   },
+   {
+    "function": "_RNvNtNtCs5YZeFliBs6N_10vos_kernel12xhci_contain7execute7session",
+    "frame": 424
+   },
+   {
+    "function": "_RNvNtNtCs5YZeFliBs6N_10vos_kernel4xhci11containment6stages",
+    "frame": 232
+   },
+   {
+    "function": "_RNvXNtCs5YZeFliBs6N_10vos_kernel12xhci_containNtB2_4LiveNtNtNtB4_4xhci11containment6Source7observe",
+    "frame": 264
+   },
+   {
+    "function": "_RNvNtNtCs5YZeFliBs6N_10vos_kernel4xhci12capabilities7inspect",
+    "frame": 328
+   },
+   {
+    "function": "_RNSNvYNCNvNtCs5YZeFliBs6N_10vos_kernel12xhci_residue19vos_xhci_residue_v10INtNtNtCs5DY3uuhqWn8_4core3ops8function6FnOnceTQNtNtBa_12xhci_qualify8BarWordsRNtNtNtBa_4xhci12capabilities10InspectionEE9call_once6vtableBa_",
+    "frame": 8
+   },
+   {
+    "function": "_RNvNtCs5YZeFliBs6N_10vos_kernel12xhci_residue7inspect",
+    "frame": 136
+   },
+   {
+    "function": "_RINvNtNtCs5YZeFliBs6N_10vos_kernel4xhci7residue6assessNtNtB6_12xhci_residue6KernelEB6_",
+    "frame": 200
+   },
+   {
+    "function": "_RNvMs_NtNtCs5YZeFliBs6N_10vos_kernel4xhci7residueINtB4_4WalkNtNtB8_12xhci_residue6KernelE5claimB8_",
+    "frame": 88
+   },
+   {
+    "function": "xhci_residue_page",
+    "frame": 8
+   },
+   {
+    "function": "efi_memory_firmware_frame",
+    "frame": 72
+   },
+   {
+    "function": "vos_efi_firmware_frame_v1",
+    "frame": 152
+   },
+   {
+    "function": "_RNvNtCs5YZeFliBs6N_10vos_kernel10efi_memory5probe",
+    "frame": 168
+   },
+   {
+    "function": "_RNvMs0_NtCs5YZeFliBs6N_10vos_kernel10efi_memoryNtB5_6EfiMap3raw",
+    "frame": 56
+   },
+   {
+    "function": "_RNvNtCs5YZeFliBs6N_10vos_kernel10efi_memory2le",
+    "frame": 0
+   }
+  ]
+ },
+ "xhci_contain_boot": {
+  "worst_case_bytes": 3832,
+  "path": [
+   {
+    "function": "xhci_contain_boot",
+    "frame": 0
+   },
+   {
+    "function": "vos_xhci_contain_v1",
+    "frame": 408
+   },
+   {
+    "function": "_RNvNtCs5YZeFliBs6N_10vos_kernel12xhci_qualify7qualify",
+    "frame": 440
+   },
+   {
+    "function": "_RNSNvYNCNvNtCs5YZeFliBs6N_10vos_kernel12xhci_contain19vos_xhci_contain_v10INtNtNtCs5DY3uuhqWn8_4core3ops8function6FnOnceTQNtNtBa_12xhci_qualify8BarWordsRNtNtNtBa_4xhci12capabilities10InspectionEE9call_once6vtableBa_",
+    "frame": 152
+   },
+   {
+    "function": "_RNvNtNtCs5YZeFliBs6N_10vos_kernel4xhci11containment8rehearse",
+    "frame": 296
+   },
+   {
+    "function": "_RNvNtNtCs5YZeFliBs6N_10vos_kernel4xhci11containment8refusals",
+    "frame": 24
+   },
+   {
+    "function": "_RNSNvYNCNvNtNtCs5YZeFliBs6N_10vos_kernel12xhci_contain7execute27vos_xhci_contain_execute_v10INtNtNtCs5DY3uuhqWn8_4core3ops8function6FnOnceTQNtNtBc_12xhci_qualify8BarWordsRNtNtNtBc_4xhci12capabilities10InspectionEE9call_once6vtableBc_",
+    "frame": 216
+   },
+   {
+    "function": "_RNvNtNtCs5YZeFliBs6N_10vos_kernel12xhci_contain7execute7session",
+    "frame": 424
+   },
+   {
+    "function": "_RNvNtNtCs5YZeFliBs6N_10vos_kernel4xhci11containment6stages",
+    "frame": 232
+   },
+   {
+    "function": "_RNvXNtCs5YZeFliBs6N_10vos_kernel12xhci_containNtB2_4LiveNtNtNtB4_4xhci11containment6Source7observe",
+    "frame": 264
+   },
+   {
+    "function": "_RNvNtNtCs5YZeFliBs6N_10vos_kernel4xhci12capabilities7inspect",
+    "frame": 328
+   },
+   {
+    "function": "_RNSNvYNCNvNtCs5YZeFliBs6N_10vos_kernel12xhci_residue19vos_xhci_residue_v10INtNtNtCs5DY3uuhqWn8_4core3ops8function6FnOnceTQNtNtBa_12xhci_qualify8BarWordsRNtNtNtBa_4xhci12capabilities10InspectionEE9call_once6vtableBa_",
+    "frame": 8
+   },
+   {
+    "function": "_RNvNtCs5YZeFliBs6N_10vos_kernel12xhci_residue7inspect",
+    "frame": 136
+   },
+   {
+    "function": "_RINvNtNtCs5YZeFliBs6N_10vos_kernel4xhci7residue6assessNtNtB6_12xhci_residue6KernelEB6_",
+    "frame": 200
+   },
+   {
+    "function": "_RNvMs_NtNtCs5YZeFliBs6N_10vos_kernel4xhci7residueINtB4_4WalkNtNtB8_12xhci_residue6KernelE5claimB8_",
+    "frame": 88
+   },
+   {
+    "function": "xhci_residue_page",
+    "frame": 8
+   },
+   {
+    "function": "efi_memory_firmware_frame",
+    "frame": 72
+   },
+   {
+    "function": "vos_efi_firmware_frame_v1",
+    "frame": 152
+   },
+   {
+    "function": "_RNvNtCs5YZeFliBs6N_10vos_kernel10efi_memory5probe",
+    "frame": 168
+   },
+   {
+    "function": "_RNvMs0_NtCs5YZeFliBs6N_10vos_kernel10efi_memoryNtB5_6EfiMap3raw",
+    "frame": 56
+   },
+   {
+    "function": "_RNvNtCs5YZeFliBs6N_10vos_kernel10efi_memory2le",
+    "frame": 0
+   }
+  ]
+ },
+ "xhci_residue_boot": {
+  "worst_case_bytes": 3704,
+  "path": [
+   {
+    "function": "xhci_residue_boot",
+    "frame": 0
+   },
+   {
+    "function": "vos_xhci_residue_v1",
+    "frame": 280
+   },
+   {
+    "function": "_RNvNtCs5YZeFliBs6N_10vos_kernel12xhci_qualify7qualify",
+    "frame": 440
+   },
+   {
+    "function": "_RNSNvYNCNvNtCs5YZeFliBs6N_10vos_kernel12xhci_contain19vos_xhci_contain_v10INtNtNtCs5DY3uuhqWn8_4core3ops8function6FnOnceTQNtNtBa_12xhci_qualify8BarWordsRNtNtNtBa_4xhci12capabilities10InspectionEE9call_once6vtableBa_",
+    "frame": 152
+   },
+   {
+    "function": "_RNvNtNtCs5YZeFliBs6N_10vos_kernel4xhci11containment8rehearse",
+    "frame": 296
+   },
+   {
+    "function": "_RNvNtNtCs5YZeFliBs6N_10vos_kernel4xhci11containment8refusals",
+    "frame": 24
+   },
+   {
+    "function": "_RNSNvYNCNvNtNtCs5YZeFliBs6N_10vos_kernel12xhci_contain7execute27vos_xhci_contain_execute_v10INtNtNtCs5DY3uuhqWn8_4core3ops8function6FnOnceTQNtNtBc_12xhci_qualify8BarWordsRNtNtNtBc_4xhci12capabilities10InspectionEE9call_once6vtableBc_",
+    "frame": 216
+   },
+   {
+    "function": "_RNvNtNtCs5YZeFliBs6N_10vos_kernel12xhci_contain7execute7session",
+    "frame": 424
+   },
+   {
+    "function": "_RNvNtNtCs5YZeFliBs6N_10vos_kernel4xhci11containment6stages",
+    "frame": 232
+   },
+   {
+    "function": "_RNvXNtCs5YZeFliBs6N_10vos_kernel12xhci_containNtB2_4LiveNtNtNtB4_4xhci11containment6Source7observe",
+    "frame": 264
+   },
+   {
+    "function": "_RNvNtNtCs5YZeFliBs6N_10vos_kernel4xhci12capabilities7inspect",
+    "frame": 328
+   },
+   {
+    "function": "_RNSNvYNCNvNtCs5YZeFliBs6N_10vos_kernel12xhci_residue19vos_xhci_residue_v10INtNtNtCs5DY3uuhqWn8_4core3ops8function6FnOnceTQNtNtBa_12xhci_qualify8BarWordsRNtNtNtBa_4xhci12capabilities10InspectionEE9call_once6vtableBa_",
+    "frame": 8
+   },
+   {
+    "function": "_RNvNtCs5YZeFliBs6N_10vos_kernel12xhci_residue7inspect",
+    "frame": 136
+   },
+   {
+    "function": "_RINvNtNtCs5YZeFliBs6N_10vos_kernel4xhci7residue6assessNtNtB6_12xhci_residue6KernelEB6_",
+    "frame": 200
+   },
+   {
+    "function": "_RNvMs_NtNtCs5YZeFliBs6N_10vos_kernel4xhci7residueINtB4_4WalkNtNtB8_12xhci_residue6KernelE5claimB8_",
+    "frame": 88
+   },
+   {
+    "function": "xhci_residue_page",
+    "frame": 8
+   },
+   {
+    "function": "efi_memory_firmware_frame",
+    "frame": 72
+   },
+   {
+    "function": "vos_efi_firmware_frame_v1",
+    "frame": 152
+   },
+   {
+    "function": "_RNvNtCs5YZeFliBs6N_10vos_kernel10efi_memory5probe",
+    "frame": 168
+   },
+   {
+    "function": "_RNvMs0_NtCs5YZeFliBs6N_10vos_kernel10efi_memoryNtB5_6EfiMap3raw",
+    "frame": 56
+   },
+   {
+    "function": "_RNvNtCs5YZeFliBs6N_10vos_kernel10efi_memory2le",
+    "frame": 0
+   }
+  ]
+ },
+ "xhci_qualify_boot": {
+  "worst_case_bytes": 3464,
+  "path": [
+   {
+    "function": "xhci_qualify_boot",
+    "frame": 0
+   },
+   {
+    "function": "vos_xhci_qualify_v1",
+    "frame": 40
+   },
+   {
+    "function": "_RNvNtCs5YZeFliBs6N_10vos_kernel12xhci_qualify7qualify",
+    "frame": 440
+   },
+   {
+    "function": "_RNSNvYNCNvNtCs5YZeFliBs6N_10vos_kernel12xhci_contain19vos_xhci_contain_v10INtNtNtCs5DY3uuhqWn8_4core3ops8function6FnOnceTQNtNtBa_12xhci_qualify8BarWordsRNtNtNtBa_4xhci12capabilities10InspectionEE9call_once6vtableBa_",
+    "frame": 152
+   },
+   {
+    "function": "_RNvNtNtCs5YZeFliBs6N_10vos_kernel4xhci11containment8rehearse",
+    "frame": 296
+   },
+   {
+    "function": "_RNvNtNtCs5YZeFliBs6N_10vos_kernel4xhci11containment8refusals",
+    "frame": 24
+   },
+   {
+    "function": "_RNSNvYNCNvNtNtCs5YZeFliBs6N_10vos_kernel12xhci_contain7execute27vos_xhci_contain_execute_v10INtNtNtCs5DY3uuhqWn8_4core3ops8function6FnOnceTQNtNtBc_12xhci_qualify8BarWordsRNtNtNtBc_4xhci12capabilities10InspectionEE9call_once6vtableBc_",
+    "frame": 216
+   },
+   {
+    "function": "_RNvNtNtCs5YZeFliBs6N_10vos_kernel12xhci_contain7execute7session",
+    "frame": 424
+   },
+   {
+    "function": "_RNvNtNtCs5YZeFliBs6N_10vos_kernel4xhci11containment6stages",
+    "frame": 232
+   },
+   {
+    "function": "_RNvXNtCs5YZeFliBs6N_10vos_kernel12xhci_containNtB2_4LiveNtNtNtB4_4xhci11containment6Source7observe",
+    "frame": 264
+   },
+   {
+    "function": "_RNvNtNtCs5YZeFliBs6N_10vos_kernel4xhci12capabilities7inspect",
+    "frame": 328
+   },
+   {
+    "function": "_RNSNvYNCNvNtCs5YZeFliBs6N_10vos_kernel12xhci_residue19vos_xhci_residue_v10INtNtNtCs5DY3uuhqWn8_4core3ops8function6FnOnceTQNtNtBa_12xhci_qualify8BarWordsRNtNtNtBa_4xhci12capabilities10InspectionEE9call_once6vtableBa_",
+    "frame": 8
+   },
+   {
+    "function": "_RNvNtCs5YZeFliBs6N_10vos_kernel12xhci_residue7inspect",
+    "frame": 136
+   },
+   {
+    "function": "_RINvNtNtCs5YZeFliBs6N_10vos_kernel4xhci7residue6assessNtNtB6_12xhci_residue6KernelEB6_",
+    "frame": 200
+   },
+   {
+    "function": "_RNvMs_NtNtCs5YZeFliBs6N_10vos_kernel4xhci7residueINtB4_4WalkNtNtB8_12xhci_residue6KernelE5claimB8_",
+    "frame": 88
+   },
+   {
+    "function": "xhci_residue_page",
+    "frame": 8
+   },
+   {
+    "function": "efi_memory_firmware_frame",
+    "frame": 72
+   },
+   {
+    "function": "vos_efi_firmware_frame_v1",
+    "frame": 152
+   },
+   {
+    "function": "_RNvNtCs5YZeFliBs6N_10vos_kernel10efi_memory5probe",
+    "frame": 168
+   },
+   {
+    "function": "_RNvMs0_NtCs5YZeFliBs6N_10vos_kernel10efi_memoryNtB5_6EfiMap3raw",
+    "frame": 56
+   },
+   {
+    "function": "_RNvNtCs5YZeFliBs6N_10vos_kernel10efi_memory2le",
+    "frame": 0
+   }
+  ]
+ }
+}

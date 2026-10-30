@@ -1,0 +1,1 @@
+/home/veasnawt/src/vos-usb2c3b2/build/usb2c3b2-1/kernel-4/vos.bin: NOT a test image: {'marker': False, 'option': False, 'symbols': [], 'rust_executor': False}

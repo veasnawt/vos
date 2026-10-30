@@ -1,0 +1,17 @@
+uefi-r-qemu-xhci PASS
+uefi-x-none PASS
+uefi-x-qemu-xhci+oem FAIL timed out
+uefi-y-qemu-xhci PASS
+uefi-z-qemu-xhci PASS
+uefi-w-qemu-xhci PASS
+uefi-u-qemu-xhci PASS
+Traceback (most recent call last):
+  File "/home/veasnawt/src/vos-usb2c3b2/scripts/test-usb2c3a2-native.py", line 921, in <module>
+    main()
+    ~~~~^^
+  File "/home/veasnawt/src/vos-usb2c3b2/scripts/test-usb2c3a2-native.py", line 917, in main
+    need(report['passed'], 'native matrix failures: ' + str(report['failures']))
+    ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/veasnawt/src/vos-usb2c3b2/scripts/test-usb2c1-native.py", line 56, in need
+    raise RuntimeError(message)
+RuntimeError: native matrix failures: [{'case': 'uefi-x-qemu-xhci+oem', 'error': 'timed out', 'where': 'Traceback (most recent call last):\n  File "/home/veasnawt/src/vos-usb2c3b2/scripts/vos_gdbstub.py", line 18, in __init__\n    self.command(\'QStartNoAckMode\')\n    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^\n  File "/home/veasnawt/src/vos-usb2c3b2/scripts/vos_gdbstub.py", line 51, in command\n    reply = self._packet()\n  File "/home/veasnawt/src/vos-usb2c3b2/scripts/vos_gdbstub.py", line 44, in _packet\n    chunk = self.s.recv(65536)\nTimeoutError: timed out\n'}]

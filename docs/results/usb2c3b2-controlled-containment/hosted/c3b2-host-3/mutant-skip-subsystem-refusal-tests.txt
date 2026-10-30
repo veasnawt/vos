@@ -1,0 +1,20 @@
+
+running 1 test
+test environment_and_subsystem_refuse_only_when_executing ... FAILED
+
+failures:
+
+---- environment_and_subsystem_refuse_only_when_executing stdout ----
+
+thread 'environment_and_subsystem_refuse_only_when_executing' (30801) panicked at tests/rust/xhci_contain_execute.rs:380:5:
+assertion `left == right` failed
+  left: 0
+ right: 524288
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    environment_and_subsystem_refuse_only_when_executing
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 13 filtered out; finished in 0.00s
+

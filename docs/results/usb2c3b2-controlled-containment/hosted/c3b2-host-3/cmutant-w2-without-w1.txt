@@ -1,0 +1,51 @@
+  C3b.2 eligible QEMU profile: exactly W1 then W2, read-backs, reset, once per boot, firmware memory untouched: 40 checks PASS
+  C3b.2 disabled by default even in the test image: 21 checks PASS
+  C3b.2 refused, nothing written: conflicting option vos.usb2-contain=1: 18 checks PASS
+  C3b.2 refused, nothing written: conflicting option vos.usb2-residue=1: 18 checks PASS
+  C3b.2 refused, nothing written: conflicting option vos.usb2-qualify=1: 18 checks PASS
+  C3b.2 refused, nothing written: conflicting option vos.usb2c2-dma=1: 18 checks PASS
+  C3b.2 refused, nothing written: conflicting option vos.usb_probe=1: 18 checks PASS
+  C3b.2 refused, nothing written: BIOS: 19 checks PASS
+  C3b.2 refused, nothing written: command 0x107: 19 checks PASS
+  C3b.2 refused, nothing written: running controller: 19 checks PASS
+  C3b.2 refused, nothing written: USBSTS.EINT: 19 checks PASS
+  C3b.2 refused, nothing written: USBCMD.INTE: 19 checks PASS
+  C3b.2 refused, nothing written: IMAN.IP: 19 checks PASS
+  C3b.2 refused, nothing written: MSI-X enabled: 19 checks PASS
+  C3b.2 refused, nothing written: active slot: 19 checks PASS
+  C3b.2 refused, nothing written: port change: 19 checks PASS
+  C3b.2 refused, nothing written: port connected: 19 checks PASS
+  C3b.2 refused, nothing written: PCIe transactions pending: 19 checks PASS
+  C3b.2 refused, nothing written: profile mismatch: 19 checks PASS
+  C3b.2 refused, nothing written: NEC controller: 19 checks PASS
+  C3b.2 refused, nothing written: no controller: 19 checks PASS
+  C3b.2 refused, nothing written: two controllers: 19 checks PASS
+  C3b.2 refused, nothing written: bad context: 19 checks PASS
+  C3b.2 refused, nothing written: xHCI subsystem not QEMU's: 19 checks PASS
+  C3b.2 refused, nothing written: xHCI subsystem zero: 19 checks PASS
+  C3b.2 refused, nothing written: no hypervisor bit: 19 checks PASS
+  C3b.2 refused, nothing written: KVM signature: 19 checks PASS
+  C3b.2 refused, nothing written: TCG signature off by one bit: 19 checks PASS
+  C3b.2 refused, nothing written: ACPI OEM ID not BOCHS: 19 checks PASS
+  C3b.2 refused, nothing written: no ACPI tag: 19 checks PASS
+  C3b.2 refused, nothing written: host bridge not Q35: 19 checks PASS
+  C3b.2 refused, nothing written: host bridge subsystem: 19 checks PASS
+  C3b.2 refused, nothing written: no host bridge: 19 checks PASS
+  C3b.2 W1 ignored by the device: final, no W2, nothing restored: 15 checks PASS
+  C3b.2 W1 changes the status: final, no W2: 15 checks PASS
+  C3b.2 controller error (HCE) after W1: final, no W2, loud integrity failure: 15 checks PASS
+  C3b.2 W1 changes more than Bus Master Enable: final, no W2: 16 checks PASS
+  C3b.2 no write ever sets Bus Master Enable: 11 checks PASS
+  C3b.2 HCRST never clears: final, no abort or retry: 16 checks PASS
+  C3b.2 CNR never clears: final: 16 checks PASS
+  C3b.2 event ring pointer survives the reset: unverified: 16 checks PASS
+  C3b.2 command ring pointer survives the reset: unverified: 16 checks PASS
+  C3b.2 a port reports a device after the reset: unverified: 16 checks PASS
+  C3b.2 IMOD at the specification default is accepted: 15 checks PASS
+  C3b.2 stuck reset polls exactly the bound: 15 checks PASS
+  C3b.2 a device appears at every read of a full execution: only valid write prefixes: 8142 checks PASS
+  C3b.2 a device on each port read: the guarding stage is pinned (before W1, after W1, before W2, after reset): 531 checks PASS
+  C3b.2 W1 adapter refuses unless all of its own preconditions hold: 21 checks PASS
+FAIL tests/host/usb2c3b2-execute.c:498 xhci_contain_w2(token,0x40,0,2)!=0 && wn==0 && bar[0x40/4]==0
+
+scenario C3b.2 W2 adapter: order, lease, value, offset, bus-master and once-only checks FAILED

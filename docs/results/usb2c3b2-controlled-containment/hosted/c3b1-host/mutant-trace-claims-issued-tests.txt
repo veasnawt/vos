@@ -1,0 +1,20 @@
+
+running 1 test
+test trace_is_data_only_and_every_write_is_marked_not_issued ... FAILED
+
+failures:
+
+---- trace_is_data_only_and_every_write_is_marked_not_issued stdout ----
+
+thread 'trace_is_data_only_and_every_write_is_marked_not_issued' (43210) panicked at tests/rust/xhci_containment.rs:363:13:
+assertion `left == right` failed: Trace { kind: 2, result: 0, width: 16, step: 2, offset: 4, old: 7, new: 3 }
+  left: 0
+ right: 2
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    trace_is_data_only_and_every_write_is_marked_not_issued
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 10 filtered out; finished in 0.00s
+

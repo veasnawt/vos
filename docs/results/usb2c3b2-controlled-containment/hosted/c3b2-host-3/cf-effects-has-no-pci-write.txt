@@ -1,0 +1,9 @@
+error[E0599]: no method named `write_pci` found for mutable reference `&mut dyn Effects` in the current scope
+ --> /home/veasnawt/src/vos-usb2c3b2/build/usb2c3b2-1/final/c3b2-host-3/cf-effects-has-no-pci-write.rs:2:31
+  |
+2 | fn f(e: &mut dyn Effects) { e.write_pci(0x10, 1); }
+  |                               ^^^^^^^^^ method not found in `&mut dyn Effects`
+
+error: aborting due to 1 previous error
+
+For more information about this error, try `rustc --explain E0599`.

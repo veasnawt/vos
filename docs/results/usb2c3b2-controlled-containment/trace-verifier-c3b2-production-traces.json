@@ -1,0 +1,141 @@
+{
+  "accepted": {
+    "xhci_cfg_writes": 1,
+    "xhci_register_writes": 1,
+    "state_events": 82
+  },
+  "rejected": {
+    "missing W1": "expected exactly 1 xHCI configuration write, saw 0",
+    "missing W2": "expected exactly 1 xHCI register write, saw 0",
+    "duplicate W1": "expected exactly 1 xHCI configuration write, saw 2",
+    "duplicate W2": "expected exactly 1 xHCI register write, saw 2",
+    "W2 before W1": "W2 precedes W1",
+    "W1 32-bit": "W1 access is size 4 value 0x3, expected a 16-bit write of 0x3",
+    "W1 8-bit": "W1 access is size 1 value 0x3, expected a 16-bit write of 0x3",
+    "W1 value 0x1": "W1 value 0x1, expected 0x3",
+    "W1 sets bus master": "W1 value 0x7, expected 0x3",
+    "W1 wrong offset": "W1 offset 0x6, expected 0x4",
+    "W1 wrong index write": "W1 is not preceded by the configuration index write for (0, 2, 0) offset 0x4",
+    "W2 wrong value": "W2 value 0x3, expected 0x2",
+    "W2 wrong size": "W2 size 1, expected 4",
+    "W2 wrong address": "W2 address 0xc000000044, expected 0xc000000040",
+    "W2 wrong region": "W2 targets region 'runtime', expected the operational registers",
+    "extra register write": "expected exactly 1 xHCI register write, saw 2",
+    "extra config write to xHCI": "expected exactly 1 xHCI configuration write, saw 2",
+    "extra config write elsewhere": "configuration write to virtio-blk-pci 00:03.0 not authorized",
+    "second reset": "1 controller state event(s) outside the single reset: ['usb_xhci_reset === RESET ===']",
+    "controller started": "2 controller state event(s) outside the single reset: ['usb_xhci_run', 'usb_xhci_fetch_trb']",
+    "stray link notification": "1 controller state event(s) outside the single reset: ['usb_xhci_port_notify port 2, bits 0x20000']",
+    "slot activity": "1 controller state event(s) outside the single reset: ['usb_xhci_slot_enable slotid 1']",
+    "state between writes": "controller state events between W1 and W2: ['usb_xhci_doorbell_write off 0x0, val 0x0']",
+    "consequence missing a port": "the per-port reset consequences are not the expected link/notify pairs",
+    "consequence wrong bits": "the per-port reset consequences are not the expected link/notify pairs",
+    "consequence missing slot": "the events right after W2 are not the reset consequences",
+    "no write at all": "expected exactly 1 xHCI configuration write, saw 0",
+    "no boundary": "VOS serial boundary not found"
+  },
+  "real": {
+    "bios-c-qemu-xhci": {
+      "refusal_ok": true,
+      "rejected_as_contained": true
+    },
+    "bios-d-qemu-xhci": {
+      "refusal_ok": true,
+      "rejected_as_contained": true
+    },
+    "bios-n-qemu-xhci": {
+      "refusal_ok": true,
+      "rejected_as_contained": true
+    },
+    "bios-n-qemu-xhci+disk": {
+      "refusal_ok": true,
+      "rejected_as_contained": true
+    },
+    "bios-n-qemu-xhci+kbd": {
+      "refusal_ok": true,
+      "rejected_as_contained": true
+    },
+    "bios-p-qemu-xhci": {
+      "refusal_ok": true,
+      "rejected_as_contained": true
+    },
+    "bios-q-qemu-xhci": {
+      "refusal_ok": true,
+      "rejected_as_contained": true
+    },
+    "bios-r-qemu-xhci": {
+      "refusal_ok": true,
+      "rejected_as_contained": true
+    },
+    "bios-t-qemu-xhci": {
+      "refusal_ok": true,
+      "rejected_as_contained": true
+    },
+    "bios-t-qemu-xhci+disk": {
+      "refusal_ok": true,
+      "rejected_as_contained": true
+    },
+    "bios-t-qemu-xhci+kbd": {
+      "refusal_ok": true,
+      "rejected_as_contained": true
+    },
+    "bios-x-qemu-xhci": {
+      "refusal_ok": true,
+      "rejected_as_contained": true
+    },
+    "uefi-c-qemu-xhci": {
+      "refusal_ok": true,
+      "rejected_as_contained": true
+    },
+    "uefi-d-qemu-xhci": {
+      "refusal_ok": true,
+      "rejected_as_contained": true
+    },
+    "uefi-n-qemu-xhci": {
+      "refusal_ok": true,
+      "rejected_as_contained": true
+    },
+    "uefi-n-qemu-xhci+disk": {
+      "refusal_ok": true,
+      "rejected_as_contained": true
+    },
+    "uefi-n-qemu-xhci+kbd": {
+      "refusal_ok": true,
+      "rejected_as_contained": true
+    },
+    "uefi-p-qemu-xhci": {
+      "refusal_ok": true,
+      "rejected_as_contained": true
+    },
+    "uefi-q-qemu-xhci": {
+      "refusal_ok": true,
+      "rejected_as_contained": true
+    },
+    "uefi-r-qemu-xhci": {
+      "refusal_ok": true,
+      "rejected_as_contained": true
+    },
+    "uefi-t-qemu-xhci": {
+      "refusal_ok": true,
+      "rejected_as_contained": true
+    },
+    "uefi-t-qemu-xhci+disk": {
+      "refusal_ok": true,
+      "rejected_as_contained": true
+    },
+    "uefi-t-qemu-xhci+kbd": {
+      "refusal_ok": true,
+      "rejected_as_contained": true
+    },
+    "uefi-t-qemu-xhci+kbd2": {
+      "refusal_ok": true,
+      "rejected_as_contained": true
+    },
+    "uefi-x-qemu-xhci": {
+      "refusal_ok": true,
+      "rejected_as_contained": true
+    }
+  },
+  "status": "PASS",
+  "variants_rejected": 28
+}

@@ -3,6 +3,7 @@
 //! bound to one selected function. No PCI configuration or controller register
 //! is written, no DMA memory exists, no worker starts and nothing is enumerated.
 use crate::xhci::capabilities::{self, Inspection, Words};
+use crate::xhci::containment::BUS_MASTER;
 use crate::xhci::discovery::{self, Status};
 use crate::xhci::qualify::{self, Config, Pci, Reason, State};
 use crate::xhci::resources::{Kind, Lease};
@@ -13,7 +14,11 @@ use core::mem::{align_of, offset_of, size_of};
 /// (3) bodies, USBCMD/USBSTS and legacy words twice: well below 256 DWORDs.
 const READ_LIMIT: u32 = 256;
 /// Revalidation passes (USB.2-C3b.1) each get their own `READ_LIMIT`; at most this many.
+#[cfg(not(vos_contain_test))]
 const PHASE_LIMIT: u8 = 4;
+/// USB.2-C3b.2 test images: two more passes, the reset poll and the post-reset reads.
+#[cfg(vos_contain_test)]
+const PHASE_LIMIT: u8 = 7;
 
 unsafe extern "C" {
     // xhci_qualify.h: valid only inside the qualification session.
@@ -186,6 +191,7 @@ impl Config for PciConfig {
 pub(crate) struct BarWords<'a> {
     lease: &'a BarLease,
     reads: u32,
+    limit: u32,
     /// Reads of finished phases and the number of phases begun after the first.
     done: u32,
     phases: u8,
@@ -199,7 +205,21 @@ impl BarWords<'_> {
         self.phases += 1;
         self.done += self.reads;
         self.reads = 0;
+        self.limit = READ_LIMIT;
         true
+    }
+    /// USB.2-C3b.2: a new pass with its own budget (the bounded reset poll).
+    #[cfg(vos_contain_test)]
+    pub(crate) fn phase(&mut self, reads: u32) -> bool {
+        self.next_phase() && {
+            self.limit = reads;
+            true
+        }
+    }
+    /// The live lease token, for the one USBCMD write adapter.
+    #[cfg(vos_contain_test)]
+    pub(crate) fn token(&self) -> u64 {
+        self.lease.lease.as_ref().map_or(0, |l| l.token())
     }
     pub(crate) fn total_reads(&self) -> u32 {
         self.done + self.reads
@@ -213,7 +233,7 @@ impl Words for BarWords<'_> {
         if offset >= BAR_BYTES {
             return Err(Error::Truncated);
         }
-        if self.reads == READ_LIMIT {
+        if self.reads == self.limit {
             return Err(Error::Budget);
         }
         self.reads += 1;
@@ -273,11 +293,13 @@ fn record_inspection(r: &mut Report, i: &Inspection) {
 /// Runs while the lease is held, after the first and before the second
 /// observation of USBCMD/USBSTS/legacy words, so their stability check spans
 /// it. Reads only: `BarWords` has no write operation.
-pub(crate) type Hook<'h> = &'h mut dyn FnMut(&mut BarWords<'_>, &Inspection) -> Result<(), Reason>;
+/// A hook returns the PCI command bits it verifiably cleared: always 0, except
+/// USB.2-C3b.2's bus-master clear, the only change the re-observation accepts.
+pub(crate) type Hook<'h> = &'h mut dyn FnMut(&mut BarWords<'_>, &Inspection) -> Result<u16, Reason>;
 
 /// Everything that touches the leased BAR. Second observations of USBCMD,
 /// USBSTS and legacy-support words follow the walk, before release.
-fn inspect_bar(w: &mut BarWords<'_>, r: &mut Report, hook: Hook<'_>) -> Result<(), Reason> {
+fn inspect_bar(w: &mut BarWords<'_>, r: &mut Report, hook: Hook<'_>) -> Result<u16, Reason> {
     let i = capabilities::inspect(w).map_err(Reason::from)?;
     record_inspection(r, &i);
     // USB.1's accepted decoder must also accept the same copied header.
@@ -293,10 +315,10 @@ fn inspect_bar(w: &mut BarWords<'_>, r: &mut Report, hook: Hook<'_>) -> Result<(
         r.usblegsup_after = w.word(l.offset).map_err(Reason::from)?;
         r.usblegctlsts_after = w.word(l.offset + 4).map_err(Reason::from)?;
     }
-    hook(w, &i)?;
+    let cleared = hook(w, &i)?;
     r.usbcmd_after = w.word(op).map_err(Reason::from)?;
     r.usbsts_after = w.word(op + 4).map_err(Reason::from)?;
-    Ok(())
+    Ok(cleared)
 }
 
 fn finish(r: &mut Report, status: i32, reason: Reason) -> i32 {
@@ -328,7 +350,7 @@ pub(crate) fn qualify(candidates: u32, complete: bool, physical_bits: u32, r: &m
         }
     };
     r.lease_acquired = 1;
-    let mut words = BarWords { lease: &lease, reads: 0, done: 0, phases: 0 };
+    let mut words = BarWords { lease: &lease, reads: 0, limit: READ_LIMIT, done: 0, phases: 0 };
     let inspected = inspect_bar(&mut words, r, hook);
     r.mmio_reads = words.total_reads();
     // Release before any PCI re-observation; failure retains the lease (Drop).
@@ -336,10 +358,13 @@ pub(crate) fn qualify(candidates: u32, complete: bool, physical_bits: u32, r: &m
         return finish(r, -1, Reason::Release);
     }
     r.lease_released = 1;
+    let cleared = *inspected.as_ref().unwrap_or(&0);
+    let mut expected = pci.state;
+    expected.command &= !cleared;
     match qualify::observe(&mut PciConfig, &pci) {
         Ok(after) => {
             record_after(r, &after);
-            if after != pci.state {
+            if cleared & !BUS_MASTER != 0 || after != expected {
                 return finish(r, -1, Reason::StateChanged);
             }
         }
@@ -440,5 +465,5 @@ pub unsafe extern "C" fn vos_xhci_qualify_v1(
         out.write(ZERO);
         &mut *out
     };
-    qualify(candidates, complete != 0, physical_bits, r, &mut |_, _| Ok(()))
+    qualify(candidates, complete != 0, physical_bits, r, &mut |_, _| Ok(0))
 }

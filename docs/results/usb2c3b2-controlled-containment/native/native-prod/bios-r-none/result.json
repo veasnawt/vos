@@ -1,0 +1,270 @@
+{
+  "case": "bios-r-none",
+  "firmware": "bios",
+  "mode": "r",
+  "device": "none",
+  "expect": "containment",
+  "passed": true,
+  "first_allocation": {
+    "avail_ptr": 18446744071563530432,
+    "alloc_ptr": 18446744071563497664,
+    "frames": 262144,
+    "usable": 31927,
+    "free": 31927,
+    "hint": 0,
+    "ignored": 0,
+    "state": 1
+  },
+  "mb2": {
+    "tags": [
+      [
+        21,
+        12
+      ],
+      [
+        1,
+        62
+      ],
+      [
+        2,
+        29
+      ],
+      [
+        10,
+        28
+      ],
+      [
+        3,
+        20
+      ],
+      [
+        3,
+        22
+      ],
+      [
+        3,
+        22
+      ],
+      [
+        3,
+        25
+      ],
+      [
+        6,
+        232
+      ],
+      [
+        9,
+        1428
+      ],
+      [
+        4,
+        16
+      ],
+      [
+        5,
+        20
+      ],
+      [
+        7,
+        784
+      ],
+      [
+        8,
+        38
+      ],
+      [
+        14,
+        28
+      ],
+      [
+        0,
+        8
+      ]
+    ],
+    "efi_header": null,
+    "mmap_entries": 9,
+    "efi_descriptors": 0
+  },
+  "efi": {
+    "boot_services_frames_in_window": 0,
+    "boot_services_frames_allocatable": 0,
+    "excluded_frames_oracle": 0,
+    "excluded_ranges_oracle": [],
+    "excluded_ranges_kernel": []
+  },
+  "verdict": "usb2c3a: REFUSED: residue incomplete or controller unqualified; protected pages kept",
+  "guard": {
+    "base": "0x0",
+    "candidates": "0x0",
+    "complete": "0x1",
+    "vendor": "0x0",
+    "device": "0x0",
+    "class_revision": "0x0",
+    "pci_status": "0x0",
+    "bar_low": "0x0",
+    "bar_high": "0x0",
+    "bar_bits": "0x0",
+    "pci_caps": "0x0",
+    "pm_offset": "0x0",
+    "pmcsr_before": "0x0",
+    "power_state": "0x0",
+    "msi_offset": "0x0",
+    "msi_control_before": "0x0",
+    "msix_offset": "0x0",
+    "msix_control_before": "0x0",
+    "msix_table": "0x0",
+    "msix_pba": "0x0",
+    "command_before": "0x0",
+    "version": "0x0",
+    "caplength": "0x0",
+    "hcs1": "0x0",
+    "hcs2": "0x0",
+    "hcc1": "0x0",
+    "doorbell": "0x0",
+    "runtime": "0x0",
+    "pagesize": "0x0",
+    "xecp_headers": "0x0",
+    "protocol_ports": "0x0",
+    "usb1_compatible": "0x0",
+    "legacy_offset": "0x0",
+    "usblegsup_before": "0x0",
+    "usblegctlsts_before": "0x0",
+    "usblegsup_after": "0x0",
+    "usblegctlsts_after": "0x0",
+    "usbcmd_before": "0x0",
+    "usbsts_before": "0x0",
+    "usbcmd_after": "0x0",
+    "usbsts_after": "0x0",
+    "command_after": "0x0",
+    "bar_low_after": "0x0",
+    "bar_high_after": "0x0",
+    "pmcsr_after": "0x0",
+    "msi_control_after": "0x0",
+    "msix_control_after": "0x0",
+    "mmio_reads": "0x0",
+    "lease_acquired": "0x0",
+    "lease_released": "0x0",
+    "crcr": "0x0",
+    "dcbaap": "0x0",
+    "erstba0": "0x0",
+    "erdp0": "0x0",
+    "usbcmd": "0x0",
+    "usbsts": "0x0",
+    "config": "0x0",
+    "iman0": "0x0",
+    "erstsz0": "0x0",
+    "findings": "0x0",
+    "reserved": "0x0",
+    "owned_again": "0x0",
+    "protected_pages": "0x0",
+    "hazards": "0x0",
+    "pages": "0x0",
+    "interrupters": "0x0",
+    "interrupter_enables": "0x0",
+    "refusal": "0x1",
+    "violation": "0x0",
+    "plan_len": "0x0",
+    "excluded": "0x0",
+    "inspection": "0x0"
+  },
+  "reserved": [],
+  "after": {
+    "usable": 31927,
+    "free": 31924
+  },
+  "allocated_after": 3,
+  "low_water": {
+    "watch_hits": 231,
+    "min_free": 31870,
+    "peak_in_use_frames": 57,
+    "peak_in_use_bytes": 233472
+  },
+  "ahci": {
+    "abar": "0xfebf1000",
+    "ports": {
+      "0": {
+        "clb": "0x6fe9400",
+        "fb": "0x6fe9d00",
+        "cmd": 6,
+        "st": 0,
+        "fre": 0,
+        "cr": 0,
+        "fr": 0
+      },
+      "1": {
+        "clb": "0x6fe9000",
+        "fb": "0x6fe9900",
+        "cmd": 6,
+        "st": 0,
+        "fre": 0,
+        "cr": 0,
+        "fr": 0
+      },
+      "2": {
+        "clb": "0x7fdfc00",
+        "fb": "0x7fdfb00",
+        "cmd": 49175,
+        "st": 1,
+        "fre": 1,
+        "cr": 1,
+        "fr": 1
+      },
+      "3": {
+        "clb": "0x6fe5400",
+        "fb": "0x6fe5200",
+        "cmd": 6,
+        "st": 0,
+        "fre": 0,
+        "cr": 0,
+        "fr": 0
+      },
+      "4": {
+        "clb": "0x6fe8800",
+        "fb": "0x6fe8e00",
+        "cmd": 6,
+        "st": 0,
+        "fre": 0,
+        "cr": 0,
+        "fr": 0
+      },
+      "5": {
+        "clb": "0x6fe8400",
+        "fb": "0x6fe8300",
+        "cmd": 6,
+        "st": 0,
+        "fre": 0,
+        "cr": 0,
+        "fr": 0
+      }
+    },
+    "live_pages": {
+      "0x7fdf000": 0
+    }
+  },
+  "serial_sha256": "e75f753dc6fe46b606df234ceab1ddf39c0cc02f9fffb14528b7c1aeb135a363",
+  "xhci_bdf": [
+    255,
+    255,
+    255
+  ],
+  "trace_sha256": "118442cb218fcecc2f7742208ece5a63c1fbc1a5f8afc28b9471c0ac1f32e284",
+  "trace_bytes": 7201536,
+  "trace_vos": {
+    "xhci_mmio_writes": 0,
+    "xhci_mmio_reads": 0,
+    "xhci_cfg_writes": 0,
+    "state_events": 0,
+    "other_cfg_writes": 0,
+    "xhci_read_events": 0
+  },
+  "vos_cfg_writes_by_device": {},
+  "trace_preservation": {
+    "raw_sha256": "118442cb218fcecc2f7742208ece5a63c1fbc1a5f8afc28b9471c0ac1f32e284",
+    "raw_bytes": 7201536,
+    "gz_sha256": "4fc42b0ecf3b87a562ce37c4c75d7234005de611c057e59cd950f100cd40606e",
+    "gz_bytes": 170767,
+    "roundtrip_verified": true,
+    "restore": "gzip -dk trace.txt.gz"
+  }
+}
