@@ -184,6 +184,10 @@ and eventually a dock and Settings/Accessibility (including cursor-size options)
 These are incomplete planning topics; their order, contracts and budgets require
 owner approval. The accepted mockup is a design reference, not implemented UI.
 
+The [A1 Rust ELF validator](results/a1-elf-validate-rust.md) is a PR candidate, not merged:
+`elf_validate`/`elf_strerror` move to Rust behind the unchanged `elf.h` ABI and `elf.c`
+becomes the frozen differential reference. QEMU-only; physical hardware NOT TESTED.
+
 Rust-first kernel migration beyond the merged R1 helper and broader
 physical-hardware/architecture portability remain proposals. They require separate compatibility, unsafe/FFI/DMA,
 boot/interrupt/device and resource-management plans with reproducible checks.
