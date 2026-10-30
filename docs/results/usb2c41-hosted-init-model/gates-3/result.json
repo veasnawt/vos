@@ -1,0 +1,1314 @@
+{
+ "hosted_only": true,
+ "device_access": false,
+ "pci_mmio_physical_memory_access": false,
+ "source_sha256": {
+  "kernel/rust/usb/xhci_init/lib.rs": "e8e9a3f9edd56c78a6a407825871e946ff1ee19896bd5441fb9b346044654b8c",
+  "kernel/rust/usb/xhci_init/machine.rs": "9e12dd1f940f1e4ef979149c7592f8025d9617c9960af93226c63af2264d741b",
+  "kernel/rust/usb/xhci_init/types.rs": "32ba0c00550b4e5df7d43c3e14586bf7a3aad82c9d14e7dcd5e8c6f017a8d35d",
+  "tests/rust/xhci_init_support.rs": "be7bdd5bde329fb8fff63d48fa4c4aefa639314779a58e28554bac1cb53f77ba",
+  "tests/rust/xhci_init_model.rs": "fc9c91a0249fdad46756f6a573e385abe84bd6c85c3805bcc61f6734065594ba",
+  "scripts/xhci_init_oracle.py": "fa7da1b2dd4da3ca34aaab58835498272fc0e672feed414760668d21be023725",
+  "scripts/test-usb2c41.py": "4ee570c6a1d0d1917e15b2a37424109df4b221ae0a41167fa589eceada2c82a3"
+ },
+ "commands": [
+  [
+   "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+   "--edition=2024",
+   "-Dwarnings",
+   "--crate-name",
+   "vos_xhci_init",
+   "--crate-type=rlib",
+   "-Coverflow-checks=yes",
+   "-Cdebug-assertions=yes",
+   "/home/veasnawt/src/vos-usb2c41/kernel/rust/usb/xhci_init/lib.rs",
+   "-o",
+   "/home/veasnawt/src/vos-usb2c41/build/usb2c41-1/gates-3/libvos_xhci_init.rlib"
+  ],
+  [
+   "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+   "--edition=2024",
+   "-Dwarnings",
+   "--test",
+   "-Copt-level=1",
+   "-Coverflow-checks=yes",
+   "--extern",
+   "vos_xhci_init=/home/veasnawt/src/vos-usb2c41/build/usb2c41-1/gates-3/libvos_xhci_init.rlib",
+   "/home/veasnawt/src/vos-usb2c41/tests/rust/xhci_init_model.rs",
+   "-o",
+   "/home/veasnawt/src/vos-usb2c41/build/usb2c41-1/gates-3/init-tests"
+  ],
+  [
+   "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+   "--edition=2024",
+   "--extern",
+   "vos_xhci_init=/home/veasnawt/src/vos-usb2c41/build/usb2c41-1/gates-3/libvos_xhci_init.rlib",
+   "/home/veasnawt/src/vos-usb2c41/build/usb2c41-1/gates-3/cf-old-broad-program-action-is-gone.rs",
+   "-o",
+   "/home/veasnawt/src/vos-usb2c41/build/usb2c41-1/gates-3/cf-old-broad-program-action-is-gone"
+  ],
+  [
+   "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+   "--edition=2024",
+   "--extern",
+   "vos_xhci_init=/home/veasnawt/src/vos-usb2c41/build/usb2c41-1/gates-3/libvos_xhci_init.rlib",
+   "/home/veasnawt/src/vos-usb2c41/build/usb2c41-1/gates-3/cf-state-cannot-be-forged.rs",
+   "-o",
+   "/home/veasnawt/src/vos-usb2c41/build/usb2c41-1/gates-3/cf-state-cannot-be-forged"
+  ],
+  [
+   "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+   "--edition=2024",
+   "--extern",
+   "vos_xhci_init=/home/veasnawt/src/vos-usb2c41/build/usb2c41-1/gates-3/libvos_xhci_init.rlib",
+   "/home/veasnawt/src/vos-usb2c41/build/usb2c41-1/gates-3/cf-registers-have-no-raw-write.rs",
+   "-o",
+   "/home/veasnawt/src/vos-usb2c41/build/usb2c41-1/gates-3/cf-registers-have-no-raw-write"
+  ],
+  [
+   "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+   "--edition=2024",
+   "--crate-name",
+   "cf_unsafe",
+   "--crate-type=rlib",
+   "/home/veasnawt/src/vos-usb2c41/build/usb2c41-1/gates-3/cf-unsafe-model/lib.rs",
+   "-o",
+   "/home/veasnawt/src/vos-usb2c41/build/usb2c41-1/gates-3/cf-unsafe.rlib"
+  ],
+  [
+   "/home/veasnawt/src/vos-usb2c41/build/usb2c41-1/gates-3/init-tests",
+   "--test-threads=1"
+  ],
+  [
+   "/home/veasnawt/src/vos-usb2c41/build/usb2c41-1/gates-3/init-tests",
+   "--test-threads=1",
+   "export_traces_for_the_oracle"
+  ],
+  [
+   "/usr/bin/python3",
+   "-I",
+   "-B",
+   "/home/veasnawt/src/vos-usb2c41/scripts/xhci_init_oracle.py",
+   "/home/veasnawt/src/vos-usb2c41/build/usb2c41-1/gates-3/trace.txt"
+  ]
+ ],
+ "static_isolation": {
+  "model_files": [
+   "lib.rs",
+   "machine.rs",
+   "types.rs"
+  ],
+  "unsafe_free_no_std": true,
+  "files_outside_allowed_set_mentioning_model": [],
+  "kernel_crate_root_mentions_model": false
+ },
+ "compile_fail_controls": {
+  "old-broad-program-action-is-gone": "E0599",
+  "state-cannot-be-forged": "E0616",
+  "registers-have-no-raw-write": "E0599",
+  "unsafe-rejected": "forbid(unsafe_code)"
+ },
+ "rust_tests": "test result: ok. 48 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.53s",
+ "rust_test_names": [
+  "a_completed_command_leaves_no_deadline_behind",
+  "a_missing_acknowledgment_blocks_the_next_doorbell",
+  "a_stuck_bus_master_is_reported_and_never_retried",
+  "allocation_closes_once_the_device_is_exposed",
+  "bus_master_and_erstba_ordering_is_enforced",
+  "cancel_routes_every_phase_to_a_safe_path",
+  "command_ring_cycle_and_link_semantics",
+  "controller_errors_clock_faults_and_unexpected_halts",
+  "deadlines_expire_exactly_at_their_tick_count",
+  "device_attachment_before_run_fails_and_after_run_is_only_noted",
+  "dma_address_alignment_and_overlap_rules",
+  "dma_page_lifetime_state_machine",
+  "erdp_and_ehb_acknowledgments",
+  "erst_contents_are_validated",
+  "event_validation_refusals_and_faults",
+  "export_traces_for_the_oracle",
+  "firmware_handoff_sequence_and_conflicts",
+  "firmware_that_never_releases_ends_in_a_clean_failure_without_forcing",
+  "halt_bme_clear_and_reset_must_happen_in_that_order",
+  "halt_never_reached_times_out_without_exposure",
+  "halt_requests_are_refused_when_there_is_nothing_to_halt",
+  "idle_accepts_only_qualification_and_time",
+  "interrupts_ports_slots_and_other_commands_are_forbidden_everywhere",
+  "msi_observed_at_any_time_is_a_fault",
+  "no_session_ever_writes_ports_slots_interrupts_or_other_doorbells",
+  "ownership_lost_noop_and_no_capability_cases",
+  "polling_is_bounded_per_step_and_per_unacknowledged_batch",
+  "published_pages_are_never_released_before_quiescence",
+  "qemu_deviations_are_documented_as_device_options_not_protocol_assumptions",
+  "qemu_fetches_the_erst_inside_the_erstba_write_and_needs_bus_mastering",
+  "qemu_session_completes_260_noops_with_both_rings_wrapping",
+  "qualification_refusals_are_named_prioritised_and_terminal",
+  "random_sessions_with_the_canonical_driver_never_violate_the_device",
+  "randomized_transitions_keep_every_invariant",
+  "randomized_transitions_with_false_observations_keep_the_state_invariants",
+  "reset_that_does_not_clear_the_controller_is_unverified",
+  "reset_that_never_completes_times_out_before_and_after_exposure",
+  "scratchpad_and_dcbaa_eligibility",
+  "slow_legacy_hardware_like_session_completes_in_both_erst_fetch_modes",
+  "start_and_command_timeouts_quarantine_and_run_the_containment_tail",
+  "static_registers_need_containment_prepared_pages_and_valid_values",
+  "terminal_phases_accept_nothing_but_their_defined_cleanup",
+  "the_alternate_fetch_timing_does_not_fault_until_run_and_the_protocol_is_safe_either_way",
+  "the_event_log_checker_itself_rejects_misordered_logs",
+  "the_halted_belief_is_invalidated_whenever_run_stop_is_written",
+  "the_write_inventory_is_exactly_n01_to_n18_and_in_order",
+  "unresolved_facts_are_never_treated_as_favourable",
+  "zz_every_rule_and_every_reason_is_exercised"
+ ],
+ "oracle": {
+  "traces": 600,
+  "steps": 156000,
+  "accepted": 19757,
+  "refused": 136243,
+  "mismatches": 0,
+  "first_mismatches": [],
+  "rules_seen": 63,
+  "reasons_seen": 63
+ },
+ "oracle_trace_sha256": "d61a72830eead5e2b8fa9484cabfb82f3b08988ebe921c39a8ccdcaa05866abe",
+ "oracle_corruption_controls": {
+  "refusal-reason": 1,
+  "rule-name": 1,
+  "write-value": 1,
+  "terminal-cause": 1,
+  "transition-target": 1
+ },
+ "workers_dir_reused": "build/usb2c41-1/gates-2/mutant-workers",
+ "mutants": [
+  {
+   "name": "erstba-skips-bme-verification",
+   "breaks": "ERSTBA accepted without a verified BME read-back",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "bus_master_and_erstba_ordering_is_enforced",
+    "the_alternate_fetch_timing_does_not_fault_until_run_and_the_protocol_is_safe_either_way"
+   ]
+  },
+  {
+   "name": "erstba-allowed-without-bme",
+   "breaks": "ERSTBA accepted in Programmed (BME still clear)",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "bus_master_and_erstba_ordering_is_enforced",
+    "zz_every_rule_and_every_reason_is_exercised"
+   ]
+  },
+  {
+   "name": "bme-set-while-programming",
+   "breaks": "BME enable accepted before the static registers are complete",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "randomized_transitions_keep_every_invariant",
+    "randomized_transitions_with_false_observations_keep_the_state_invariants",
+    "zz_every_rule_and_every_reason_is_exercised"
+   ]
+  },
+  {
+   "name": "run-without-status-check",
+   "breaks": "R/S accepted without the post-ERSTBA status read",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "bus_master_and_erstba_ordering_is_enforced",
+    "zz_every_rule_and_every_reason_is_exercised"
+   ]
+  },
+  {
+   "name": "reset-with-bme",
+   "breaks": "HCRST accepted while BME is set",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "halt_bme_clear_and_reset_must_happen_in_that_order",
+    "randomized_transitions_keep_every_invariant",
+    "randomized_transitions_with_false_observations_keep_the_state_invariants",
+    "zz_every_rule_and_every_reason_is_exercised"
+   ]
+  },
+  {
+   "name": "reset-without-bme-verification",
+   "breaks": "HCRST accepted before the BME clear was read back",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "halt_bme_clear_and_reset_must_happen_in_that_order",
+    "randomized_transitions_keep_every_invariant",
+    "zz_every_rule_and_every_reason_is_exercised"
+   ]
+  },
+  {
+   "name": "bme-clear-before-halt",
+   "breaks": "BME clear accepted while the controller may still run",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "cancel_routes_every_phase_to_a_safe_path",
+    "halt_bme_clear_and_reset_must_happen_in_that_order",
+    "randomized_transitions_keep_every_invariant",
+    "randomized_transitions_with_false_observations_keep_the_state_invariants",
+    "zz_every_rule_and_every_reason_is_exercised"
+   ]
+  },
+  {
+   "name": "ack-without-ehb",
+   "breaks": "ERDP acknowledgment accepted without EHB",
+   "killed_by": [
+    "rust-tests",
+    "oracle"
+   ],
+   "failing_tests": [
+    "erdp_and_ehb_acknowledgments",
+    "zz_every_rule_and_every_reason_is_exercised"
+   ]
+  },
+  {
+   "name": "ack-repeat-allowed",
+   "breaks": "the same ERDP value may be written twice",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "erdp_and_ehb_acknowledgments",
+    "randomized_transitions_keep_every_invariant",
+    "zz_every_rule_and_every_reason_is_exercised"
+   ]
+  },
+  {
+   "name": "ack-address-unchecked",
+   "breaks": "ERDP need not match the next TRB",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "erdp_and_ehb_acknowledgments",
+    "randomized_transitions_keep_every_invariant",
+    "zz_every_rule_and_every_reason_is_exercised"
+   ]
+  },
+  {
+   "name": "doorbell-ignores-unacked",
+   "breaks": "doorbell accepted with unacknowledged events",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "a_missing_acknowledgment_blocks_the_next_doorbell"
+   ]
+  },
+  {
+   "name": "doorbell-ignores-missing-link",
+   "breaks": "doorbell accepted before the Link TRB",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "command_ring_cycle_and_link_semantics",
+    "zz_every_rule_and_every_reason_is_exercised"
+   ]
+  },
+  {
+   "name": "link-toggle-unchecked",
+   "breaks": "Link TRB without Toggle Cycle accepted",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "command_ring_cycle_and_link_semantics",
+    "zz_every_rule_and_every_reason_is_exercised"
+   ]
+  },
+  {
+   "name": "link-cycle-unchecked",
+   "breaks": "Link TRB with the wrong cycle accepted",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "command_ring_cycle_and_link_semantics",
+    "zz_every_rule_and_every_reason_is_exercised"
+   ]
+  },
+  {
+   "name": "noop-cycle-unchecked",
+   "breaks": "No-Op with the wrong cycle accepted",
+   "killed_by": [
+    "rust-tests",
+    "oracle"
+   ],
+   "failing_tests": [
+    "command_ring_cycle_and_link_semantics",
+    "zz_every_rule_and_every_reason_is_exercised"
+   ]
+  },
+  {
+   "name": "noop-index-unchecked",
+   "breaks": "No-Op index need not be the enqueue position",
+   "killed_by": [
+    "rust-tests",
+    "oracle"
+   ],
+   "failing_tests": [
+    "command_ring_cycle_and_link_semantics",
+    "zz_every_rule_and_every_reason_is_exercised"
+   ]
+  },
+  {
+   "name": "producer-cycle-not-toggled",
+   "breaks": "command producer cycle not toggled at the Link",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "command_ring_cycle_and_link_semantics",
+    "qemu_session_completes_260_noops_with_both_rings_wrapping",
+    "random_sessions_with_the_canonical_driver_never_violate_the_device"
+   ]
+  },
+  {
+   "name": "consumer-cycle-not-toggled",
+   "breaks": "event consumer cycle not toggled at the wrap",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "qemu_session_completes_260_noops_with_both_rings_wrapping",
+    "random_sessions_with_the_canonical_driver_never_violate_the_device"
+   ]
+  },
+  {
+   "name": "completion-pointer-unchecked",
+   "breaks": "completion for another TRB accepted",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "event_validation_refusals_and_faults",
+    "zz_every_rule_and_every_reason_is_exercised"
+   ]
+  },
+  {
+   "name": "completion-code-unchecked",
+   "breaks": "failed completion code accepted",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "event_validation_refusals_and_faults",
+    "zz_every_rule_and_every_reason_is_exercised"
+   ]
+  },
+  {
+   "name": "completion-fields-unchecked",
+   "breaks": "completion with slot/VF/parameter accepted",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "event_validation_refusals_and_faults",
+    "zz_every_rule_and_every_reason_is_exercised"
+   ]
+  },
+  {
+   "name": "poll-budget-removed",
+   "breaks": "unbounded events per poll step",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "polling_is_bounded_per_step_and_per_unacknowledged_batch",
+    "zz_every_rule_and_every_reason_is_exercised"
+   ]
+  },
+  {
+   "name": "unacked-limit-removed",
+   "breaks": "unbounded unacknowledged events",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "polling_is_bounded_per_step_and_per_unacknowledged_batch"
+   ]
+  },
+  {
+   "name": "scratchpads-allowed",
+   "breaks": "controller needing scratchpads qualifies",
+   "killed_by": [
+    "rust-tests",
+    "oracle"
+   ],
+   "failing_tests": [
+    "qualification_refusals_are_named_prioritised_and_terminal",
+    "scratchpad_and_dcbaa_eligibility",
+    "zz_every_rule_and_every_reason_is_exercised"
+   ]
+  },
+  {
+   "name": "dcbaa-entry0-allowed",
+   "breaks": "nonzero DCBAA entry 0 accepted",
+   "killed_by": [
+    "rust-tests",
+    "oracle"
+   ],
+   "failing_tests": [
+    "scratchpad_and_dcbaa_eligibility",
+    "zz_every_rule_and_every_reason_is_exercised"
+   ]
+  },
+  {
+   "name": "unknown-iommu-accepted",
+   "breaks": "unresolved IOMMU treated as absent",
+   "killed_by": [
+    "rust-tests",
+    "oracle"
+   ],
+   "failing_tests": [
+    "qualification_refusals_are_named_prioritised_and_terminal",
+    "unresolved_facts_are_never_treated_as_favourable",
+    "zz_every_rule_and_every_reason_is_exercised"
+   ]
+  },
+  {
+   "name": "present-iommu-accepted",
+   "breaks": "present IOMMU accepted",
+   "killed_by": [
+    "rust-tests",
+    "oracle"
+   ],
+   "failing_tests": [
+    "qualification_refusals_are_named_prioritised_and_terminal",
+    "zz_every_rule_and_every_reason_is_exercised"
+   ]
+  },
+  {
+   "name": "unknown-identity-dma-accepted",
+   "breaks": "unresolved identity DMA accepted",
+   "killed_by": [
+    "rust-tests",
+    "oracle"
+   ],
+   "failing_tests": [
+    "qualification_refusals_are_named_prioritised_and_terminal",
+    "unresolved_facts_are_never_treated_as_favourable",
+    "zz_every_rule_and_every_reason_is_exercised"
+   ]
+  },
+  {
+   "name": "denied-identity-dma-accepted",
+   "breaks": "denied identity DMA accepted",
+   "killed_by": [
+    "rust-tests",
+    "oracle"
+   ],
+   "failing_tests": [
+    "qualification_refusals_are_named_prioritised_and_terminal",
+    "zz_every_rule_and_every_reason_is_exercised"
+   ]
+  },
+  {
+   "name": "unknown-no-snoop-accepted",
+   "breaks": "unresolved No Snoop accepted",
+   "killed_by": [
+    "rust-tests",
+    "oracle"
+   ],
+   "failing_tests": [
+    "qualification_refusals_are_named_prioritised_and_terminal",
+    "unresolved_facts_are_never_treated_as_favourable",
+    "zz_every_rule_and_every_reason_is_exercised"
+   ]
+  },
+  {
+   "name": "unknown-dbc-accepted",
+   "breaks": "unresolved Debug Capability accepted",
+   "killed_by": [
+    "rust-tests",
+    "oracle"
+   ],
+   "failing_tests": [
+    "qualification_refusals_are_named_prioritised_and_terminal",
+    "unresolved_facts_are_never_treated_as_favourable",
+    "zz_every_rule_and_every_reason_is_exercised"
+   ]
+  },
+  {
+   "name": "enabled-dbc-accepted",
+   "breaks": "enabled Debug Capability accepted",
+   "killed_by": [
+    "rust-tests",
+    "oracle"
+   ],
+   "failing_tests": [
+    "qualification_refusals_are_named_prioritised_and_terminal",
+    "zz_every_rule_and_every_reason_is_exercised"
+   ]
+  },
+  {
+   "name": "msi-accepted-at-qualification",
+   "breaks": "MSI/MSI-X enabled controller qualifies",
+   "killed_by": [
+    "rust-tests",
+    "oracle"
+   ],
+   "failing_tests": [
+    "qualification_refusals_are_named_prioritised_and_terminal",
+    "terminal_phases_accept_nothing_but_their_defined_cleanup"
+   ]
+  },
+  {
+   "name": "attached-device-accepted",
+   "breaks": "attached device ignored at qualification",
+   "killed_by": [
+    "rust-tests",
+    "oracle"
+   ],
+   "failing_tests": [
+    "device_attachment_before_run_fails_and_after_run_is_only_noted",
+    "qualification_refusals_are_named_prioritised_and_terminal"
+   ]
+  },
+  {
+   "name": "ownership-conflict-accepted",
+   "breaks": "both semaphores set accepted",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "qualification_refusals_are_named_prioritised_and_terminal"
+   ]
+  },
+  {
+   "name": "qualification-fault-accepted",
+   "breaks": "HSE/HCE at qualification ignored",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "qualification_refusals_are_named_prioritised_and_terminal"
+   ]
+  },
+  {
+   "name": "wrong-profile-accepted",
+   "breaks": "unqualified platform accepted",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "qualification_refusals_are_named_prioritised_and_terminal",
+    "zz_every_rule_and_every_reason_is_exercised"
+   ]
+  },
+  {
+   "name": "handoff-deadline-missing",
+   "breaks": "no deadline on the BIOS release",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "firmware_that_never_releases_ends_in_a_clean_failure_without_forcing",
+    "zz_every_rule_and_every_reason_is_exercised"
+   ]
+  },
+  {
+   "name": "halt-deadline-missing",
+   "breaks": "no deadline on the initial halt",
+   "killed_by": [
+    "rust-tests",
+    "oracle"
+   ],
+   "failing_tests": [
+    "deadlines_expire_exactly_at_their_tick_count",
+    "halt_never_reached_times_out_without_exposure"
+   ]
+  },
+  {
+   "name": "reset-deadline-missing",
+   "breaks": "no deadline on HCRST completion",
+   "killed_by": [
+    "rust-tests",
+    "oracle"
+   ],
+   "failing_tests": [
+    "deadlines_expire_exactly_at_their_tick_count",
+    "reset_that_never_completes_times_out_before_and_after_exposure",
+    "zz_every_rule_and_every_reason_is_exercised"
+   ]
+  },
+  {
+   "name": "start-deadline-missing",
+   "breaks": "no deadline on Run",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "deadlines_expire_exactly_at_their_tick_count",
+    "start_and_command_timeouts_quarantine_and_run_the_containment_tail",
+    "zz_every_rule_and_every_reason_is_exercised"
+   ]
+  },
+  {
+   "name": "command-deadline-missing",
+   "breaks": "no deadline on a command",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "start_and_command_timeouts_quarantine_and_run_the_containment_tail",
+    "zz_every_rule_and_every_reason_is_exercised"
+   ]
+  },
+  {
+   "name": "deadline-off-by-one",
+   "breaks": "deadline expires one tick late",
+   "killed_by": [
+    "rust-tests",
+    "oracle"
+   ],
+   "failing_tests": [
+    "deadlines_expire_exactly_at_their_tick_count"
+   ]
+  },
+  {
+   "name": "clock-backwards-ignored",
+   "breaks": "a clock that goes backwards is accepted",
+   "killed_by": [
+    "rust-tests",
+    "oracle"
+   ],
+   "failing_tests": [
+    "controller_errors_clock_faults_and_unexpected_halts",
+    "randomized_transitions_keep_every_invariant",
+    "randomized_transitions_with_false_observations_keep_the_state_invariants",
+    "zz_every_rule_and_every_reason_is_exercised"
+   ]
+  },
+  {
+   "name": "exposure-ignores-pages",
+   "breaks": "published pages do not count as exposure",
+   "killed_by": [
+    "rust-tests",
+    "oracle"
+   ],
+   "failing_tests": [
+    "allocation_closes_once_the_device_is_exposed",
+    "cancel_routes_every_phase_to_a_safe_path",
+    "randomized_transitions_keep_every_invariant",
+    "randomized_transitions_with_false_observations_keep_the_state_invariants",
+    "zz_every_rule_and_every_reason_is_exercised"
+   ]
+  },
+  {
+   "name": "failure-never-quarantines",
+   "breaks": "exposed failures end as clean failures",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "a_stuck_bus_master_is_reported_and_never_retried",
+    "controller_errors_clock_faults_and_unexpected_halts",
+    "device_attachment_before_run_fails_and_after_run_is_only_noted",
+    "event_validation_refusals_and_faults",
+    "msi_observed_at_any_time_is_a_fault",
+    "randomized_transitions_keep_every_invariant"
+   ]
+  },
+  {
+   "name": "tail-trusts-stale-halt",
+   "breaks": "quarantine tail clears BME because of an old halted read",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "controller_errors_clock_faults_and_unexpected_halts",
+    "randomized_transitions_keep_every_invariant",
+    "randomized_transitions_with_false_observations_keep_the_state_invariants",
+    "zz_every_rule_and_every_reason_is_exercised"
+   ]
+  },
+  {
+   "name": "run-start-keeps-halted-belief",
+   "breaks": "halted belief survives setting R/S",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "the_halted_belief_is_invalidated_whenever_run_stop_is_written"
+   ]
+  },
+  {
+   "name": "tail-skips-halt",
+   "breaks": "quarantine tail may clear BME without halting",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "randomized_transitions_keep_every_invariant",
+    "randomized_transitions_with_false_observations_keep_the_state_invariants",
+    "start_and_command_timeouts_quarantine_and_run_the_containment_tail",
+    "zz_every_rule_and_every_reason_is_exercised"
+   ]
+  },
+  {
+   "name": "quarantine-releases-pages",
+   "breaks": "pages can be released from a quarantined controller",
+   "killed_by": [
+    "rust-tests",
+    "oracle"
+   ],
+   "failing_tests": [
+    "reset_that_never_completes_times_out_before_and_after_exposure"
+   ]
+  },
+  {
+   "name": "published-release-before-quiescence",
+   "breaks": "published page released before quiescence",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "published_pages_are_never_released_before_quiescence",
+    "randomized_transitions_keep_every_invariant",
+    "randomized_transitions_with_false_observations_keep_the_state_invariants",
+    "zz_every_rule_and_every_reason_is_exercised"
+   ]
+  },
+  {
+   "name": "release-policy-ignored",
+   "breaks": "physical never-release policy ignored",
+   "killed_by": [
+    "rust-tests",
+    "oracle"
+   ],
+   "failing_tests": [
+    "published_pages_are_never_released_before_quiescence",
+    "zz_every_rule_and_every_reason_is_exercised"
+   ]
+  },
+  {
+   "name": "allocation-open-after-exposure",
+   "breaks": "allocation allowed while stopping an exposed device",
+   "killed_by": [
+    "rust-tests",
+    "oracle"
+   ],
+   "failing_tests": [
+    "allocation_closes_once_the_device_is_exposed"
+   ]
+  },
+  {
+   "name": "misaligned-page-accepted",
+   "breaks": "unaligned DMA page accepted",
+   "killed_by": [
+    "rust-tests",
+    "oracle"
+   ],
+   "failing_tests": [
+    "dma_address_alignment_and_overlap_rules",
+    "zz_every_rule_and_every_reason_is_exercised"
+   ]
+  },
+  {
+   "name": "low-address-accepted",
+   "breaks": "page below 1 MiB accepted",
+   "killed_by": [
+    "rust-tests",
+    "oracle"
+   ],
+   "failing_tests": [
+    "dma_address_alignment_and_overlap_rules"
+   ]
+  },
+  {
+   "name": "high-address-accepted",
+   "breaks": "page beyond the DMA limit accepted",
+   "killed_by": [
+    "rust-tests",
+    "oracle"
+   ],
+   "failing_tests": [
+    "dma_address_alignment_and_overlap_rules"
+   ]
+  },
+  {
+   "name": "overlap-accepted",
+   "breaks": "overlapping DMA pages accepted",
+   "killed_by": [
+    "rust-tests",
+    "oracle"
+   ],
+   "failing_tests": [
+    "dma_address_alignment_and_overlap_rules",
+    "zz_every_rule_and_every_reason_is_exercised"
+   ]
+  },
+  {
+   "name": "double-allocation-accepted",
+   "breaks": "a page can be allocated twice",
+   "killed_by": [
+    "rust-tests",
+    "oracle"
+   ],
+   "failing_tests": [
+    "dma_address_alignment_and_overlap_rules",
+    "zz_every_rule_and_every_reason_is_exercised"
+   ]
+  },
+  {
+   "name": "page-state-unchecked",
+   "breaks": "any page state may be zeroed/prepared",
+   "killed_by": [
+    "rust-tests",
+    "oracle"
+   ],
+   "failing_tests": [
+    "dma_page_lifetime_state_machine",
+    "zz_every_rule_and_every_reason_is_exercised"
+   ]
+  },
+  {
+   "name": "erst-size-unchecked",
+   "breaks": "ERST segment size not validated",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "erst_contents_are_validated",
+    "zz_every_rule_and_every_reason_is_exercised"
+   ]
+  },
+  {
+   "name": "erst-segment-unchecked",
+   "breaks": "ERST segment need not be the event ring",
+   "killed_by": [
+    "rust-tests",
+    "oracle"
+   ],
+   "failing_tests": [
+    "erst_contents_are_validated",
+    "zz_every_rule_and_every_reason_is_exercised"
+   ]
+  },
+  {
+   "name": "erstsz-unchecked",
+   "breaks": "ERSTSZ other than 1 accepted",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "static_registers_need_containment_prepared_pages_and_valid_values",
+    "zz_every_rule_and_every_reason_is_exercised"
+   ]
+  },
+  {
+   "name": "slots-unchecked",
+   "breaks": "any MaxSlotsEn accepted",
+   "killed_by": [
+    "rust-tests",
+    "oracle"
+   ],
+   "failing_tests": [
+    "static_registers_need_containment_prepared_pages_and_valid_values",
+    "zz_every_rule_and_every_reason_is_exercised"
+   ]
+  },
+  {
+   "name": "crcr-allowed-while-running",
+   "breaks": "CRCR rewrite accepted while the controller runs",
+   "killed_by": [
+    "rust-tests",
+    "oracle"
+   ],
+   "failing_tests": [
+    "static_registers_need_containment_prepared_pages_and_valid_values",
+    "zz_every_rule_and_every_reason_is_exercised"
+   ]
+  },
+  {
+   "name": "crcr-rcs-unchecked",
+   "breaks": "CRCR with RCS=0 accepted",
+   "killed_by": [
+    "rust-tests",
+    "oracle"
+   ],
+   "failing_tests": [
+    "static_registers_need_containment_prepared_pages_and_valid_values",
+    "zz_every_rule_and_every_reason_is_exercised"
+   ]
+  },
+  {
+   "name": "static-register-repeat-allowed",
+   "breaks": "MaxSlotsEn written twice",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "randomized_transitions_keep_every_invariant",
+    "randomized_transitions_with_false_observations_keep_the_state_invariants",
+    "static_registers_need_containment_prepared_pages_and_valid_values",
+    "zz_every_rule_and_every_reason_is_exercised"
+   ]
+  },
+  {
+   "name": "interrupt-enable-allowed",
+   "breaks": "interrupt enable not refused by name",
+   "killed_by": [
+    "rust-tests",
+    "oracle"
+   ],
+   "failing_tests": [
+    "interrupts_ports_slots_and_other_commands_are_forbidden_everywhere",
+    "zz_every_rule_and_every_reason_is_exercised"
+   ]
+  },
+  {
+   "name": "port-mask-unchecked",
+   "breaks": "port mask beyond the port count accepted",
+   "killed_by": [
+    "rust-tests",
+    "oracle"
+   ],
+   "failing_tests": [
+    "device_attachment_before_run_fails_and_after_run_is_only_noted",
+    "zz_every_rule_and_every_reason_is_exercised"
+   ]
+  },
+  {
+   "name": "late-attachment-fails",
+   "breaks": "attachment after Run treated as a failure",
+   "killed_by": [
+    "rust-tests",
+    "oracle"
+   ],
+   "failing_tests": [
+    "device_attachment_before_run_fails_and_after_run_is_only_noted",
+    "zz_every_rule_and_every_reason_is_exercised"
+   ]
+  },
+  {
+   "name": "port-event-range-unchecked",
+   "breaks": "port change event for a nonexistent port accepted",
+   "killed_by": [
+    "rust-tests",
+    "oracle"
+   ],
+   "failing_tests": [
+    "event_validation_refusals_and_faults",
+    "zz_every_rule_and_every_reason_is_exercised"
+   ]
+  },
+  {
+   "name": "msi-observation-ignored",
+   "breaks": "MSI observed after qualification ignored",
+   "killed_by": [
+    "rust-tests",
+    "oracle"
+   ],
+   "failing_tests": [
+    "msi_observed_at_any_time_is_a_fault",
+    "terminal_phases_accept_nothing_but_their_defined_cleanup",
+    "zz_every_rule_and_every_reason_is_exercised"
+   ]
+  },
+  {
+   "name": "bme-mismatch-ignored",
+   "breaks": "wrong BME read-back ignored",
+   "killed_by": [
+    "rust-tests",
+    "oracle"
+   ],
+   "failing_tests": [
+    "randomized_transitions_keep_every_invariant",
+    "zz_every_rule_and_every_reason_is_exercised"
+   ]
+  },
+  {
+   "name": "cancel-in-running",
+   "breaks": "Cancel accepted while running (skips the R/S halt)",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "cancel_routes_every_phase_to_a_safe_path",
+    "randomized_transitions_keep_every_invariant",
+    "randomized_transitions_with_false_observations_keep_the_state_invariants",
+    "zz_every_rule_and_every_reason_is_exercised"
+   ]
+  },
+  {
+   "name": "reset-ports-unverified",
+   "breaks": "reset accepted with a port still reporting a device",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "reset_that_does_not_clear_the_controller_is_unverified"
+   ]
+  },
+  {
+   "name": "reset-pointers-unverified",
+   "breaks": "reset accepted with controller pointers not cleared",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "reset_that_does_not_clear_the_controller_is_unverified"
+   ]
+  },
+  {
+   "name": "reset-ignores-cnr",
+   "breaks": "reset verification while CNR is still set",
+   "killed_by": [
+    "rust-tests",
+    "oracle"
+   ],
+   "failing_tests": [
+    "qemu_deviations_are_documented_as_device_options_not_protocol_assumptions",
+    "random_sessions_with_the_canonical_driver_never_violate_the_device",
+    "randomized_transitions_keep_every_invariant",
+    "slow_legacy_hardware_like_session_completes_in_both_erst_fetch_modes",
+    "zz_every_rule_and_every_reason_is_exercised"
+   ]
+  },
+  {
+   "name": "bios-regain-ignored",
+   "breaks": "BIOS taking the controller back is ignored after the handoff",
+   "killed_by": [
+    "rust-tests",
+    "oracle"
+   ],
+   "failing_tests": [
+    "firmware_handoff_sequence_and_conflicts"
+   ]
+  },
+  {
+   "name": "refusal-mutates-state",
+   "breaks": "a refused status observation still updates state",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "randomized_transitions_with_false_observations_keep_the_state_invariants",
+    "zz_every_rule_and_every_reason_is_exercised"
+   ]
+  },
+  {
+   "name": "smi-before-handoff",
+   "breaks": "SMI disable accepted during the handoff",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "firmware_handoff_sequence_and_conflicts",
+    "randomized_transitions_keep_every_invariant",
+    "randomized_transitions_with_false_observations_keep_the_state_invariants",
+    "zz_every_rule_and_every_reason_is_exercised"
+   ]
+  },
+  {
+   "name": "halt-when-halted",
+   "breaks": "ClearRunStop accepted when R/S is already clear",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "halt_requests_are_refused_when_there_is_nothing_to_halt"
+   ]
+  },
+  {
+   "name": "controller-error-ignored",
+   "breaks": "HSE/HCE observations ignored",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "a_stuck_bus_master_is_reported_and_never_retried",
+    "controller_errors_clock_faults_and_unexpected_halts",
+    "zz_every_rule_and_every_reason_is_exercised"
+   ]
+  },
+  {
+   "name": "unexpected-halt-ignored",
+   "breaks": "controller halting itself while running ignored",
+   "killed_by": [
+    "rust-tests",
+    "oracle"
+   ],
+   "failing_tests": [
+    "controller_errors_clock_faults_and_unexpected_halts",
+    "zz_every_rule_and_every_reason_is_exercised"
+   ]
+  },
+  {
+   "name": "command-deadline-not-cleared",
+   "breaks": "completion leaves the command deadline armed",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "a_completed_command_leaves_no_deadline_behind"
+   ]
+  },
+  {
+   "name": "poll-step-does-not-reset",
+   "breaks": "BeginPollStep does not reset the per-step budget",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "command_ring_cycle_and_link_semantics",
+    "polling_is_bounded_per_step_and_per_unacknowledged_batch",
+    "qemu_session_completes_260_noops_with_both_rings_wrapping",
+    "random_sessions_with_the_canonical_driver_never_violate_the_device",
+    "slow_legacy_hardware_like_session_completes_in_both_erst_fetch_modes",
+    "zz_every_rule_and_every_reason_is_exercised"
+   ]
+  },
+  {
+   "name": "erdp-stride-wrong",
+   "breaks": "expected ERDP uses an 8-byte stride",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "command_ring_cycle_and_link_semantics",
+    "erdp_and_ehb_acknowledgments",
+    "qemu_deviations_are_documented_as_device_options_not_protocol_assumptions",
+    "qemu_session_completes_260_noops_with_both_rings_wrapping",
+    "random_sessions_with_the_canonical_driver_never_violate_the_device",
+    "randomized_transitions_keep_every_invariant"
+   ]
+  },
+  {
+   "name": "wrong-inventory-id",
+   "breaks": "doorbell event carries the wrong inventory id",
+   "killed_by": [
+    "rust-tests",
+    "oracle"
+   ],
+   "failing_tests": [
+    "the_write_inventory_is_exactly_n01_to_n18_and_in_order"
+   ]
+  },
+  {
+   "name": "wrong-hcrst-value",
+   "breaks": "HCRST event writes the wrong value",
+   "killed_by": [
+    "rust-tests",
+    "oracle"
+   ],
+   "failing_tests": [
+    "the_write_inventory_is_exactly_n01_to_n18_and_in_order"
+   ]
+  },
+  {
+   "name": "wrong-bme-event-id",
+   "breaks": "exit-path BME clear carries the init-path id",
+   "killed_by": [
+    "rust-tests",
+    "oracle"
+   ],
+   "failing_tests": [
+    "the_write_inventory_is_exactly_n01_to_n18_and_in_order"
+   ]
+  },
+  {
+   "name": "erdp-ack-clears-ehb-bit",
+   "breaks": "ERDP acknowledgment does not set EHB",
+   "killed_by": [
+    "rust-tests",
+    "oracle"
+   ],
+   "failing_tests": [
+    "the_write_inventory_is_exactly_n01_to_n18_and_in_order"
+   ]
+  },
+  {
+   "name": "crcr-event-drops-rcs",
+   "breaks": "CRCR event loses RCS",
+   "killed_by": [
+    "rust-tests",
+    "oracle"
+   ],
+   "failing_tests": [
+    "a_completed_command_leaves_no_deadline_behind",
+    "a_missing_acknowledgment_blocks_the_next_doorbell",
+    "command_ring_cycle_and_link_semantics",
+    "erdp_and_ehb_acknowledgments",
+    "event_validation_refusals_and_faults",
+    "published_pages_are_never_released_before_quiescence"
+   ]
+  },
+  {
+   "name": "qualified-twice",
+   "breaks": "a second qualification is accepted",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "idle_accepts_only_qualification_and_time",
+    "randomized_transitions_keep_every_invariant",
+    "randomized_transitions_with_false_observations_keep_the_state_invariants",
+    "zz_every_rule_and_every_reason_is_exercised"
+   ]
+  },
+  {
+   "name": "terminal-accepts-ticks",
+   "breaks": "time still advances after a terminal failure",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "randomized_transitions_keep_every_invariant",
+    "randomized_transitions_with_false_observations_keep_the_state_invariants",
+    "terminal_phases_accept_nothing_but_their_defined_cleanup",
+    "zz_every_rule_and_every_reason_is_exercised"
+   ]
+  },
+  {
+   "name": "forbidden-checked-after-phase",
+   "breaks": "forbidden writes refused only after the idle gate",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "interrupts_ports_slots_and_other_commands_are_forbidden_everywhere"
+   ]
+  },
+  {
+   "name": "legacy-request-without-belief-update",
+   "breaks": "ownership request does not record the OS semaphore",
+   "killed_by": [
+    "rust-tests",
+    "oracle"
+   ],
+   "failing_tests": [
+    "firmware_handoff_sequence_and_conflicts"
+   ]
+  }
+ ],
+ "mutation_summary": {
+  "total": 94,
+  "killed": 94,
+  "survived": [],
+  "invalid": [],
+  "killed_by_rust_tests": 94,
+  "killed_by_oracle": 47,
+  "killed_by_oracle_only": [],
+  "killed_by_rust_tests_only": 47
+ },
+ "pass": true,
+ "seconds": 104.9
+}

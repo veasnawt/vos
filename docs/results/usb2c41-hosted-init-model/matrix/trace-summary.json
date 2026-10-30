@@ -1,0 +1,841 @@
+{
+ "operations_seen": {
+  "SetEventDequeue": 4442,
+  "Qualify": 3859,
+  "RequestOsOwnership": 3460,
+  "ObservePorts": 3357,
+  "ObserveStatus": 9764,
+  "ObserveReset": 7215,
+  "ClearBusMaster": 3531,
+  "ObservePci": 6945,
+  "PrepareEventRing": 3465,
+  "SetCommandRing": 3576,
+  "DmaAllocate": 8281,
+  "DisableLegacySmi": 3363,
+  "DmaRelease": 5314,
+  "SetBusMaster": 3584,
+  "PrepareCommandRing": 3482,
+  "PrepareErst": 3518,
+  "DmaZero": 4371,
+  "ConsumeEvent": 11216,
+  "ObserveHandoff": 3789,
+  "SetErstSize": 3664,
+  "AssertReset": 3668,
+  "SetErstBase": 3518,
+  "PrepareDcbaa": 3548,
+  "SetRunStop": 3312,
+  "Tick": 12663,
+  "RingCommandDoorbell": 4283,
+  "SetMaxSlots": 3508,
+  "SetDcbaap": 3572,
+  "PublishLink": 3264,
+  "PublishNoop": 4253,
+  "Forbidden": 2272,
+  "Cancel": 1064,
+  "BeginPollStep": 3347,
+  "ClearRunStop": 3532
+ },
+ "reasons": {
+  "address-range": {
+   "count": 11,
+   "operations": {
+    "DmaAllocate": 11
+   }
+  },
+  "after-terminal": {
+   "count": 126866,
+   "operations": {
+    "Tick": 9335,
+    "ConsumeEvent": 9328,
+    "ObserveReset": 6249,
+    "DmaAllocate": 6236
+   }
+  },
+  "allocation-closed": {
+   "count": 974,
+   "operations": {
+    "DmaAllocate": 437,
+    "PrepareDcbaa": 138,
+    "DmaZero": 111,
+    "PrepareCommandRing": 98
+   }
+  },
+  "already-halted": {
+   "count": 113,
+   "operations": {
+    "ClearRunStop": 113
+   }
+  },
+  "already-os-owned": {
+   "count": 50,
+   "operations": {
+    "RequestOsOwnership": 50
+   }
+  },
+  "already-qualified": {
+   "count": 177,
+   "operations": {
+    "Qualify": 177
+   }
+  },
+  "already-running": {
+   "count": 68,
+   "operations": {
+    "SetRunStop": 68
+   }
+  },
+  "bme-clear-before-halt": {
+   "count": 105,
+   "operations": {
+    "ClearBusMaster": 105
+   }
+  },
+  "bus-master-already-clear": {
+   "count": 10,
+   "operations": {
+    "ClearBusMaster": 10
+   }
+  },
+  "bus-master-already-set": {
+   "count": 75,
+   "operations": {
+    "SetBusMaster": 75
+   }
+  },
+  "bus-master-before-programming": {
+   "count": 86,
+   "operations": {
+    "SetBusMaster": 86
+   }
+  },
+  "bus-master-unverified": {
+   "count": 6,
+   "operations": {
+    "AssertReset": 3,
+    "SetErstBase": 3
+   }
+  },
+  "command-cycle-mismatch": {
+   "count": 10,
+   "operations": {
+    "PublishNoop": 10
+   }
+  },
+  "command-index-mismatch": {
+   "count": 2,
+   "operations": {
+    "PublishNoop": 2
+   }
+  },
+  "command-outstanding": {
+   "count": 61,
+   "operations": {
+    "PublishNoop": 36,
+    "RingCommandDoorbell": 25
+   }
+  },
+  "crcr-while-running": {
+   "count": 72,
+   "operations": {
+    "SetCommandRing": 72
+   }
+  },
+  "cycle-state-invalid": {
+   "count": 3,
+   "operations": {
+    "SetCommandRing": 3
+   }
+  },
+  "dependency-not-ready": {
+   "count": 7,
+   "operations": {
+    "PrepareErst": 7
+   }
+  },
+  "ehb-not-expected": {
+   "count": 10,
+   "operations": {
+    "SetEventDequeue": 10
+   }
+  },
+  "ehb-not-set": {
+   "count": 12,
+   "operations": {
+    "SetEventDequeue": 12
+   }
+  },
+  "erdp-mismatch": {
+   "count": 34,
+   "operations": {
+    "SetEventDequeue": 34
+   }
+  },
+  "erdp-repeat": {
+   "count": 13,
+   "operations": {
+    "SetEventDequeue": 13
+   }
+  },
+  "erst-segment-mismatch": {
+   "count": 13,
+   "operations": {
+    "PrepareErst": 13
+   }
+  },
+  "erst-segment-size-unsupported": {
+   "count": 1,
+   "operations": {
+    "PrepareErst": 1
+   }
+  },
+  "erst-segment-too-small": {
+   "count": 3,
+   "operations": {
+    "PrepareErst": 3
+   }
+  },
+  "erst-size-invalid": {
+   "count": 2,
+   "operations": {
+    "SetErstSize": 2
+   }
+  },
+  "erstba-before-static": {
+   "count": 65,
+   "operations": {
+    "SetErstBase": 65
+   }
+  },
+  "erstba-without-bus-master": {
+   "count": 1,
+   "operations": {
+    "SetErstBase": 1
+   }
+  },
+  "event-index-mismatch": {
+   "count": 5,
+   "operations": {
+    "ConsumeEvent": 5
+   }
+  },
+  "forbidden-command": {
+   "count": 35,
+   "operations": {
+    "Forbidden": 35
+   }
+  },
+  "forbidden-interrupt-enable": {
+   "count": 31,
+   "operations": {
+    "Forbidden": 31
+   }
+  },
+  "forbidden-port-write": {
+   "count": 21,
+   "operations": {
+    "Forbidden": 21
+   }
+  },
+  "forbidden-slot-doorbell": {
+   "count": 37,
+   "operations": {
+    "Forbidden": 37
+   }
+  },
+  "halt-not-requested": {
+   "count": 3,
+   "operations": {
+    "ObserveStatus": 3
+   }
+  },
+  "link-not-expected": {
+   "count": 50,
+   "operations": {
+    "PublishLink": 50
+   }
+  },
+  "misaligned": {
+   "count": 9,
+   "operations": {
+    "DmaAllocate": 9
+   }
+  },
+  "no-legacy-capability": {
+   "count": 376,
+   "operations": {
+    "RequestOsOwnership": 134,
+    "DisableLegacySmi": 121,
+    "ObserveHandoff": 121
+   }
+  },
+  "not-qualified": {
+   "count": 246,
+   "operations": {
+    "ObserveReset": 20,
+    "ConsumeEvent": 19,
+    "ObservePci": 17,
+    "DmaAllocate": 15
+   }
+  },
+  "not-running": {
+   "count": 918,
+   "operations": {
+    "ConsumeEvent": 409,
+    "PublishNoop": 127,
+    "PublishLink": 126,
+    "BeginPollStep": 126
+   }
+  },
+  "nothing-staged": {
+   "count": 14,
+   "operations": {
+    "RingCommandDoorbell": 14
+   }
+  },
+  "observation-not-expected": {
+   "count": 436,
+   "operations": {
+    "ObserveReset": 364,
+    "ObserveStatus": 72
+   }
+  },
+  "ownership-unresolved": {
+   "count": 14,
+   "operations": {
+    "ClearRunStop": 14
+   }
+  },
+  "page-already-owned": {
+   "count": 69,
+   "operations": {
+    "DmaAllocate": 69
+   }
+  },
+  "page-not-owned": {
+   "count": 1463,
+   "operations": {
+    "DmaRelease": 1170,
+    "PrepareDcbaa": 70,
+    "PrepareErst": 63,
+    "DmaZero": 58
+   }
+  },
+  "page-not-prepared": {
+   "count": 167,
+   "operations": {
+    "SetErstSize": 42,
+    "SetErstBase": 35,
+    "SetEventDequeue": 32,
+    "SetDcbaap": 30
+   }
+  },
+  "page-overlap": {
+   "count": 402,
+   "operations": {
+    "DmaAllocate": 402
+   }
+  },
+  "page-state": {
+   "count": 92,
+   "operations": {
+    "DmaZero": 26,
+    "PrepareDcbaa": 17,
+    "PrepareErst": 17,
+    "PrepareEventRing": 16
+   }
+  },
+  "page-still-published": {
+   "count": 93,
+   "operations": {
+    "DmaRelease": 93
+   }
+  },
+  "pointer-mismatch": {
+   "count": 29,
+   "operations": {
+    "SetCommandRing": 15,
+    "SetDcbaap": 9,
+    "SetEventDequeue": 5
+   }
+  },
+  "port-mask-invalid": {
+   "count": 7,
+   "operations": {
+    "ObservePorts": 7
+   }
+  },
+  "program-before-containment": {
+   "count": 249,
+   "operations": {
+    "SetEventDequeue": 52,
+    "SetMaxSlots": 47,
+    "SetErstSize": 44,
+    "SetDcbaap": 39
+   }
+  },
+  "programming-closed": {
+   "count": 294,
+   "operations": {
+    "SetErstSize": 96,
+    "SetDcbaap": 88,
+    "SetMaxSlots": 77,
+    "SetCommandRing": 18
+   }
+  },
+  "register-repeated": {
+   "count": 106,
+   "operations": {
+    "SetErstBase": 65,
+    "SetMaxSlots": 19,
+    "SetDcbaap": 10,
+    "SetErstSize": 9
+   }
+  },
+  "release-forbidden-by-policy": {
+   "count": 1713,
+   "operations": {
+    "DmaRelease": 1713
+   }
+  },
+  "reset-before-halt": {
+   "count": 103,
+   "operations": {
+    "AssertReset": 103
+   }
+  },
+  "reset-with-bus-master": {
+   "count": 2,
+   "operations": {
+    "AssertReset": 2
+   }
+  },
+  "run-before-event-ring": {
+   "count": 43,
+   "operations": {
+    "SetRunStop": 43
+   }
+  },
+  "scratchpad-pointer-unsupported": {
+   "count": 2,
+   "operations": {
+    "PrepareDcbaa": 2
+   }
+  },
+  "slots-invalid": {
+   "count": 15,
+   "operations": {
+    "SetMaxSlots": 15
+   }
+  },
+  "smi-before-ownership": {
+   "count": 9,
+   "operations": {
+    "DisableLegacySmi": 9
+   }
+  },
+  "use-cancel": {
+   "count": 112,
+   "operations": {
+    "ClearBusMaster": 56,
+    "AssertReset": 56
+   }
+  },
+  "use-clear-run-stop": {
+   "count": 30,
+   "operations": {
+    "Cancel": 30
+   }
+  },
+  "wrong-phase": {
+   "count": 198,
+   "operations": {
+    "SetBusMaster": 47,
+    "SetErstBase": 40,
+    "SetRunStop": 35,
+    "DisableLegacySmi": 33
+   }
+  }
+ },
+ "rules": {
+  "ack.erdp": {
+   "count": 868,
+   "operations": {
+    "SetEventDequeue": 868
+   }
+  },
+  "armed.status-clean": {
+   "count": 170,
+   "operations": {
+    "ObserveStatus": 170
+   }
+  },
+  "bme.clear": {
+   "count": 149,
+   "operations": {
+    "ClearBusMaster": 149
+   }
+  },
+  "bme.set": {
+   "count": 178,
+   "operations": {
+    "SetBusMaster": 178
+   }
+  },
+  "cancel.halt": {
+   "count": 25,
+   "operations": {
+    "Cancel": 25
+   }
+  },
+  "cleanup.release": {
+   "count": 389,
+   "operations": {
+    "DmaRelease": 389
+   }
+  },
+  "cmd.noop-staged": {
+   "count": 986,
+   "operations": {
+    "PublishNoop": 986
+   }
+  },
+  "dma.allocate": {
+   "count": 1102,
+   "operations": {
+    "DmaAllocate": 1102
+   }
+  },
+  "dma.prepare": {
+   "count": 900,
+   "operations": {
+    "PrepareCommandRing": 237,
+    "PrepareEventRing": 229,
+    "PrepareDcbaa": 219
+   }
+  },
+  "dma.release": {
+   "count": 46,
+   "operations": {
+    "DmaRelease": 46
+   }
+  },
+  "dma.zero": {
+   "count": 1042,
+   "operations": {
+    "DmaZero": 1042
+   }
+  },
+  "doorbell.noop": {
+   "count": 952,
+   "operations": {
+    "RingCommandDoorbell": 952
+   }
+  },
+  "erstba.armed": {
+   "count": 168,
+   "operations": {
+    "SetErstBase": 168
+   }
+  },
+  "event.completion": {
+   "count": 885,
+   "operations": {
+    "ConsumeEvent": 885
+   }
+  },
+  "event.empty": {
+   "count": 332,
+   "operations": {
+    "ConsumeEvent": 332
+   }
+  },
+  "event.port-change": {
+   "count": 230,
+   "operations": {
+    "ConsumeEvent": 230
+   }
+  },
+  "fault.bme-mismatch": {
+   "count": 48,
+   "operations": {
+    "ObservePci": 48
+   }
+  },
+  "fault.cancelled": {
+   "count": 11,
+   "operations": {
+    "Cancel": 11
+   }
+  },
+  "fault.clock": {
+   "count": 118,
+   "operations": {
+    "Tick": 118
+   }
+  },
+  "fault.device-attached": {
+   "count": 46,
+   "operations": {
+    "ObservePorts": 46
+   }
+  },
+  "fault.event": {
+   "count": 8,
+   "operations": {
+    "ConsumeEvent": 8
+   }
+  },
+  "fault.inconsistent": {
+   "count": 18,
+   "operations": {
+    "ObserveStatus": 18
+   }
+  },
+  "fault.msi": {
+   "count": 4,
+   "operations": {
+    "ObservePci": 4
+   }
+  },
+  "fault.ownership": {
+   "count": 14,
+   "operations": {
+    "ObserveHandoff": 14
+   }
+  },
+  "fault.qualification-refused": {
+   "count": 233,
+   "operations": {
+    "Qualify": 233
+   }
+  },
+  "fault.reset-unverified": {
+   "count": 10,
+   "operations": {
+    "ObserveReset": 10
+   }
+  },
+  "fault.status-error": {
+   "count": 4,
+   "operations": {
+    "ObserveStatus": 4
+   }
+  },
+  "fault.timeout": {
+   "count": 18,
+   "operations": {
+    "Tick": 18
+   }
+  },
+  "fault.unexpected-halt": {
+   "count": 9,
+   "operations": {
+    "ObserveStatus": 9
+   }
+  },
+  "halt.idle-observed": {
+   "count": 239,
+   "operations": {
+    "ObserveStatus": 239
+   }
+  },
+  "halt.observed": {
+   "count": 144,
+   "operations": {
+    "ObserveStatus": 144
+   }
+  },
+  "halt.pending": {
+   "count": 2428,
+   "operations": {
+    "ObserveStatus": 2428
+   }
+  },
+  "halt.request": {
+   "count": 164,
+   "operations": {
+    "ClearRunStop": 164
+   }
+  },
+  "handoff.complete": {
+   "count": 82,
+   "operations": {
+    "ObserveHandoff": 82
+   }
+  },
+  "handoff.pending": {
+   "count": 347,
+   "operations": {
+    "ObserveHandoff": 347
+   }
+  },
+  "handoff.request": {
+   "count": 112,
+   "operations": {
+    "RequestOsOwnership": 112
+   }
+  },
+  "handoff.stable": {
+   "count": 59,
+   "operations": {
+    "ObserveHandoff": 59
+   }
+  },
+  "pci.stable": {
+   "count": 607,
+   "operations": {
+    "ObservePci": 607
+   }
+  },
+  "poll.step": {
+   "count": 59,
+   "operations": {
+    "BeginPollStep": 59
+   }
+  },
+  "ports.device-noted": {
+   "count": 44,
+   "operations": {
+    "ObservePorts": 44
+   }
+  },
+  "ports.quiet": {
+   "count": 68,
+   "operations": {
+    "ObservePorts": 68
+   }
+  },
+  "program.crcr": {
+   "count": 196,
+   "operations": {
+    "SetCommandRing": 196
+   }
+  },
+  "program.dcbaap": {
+   "count": 205,
+   "operations": {
+    "SetDcbaap": 205
+   }
+  },
+  "program.erdp": {
+   "count": 181,
+   "operations": {
+    "SetEventDequeue": 181
+   }
+  },
+  "program.erstsz": {
+   "count": 191,
+   "operations": {
+    "SetErstSize": 191
+   }
+  },
+  "program.slots": {
+   "count": 211,
+   "operations": {
+    "SetMaxSlots": 211
+   }
+  },
+  "qualify.legacy": {
+   "count": 113,
+   "operations": {
+    "Qualify": 113
+   }
+  },
+  "qualify.no-legacy": {
+   "count": 254,
+   "operations": {
+    "Qualify": 254
+   }
+  },
+  "quarantine.bme-clear": {
+   "count": 63,
+   "operations": {
+    "ClearBusMaster": 63
+   }
+  },
+  "quarantine.bme-stuck": {
+   "count": 4,
+   "operations": {
+    "ObservePci": 4
+   }
+  },
+  "quarantine.halt": {
+   "count": 84,
+   "operations": {
+    "ClearRunStop": 84
+   }
+  },
+  "quarantine.halted": {
+   "count": 49,
+   "operations": {
+    "ObserveStatus": 49
+   }
+  },
+  "quarantine.verified": {
+   "count": 59,
+   "operations": {
+    "ObservePci": 59
+   }
+  },
+  "reset.assert": {
+   "count": 387,
+   "operations": {
+    "AssertReset": 387
+   }
+  },
+  "reset.pending": {
+   "count": 213,
+   "operations": {
+    "ObserveReset": 213
+   }
+  },
+  "reset.quiesced": {
+   "count": 53,
+   "operations": {
+    "ObserveReset": 53
+   }
+  },
+  "reset.verified": {
+   "count": 306,
+   "operations": {
+    "ObserveReset": 306
+   }
+  },
+  "run.pending": {
+   "count": 42,
+   "operations": {
+    "ObserveStatus": 42
+   }
+  },
+  "run.start": {
+   "count": 161,
+   "operations": {
+    "SetRunStop": 161
+   }
+  },
+  "run.started": {
+   "count": 151,
+   "operations": {
+    "ObserveStatus": 151
+   }
+  },
+  "smi.disabled": {
+   "count": 81,
+   "operations": {
+    "DisableLegacySmi": 81
+   }
+  },
+  "status.stable": {
+   "count": 245,
+   "operations": {
+    "ObserveStatus": 245
+   }
+  },
+  "tick.advance": {
+   "count": 3192,
+   "operations": {
+    "Tick": 3192
+   }
+  }
+ }
+}

@@ -45,8 +45,9 @@ is merged through [PR #32](https://github.com/veasnawt/vos/pull/32): opt-in
 `vos.usb2-contain=1` admits only an idle QEMU xHCI left by UEFI, re-observes it
 twice and records the proposed bus-master clear and HCRST as `NOT-ISSUED` trace
 data, with no PCI-write or register-write path.
-This branch's [USB.2-C3b.2 controlled containment](results/usb2c3b2-controlled-containment.md)
-is verified for PR review, not accepted or merged. **It exists only in a
+The [USB.2-C3b.2 controlled containment](results/usb2c3b2-controlled-containment.md)
+is merged through [PR #33](https://github.com/veasnawt/vos/pull/33) at
+`03e7532aba739c636438c887e8aa9d6169f4cfcb`. **It exists only in a
 separately built, explicitly QEMU-only test image** (`VOS_CONTAIN_TEST=1` plus an
 acknowledgement token on the make command line, a `contain-test` build directory,
 a goal whitelist, and a per-link binary check that production kernels carry no
@@ -57,6 +58,11 @@ Enable, then a 32-bit USBCMD read-modify-write requesting HCRST, each verified,
 with every later outcome final and bus mastering never re-enabled. Real xHCI
 reset behavior, timing, Transactions Pending and DMA drain remain unverified;
 physical hardware is NOT TESTED and unauthorized.
+This branch's [USB.2-C4.1 hosted initialization protocol model](results/usb2c41-hosted-init-model.md)
+is hosted-only and unmerged: a `no_std`, `forbid(unsafe_code)` Rust state machine under
+`kernel/rust/usb/xhci_init/` that no kernel, ISO or Makefile input references, verified by
+Rust tests, an independent Python oracle and mutation controls. It performs no I/O, enables no
+bus mastering and writes no register; its register writes are values returned to a test.
 
 ## Current accepted components
 
@@ -143,8 +149,9 @@ software DMA ownership through PR #28 and the USB.2-C3a residue guard through
 PR #29 and the USB.2-C3a.2 early UEFI firmware memory exclusion through PR #30
 and the USB.2-C3a.3 protected firmware DMA inspection through PR #31.
 The USB.2-C3b.1 read-only containment dry-run is merged through PR #32. The
-USB.2-C3b.2 QEMU-only controlled containment is a review candidate on this branch;
-USB.2-C4, physical-PC activation and USB HID remain unimplemented.
+USB.2-C3b.2 QEMU-only controlled containment is merged through PR #33. The USB.2-C4.1 hosted
+protocol model is a review candidate on this branch and executes nowhere; native USB.2-C4
+controller initialization, physical-PC activation and USB HID remain unimplemented.
 
 The [USB.1 Rust publication review](results/usb1-rust-publication-review.md)
 records the candidate production migration, preserved read-only behavior,

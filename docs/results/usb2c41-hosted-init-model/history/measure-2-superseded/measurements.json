@@ -1,0 +1,281 @@
+{
+ "kernel_target": "x86_64-unknown-none",
+ "linked_into_kernel": false,
+ "rustc": [
+  "rustc 1.100.0-nightly (2e2b193f8 2026-09-02)",
+  "binary: rustc",
+  "commit-hash: 2e2b193f8ada105f27608b7be81c293e0d7292cb"
+ ],
+ "sections_all_members_bytes": {
+  ".text": 12230,
+  ".rodata": 10271,
+  ".data": 0,
+  ".bss": 0
+ },
+ "members": {
+  "b2f3eb2f094cea5b-absvdi2.o": {
+   ".text": 61,
+   ".data": 0,
+   ".bss": 0,
+   ".rodata": 35
+  },
+  "b2f3eb2f094cea5b-absvsi2.o": {
+   ".text": 49,
+   ".data": 0,
+   ".bss": 0,
+   ".rodata": 35
+  },
+  "b2f3eb2f094cea5b-absvti2.o": {
+   ".text": 71,
+   ".data": 0,
+   ".bss": 0,
+   ".rodata": 35
+  },
+  "b2f3eb2f094cea5b-addvdi3.o": {
+   ".text": 85,
+   ".data": 0,
+   ".bss": 0,
+   ".rodata": 35
+  },
+  "b2f3eb2f094cea5b-addvsi3.o": {
+   ".text": 84,
+   ".data": 0,
+   ".bss": 0,
+   ".rodata": 35
+  },
+  "b2f3eb2f094cea5b-addvti3.o": {
+   ".text": 107,
+   ".data": 0,
+   ".bss": 0,
+   ".rodata": 35
+  },
+  "b2f3eb2f094cea5b-cmpdi2.o": {
+   ".text": 47,
+   ".data": 0,
+   ".bss": 0
+  },
+  "b2f3eb2f094cea5b-cmpti2.o": {
+   ".text": 35,
+   ".data": 0,
+   ".bss": 0
+  },
+  "b2f3eb2f094cea5b-ffsti2.o": {
+   ".text": 41,
+   ".data": 0,
+   ".bss": 0
+  },
+  "b2f3eb2f094cea5b-int_util.o": {
+   ".text": 6,
+   ".data": 0,
+   ".bss": 0
+  },
+  "b2f3eb2f094cea5b-mulvdi3.o": {
+   ".text": 276,
+   ".data": 0,
+   ".bss": 0,
+   ".rodata": 43
+  },
+  "b2f3eb2f094cea5b-mulvsi3.o": {
+   ".text": 238,
+   ".data": 0,
+   ".bss": 0,
+   ".rodata": 43
+  },
+  "b2f3eb2f094cea5b-mulvti3.o": {
+   ".text": 529,
+   ".data": 0,
+   ".bss": 0,
+   ".rodata": 43
+  },
+  "b2f3eb2f094cea5b-negdf2.o": {
+   ".text": 20,
+   ".data": 0,
+   ".bss": 0
+  },
+  "b2f3eb2f094cea5b-negdi2.o": {
+   ".text": 11,
+   ".data": 0,
+   ".bss": 0
+  },
+  "b2f3eb2f094cea5b-negsf2.o": {
+   ".text": 18,
+   ".data": 0,
+   ".bss": 0
+  },
+  "b2f3eb2f094cea5b-negti2.o": {
+   ".text": 21,
+   ".data": 0,
+   ".bss": 0
+  },
+  "b2f3eb2f094cea5b-negvdi2.o": {
+   ".text": 51,
+   ".data": 0,
+   ".bss": 0,
+   ".rodata": 35
+  },
+  "b2f3eb2f094cea5b-negvsi2.o": {
+   ".text": 42,
+   ".data": 0,
+   ".bss": 0,
+   ".rodata": 35
+  },
+  "b2f3eb2f094cea5b-negvti2.o": {
+   ".text": 56,
+   ".data": 0,
+   ".bss": 0,
+   ".rodata": 35
+  },
+  "b2f3eb2f094cea5b-paritydi2.o": {
+   ".text": 48,
+   ".data": 0,
+   ".bss": 0
+  },
+  "b2f3eb2f094cea5b-paritysi2.o": {
+   ".text": 41,
+   ".data": 0,
+   ".bss": 0
+  },
+  "b2f3eb2f094cea5b-parityti2.o": {
+   ".text": 51,
+   ".data": 0,
+   ".bss": 0
+  },
+  "b2f3eb2f094cea5b-popcountdi2.o": {
+   ".text": 102,
+   ".data": 0,
+   ".bss": 0
+  },
+  "b2f3eb2f094cea5b-popcountsi2.o": {
+   ".text": 64,
+   ".data": 0,
+   ".bss": 0
+  },
+  "b2f3eb2f094cea5b-popcountti2.o": {
+   ".text": 183,
+   ".data": 0,
+   ".bss": 0
+  },
+  "b2f3eb2f094cea5b-subvdi3.o": {
+   ".text": 85,
+   ".data": 0,
+   ".bss": 0,
+   ".rodata": 35
+  },
+  "b2f3eb2f094cea5b-subvsi3.o": {
+   ".text": 84,
+   ".data": 0,
+   ".bss": 0,
+   ".rodata": 35
+  },
+  "b2f3eb2f094cea5b-subvti3.o": {
+   ".text": 112,
+   ".data": 0,
+   ".bss": 0,
+   ".rodata": 35
+  },
+  "b2f3eb2f094cea5b-ucmpdi2.o": {
+   ".text": 47,
+   ".data": 0,
+   ".bss": 0
+  },
+  "b2f3eb2f094cea5b-ucmpti2.o": {
+   ".text": 35,
+   ".data": 0,
+   ".bss": 0
+  },
+  "libvos_xhci_init_kernelflags.vos_xhci_init.511f4d73b5a3a0e1-cgu.0.rcgu.o": {
+   ".text": 9158,
+   ".rodata": 9616
+  },
+  "libvos_xhci_init_measure.vos_measure_anchor.1a1b77066858d44e-cgu.0.rcgu.o": {
+   ".text": 372,
+   ".rodata": 106
+  }
+ },
+ "model_symbols_text_bytes": 9528,
+ "model_symbols_rodata_bytes": 1704,
+ "largest_symbols": [
+  {
+   "bytes": 2027,
+   "kind": "T",
+   "name": "<vos_xhci_init::machine::Machine>::apply"
+  },
+  {
+   "bytes": 856,
+   "kind": "R",
+   "name": "<vos_xhci_init::types::Reason as core::fmt::Debug>::fmt::__OFFSET"
+  },
+  {
+   "bytes": 555,
+   "kind": "t",
+   "name": "<vos_xhci_init::machine::Machine>::observe_handoff"
+  },
+  {
+   "bytes": 520,
+   "kind": "R",
+   "name": "<vos_xhci_init::types::Rule as core::fmt::Debug>::fmt::__OFFSET"
+  },
+  {
+   "bytes": 513,
+   "kind": "t",
+   "name": "<vos_xhci_init::machine::Machine>::consume"
+  },
+  {
+   "bytes": 484,
+   "kind": "t",
+   "name": "<vos_xhci_init::machine::Machine>::observe_status"
+  },
+  {
+   "bytes": 357,
+   "kind": "t",
+   "name": "<vos_xhci_init::machine::Machine>::set_erdp"
+  },
+  {
+   "bytes": 333,
+   "kind": "T",
+   "name": "vos_measure_apply"
+  },
+  {
+   "bytes": 322,
+   "kind": "t",
+   "name": "<vos_xhci_init::machine::Machine>::observe_reset"
+  },
+  {
+   "bytes": 315,
+   "kind": "t",
+   "name": "<vos_xhci_init::machine::Machine>::allocate"
+  },
+  {
+   "bytes": 305,
+   "kind": "t",
+   "name": "<vos_xhci_init::machine::Machine>::tick"
+  },
+  {
+   "bytes": 293,
+   "kind": "t",
+   "name": "<vos_xhci_init::machine::Machine>::observe_pci"
+  }
+ ],
+ "largest_frames_bytes": [
+  {
+   "bytes": 296,
+   "function": "vos_measure_apply"
+  }
+ ],
+ "max_frame_bytes": 296,
+ "type_sizes_bytes": {
+  "Machine": 200,
+  "Operation": 40,
+  "Accepted": 40,
+  "Facts": 40,
+  "Reason": 1,
+  "Rule": 1
+ },
+ "source_lines": {
+  "lib.rs": 14,
+  "machine.rs": 1146,
+  "types.rs": 469
+ },
+ "source_lines_total": 1629,
+ "bytes_per_source_line_text_rodata": 6.9
+}

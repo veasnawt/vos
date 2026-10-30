@@ -1,0 +1,14 @@
+error: usage of an `unsafe` block
+   --> /home/veasnawt/src/vos-usb2c41/build/usb2c41-1/gates-3/cf-unsafe-model/machine.rs:134:30
+    |
+134 |         let x = 1u8; let _ = unsafe { core::ptr::read(&x) };
+    |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+note: the lint level is defined here
+   --> /home/veasnawt/src/vos-usb2c41/build/usb2c41-1/gates-3/cf-unsafe-model/lib.rs:8:11
+    |
+  8 | #![forbid(unsafe_code)]
+    |           ^^^^^^^^^^^
+
+error: aborting due to 1 previous error
+
