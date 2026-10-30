@@ -303,6 +303,8 @@ void kernel_main(uint32_t mb2_magic, uint32_t mb2_info)
         xhci_boot_probe(bi.cmdline);
     /* USB input bring-up, Increment 1: opt-in, read-only; never returns with vos.usb-survey=hold. */
     check(xhci_survey_boot(&bi), "USB input survey integrity");
+    for (;;)
+        cpu_halt();
 
     struct vmm_audit audit;
     if (vmm_audit_space(vmm_kernel_root(), 1, &audit) != VMM_OK) {
