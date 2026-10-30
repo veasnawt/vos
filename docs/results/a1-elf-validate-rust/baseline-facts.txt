@@ -1,0 +1,26 @@
+== baseline layout line
+0x100000-0x101000/5 0x101000-0x107000/6 0x107000-0x149000/5 0x149000-0x157000/4 0x157000-0x1e9000/6
+== baseline section sizes
+4] 003000
+5] 045000
+6] 053000
+9] 053200
+== PT_LOAD
+0x001000 0x0000000000100000 0x001000 0x001000 R
+0x002000 0x0000000000101000 0x000028 0x006000 RW
+0x003000 0xffffffff80107000 0x042000 0x042000 R
+0x045000 0xffffffff80149000 0x00e000 0x00e000 R
+0x053000 0xffffffff80157000 0x000200 0x092000 RW
+== elf_validate / elf_strerror in baseline
+ffffffff80113360 0000000000000018 T elf_strerror
+ffffffff80112bc0 000000000000079a T elf_validate
+ffffffff80140190 0000000000000012 T vos_rust_elf_inside
+== baseline map: elf.o contribution
+85: .comment       0x0000000000000000       0x27 build/a1/base/elf.o
+87:                0x0000000000000000        0x0 build/a1/base/elf.o
+460: .text          0xffffffff80112bc0      0x7b8 build/a1/base/elf.o
+1224:                0xffffffff80153590        0x0 build/a1/base/elf.o
+== stack frame of the C elf_validate
+ffffffff80112bd7:	sub    $0x128,%rsp
+== callers resolve to
+3

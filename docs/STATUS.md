@@ -184,6 +184,10 @@ and eventually a dock and Settings/Accessibility (including cursor-size options)
 These are incomplete planning topics; their order, contracts and budgets require
 owner approval. The accepted mockup is a design reference, not implemented UI.
 
+The [A1 Rust ELF validator](results/a1-elf-validate-rust.md) is a PR candidate, not merged:
+`elf_validate`/`elf_strerror` move to Rust behind the unchanged `elf.h` ABI and `elf.c`
+becomes the frozen differential reference. QEMU-only; physical hardware NOT TESTED.
+
 The [USB survey v2.1](results/usb-survey-v21-summary.md) is a PR candidate, not merged: it repeats the raw Intel
 routing registers and the EHCI status and PORTSC words in the final SUMMARY block, from values the survey
 already captured (no new reads). QEMU-only; the survey has not been run on the Dell.

@@ -1,0 +1,25 @@
+== layout (baseline | A1)
+0x100000-0x101000/5 0x101000-0x107000/6 0x107000-0x149000/5 0x149000-0x157000/4 0x157000-0x1e9000/6
+0x100000-0x101000/5 0x101000-0x107000/6 0x107000-0x14a000/5 0x14a000-0x158000/4 0x158000-0x1ea000/6
+== size (baseline | A1)
+ 331776	    552	 617984	 950312	  e8028	build/a1/base/vos.bin
+ 335872	    552	 617984	 954408	  e9028	build/a1/kernel/vos.bin
+== PT_LOAD memsz/filesz (baseline | A1)
+0x001000/0x001000 0x006000/0x000028 0x042000/0x042000 0x00e000/0x00e000 0x092000/0x000200 
+0x001000/0x001000 0x006000/0x000028 0x043000/0x043000 0x00e000/0x00e000 0x092000/0x000200 
+== loaded growth (text+data+bss, bytes): 4096
+== elf_validate / elf_strerror / vos_rust_elf_inside (A1)
+ffffffff8013f210 000000000000001a T elf_strerror
+ffffffff8013f230 0000000000000a90 T elf_validate
+ffffffff80140480 0000000000000012 T vos_rust_elf_inside
+== link map: which object defines them
+(no elf.o lines above = C validator not linked)
+                0xffffffff8013f230                elf_validate
+1038: .text.elf_validate
+1039-                0xffffffff8013f230      0xa90 build/a1/kernel/rust/libvos_kernel.a(libvos_kernel.vos_kernel.45b20e7284a592af-cgu.0.rcgu.o)
+== stack frame of Rust elf_validate
+ffffffff8013f384:	sub    $0x1b8,%rsp
+== panic / fmt symbols
+0
+== call sites resolve to the Rust symbol (A1)
+3
