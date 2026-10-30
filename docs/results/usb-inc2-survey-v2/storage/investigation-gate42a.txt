@@ -1,0 +1,10 @@
+Investigation record (written by the agent; the STOP file is NOT removed or edited, only the owner may release it).
+Step: i2-gate42a-focused (scripts/test-usb2c42a.py, --jobs 2, 5 port-related mutants), 2026-10-30.
+Measured: growth 34,760,308 B; projection 18,000,000 B; 1.93x (limit 1.25x = 22,500,000). Exit status of the gate itself: rc=0, pass=true, 5/5 mutants killed.
+Tree after: 153,034,964 B (stop line 280,000,000, cap 310,000,000, forecast 210,000,000). No line crossed.
+Cause (du -b of build/i2-1/gate42-1): two fresh mutant worker directories of 10,452,6xx B each (unstripped test binary 7,717,3xx B + trace.txt 1,373,564 B + lib.rlib 1,237,8xx B) = 20,905,290 B;
+main output 13,854,244 B (backend-tests 7,717,320 B unstripped, trace.txt 4,753,299 B, libvos_xhci_init.rlib 1,237,494 B, cf-unsafe-model 123,958 B).
+Projection error: the 18 MB projection reused the Increment 1 cost of gate42-1/gate42-2 (13.9 MB), which reused workers kept OUTSIDE the output folder (--workers-dir). This run created fresh workers, which the projection omitted.
+Correct unit cost for a C4.2a run: ~14 MB base + ~10.5 MB per fresh worker (jobs). C4.1 (gate41-1, jobs 2): 40,182,692 B, projected 38 MB, within limit.
+No runaway process, no leftover large files outside gate42-1. Nothing was deleted, moved, or compacted.
+Open: owner decision whether to release STOP and continue with corrected projections.

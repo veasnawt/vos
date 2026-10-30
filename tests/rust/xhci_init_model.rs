@@ -217,7 +217,8 @@ fn qualification_refusals_are_named_prioritised_and_terminal() {
         (bad_facts(|f| f.page_4k = false), Reason::PageSizeUnsupported),
         (bad_facts(|f| f.slots = 0), Reason::BadCapabilities),
         (bad_facts(|f| f.ports = 0), Reason::BadCapabilities),
-        (bad_facts(|f| f.ports = 17), Reason::BadCapabilities),
+        (bad_facts(|f| f.ports = 32), Reason::BadCapabilities),
+        (bad_facts(|f| f.ports = u8::MAX), Reason::BadCapabilities),
         (bad_facts(|f| f.interrupters = 0), Reason::BadCapabilities),
         (bad_facts(|f| f.dma_limit = 0x10_0000), Reason::BadDmaLimit),
         (bad_facts(|f| f.dma_limit = (1 << 30) + 1), Reason::BadDmaLimit),
@@ -388,6 +389,18 @@ fn static_registers_need_containment_prepared_pages_and_valid_values() {
     { let st = h.d.status(); ok(&mut h, Operation::ObserveStatus(st)); }
     refused(&mut h, Operation::SetCommandRing { addr: CMD, rcs: true }, Reason::CrcrWhileRunning);
     assert!(h.d.violations.is_empty());
+}
+
+#[test]
+fn up_to_31_root_ports_qualify_and_the_port_mask_follows_the_count() {
+    // The Dell OptiPlex 9020 xHCI has 21 ports: the old limit of 16 must not apply, and the u32 mask bounds it at 31.
+    for ports in [8u8, 16, 17, 21, 31] {
+        let mut h = with(|q| q.ports = ports);
+        goto(&mut h, Phase::Running);
+        ok(&mut h, Operation::ObservePorts { connected: 1u32 << (ports - 1) });
+        refused(&mut h, Operation::ObservePorts { connected: 1u32 << ports }, Reason::PortMaskInvalid);
+        assert_eq!(h.m.devices_seen(), 1u32 << (ports - 1), "{ports}");
+    }
 }
 
 #[test]

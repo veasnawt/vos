@@ -510,7 +510,7 @@ class SessionOracle:
             dbc = self.rd('dbc.dcctrl', 0)
             ports = hcs1 >> 24
             connected = 0
-            if ports <= 16:
+            if ports <= 31:
                 for p in range(ports):
                     if bit(self.rd_need('portsc', p), 0):
                         connected |= 1 << p
@@ -526,7 +526,7 @@ class SessionOracle:
             return self.close(c.cause)
         r = self.m.apply('Qualify', [str(x) for x in facts])
         if r.startswith('ok'):
-            self.ports = min(ports, 16)
+            self.ports = min(ports, 31)
             self.know_bme, self.know_rs, self.know_hch = bool(facts[15]), bool(facts[16]), bool(facts[17])
             self.last_cnr = bool(usbsts & CNR)
             self.fresh = [True, True, facts[7] == 1, True, False]

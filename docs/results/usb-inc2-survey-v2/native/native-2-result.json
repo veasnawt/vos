@@ -1,0 +1,37 @@
+{
+ "cases": 4,
+ "passed": 3,
+ "results": [
+  {
+   "case": "bios-survey-two-xhci-bridge-ehci",
+   "passed": true,
+   "xhci": 2,
+   "behind_bridge": true,
+   "seconds": 21.1
+  },
+  {
+   "case": "bios-survey-ehci-keyboard",
+   "passed": true,
+   "ehci_connected": 1,
+   "table_present": "no",
+   "hardware_answers": "unknown",
+   "translation_enabled": "unknown",
+   "xhci_translated": "unknown",
+   "seconds": 21.1
+  },
+  {
+   "case": "uefi-survey-two-xhci-bridge-ehci",
+   "passed": true,
+   "xhci": 2,
+   "behind_bridge": true,
+   "seconds": 24.1
+  },
+  {
+   "case": "uefi-survey-ehci-keyboard",
+   "passed": false,
+   "failure": "the hub caveat is stated",
+   "seconds": 23.1
+  }
+ ],
+ "qemu": "QEMU emulator version 10.2.1 (Debian 1:10.2.1+ds-1ubuntu3.2)"
+}

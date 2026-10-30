@@ -1,0 +1,248 @@
+{
+ "hosted_only": true,
+ "device_access": false,
+ "pci_mmio_physical_memory_access": false,
+ "source_sha256": {
+  "kernel/rust/usb/xhci_init/backend.rs": "24d3e06c3534ed739c76356dfe06d3cd659406213c7869e52453b48d83ac93d4",
+  "kernel/rust/usb/xhci_init/dma_model.rs": "8633a054eaa0b8fda2fad7ed77de941f366f9da04268507291ba52b445b8fa17",
+  "kernel/rust/usb/xhci_init/lib.rs": "82a948724fb685950d3b10fb06f781fc0c50f3eaa8516b46bb6ae240758fe1a2",
+  "kernel/rust/usb/xhci_init/machine.rs": "bd0f7f1815a3784390bb608b5f7fe9fd87dc9b759f982b3aec719ce830ddf4ae",
+  "kernel/rust/usb/xhci_init/session.rs": "52ab3791109673621dad2010a577254d2bd201a7de0e911d220295fa06616d59",
+  "kernel/rust/usb/xhci_init/types.rs": "35d8db08cbc6d228ec2d97d7589e66c0bb3af4bbf2d0b851034c20280ce00889",
+  "tests/rust/xhci_init_support.rs": "d0292cff7af380271220a1d067ac0a0ddfdca471a8b8c5838635cc954d149f62",
+  "tests/rust/xhci_init_model.rs": "19730d0f0614a4bdda6336d2c1b8fab9525b61d278feb7ee081c2adc8fb6d664",
+  "scripts/xhci_init_oracle.py": "2961ff875139902f2a3ad260541e6514e6daa17a22e25d4760ee08b3ab06609d",
+  "scripts/test-usb2c41.py": "06d79f7c70cb2c6888e9c773aace169e4c4ab98b7c7521ecd8d05c0abfa86761"
+ },
+ "commands": [
+  [
+   "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+   "--edition=2024",
+   "-Dwarnings",
+   "--crate-name",
+   "vos_xhci_init",
+   "--crate-type=rlib",
+   "-Coverflow-checks=yes",
+   "-Cdebug-assertions=yes",
+   "/home/veasnawt/src/vos-usb-inc2/kernel/rust/usb/xhci_init/lib.rs",
+   "-o",
+   "/home/veasnawt/src/vos-usb-inc2/build/i2-1/gate41-1/libvos_xhci_init.rlib"
+  ],
+  [
+   "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+   "--edition=2024",
+   "-Dwarnings",
+   "--test",
+   "-Copt-level=1",
+   "-Coverflow-checks=yes",
+   "--extern",
+   "vos_xhci_init=/home/veasnawt/src/vos-usb-inc2/build/i2-1/gate41-1/libvos_xhci_init.rlib",
+   "/home/veasnawt/src/vos-usb-inc2/tests/rust/xhci_init_model.rs",
+   "-o",
+   "/home/veasnawt/src/vos-usb-inc2/build/i2-1/gate41-1/init-tests"
+  ],
+  [
+   "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+   "--edition=2024",
+   "--extern",
+   "vos_xhci_init=/home/veasnawt/src/vos-usb-inc2/build/i2-1/gate41-1/libvos_xhci_init.rlib",
+   "/home/veasnawt/src/vos-usb-inc2/build/i2-1/gate41-1/cf-old-broad-program-action-is-gone.rs",
+   "-o",
+   "/home/veasnawt/src/vos-usb-inc2/build/i2-1/gate41-1/cf-old-broad-program-action-is-gone"
+  ],
+  [
+   "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+   "--edition=2024",
+   "--extern",
+   "vos_xhci_init=/home/veasnawt/src/vos-usb-inc2/build/i2-1/gate41-1/libvos_xhci_init.rlib",
+   "/home/veasnawt/src/vos-usb-inc2/build/i2-1/gate41-1/cf-state-cannot-be-forged.rs",
+   "-o",
+   "/home/veasnawt/src/vos-usb-inc2/build/i2-1/gate41-1/cf-state-cannot-be-forged"
+  ],
+  [
+   "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+   "--edition=2024",
+   "--extern",
+   "vos_xhci_init=/home/veasnawt/src/vos-usb-inc2/build/i2-1/gate41-1/libvos_xhci_init.rlib",
+   "/home/veasnawt/src/vos-usb-inc2/build/i2-1/gate41-1/cf-registers-have-no-raw-write.rs",
+   "-o",
+   "/home/veasnawt/src/vos-usb-inc2/build/i2-1/gate41-1/cf-registers-have-no-raw-write"
+  ],
+  [
+   "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+   "--edition=2024",
+   "--crate-name",
+   "cf_unsafe",
+   "--crate-type=rlib",
+   "/home/veasnawt/src/vos-usb-inc2/build/i2-1/gate41-1/cf-unsafe-model/lib.rs",
+   "-o",
+   "/home/veasnawt/src/vos-usb-inc2/build/i2-1/gate41-1/cf-unsafe.rlib"
+  ],
+  [
+   "/home/veasnawt/src/vos-usb-inc2/build/i2-1/gate41-1/init-tests",
+   "--test-threads=1"
+  ],
+  [
+   "/home/veasnawt/src/vos-usb-inc2/build/i2-1/gate41-1/init-tests",
+   "--test-threads=1",
+   "export_traces_for_the_oracle"
+  ],
+  [
+   "/usr/bin/python3",
+   "-I",
+   "-B",
+   "/home/veasnawt/src/vos-usb-inc2/scripts/xhci_init_oracle.py",
+   "/home/veasnawt/src/vos-usb-inc2/build/i2-1/gate41-1/trace.txt"
+  ]
+ ],
+ "static_isolation": {
+  "model_files": [
+   "backend.rs",
+   "dma_model.rs",
+   "lib.rs",
+   "machine.rs",
+   "session.rs",
+   "types.rs"
+  ],
+  "unsafe_free_no_std": true,
+  "files_outside_allowed_set_mentioning_model": [],
+  "kernel_crate_root_mentions_model": false
+ },
+ "compile_fail_controls": {
+  "old-broad-program-action-is-gone": "E0599",
+  "state-cannot-be-forged": "E0616",
+  "registers-have-no-raw-write": "E0599",
+  "unsafe-rejected": "forbid(unsafe_code)"
+ },
+ "rust_tests": "test result: ok. 50 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.55s",
+ "rust_test_names": [
+  "a_backend_fault_is_terminal_with_its_own_reason",
+  "a_completed_command_leaves_no_deadline_behind",
+  "a_missing_acknowledgment_blocks_the_next_doorbell",
+  "a_stuck_bus_master_is_reported_and_never_retried",
+  "allocation_closes_once_the_device_is_exposed",
+  "bus_master_and_erstba_ordering_is_enforced",
+  "cancel_routes_every_phase_to_a_safe_path",
+  "command_ring_cycle_and_link_semantics",
+  "controller_errors_clock_faults_and_unexpected_halts",
+  "deadlines_expire_exactly_at_their_tick_count",
+  "device_attachment_before_run_fails_and_after_run_is_only_noted",
+  "dma_address_alignment_and_overlap_rules",
+  "dma_page_lifetime_state_machine",
+  "erdp_and_ehb_acknowledgments",
+  "erst_contents_are_validated",
+  "event_validation_refusals_and_faults",
+  "export_traces_for_the_oracle",
+  "firmware_handoff_sequence_and_conflicts",
+  "firmware_that_never_releases_ends_in_a_clean_failure_without_forcing",
+  "halt_bme_clear_and_reset_must_happen_in_that_order",
+  "halt_never_reached_times_out_without_exposure",
+  "halt_requests_are_refused_when_there_is_nothing_to_halt",
+  "idle_accepts_only_qualification_and_time",
+  "interrupts_ports_slots_and_other_commands_are_forbidden_everywhere",
+  "msi_observed_at_any_time_is_a_fault",
+  "no_session_ever_writes_ports_slots_interrupts_or_other_doorbells",
+  "ownership_lost_noop_and_no_capability_cases",
+  "polling_is_bounded_per_step_and_per_unacknowledged_batch",
+  "published_pages_are_never_released_before_quiescence",
+  "qemu_deviations_are_documented_as_device_options_not_protocol_assumptions",
+  "qemu_fetches_the_erst_inside_the_erstba_write_and_needs_bus_mastering",
+  "qemu_session_completes_260_noops_with_both_rings_wrapping",
+  "qualification_refusals_are_named_prioritised_and_terminal",
+  "random_sessions_with_the_canonical_driver_never_violate_the_device",
+  "randomized_transitions_keep_every_invariant",
+  "randomized_transitions_with_false_observations_keep_the_state_invariants",
+  "reset_that_does_not_clear_the_controller_is_unverified",
+  "reset_that_never_completes_times_out_before_and_after_exposure",
+  "scratchpad_and_dcbaa_eligibility",
+  "slow_legacy_hardware_like_session_completes_in_both_erst_fetch_modes",
+  "start_and_command_timeouts_quarantine_and_run_the_containment_tail",
+  "static_registers_need_containment_prepared_pages_and_valid_values",
+  "terminal_phases_accept_nothing_but_their_defined_cleanup",
+  "the_alternate_fetch_timing_does_not_fault_until_run_and_the_protocol_is_safe_either_way",
+  "the_event_log_checker_itself_rejects_misordered_logs",
+  "the_halted_belief_is_invalidated_whenever_run_stop_is_written",
+  "the_write_inventory_is_exactly_n01_to_n18_and_in_order",
+  "unresolved_facts_are_never_treated_as_favourable",
+  "up_to_31_root_ports_qualify_and_the_port_mask_follows_the_count",
+  "zz_every_rule_and_every_reason_is_exercised"
+ ],
+ "oracle": {
+  "traces": 600,
+  "steps": 156000,
+  "accepted": 20003,
+  "refused": 135997,
+  "mismatches": 0,
+  "first_mismatches": [],
+  "rules_seen": 64,
+  "reasons_seen": 64
+ },
+ "oracle_trace_sha256": "5cfbcbf14adf178cf521ce49d4a0db9d506224d67798a30dec5282e41e81c7f8",
+ "oracle_corruption_controls": {
+  "refusal-reason": 1,
+  "rule-name": 1,
+  "write-value": 1,
+  "terminal-cause": 1,
+  "transition-target": 1
+ },
+ "mutants": [
+  {
+   "name": "port-bound-is-the-old-16",
+   "breaks": "a controller with more than 16 root ports is refused",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "up_to_31_root_ports_qualify_and_the_port_mask_follows_the_count"
+   ]
+  },
+  {
+   "name": "port-bound-off-by-one",
+   "breaks": "a controller with 32 root ports qualifies",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "qualification_refusals_are_named_prioritised_and_terminal",
+    "zz_every_rule_and_every_reason_is_exercised"
+   ]
+  },
+  {
+   "name": "port-mask-unchecked",
+   "breaks": "port mask beyond the port count accepted",
+   "killed_by": [
+    "rust-tests",
+    "oracle"
+   ],
+   "failing_tests": [
+    "device_attachment_before_run_fails_and_after_run_is_only_noted",
+    "up_to_31_root_ports_qualify_and_the_port_mask_follows_the_count",
+    "zz_every_rule_and_every_reason_is_exercised"
+   ]
+  },
+  {
+   "name": "port-event-range-unchecked",
+   "breaks": "port change event for a nonexistent port accepted",
+   "killed_by": [
+    "rust-tests",
+    "oracle"
+   ],
+   "failing_tests": [
+    "event_validation_refusals_and_faults",
+    "zz_every_rule_and_every_reason_is_exercised"
+   ]
+  }
+ ],
+ "mutation_summary": {
+  "total": 4,
+  "killed": 4,
+  "survived": [],
+  "invalid": [],
+  "killed_by_rust_tests": 4,
+  "killed_by_oracle": 2,
+  "killed_by_oracle_only": [],
+  "killed_by_rust_tests_only": 2
+ },
+ "pass": true,
+ "seconds": 13.4
+}

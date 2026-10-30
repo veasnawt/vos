@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""USB input bring-up, Increment 1: native QEMU checks of the read-only USB survey and of the unchanged default boot.
+"""USB input bring-up, Increments 1 and 2: native QEMU checks of the read-only USB survey and of the unchanged default boot.
 
 Boots the survey ISOs (menu entry 0: vos.usb-survey=hold) and the default ISOs under BIOS (SeaBIOS) and UEFI (OVMF) on
 QEMU q35 with several USB topologies, and checks the guest's own account: every xHCI controller found on the bus tree,
@@ -28,6 +28,12 @@ XHCI = ['-device', 'qemu-xhci,id=xhci', '-device', 'usb-kbd,bus=xhci.0', '-devic
 TWO = ['-device', 'qemu-xhci,id=xa', '-device', 'usb-kbd,bus=xa.0', '-device', 'pcie-root-port,id=rp1,bus=pcie.0,chassis=1,slot=1',
        '-device', 'qemu-xhci,id=xb,bus=rp1', '-device', 'usb-mouse,bus=xb.0', '-device', 'usb-ehci,id=eh']
 NONE = []
+# an EHCI with a keyboard on it: the Dell's keyboard and mouse are on an EHCI behind an internal hub, so a connected EHCI root port
+# is the interesting case
+EHCI_KBD = ['-device', 'usb-ehci,id=eh', '-device', 'usb-kbd,bus=eh.0']
+# IOMMU tables and remapping hardware that is present but not enabled by anything: table present is not isolation
+INTEL_IOMMU = XHCI + ['-device', 'intel-iommu']
+AMD_IOMMU = XHCI + ['-device', 'amd-iommu']
 
 
 class Fail(Exception):
@@ -53,11 +59,11 @@ def qmp(sock_path, command, **args):
     need('error' not in reply, f'{command}: {reply}')
 
 
-def boot(out, name, fw, iso, devices, hold, shot=False):
+def boot(out, name, fw, iso, devices, hold, shot=False, mem='128M'):
     folder = out / name
     folder.mkdir()
     serial, sock = folder / 'serial.txt', folder / 'qmp'
-    argv = ['qemu-system-x86_64', '-machine', 'q35', '-accel', 'tcg', '-m', '128M', '-cdrom', str(iso), '-boot', 'd', '-display', 'none',
+    argv = ['qemu-system-x86_64', '-machine', 'q35', '-accel', 'tcg', '-m', mem, '-cdrom', str(iso), '-boot', 'd', '-display', 'none',
             '-nic', 'none', *devices, '-serial', f'file:{serial}', '-qmp', f'unix:{sock},server=on,wait=off', '-no-reboot']
     if fw == 'uefi':
         variables = folder / 'OVMF_VARS_4M.fd'
@@ -102,10 +108,12 @@ def lines(text):
 
 def common(text):
     u = '\n'.join(lines(text))
-    need('usb: USB input survey: PCI configuration and xHCI registers are only read; nothing is written' in u, 'banner')
+    need('usb: USB input survey v2: PCI configuration, xHCI, EHCI and firmware tables are only read; nothing is written' in u, 'banner')
     need('usb: survey complete. Nothing was written. The machine is halted: power it off.' in u, 'closing line')
     need(re.search(r'usb: i8042 status 0x[0-9a-f]{2} ', u), 'PS/2 status line')
-    need('ACPI DMAR and IVRS are NOT read, so an Intel or AMD IOMMU is UNKNOWN' in u, 'IOMMU limitation stated')
+    need('usb: dma-protection facts (separate claims): table present ' in u, 'the four DMA facts are reported')
+    need('DMA isolation NOT ESTABLISHED' in u and 'usb: SUMMARY DMA isolation NOT ESTABLISHED' in u, 'isolation is never claimed')
+    need(re.search(r'usb: acpi (rsdp revision \d|: )', u), 'the ACPI root was looked for')
     need('INTEGRITY' not in text and 'ERROR' not in u and 'CHANGED' not in u and 'WARNING' not in u, 'no integrity error, change or warning')
     return u
 
@@ -117,8 +125,12 @@ def check_one(text, ports_connected):
     need(re.search(r'hci 0x0100 caplen 0x40 slots 64 intr 16 ports 8 scratchpads 0 ac64 1', u), 'decoded capability registers')
     need(re.search(rf'ports read 8 connected {ports_connected}', u), f'{ports_connected} connected ports')
     need(len(re.findall(r'usb: SUMMARY xhci ', u)) == 1 and u.index('SUMMARY') > u.index('IOMMU:'), 'the summary comes last, after the details')
+    need(re.search(r'usb:   portsc of 8 of 8 ports: connected \d+ enabled \d+ powered \d+ over-current 0', u), 'all eight PORTSC registers are shown')
+    need(re.search(r'usb:   dcbaap 0x[0-9a-f]+ \[[a-z -]+\] crcr\(lo\) 0x[0-9a-f]{8} ir0 erstba', u), 'the ring pointers are shown')
+    need('usb: SUMMARY usb2 routing: not read' in u, 'a non-Intel controller has no routing registers to read')
     need('protocols usb2.00 ports 5+4 usb3.00 ports 1+4' in u, 'supported-protocol capabilities')
-    return {'xhci': 1}
+    need(facts(u)['table_present'] == 'no', 'no IOMMU table on a plain machine')
+    return {'xhci': 1, **facts(u)}
 
 
 def check_two(text):
@@ -126,7 +138,7 @@ def check_two(text):
     xs = re.findall(r'usb: xhci (\w\w):(\w\w)\.(\d) ', u)
     need(len(xs) == 2, f'two xHCI controllers listed: {xs}')
     need(any(b != '00' for b, _, _ in xs), 'one controller is behind a bridge (bus other than 0)')
-    need(len(re.findall(r'usb: ehci ', u)) == 1, 'the EHCI is listed')
+    need(len(re.findall(r'usb: ehci \S+ \S+ cls ', u)) == 1 and len(re.findall(r'usb: ehci \S+ \S+ hci 0x', u)) == 1, 'the EHCI is listed once and its registers are read')
     need(len(re.findall(r'ports read 8 connected', u)) == 2, 'both controllers read')
     need(re.search(r'bridges [1-9]', u), 'a bridge was walked')
     need(sum(int(c) for c in re.findall(r'ports read \d+ connected (\d+)', u)) == 2, 'the keyboard and the mouse, one per controller')
@@ -134,11 +146,59 @@ def check_two(text):
     return {'xhci': 2, 'behind_bridge': True}
 
 
+def facts(u):
+    m = re.search(r'table present (\w+), hardware answers (\w+)\r?\nusb:   translation enabled (\w+), xhci translated (\w+)', u)
+    need(m, 'the DMA facts line')
+    return dict(zip(('table_present', 'hardware_answers', 'translation_enabled', 'xhci_translated'), m.groups()))
+
+
+def check_ehci_kbd(text):
+    u = common(text)
+    need(len(re.findall(r'usb: ehci \S+ \S+ cls ', u)) == 1 and len(re.findall(r'usb: ehci \S+ \S+ hci 0x', u)) == 1, 'the EHCI is listed once and its registers are read')
+    need(re.search(r'usb:   connected 1 companion-owned 0', u), 'the keyboard is a connected EHCI root port')
+    need(re.search(r'usb:   ehci root port \d connected \S+ enabled \d owner ehci \(a hub behind it\? devices below it are not visible\)', u), 'the hub caveat is stated')
+    need(re.search(r'usb: SUMMARY ehci connected root ports: [0-9a-f]{4}=1', u), 'the summary names the EHCI with the connected port')
+    need('no xHCI controller found' in u and 'usb: SUMMARY usb2 routing: not read' in u, 'no xHCI, so no routing')
+    return {'ehci_connected': 1, **facts(u)}
+
+
+def check_intel_iommu(text):
+    u = common(text)
+    f = facts(u)
+    need(f['table_present'] == 'yes', 'the DMAR table is found')
+    need(re.search(r'usb: dmar host-width \d+ flags 0x[0-9a-f]{2} units [1-9]', u), 'the DMAR is parsed')
+    need(re.search(r'usb:   intel unit 0 base 0x[0-9a-f]+ flags 0x[0-9a-f]{2} covers xhci: yes', u), 'the unit covers the xHCI by its scope')
+    need(re.search(r'usb:     registers ver 0x[0-9a-f]+ status 0x[0-9a-f]{8} translation off', u), 'the unit answers and translation is off')
+    need(f['hardware_answers'] == 'yes' and f['translation_enabled'] == 'no' and f['xhci_translated'] == 'no', f'present but not enabled: {f}')
+    return f
+
+
+def check_amd_iommu(text):
+    u = common(text)
+    f = facts(u)
+    need(f['table_present'] == 'yes', 'the IVRS table is found')
+    need(re.search(r'usb: ivrs units [1-9]', u), 'the IVRS is parsed')
+    need(f['xhci_translated'] == 'unknown', f'AMD coverage is never inferred: {f}')
+    return f
+
+
+def check_high_tables(text):
+    u = common(text)
+    m = re.search(r'usb: acpi rsdp revision \d rsdt 0x([0-9a-f]+) xsdt 0x([0-9a-f]+) root (\w+) tables (\d+)', u)
+    need(m, 'the ACPI root line')
+    root = int(m.group(2), 16) or int(m.group(1), 16)
+    need(root >= 1 << 30, f'the root table is above 1 GiB, so the read-only lease path was used: {root:#x}')
+    need(int(m.group(4)) > 0 and 'acpi tables not fully read' not in u, 'the tables were read through the lease')
+    need(facts(u)['table_present'] == 'yes', 'the DMAR table is found above 1 GiB')
+    return {'root': hex(root), **facts(u)}
+
+
 def check_none(text):
     u = common(text)
     need('no xHCI controller found on the buses that were scanned' in u, 'absence stated')
     need(not re.search(r'usb: (xhci|ehci|uhci|ohci) ', u), 'no controller listed')
-    return {'xhci': 0}
+    need(facts(u)['table_present'] == 'no', 'QEMU describes no IOMMU unless asked: absence is a result because the root table was read')
+    return {'xhci': 0, **facts(u)}
 
 
 def check_default(text):
@@ -163,20 +223,25 @@ def main():
            ('bios', False): k / 'vos.iso', ('uefi', False): k / 'vos-uefi.iso'}
     cases = []
     for fw in ('bios', 'uefi'):
-        cases += [(f'{fw}-survey-one-xhci', fw, True, XHCI, lambda t: check_one(t, 2), True),
-                  (f'{fw}-survey-two-xhci-bridge-ehci', fw, True, TWO, check_two, fw == 'bios'),
-                  (f'{fw}-survey-no-usb', fw, True, NONE, check_none, False),
-                  (f'{fw}-default-boot-with-xhci', fw, False, XHCI, check_default, False)]
+        cases += [(f'{fw}-survey-one-xhci', fw, True, XHCI, lambda t: check_one(t, 2), True, '128M'),
+                  (f'{fw}-survey-two-xhci-bridge-ehci', fw, True, TWO, check_two, fw == 'bios', '128M'),
+                  (f'{fw}-survey-no-usb', fw, True, NONE, check_none, False, '128M'),
+                  (f'{fw}-survey-ehci-keyboard', fw, True, EHCI_KBD, check_ehci_kbd, fw == 'bios', '128M'),
+                  (f'{fw}-survey-intel-iommu', fw, True, INTEL_IOMMU, check_intel_iommu, False, '128M'),
+                  (f'{fw}-survey-amd-iommu', fw, True, AMD_IOMMU, check_amd_iommu, False, '128M'),
+                  (f'{fw}-survey-tables-above-1gib', fw, True, INTEL_IOMMU, check_high_tables, False, '2048M'),
+                  (f'{fw}-default-boot-with-xhci', fw, False, XHCI, check_default, False, '128M'),
+                  (f'{fw}-default-boot-2gib-iommu', fw, False, INTEL_IOMMU, check_default, False, '2048M')]
     if args.cases:
         want = set(args.cases.split(','))
         cases = [c for c in cases if c[0] in want]
     results = []
-    for name, fw, hold, devices, check, shot in cases:
+    for name, fw, hold, devices, check, shot, mem in cases:
         r = {'case': name, 'passed': False}
         results.append(r)
         t0 = time.monotonic()
         try:
-            text = boot(out, name, fw, iso[(fw, hold)], devices, hold, shot)
+            text = boot(out, name, fw, iso[(fw, hold)], devices, hold, shot, mem)
             r.update(check(text))
             r['passed'] = True
         except Fail as e:

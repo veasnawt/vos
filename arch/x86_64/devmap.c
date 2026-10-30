@@ -22,6 +22,7 @@ struct devmap_entry {
     uint64_t va;                            /* virtual address of pa */
     uint64_t bits;                          /* memory-type bits of every leaf */
     const char *what;
+    int ro;                                 /* leaves are not writable (firmware-table lease) */
 };
 
 static struct devmap_entry map[DEVMAP_MAX];
@@ -244,7 +245,7 @@ int devmap_map(uint64_t pa, uint64_t len, int attr, const char *what, void **va,
         *pte = (first + i * PAGE_SIZE) | PTE_P | PTE_W | PTE_NX | bits;
         invlpg(next_va + i * PAGE_SIZE);
     }
-    map[count] = (struct devmap_entry){ first, last, next_va, bits, what };
+    map[count] = (struct devmap_entry){ first, last, next_va, bits, what, 0 };
     count++;
     *va = (void *)(uintptr_t)(next_va + (pa - first));
     if (used)
@@ -299,7 +300,7 @@ int devmap_scope_release(uint64_t token)
 /* Common tail of both scoped regions, after region-specific validation and
  * devmap_check. `start` selects fresh PDEs above every existing mapping. */
 static int scope_install(unsigned kind, uint64_t pa, uint64_t length, uint64_t start,
-                         const char *what, uint64_t *token, uint64_t *va)
+                         const char *what, uint64_t *token, uint64_t *va, int ro)
 {
     if (count == DEVMAP_MAX || scope.generation == UINT64_MAX ||
         used_bytes + length > DEVMAP_MAX_BYTES)
@@ -334,10 +335,10 @@ static int scope_install(unsigned kind, uint64_t pa, uint64_t length, uint64_t s
         pd[i] = frame | PTE_P | PTE_W;
     }
     for (uint64_t off = 0; off < length; off += PAGE_SIZE) {
-        *pte_slot(start + off, 0) = (pa + off) | PTE_P | PTE_W | PTE_NX | uc_bits;
+        *pte_slot(start + off, 0) = (pa + off) | PTE_P | (ro ? 0 : PTE_W) | PTE_NX | uc_bits;
         invlpg(start + off);
     }
-    map[count++] = (struct devmap_entry){pa, pa + length, start, uc_bits, what};
+    map[count++] = (struct devmap_entry){pa, pa + length, start, uc_bits, what, ro};
     next_va = start + length + PAGE_SIZE; used_bytes += length;
     *token = scope.token; *va = start;
     return DEVMAP_OK;
@@ -359,7 +360,7 @@ int devmap_scope_acquire(unsigned region, uint64_t offset, uint64_t length,
      * At most two 4 KiB tables, even when the 16 KiB fixture straddles a PDE. */
     uint64_t start = ((next_va + 0x1fffff) & ~0x1fffffULL) + 0x1ff000;
     return scope_install(DEVMAP_SCOPE_FIXTURE, pa, length, start,
-                         "USB.2-B no-access fixture", token, va);
+                         "USB.2-B no-access fixture", token, va, 0);
 }
 
 int devmap_scope_acquire_region(const struct devmap_scope_region *r, int attr,
@@ -371,6 +372,19 @@ int devmap_scope_acquire_region(const struct devmap_scope_region *r, int attr,
     /* Only two fixed extents: the qualification profile (naturally aligned as a PCI BAR of that size must be) and
      * the survey window (page aligned). No arbitrary length or WC mapping. */
     if (!r || attr != DEVMAP_UC || !r->pa) return DEVMAP_EINVAL;
+    if (r->kind == DEVMAP_SCOPE_FIRMWARE_TABLE) {
+        /* Firmware tables are RAM-typed in the memory map, so devmap_check would refuse them: they get their own, stricter
+         * rule instead (whole range firmware memory, at or above the direct map, no overlap) and a read-only leaf. */
+        if (!r->length || r->length > DEVMAP_FIRMWARE_MAX_BYTES || r->length % PAGE_SIZE || r->pa % PAGE_SIZE ||
+            r->pa < (1ULL << 30) || !devmap_firmware_range_ok(r->pa, r->length))
+            return DEVMAP_EINVAL;
+        if (r->pa + r->length > (1ULL << maxphys)) return DEVMAP_ERANGE;
+        for (unsigned i = 0; i < count; i++)
+            if (r->pa < map[i].end && map[i].pa < r->pa + r->length) return DEVMAP_EOVERLAP;
+        uint64_t fstart = (next_va + 0x1fffff) & ~0x1fffffULL;
+        return scope_install(DEVMAP_SCOPE_FIRMWARE_TABLE, r->pa, r->length, fstart,
+                             "USB input survey firmware table (read only)", token, va, 1);
+    }
     int profile = r->kind == DEVMAP_SCOPE_XHCI_BAR && r->length == DEVMAP_XHCI_BAR_BYTES && r->pa % r->length == 0;
     int survey = r->kind == DEVMAP_SCOPE_XHCI_SURVEY && r->length == DEVMAP_XHCI_SURVEY_BYTES && r->pa % PAGE_SIZE == 0;
     if (!profile && !survey) return DEVMAP_EINVAL;
@@ -380,14 +394,38 @@ int devmap_scope_acquire_region(const struct devmap_scope_region *r, int attr,
     uint64_t start = (next_va + 0x1fffff) & ~0x1fffffULL;
     return scope_install(r->kind, r->pa, r->length, start,
                          survey ? "USB input survey xHCI BAR (read only)" : "USB.2-C1 xHCI BAR read-only qualification",
-                         token, va);
+                         token, va, 0);
+}
+
+int devmap_firmware_range_ok(uint64_t pa, uint64_t len)
+{
+    if (!ready || !len || len > (1ULL << 20) || pa + len < pa) return 0;
+    for (uint64_t page = page_down(pa); page < pa + len; page += PAGE_SIZE) {
+        int covered = 0;
+        for (uint32_t i = 0; i < mmap_entries && !covered; i++) {
+            const struct mb2_mmap_entry *e =
+                (const void *)((const uint8_t *)mmap + sizeof(*mmap) + (uint64_t)i * mmap->entry_size);
+            if (e->length && (e->type == 2 || e->type == 3 || e->type == 4) && e->base <= page &&
+                page + PAGE_SIZE <= e->base + e->length && e->base + e->length >= e->base)
+                covered = 1;
+        }
+        if (!covered) return 0;
+        /* A page that any RAM-typed entry also claims is not firmware-table memory, overlap or not. */
+        for (uint32_t i = 0; i < mmap_entries; i++) {
+            const struct mb2_mmap_entry *e =
+                (const void *)((const uint8_t *)mmap + sizeof(*mmap) + (uint64_t)i * mmap->entry_size);
+            if (e->length && (e->type == 1 || e->type == 5) && page < e->base + e->length && e->base < page + PAGE_SIZE)
+                return 0;
+        }
+    }
+    return 1;
 }
 
 uint64_t devmap_expected_pte(uint64_t va)
 {
     for (unsigned i = 0; i < count; i++)
         if (va >= map[i].va && va < map[i].va + (map[i].end - map[i].pa))
-            return (map[i].pa + (va - map[i].va)) | PTE_P | PTE_W | PTE_NX | map[i].bits;
+            return (map[i].pa + (va - map[i].va)) | PTE_P | (map[i].ro ? 0 : PTE_W) | PTE_NX | map[i].bits;
     return 0;
 }
 

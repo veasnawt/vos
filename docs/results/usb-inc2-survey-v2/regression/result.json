@@ -1,0 +1,40 @@
+{
+ "cases": 4,
+ "passed": 4,
+ "results": [
+  {
+   "case": "bios-normal",
+   "cmdline": "",
+   "passed": true,
+   "checked": true,
+   "seconds": 3.0
+  },
+  {
+   "case": "bios-qualify",
+   "cmdline": "vos.usb2-qualify=1",
+   "passed": true,
+   "checked": true,
+   "seconds": 3.3
+  },
+  {
+   "case": "bios-dma",
+   "cmdline": "vos.usb2-residue=1 vos.usb2c2-dma=1",
+   "passed": true,
+   "checked": true,
+   "seconds": 3.6
+  },
+  {
+   "case": "bios-conflict",
+   "cmdline": "vos.usb-survey=1 vos.usb_probe=1",
+   "passed": true,
+   "checked": true,
+   "seconds": 3.9
+  }
+ ],
+ "inputs": {
+  "kernel": "c60d498b6e72f381cb26b875595ffeaecd70388fb91c86092b38bcfdaa09986d",
+  "hello": "c6c6416195a0f18d680d7f8f19be52ce02ff02912ef3bac45324fbe88006cd06",
+  "iso": "91899d794d3307efa0cef8c7cecf108b4802b9e99b760fcf855ac2632f7d3443"
+ },
+ "physical_hardware": false
+}

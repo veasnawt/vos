@@ -1,0 +1,295 @@
+{
+ "hosted_only": true,
+ "device_access": false,
+ "pci_mmio_physical_memory_access": false,
+ "source_sha256": {
+  "kernel/rust/usb/xhci_init/backend.rs": "24d3e06c3534ed739c76356dfe06d3cd659406213c7869e52453b48d83ac93d4",
+  "kernel/rust/usb/xhci_init/dma_model.rs": "8633a054eaa0b8fda2fad7ed77de941f366f9da04268507291ba52b445b8fa17",
+  "kernel/rust/usb/xhci_init/lib.rs": "82a948724fb685950d3b10fb06f781fc0c50f3eaa8516b46bb6ae240758fe1a2",
+  "kernel/rust/usb/xhci_init/machine.rs": "bd0f7f1815a3784390bb608b5f7fe9fd87dc9b759f982b3aec719ce830ddf4ae",
+  "kernel/rust/usb/xhci_init/session.rs": "52ab3791109673621dad2010a577254d2bd201a7de0e911d220295fa06616d59",
+  "kernel/rust/usb/xhci_init/types.rs": "35d8db08cbc6d228ec2d97d7589e66c0bb3af4bbf2d0b851034c20280ce00889",
+  "tests/rust/xhci_init_backend_support.rs": "702ff25f634cc124755755056d44e25260e6fa6e85ecd60dd6a393fcfbe0c83a",
+  "tests/rust/xhci_init_backend.rs": "bc396c2455e3943cddc6a9eabc23a434be94028c25ed33dd70c0ce1eda40b65b",
+  "scripts/xhci_init_oracle_session.py": "d9b3cc0daea8740be8c616b033aebed45e1d1975669da4b86567564ef8be0f8d",
+  "scripts/test-usb2c42a.py": "29c7aad3e1bb9487a0e00d1177073d910a397fd17ea52404a4c7d37377a30d5e"
+ },
+ "commands": [
+  [
+   "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+   "--edition=2024",
+   "-Dwarnings",
+   "--crate-name",
+   "vos_xhci_init",
+   "--crate-type=rlib",
+   "-Coverflow-checks=yes",
+   "-Cdebug-assertions=yes",
+   "/home/veasnawt/src/vos-usb-inc2/kernel/rust/usb/xhci_init/lib.rs",
+   "-o",
+   "/home/veasnawt/src/vos-usb-inc2/build/i2-1/gate42-1/libvos_xhci_init.rlib"
+  ],
+  [
+   "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+   "--edition=2024",
+   "-Dwarnings",
+   "--test",
+   "-Copt-level=1",
+   "-Coverflow-checks=yes",
+   "--extern",
+   "vos_xhci_init=/home/veasnawt/src/vos-usb-inc2/build/i2-1/gate42-1/libvos_xhci_init.rlib",
+   "/home/veasnawt/src/vos-usb-inc2/tests/rust/xhci_init_backend.rs",
+   "-o",
+   "/home/veasnawt/src/vos-usb-inc2/build/i2-1/gate42-1/backend-tests"
+  ],
+  [
+   "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+   "--edition=2024",
+   "--extern",
+   "vos_xhci_init=/home/veasnawt/src/vos-usb-inc2/build/i2-1/gate42-1/libvos_xhci_init.rlib",
+   "/home/veasnawt/src/vos-usb-inc2/build/i2-1/gate42-1/cf-publish-proof-tuple-cannot-be-forged.rs",
+   "-o",
+   "/home/veasnawt/src/vos-usb-inc2/build/i2-1/gate42-1/cf-publish-proof-tuple-cannot-be-forged"
+  ],
+  [
+   "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+   "--edition=2024",
+   "--extern",
+   "vos_xhci_init=/home/veasnawt/src/vos-usb-inc2/build/i2-1/gate42-1/libvos_xhci_init.rlib",
+   "/home/veasnawt/src/vos-usb-inc2/build/i2-1/gate42-1/cf-publish-proof-constructor-is-private.rs",
+   "-o",
+   "/home/veasnawt/src/vos-usb-inc2/build/i2-1/gate42-1/cf-publish-proof-constructor-is-private"
+  ],
+  [
+   "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+   "--edition=2024",
+   "--extern",
+   "vos_xhci_init=/home/veasnawt/src/vos-usb-inc2/build/i2-1/gate42-1/libvos_xhci_init.rlib",
+   "/home/veasnawt/src/vos-usb-inc2/build/i2-1/gate42-1/cf-quiescence-proof-constructor-is-private.rs",
+   "-o",
+   "/home/veasnawt/src/vos-usb-inc2/build/i2-1/gate42-1/cf-quiescence-proof-constructor-is-private"
+  ],
+  [
+   "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+   "--edition=2024",
+   "--extern",
+   "vos_xhci_init=/home/veasnawt/src/vos-usb-inc2/build/i2-1/gate42-1/libvos_xhci_init.rlib",
+   "/home/veasnawt/src/vos-usb-inc2/build/i2-1/gate42-1/cf-write-ticket-cannot-be-forged.rs",
+   "-o",
+   "/home/veasnawt/src/vos-usb-inc2/build/i2-1/gate42-1/cf-write-ticket-cannot-be-forged"
+  ],
+  [
+   "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+   "--edition=2024",
+   "--extern",
+   "vos_xhci_init=/home/veasnawt/src/vos-usb-inc2/build/i2-1/gate42-1/libvos_xhci_init.rlib",
+   "/home/veasnawt/src/vos-usb-inc2/build/i2-1/gate42-1/cf-session-state-is-private.rs",
+   "-o",
+   "/home/veasnawt/src/vos-usb-inc2/build/i2-1/gate42-1/cf-session-state-is-private"
+  ],
+  [
+   "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+   "--edition=2024",
+   "--extern",
+   "vos_xhci_init=/home/veasnawt/src/vos-usb-inc2/build/i2-1/gate42-1/libvos_xhci_init.rlib",
+   "/home/veasnawt/src/vos-usb-inc2/build/i2-1/gate42-1/cf-machine-state-is-still-private.rs",
+   "-o",
+   "/home/veasnawt/src/vos-usb-inc2/build/i2-1/gate42-1/cf-machine-state-is-still-private"
+  ],
+  [
+   "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+   "--edition=2024",
+   "--crate-name",
+   "cf_unsafe",
+   "--crate-type=rlib",
+   "/home/veasnawt/src/vos-usb-inc2/build/i2-1/gate42-1/cf-unsafe-model/lib.rs",
+   "-o",
+   "/home/veasnawt/src/vos-usb-inc2/build/i2-1/gate42-1/cf-unsafe.rlib"
+  ],
+  [
+   "/home/veasnawt/src/vos-usb-inc2/build/i2-1/gate42-1/backend-tests",
+   "--test-threads=1"
+  ],
+  [
+   "/home/veasnawt/src/vos-usb-inc2/build/i2-1/gate42-1/backend-tests",
+   "--test-threads=1",
+   "export_session_traces_for_the_oracle"
+  ],
+  [
+   "/usr/bin/python3",
+   "-I",
+   "-B",
+   "/home/veasnawt/src/vos-usb-inc2/scripts/xhci_init_oracle_session.py",
+   "/home/veasnawt/src/vos-usb-inc2/build/i2-1/gate42-1/trace.txt"
+  ]
+ ],
+ "static_isolation": {
+  "model_files": [
+   "backend.rs",
+   "dma_model.rs",
+   "lib.rs",
+   "machine.rs",
+   "session.rs",
+   "types.rs"
+  ],
+  "unsafe_free_no_std": true,
+  "files_outside_allowed_set_mentioning_model": [],
+  "kernel_crate_root_mentions_model": false
+ },
+ "compile_fail_controls": {
+  "publish-proof-tuple-cannot-be-forged": "E0423",
+  "publish-proof-constructor-is-private": "E0624",
+  "quiescence-proof-constructor-is-private": "E0624",
+  "write-ticket-cannot-be-forged": "E0624",
+  "session-state-is-private": "E0616",
+  "machine-state-is-still-private": "E0616",
+  "unsafe-rejected": "forbid(unsafe_code)"
+ },
+ "rust_tests": "test result: ok. 59 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.66s",
+ "rust_test_names": [
+  "a_caller_cannot_supply_observations",
+  "a_controller_with_more_than_31_ports_is_refused_without_reading_ports",
+  "a_device_attached_during_reset_is_unverified_and_port_observation_reads_the_connection_bit",
+  "a_doorbell_needs_a_status_read_after_the_previous_doorbell",
+  "a_duplicated_observation_replayed_from_a_cache_is_rejected",
+  "a_failed_reset_write_leaves_the_exposed_belief_and_a_quarantine",
+  "a_failure_while_the_controller_may_still_be_running_keeps_the_halt_unconfirmed",
+  "a_fault_inside_the_quarantine_tail_quarantines_the_pages_automatically",
+  "a_fault_inside_the_tail_ends_the_tail",
+  "a_halted_report_is_corroborated_and_a_contradiction_is_caught",
+  "a_pci_read_turns_an_unknown_bus_master_fact_into_a_known_one",
+  "a_readback_of_another_register_is_a_mismatch",
+  "a_session_closed_with_pages_the_device_may_use_quarantines_them_and_never_frees_them",
+  "a_session_completes_260_noops_with_consecutive_sequence_numbers_and_one_ticket_per_write",
+  "a_session_with_scratchpads_runs_to_quiescence_and_the_ledger_follows_every_step",
+  "a_slow_legacy_firmware_running_controller_completes",
+  "a_write_invalidates_the_observations_it_can_change_and_later_writes_refuse_stale_inputs",
+  "after_a_terminal_error_only_the_quarantine_tail_is_possible",
+  "an_incomplete_scratchpad_set_cannot_be_published",
+  "an_uncertain_bus_master_enable_is_assumed_to_have_happened_and_the_tail_clears_it",
+  "an_uncertain_run_stop_clear_keeps_the_exposed_belief_and_marks_the_facts_unknown",
+  "an_uncertain_run_stop_set_is_assumed_to_have_happened_and_the_tail_halts_first",
+  "bind_requires_one_complete_topology_and_is_required_first",
+  "contradictory_observations_are_faults",
+  "dcbaa_entry_zero_must_be_the_prepared_array_when_the_controller_needs_scratchpads",
+  "debug_capability_firmware_ownership_msi_snoop_and_attachment_are_decoded_at_qualification",
+  "every_read_fault_closes_with_its_own_cause_and_an_absent_optional_register_does_not",
+  "export_session_traces_for_the_oracle",
+  "firmware_regaining_ownership_is_a_conflict_or_a_precondition_failure",
+  "firmware_that_never_releases_ends_in_a_clean_failure_after_one_write",
+  "identity_and_topology_changes_stop_a_write_before_it_happens",
+  "ledger_address_and_lifetime_rules_are_named",
+  "ledger_dependencies_and_publication_proofs",
+  "limitation_a_change_after_the_last_check_is_not_prevented",
+  "limitation_a_consistent_liar_is_not_detected",
+  "msi_enabled_after_qualification_is_a_machine_fault",
+  "qualification_cannot_be_repeated_and_writes_before_it_are_a_machine_refusal",
+  "qualification_decodes_registers_into_facts_and_marks_observations_valid",
+  "quarantine_all_is_bounded_and_an_exhausted_pool_closes",
+  "quarantine_is_bounded_and_exhaustion_closes_the_pool",
+  "randomized_requests_against_a_truthful_backend_keep_every_invariant_and_never_violate_the_device",
+  "randomized_requests_with_injected_backend_faults_stay_fail_closed",
+  "responses_about_the_wrong_register_or_width_are_rejected",
+  "scratchpad_counts_are_decoded_from_hcsparams2_and_judged_by_policy_not_by_a_31_limit",
+  "scratchpad_pages_become_device_owned_and_are_never_touched_or_freed_until_quiescence",
+  "scratchpad_requests_are_bounded_by_the_session_and_the_ledger",
+  "sequence_and_session_defects_close_the_session_fail_closed",
+  "state_that_changes_between_validation_and_the_write_precondition_is_refused",
+  "static_register_writes_recheck_cnr_at_write_time",
+  "the_backend_refuses_writes_after_the_terminal_latch_and_forged_tickets",
+  "the_crcr_read_quirk_is_a_configuration_not_an_assumption",
+  "the_dcbaa_waits_for_the_scratchpad_array",
+  "the_last_write_sequence_number_follows_every_write",
+  "the_ledger_agrees_with_the_machine_through_a_whole_session",
+  "the_never_release_policy_applies_to_scratchpad_pages_too",
+  "the_physical_port_count_of_21_is_read_in_full_and_a_late_attachment_on_the_last_port_is_seen",
+  "the_scratchpad_policy_separates_the_specification_limit_from_the_resource_budget",
+  "the_write_sequence_matches_the_inventory",
+  "zz_every_cause_session_refusal_and_ledger_reason_is_exercised"
+ ],
+ "oracle": {
+  "traces": 200,
+  "requests": 44000,
+  "refused": 24804,
+  "closed": 135,
+  "accepted": 19061,
+  "mismatches": 0,
+  "first_mismatches": []
+ },
+ "oracle_trace_sha256": "e381b3d0225ca726a21802497d11beca741803b81d6bcaea74fec28170afb9dd",
+ "oracle_corruption_controls": {
+  "refusal-reason": 1,
+  "accepted-rule": 1,
+  "closure-cause": 1,
+  "write-event": 1,
+  "missing-backend-call": 1,
+  "extra-backend-call": 1
+ },
+ "mutants": [
+  {
+   "name": "qualify-port-bound",
+   "breaks": "more ports than the model bound are read",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "a_controller_with_more_than_31_ports_is_refused_without_reading_ports"
+   ]
+  },
+  {
+   "name": "session-port-clamp-16",
+   "breaks": "the session only tracks the first 16 ports",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "the_physical_port_count_of_21_is_read_in_full_and_a_late_attachment_on_the_last_port_is_seen"
+   ]
+  },
+  {
+   "name": "reset-ports-skipped",
+   "breaks": "ports are not read after a reset",
+   "killed_by": [
+    "rust-tests",
+    "oracle"
+   ],
+   "failing_tests": [
+    "a_device_attached_during_reset_is_unverified_and_port_observation_reads_the_connection_bit",
+    "the_physical_port_count_of_21_is_read_in_full_and_a_late_attachment_on_the_last_port_is_seen"
+   ]
+  },
+  {
+   "name": "reset-port-connection-ignored",
+   "breaks": "a connected port is not noticed after reset",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "a_device_attached_during_reset_is_unverified_and_port_observation_reads_the_connection_bit",
+    "the_physical_port_count_of_21_is_read_in_full_and_a_late_attachment_on_the_last_port_is_seen"
+   ]
+  },
+  {
+   "name": "ports-bit",
+   "breaks": "the ports observation reads the wrong bit",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "a_device_attached_during_reset_is_unverified_and_port_observation_reads_the_connection_bit",
+    "the_physical_port_count_of_21_is_read_in_full_and_a_late_attachment_on_the_last_port_is_seen"
+   ]
+  }
+ ],
+ "mutation_summary": {
+  "total": 5,
+  "killed": 5,
+  "survived": [],
+  "invalid": [],
+  "killed_by_rust_tests": 5,
+  "killed_by_oracle": 1,
+  "killed_by_oracle_only": [],
+  "killed_by_rust_tests_only": 4
+ },
+ "pass": true,
+ "seconds": 27.1
+}

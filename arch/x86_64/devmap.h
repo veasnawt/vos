@@ -114,6 +114,14 @@ int devmap_scope_acquire_region(const struct devmap_scope_region *r, int attr,
  * and MAXPHYADDR are refused by devmap_check. */
 #define DEVMAP_SCOPE_XHCI_SURVEY    3u
 #define DEVMAP_XHCI_SURVEY_BYTES    65536ULL
+/* USB input bring-up, Increment 2: a READ-ONLY lease on firmware-table memory (ACPI tables above the 1 GiB the kernel's
+ * direct map reaches). Page aligned, at most 16 KiB, at or above 1 GiB so that it can never alias a cached kernel mapping,
+ * and only where the firmware memory map says every page is reserved, ACPI-reclaimable or ACPI-NVS: never RAM, never an
+ * unlisted hole. Mapped uncached, present, NX and NOT writable (the registry records it and the VMM audit enforces it). */
+#define DEVMAP_SCOPE_FIRMWARE_TABLE 4u
+#define DEVMAP_FIRMWARE_MAX_BYTES   16384ULL
+/* Is [pa, pa + len) entirely reserved/ACPI-reclaim/ACPI-NVS memory in the boot memory map? (No mapping is made.) */
+int devmap_firmware_range_ok(uint64_t pa, uint64_t len);
 /* Kind of the live scope lease (0 when none) and its window for that token. */
 unsigned devmap_scope_kind(void);
 int devmap_scope_extent(uint64_t token, uint64_t *va, uint64_t *length);

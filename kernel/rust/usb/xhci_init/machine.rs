@@ -29,7 +29,8 @@ pub const POLL_BUDGET: u16 = 32;
 pub const UNACKED_LIMIT: u16 = 32;
 pub const PAGE: u64 = 4096;
 pub const MIN_ADDR: u64 = 0x10_0000;
-pub const MAX_PORTS: u8 = 16;
+/// The port mask is a `u32`, so at most 31 root-hub ports are modelled (the Dell OptiPlex 9020 xHCI has 21).
+pub const MAX_PORTS: u8 = 31;
 
 const R_SLOTS: u8 = 1;
 const R_DCBAAP: u8 = 2;

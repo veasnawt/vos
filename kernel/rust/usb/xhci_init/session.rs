@@ -17,7 +17,7 @@
 use crate::backend::*;
 use crate::backend::named;
 use crate::dma_model::{DReason, DState, Item, Ledger, PoolSpec, PublishProof, QuiescenceProof};
-use crate::machine::{Machine, Page};
+use crate::machine::{MAX_PORTS, Machine, Page};
 use crate::types::*;
 
 named! {
@@ -694,7 +694,7 @@ impl<B: Backend> Session<B> {
             let dbc = s.rd(Reg::DbcCtrl, 0)?;
             let ports = (hcs1 >> 24) as u8;
             let mut connected = 0u32;
-            if ports as usize <= 16 {
+            if ports <= MAX_PORTS {
                 for p in 0..ports {
                     if bit(s.rd_need(Reg::Portsc, p)?, 0) {
                         connected |= 1 << p;
@@ -728,7 +728,7 @@ impl<B: Backend> Session<B> {
             }
             let a = s.m.apply(Operation::Qualify(facts));
             if a.is_ok() {
-                s.ports = ports.min(16);
+                s.ports = ports.min(MAX_PORTS);
                 s.know_bme = Fact::Known(facts.bme);
                 s.know_rs = Fact::Known(facts.running);
                 s.know_hch = Fact::Known(facts.halted);

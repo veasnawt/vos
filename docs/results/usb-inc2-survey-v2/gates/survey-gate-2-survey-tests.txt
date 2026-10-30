@@ -1,0 +1,41 @@
+
+running 36 tests
+test a_bad_or_refusing_ehci_stops_without_reading_outside_its_window ... ok
+test a_controller_that_changes_by_itself_between_two_reads_is_caught_by_the_reader ... ok
+test a_controller_that_changes_while_it_is_read_is_flagged ... ok
+test a_controller_that_reads_as_all_ones_or_has_a_bad_caplength_is_reported_not_trusted ... ok
+test a_huge_port_count_is_bounded_and_registers_past_the_window_are_not_asked_for ... ok
+test a_refused_or_truncated_read_ends_the_walk_with_what_was_read ... ok
+test a_walk_that_stopped_early_says_where_and_why ... ok
+test absent_garbage_and_vendor_zero_functions_are_ignored ... ok
+test all_twenty_one_ports_are_read_and_a_connection_on_the_last_one_is_seen ... ok
+test an_ehci_is_decoded_with_its_ports_and_legacy_support ... ok
+test an_intel_style_controller_is_decoded_completely ... ok
+test bar_decoding_names_every_reason_a_controller_cannot_be_read ... ok
+test bridge_cycles_unassigned_and_reversed_bus_numbers_are_not_followed ... ok
+test capability_chains_that_run_on_or_off_the_window_are_cut ... ok
+test intel_routing_registers_are_read_and_interpreted_without_assuming_a_port_layout ... ok
+test legacy_debug_and_protocol_capabilities_are_recorded_once_and_by_name ... ok
+test more_controllers_than_the_recording_limit_are_counted_not_hidden ... ok
+test more_ports_than_the_recorded_thirty_two_are_counted_but_only_thirty_two_are_shown ... ok
+test only_type_one_headers_are_bridges_and_only_upward_buses_are_followed ... ok
+test pci_capabilities_are_summarised_and_malformed_lists_stop ... ok
+test random_ehci_register_files_stay_inside_the_window_and_the_read_budget ... ok
+test random_pci_trees_terminate_within_the_bounds ... ok
+test random_register_files_never_panic_and_never_exceed_the_read_budget ... ok
+test ring_pointers_are_decoded_from_their_registers_and_never_dereferenced ... ok
+test routing_is_only_read_for_an_intel_xhci_type_zero_header_that_has_the_registers ... ok
+test scratchpad_counts_combine_the_high_and_low_fields ... ok
+test the_bus_and_function_bounds_stop_the_walk ... ok
+test the_ehci_legacy_capability_list_is_bounded_and_confined_to_the_extended_config_space ... ok
+test the_new_survey_code_never_writes_and_reads_nothing_beyond_its_documented_registers ... ok
+test the_platform_sources_contain_no_pci_or_port_or_register_write ... ok
+test the_port_summary_counts_each_status_bit_on_its_own ... ok
+test the_report_lines_are_short_printable_and_complete ... ok
+test the_scan_finds_controllers_on_bus_zero_and_behind_nested_bridges ... ok
+test the_summary_fits_an_80_column_display_and_says_when_nothing_was_read ... ok
+test unprintable_bytes_and_overlong_lines_are_neutralised ... ok
+test unusable_runtime_offsets_are_recorded_and_the_rest_of_the_walk_still_runs ... ok
+
+test result: ok. 36 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.49s
+

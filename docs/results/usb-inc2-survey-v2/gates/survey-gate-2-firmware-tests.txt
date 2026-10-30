@@ -1,0 +1,26 @@
+
+running 21 tests
+test a_cut_root_list_is_reported_even_when_the_unread_part_adds_no_signatures ... ok
+test a_page_any_ram_entry_claims_is_not_firmware_memory_and_overlaps_never_hide_reserved_memory ... ok
+test a_root_table_that_cannot_be_trusted_makes_absence_unknown_not_false ... ok
+test an_rsdt_is_used_when_there_is_no_xsdt_and_the_xsdt_wins_when_there_is_one ... ok
+test dmar_units_beyond_the_bound_are_counted_not_stored ... ok
+test dmar_units_scopes_and_coverage_of_the_xhci_are_resolved_conservatively ... ok
+test hostile_information_blocks_never_panic_and_never_read_past_their_end ... ok
+test ivrs_blocks_are_counted_and_malformed_ones_refused ... ok
+test malformed_dmar_tables_are_refused_by_name ... ok
+test more_entries_than_the_bound_are_cut_and_reported ... ok
+test random_acpi_memory_never_panics_and_every_read_stays_within_the_platform_bound ... ok
+test rsdp_defects_are_named ... ok
+test the_acpi_dmar_and_unit_lines_are_short_and_say_what_was_not_read ... ok
+test the_firmware_source_has_no_unsafe_code_and_no_write_method ... ok
+test the_four_facts_stay_distinct_and_unknown_is_never_turned_into_no ... ok
+test the_longest_renderings_fit_the_console_line_and_lose_nothing ... ok
+test the_memory_map_and_the_rsdp_are_found_in_the_information_block ... ok
+test the_report_never_claims_isolation ... ok
+test the_tables_are_listed_and_dmar_and_ivrs_are_found_by_signature ... ok
+test unit_registers_are_decoded_and_the_translation_bit_is_not_confused_with_presence ... ok
+test unit_windows_are_confined_to_the_chipset_hole ... ok
+
+test result: ok. 21 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+

@@ -1,0 +1,90 @@
+S0 checkout: tree=21607030 (projected 23000000). ADMISSION (Increment 2, Option A, owner-relayed Antigravity acceptance 2026-10-30): forecast 210000000 stop 280000000 cap 310000000. Revised scope (0-connected finding) is a strict subset of the admitted plan; total forecast unchanged.
+BEFORE i2-hosted-model-compile: tree=21609850 projected=22000000 c_free=22773141504
+AFTER  i2-hosted-model-compile: rc=0 tree=38077708 growth=16467858 projected=22000000 limit(1.25x)=27500000
+BEFORE i2-kernel-verify-1: tree=39992080 projected=20000000 c_free=22771478528
+AFTER  i2-kernel-verify-1: rc=0 tree=55138910 growth=15146830 projected=20000000 limit(1.25x)=25000000
+BEFORE i2-firmware-tests: tree=55172566 projected=8000000 c_free=22764773376
+AFTER  i2-firmware-tests: rc=0 tree=56241493 growth=1068927 projected=8000000 limit(1.25x)=10000000
+BEFORE i2-survey-tests-compile: tree=56241593 projected=4000000 c_free=22764773376
+AFTER  i2-survey-tests-compile: rc=0 tree=57291148 growth=1049555 projected=4000000 limit(1.25x)=5000000
+BEFORE i2-survey-tests-2: tree=57307156 projected=4000000 c_free=22777061376
+AFTER  i2-survey-tests-2: rc=0 tree=57377241 growth=70085 projected=4000000 limit(1.25x)=5000000
+BEFORE i2-survey-tests-3: tree=57377580 projected=9000000 c_free=22777061376
+AFTER  i2-survey-tests-3: rc=0 tree=57378337 growth=757 projected=9000000 limit(1.25x)=11250000
+BEFORE i2-survey-tests-4: tree=57378410 projected=5000000 c_free=22777061376
+AFTER  i2-survey-tests-4: rc=0 tree=57378455 growth=45 projected=5000000 limit(1.25x)=6250000
+BEFORE i2-survey-gate-dry: tree=57400322 projected=12000000 c_free=22777028608
+AFTER  i2-survey-gate-dry: rc=1 tree=57400401 growth=79 projected=12000000 limit(1.25x)=15000000
+BEFORE i2-survey-gate-1: tree=57449395 projected=28000000 c_free=22776938496
+AFTER  i2-survey-gate-1: rc=1 tree=70893284 growth=13443889 projected=28000000 limit(1.25x)=35000000
+BEFORE i2-survey-gate-2: tree=70894106 projected=6000000 c_free=22725763072
+AFTER  i2-survey-gate-2: rc=0 tree=78091000 growth=7196894 projected=6000000 limit(1.25x)=7500000
+BEFORE i2-gate41-focused: tree=78091098 projected=38000000 c_free=22725828608
+AFTER  i2-gate41-focused: rc=0 tree=118274553 growth=40183455 projected=38000000 limit(1.25x)=47500000
+BEFORE i2-gate42a-focused: tree=118274656 projected=18000000 c_free=22725894144
+AFTER  i2-gate42a-focused: rc=0 tree=153034964 growth=34760308 projected=18000000 limit(1.25x)=22500000
+STOP: i2-gate42a-focused grew 34760308 B, over 1.25 x its projection (18000000); investigation required
+ADMISSION (owner-relayed Antigravity, 2026-10-30, "ADMISSION GRANTED (ACCEPTED)", resume of USB Increment 2): worktree baseline 153,034,964 B; stop line 280,000,000; hard cap 310,000,000; projected final 245,034,964. Windows C: reserve 20 GiB + 1 GiB margin unchanged.
+  Admitted step projections / 1.25x halt limits: i2-bios-isos 28,000,000 / 35,000,000; i2-uefi-isos 35,000,000 / 43,750,000; i2-native-qemu 8,000,000 / 10,000,000; i2-regression-isos 16,000,000 / 20,000,000; i2-evidence-report 5,000,000 / 6,250,000.
+  STOP supersession authorized by Antigravity: original STOP preserved as STOP.superseded-2026-10-30 (identical, cmp verified), investigation-gate42a.txt preserved (copy .preserved), failed survey gate-1 output (build/i2-1/survey-gate-1) and gate outputs kept intact. STOP archived by rename, not deleted. guard.sh unchanged (STOPLINE=280000000, CAP=310000000, 1.25x rule, C: reserve).
+BEFORE i2-bios-isos: tree=153039192 projected=28000000 c_free=21536149504
+STOP: i2-bios-isos would cross a storage line (tree=153039192 proj=28000000 c_free=21536149504)
+RENEWED ADMISSION (owner-relayed Antigravity, 2026-10-30, "ADMISSION GRANTED (ACCEPTED)" after Windows C: recovery): Antigravity-verified C: free 23,584,571,392 B; reserve 20 GiB + 1 GiB margin; worktree baseline 153,039,192 B; stop line 280,000,000; hard cap 310,000,000; remaining projected growth 92,000,000 B. Step projections unchanged (bios-isos 28 MB, uefi-isos 35 MB, native-qemu 8 MB, regression-isos 16 MB, evidence-report 5 MB; halt at 1.25x each).
+  STOP of i2-bios-isos (C: reserve: free 21,536,149,504 B at the time) preserved byte-identically as STOP.archived-2026-10-30-bios-isos-c-reserve, then removed from the active path by the authorized supersession; earlier archives STOP.superseded-2026-10-30 / STOP.archived-2026-10-30 untouched. Recheck at resume: see next BEFORE line.
+BEFORE i2-bios-isos: tree=153040350 projected=28000000 c_free=23609241600
+AFTER  i2-bios-isos: rc=0 tree=169160788 growth=16120438 projected=28000000 limit(1.25x)=35000000
+BEFORE i2-uefi-isos: tree=169160886 projected=35000000 c_free=23610998784
+AFTER  i2-uefi-isos: rc=2 tree=169162462 growth=1576 projected=35000000 limit(1.25x)=43750000
+BEFORE i2-uefi-isos-2: tree=169164058 projected=35000000 c_free=23610880000
+AFTER  i2-uefi-isos-2: rc=0 tree=194361182 growth=25197124 projected=35000000 limit(1.25x)=43750000
+BEFORE i2-native-qemu: tree=194361282 projected=8000000 c_free=23610789888
+AFTER  i2-native-qemu: rc=1 tree=199515132 growth=5153850 projected=8000000 limit(1.25x)=10000000
+BEFORE i2-native-qemu-2: tree=199515420 projected=3000000 c_free=23609835520
+AFTER  i2-native-qemu-2: rc=1 tree=200697344 growth=1181924 projected=3000000 limit(1.25x)=3750000
+BEFORE i2-native-qemu-3: tree=200697443 projected=2000000 c_free=23611858944
+AFTER  i2-native-qemu-3: rc=0 tree=201257558 growth=560115 projected=2000000 limit(1.25x)=2500000
+BEFORE i2-regression-isos: tree=201265082 projected=16000000 c_free=23611187200
+AFTER  i2-regression-isos: rc=0 tree=208081697 growth=6816615 projected=16000000 limit(1.25x)=20000000
+BEFORE i2-evidence-report: tree=208086841 projected=5000000 c_free=23611039744
+AFTER  i2-evidence-report: rc=0 tree=208673809 growth=586968 projected=5000000 limit(1.25x)=6250000
+BEFORE i2-evidence-final: tree=208684681 projected=1000000 c_free=23610982400
+AFTER  i2-evidence-final: rc=0 tree=208696391 growth=11710 projected=1000000 limit(1.25x)=1250000
+BEFORE i2-publication-prep: tree=208697784 projected=2000000 c_free=23609720832
+AFTER  i2-publication-prep: rc=0 tree=208698656 growth=872 projected=2000000 limit(1.25x)=2500000
+BEFORE i2-publication-prep-2: tree=208659777 projected=2000000 c_free=23609716736
+AFTER  i2-publication-prep-2: rc=0 tree=208699053 growth=39276 projected=2000000 limit(1.25x)=2500000
+BEFORE i2-publication-prep-3: tree=208687595 projected=2000000 c_free=23609311232
+AFTER  i2-publication-prep-3: rc=0 tree=208698861 growth=11266 projected=2000000 limit(1.25x)=2500000
+BEFORE i2-publication-prep-4: tree=208687667 projected=2000000 c_free=23609303040
+AFTER  i2-publication-prep-4: rc=0 tree=208699677 growth=12010 projected=2000000 limit(1.25x)=2500000
+ADMISSION (owner-relayed Antigravity, 2026-10-31, "ADMISSION GRANTED (ACCEPTED)", PR #39 R1-R3 verification): baseline 208,699,881 B; C: free 23,690,903,552 B (Antigravity); stop line 280,000,000; hard cap 310,000,000; reserve 20 GiB + 1 GiB margin; total projected retained growth 36,000,000 B; cumulative 1.25x allowance 45,000,000 B.
+  Step budgets / halt: R1 3,000,000 / 3,750,000; R3 6,000,000 / 7,500,000; R2a 1,000,000 / 1,250,000; R2b 24,000,000 / 30,000,000; Evidence 2,000,000 / 2,500,000. guard.sh unchanged (verified: STOPLINE=280000000, CAP=310000000, reserve + margin, 1.25x halt). No active STOP file at resume.
+BEFORE i2-r1: tree=208702432 projected=3000000 c_free=23691763712
+AFTER  i2-r1: rc=0 tree=209965660 growth=1263228 projected=3000000 limit(1.25x)=3750000
+BEFORE i2-r3: tree=209994843 projected=6000000 c_free=23670505472
+AFTER  i2-r3: rc=1 tree=210324707 growth=329864 projected=6000000 limit(1.25x)=7500000
+R3 CORRECTION (owner authorization 2026-10-31, test-only fixture fix for surviving mutant bad-memory-is-firmware): worktree 210,324,794 B, C: free 23,665,397,760 B, no active STOP. Failed run build/i2-1/r3-1 retained (329,864 B counted). The corrected run is accounted against the same R3 allowance (projection 6,000,000 / halt 7,500,000 cumulative): remaining projection 5,670,136 B, remaining halt allowance 7,170,136 B; the guard is invoked with projection 5,670,000 (1.25x limit 7,087,500 B). No reset of cumulative accounting; stop line, cap, reserve unchanged.
+BEFORE i2-r3-corrected: tree=210326516 projected=5670000 c_free=23665053696
+AFTER  i2-r3-corrected: rc=0 tree=210659357 growth=332841 projected=5670000 limit(1.25x)=7087500
+BEFORE i2-r2a: tree=210659454 projected=1000000 c_free=23665180672
+AFTER  i2-r2a: rc=0 tree=210665213 growth=5759 projected=1000000 limit(1.25x)=1250000
+BEFORE i2-r2b-build: tree=210665299 projected=24000000 c_free=23665180672
+AFTER  i2-r2b-build: rc=0 tree=239646361 growth=28981062 projected=24000000 limit(1.25x)=30000000
+NOTE: tree above 85% of the stop line
+R2b ACCOUNTING NOTE: i2-r2b-build grew 28,981,062 B vs projection 24,000,000 (1.21x, inside the 1.25x halt of 30,000,000). The R2b allowance has 1,018,938 B of halt headroom left for the two boot runs; they are invoked with projection 600,000 (limit 750,000). Tree 239,646,361 B (85% of the stop line = 238,000,000 crossed: NOTE only, stop line 280,000,000 untouched). Remaining admitted: evidence 2,000,000 (halt 2,500,000).
+BEFORE i2-r2b-run: tree=239648692 projected=600000 c_free=23664979968
+AFTER  i2-r2b-run: rc=0 tree=239700785 growth=52093 projected=600000 limit(1.25x)=750000
+NOTE: tree above 85% of the stop line
+BEFORE i2-evidence-copy: tree=239706468 projected=1500000 c_free=23664943104
+AFTER  i2-evidence-copy: rc=0 tree=239830340 growth=123872 projected=1500000 limit(1.25x)=1875000
+NOTE: tree above 85% of the stop line
+BEFORE i2-evidence-final: tree=239833453 projected=500000 c_free=23664762880
+AFTER  i2-evidence-final: rc=0 tree=239837914 growth=4461 projected=500000 limit(1.25x)=625000
+NOTE: tree above 85% of the stop line
+BEFORE i2-publication-supplement: tree=239806769 projected=500000 c_free=23662379008
+AFTER  i2-publication-supplement: rc=0 tree=239842244 growth=35475 projected=500000 limit(1.25x)=625000
+NOTE: tree above 85% of the stop line
+BEFORE i2-correction-evidence: tree=239844467 projected=400000 c_free=23657312256
+AFTER  i2-correction-evidence: rc=0 tree=239845148 growth=681 projected=400000 limit(1.25x)=500000
+NOTE: tree above 85% of the stop line
+BEFORE i2-correction-evidence-2: tree=239845510 projected=400000 c_free=23657439232
