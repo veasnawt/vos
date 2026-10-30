@@ -184,13 +184,19 @@ and eventually a dock and Settings/Accessibility (including cursor-size options)
 These are incomplete planning topics; their order, contracts and budgets require
 owner approval. The accepted mockup is a design reference, not implemented UI.
 
-The [A1 Rust ELF validator](results/a1-elf-validate-rust.md) is a PR candidate, not merged:
-`elf_validate`/`elf_strerror` move to Rust behind the unchanged `elf.h` ABI and `elf.c`
-becomes the frozen differential reference. QEMU-only; physical hardware NOT TESTED.
+The [A1 Rust ELF validator](results/a1-elf-validate-rust.md) is merged through PR #41 at
+`b403609e8db19e3fb30e1fd2a975317a56bf746b` (implementation commit `7965117`).
+`elf_validate`/`elf_strerror` run in Rust behind the unchanged `elf.h` ABI, and `elf.c`
+remains only as the frozen differential reference. Verified in QEMU and hosted tests only;
+physical hardware is NOT TESTED. The loaded image sits at its 4 KiB growth ceiling because
+of segment page rounding (see the report).
 
-The [USB survey v2.1](results/usb-survey-v21-summary.md) is a PR candidate, not merged: it repeats the raw Intel
-routing registers and the EHCI status and PORTSC words in the final SUMMARY block, from values the survey
-already captured (no new reads). QEMU-only; the survey has not been run on the Dell.
+The [USB survey v2.1](results/usb-survey-v21-summary.md) is merged through PR #42 at
+`5a4e87e53cdb4eba6af18a678edfbd19896b8450` (implementation commit `2966769`). It repeats the
+raw Intel routing registers and the EHCI status and PORTSC words in the final SUMMARY block
+from values the survey already captured (no new reads). QEMU-only; the survey has not been
+run on the Dell. The xHCI `erdp` value differed between runs in five BIOS QEMU cases; its
+cause is not established.
 
 Rust-first kernel migration beyond the merged R1 helper and broader
 physical-hardware/architecture portability remain proposals. They require separate compatibility, unsafe/FFI/DMA,
