@@ -1,0 +1,14 @@
+error[E0624]: associated function `new` is private
+  --> /home/veasnawt/src/vos-usb2c42a/build/usb2c42a-1/gates-3/cf-publish-proof-constructor-is-private.rs:2:35
+   |
+ 2 | fn main() { let _ = PublishProof::new(); }
+   |                                   ^^^ private associated function
+   |
+  ::: /home/veasnawt/src/vos-usb2c42a/kernel/rust/usb/xhci_init/dma_model.rs:27:5
+   |
+27 |     pub(crate) fn new() -> Self {
+   |     --------------------------- private associated function defined here
+
+error: aborting due to 1 previous error
+
+For more information about this error, try `rustc --explain E0624`.

@@ -108,3 +108,6 @@ jobs:
 
       - name: Verify USB.2-C4.1 hosted initialization protocol model (no kernel code, no device access)
         run: python3 -I -B scripts/test-usb2c41.py --rustc "$RUSTC" --out build/usb2c41-ci
+
+      - name: Verify USB.2-C4.2a hosted backend contract (no kernel code, no device access)
+        run: python3 -I -B scripts/test-usb2c42a.py --rustc "$RUSTC" --out build/usb2c42a-ci

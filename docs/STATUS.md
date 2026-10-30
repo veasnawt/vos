@@ -58,11 +58,18 @@ Enable, then a 32-bit USBCMD read-modify-write requesting HCRST, each verified,
 with every later outcome final and bus mastering never re-enabled. Real xHCI
 reset behavior, timing, Transactions Pending and DMA drain remain unverified;
 physical hardware is NOT TESTED and unauthorized.
-This branch's [USB.2-C4.1 hosted initialization protocol model](results/usb2c41-hosted-init-model.md)
-is hosted-only and unmerged: a `no_std`, `forbid(unsafe_code)` Rust state machine under
+The [USB.2-C4.1 hosted initialization protocol model](results/usb2c41-hosted-init-model.md)
+is merged through [PR #34](https://github.com/veasnawt/vos/pull/34) at
+`dbb7d1d06452414c9674d9f9bb4b6e08d859da59` and is hosted-only: a `no_std`, `forbid(unsafe_code)` Rust state machine under
 `kernel/rust/usb/xhci_init/` that no kernel, ISO or Makefile input references, verified by
 Rust tests, an independent Python oracle and mutation controls. It performs no I/O, enables no
 bus mastering and writes no register; its register writes are values returned to a test.
+This branch's [USB.2-C4.2a hosted backend contract](results/usb2c42a-hosted-backend-contract.md) is
+also hosted-only and unmerged: typed, sequence-stamped register observations, a validating session
+through which alone observations reach the model, write tickets with read-back, identity continuity,
+fail-closed quarantine and a model-only DMA ownership ledger with a provisional 31-scratchpad policy
+(xHCI 1.2 Table 6-1 and HCSPARAMS2 disagree; unresolved). Sequence numbers are not proof of freshness
+against asynchronous hardware or firmware. No kernel, ISO or Makefile input references it.
 
 ## Current accepted components
 
@@ -150,8 +157,9 @@ PR #29 and the USB.2-C3a.2 early UEFI firmware memory exclusion through PR #30
 and the USB.2-C3a.3 protected firmware DMA inspection through PR #31.
 The USB.2-C3b.1 read-only containment dry-run is merged through PR #32. The
 USB.2-C3b.2 QEMU-only controlled containment is merged through PR #33. The USB.2-C4.1 hosted
-protocol model is a review candidate on this branch and executes nowhere; native USB.2-C4
-controller initialization, physical-PC activation and USB HID remain unimplemented.
+protocol model is merged through PR #34. The USB.2-C4.2a hosted backend contract is a review
+candidate on this branch and executes nowhere; native USB.2-C4 controller initialization,
+physical-PC activation and USB HID remain unimplemented.
 
 The [USB.1 Rust publication review](results/usb1-rust-publication-review.md)
 records the candidate production migration, preserved read-only behavior,

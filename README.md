@@ -152,12 +152,17 @@ QEMU-only test image (production and physical-PC images contain none of it)
 can, behind a one-shot `vos.usb2-contain-execute=1`, make exactly two writes to
 the one eligible idle UEFI QEMU xHCI (clear PCI Bus Master Enable, then request
 HCRST), verify each, and never re-enable bus mastering. It establishes nothing
-about physical xHCI hardware. This branch's
+about physical xHCI hardware. The
 [USB.2-C4.1 hosted initialization protocol model](docs/results/usb2c41-hosted-init-model.md)
-is a host-only Rust state machine for the future controller bring-up (typed
-operations, register writes as model events, bus-master ordering, DMA ownership,
-refusal and quarantine rules) with an independent oracle and mutation controls;
-it is not linked into any kernel or ISO and touches no device. Further Rust
+is merged through PR #34 at `dbb7d1d06452414c9674d9f9bb4b6e08d859da59`: a host-only Rust state
+machine for the future controller bring-up (typed operations, register writes as model events,
+bus-master ordering, DMA ownership, refusal and quarantine rules) with an independent oracle and
+mutation controls. This branch's
+[USB.2-C4.2a hosted backend contract](docs/results/usb2c42a-hosted-backend-contract.md) adds,
+also host-only, typed register observations with sequence numbers, a validating session that is
+the only path for observations to reach that model, write tickets and read-back checks, and a
+model-only DMA ownership ledger. Neither is linked into any kernel or ISO and neither touches a
+device. Further Rust
 kernel migration and broader
 hardware portability remain proposed tracks requiring separate authorization.
 

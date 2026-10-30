@@ -1,0 +1,38 @@
+{
+ "purpose": "source-to-binary identity of the production kernel and BIOS ISO built from the C4.2a tree versus the C3b.2 production kernel/ISO and the C4.1 identity record",
+ "c42a_vos_bin_sha256": "e73feb0cfaf2c9d8ceb7732b424ba3c14a4336737c3cbf04e8330c58136034c8",
+ "c3b2_kernel4_vos_bin_sha256": "e34453f59af34904a058ba615a75fc29cf588974db260d641c2c4c7f3967cc00",
+ "full_elf_identical": false,
+ "flat_loaded_image_sha256_c42a": "f96f4ddbdee37afce3a29d18ff3f4649319aee7ccca1f7a7fb7128ab92d65b97",
+ "flat_loaded_image_sha256_c3b2": "f96f4ddbdee37afce3a29d18ff3f4649319aee7ccca1f7a7fb7128ab92d65b97",
+ "flat_loaded_image_sha256_c41_record": "f96f4ddbdee37afce3a29d18ff3f4649319aee7ccca1f7a7fb7128ab92d65b97",
+ "stripped_elf_sha256_c42a": "d09e73e87a12c03742471276397485a3483579a50f78efe9854a0dbd841629ff",
+ "stripped_elf_sha256_c3b2": "d09e73e87a12c03742471276397485a3483579a50f78efe9854a0dbd841629ff",
+ "stripped_elf_sha256_c41_record": "d09e73e87a12c03742471276397485a3483579a50f78efe9854a0dbd841629ff",
+ "flat_image_identical_to_c3b2_and_c41": true,
+ "stripped_elf_identical_to_c3b2_and_c41": true,
+ "pt_load_tables_identical": true,
+ "file_size_bytes": [
+  1175352,
+  1175352
+ ],
+ "iso": {
+  "c42a_sha256": "f00f13ec2f461932a6600fcc00d4582569050ef2cd5dfffab22210cfbc5f26de",
+  "c3b2_sha256": "a05a2101d401a6dc6639a81af349b7511f51907db35935767b49b7113e7b4fc7",
+  "size_bytes": [
+   6715392,
+   6715392
+  ],
+  "files_listed": 313,
+  "file_lists_identical": true,
+  "differing_bytes": 5370,
+  "grub_cfg_identical": true,
+  "kernel_payload_in_iso_equals_built_vos_bin": true,
+  "kernel_payload_stripped_identical": true
+ },
+ "explanation": "The unstripped ELF and the raw ISO differ only in debug-section path strings (the -g C objects record the build directory) and ISO9660 timestamps. After objcopy --strip-debug the kernels, and the kernel payloads inside the ISOs, are byte-identical, as are grub.cfg and the file list.",
+ "model_markers_in_kernel": {
+  "xhci_init_strings": 0,
+  "test_image_marker_strings": 0
+ }
+}

@@ -1,0 +1,14 @@
+error[E0624]: associated function `new` is private
+   --> /home/veasnawt/src/vos-usb2c42a/build/usb2c42a-1/gates-4/cf-write-ticket-cannot-be-forged.rs:2:34
+    |
+  2 | fn main() { let _ = WriteTicket::new(1, "N-01"); }
+    |                                  ^^^ private associated function
+    |
+   ::: /home/veasnawt/src/vos-usb2c42a/kernel/rust/usb/xhci_init/backend.rs:174:5
+    |
+174 |     pub(crate) fn new(nonce: u64, id: &'static str) -> Self {
+    |     ------------------------------------------------------- private associated function defined here
+
+error: aborting due to 1 previous error
+
+For more information about this error, try `rustc --explain E0624`.

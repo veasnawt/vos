@@ -1,0 +1,40 @@
+ADMISSION 2026-10-31: forecast 124000000 stop 168000000 cap 200000000 accepted (owner confirmation of Antigravity acceptance); c_free=23017263104
+BEFORE c42a-compile-1: tree=21236495 projected=9000000 c_free=23015796736
+AFTER  c42a-compile-1: rc=1 tree=21236833 growth=338 projected=9000000 limit(1.25x)=11250000
+BEFORE c42a-compile-2: tree=21236956 projected=9000000 c_free=23015796736
+AFTER  c42a-compile-2: rc=1 tree=21237030 growth=74 projected=9000000 limit(1.25x)=11250000
+BEFORE c42a-compile-3: tree=21237040 projected=9000000 c_free=23015796736
+AFTER  c42a-compile-3: rc=0 tree=28832530 growth=7595490 projected=9000000 limit(1.25x)=11250000
+BEFORE c42a-compile-4: tree=28833051 projected=9000000 c_free=23015862272
+AFTER  c42a-compile-4: rc=0 tree=28833533 growth=482 projected=9000000 limit(1.25x)=11250000
+BEFORE c42a-compile-5: tree=28833868 projected=9000000 c_free=23015677952
+AFTER  c42a-compile-5: rc=0 tree=28834094 growth=226 projected=9000000 limit(1.25x)=11250000
+BEFORE c42a-export-1: tree=28856869 projected=9000000 c_free=23015153664
+AFTER  c42a-export-1: rc=0 tree=35564421 growth=6707552 projected=9000000 limit(1.25x)=11250000
+BEFORE c42a-compile-6: tree=35566614 projected=9000000 c_free=23014793216
+AFTER  c42a-compile-6: rc=0 tree=35575184 growth=8570 projected=9000000 limit(1.25x)=11250000
+BEFORE c42a-gate-1: tree=35646682 projected=36000000 c_free=23006306304
+AFTER  c42a-gate-1: rc=1 tree=69441031 growth=33794349 projected=36000000 limit(1.25x)=45000000
+BEFORE c42a-compile-7: tree=69446325 projected=9000000 c_free=22994374656
+AFTER  c42a-compile-7: rc=0 tree=69466439 growth=20114 projected=9000000 limit(1.25x)=11250000
+BEFORE c42a-gate-2: tree=69466534 projected=15000000 c_free=22994374656
+AFTER  c42a-gate-2: rc=1 tree=82910747 growth=13444213 projected=15000000 limit(1.25x)=18750000
+BEFORE c42a-compile-8: tree=82911541 projected=9000000 c_free=23004495872
+AFTER  c42a-compile-8: rc=0 tree=82913159 growth=1618 projected=9000000 limit(1.25x)=11250000
+BEFORE c42a-gate-3: tree=82913253 projected=15000000 c_free=23004495872
+AFTER  c42a-gate-3: rc=0 tree=96331338 growth=13418085 projected=15000000 limit(1.25x)=18750000
+BEFORE c42a-measure: tree=96331434 projected=3000000 c_free=22993530880
+AFTER  c42a-measure: rc=0 tree=97608134 growth=1276700 projected=3000000 limit(1.25x)=3750000
+BEFORE c42a-measure-2: tree=97608505 projected=3000000 c_free=22993657856
+AFTER  c42a-measure-2: rc=0 tree=98887482 growth=1278977 projected=3000000 limit(1.25x)=3750000
+BEFORE c42a-kernel-iso: tree=98887578 projected=24000000 c_free=22993522688
+AFTER  c42a-kernel-iso: rc=0 tree=121700493 growth=22812915 projected=24000000 limit(1.25x)=30000000
+BEFORE c42a-c41-regression: tree=125996758 projected=20000000 c_free=22993371136
+AFTER  c42a-c41-regression: rc=0 tree=145569895 growth=19573137 projected=20000000 limit(1.25x)=25000000
+NOTE: tree above 85% of the stop line
+BEFORE c42a-compile-9: tree=145877447 projected=9000000 c_free=22991077376
+AFTER  c42a-compile-9: rc=0 tree=145894426 growth=16979 projected=9000000 limit(1.25x)=11250000
+NOTE: tree above 85% of the stop line
+BEFORE c42a-gate-4: tree=145894560 projected=15000000 c_free=22991142912
+AFTER  c42a-gate-4: rc=0 tree=158348770 growth=12454210 projected=15000000 limit(1.25x)=18750000
+NOTE: tree above 85% of the stop line

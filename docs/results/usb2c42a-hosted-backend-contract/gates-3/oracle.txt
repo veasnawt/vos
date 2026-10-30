@@ -1,0 +1,9 @@
+{
+ "traces": 200,
+ "requests": 44000,
+ "refused": 24873,
+ "closed": 129,
+ "accepted": 18998,
+ "mismatches": 0,
+ "first_mismatches": []
+}
