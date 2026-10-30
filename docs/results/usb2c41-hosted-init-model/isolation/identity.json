@@ -1,0 +1,22 @@
+{
+ "purpose": "source-to-binary identity of the production kernel built from the C4.1 tree versus the C3b.2 production kernel (kernel-4, merge 03e7532 source)",
+ "c41_vos_bin_sha256": "9b814a117af9393a3978fce720da2f6298091d95f843729dc77585ea4e67c94a",
+ "c3b2_kernel4_vos_bin_sha256": "e34453f59af34904a058ba615a75fc29cf588974db260d641c2c4c7f3967cc00",
+ "full_elf_identical": false,
+ "flat_loaded_image_sha256_c41": "f96f4ddbdee37afce3a29d18ff3f4649319aee7ccca1f7a7fb7128ab92d65b97",
+ "flat_loaded_image_sha256_c3b2": "f96f4ddbdee37afce3a29d18ff3f4649319aee7ccca1f7a7fb7128ab92d65b97",
+ "stripped_elf_sha256_c41": "d09e73e87a12c03742471276397485a3483579a50f78efe9854a0dbd841629ff",
+ "stripped_elf_sha256_c3b2": "d09e73e87a12c03742471276397485a3483579a50f78efe9854a0dbd841629ff",
+ "flat_image_identical": true,
+ "stripped_elf_identical": true,
+ "pt_load_tables_identical": true,
+ "file_size_bytes": [
+  1175352,
+  1175352
+ ],
+ "explanation": "The unstripped ELF differs only in debug information: the C objects are built with -g and record the build directory (the other worktree path). After objcopy --strip-debug both ELFs and their flat loaded images are byte-identical.",
+ "model_markers_in_c41_kernel": {
+  "xhci_init_strings": 0,
+  "contain_test_marker_strings": 0
+ }
+}

@@ -1,0 +1,18 @@
+storage before c41-gates-1: tree=52115896 c_free=23024893952 projected=90000000
+c41-gates-1 exit 1 tree_after=108497541
+storage before c41-gates-2: tree=108506923 c_free=23024615424 projected=90000000
+STOP: c41-gates-2 would cross a storage line (tree=108506923 proj=90000000 c_free=23024615424)
+storage before c41-measure: tree=108507194 c_free=23024467968 projected=4000000
+c41-measure exit 1 tree_after=109031064
+storage before c41-measure-2: tree=109031195 c_free=23024533504 projected=4000000
+c41-measure-2 exit 0 tree_after=136967320
+OWNER DECISION 2026-10-30: C4.1 stop line raised from 167,772,160 B (160 MiB) to 234,881,024 B (224 MiB), cap 268,435,456 B (256 MiB); C: reserve unchanged; no cleanup authorized; reason: forecast 97.5 MB was low, measured tree 108.5 MB before gate run 2 (checkout 19.5, scratch 32.4, gate run 1 56.4).
+storage before c41-gates-2: tree=136967625 c_free=23022252032 projected=60000000
+c41-gates-2 exit 0 tree_after=191634133
+storage before c41-gates-3: tree=191640528 c_free=23022567424 projected=25000000
+c41-gates-3 exit 0 tree_after=211367190
+storage before c41-identity: tree=211367230 c_free=23022538752 projected=14000000
+c41-identity exit 0 tree_after=226262182
+storage before c41-measure-3: tree=227555598 c_free=23022276608 projected=3000000
+c41-measure-3 exit 0 tree_after=244732646
+OWNER DECISION 2026-10-30 (second): tree reached 244,732,646 B after c41-measure-3, 9.85 MB over the 234,881,024 B stop line (cap 268,435,456 B not exceeded), because the step was under-projected (3 MB given, 17.2 MB written: the bundled Rust core archive is ~15 MB). Owner approved finishing above the line with small writes only (evidence ~1 MB, commit/push/PR); no further builds or gate runs; any cleanup is Antigravity's.

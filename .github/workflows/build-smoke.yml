@@ -105,3 +105,6 @@ jobs:
             --production-build build/x86_64 --test-build build/x86_64-contain-test \
             --iso build/x86_64/vos.iso --iso build/x86_64/vos-uefi.iso \
             --rustc "$RUSTC" --out build/usb2c3b2-ci
+
+      - name: Verify USB.2-C4.1 hosted initialization protocol model (no kernel code, no device access)
+        run: python3 -I -B scripts/test-usb2c41.py --rustc "$RUSTC" --out build/usb2c41-ci

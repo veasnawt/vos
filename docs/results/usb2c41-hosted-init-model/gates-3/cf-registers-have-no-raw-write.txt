@@ -1,0 +1,9 @@
+error[E0599]: no variant named `WriteRegister` found for enum `vos_xhci_init::Operation`
+ --> /home/veasnawt/src/vos-usb2c41/build/usb2c41-1/gates-3/cf-registers-have-no-raw-write.rs:2:32
+  |
+2 | fn main() { let _ = Operation::WriteRegister { offset: 0x38, value: 1 }; }
+  |                                ^^^^^^^^^^^^^ variant not found in `vos_xhci_init::Operation`
+
+error: aborting due to 1 previous error
+
+For more information about this error, try `rustc --explain E0599`.

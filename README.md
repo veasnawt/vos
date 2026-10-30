@@ -145,14 +145,19 @@ place, read-only and bounded, again without device writes. The
 [USB.2-C3b.1 containment dry-run](docs/results/usb2c3b1-containment-dry-run.md)
 is merged through PR #32: opt-in `vos.usb2-contain=1` rehearses the
 bus-master-off and controller-reset sequence for the strict idle UEFI QEMU
-profile and lists the proposed writes as data, with no write path. This branch's
+profile and lists the proposed writes as data, with no write path. The
 [USB.2-C3b.2 controlled containment](docs/results/usb2c3b2-controlled-containment.md)
-is verified in QEMU for review: only a separately built, explicitly
+is merged through PR #33 at `03e7532aba739c636438c887e8aa9d6169f4cfcb`: only a separately built, explicitly
 QEMU-only test image (production and physical-PC images contain none of it)
 can, behind a one-shot `vos.usb2-contain-execute=1`, make exactly two writes to
 the one eligible idle UEFI QEMU xHCI (clear PCI Bus Master Enable, then request
 HCRST), verify each, and never re-enable bus mastering. It establishes nothing
-about physical xHCI hardware. Further Rust
+about physical xHCI hardware. This branch's
+[USB.2-C4.1 hosted initialization protocol model](docs/results/usb2c41-hosted-init-model.md)
+is a host-only Rust state machine for the future controller bring-up (typed
+operations, register writes as model events, bus-master ordering, DMA ownership,
+refusal and quarantine rules) with an independent oracle and mutation controls;
+it is not linked into any kernel or ISO and touches no device. Further Rust
 kernel migration and broader
 hardware portability remain proposed tracks requiring separate authorization.
 

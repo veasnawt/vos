@@ -1,0 +1,7 @@
+Traceback (most recent call last):
+  File "/home/veasnawt/src/vos-usb2c41/scripts/test-usb2c41.py", line 385, in <module>
+    main()
+    ~~~~^^
+  File "/home/veasnawt/src/vos-usb2c41/scripts/test-usb2c41.py", line 371, in main
+    raise RuntimeError(f'mutation controls: survived={survived} invalid={invalid}')
+RuntimeError: mutation controls: survived=['run-start-keeps-halted-belief', 'halt-when-halted', 'command-deadline-not-cleared'] invalid=[]

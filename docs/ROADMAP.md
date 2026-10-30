@@ -229,11 +229,13 @@ excluded firmware DMA memory, with reuse protection and inspection completeness
 reported separately. [USB.2-C3b.1](results/usb2c3b1-containment-dry-run.md) is
 merged through PR #32 at `6eb9a30be63e29667a75b9a04c4cafe994f25e3c`: a read-only
 rehearsal of controller containment with no write path.
-[USB.2-C3b.2](results/usb2c3b2-controlled-containment.md) is implemented and
-verified in this PR candidate, not yet accepted: the first, QEMU-only, test-image-only
+[USB.2-C3b.2](results/usb2c3b2-controlled-containment.md) is merged through PR #33 at
+`03e7532aba739c636438c887e8aa9d6169f4cfcb`: the first, QEMU-only, test-image-only
 controller writes (clear Bus Master Enable, then HCRST) for the one eligible idle
-UEFI QEMU xHCI. USB.2-C4 and later, physical-PC activation and USB HID require
-separate authorization; physical controller takeover remains unauthorized.
+UEFI QEMU xHCI. [USB.2-C4.1](results/usb2c41-hosted-init-model.md) is a hosted-only Rust
+protocol model in this PR candidate (no kernel, no device, no new write path). Native USB.2-C4
+stages, physical-PC activation and USB HID require separate authorization; physical
+controller takeover remains unauthorized.
 This status update grants no implementation authority.
 Unrelated bug fixes, boot-media work and desktop planning need not
 wait for the full migration. Hardware and migration work coordinate when sharing
