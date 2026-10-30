@@ -2,8 +2,9 @@
 
 Target: Dell OptiPlex 9020, BIOS A12, Legacy BIOS boot, Intel USB 3.0 xHCI `8086:8C31` rev 04, Windows on the internal drive.
 Baseline: Increment 1 merged as PR #36, merge commit `6d6a941a04fe31b318d184408e3c1a55e7d63f8d`.
-**Diagnostic only: no controller initialization, no USB device takeover, no DMA activation, no HID.** No physical test has been run.
-Nothing is committed or published; the physical boot needs the owner's approval. Owner procedure:
+**Diagnostic only: no controller initialization, no USB device takeover, no DMA activation, no HID.** The first physical survey was later run by the
+owner on the Dell (2026-10-30); its photographs and results are in section 8 and `usb-physical-survey-dell-optiplex-9020/physical/`. The text up to
+section 7 is the pre-test report and is kept as written. Owner procedure:
 [usb-physical-survey-dell-optiplex-9020-procedure.md](usb-physical-survey-dell-optiplex-9020-procedure.md).
 
 ## 1. Source baseline (verified)
@@ -82,7 +83,7 @@ modules through a `/.disk/<date>.uuid` file named in its embedded configuration,
 file, so GRUB stopped at `grub rescue>` (`native/qemu-1`). Fix: carry the UEFI image's `.disk` directory into the merged tree (`assemble-dual.sh`);
 the whole matrix was rerun (8/8, `native/qemu-2`).
 
-## 6. What is NOT tested
+## 6. What is NOT tested (before the physical run; see section 8 for what changed)
 Any physical hardware; Dell BIOS A12 behaviour with these images; real USB-stick controllers; GRUB keyboard handling on the Dell. UEFI on the Dell
 is not applicable (Legacy mode). The older regression suites (C1-C3b.2, PS/2) were not re-run for this milestone: the kernel is byte-identical to the
 one CI and Increment 1 already verified, and no source changed.
@@ -98,3 +99,29 @@ one CI and Increment 1 already verified, and no source changed.
 - Dual image MBR (above); BIOS-only fallback prepared.
 - Documentation: `docs/plans/MASTER-PLAN.md` and `docs/ROADMAP.md` now state that UEFI x86-64 is the primary long-term boot target and Legacy BIOS a supported
   compatibility path, with firmware-independent USB/DMA/memory/HID logic (uncommitted).
+
+## 8. Physical results (owner photographs, 2026-10-30)
+Full record, per-line transcription and cross-checks: [`physical/README.md`](usb-physical-survey-dell-optiplex-9020/physical/README.md). Three unmodified originals are
+preserved in `physical/photos/` (SHA-256 in `physical/original-sha256.txt`; they have no EXIF data, so capture order and times are not established).
+
+| Photo | SHA-256 | Shows |
+| --- | --- | --- |
+| `photo_2026-10-30_13-50-58.jpg` | `579c7d74...c8` (full value in the record) | survey result screen, halted |
+| `photo_2026-10-30_13-51-28.jpg` | `cb0b223c...ff` | GRUB menu of the survey image, `build 6d6a941`, 27 s countdown |
+| `photo_2026-10-30_13-55-09.jpg` | `59868589...3d` | a normal VOS boot to `boot: checks passed` |
+
+Associated with: ISO `vos-usb-survey-dual.iso` SHA-256 `736e5fdeb8b6b32c28374d6dee5b5be4bedef18d39cbede05517e69e0a887535` (owner-stated), build `6d6a941`,
+evidence commit `88c64fb` (merged as `496cc29`). The normal-boot photo is kept as separate provenance: its kernel layout values equal the tested kernel's
+QEMU log exactly (kernel image `0x100000-0x1e2000`, text `...80107000-...80143000`, PDPT `0x105000 -> 0x177000`, same probe seed and salt) and its command line is empty with module
+`hello`, so it is consistent with the default entry of the tested image, but the image itself cannot be confirmed from a photo.
+
+**xHCI as printed (all legible; marked values are not cross-checked):** `00:14.0` `8086:8c31` rev 04, subsystem `0x05a41028`, bar0 `0xf7c20000`; version `0x0100`,
+caplen `0x80`, 32 slots, 8 interrupters, **21 ports, 16 scratchpad buffers**, AC64 1, CSZ 0 (32-byte contexts), PPC 0; hcs1 `0x15000820`, hcs2 `0x84000054`, hcs3 `0x0200000a`,
+hcc1 `0x200077c1`, hcc2 0; usbcmd `0x5` (running, interrupter enable set), usbsts `0x0`, config `0x20`; **0 of 21 ports connected**; 5 extended capabilities (ids 2 2 193 192 1),
+legacy support at `0x846c`, **BIOS-owned 1, OS-owned 0**, SMI register `0x40002001`; protocols usb2.00 ports 1-15, usb3.00 ports 16-21; two EHCI at `00:1a.0` (`8c2d`) and
+`00:1d.0` (`8c26`); i8042 status `0x1c`; IOMMU unknown (ACPI not read); survey completed and halted.
+
+**Corrections to the first chat transcription:** 0 connected (not 8) and 16 scratchpads (not 32). Consequences: no device is attached to any xHCI port, so the
+keyboard and mouse are on the EHCI controllers (or behind routing the survey did not print), which makes the Intel routing registers the decisive unknown; 16 buffers are within the
+64-buffer budget; 21 ports still exceed the model's current 16-port limit; the controller is in exactly the BIOS-owned, running, SMI-enabled state the handoff sequence addresses.
+Missing evidence is listed in the record (ISO identity on the drive, photo order, routing registers, EHCI ports, ring pointers, DMAR, Windows' device tree and BIOS settings, PS/2 port).
