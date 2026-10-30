@@ -1,0 +1,17 @@
+{
+ "cases": 1,
+ "passed": 1,
+ "results": [
+  {
+   "case": "uefi-survey-ehci-keyboard",
+   "passed": true,
+   "ehci_connected": 1,
+   "table_present": "no",
+   "hardware_answers": "unknown",
+   "translation_enabled": "unknown",
+   "xhci_translated": "unknown",
+   "seconds": 24.1
+  }
+ ],
+ "qemu": "QEMU emulator version 10.2.1 (Debian 1:10.2.1+ds-1ubuntu3.2)"
+}

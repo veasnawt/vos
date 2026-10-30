@@ -79,6 +79,8 @@ mut('completion-fields-unchecked', 'completion with slot/VF/parameter accepted',
     "                if t.slot != 0 || t.vf != 0 || t.param != 0 {\n                    return self.fail(Reason::CompletionFieldInvalid, Rule::FaultEvent);\n                }\n", "")
 mut('poll-budget-removed', 'unbounded events per poll step', "        if self.step_events >= POLL_BUDGET {\n            return Err(Reason::PollBudgetExceeded);\n        }\n", "")
 mut('unacked-limit-removed', 'unbounded unacknowledged events', "        if self.unacked >= UNACKED_LIMIT {\n            return Err(Reason::AckMissing);\n        }\n", "")
+mut('port-bound-is-the-old-16', 'a controller with more than 16 root ports is refused', "f.ports > MAX_PORTS", "f.ports > 16")
+mut('port-bound-off-by-one', 'a controller with 32 root ports qualifies', "f.ports > MAX_PORTS", "f.ports > MAX_PORTS + 1")
 mut('scratchpad-budget-ignored', 'a controller asking for more scratchpads than the budget qualifies', "        } else if f.scratchpads > SCRATCHPAD_BUDGET {\n            Some(Reason::ScratchpadsExceedBudget)\n", "        } else if false {\n            Some(Reason::ScratchpadsExceedBudget)\n")
 mut('scratchpad-invalid-ignored', 'a count beyond the specification maximum is only a budget refusal', "        } else if f.scratchpads > SPEC_MAX_SCRATCHPADS {\n            Some(Reason::ScratchpadsInvalid)\n", "        } else if false {\n            Some(Reason::ScratchpadsInvalid)\n")
 mut('scratchpad-limit-31', 'the old 31-entry array limit is applied to the budget', "        } else if f.scratchpads > SCRATCHPAD_BUDGET {\n", "        } else if f.scratchpads > 31 {\n")

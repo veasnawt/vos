@@ -155,7 +155,7 @@ class Oracle:
             (profile != 0, 'unqualified-platform'),
             (version != 0x100, 'unsupported-version'),
             (not page4k, 'page-size-unsupported'),
-            (slots == 0 or ports == 0 or ports > 16 or intr == 0, 'bad-capabilities'),
+            (slots == 0 or ports == 0 or ports > 31 or intr == 0, 'bad-capabilities'),
             (limit < 0x200000 or limit > 1 << 30, 'bad-dma-limit'),
             (hse or hce, 'controller-fault'),
             (halted == running, 'inconsistent-run-state'),

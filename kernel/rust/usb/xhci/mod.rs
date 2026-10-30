@@ -6,6 +6,7 @@ pub mod containment;
 pub mod controller;
 pub mod discovery;
 pub mod dma;
+pub mod firmware;
 pub mod header;
 pub mod lifecycle;
 pub mod qualify;

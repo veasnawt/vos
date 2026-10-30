@@ -1,0 +1,65 @@
+grub-file --is-x86-multiboot2 build/i2-1/kernel/vos.bin
+x86_64: Multiboot header OK
+python3 -I -B scripts/check-contain-image.py --expect production build/i2-1/kernel/vos.bin
+rm -rf build/i2-1/kernel/isodir
+mkdir -p build/i2-1/kernel/isodir/boot/grub
+cp build/i2-1/kernel/vos.bin build/i2-1/kernel/isodir/boot/vos.bin
+cp arch/x86_64/grub.cfg build/i2-1/kernel/isodir/boot/grub/grub.cfg
+for f in build/i2-1/user/hello.elf:boot/hello.elf ; do \
+    mkdir -p build/i2-1/kernel/isodir/$(dirname ${f#*:}); cp ${f%%:*} build/i2-1/kernel/isodir/${f#*:}; \
+done
+grub-mkrescue -o build/i2-1/kernel/vos.iso build/i2-1/kernel/isodir
+xorriso 1.5.6 : RockRidge filesystem manipulator, libburnia project.
+
+Drive current: -outdev 'stdio:build/i2-1/kernel/vos.iso'
+Media current: stdio file, overwriteable
+Media status : is blank
+Media summary: 0 sessions, 0 data blocks, 0 data,  933g free
+Added to ISO image: directory '/'='/tmp/grub.cRf2kQ'
+xorriso : UPDATE :     316 files added in 1 seconds
+Added to ISO image: directory '/'='/home/veasnawt/src/vos-usb-inc2/build/i2-1/kernel/isodir'
+xorriso : UPDATE :     321 files added in 1 seconds
+xorriso : NOTE : Copying to System Area: 512 bytes from file '/usr/lib/grub/i386-pc/boot_hybrid.img'
+ISO image produced: 3314 sectors
+Written to medium : 3314 sectors at LBA 0
+Writing to 'stdio:build/i2-1/kernel/vos.iso' completed successfully.
+
+rm -rf build/i2-1/kernel/isodir-uefi
+cp -r build/i2-1/kernel/isodir build/i2-1/kernel/isodir-uefi
+cat arch/x86_64/grub-uefi-head.cfg arch/x86_64/grub.cfg > build/i2-1/kernel/isodir-uefi/boot/grub/grub.cfg
+grub-mkrescue -d /home/veasnawt/vos-evidence/n36-stage3-gatea-cont-20261021T220119Z/efi-tools/usr/lib/grub/x86_64-efi -o build/i2-1/kernel/vos-uefi.iso build/i2-1/kernel/isodir-uefi
+xorriso 1.5.6 : RockRidge filesystem manipulator, libburnia project.
+
+Drive current: -outdev 'stdio:build/i2-1/kernel/vos-uefi.iso'
+Media current: stdio file, overwriteable
+Media status : is blank
+Media summary: 0 sessions, 0 data blocks, 0 data,  933g free
+Added to ISO image: directory '/'='/tmp/grub.W5HJGu'
+xorriso : UPDATE :     323 files added in 1 seconds
+Added to ISO image: directory '/'='/home/veasnawt/src/vos-usb-inc2/build/i2-1/kernel/isodir-uefi'
+xorriso : UPDATE :     328 files added in 1 seconds
+xorriso : UPDATE :  29.49% done
+ISO image produced: 5535 sectors
+Written to medium : 5535 sectors at LBA 0
+Writing to 'stdio:build/i2-1/kernel/vos-uefi.iso' completed successfully.
+
+rm -rf build/i2-1/kernel/isodir-uefi-usb-survey
+cp -r build/i2-1/kernel/isodir build/i2-1/kernel/isodir-uefi-usb-survey
+cat arch/x86_64/grub-uefi-head.cfg arch/x86_64/grub-usb-survey.cfg > build/i2-1/kernel/isodir-uefi-usb-survey/boot/grub/grub.cfg
+grub-mkrescue -d /home/veasnawt/vos-evidence/n36-stage3-gatea-cont-20261021T220119Z/efi-tools/usr/lib/grub/x86_64-efi -o build/i2-1/kernel/vos-uefi-usb-survey.iso build/i2-1/kernel/isodir-uefi-usb-survey
+xorriso 1.5.6 : RockRidge filesystem manipulator, libburnia project.
+
+Drive current: -outdev 'stdio:build/i2-1/kernel/vos-uefi-usb-survey.iso'
+Media current: stdio file, overwriteable
+Media status : is blank
+Media summary: 0 sessions, 0 data blocks, 0 data,  933g free
+Added to ISO image: directory '/'='/tmp/grub.41xgm7'
+xorriso : UPDATE :     323 files added in 1 seconds
+Added to ISO image: directory '/'='/home/veasnawt/src/vos-usb-inc2/build/i2-1/kernel/isodir-uefi-usb-survey'
+xorriso : UPDATE :     328 files added in 1 seconds
+xorriso : UPDATE :  5.20% done
+xorriso : UPDATE :  38.16% done
+ISO image produced: 5535 sectors
+Written to medium : 5535 sectors at LBA 0
+Writing to 'stdio:build/i2-1/kernel/vos-uefi-usb-survey.iso' completed successfully.
+

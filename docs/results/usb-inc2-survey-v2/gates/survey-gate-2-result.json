@@ -1,0 +1,145 @@
+{
+ "hosted_only": true,
+ "device_access": false,
+ "source_sha256": {
+  "kernel/rust/usb/xhci/capabilities.rs": "e8864394b59f0d8cf42993a7d141e7e75dd98f91788d7ce9c6ffa9fcfe66e03f",
+  "kernel/rust/usb/xhci/containment.rs": "4e8479d5f5ee8ff516d24eaad9c8379edc28ecd96ea21ff546b357aff3054644",
+  "kernel/rust/usb/xhci/controller.rs": "86217a6d2502830ff22b30393338ad5910f8133123aee4e1167390fd06c468a2",
+  "kernel/rust/usb/xhci/discovery.rs": "f3e50289da2afb22900dcd630651ce0ac2690489d22262d963fa962d16661c43",
+  "kernel/rust/usb/xhci/dma.rs": "9aac2669ad22d7c33480a43199ba9d5078c45c39e14e406c609b222af19689c6",
+  "kernel/rust/usb/xhci/firmware.rs": "4c146d75567b7799a7eeb50e61fbb9308fa32c1f8cd0b271b809e92297fd9e0a",
+  "kernel/rust/usb/xhci/header.rs": "4d78fc16c6a52806b3b001e50a28d85b6ba98eecf715b4ac86cb8e415b2a0a3e",
+  "kernel/rust/usb/xhci/lib.rs": "15a8982e2ee49e0e4d9198b061382d3e27549a5867872202148b9bdd7aa232ba",
+  "kernel/rust/usb/xhci/lifecycle.rs": "218a7f138102033aa6d9bfd9e2229db84ffed467d6a4acf67870b43957f5d40c",
+  "kernel/rust/usb/xhci/mod.rs": "677ade7d486d7b564fef2910415dd39527540ce9ab82cd77cc1494b6e8e6a824",
+  "kernel/rust/usb/xhci/qualify.rs": "a6e81b33736f3e698175b88f18d80f9d06ae8d8574d2c2079c7cae8240e3815d",
+  "kernel/rust/usb/xhci/residue.rs": "bcce659b2deb0895082097580f9f3591c56bd8dd76dc97d082d868f746594ec0",
+  "kernel/rust/usb/xhci/resources.rs": "a46ff4fed32b775e6d03e0fcb85594de6224b484c21183bb2a13a4b83502f372",
+  "kernel/rust/usb/xhci/ring.rs": "87b575a4a9e4353a00eeb1bbe23ec7452e978c413566d8b2cff98d71ba2fd3c2",
+  "kernel/rust/usb/xhci/survey.rs": "b0d9318605fd49fc00794e1f7eae77a3b8f3fc76a68990638e409053f26bc3d9",
+  "kernel/rust/usb/xhci/types.rs": "27eddcb969ef2ab87a056910b76b47a1865c7d464130d04095824ea0625a724a",
+  "tests/rust/xhci_survey.rs": "09c2d9901acf9cf7627e09879deb90abc4bcf1cced357102963efcc3c5164e0b",
+  "tests/rust/xhci_firmware.rs": "ce4ec250f47f37fd1ace7c808b0f0469b6346a22509febb3ed6bf74ebbf6e49e",
+  "scripts/test-usb-survey.py": "29019e475a3d211708f4452348c7c99524f700c191f020c3d7dd1350babbe64b",
+  "arch/x86_64/xhci_survey.c": "a82f50756e0f77e21ecf5eb118b1426d6dc859931407c1424a432c9810b62144",
+  "arch/x86_64/rust/xhci_survey.rs": "7ee6ea579478f072dd3eb9633aaf30470d6f287c6e195d5495030531d2b4b83a"
+ },
+ "commands": [
+  [
+   "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+   "--edition=2024",
+   "-Dwarnings",
+   "--crate-name",
+   "vos_xhci",
+   "--crate-type=rlib",
+   "-Coverflow-checks=yes",
+   "-Cstrip=symbols",
+   "/home/veasnawt/src/vos-usb-inc2/kernel/rust/usb/xhci/lib.rs",
+   "-o",
+   "/home/veasnawt/src/vos-usb-inc2/build/i2-1/survey-gate-2/libvos_xhci.rlib"
+  ],
+  [
+   "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+   "--edition=2024",
+   "-Dwarnings",
+   "--test",
+   "-Copt-level=1",
+   "-Coverflow-checks=yes",
+   "-Cstrip=symbols",
+   "--extern",
+   "vos_xhci=/home/veasnawt/src/vos-usb-inc2/build/i2-1/survey-gate-2/libvos_xhci.rlib",
+   "/home/veasnawt/src/vos-usb-inc2/tests/rust/xhci_survey.rs",
+   "-o",
+   "/home/veasnawt/src/vos-usb-inc2/build/i2-1/survey-gate-2/survey-tests"
+  ],
+  [
+   "/home/veasnawt/src/vos-usb-inc2/build/i2-1/survey-gate-2/survey-tests",
+   "--test-threads=1"
+  ],
+  [
+   "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+   "--edition=2024",
+   "-Dwarnings",
+   "--test",
+   "-Copt-level=1",
+   "-Coverflow-checks=yes",
+   "-Cstrip=symbols",
+   "--extern",
+   "vos_xhci=/home/veasnawt/src/vos-usb-inc2/build/i2-1/survey-gate-2/libvos_xhci.rlib",
+   "/home/veasnawt/src/vos-usb-inc2/tests/rust/xhci_firmware.rs",
+   "-o",
+   "/home/veasnawt/src/vos-usb-inc2/build/i2-1/survey-gate-2/firmware-tests"
+  ],
+  [
+   "/home/veasnawt/src/vos-usb-inc2/build/i2-1/survey-gate-2/firmware-tests",
+   "--test-threads=1"
+  ],
+  [
+   "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+   "--edition=2024",
+   "--extern",
+   "vos_xhci=/home/veasnawt/src/vos-usb-inc2/build/i2-1/survey-gate-2/libvos_xhci.rlib",
+   "/home/veasnawt/src/vos-usb-inc2/build/i2-1/survey-gate-2/cf-pci-trait-has-no-write.rs",
+   "-o",
+   "/home/veasnawt/src/vos-usb-inc2/build/i2-1/survey-gate-2/cf-pci-trait-has-no-write"
+  ],
+  [
+   "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+   "--edition=2024",
+   "--extern",
+   "vos_xhci=/home/veasnawt/src/vos-usb-inc2/build/i2-1/survey-gate-2/libvos_xhci.rlib",
+   "/home/veasnawt/src/vos-usb-inc2/build/i2-1/survey-gate-2/cf-mmio-trait-has-no-write.rs",
+   "-o",
+   "/home/veasnawt/src/vos-usb-inc2/build/i2-1/survey-gate-2/cf-mmio-trait-has-no-write"
+  ],
+  [
+   "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+   "--edition=2024",
+   "--extern",
+   "vos_xhci=/home/veasnawt/src/vos-usb-inc2/build/i2-1/survey-gate-2/libvos_xhci.rlib",
+   "/home/veasnawt/src/vos-usb-inc2/build/i2-1/survey-gate-2/cf-phys-trait-has-no-write.rs",
+   "-o",
+   "/home/veasnawt/src/vos-usb-inc2/build/i2-1/survey-gate-2/cf-phys-trait-has-no-write"
+  ],
+  [
+   "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+   "--edition=2024",
+   "--extern",
+   "vos_xhci=/home/veasnawt/src/vos-usb-inc2/build/i2-1/survey-gate-2/libvos_xhci.rlib",
+   "/home/veasnawt/src/vos-usb-inc2/build/i2-1/survey-gate-2/cf-scan-needs-a-pci-reader.rs",
+   "-o",
+   "/home/veasnawt/src/vos-usb-inc2/build/i2-1/survey-gate-2/cf-scan-needs-a-pci-reader"
+  ]
+ ],
+ "tests_passed": 57,
+ "tests_passed_by_suite": {
+  "survey": 36,
+  "firmware": 21
+ },
+ "compile_fail_controls": {
+  "pci-trait-has-no-write": "E0599",
+  "mmio-trait-has-no-write": "E0599",
+  "phys-trait-has-no-write": "E0599",
+  "scan-needs-a-pci-reader": "E0277"
+ },
+ "mutation_controls": [
+  {
+   "name": "fw-entry-truncation-silent",
+   "breaks": "a cut root list is not reported",
+   "killed_by": [
+    "rust-tests"
+   ],
+   "failing_tests": [
+    "a_cut_root_list_is_reported_even_when_the_unread_part_adds_no_signatures"
+   ],
+   "killed_in": "xhci_firmware.rs"
+  }
+ ],
+ "mutation_summary": {
+  "total": 1,
+  "killed": 1,
+  "survived": [],
+  "invalid": []
+ },
+ "pass": true
+}

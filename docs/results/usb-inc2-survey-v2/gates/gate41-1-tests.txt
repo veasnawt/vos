@@ -1,0 +1,55 @@
+
+running 50 tests
+test a_backend_fault_is_terminal_with_its_own_reason ... ok
+test a_completed_command_leaves_no_deadline_behind ... ok
+test a_missing_acknowledgment_blocks_the_next_doorbell ... ok
+test a_stuck_bus_master_is_reported_and_never_retried ... ok
+test allocation_closes_once_the_device_is_exposed ... ok
+test bus_master_and_erstba_ordering_is_enforced ... ok
+test cancel_routes_every_phase_to_a_safe_path ... ok
+test command_ring_cycle_and_link_semantics ... ok
+test controller_errors_clock_faults_and_unexpected_halts ... ok
+test deadlines_expire_exactly_at_their_tick_count ... ok
+test device_attachment_before_run_fails_and_after_run_is_only_noted ... ok
+test dma_address_alignment_and_overlap_rules ... ok
+test dma_page_lifetime_state_machine ... ok
+test erdp_and_ehb_acknowledgments ... ok
+test erst_contents_are_validated ... ok
+test event_validation_refusals_and_faults ... ok
+test export_traces_for_the_oracle ... ok
+test firmware_handoff_sequence_and_conflicts ... ok
+test firmware_that_never_releases_ends_in_a_clean_failure_without_forcing ... ok
+test halt_bme_clear_and_reset_must_happen_in_that_order ... ok
+test halt_never_reached_times_out_without_exposure ... ok
+test halt_requests_are_refused_when_there_is_nothing_to_halt ... ok
+test idle_accepts_only_qualification_and_time ... ok
+test interrupts_ports_slots_and_other_commands_are_forbidden_everywhere ... ok
+test msi_observed_at_any_time_is_a_fault ... ok
+test no_session_ever_writes_ports_slots_interrupts_or_other_doorbells ... ok
+test ownership_lost_noop_and_no_capability_cases ... ok
+test polling_is_bounded_per_step_and_per_unacknowledged_batch ... ok
+test published_pages_are_never_released_before_quiescence ... ok
+test qemu_deviations_are_documented_as_device_options_not_protocol_assumptions ... ok
+test qemu_fetches_the_erst_inside_the_erstba_write_and_needs_bus_mastering ... ok
+test qemu_session_completes_260_noops_with_both_rings_wrapping ... ok
+test qualification_refusals_are_named_prioritised_and_terminal ... ok
+test random_sessions_with_the_canonical_driver_never_violate_the_device ... ok
+test randomized_transitions_keep_every_invariant ... ok
+test randomized_transitions_with_false_observations_keep_the_state_invariants ... ok
+test reset_that_does_not_clear_the_controller_is_unverified ... ok
+test reset_that_never_completes_times_out_before_and_after_exposure ... ok
+test scratchpad_and_dcbaa_eligibility ... ok
+test slow_legacy_hardware_like_session_completes_in_both_erst_fetch_modes ... ok
+test start_and_command_timeouts_quarantine_and_run_the_containment_tail ... ok
+test static_registers_need_containment_prepared_pages_and_valid_values ... ok
+test terminal_phases_accept_nothing_but_their_defined_cleanup ... ok
+test the_alternate_fetch_timing_does_not_fault_until_run_and_the_protocol_is_safe_either_way ... ok
+test the_event_log_checker_itself_rejects_misordered_logs ... ok
+test the_halted_belief_is_invalidated_whenever_run_stop_is_written ... ok
+test the_write_inventory_is_exactly_n01_to_n18_and_in_order ... ok
+test unresolved_facts_are_never_treated_as_favourable ... ok
+test up_to_31_root_ports_qualify_and_the_port_mask_follows_the_count ... ok
+test zz_every_rule_and_every_reason_is_exercised ... ok
+
+test result: ok. 50 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.55s
+

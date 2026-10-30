@@ -382,6 +382,10 @@ fn a_refused_or_truncated_read_ends_the_walk_with_what_was_read() {
         r.reads
     };
     assert!(full > 30, "{full}");
+    // The nine ring-pointer reads come just before the second USBCMD/USBSTS reading. A refusal among them is recorded apart
+    // (`ptr_stopped`) and the walk still tries the second USBCMD once, so a controller whose runtime registers are out of
+    // reach still gets its stability check; it is refused too, which ends the walk one read later.
+    let pointer_block = full - 11..full - 2;
     for k in 0..full {
         let mut r = intel();
         r.fail_after = Some(k);
@@ -389,7 +393,13 @@ fn a_refused_or_truncated_read_ends_the_walk_with_what_was_read() {
         assert!(x.stopped.is_some(), "fail_after {k}: a refused read must be reported: {x:?}");
         assert_eq!(x.stopped, Some("read refused"));
         assert!(x.reads <= READ_LIMIT);
-        assert_eq!(r.reads, k + 1, "the walk stops at the first refusal");
+        if pointer_block.contains(&k) {
+            assert_eq!((r.reads, x.ptr_stopped), (k + 2, Some("read refused")), "fail_after {k}");
+            assert_eq!((x.usbcmd2, x.usbsts2), (0, 0));
+        } else {
+            assert_eq!(r.reads, k + 1, "the walk stops at the first refusal");
+            assert_eq!(x.ptr_stopped, None, "fail_after {k}");
+        }
     }
 }
 
@@ -686,4 +696,341 @@ fn the_platform_sources_contain_no_pci_or_port_or_register_write() {
     assert!(!hosted.contains("fn write") && !hosted.contains("unsafe"), "the hosted module has no write method and no unsafe code");
     // The only memory operations the survey trait objects have are reads.
     assert!(hosted.contains("pub trait Pci {\n    fn read32") && hosted.contains("pub trait Mmio {\n    fn read32"));
+}
+
+// ---- Increment 2: 21 ports, ring pointers ------------------------------------------------------------------------------------
+
+/// The Dell's controller: 21 ports, all disconnected, powered off by default (PORTSC 0x2a0 is "disconnected, powered, no change").
+fn dell() -> Regs {
+    let mut r = intel();
+    r.set(4, 21 << 24 | 8 << 8 | 32);
+    for p in 0..21u32 {
+        r.set(0x80 + 0x400 + 0x10 * p, 0x0000_02a0);
+    }
+    r.w.remove(&(0x80 + 0x400 + 0x10 * 2));
+    r.w.remove(&(0x80 + 0x400 + 0x10 * 9));
+    r.set(0x80 + 0x400 + 0x10 * 2, 0x0000_02a0).set(0x80 + 0x400 + 0x10 * 9, 0x0000_02a0);
+    r
+}
+
+#[test]
+fn all_twenty_one_ports_are_read_and_a_connection_on_the_last_one_is_seen() {
+    let mut r = dell();
+    let x = inspect_xhci(&mut r);
+    assert_eq!((x.stopped, x.ports, x.ports_read, x.connected), (None, 21, 21, 0), "{x:?}");
+    assert!(x.portsc[..21].iter().all(|sc| *sc == 0x2a0));
+    // the 21st port (index 20) is the last one: its register is the 21st PORTSC
+    let mut r = dell();
+    r.set(0x80 + 0x400 + 0x10 * 20, 0x0000_0201);
+    let x = inspect_xhci(&mut r);
+    assert_eq!((x.connected, x.conn[0].index, x.conn[0].portsc), (1, 20, 0x0000_0201));
+    assert!(r.log.contains(&(0x80 + 0x400 + 0x10 * 20)) && !r.log.contains(&(0x80 + 0x400 + 0x10 * 21)));
+    let mut out = Capture::default();
+    render_xhci_ports(&x, &mut out);
+    let text = out.text();
+    assert!(text.contains("portsc of 21 of 21 ports: connected 1 enabled 0 powered 21 over-current 0"), "{text}");
+    assert!(text.contains(" p21=00000201") && text.contains(" p1=000002a0 "), "{text}");
+    assert!(text.lines().all(|l| l.len() <= 118), "{text}");
+}
+
+#[test]
+fn the_port_summary_counts_each_status_bit_on_its_own() {
+    let x = Xhci { ports: 8, ports_read: 8, portsc: { let mut a = [0u32; 32]; a[..5].copy_from_slice(&[0x1, 0x203, 0x8, 0x200, 0x0000_0008 | 0x200]); a }, ..Default::default() };
+    let mut out = Capture::default();
+    render_xhci_ports(&x, &mut out);
+    let text = out.text();
+    assert!(text.contains("portsc of 8 of 8 ports: connected 2 enabled 1 powered 3 over-current 2"), "{text}");
+    assert!(text.contains(" p1=00000001 p2=00000203 p3=00000008 p4=00000200 p5=00000208 p6=00000000"), "{text}");
+}
+
+#[test]
+fn more_ports_than_the_recorded_thirty_two_are_counted_but_only_thirty_two_are_shown() {
+    let mut r = intel();
+    r.set(4, 40 << 24 | 8 << 8 | 32);
+    for p in 0..40u32 {
+        r.set(0x80 + 0x400 + 0x10 * p, 1);
+    }
+    let x = inspect_xhci(&mut r);
+    assert_eq!((x.ports, x.ports_read, x.connected), (40, 40, 40));
+    let mut out = Capture::default();
+    render_xhci_ports(&x, &mut out);
+    let text = out.text();
+    assert!(text.contains("portsc of 32 of 40 ports: connected 32") && text.contains("(first 32 shown)"), "{text}");
+    assert!(text.contains(" p32=") && !text.contains(" p33="), "{text}");
+    assert!(text.lines().all(|l| l.len() <= 118), "{text}");
+}
+
+#[test]
+fn ring_pointers_are_decoded_from_their_registers_and_never_dereferenced() {
+    let mut r = intel();
+    let rt = 0x2000;
+    r.set(0x80 + 0x18, 0x0000_0009).set(0x80 + 0x30, 0x7f00_1000).set(0x80 + 0x34, 0x1);
+    r.set(rt + 0x20, 0x2).set(rt + 0x28, 1).set(rt + 0x30, 0x7f00_2000).set(rt + 0x34, 0).set(rt + 0x38, 0x7f00_3008).set(rt + 0x3c, 0);
+    let x = inspect_xhci(&mut r);
+    assert_eq!(x.ptr_stopped, None);
+    assert_eq!((x.dcbaap, x.crcr, x.ir_iman, x.ir_erstsz, x.ir_erstba, x.ir_erdp), (0x1_7f00_1000, 9, 2, 1, 0x7f00_2000, 0x7f00_3008));
+    let reads: Vec<u32> = r.log.iter().copied().filter(|o| (0x2000..0x3000).contains(o)).collect();
+    assert_eq!(reads, vec![rt + 0x20, rt + 0x28, rt + 0x30, rt + 0x34, rt + 0x38, rt + 0x3c], "exactly interrupter 0, nothing else");
+    let mut out = Capture::default();
+    let f = scan(&mut typical()).usb[0];
+    render_pointers(&f, &x, &|a| if a >> 24 == 0x7f { "ram" } else { "none" }, &mut out);
+    let text = out.text();
+    assert!(text.contains("dcbaap 0x17f001000 [none] crcr(lo) 0x00000009 ir0 erstba 0x7f002000 [ram] erdp 0x7f003008 [ram]"), "{text}");
+    assert!(text.lines().all(|l| l.len() <= 118), "{text}");
+}
+
+#[test]
+fn unusable_runtime_offsets_are_recorded_and_the_rest_of_the_walk_still_runs() {
+    for (rtsoff, why) in [(0x2004u32, "RTSOFF unaligned"), (0xffff_ffe0, "RTSOFF overflows"), (0x0fff_ffe0, "register outside the MMIO window")] {
+        let mut r = intel();
+        r.set(0x18, rtsoff);
+        let x = inspect_xhci(&mut r);
+        assert_eq!((x.stopped, x.ptr_stopped.is_some()), (None, true), "{rtsoff:#x}: {x:?}");
+        if why != "register outside the MMIO window" {
+            assert_eq!(x.ptr_stopped, Some(why), "{rtsoff:#x}");
+        }
+        assert_eq!((x.usbcmd2, x.usbsts2), (8, 1), "the stability reading is still taken");
+        assert!(r.log.iter().all(|o| *o < WINDOW));
+        let mut out = Capture::default();
+        render_pointers(&scan(&mut typical()).usb[0], &x, &|_| "x", &mut out);
+        assert!(out.text().contains("ring pointers not fully read"), "{}", out.text());
+    }
+}
+
+// ---- Increment 2: Intel port routing -----------------------------------------------------------------------------------------
+
+struct Spy<'a>(&'a mut Tree, Vec<u8>);
+impl Pci for Spy<'_> {
+    fn read32(&mut self, bus: u8, dev: u8, func: u8, off: u8) -> u32 {
+        self.1.push(off);
+        self.0.read32(bus, dev, func, off)
+    }
+}
+
+fn dell_pci() -> Tree {
+    let mut t = Tree::default();
+    t.func(0, 0x14, 0, 0x8086, 0x8c31, XHCI, 0x80);
+    t.set(0, 0x14, 0, 0x10, 0xf7c2_0004);
+    t.func(0, 0x1a, 0, 0x8086, 0x8c2d, 0x0c0320, 0x80);
+    t.set(0, 0x1a, 0, 0x10, 0xf7c3_1c00);
+    t.func(0, 0x1d, 0, 0x8086, 0x8c26, 0x0c0320, 0x80);
+    t.set(0, 0x1d, 0, 0x10, 0xf7c3_0800);
+    t
+}
+
+#[test]
+fn intel_routing_registers_are_read_and_interpreted_without_assuming_a_port_layout() {
+    let mut t = dell_pci();
+    t.set(0, 0x14, 0, 0xd0, 0x0000_0000).set(0, 0x14, 0, 0xd4, 0x0000_3fff).set(0, 0x14, 0, 0xd8, 0x0000_0000).set(0, 0x14, 0, 0xdc, 0x0000_000f);
+    let s = scan(&mut t);
+    let f = s.usb[0];
+    let mut spy = Spy(&mut t, vec![]);
+    let r = intel_routing(&mut spy, &f).unwrap();
+    assert_eq!(spy.1, vec![0xd0, 0xd4, 0xd8, 0xdc], "exactly the four routing registers, each read once");
+    assert_eq!((r.usb2_routable(), r.usb2_to_xhci(), r.usb2_to_ehci()), (0x3fff, 0, 0x3fff), "nothing routed: every port stays with its EHCI");
+    assert_eq!((r.usb3_enabled(), r.usb3_disabled()), (0, 0xf));
+    let mut out = Capture::default();
+    render_routing(&f, &r, &mut out);
+    let text = out.text();
+    assert!(text.contains("xusb2pr 0x00000000 xusb2prm 0x00003fff\r\n"), "{text}");
+    assert!(text.contains("to xhci -, left with ehci 1-14"), "{text}");
+    assert!(text.contains("superspeed ports enabled -\r\n") && text.contains("superspeed ports disabled 1-4  (bit n"), "{text}");
+    assert!(text.contains("usb:   usb3_pssen 0x00000000 usb3prm 0x0000000f"), "{text}");
+    assert!(text.lines().all(|l| l.len() <= 118), "{text}");
+    // partly routed: ports 1, 2, 5 to the xHCI; a bit outside the routable mask is not a routed port
+    let mut t = dell_pci();
+    t.set(0, 0x14, 0, 0xd0, 0x8000_4013).set(0, 0x14, 0, 0xd4, 0x0000_3fff).set(0, 0x14, 0, 0xd8, 0x0000_001f).set(0, 0x14, 0, 0xdc, 0x0000_000f);
+    let f = scan(&mut t).usb[0];
+    let r = intel_routing(&mut t, &f).unwrap();
+    assert_eq!((r.usb2_to_xhci(), r.usb2_to_ehci(), r.usb3_enabled()), (0x13, 0x3fec, 0xf), "bits outside the routable mask are neither routed nor left");
+    // a routable mask wider than the PCH has ports is cut to the fifteen it has
+    let wide = Routing { xusb2pr: 0x8000_4013, xusb2prm: u32::MAX, usb3_pssen: 0, usb3prm: 0 };
+    assert_eq!((wide.usb2_routable(), wide.usb2_to_xhci(), wide.usb2_to_ehci()), (ROUTING_PORT_MASK, 0x4013, 0x3fec));
+    let mut out = Capture::default();
+    render_routing(&f, &r, &mut out);
+    assert!(out.text().contains("to xhci 1-2,5, left with ehci 3-4,6-14"), "{}", out.text());
+}
+
+#[test]
+fn routing_is_only_read_for_an_intel_xhci_type_zero_header_that_has_the_registers() {
+    let mut t = dell_pci();
+    for off in [0xd0, 0xd4, 0xd8, 0xdc] {
+        t.set(0, 0x14, 0, off, 0);
+    }
+    let s = scan(&mut t);
+    let (xhci, ehci) = (s.usb[0], s.usb[1]);
+    assert!(ehci.is_ehci());
+    // zero is a valid answer; only all ones means "no such registers"
+    assert!(intel_routing(&mut t, &xhci).is_some());
+    for (f, why) in [
+        (ehci, "an EHCI has no routing registers"),
+        (UsbFn { vendor: 0x1b36, ..xhci }, "another vendor"),
+        (UsbFn { header: 1, ..xhci }, "a bridge header"),
+    ] {
+        let mut spy = Spy(&mut t, vec![]);
+        assert_eq!(intel_routing(&mut spy, &f), None, "{why}");
+        assert!(spy.1.is_empty(), "{why}: no configuration read at all");
+    }
+    // a function that does not decode the registers reads all ones everywhere
+    for off in [0xd0, 0xd4, 0xd8, 0xdc] {
+        t.set(0, 0x14, 0, off, 0xffff_ffff);
+    }
+    assert_eq!(intel_routing(&mut t, &xhci), None);
+    // one register readable is enough to report
+    t.set(0, 0x14, 0, 0xd4, 0x3fff);
+    assert!(intel_routing(&mut t, &xhci).is_some());
+}
+
+// ---- Increment 2: EHCI -----------------------------------------------------------------------------------------------------
+
+/// An Intel PCH EHCI: CAPLENGTH 0x20, version 1.0, six ports (two companions of three), EECP 0x68, halted... running.
+fn ehci_regs() -> Regs {
+    let mut r = Regs::default();
+    r.set(0, 0x0100_0020).set(4, 2 << 12 | 3 << 8 | 6).set(8, 0x68 << 8);
+    let op = 0x20;
+    r.set(op, 0x0001_0001).set(op + 4, 0x0000_0000).set(op + 0x40, 1);
+    r.set(op + 0x44, 0x0000_1005); // port 1: connected, enabled, high speed (bit 2 = enabled; line status bits are not used), powered
+    r.set(op + 0x48, 0x0000_1000); // port 2: powered, empty
+    r.set(op + 0x4c, 0x0000_3001); // port 3: connected, owned by the companion
+    r
+}
+fn ehci_pci() -> (Tree, UsbFn) {
+    let mut t = dell_pci();
+    t.set(0, 0x1a, 0, 0x68, 0x0000_0001 | 1 << 16).set(0, 0x1a, 0, 0x6c, 0x0000_0001);
+    let f = scan(&mut t).usb[1];
+    (t, f)
+}
+
+#[test]
+fn an_ehci_is_decoded_with_its_ports_and_legacy_support() {
+    let (mut t, f) = ehci_pci();
+    assert!(f.is_ehci() && !f.is_xhci());
+    assert_eq!(f.ehci_base(), Ok(0xf7c3_1c00), "an EHCI BAR may sit at a 1 KiB boundary");
+    assert_eq!(f.bar_base(), Err("BAR unaligned"), "an xHCI BAR may not");
+    let mut r = ehci_regs();
+    let e = inspect_ehci(&mut r, &mut t, &f);
+    assert_eq!((e.stopped, e.caplength, e.version, e.ports, e.connected, e.companion_owned), (None, 0x20, 0x0100, 6, 2, 1), "{e:?}");
+    assert_eq!((e.usbcmd, e.usbsts, e.configflag, e.halted()), (0x0001_0001, 0, 1, false));
+    let mut r2 = ehci_regs();
+    r2.set(0x24, 0x0000_1000);
+    assert!(inspect_ehci(&mut r2, &mut t, &f).halted(), "HCHalted is USBSTS bit 12");
+    r2.log.clear();
+    r2.set(0x24, 0x0000_0800);
+    assert!(!inspect_ehci(&mut r2, &mut t, &f).halted());
+    assert_eq!(e.portsc[..3], [0x1005, 0x1000, 0x3001]);
+    assert_eq!(e.legacy, Some((0x68, 0x0001_0001, 1)));
+    assert!(r.log.iter().all(|o| *o < EHCI_WINDOW && o % 4 == 0), "{:?}", r.log);
+    let mut out = Capture::default();
+    render_ehci(&f, &e, &mut out);
+    let text = out.text();
+    assert!(text.contains("usb: ehci 00:1a.0 8086:8c2d hci 0x0100 ports 6 companions 2 x 3 cmd 0x00010001 sts 0x00000000 halted 0 configflag 1"), "{text}");
+    assert!(text.contains(" p1=00001005 p2=00001000 p3=00003001 p4=00000000"), "{text}");
+    assert!(text.contains("connected 2 companion-owned 1 legacy@0x68 bios 1 os 0 smi 0x00000001"), "{text}");
+    assert!(text.contains("ehci root port 1 connected hs enabled 1 owner ehci (a hub behind it? devices below it are not visible)"), "{text}");
+    assert!(text.contains("ehci root port 3 connected"), "{text}");
+    assert!(!text.contains("ehci root port 2"), "an empty port is not listed as connected");
+    assert!(text.lines().all(|l| l.len() <= 118), "{text}");
+}
+
+#[test]
+fn a_bad_or_refusing_ehci_stops_without_reading_outside_its_window() {
+    let (mut t, f) = ehci_pci();
+    let mut r = Regs::default();
+    r.set(0, 0xffff_ffff);
+    let e = inspect_ehci(&mut r, &mut t, &f);
+    assert_eq!((e.stopped, r.reads), (Some("reads as all ones"), 1));
+    for cap in [0u32, 8, 0x0c, 0x22, 0x44, 0xff] {
+        let mut r = ehci_regs();
+        r.set(0, 0x0100_0000 | cap);
+        let e = inspect_ehci(&mut r, &mut t, &f);
+        assert_eq!(e.stopped, Some("bad CAPLENGTH"), "{cap:#x}");
+        assert!(r.log.iter().all(|o| *o < 0x10), "no operational register is read through a bad CAPLENGTH: {:?}", r.log);
+    }
+    let full = {
+        let mut r = ehci_regs();
+        inspect_ehci(&mut r, &mut t, &f);
+        r.reads
+    };
+    for k in 0..full {
+        let mut r = ehci_regs();
+        r.fail_after = Some(k);
+        let e = inspect_ehci(&mut r, &mut t, &f);
+        assert_eq!((e.stopped, r.reads), (Some("read refused"), k + 1), "fail_after {k}");
+    }
+    // fifteen ports at the largest CAPLENGTH still end inside the 256-byte window
+    let mut r = ehci_regs();
+    r.set(0, 0x0100_0040).set(4, 15);
+    let e = inspect_ehci(&mut r, &mut t, &f);
+    assert_eq!((e.stopped, e.ports), (None, 15));
+    assert!(r.log.iter().all(|o| *o < EHCI_WINDOW), "{:?}", r.log);
+}
+
+#[test]
+fn the_ehci_legacy_capability_list_is_bounded_and_confined_to_the_extended_config_space() {
+    for (eecp, want) in [(0u32, false), (0x20, false), (0x3c, false), (0xfc, false), (0xa0, true)] {
+        let (mut t, f) = ehci_pci();
+        t.set(0, 0x1a, 0, 0xa0, 1 | 1 << 16);
+        let mut r = ehci_regs();
+        r.set(8, eecp << 8);
+        let mut spy = Spy(&mut t, vec![]);
+        let e = inspect_ehci(&mut r, &mut spy, &f);
+        assert_eq!(e.legacy.is_some(), want, "{eecp:#x}");
+        assert!(spy.1.iter().all(|o| (0x40..=0xfc).contains(o)), "{eecp:#x}: {:?}", spy.1);
+    }
+    // a list that loops through other capabilities ends after eight reads
+    let (mut t, f) = ehci_pci();
+    t.set(0, 0x1a, 0, 0x68, 0x0000_6802).set(0, 0x1a, 0, 0x6c, 0);
+    let mut spy = Spy(&mut t, vec![]);
+    let e = inspect_ehci(&mut ehci_regs(), &mut spy, &f);
+    assert_eq!(e.legacy, None);
+    assert!(spy.1.len() <= 8, "{:?}", spy.1);
+    // legacy support behind another capability is found
+    let (mut t, f) = ehci_pci();
+    t.set(0, 0x1a, 0, 0x68, 0x0000_7000 | 5).set(0, 0x1a, 0, 0x70, 1 << 24 | 1);
+    let e = inspect_ehci(&mut ehci_regs(), &mut t, &f);
+    assert_eq!(e.legacy.map(|(o, h, _)| (o, h >> 24 & 1)), Some((0x70, 1)));
+}
+
+struct EhciHash(u64, u32);
+impl Mmio for EhciHash {
+    fn read32(&mut self, off: u32) -> Option<u32> {
+        assert!(off % 4 == 0 && off < EHCI_WINDOW, "{off:#x}");
+        self.1 += 1;
+        let mut r = Rng(self.0 ^ (u64::from(off) + 1).wrapping_mul(0x9e37_79b9_7f4a_7c15) | 1);
+        Some(match off {
+            0 if r.next() % 4 != 0 => 0x0100_0000 | [0x10, 0x20, 0x30, 0x40][(r.next() % 4) as usize],
+            _ => r.word(),
+        })
+    }
+}
+
+#[test]
+fn random_ehci_register_files_stay_inside_the_window_and_the_read_budget() {
+    let (mut t, f) = ehci_pci();
+    for seed in 1..=5000u64 {
+        let mut m = EhciHash(seed, 0);
+        let e = inspect_ehci(&mut m, &mut Noise(seed), &f);
+        assert!(m.1 <= 3 + 3 + 15, "seed {seed}: {} reads", m.1);
+        assert_eq!(u32::from(e.reads), m.1);
+        assert!(e.connected <= e.ports && e.companion_owned <= e.ports && e.ports <= 15);
+        let mut out = Capture::default();
+        render_ehci(&f, &e, &mut out);
+        render_routing(&f, &Routing { xusb2pr: seed as u32, xusb2prm: !(seed as u32), usb3_pssen: seed as u32 >> 3, usb3prm: u32::MAX }, &mut out);
+        assert!(out.text().lines().all(|l| l.len() <= 118), "seed {seed}: {}", out.text());
+    }
+    let _ = &mut t;
+}
+
+#[test]
+fn the_new_survey_code_never_writes_and_reads_nothing_beyond_its_documented_registers() {
+    let hosted = include_str!("../../kernel/rust/usb/xhci/survey.rs");
+    for bad in ["fn write", "unsafe", "write_volatile", "outl", "wrmsr"] {
+        assert!(!hosted.contains(bad), "survey.rs mentions {bad}");
+    }
+    // the routing registers are named once, as reads of the four documented offsets
+    for off in ["0xd0", "0xd4", "0xd8", "0xdc"] {
+        assert_eq!(hosted.matches(&format!("{off})")).count(), 1, "{off} is read exactly once");
+    }
+    let rs = include_str!("../../arch/x86_64/rust/xhci_survey.rs");
+    assert!(!rs.contains("xusb2pr =") && !rs.contains("XUSB2PR ="), "routing is never assigned");
 }

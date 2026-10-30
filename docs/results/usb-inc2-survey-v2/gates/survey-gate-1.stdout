@@ -1,0 +1,7 @@
+Traceback (most recent call last):
+  File "/home/veasnawt/src/vos-usb-inc2/scripts/test-usb-survey.py", line 351, in <module>
+    main()
+    ~~~~^^
+  File "/home/veasnawt/src/vos-usb-inc2/scripts/test-usb-survey.py", line 342, in main
+    raise RuntimeError(f'mutation controls: survived={survived} invalid={invalid}')
+RuntimeError: mutation controls: survived=['fw-entry-truncation-silent'] invalid=[]

@@ -70,8 +70,18 @@ impl UsbFn {
             _ => "unknown",
         }
     }
-    /// Base of memory BAR 0: `Err` says why there is none usable.
+    pub fn is_ehci(&self) -> bool {
+        self.class_rev >> 8 == 0x000c_0320
+    }
+    /// Base of memory BAR 0 of an xHCI (a 4 KiB-aligned BAR): `Err` says why there is none usable.
     pub fn bar_base(&self) -> Result<u64, &'static str> {
+        self.bar_base_aligned(4096)
+    }
+    /// An EHCI's BAR is only 1 KiB, so it may sit anywhere in a page at a 1 KiB boundary.
+    pub fn ehci_base(&self) -> Result<u64, &'static str> {
+        self.bar_base_aligned(1024)
+    }
+    fn bar_base_aligned(&self, align: u64) -> Result<u64, &'static str> {
         if self.header & 0x7f != 0 {
             return Err("not a type-0 header");
         }
@@ -93,7 +103,7 @@ impl UsbFn {
         if base < 0x10_0000 {
             return Err("BAR below 1 MiB");
         }
-        if base % 4096 != 0 {
+        if base % align != 0 {
             return Err("BAR unaligned");
         }
         Ok(base)
@@ -310,6 +320,17 @@ pub struct Xhci {
     pub dbc: Option<(u16, u32)>,
     pub protocols: u8,
     pub proto: [Proto; 6],
+    /// Raw PORTSC of the first 32 ports (the model and the survey support up to 31).
+    pub portsc: [u32; 32],
+    /// Ring pointers as the controller (or the firmware that ran it) left them: DCBAAP, CRCR (low dword; the pointer bits may
+    /// read as zero) and interrupter 0's IMAN, ERSTSZ, ERSTBA and ERDP. Read, never used.
+    pub dcbaap: u64,
+    pub crcr: u32,
+    pub ir_iman: u32,
+    pub ir_erstsz: u32,
+    pub ir_erstba: u64,
+    pub ir_erdp: u64,
+    pub ptr_stopped: Option<&'static str>,
 }
 impl Xhci {
     pub fn slots(&self) -> u32 {
@@ -327,13 +348,15 @@ impl Xhci {
 struct Reader<'a, M: Mmio> {
     m: &'a mut M,
     reads: u16,
+    /// The window this reader may touch: `WINDOW` for an xHCI, `EHCI_WINDOW` for an EHCI.
+    limit: u32,
 }
 impl<M: Mmio> Reader<'_, M> {
     fn word(&mut self, off: u32) -> Result<u32, &'static str> {
         if off % 4 != 0 {
             return Err("unaligned offset");
         }
-        if off > WINDOW - 4 {
+        if off > self.limit.saturating_sub(4) {
             return Err("outside window");
         }
         if self.reads >= READ_LIMIT {
@@ -347,7 +370,7 @@ impl<M: Mmio> Reader<'_, M> {
 /// Read every register worth reporting. Never writes, never fails the caller: `stopped` records where it ended.
 pub fn inspect_xhci<M: Mmio>(m: &mut M) -> Xhci {
     let mut x = Xhci::default();
-    let mut r = Reader { m, reads: 0 };
+    let mut r = Reader { m, reads: 0, limit: WINDOW };
     x.stopped = walk(&mut r, &mut x).err();
     x.reads = r.reads;
     x
@@ -382,6 +405,9 @@ fn walk<M: Mmio>(r: &mut Reader<'_, M>, x: &mut Xhci) -> Result<(), &'static str
     for p in 0..x.ports.min(PORT_LIMIT) {
         let sc = r.word(op + 0x400 + 0x10 * u32::from(p))?;
         x.ports_read += 1;
+        if let Some(slot) = x.portsc.get_mut(usize::from(p)) {
+            *slot = sc;
+        }
         if sc & 1 != 0 {
             x.connected = x.connected.saturating_add(1);
             if let Some(slot) = x.conn.get_mut(next) {
@@ -427,8 +453,163 @@ fn walk<M: Mmio>(r: &mut Reader<'_, M>, x: &mut Xhci) -> Result<(), &'static str
         }
         off += next; // at most 0x3fffc + 32 * 0x3fc: cannot overflow
     }
+    // The pointers are read after the capability walk and their failure is recorded separately: a controller whose runtime
+    // registers are outside the window still gets its second USBCMD/USBSTS reading.
+    x.ptr_stopped = pointers(r, x, op).err();
     x.usbcmd2 = r.word(op)?;
     x.usbsts2 = r.word(op + 4)?;
+    Ok(())
+}
+
+fn pointers<M: Mmio>(r: &mut Reader<'_, M>, x: &mut Xhci, op: u32) -> Result<(), &'static str> {
+    x.crcr = r.word(op + 0x18)?;
+    let (lo, hi) = (r.word(op + 0x30)?, r.word(op + 0x34)?);
+    x.dcbaap = u64::from(hi) << 32 | u64::from(lo);
+    let rt = x.rtsoff;
+    if rt % 32 != 0 {
+        return Err("RTSOFF unaligned");
+    }
+    let ir = rt.checked_add(0x20).ok_or("RTSOFF overflows")?;
+    x.ir_iman = r.word(ir)?;
+    x.ir_erstsz = r.word(ir.checked_add(8).ok_or("RTSOFF overflows")?)?;
+    let (blo, bhi) = (r.word(ir.checked_add(0x10).ok_or("RTSOFF overflows")?)?, r.word(ir.checked_add(0x14).ok_or("RTSOFF overflows")?)?);
+    x.ir_erstba = u64::from(bhi) << 32 | u64::from(blo);
+    let (dlo, dhi) = (r.word(ir.checked_add(0x18).ok_or("RTSOFF overflows")?)?, r.word(ir.checked_add(0x1c).ok_or("RTSOFF overflows")?)?);
+    x.ir_erdp = u64::from(dhi) << 32 | u64::from(dlo);
+    Ok(())
+}
+
+// ---- Intel port routing (read-only) --------------------------------------------------------------------------------------
+
+/// Intel xHCI vendor-specific PCI configuration registers that decide which USB 2.0 ports the xHCI owns and whether the
+/// SuperSpeed lanes are enabled (the registers Linux's `usb_enable_intel_xhci_ports` writes). Only ever read here.
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+pub struct Routing {
+    /// 0xD0 XUSB2PR: bit n set routes USB 2.0 port n+1 to the xHCI, clear leaves it with its EHCI.
+    pub xusb2pr: u32,
+    /// 0xD4 XUSB2PRM: which of those ports can be routed at all.
+    pub xusb2prm: u32,
+    /// 0xD8 USB3_PSSEN: SuperSpeed port enables, and 0xDC USB3PRM the ports that can be enabled.
+    pub usb3_pssen: u32,
+    pub usb3prm: u32,
+}
+/// USB 2.0 ports the xHCI of an 8-Series PCH has (the survey photo shows `usb2.00 ports 1+15`).
+pub const ROUTING_PORT_MASK: u32 = 0x7fff;
+impl Routing {
+    pub fn usb2_routable(&self) -> u32 {
+        self.xusb2prm & ROUTING_PORT_MASK
+    }
+    pub fn usb2_to_xhci(&self) -> u32 {
+        self.xusb2pr & self.usb2_routable()
+    }
+    pub fn usb2_to_ehci(&self) -> u32 {
+        !self.xusb2pr & self.usb2_routable()
+    }
+    pub fn usb3_enabled(&self) -> u32 {
+        self.usb3_pssen & self.usb3prm
+    }
+    pub fn usb3_disabled(&self) -> u32 {
+        !self.usb3_pssen & self.usb3prm
+    }
+}
+
+pub fn intel_routing<P: Pci>(p: &mut P, f: &UsbFn) -> Option<Routing> {
+    if f.vendor != 0x8086 || !f.is_xhci() || f.header & 0x7f != 0 {
+        return None;
+    }
+    let r = Routing {
+        xusb2pr: word(p, f.bus, f.dev, f.func, 0xd0),
+        xusb2prm: word(p, f.bus, f.dev, f.func, 0xd4),
+        usb3_pssen: word(p, f.bus, f.dev, f.func, 0xd8),
+        usb3prm: word(p, f.bus, f.dev, f.func, 0xdc),
+    };
+    // A function without these registers reads all ones everywhere.
+    if r.xusb2pr == 0xffff_ffff && r.xusb2prm == 0xffff_ffff && r.usb3_pssen == 0xffff_ffff && r.usb3prm == 0xffff_ffff {
+        return None;
+    }
+    Some(r)
+}
+
+// ---- EHCI (read-only) --------------------------------------------------------------------------------------------------
+
+/// EHCI registers sit in the first 0x100 bytes of a 1 KiB BAR.
+pub const EHCI_WINDOW: u32 = 0x100;
+
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+pub struct Ehci {
+    pub reads: u16,
+    pub stopped: Option<&'static str>,
+    pub caplength: u8,
+    pub version: u16,
+    pub hcs: u32,
+    pub hcc: u32,
+    pub usbcmd: u32,
+    pub usbsts: u32,
+    pub configflag: u32,
+    pub ports: u8,
+    pub portsc: [u32; 16],
+    pub connected: u8,
+    /// Ports whose Port Owner bit is set: handed to a companion controller.
+    pub companion_owned: u8,
+    /// USB legacy support in PCI configuration space: (offset, USBLEGSUP, USBLEGCTLSTS).
+    pub legacy: Option<(u8, u32, u32)>,
+}
+impl Ehci {
+    pub fn halted(&self) -> bool {
+        self.usbsts & (1 << 12) != 0
+    }
+}
+
+pub fn inspect_ehci<M: Mmio, P: Pci>(m: &mut M, p: &mut P, f: &UsbFn) -> Ehci {
+    let mut e = Ehci::default();
+    let mut r = Reader { m, reads: 0, limit: EHCI_WINDOW };
+    e.stopped = ehci_walk(&mut r, &mut e).err();
+    e.reads = r.reads;
+    // USB legacy support lives in PCI configuration space, at the offset HCCPARAMS names (EECP).
+    let mut at = ((e.hcc >> 8) & 0xff) as u8;
+    for _ in 0..8 {
+        if !(0x40..=0xf8).contains(&at) {
+            break;
+        }
+        let h = word(p, f.bus, f.dev, f.func, at);
+        if h as u8 == 1 {
+            e.legacy = Some((at, h, word(p, f.bus, f.dev, f.func, at + 4)));
+            break;
+        }
+        let next = ((h >> 8) & 0xff) as u8;
+        if next == 0 {
+            break;
+        }
+        at = next;
+    }
+    e
+}
+
+fn ehci_walk<M: Mmio>(r: &mut Reader<'_, M>, e: &mut Ehci) -> Result<(), &'static str> {
+    let w0 = r.word(0)?;
+    if w0 == 0xffff_ffff {
+        return Err("reads as all ones");
+    }
+    e.caplength = w0 as u8;
+    e.version = (w0 >> 16) as u16;
+    e.hcs = r.word(4)?;
+    e.hcc = r.word(8)?;
+    let op = u32::from(e.caplength);
+    if !(0x10..=0x40).contains(&op) || op % 4 != 0 {
+        return Err("bad CAPLENGTH");
+    }
+    e.usbcmd = r.word(op)?;
+    e.usbsts = r.word(op + 4)?;
+    e.configflag = r.word(op + 0x40)?;
+    e.ports = (e.hcs & 0xf) as u8;
+    for i in 0..e.ports {
+        let sc = r.word(op + 0x44 + 4 * u32::from(i))?;
+        if let Some(slot) = e.portsc.get_mut(usize::from(i)) {
+            *slot = sc;
+        }
+        e.connected += (sc & 1) as u8;
+        e.companion_owned += (sc >> 13 & 1) as u8;
+    }
     Ok(())
 }
 
@@ -499,6 +680,33 @@ impl Line {
         }
         for &c in t.get(i..).unwrap_or(&[]) {
             self.c(c);
+        }
+        self
+    }
+    /// A set of port numbers (bit n is port n+1) as ranges, `-` when empty: `1-8,10`.
+    #[inline(never)]
+    pub fn set(&mut self, mask: u32) -> &mut Self {
+        let mut any = false;
+        let mut i = 0u32;
+        while i < 32 {
+            if mask >> i & 1 != 0 {
+                let start = i;
+                while i + 1 < 32 && mask >> (i + 1) & 1 != 0 {
+                    i += 1;
+                }
+                if any {
+                    self.s(",");
+                }
+                any = true;
+                self.d(u64::from(start) + 1);
+                if i > start {
+                    self.s("-").d(u64::from(i) + 1);
+                }
+            }
+            i += 1;
+        }
+        if !any {
+            self.s("-");
         }
         self
     }
@@ -654,4 +862,116 @@ pub fn render_note(msg: &str, out: &mut dyn Out) {
     let mut l = Line::new();
     l.s("usb: ").s(msg);
     l.flush(out);
+}
+
+// ---- rendering of the Increment 2 additions ----------------------------------------------------------------------------
+
+/// All ports' raw PORTSC (eight per line) with counts of connected, powered, enabled and over-current ports.
+pub fn render_xhci_ports(x: &Xhci, out: &mut dyn Out) {
+    let shown = usize::from(x.ports_read).min(x.portsc.len());
+    let (mut conn, mut power, mut enabled, mut oc) = (0u32, 0u32, 0u32, 0u32);
+    for sc in x.portsc.iter().take(shown) {
+        conn += sc & 1;
+        enabled += sc >> 1 & 1;
+        oc += sc >> 3 & 1;
+        power += sc >> 9 & 1;
+    }
+    let mut l = Line::new();
+    l.s("usb:   portsc of ").d(shown as u64).s(" of ").d(u64::from(x.ports)).s(" ports: connected ").d(u64::from(conn)).s(" enabled ").d(u64::from(enabled));
+    l.s(" powered ").d(u64::from(power)).s(" over-current ").d(u64::from(oc));
+    if usize::from(x.ports_read) > shown {
+        l.s(" (first 32 shown)");
+    }
+    l.flush(out);
+    for (row, chunk) in x.portsc.get(..shown).unwrap_or(&[]).chunks(8).enumerate() {
+        l.s("usb:    ");
+        for (k, sc) in chunk.iter().enumerate() {
+            l.s(" p").d((row * 8 + k + 1) as u64).s("=").hx(u64::from(*sc), 8);
+        }
+        l.flush(out);
+    }
+}
+
+/// Ring pointers with the firmware memory class of the page each names (`class` maps an address to its memory-map type).
+pub fn render_pointers(f: &UsbFn, x: &Xhci, class: &dyn Fn(u64) -> &'static str, out: &mut dyn Out) {
+    let mut l = Line::new();
+    l.s("usb: ");
+    bdf(&mut l, f);
+    if let Some(why) = x.ptr_stopped {
+        l.s(" ring pointers not fully read: ").s(why);
+        l.flush(out);
+    }
+    let mut l = Line::new();
+    l.s("usb:   dcbaap ").x(x.dcbaap, 8).s(" [").s(class(x.dcbaap)).s("] crcr(lo) ").x(u64::from(x.crcr), 8);
+    l.s(" ir0 erstba ").x(x.ir_erstba, 8).s(" [").s(class(x.ir_erstba)).s("] erdp ").x(x.ir_erdp, 8).s(" [").s(class(x.ir_erdp)).s("]");
+    l.flush(out);
+    l.s("usb:   ir0 iman ").x(u64::from(x.ir_iman), 8).s(" erstsz ").x(u64::from(x.ir_erstsz), 8);
+    l.flush(out);
+}
+
+pub fn render_routing(f: &UsbFn, r: &Routing, out: &mut dyn Out) {
+    let mut l = Line::new();
+    l.s("usb: ");
+    bdf(&mut l, f);
+    l.s(" intel routing (pci cfg 0xd0-0xdc, read only): xusb2pr ").x(u64::from(r.xusb2pr), 8).s(" xusb2prm ").x(u64::from(r.xusb2prm), 8);
+    l.flush(out);
+    l.s("usb:   usb3_pssen ").x(u64::from(r.usb3_pssen), 8).s(" usb3prm ").x(u64::from(r.usb3prm), 8);
+    l.flush(out);
+    l.s("usb:   usb2 ports routable ").set(r.usb2_routable()).s(": to xhci ").set(r.usb2_to_xhci()).s(", left with ehci ").set(r.usb2_to_ehci());
+    l.flush(out);
+    l.s("usb:   superspeed ports enabled ").set(r.usb3_enabled());
+    l.flush(out);
+    l.s("usb:   superspeed ports disabled ").set(r.usb3_disabled()).s("  (bit n = port n+1; datasheet layout, unverified here)");
+    l.flush(out);
+}
+
+fn ehci_speed(sc: u32) -> &'static str {
+    if sc >> 2 & 1 != 0 {
+        "hs"
+    } else if sc >> 10 & 3 == 1 {
+        "ls"
+    } else {
+        "fs?"
+    }
+}
+
+pub fn render_ehci(f: &UsbFn, e: &Ehci, out: &mut dyn Out) {
+    let mut l = Line::new();
+    l.s("usb: ehci ");
+    bdf(&mut l, f);
+    l.s(" ").hx(u64::from(f.vendor), 4).s(":").hx(u64::from(f.device), 4).s(" hci ").x(u64::from(e.version), 4).s(" ports ").d(u64::from(e.ports));
+    l.s(" companions ").d(u64::from(e.hcs >> 12 & 0xf)).s(" x ").d(u64::from(e.hcs >> 8 & 0xf)).s(" cmd ").x(u64::from(e.usbcmd), 8).s(" sts ").x(u64::from(e.usbsts), 8);
+    l.s(" halted ").d(u64::from(e.halted())).s(" configflag ").d(u64::from(e.configflag & 1));
+    l.flush(out);
+    if let Some(why) = e.stopped {
+        l.s("usb:   walk stopped: ").s(why).s(" after ").d(u64::from(e.reads)).s(" reads");
+        l.flush(out);
+    }
+    let shown = usize::from(e.ports).min(e.portsc.len());
+    for (row, chunk) in e.portsc.get(..shown).unwrap_or(&[]).chunks(8).enumerate() {
+        l.s("usb:    ");
+        for (k, sc) in chunk.iter().enumerate() {
+            l.s(" p").d((row * 8 + k + 1) as u64).s("=").hx(u64::from(*sc), 8);
+        }
+        l.flush(out);
+    }
+    l.s("usb:   connected ").d(u64::from(e.connected)).s(" companion-owned ").d(u64::from(e.companion_owned));
+    if let Some((off, sup, ctl)) = e.legacy {
+        l.s(" legacy@").x(u64::from(off), 2).s(" bios ").d(u64::from(sup >> 16 & 1)).s(" os ").d(u64::from(sup >> 24 & 1)).s(" smi ").x(u64::from(ctl), 8);
+    } else {
+        l.s(" no-legacy");
+    }
+    l.flush(out);
+    // An Intel PCH EHCI normally has two root ports that feed an internal "rate matching hub" (Windows shows it as a Generic
+    // USB Hub, Linux as 8087:0024 / 8087:8000); the physical ports hang off that hub. A connected high-speed root port is
+    // therefore probably that hub, and the devices behind it, and which XUSB2PR bit they use, are not visible without
+    // enumerating it. This is a hypothesis for the owner to check, not something the survey establishes.
+    for (i, sc) in e.portsc.iter().take(shown).enumerate() {
+        if sc & 1 == 0 {
+            continue;
+        }
+        l.s("usb:   ehci root port ").d(i as u64 + 1).s(" connected ").s(ehci_speed(*sc)).s(" enabled ").d(u64::from(sc >> 2 & 1)).s(" owner ").s(if sc >> 13 & 1 != 0 { "companion" } else { "ehci" });
+        l.s(" (a hub behind it? devices below it are not visible)");
+        l.flush(out);
+    }
 }

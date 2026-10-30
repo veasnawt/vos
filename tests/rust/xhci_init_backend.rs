@@ -344,13 +344,16 @@ fn limitation_a_consistent_liar_is_not_detected() {
 }
 
 #[test]
-fn a_controller_with_more_than_16_ports_is_refused_without_reading_ports() {
-    let mut h = SH::with(|q| q.ports = 17);
-    ok(&mut h, Req::Bind);
-    let d = ok(&mut h, Req::Qualify);
-    assert_eq!(d.accepted.unwrap().to, Phase::Refused);
-    assert_eq!(h.s.machine().terminal_reason(), Some(Reason::BadCapabilities));
-    assert!(h.log.last().unwrap().io.iter().all(|l| !l.starts_with("R portsc")), "no port register was read");
+fn a_controller_with_more_than_31_ports_is_refused_without_reading_ports() {
+    // 31 is the bound of the u32 port mask; 16 (the old bound) and 21 (the Dell OptiPlex 9020) are accepted.
+    for ports in [32u8, 64, 255] {
+        let mut h = SH::with(|q| q.ports = ports);
+        ok(&mut h, Req::Bind);
+        let d = ok(&mut h, Req::Qualify);
+        assert_eq!(d.accepted.unwrap().to, Phase::Refused);
+        assert_eq!(h.s.machine().terminal_reason(), Some(Reason::BadCapabilities), "{ports}");
+        assert!(h.log.last().unwrap().io.iter().all(|l| !l.starts_with("R portsc")), "{ports}: no port register was read");
+    }
 }
 
 #[test]
@@ -1151,6 +1154,24 @@ fn export_session_traces_for_the_oracle() {
             writeln!(out, "L {}", e.ledger).unwrap();
         }
     }
+}
+
+#[test]
+fn the_physical_port_count_of_21_is_read_in_full_and_a_late_attachment_on_the_last_port_is_seen() {
+    for ports in [17u8, 21, 31] {
+        let mut h = SH::with(|q| q.ports = ports);
+        h.goto(Phase::Running);
+        assert_eq!(h.s.ports(), ports);
+        h.fake().d.connected = 1 << (ports - 1);
+        ok(&mut h, Req::Ports);
+        assert_eq!(h.s.machine().devices_seen(), 1 << (ports - 1), "{ports}");
+    }
+    // Quiet ports are all read at reset too: a device on the last of 21 ports makes the reset unverified.
+    let mut h = SH::with(|q| q.ports = 21);
+    h.goto(Phase::Resetting);
+    h.fake().d.connected = 1 << 20;
+    let d = ok(&mut h, Req::Reset);
+    assert_eq!(d.accepted.unwrap().why, Rule::FaultResetUnverified);
 }
 
 // ---- Increment 1: scratchpad plans wired to the machine and the ledger ---------------------------------------------------
