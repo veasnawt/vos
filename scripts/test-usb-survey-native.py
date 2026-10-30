@@ -109,7 +109,7 @@ def lines(text):
 def common(text):
     u = '\n'.join(lines(text))
     need('usb: USB input survey v2: PCI configuration, xHCI, EHCI and firmware tables are only read; nothing is written' in u, 'banner')
-    need('usb: survey complete. Nothing was written. The machine is halted: power it off.' in u, 'closing line')
+    need('usb: survey complete. Nothing was written. The machine is halted: power it ON.' in u, 'closing line')
     need(re.search(r'usb: i8042 status 0x[0-9a-f]{2} ', u), 'PS/2 status line')
     need('usb: dma-protection facts (separate claims): table present ' in u, 'the four DMA facts are reported')
     need('DMA isolation NOT ESTABLISHED' in u and 'usb: SUMMARY DMA isolation NOT ESTABLISHED' in u, 'isolation is never claimed')
