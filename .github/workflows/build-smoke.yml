@@ -18,7 +18,7 @@ jobs:
   build-smoke:
     name: Freestanding builds and user ELF static tests
     runs-on: ubuntu-24.04
-    timeout-minutes: 30
+    timeout-minutes: 25
     steps:
       - name: Checkout repository
         uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
@@ -164,10 +164,12 @@ jobs:
   # Boots the generated images in QEMU (TCG, no KVM, no devices of the host): a representative subset of the native USB
   # survey matrix under SeaBIOS and OVMF, and the BIOS regression boots. It is deliberately NOT a required check yet; it
   # becomes one only after its stability has been shown and the "Protect main" ruleset is changed by the repository owner.
+  # Timeouts come from measured runs: the required job needed 9.7-14.1 minutes (limit 25), this job 3.5-4.7 minutes (limit 25);
+  # a hung boot is failed by the harness after 180 s per case, and the step limits (18 and 5 minutes) end a stuck run.
   qemu-runtime-smoke:
     name: QEMU runtime smoke (BIOS and UEFI)
     runs-on: ubuntu-24.04
-    timeout-minutes: 30
+    timeout-minutes: 25
     steps:
       - name: Checkout repository
         uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
@@ -219,14 +221,14 @@ jobs:
       # Each case boots an image in QEMU and checks the guest's own serial output; a missing marker, a guest panic, an
       # integrity message or a timeout fails the step. Nothing is retried.
       - name: Boot default and read-only survey images under SeaBIOS and OVMF (QEMU)
-        timeout-minutes: 25
+        timeout-minutes: 18
         run: |
           python3 -I -B scripts/test-usb-survey-native.py \
             --kernel-dir build/x86_64 --out build/usb-survey-native-ci \
             --cases bios-default-boot-with-xhci,uefi-default-boot-with-xhci,bios-default-boot-2gib-iommu,uefi-default-boot-2gib-iommu,bios-survey-one-xhci,uefi-survey-one-xhci,bios-survey-ehci-keyboard,uefi-survey-ehci-keyboard,bios-survey-intel-iommu,uefi-survey-intel-iommu,bios-survey-tables-above-1gib,uefi-survey-tables-above-1gib
 
       - name: Boot the shared-path regression entries under SeaBIOS (QEMU)
-        timeout-minutes: 8
+        timeout-minutes: 5
         run: |
           python3 -I -B scripts/test-usb-inc2-regression.py \
             --kernel build/x86_64/vos.bin --hello build/x86_64/user/hello.elf --out build/usb-inc2-regression-ci
