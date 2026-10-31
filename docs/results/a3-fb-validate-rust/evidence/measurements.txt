@@ -1,0 +1,37 @@
+== baseline: the A2 kernel build (kernel inputs identical to main fd881208d1988e18b0122d6eac73923196395aa7: no non-doc path changed between the A2 head and main); candidate: this tree; same make, same rustc nightly-2026-09-03
+== size text/data/bss (baseline | A3)
+335872 552 617984 954408
+335872 552 617984 954408
+== PT_LOAD addr/memsz (baseline | A3)
+0x0000000000100000/0x001000 0x0000000000101000/0x006000 0x0000000000107000/0x043000 0x000000000014a000/0x00e000 0x0000000000158000/0x092000 
+0x0000000000100000/0x001000 0x0000000000101000/0x006000 0x0000000000107000/0x043000 0x000000000014a000/0x00e000 0x0000000000158000/0x092000 
+== symbols (baseline | A3)
+ffffffff801088a0 000000000000020b T boot_framebuffer
+ffffffff80108ab0 0000000000000013 T boot_mmap_entry
+ffffffff80108ad0 00000000000001ba T boot_reserve
+---
+ffffffff8013f4c0 000000000000013d T boot_framebuffer
+ffffffff801088a0 0000000000000013 T boot_mmap_entry
+ffffffff801088c0 00000000000001ba T boot_reserve
+ffffffff8013d2a0 0000000000000372 t vos_kernel::fb_validate::framebuffer::validate
+== link map: boot_framebuffer input (A3)
+ .text.boot_framebuffer
+                0xffffffff8013f4c0      0x13d <worktree>/build/a3/kernel/rust/libvos_kernel.a(libvos_kernel.vos_kernel.45b20e7284a592af-cgu.0.rcgu.o)
+== bootinfo.o defines boot_framebuffer? (A3): 0
+== call sites of boot_framebuffer in vos.bin (A3)
+ffffffff80121e5d:	call   ffffffff8013f4c0 <boot_framebuffer>
+== core::panicking / core::fmt symbols in vos.bin (A3): 0
+== frames (pushes and sub rsp): C boot_framebuffer in the baseline kernel
+ffffffff801088a0:	push   %r12
+ffffffff801088ac:	push   %rbp
+ffffffff801088ad:	push   %rbx
+== frames: Rust wrapper boot_framebuffer (A3)
+ffffffff8013f583:	push   %rbx
+ffffffff8013f584:	sub    $0x30,%rsp
+(the gate sums the frames along the call chain: 80 B for the Rust chain against 24 B for the C function)
+== net input-section growth from the link maps (bytes)
+text    baseline   270960 A3   271631 net +671
+rodata  baseline    53871 A3    53842 net -29
+data    baseline      456 A3      456 net +0
+net total 642
+text slack to the next page: baseline 1827 B, A3 1187 B; rodata slack: baseline 3176 B, A3 3208 B

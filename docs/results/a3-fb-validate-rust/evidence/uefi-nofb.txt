@@ -1,0 +1,3 @@
+halt-test.sh [uefi-nofb]: qemu-system-x86_64 -machine q35 -drive if=pflash,format=raw,readonly=on,file=/usr/share/OVMF/OVMF_CODE_4M.fd -drive if=pflash,format=raw,file=<worktree>/build/a3/kernel/uefi-nofb.vars.fd -m 1G -cdrom <worktree>/build/a3/kernel/vos-uefi-nogop.iso -boot d -serial file:<worktree>/build/a3/kernel/uefi-nofb.serial.log 
+TEST PASS [uefi-nofb]: halted as expected (main, RIP ffffffff80107041), 3 marker(s) found
+uefi-nofb exit=0

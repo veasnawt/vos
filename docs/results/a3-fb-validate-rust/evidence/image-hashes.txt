@@ -1,0 +1,6 @@
+QEMU build 58e605700796ab97fad5602a6da2d100d952c87983ff57f062a685af9f7ad59a  kernel/vos.bin
+QEMU build 03e11227cfe8722719631965d104c021511140306e3a7efcba21979407ac5330  kernel/vos.iso
+QEMU build 6641c14420d98a2668af90431b77d9a6d123dade3e4e2bb8b5dc1c82aee33eff  kernel/vos-uefi.iso
+QEMU build b9a8f5778bbfeb566cf6b6d665306850795fb66416995372f81ea7b3fb36037f  kernel/vos-uefi-nogop.iso
+QEMU build 5588757aa2e20444e4585acf360da5eb47c36fcb0abff7f7278a45ef8615ec11  test-kernel/vos.iso
+QEMU build b71112bec436daf320703799c19fd8162bb3147a86650e1bede3175fff442192  test-kernel/vos-uefi.iso

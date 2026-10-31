@@ -1,0 +1,4 @@
+halt-test.sh [uefi-1920x1080]: qemu-system-x86_64 -machine q35 -drive if=pflash,format=raw,readonly=on,file=/usr/share/OVMF/OVMF_CODE_4M.fd -drive if=pflash,format=raw,file=<worktree>/build/a3/kernel/uefi-1920x1080.vars.fd -m 1G -cdrom <worktree>/build/a3/kernel/vos-uefi.iso -boot d -serial file:<worktree>/build/a3/kernel/uefi-1920x1080.serial.log -vga none -device VGA,edid=on,xres=1920,yres=1080
+screenshot <worktree>/build/a3/kernel/uefi-1920x1080.png: 1920x1080 colours ok
+TEST PASS [uefi-1920x1080]: halted as expected (main, RIP ffffffff80107041), 2 marker(s) found
+uefi-1920x1080 exit=0

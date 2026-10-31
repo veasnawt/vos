@@ -1,0 +1,135 @@
+{
+ "passed": true,
+ "cases": [
+  {
+   "case": "bios",
+   "iso": "vos.iso",
+   "symbol": "boot_framebuffer",
+   "address": "0xffffffff8013f4c0",
+   "passed": true,
+   "entry": {
+    "rip": "0xffffffff8013f4c0",
+    "boot_info": "0xffffffff8015d968",
+    "boot_fb": "0xffffffff8015d8a8"
+   },
+   "return": {
+    "rip": "0xffffffff80121e62",
+    "rax": "0x0"
+   },
+   "fb_tags": 1,
+   "boot_fb": {
+    "kind": 1,
+    "addr": "0xfd000000",
+    "size": 4096000,
+    "pitch": 5120,
+    "width": 1280,
+    "height": 800
+   },
+   "serial": "screen: framebuffer 1280x800 BGRX at 0xfd000000, pitch 5120"
+  },
+  {
+   "case": "uefi",
+   "iso": "vos-uefi.iso",
+   "symbol": "boot_framebuffer",
+   "address": "0xffffffff8013f4c0",
+   "passed": true,
+   "entry": {
+    "rip": "0xffffffff8013f4c0",
+    "boot_info": "0xffffffff8015d968",
+    "boot_fb": "0xffffffff8015d8a8"
+   },
+   "return": {
+    "rip": "0xffffffff80121e62",
+    "rax": "0x0"
+   },
+   "fb_tags": 1,
+   "boot_fb": {
+    "kind": 1,
+    "addr": "0x80000000",
+    "size": 4096000,
+    "pitch": 5120,
+    "width": 1280,
+    "height": 800
+   },
+   "serial": "screen: framebuffer 1280x800 BGRX at 0x80000000, pitch 5120"
+  },
+  {
+   "case": "uefi-nogop",
+   "iso": "vos-uefi-nogop.iso",
+   "symbol": "boot_framebuffer",
+   "address": "0xffffffff8013f4c0",
+   "passed": true,
+   "entry": {
+    "rip": "0xffffffff8013f4c0",
+    "boot_info": "0xffffffff8015d968",
+    "boot_fb": "0xffffffff8015d8a8"
+   },
+   "return": {
+    "rip": "0xffffffff80121e62",
+    "rax": "0xffffffff8014dd51"
+   },
+   "fb_tags": 0,
+   "message": "no framebuffer information",
+   "boot_fb": {
+    "kind": 0,
+    "addr": "0x0",
+    "size": 0,
+    "pitch": 0,
+    "width": 0,
+    "height": 0
+   }
+  },
+  {
+   "case": "uefi-640x480",
+   "iso": "vos-uefi.iso",
+   "symbol": "boot_framebuffer",
+   "address": "0xffffffff8013f4c0",
+   "passed": true,
+   "entry": {
+    "rip": "0xffffffff8013f4c0",
+    "boot_info": "0xffffffff8015d968",
+    "boot_fb": "0xffffffff8015d8a8"
+   },
+   "return": {
+    "rip": "0xffffffff80121e62",
+    "rax": "0x0"
+   },
+   "fb_tags": 1,
+   "boot_fb": {
+    "kind": 1,
+    "addr": "0x80000000",
+    "size": 1228800,
+    "pitch": 2560,
+    "width": 640,
+    "height": 480
+   },
+   "serial": "screen: framebuffer 640x480 BGRX at 0x80000000, pitch 2560"
+  },
+  {
+   "case": "uefi-1920x1080",
+   "iso": "vos-uefi.iso",
+   "symbol": "boot_framebuffer",
+   "address": "0xffffffff8013f4c0",
+   "passed": true,
+   "entry": {
+    "rip": "0xffffffff8013f4c0",
+    "boot_info": "0xffffffff8015d968",
+    "boot_fb": "0xffffffff8015d8a8"
+   },
+   "return": {
+    "rip": "0xffffffff80121e62",
+    "rax": "0x0"
+   },
+   "fb_tags": 1,
+   "boot_fb": {
+    "kind": 1,
+    "addr": "0x80000000",
+    "size": 8294400,
+    "pitch": 7680,
+    "width": 1920,
+    "height": 1080
+   },
+   "serial": "screen: framebuffer 1920x1080 BGRX at 0x80000000, pitch 7680"
+  }
+ ]
+}

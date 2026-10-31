@@ -22,58 +22,11 @@ static uint64_t page_up(uint64_t x)     /* callers keep x <= BOOT_MAP_LIMIT */
  * frozen differential reference and is not linked into the kernel.
  */
 
-const char *boot_framebuffer(const struct boot_info *bi, struct boot_fb *fb)
-{
-    const struct mb2_tag_framebuffer *t = bi->fb;
-
-    memset(fb, 0, sizeof(*fb));
-    if (!bi->fb_tags || !t)
-        return "no framebuffer information";
-    if (bi->fb_tags > 1)
-        return "more than one framebuffer tag";
-    if (t->tag.size < sizeof(*t))
-        return "framebuffer tag truncated";
-    if (t->type == MB2_FB_TYPE_EGA_TEXT) {
-        if (t->addr != 0xB8000 || t->width != 80 || t->height != 25 || t->bpp != 16 || t->pitch != 160)
-            return "EGA text framebuffer other than 80x25 at 0xB8000";
-        fb->kind = BOOT_FB_EGA_TEXT;
-        fb->addr = t->addr;
-        fb->size = 4000;
-        fb->pitch = t->pitch;
-        fb->width = t->width;
-        fb->height = t->height;
-        return NULL;
-    }
-    if (t->type != MB2_FB_TYPE_RGB)
-        return "framebuffer is not RGB (indexed colour is not supported)";
-    if (t->tag.size < sizeof(*t) + sizeof(struct mb2_fb_rgb))
-        return "RGB framebuffer tag without its channel layout";
-
-    const struct mb2_fb_rgb *c = (const void *)(t + 1);
-    uint64_t size = (uint64_t)t->pitch * t->height;
-
-    if (t->bpp != 32)
-        return "framebuffer is not 32 bits per pixel";
-    if (c->red_pos != 16 || c->red_size != 8 || c->green_pos != 8 || c->green_size != 8 || c->blue_pos != 0 ||
-        c->blue_size != 8)
-        return "pixel layout is not BGRX (red 16, green 8, blue 0, 8 bits each)";
-    if (t->width < BOOT_FB_MIN_W || t->height < BOOT_FB_MIN_H || t->width > BOOT_FB_MAX_DIM ||
-        t->height > BOOT_FB_MAX_DIM)
-        return "framebuffer dimensions outside 320x200 to 8192x8192";
-    if (t->pitch % 4 || (uint64_t)t->pitch < (uint64_t)t->width * 4 || t->pitch > BOOT_FB_MAX_PITCH)
-        return "framebuffer pitch below width x 4, unaligned or too large";
-    if (size > BOOT_FB_MAX_BYTES)
-        return "framebuffer larger than 32 MiB";
-    if (t->addr == 0 || t->addr % 4 || t->addr + size < t->addr)
-        return "framebuffer address zero, unaligned or wrapping";
-    fb->kind = BOOT_FB_BGRX32;
-    fb->addr = t->addr;
-    fb->size = size;
-    fb->pitch = t->pitch;
-    fb->width = t->width;
-    fb->height = t->height;
-    return NULL;
-}
+/*
+ * A3: boot_framebuffer is Rust (arch/x86_64/rust/fb_validate.rs, kernel/rust/mb2/framebuffer.rs); its declaration and
+ * contract are in bootinfo.h and are unchanged. The accepted C version is kept verbatim in
+ * tests/host/reference/bootinfo_ref.c as the frozen differential reference and is not linked into the kernel.
+ */
 
 const struct mb2_mmap_entry *boot_mmap_entry(const struct boot_info *bi, uint32_t i)
 {

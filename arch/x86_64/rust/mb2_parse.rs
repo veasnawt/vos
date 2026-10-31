@@ -26,8 +26,9 @@ pub struct BootInfo {
     mmap_entries: u32,
     modules: [BootModule; BOOT_MAX_MODULES as usize],
     module_count: u32,
-    fb: *const u8,
-    fb_tags: u32,
+    /// A3 (`boot_framebuffer`) reads these two; every other field stays private to this module.
+    pub(crate) fb: *const u8,
+    pub(crate) fb_tags: u32,
     efi: i32,
     efi_mmap: *const u8,
     efi_mmap_tags: u32,
