@@ -49,14 +49,14 @@ and everything after it (schedules, enumeration) is outside this increment.
 
 | Check | Result |
 | --- | --- |
-| Hosted gate `scripts/test-usb3a.py` (not a CI job) | **PASS**: [result](usb3a-ehci-model/evidence/gate-result.json) |
+| Hosted gate `scripts/test-usb3a.py` | **PASS** locally: [result](usb3a-ehci-model/evidence/gate-result.json). It also runs as one step of the existing Build smoke job (see CI below). |
 | Static isolation | Model is `no_std` and `forbid(unsafe_code)`; 13 banned constructs (unsafe, extern, asm, std, alloc, `core::ptr`, volatile, `core::arch`, `no_mangle`, `#[link]`, register-style `fn read*`/`write*`, `static mut`, I/O traits) are absent; `Makefile`, `user/`, `arch/`, `kernel/` and `tools/` do not mention the crate, and no `#[path]` module of the production Rust root reaches it. |
 | Compile-fail controls | 4/4: machine state cannot be forged, a machine cannot be built by hand, an `Event` has no way to be performed, and unsafe code is rejected. |
 | Rust tests | 17/17: both Dell fixtures and their provenance; qualification versus readiness; the full abstract sequence on each Dell controller (exact events: `0x68` semaphore, SMI control value 0, USBCMD `0x01`, `0x00`, `0x02`); firmware non-release and revocation; SMI refusal and timeout; schedule, halt and reset timeouts; unverified reset; host error and read failure; missing, inferred, contradictory and malformed facts; stale observations; ordering and terminal phases; no-legacy and already-owned paths; companion refusal; a seeded safety property over 3,000 streams of 60 operations (60% of the operations guided deep into the protocol) checked against an independent tracker; rule and reason coverage. |
 | Independent reference | A second implementation written from the register definitions (`scripts/ehci_init_oracle.py`) agrees with the Rust model on 300 exported traces, 18,300 steps, covering every kind of write and failure; it detects a corrupted trace. |
 | Bounded mutation check | 17 mutants of single safety decisions (register bit positions, ordering, freshness, timeouts, refusal rules): 17/17 killed, 1 only by the Python reference (`handoff-timeout-moved`, because the Rust tests use the model's own constant). No larger campaign was run. |
 | Production kernel build | Not run. A standalone hosted crate that no build input names needs no kernel build; the static gate checks the build inputs directly. |
-| CI | The existing workflows are unchanged and do not run this gate; adding it as a step of the existing job (the pattern of C4.1 and C4.2a) would need your approval. |
+| CI | The first CI run on the original head passed all three required checks without this gate. A follow-up commit adds exactly one step, `Verify USB.3-A hosted EHCI qualification and handoff model`, to the existing Build smoke job (no new workflow or job); its GitHub Actions step result is recorded in the PR discussion. |
 
 Failed attempts: the first gate run failed because one compile-fail control expected an error code that rustc does not print for
 that error; the expectation was corrected and the run repeated (the failed run's output was kept in the build tree).

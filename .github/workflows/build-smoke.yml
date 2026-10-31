@@ -139,6 +139,9 @@ jobs:
       - name: Verify USB.2-C4.2a hosted backend contract (no kernel code, no device access)
         run: python3 -I -B scripts/test-usb2c42a.py --rustc "$RUSTC" --out build/usb2c42a-ci
 
+      - name: Verify USB.3-A hosted EHCI qualification and handoff model (no kernel code, no device access)
+        run: python3 -I -B scripts/test-usb3a.py --rustc "$RUSTC" --out build/usb3a-ci
+
       - name: Verify the read-only USB survey (hosted tests, mutation controls, production panic-free link)
         run: |
           python3 -I -B scripts/test-usb-survey.py --rustc "$RUSTC" --out build/usb-survey-ci
