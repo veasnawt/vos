@@ -1,0 +1,206 @@
+[
+ {
+  "name": "legacy-enables-mask-wrong",
+  "breaks": "SMI enable bit 13 (SMI on OS ownership) is not cleared",
+  "killed_by": [
+   "rust-tests",
+   "oracle"
+  ],
+  "failing_tests": [
+   "smi_management_refusal_and_timeout",
+   "the_full_abstract_sequence_on_each_dell_controller"
+  ]
+ },
+ {
+  "name": "periodic-enable-bit-wrong",
+  "breaks": "the periodic schedule enable is the wrong USBCMD bit",
+  "killed_by": [
+   "rust-tests",
+   "oracle"
+  ],
+  "failing_tests": [
+   "halt_and_reset_refuse_unsafe_register_states",
+   "the_full_abstract_sequence_on_each_dell_controller"
+  ]
+ },
+ {
+  "name": "halted-bit-wrong",
+  "breaks": "HCHalted is the wrong USBSTS bit",
+  "killed_by": [
+   "rust-tests"
+  ],
+  "failing_tests": [
+   "halt_and_reset_refuse_unsafe_register_states",
+   "no_legacy_and_already_owned_paths_need_no_write",
+   "ordering_and_terminal_phases",
+   "reset_is_refused_when_companion_controllers_exist",
+   "schedule_halt_and_reset_timeouts_and_failures",
+   "seeded_random_operations_keep_the_safety_properties"
+  ]
+ },
+ {
+  "name": "periodic-status-bit-wrong",
+  "breaks": "the periodic schedule status is the wrong USBSTS bit",
+  "killed_by": [
+   "rust-tests",
+   "oracle"
+  ],
+  "failing_tests": [
+   "halt_and_reset_refuse_unsafe_register_states",
+   "no_legacy_and_already_owned_paths_need_no_write",
+   "ordering_and_terminal_phases",
+   "reset_is_refused_when_companion_controllers_exist",
+   "schedule_halt_and_reset_timeouts_and_failures",
+   "the_full_abstract_sequence_on_each_dell_controller"
+  ]
+ },
+ {
+  "name": "handoff-timeout-moved",
+  "breaks": "the handoff deadline is not one second",
+  "killed_by": [
+   "oracle"
+  ]
+ },
+ {
+  "name": "revocation-ignored",
+  "breaks": "firmware taking the OS semaphore back is not a failure",
+  "killed_by": [
+   "rust-tests",
+   "oracle"
+  ],
+  "failing_tests": [
+   "firmware_that_does_not_release_ownership_is_never_overridden",
+   "zz_every_rule_and_simple_reason_is_exercised"
+  ]
+ },
+ {
+  "name": "handoff-stability-early",
+  "breaks": "a release is stable without time passing",
+  "killed_by": [
+   "rust-tests",
+   "oracle"
+  ],
+  "failing_tests": [
+   "the_full_abstract_sequence_on_each_dell_controller"
+  ]
+ },
+ {
+  "name": "halt-ignores-schedules",
+  "breaks": "Run/Stop cleared while a schedule is enabled or active",
+  "killed_by": [
+   "rust-tests"
+  ],
+  "failing_tests": [
+   "halt_and_reset_refuse_unsafe_register_states",
+   "seeded_random_operations_keep_the_safety_properties",
+   "zz_every_rule_and_simple_reason_is_exercised"
+  ]
+ },
+ {
+  "name": "reset-while-running",
+  "breaks": "HCRESET requested without Run/Stop being clear",
+  "killed_by": [
+   "rust-tests"
+  ],
+  "failing_tests": [
+   "halt_and_reset_refuse_unsafe_register_states",
+   "seeded_random_operations_keep_the_safety_properties"
+  ]
+ },
+ {
+  "name": "smi-write-keeps-status",
+  "breaks": "the SMI control write carries the write-one-to-clear status bits",
+  "killed_by": [
+   "rust-tests"
+  ],
+  "failing_tests": [
+   "seeded_random_operations_keep_the_safety_properties",
+   "smi_management_refusal_and_timeout",
+   "the_full_abstract_sequence_on_each_dell_controller",
+   "zz_every_rule_and_simple_reason_is_exercised"
+  ]
+ },
+ {
+  "name": "handoff-without-fresh-read",
+  "breaks": "the OS semaphore is written from a stale observation",
+  "killed_by": [
+   "rust-tests"
+  ],
+  "failing_tests": [
+   "seeded_random_operations_keep_the_safety_properties",
+   "the_full_abstract_sequence_on_each_dell_controller",
+   "zz_every_rule_and_simple_reason_is_exercised"
+  ]
+ },
+ {
+  "name": "reset-without-configflag",
+  "breaks": "reset accepted without CONFIGFLAG read back clear",
+  "killed_by": [
+   "rust-tests",
+   "oracle"
+  ],
+  "failing_tests": [
+   "ordering_and_terminal_phases",
+   "schedule_halt_and_reset_timeouts_and_failures",
+   "zz_every_rule_and_simple_reason_is_exercised"
+  ]
+ },
+ {
+  "name": "halt-value-keeps-run",
+  "breaks": "the halt write does not clear Run/Stop",
+  "killed_by": [
+   "rust-tests"
+  ],
+  "failing_tests": [
+   "seeded_random_operations_keep_the_safety_properties",
+   "the_full_abstract_sequence_on_each_dell_controller",
+   "zz_every_rule_and_simple_reason_is_exercised"
+  ]
+ },
+ {
+  "name": "host-error-ignored",
+  "breaks": "a host system error is not a failure",
+  "killed_by": [
+   "rust-tests",
+   "oracle"
+  ],
+  "failing_tests": [
+   "schedule_halt_and_reset_timeouts_and_failures",
+   "zz_every_rule_and_simple_reason_is_exercised"
+  ]
+ },
+ {
+  "name": "inferred-accepted",
+  "breaks": "an inferred fact satisfies a safety requirement",
+  "killed_by": [
+   "rust-tests"
+  ],
+  "failing_tests": [
+   "missing_inferred_contradictory_and_malformed_facts",
+   "zz_every_rule_and_simple_reason_is_exercised"
+  ]
+ },
+ {
+  "name": "companion-bound-off-by-one",
+  "breaks": "N_PORTS equal to N_CC x N_PCC is called contradictory",
+  "killed_by": [
+   "rust-tests"
+  ],
+  "failing_tests": [
+   "reset_is_refused_when_companion_controllers_exist",
+   "zz_every_rule_and_simple_reason_is_exercised"
+  ]
+ },
+ {
+  "name": "observed-disagreement-accepted",
+  "breaks": "two differing observations are not contradictory",
+  "killed_by": [
+   "rust-tests",
+   "oracle"
+  ],
+  "failing_tests": [
+   "fact_reconciliation_rules",
+   "zz_every_rule_and_simple_reason_is_exercised"
+  ]
+ }
+]

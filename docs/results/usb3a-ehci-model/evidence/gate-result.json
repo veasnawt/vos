@@ -1,0 +1,127 @@
+{
+ "hosted_only": true,
+ "device_access": false,
+ "sources_sha256": {
+  "kernel/rust/usb/ehci_init/dell.rs": "4f6bcdc6f42f63836054510ec22afaead5449e4244aed7dacb30e07d36d3aa52",
+  "kernel/rust/usb/ehci_init/facts.rs": "41740948e3841aa0fb1d4a390ecaa5a32eb70819e694febb0ec6972003fdd8a0",
+  "kernel/rust/usb/ehci_init/lib.rs": "14276dd045817ceebae98af729092d2156752b4190e28369432d8fea8f50d7f3",
+  "kernel/rust/usb/ehci_init/machine.rs": "988980391c823d88c85c5419eee77bc5bb54b140fff8b82dd21de9b8a65d9bd7",
+  "kernel/rust/usb/ehci_init/types.rs": "6b796e8dce746ff76cf72610c09625505fe41dc2de4198d632cd21feac93a687",
+  "tests/rust/ehci_init_model.rs": "184e627df8c7df0d3b1a559aedccdc474bad06c4e8e4d0aaf0e514cb9ae112a5",
+  "scripts/ehci_init_oracle.py": "fbddfcc10ea0032daae1339806efa60a41a6e86e67a9b5df5310497c02080718",
+  "scripts/test-usb3a.py": "55ad356ca2c174089408e5f06e83132ee82a89e881c020bca7b6f561809b3ac2"
+ },
+ "commands": [
+  [
+   "<rustc nightly-2026-09-03>",
+   "--edition=2024",
+   "-Dwarnings",
+   "--crate-name",
+   "vos_ehci_init",
+   "--crate-type=rlib",
+   "-Coverflow-checks=yes",
+   "-Cstrip=symbols",
+   "<worktree>/kernel/rust/usb/ehci_init/lib.rs",
+   "-o",
+   "<worktree>/build/usb3a/gate-2/libvos_ehci_init.rlib"
+  ],
+  [
+   "<rustc nightly-2026-09-03>",
+   "--edition=2024",
+   "--extern",
+   "vos_ehci_init=<worktree>/build/usb3a/gate-2/libvos_ehci_init.rlib",
+   "<worktree>/build/usb3a/gate-2/cf-state-cannot-be-forged.rs",
+   "-o",
+   "<worktree>/build/usb3a/gate-2/cf-state-cannot-be-forged"
+  ],
+  [
+   "<rustc nightly-2026-09-03>",
+   "--edition=2024",
+   "--extern",
+   "vos_ehci_init=<worktree>/build/usb3a/gate-2/libvos_ehci_init.rlib",
+   "<worktree>/build/usb3a/gate-2/cf-machine-cannot-be-built-by-hand.rs",
+   "-o",
+   "<worktree>/build/usb3a/gate-2/cf-machine-cannot-be-built-by-hand"
+  ],
+  [
+   "<rustc nightly-2026-09-03>",
+   "--edition=2024",
+   "--extern",
+   "vos_ehci_init=<worktree>/build/usb3a/gate-2/libvos_ehci_init.rlib",
+   "<worktree>/build/usb3a/gate-2/cf-event-cannot-be-performed.rs",
+   "-o",
+   "<worktree>/build/usb3a/gate-2/cf-event-cannot-be-performed"
+  ],
+  [
+   "<rustc nightly-2026-09-03>",
+   "--edition=2024",
+   "--crate-name",
+   "unsafe_probe",
+   "--crate-type=rlib",
+   "<worktree>/build/usb3a/gate-2/unsafe-crate/lib.rs",
+   "-o",
+   "<worktree>/build/usb3a/gate-2/unsafe-probe.rlib"
+  ],
+  [
+   "<rustc nightly-2026-09-03>",
+   "--edition=2024",
+   "-Dwarnings",
+   "--test",
+   "-Copt-level=1",
+   "-Coverflow-checks=yes",
+   "-Cstrip=symbols",
+   "--extern",
+   "vos_ehci_init=<worktree>/build/usb3a/gate-2/libvos_ehci_init.rlib",
+   "<worktree>/tests/rust/ehci_init_model.rs",
+   "-o",
+   "<worktree>/build/usb3a/gate-2/model-tests"
+  ],
+  [
+   "<worktree>/build/usb3a/gate-2/model-tests",
+   "--test-threads=1"
+  ],
+  [
+   "/usr/bin/python3",
+   "-I",
+   "-B",
+   "<worktree>/scripts/ehci_init_oracle.py",
+   "<worktree>/build/usb3a/gate-2/trace.txt"
+  ],
+  [
+   "/usr/bin/python3",
+   "-I",
+   "-B",
+   "<worktree>/scripts/ehci_init_oracle.py",
+   "<worktree>/build/usb3a/gate-2/trace-corrupted.txt"
+  ]
+ ],
+ "static_isolation": {
+  "files_scanned_for_mentions": [
+   "Makefile",
+   "user",
+   "arch",
+   "kernel",
+   "tools"
+  ],
+  "banned_patterns": 13
+ },
+ "compile_fail_controls": {
+  "state-cannot-be-forged": "E0616",
+  "machine-cannot-be-built-by-hand": "with struct literal syntax due to private fields",
+  "event-cannot-be-performed": "E0599",
+  "unsafe-rejected": "forbid(unsafe_code)"
+ },
+ "tests_passed": 17,
+ "oracle": "oracle: 300 traces, 18300 steps, all agree",
+ "oracle_detects_corrupted_trace": true,
+ "mutation_summary": {
+  "total": 17,
+  "killed": 17,
+  "survived": [],
+  "invalid": [],
+  "killed_only_by_oracle": [
+   "handoff-timeout-moved"
+  ]
+ },
+ "pass": true
+}
