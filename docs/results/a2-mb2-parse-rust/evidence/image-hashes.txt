@@ -1,0 +1,3 @@
+QEMU build ed3f7090a0058eab9a642bce0d0c8d6677ebb8b8b9e52a1c9cceaf2e5c27bdf0  vos.bin
+QEMU build 8b731853b0ae768f8491be3f36719ccebdb6415bf8b2a2a964a1d93bd1cd1cf7  vos.iso
+QEMU build c6a261258befa409bf4f6e2a03b1e46179bdb035dd47ab542d49d84ca6952c2d  vos-uefi.iso

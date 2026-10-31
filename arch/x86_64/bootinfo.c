@@ -16,113 +16,11 @@ static uint64_t page_up(uint64_t x)     /* callers keep x <= BOOT_MAP_LIMIT */
     return (x + PAGE_SIZE - 1) & ~(PAGE_SIZE - 1);
 }
 
-/* True if the tag's string area is non-empty and ends in NUL. */
-static int terminated(const char *s, uint32_t len)
-{
-    return len > 0 && s[len - 1] == '\0';
-}
-
-const char *mb2_parse(const void *info, uint64_t info_phys, struct boot_info *bi)
-{
-    memset(bi, 0, sizeof(*bi));
-    if (info_phys == 0 || info_phys % MB2_TAG_ALIGN != 0 ||
-        info_phys > BOOT_MAP_LIMIT - sizeof(struct mb2_info))
-        return "info block address invalid";
-
-    const uint8_t *base = info;
-    uint32_t total = ((const struct mb2_info *)base)->total_size;
-
-    if (total < sizeof(struct mb2_info) + sizeof(struct mb2_tag) || total > MB2_INFO_MAX ||
-        info_phys + total > BOOT_MAP_LIMIT)
-        return "info block size invalid";
-    bi->info_start = info_phys;
-    bi->info_end = info_phys + total;
-
-    uint32_t off = sizeof(struct mb2_info);
-    while (off + sizeof(struct mb2_tag) <= total) {
-        const struct mb2_tag *tag = (const void *)(base + off);
-
-        if (tag->size < sizeof(*tag) || tag->size > total - off)
-            return "tag size invalid";
-        switch (tag->type) {
-        case MB2_TAG_END:
-            if (tag->size != sizeof(*tag))
-                return "end tag size invalid";
-            return bi->mmap ? NULL : "no memory map";
-        case MB2_TAG_CMDLINE: {
-            const struct mb2_tag_string *s = (const void *)tag;
-
-            if (bi->cmdline)
-                return "duplicate command line tag";
-            if (!terminated(s->string, tag->size - sizeof(*tag)))
-                return "command line not terminated";
-            bi->cmdline = s->string;
-            break;
-        }
-        case MB2_TAG_LOADER_NAME: {
-            const struct mb2_tag_string *s = (const void *)tag;
-
-            if (terminated(s->string, tag->size - sizeof(*tag)))
-                bi->loader = s->string;
-            break;
-        }
-        case MB2_TAG_MODULE: {
-            const struct mb2_tag_module *m = (const void *)tag;
-
-            if (tag->size < sizeof(*m))
-                return "module tag too small";
-            if (!terminated(m->cmdline, tag->size - sizeof(*m)))
-                return "module command line not terminated";
-            if (m->mod_start >= m->mod_end)
-                return "module range empty or reversed";
-            if (m->mod_end > BOOT_MAP_LIMIT)
-                return "module extends above 1 GiB";
-            if (bi->module_count >= BOOT_MAX_MODULES)
-                return "too many modules";
-            bi->modules[bi->module_count].start = m->mod_start;
-            bi->modules[bi->module_count].end = m->mod_end;
-            bi->modules[bi->module_count].cmdline = m->cmdline;
-            bi->module_count++;
-            break;
-        }
-        case MB2_TAG_FRAMEBUFFER:
-            if (!bi->fb_tags++)
-                bi->fb = (const void *)tag;
-            break;
-        case MB2_TAG_EFI32_SYSTAB:
-        case MB2_TAG_EFI64_SYSTAB:
-            bi->efi = 1;
-            break;
-        case MB2_TAG_EFI_MMAP:
-            if (!bi->efi_mmap_tags++)
-                bi->efi_mmap = tag;
-            break;
-        case MB2_TAG_EFI_BS:
-            bi->efi_bs_active = 1;
-            break;
-        case MB2_TAG_MMAP: {
-            const struct mb2_tag_mmap *m = (const void *)tag;
-
-            if (bi->mmap)
-                return "duplicate memory map tag";
-            if (tag->size < sizeof(*m) || m->entry_size < sizeof(struct mb2_mmap_entry) ||
-                m->entry_size % 8 != 0)
-                return "memory map tag invalid";
-            if (m->entry_version != 0)
-                return "memory map version unsupported";
-            if (tag->size == sizeof(*m))
-                return "memory map empty";
-            if ((tag->size - sizeof(*m)) % m->entry_size != 0)
-                return "memory map has a partial entry";
-            bi->mmap = m;
-            bi->mmap_entries = (tag->size - sizeof(*m)) / m->entry_size;
-            break;
-        }
-        }
-        off += (tag->size + MB2_TAG_ALIGN - 1) & ~(uint32_t)(MB2_TAG_ALIGN - 1);
-    }
-    return "no end tag";
-}
+/*
+ * A2: mb2_parse is Rust (arch/x86_64/rust/mb2_parse.rs, kernel/rust/mb2/parse.rs); its declaration and contract are in
+ * bootinfo.h and are unchanged. The accepted C version is kept verbatim in tests/host/reference/bootinfo_ref.c as the
+ * frozen differential reference and is not linked into the kernel.
+ */
 
 const char *boot_framebuffer(const struct boot_info *bi, struct boot_fb *fb)
 {

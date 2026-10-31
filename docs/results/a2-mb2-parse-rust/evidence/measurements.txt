@@ -1,0 +1,68 @@
+== source: base c77dabb2d84228120109c1e0f547264d99e6485e; A2 branch feat/a2-mb2-parse-rust
+== baseline kernel = Dell survey image build (602a1dc7, kernel inputs byte-identical to c77dabb2 apart from the unlinked EHCI crate), A2 = this tree; same make, same rustc nightly-2026-09-03
+== size text/data/bss (baseline | A2)
+335872 552 617984 954408
+335872 552 617984 954408
+== PT_LOAD addr/memsz (baseline | A2)
+0x0000000000100000/0x001000 0x0000000000101000/0x006000 0x0000000000107000/0x043000 0x000000000014a000/0x00e000 0x0000000000158000/0x092000 
+0x0000000000100000/0x001000 0x0000000000101000/0x006000 0x0000000000107000/0x043000 0x000000000014a000/0x00e000 0x0000000000158000/0x092000 
+== flat vos.bin sha256 (A2 build)
+ed3f7090a0058eab9a642bce0d0c8d6677ebb8b8b9e52a1c9cceaf2e5c27bdf0
+== symbols (baseline | A2)
+ffffffff80108c10 000000000000020b T boot_framebuffer
+ffffffff80108e20 0000000000000013 T boot_mmap_entry
+ffffffff80108e40 00000000000001ba T boot_reserve
+ffffffff801088a0 000000000000036c T mb2_parse
+---
+ffffffff801088a0 000000000000020b T boot_framebuffer
+ffffffff80108ab0 0000000000000013 T boot_mmap_entry
+ffffffff80108ad0 00000000000001ba T boot_reserve
+ffffffff8013fe30 0000000000000114 T mb2_parse
+== link map: mb2_parse input (A2)
+ .text.mb2_parse
+                0xffffffff8013fe30      0x114 <worktree>/build/a2/kernel/rust/libvos_kernel.a(libvos_kernel.vos_kernel.45b20e7284a592af-cgu.0.rcgu.o)
+== bootinfo.o defines mb2_parse? (A2)
+0
+== call sites of mb2_parse in vos.bin (A2)
+ffffffff80107373:	call   ffffffff8013fe30 <mb2_parse>
+== core::panicking / core::fmt symbols in vos.bin (A2)
+0
+== frame of mb2_parse: kernel C (baseline) | Rust (A2): pushes and sub rsp
+3
+5
+1
+== the one call out of Rust mb2_parse is memset(bi, 0, 1624) through the GOT:
+ffffffff8013fe9d:	mov    $0x658,%edx
+ffffffff8013fea2:	mov    %rbx,%rdi
+ffffffff8013fea5:	xor    %esi,%esi
+ffffffff8013fea7:	call   *0x18333(%rip)        # ffffffff801581e0 <_RNvNtCs5YZeFliBs6N_10vos_kernel8xhci_dma8XHCI_DMA+0x
+--
+ffffffff8013feb6:	mov    $0x658,%edx
+ffffffff8013febb:	mov    %rbx,%rdi
+ffffffff8013febe:	xor    %esi,%esi
+ffffffff8013fec0:	call   *0x1831a(%rip)        # ffffffff801581e0 <_RNvNtCs5YZeFliBs6N_10vos_kernel8xhci_dma8XHCI_DMA+0x
+--
+ffffffff8013ff16:	mov    %rax,%rdi
+ffffffff8013ff19:	mov    %rsi,%r13
+ffffffff8013ff1c:	xor    %esi,%esi
+ffffffff8013ff1e:	call   *0x182bc(%rip)        # ffffffff801581e0 <_RNvNtCs5YZeFliBs6N_10vos_kernel8xhci_dma8XHCI_DMA+0x
+--
+ffffffff8013ff34:	mov    %rsp,%rdx
+ffffffff8013ff37:	mov    %r15,%rdi
+ffffffff8013ff3a:	mov    %r14,%rsi
+ffffffff8013ff3d:	call   ffffffff801379a0 <_RINvNtNtCs5YZeFliBs6N_10vos_kernel9mb2_parse5parse4walkNtB4_4FillEB6_>
+ffffffff80109d40 T memset
+== net input-section growth from the link maps (bytes)
+text    baseline   270367 A2   270960 net +593
+rodata  baseline    53907 A2    53871 net -36
+data    baseline      456 A2      456 net +0
+net total 557
+== frames along the Rust call chain (A2): mb2_parse wrapper | walk::<Fill> (bytes of pushes + sub rsp, return addresses not counted)
+mb2_parse: 5 pushes (40 B) + sub 0x10 = 56 B
+walk: 7 pushes = 56 B, no sub; chain total 112 B
+C mb2_parse in the baseline kernel: 3 pushes = 24 B; increase +88 B (budget +256 B; ceiling 512 B)
+== sizes: mb2_parse wrapper 0x114 B + walk 0x4ad B = 1473 B (C: 0x36c = 876 B)
+ffffffff801379a0 00000000000004ad t vos_kernel::mb2_parse::parse::walk::<vos_kernel::mb2_parse::Fill>
+ffffffff8013fe30 0000000000000114 T mb2_parse
+== text/rodata slack to the next page after A2
+text slack 1827 B (baseline 2483 B); rodata slack 3176 B (baseline 3136 B)

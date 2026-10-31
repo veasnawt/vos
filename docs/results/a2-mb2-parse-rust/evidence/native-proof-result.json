@@ -1,0 +1,75 @@
+{
+ "passed": true,
+ "cases": [
+  {
+   "firmware": "bios",
+   "iso": "vos.iso",
+   "symbol": "mb2_parse",
+   "address": "0xffffffff8013fe30",
+   "passed": true,
+   "entry": {
+    "rip": "0xffffffff8013fe30",
+    "info": "0xffffffff802c8350",
+    "info_phys": "0x2c8350",
+    "boot_info": "0xffffffff8015d968"
+   },
+   "return": {
+    "rip": "0xffffffff80107378",
+    "rax": 0
+   },
+   "boot_info": {
+    "info_start": 2917200,
+    "info_end": 2919896,
+    "loader": "0xffffffff802c8380",
+    "cmdline": "0xffffffff802c8370",
+    "mmap": "0xffffffff802c83d0",
+    "mmap_entries": 9,
+    "module_count": 1,
+    "fb": "0xffffffff802c8d88",
+    "fb_tags": 1,
+    "efi": 0,
+    "efi_mmap_tags": 0
+   },
+   "total_size": 2696,
+   "serial": {
+    "loader": "GRUB 2.14-2ubuntu2.1",
+    "memory_map_entries": 9
+   }
+  },
+  {
+   "firmware": "uefi",
+   "iso": "vos-uefi.iso",
+   "symbol": "mb2_parse",
+   "address": "0xffffffff8013fe30",
+   "passed": true,
+   "entry": {
+    "rip": "0xffffffff8013fe30",
+    "info": "0xffffffff80091000",
+    "info_phys": "0x91000",
+    "boot_info": "0xffffffff8015d968"
+   },
+   "return": {
+    "rip": "0xffffffff80107378",
+    "rax": 0
+   },
+   "boot_info": {
+    "info_start": 593920,
+    "info_end": 602000,
+    "loader": "0xffffffff80091030",
+    "cmdline": "0xffffffff80091020",
+    "mmap": "0xffffffff80091060",
+    "mmap_entries": 21,
+    "module_count": 1,
+    "fb": "0xffffffff80091810",
+    "fb_tags": 1,
+    "efi": 1,
+    "efi_mmap_tags": 1
+   },
+   "total_size": 8080,
+   "serial": {
+    "loader": "GRUB 2.14-2ubuntu1",
+    "memory_map_entries": 21
+   }
+  }
+ ]
+}
