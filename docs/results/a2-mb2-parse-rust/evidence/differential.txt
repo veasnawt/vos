@@ -1,0 +1,4 @@
+random phase: 400000 inputs; 561 structural classes (outcome x module bucket x framebuffer x EFI flags), last new at input 1521335; 1151 classes including the string/map presence flags
+A2 mb2_parse differential: 1528066 inputs PASS (1128066 deterministic over 8 bases, 400000 random); result, error text and every defined boot_info field agree, Rust padding zero, guard pages never touched
+outcomes (all inputs): 0=1193447 1=12775 2=38332 3=176186 4=3295 5=13800 6=1567 7=4453 8=1709 9=10165 10=16554 11=5014 12=2 13=25 14=10452 15=14038 16=435 17=8861 18=16956
+outcomes (random phase): 0=192719 1=12567 2=33908 3=79856 4=648 5=11479 6=202 7=2722 8=668 9=8041 10=12927 11=4372 12=0 13=21 14=6731 15=12555 16=76 17=7401 18=13107

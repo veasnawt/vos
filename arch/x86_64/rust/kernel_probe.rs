@@ -22,6 +22,7 @@ pub mod efi_memory;
 mod efi_exclusion;
 mod ps2_pointer;
 mod elf_validate;
+mod mb2_parse;
 
 // SAFETY: this private kernel symbol is defined exactly once, with the scalar
 // System V C ABI declared in rust_kernel.h. It does not accept pointers.
