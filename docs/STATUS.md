@@ -207,12 +207,15 @@ the Build smoke job. Hosted verification only; physical hardware NOT TESTED. No 
 The [A2 Rust Multiboot2 parser](results/a2-mb2-parse-rust.md) is merged through PR #46 at
 `a74bcb1bbf86951075f077b19af44acc9e625381` (implementation commit `8b4bd85`): `mb2_parse` runs in Rust behind the unchanged
 `bootinfo.h` ABI, and the accepted C is kept only as a frozen differential reference (`tests/host/reference/bootinfo_ref.c`).
-`boot_framebuffer`, `boot_mmap_entry` and `boot_reserve` remain C. Verified in hosted tests and QEMU only (BIOS and UEFI);
-physical hardware NOT TESTED. Its gate runs as one step of the Build smoke job.
+`boot_framebuffer`, `boot_mmap_entry` and `boot_reserve` remained C at that merge (`boot_framebuffer` moved in A3 below). Verified in
+hosted tests and QEMU only (BIOS and UEFI); physical hardware NOT TESTED. Its gate runs as one step of the Build smoke job.
 
-The [A3 Rust framebuffer validation](results/a3-fb-validate-rust.md) is a PR candidate, not merged: `boot_framebuffer` runs in Rust
-behind the unchanged `bootinfo.h` ABI, with the accepted C kept only as a frozen differential reference. Verified in hosted tests and
-QEMU only (BIOS and UEFI, including the no-GOP image); physical hardware NOT TESTED.
+The [A3 Rust framebuffer validation](results/a3-fb-validate-rust.md) is merged through PR #48 at
+`cf23fa727d92ec7fa5f965ff2eb615f38becdd50` (implementation commit `563612a`): `boot_framebuffer` runs in Rust behind the unchanged
+`bootinfo.h` ABI, and the accepted C is kept only as a frozen differential reference (`tests/host/reference/bootinfo_ref.c`).
+`boot_mmap_entry` and `boot_reserve` remain C. Verified in hosted tests and QEMU only (BIOS and UEFI, including the no-GOP image);
+physical hardware NOT TESTED. Its gate runs as one step of the Build smoke job, which passed together with the other required
+checks on the merge commit.
 
 Rust-first kernel migration beyond the merged R1 helper and broader
 physical-hardware/architecture portability remain proposals. They require separate compatibility, unsafe/FFI/DMA,
