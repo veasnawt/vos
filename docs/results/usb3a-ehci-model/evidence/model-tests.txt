@@ -1,0 +1,22 @@
+
+running 17 tests
+test fact_reconciliation_rules ... ok
+test firmware_that_does_not_release_ownership_is_never_overridden ... ok
+test halt_and_reset_refuse_unsafe_register_states ... ok
+test malformed_capability_offset_and_caplength_are_refused_by_the_machine ... ok
+test missing_inferred_contradictory_and_malformed_facts ... ok
+test names_are_unique_and_stable ... ok
+test no_legacy_and_already_owned_paths_need_no_write ... ok
+test ordering_and_terminal_phases ... ok
+test qualification_and_readiness_are_separate_and_unknown_facts_block_only_their_steps ... ok
+test reset_is_refused_when_companion_controllers_exist ... ok
+test schedule_halt_and_reset_timeouts_and_failures ... ok
+test seeded_random_operations_keep_the_safety_properties ... ok
+test smi_management_refusal_and_timeout ... ok
+test the_full_abstract_sequence_on_each_dell_controller ... ok
+test the_model_never_assumes_what_is_behind_a_root_port ... ok
+test the_two_dell_fixtures_are_distinct_and_carry_provenance ... ok
+test zz_every_rule_and_simple_reason_is_exercised ... ok
+
+test result: ok. 17 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.10s
+
