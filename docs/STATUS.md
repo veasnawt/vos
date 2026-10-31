@@ -204,9 +204,11 @@ model of EHCI qualification and the firmware handoff, SMI masking, halt and rese
 controllers. It emits abstract events only, performs no I/O and is not linked into the kernel; its gate runs as one step of
 the Build smoke job. Hosted verification only; physical hardware NOT TESTED. No real EHCI backend exists.
 
-The [A2 Rust Multiboot2 parser](results/a2-mb2-parse-rust.md) is a PR candidate, not merged: `mb2_parse` runs in Rust behind
-the unchanged `bootinfo.h` ABI, with the accepted C kept only as a frozen differential reference. Verified in hosted tests and
-QEMU only (BIOS and UEFI); physical hardware NOT TESTED.
+The [A2 Rust Multiboot2 parser](results/a2-mb2-parse-rust.md) is merged through PR #46 at
+`a74bcb1bbf86951075f077b19af44acc9e625381` (implementation commit `8b4bd85`): `mb2_parse` runs in Rust behind the unchanged
+`bootinfo.h` ABI, and the accepted C is kept only as a frozen differential reference (`tests/host/reference/bootinfo_ref.c`).
+`boot_framebuffer`, `boot_mmap_entry` and `boot_reserve` remain C. Verified in hosted tests and QEMU only (BIOS and UEFI);
+physical hardware NOT TESTED. Its gate runs as one step of the Build smoke job.
 
 Rust-first kernel migration beyond the merged R1 helper and broader
 physical-hardware/architecture portability remain proposals. They require separate compatibility, unsafe/FFI/DMA,
