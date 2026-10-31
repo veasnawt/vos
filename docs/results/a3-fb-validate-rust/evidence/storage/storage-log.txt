@@ -1,0 +1,32 @@
+ADMISSION 2026-10-31T04:35:44Z: Antigravity A3 admission ACCEPTED, Tier 1+2 (owner-relayed). Limits: forecast 120000000, sum of step projections 139000000, expected peak 145000000, STOP 160000000, hard cap 175000000, floor 22548578304, per-step 1.25x. Worktree <worktree>. Guard dir <a3-storage> is a NEW directory named by Antigravity under the git-ignored build/ of the protected vos-r2b worktree; before-creation manifest of 2589 existing files under build/ recorded; no tracked file, no existing file touched. c_free=25291345920 headroom=2742767616. No active STOP.
+demonstration recorded: 2026-10-31T04:35:52Z existing-file manifest identical before/after guard creation; git status clean; new files only: guard.sh storage-log.txt 
+BEFORE A3/worktree-checkout: tree=0 projected=24500000 c_free=25289248768 headroom=2740670464
+AFTER  A3/worktree-checkout: rc=0 tree=24070464 growth=24070464 projected=24500000 limit(1.25x)=30625000 c_free=25289248768 headroom_above_floor=2740670464
+BEFORE A3/production-kernel-user-bios-iso: tree=24079124 projected=25000000 c_free=25287151616 headroom=2738573312
+AFTER  A3/production-kernel-user-bios-iso: rc=2 tree=26443137 growth=2364013 projected=25000000 limit(1.25x)=31250000 c_free=25287143424 headroom_above_floor=2738565120
+BEFORE A3/production-kernel-user-bios-iso-2: tree=26443180 projected=25000000 c_free=25285046272 headroom=2736467968
+AFTER  A3/production-kernel-user-bios-iso-2: rc=0 tree=47259278 growth=20816098 projected=25000000 limit(1.25x)=31250000 c_free=25285111808 headroom_above_floor=2736533504
+BEFORE A3/hosted-differential: tree=47293370 projected=4000000 c_free=25280380928 headroom=2731802624
+AFTER  A3/hosted-differential: rc=1 tree=47568966 growth=275596 projected=4000000 limit(1.25x)=5000000 c_free=25280380928 headroom_above_floor=2731802624
+BEFORE A3/hosted-differential-2: tree=47569290 projected=4000000 c_free=25278054400 headroom=2729476096
+AFTER  A3/hosted-differential-2: rc=0 tree=47848920 growth=279630 projected=4000000 limit(1.25x)=5000000 c_free=25276022784 headroom_above_floor=2727444480
+BEFORE A3/selftest-kernel-bios-iso: tree=47848920 projected=30000000 c_free=25289756672 headroom=2741178368
+AFTER  A3/selftest-kernel-bios-iso: rc=0 tree=76806294 growth=28957374 projected=30000000 limit(1.25x)=37500000 c_free=25287643136 headroom_above_floor=2739064832
+BEFORE A3/production-uefi-iso: tree=76806294 projected=14000000 c_free=25287643136 headroom=2739064832
+AFTER  A3/production-uefi-iso: rc=0 tree=89392642 growth=12586348 projected=14000000 limit(1.25x)=17500000 c_free=25287643136 headroom_above_floor=2739064832
+BEFORE A3/nogop-uefi-iso: tree=89392642 projected=15000000 c_free=25287643136 headroom=2739064832
+AFTER  A3/nogop-uefi-iso: rc=0 tree=101978894 growth=12586252 projected=15000000 limit(1.25x)=18750000 c_free=25287708672 headroom_above_floor=2739130368
+BEFORE A3/selftest-uefi-iso: tree=101978894 projected=15000000 c_free=25287708672 headroom=2739130368
+AFTER  A3/selftest-uefi-iso: rc=0 tree=116738813 growth=14759919 projected=15000000 limit(1.25x)=18750000 c_free=25287708672 headroom_above_floor=2739130368
+BEFORE A3/boots-and-selftests: tree=116742164 projected=5000000 c_free=25285672960 headroom=2737094656
+AFTER  A3/boots-and-selftests: rc=0 tree=121567674 growth=4825510 projected=5000000 limit(1.25x)=6250000 c_free=25291489280 headroom_above_floor=2742910976
+BEFORE A3/execution-proof: tree=121575773 projected=2000000 c_free=25291239424 headroom=2742661120
+AFTER  A3/execution-proof: rc=0 tree=123766825 growth=2191052 projected=2000000 limit(1.25x)=2500000 c_free=25291313152 headroom_above_floor=2742734848
+BEFORE A3/extra-gop-sizes: tree=123767489 projected=2500000 c_free=25291309056 headroom=2742730752
+AFTER  A3/extra-gop-sizes: rc=0 tree=132062507 growth=8295018 projected=2500000 limit(1.25x)=3125000 c_free=25297780736 headroom_above_floor=2749202432
+STOP: A3/extra-gop-sizes grew 8295018 B, over 1.25 x its projection (2500000)
+NOTE 2026-10-31T04:45:58Z STOP-A3 cause: step extra-gop-sizes projected 2500000 B (the two PNGs and logs) but halt-test.sh also leaves the raw screendump PPMs (1920x1080: 6220817 B, 640x480: 921615 B) and a 540672 B OVMF variable store per run (1081344 B): growth 8295018 B, 5170018 B over the 1.25x limit (3125000 B). Both UEFI cases PASSED. Tree 132062507 B (stop 160000000, cap 175000000); host headroom above floor 2749198336 B. STOP-A3 not released by me; no further guarded step run; waiting for owner/Antigravity.
+READMISSION 2026-10-31T04:56:37Z STOP-A3 archived in place as STOP-A3.archived-2026-10-31-extra-gop-sizes (sha256 4a48888895b735840d5c7e5da316daa0e34dbb7831172a3a21705e0a029b645a, content unchanged: "STOP: A3/extra-gop-sizes grew 8295018 B, over 1.25 x its projection (2500000)"). Independent approval: Antigravity incident audit, decision ACCEPTED FOR CONTROLLED RESUMPTION (owner-relayed). Verified before release: only STOP-A3 existed; archive destination was unoccupied; worktree tree=132062507 B equals the audited figure; c_free=25296211968 headroom_above_floor=2747633664 B. Root cause: my projection for extra-gop-sizes (2500000 B) counted the two PNGs and logs only; halt-test.sh also leaves the raw screendump PPMs (6220817 B and 921615 B) and a 540672 B OVMF variable store per run; measured growth 8295018 B. The original projection and the failed step record above are NOT altered. Revised allowance for that step (recorded for the audit, the step already ran and is not rerun): projection 8500000 B, allowance 10625000 B (measured growth 8295018 B is inside it). Remaining authorized scope: Step 8 only (documentation, evidence organization, local commit): projection 2000000 B, allowance 2500000 B. Unchanged global limits: worktree STOP 160000000 B, hard cap 175000000 B, C: floor 22548578304 B, per-step 1.25x. Guard enforcement stays active; no push or PR under this readmission.
+BEFORE A3/readmission-check: tree=132062507 projected=100000 c_free=25296211968 headroom=2747633664
+AFTER  A3/readmission-check: rc=0 tree=132062507 growth=0 projected=100000 limit(1.25x)=125000 c_free=25296211968 headroom_above_floor=2747633664
+BEFORE A3/step8-docs-evidence-commit: tree=132062507 projected=2000000 c_free=25294237696 headroom=2745659392

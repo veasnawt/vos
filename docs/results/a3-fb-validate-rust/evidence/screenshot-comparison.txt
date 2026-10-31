@@ -1,0 +1,17 @@
+uefi-boot.ppm vs uefi-boot.ppm: 1280x800; differing pixels 428 of 1024000; differing pixel rows 63; text rows with a difference 7
+serial lines whose text differs between the two boots: 7
+  y 76-84  baseline: '  app: module "hello" at 0x8d000-0x90348, 13128 bytes'
+            candidate: '  app: module "hello" at 0x88000-0x8b348, 13128 bytes'   -> explained by a serial line that differs
+  y 220-228  baseline: '  boot: multiboot2 info at 0x91000-0x92ff0'
+            candidate: '  boot: multiboot2 info at 0x8c000-0x8df60'   -> explained by a serial line that differs
+  y 274-282  baseline: '  boot: module 0 0x8d000-0x90348 "hello"'
+            candidate: '  boot: module 0 0x88000-0x8b348 "hello"'   -> explained by a serial line that differs
+  y 328-336  baseline: '  boot: reserved 0x91000-0x93000 multiboot2 info'
+            candidate: '  boot: reserved 0x8c000-0x8e000 multiboot2 info'   -> explained by a serial line that differs
+  y 346-354  baseline: '  boot: reserved 0x8d000-0x91000 module'
+            candidate: '  boot: reserved 0x88000-0x8c000 module'   -> explained by a serial line that differs
+  y 526-534  baseline: '  efi: 9923 frames excluded in 9 ranges from 124 descriptors, coalesced 0'
+            candidate: '  efi: 9923 frames excluded in 9 ranges from 121 descriptors, coalesced 0'   -> explained by a serial line that differs
+  y 724-732  baseline: '  rust: kernel probe PASS; fn=0xffffffff80140730 seed=0xffffffffb6c71022 salt=0xffffffff8005f8e0 result=0x26303edc755556cb'
+            candidate: '  rust: kernel probe PASS; fn=0xffffffff801409b0 seed=0xffffffffb6c71022 salt=0xffffffff8005f8e0 result=0x26303edc755556cb'   -> explained by a serial line that differs
+unexplained pixel rows: 0

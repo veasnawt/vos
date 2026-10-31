@@ -1,0 +1,48 @@
+{
+ "archive_sha256": "fb442eee0f0245001ac94a1c1c48fe6ddc690b157077d3df1a53571983dc1865",
+ "reference_sha256": "8a10854a27f94f5b4de9fdb2bdc9306beffa5149f556d48461e5fea7609251da",
+ "ownership": {
+  "boot_framebuffer_address": "ffffffff8013f4c0",
+  "call_sites": 1,
+  "panic_fmt_symbols": 0,
+  "defined_by": "libvos_kernel.a",
+  "bootinfo_o_defines_it": false
+ },
+ "stack": {
+  "rust_chain_bytes": 80,
+  "out_of_line_callees": 1,
+  "c_reference_bytes": 24,
+  "ceiling": 512,
+  "increase_ceiling": 256
+ },
+ "differential_archive_build": "random phase: 100000 inputs; 21 structural classes (outcome x tag-size class), last new at input 1298397; stopped on the plateau rule with every outcome seen at least 10 times",
+ "differential_outcomes": [
+  "A3 boot_framebuffer differential: 1396996 inputs PASS (1296996 deterministic over 12 bases, 100000 random); message and every defined boot_fb field agree, zeroed after every failure, Rust padding zero, guard pages never touched",
+  "outcomes (all inputs): ega=10438 bgrx=198125 e1=12512 e2=6588 e3=13674 e4=205804 e5=68159 e6=2853 e7=24200 e8=37038 e9=85596 e10=649095 e11=76517 e12=6397",
+  "outcomes (random phase): ega=6688 bgrx=22246 e1=12440 e2=6360 e3=1542 e4=5234 e5=8003 e6=444 e7=6435 e8=21734 e9=4866 e10=2588 e11=107 e12=1313"
+ ],
+ "differential_overflow_checked_host_build": "random phase: 100000 inputs; 21 structural classes (outcome x tag-size class), last new at input 1298397; stopped on the plateau rule with every outcome seen at least 10 times",
+ "differential_detects_broken_references": {
+  "width-minimum": "mismatch",
+  "height-minimum": "mismatch",
+  "height-maximum": "mismatch",
+  "pitch-alignment": "mismatch",
+  "pitch-below-width": "mismatch",
+  "pitch-maximum": "mismatch",
+  "size-maximum": "mismatch",
+  "address-alignment": "mismatch",
+  "address-zero": "mismatch",
+  "address-wrap": "mismatch",
+  "bits-per-pixel": "mismatch",
+  "channel-red-position": "mismatch",
+  "channel-layout-length": "mismatch",
+  "tag-truncated": "mismatch",
+  "duplicate-count": "guard-page fault",
+  "ega-address": "mismatch",
+  "ega-bytes": "mismatch",
+  "ega-bits": "mismatch",
+  "output-not-zeroed": "mismatch",
+  "message-text": "mismatch"
+ },
+ "pass": true
+}
