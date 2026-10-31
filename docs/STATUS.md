@@ -198,10 +198,11 @@ from values the survey already captured (no new reads). QEMU-only; the survey ha
 run on the Dell. The xHCI `erdp` value differed between runs in five BIOS QEMU cases; its
 cause is not established.
 
-The [USB.3-A hosted EHCI model](results/usb3a-ehci-model.md) is a PR candidate, not merged: a `no_std` Rust model of
-EHCI qualification and the firmware handoff, SMI masking, halt and reset sequence for the two Dell EHCI controllers.
-It emits abstract events only, performs no I/O and is not linked into the kernel. Hosted verification only; physical
-hardware NOT TESTED.
+The [USB.3-A hosted EHCI model](results/usb3a-ehci-model.md) is merged through PR #44 at
+`0b9fc42ec1958e9c248a21912370ea3c74e561b9` (implementation commit `23b2a38`, CI integration `f3e8233`): a `no_std` Rust
+model of EHCI qualification and the firmware handoff, SMI masking, halt and reset sequence for the two Dell EHCI
+controllers. It emits abstract events only, performs no I/O and is not linked into the kernel; its gate runs as one step of
+the Build smoke job. Hosted verification only; physical hardware NOT TESTED. No real EHCI backend exists.
 
 Rust-first kernel migration beyond the merged R1 helper and broader
 physical-hardware/architecture portability remain proposals. They require separate compatibility, unsafe/FFI/DMA,
