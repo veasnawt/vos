@@ -199,4 +199,6 @@ records. Historical checkpoint wording is preserved there.
 Every milestone publication reviews README, STATUS and ROADMAP together using
 the [documentation publication checklist](docs/milestone-publication-checklist.md).
 
-The [R2 Rust PS/2 keyboard decoder candidate](docs/results/r2-keyboard-decode-rust.md) moves only `keyboard_decode()` and its two tables behind the unchanged seven-byte C ABI. Local hosted and BIOS/UEFI 128 MiB/2 GiB gates pass; PR CI and human review/merge remain required. Controller I/O and routing remain C; USB input and physical hardware are NOT TESTED. Loaded section growth is zero; the hosted decoder microbenchmark is 1.529× the C baseline and is disclosed for review. Wider R2 and R3–R5 remain incomplete.
+The [R2 Rust PS/2 keyboard decoder](docs/results/r2-keyboard-decode-rust.md) is merged through [PR #52](https://github.com/veasnawt/vos/pull/52) at `9ab5e9f58e85dfe57f039a6a7072496f21cc9779`. Its hosted 1.529x result remains an optimization candidate requiring separate source authorization; accepted evidence is preserved. Wider R2 and R3–R5 remain incomplete.
+
+The [R2 Rust console line extraction candidate](docs/results/r2-console-line-rust.md) passes local equivalence, resource and eight BIOS/UEFI native gates. Normal extraction paths are at parity or faster in hosted measurements; the owner explicitly accepted the documented pending/capacity hosted fallback regressions for gated publication. C ABI, input ownership and controller I/O are preserved. No native USB or physical hardware claim is made.

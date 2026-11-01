@@ -1,0 +1,140 @@
+{
+  "status": "FAIL",
+  "commands": [
+    {
+      "argv": [
+        "gcc",
+        "-std=gnu11",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-Iarch/x86_64",
+        "-ffunction-sections",
+        "-fdata-sections",
+        "-Wl,--gc-sections",
+        "-fno-pie",
+        "-no-pie",
+        "-O1",
+        "-g",
+        "-fsanitize=address,undefined",
+        "-fno-sanitize-recover=all",
+        "-fno-omit-frame-pointer",
+        "-Dinput_console_take_line=input_console_take_line_reference",
+        "-c",
+        "tests/reference/input-console-take-line.c",
+        "-o",
+        "/home/veasnawt/src/vos-r2-console-line/build/console-host/sanitizer-reference.o"
+      ],
+      "log": "sanitizer-reference-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "gcc",
+        "-std=gnu11",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-Iarch/x86_64",
+        "-ffunction-sections",
+        "-fdata-sections",
+        "-Wl,--gc-sections",
+        "-fno-pie",
+        "-no-pie",
+        "-O1",
+        "-g",
+        "-fsanitize=address,undefined",
+        "-fno-sanitize-recover=all",
+        "-fno-omit-frame-pointer",
+        "tests/host/console-line-differential.c",
+        "/home/veasnawt/src/vos-r2-console-line/build/console-host/sanitizer-reference.o",
+        "/home/veasnawt/src/vos-r2-console-line/build/candidate/rust/libvos_kernel.a",
+        "-o",
+        "/home/veasnawt/src/vos-r2-console-line/build/console-host/sanitizer-differential"
+      ],
+      "log": "sanitizer-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/home/veasnawt/src/vos-r2-console-line/build/console-host/sanitizer-differential"
+      ],
+      "log": "sanitizer.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "gcc",
+        "-std=gnu11",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-Iarch/x86_64",
+        "-ffunction-sections",
+        "-fdata-sections",
+        "-Wl,--gc-sections",
+        "-fno-pie",
+        "-no-pie",
+        "-O2",
+        "-ffreestanding",
+        "-fno-builtin",
+        "-fno-stack-protector",
+        "-mgeneral-regs-only",
+        "-mno-red-zone",
+        "-fcf-protection=none",
+        "-fno-stack-clash-protection",
+        "-Dinput_console_take_line=input_console_take_line_reference",
+        "-c",
+        "tests/reference/input-console-take-line.c",
+        "-o",
+        "/home/veasnawt/src/vos-r2-console-line/build/console-host/release-reference.o"
+      ],
+      "log": "release-reference-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "gcc",
+        "-std=gnu11",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-Iarch/x86_64",
+        "-ffunction-sections",
+        "-fdata-sections",
+        "-Wl,--gc-sections",
+        "-fno-pie",
+        "-no-pie",
+        "-O2",
+        "-ffreestanding",
+        "-fno-builtin",
+        "-fno-stack-protector",
+        "-mgeneral-regs-only",
+        "-mno-red-zone",
+        "-fcf-protection=none",
+        "-fno-stack-clash-protection",
+        "tests/host/console-line-differential.c",
+        "/home/veasnawt/src/vos-r2-console-line/build/console-host/release-reference.o",
+        "/home/veasnawt/src/vos-r2-console-line/build/candidate/rust/libvos_kernel.a",
+        "-o",
+        "/home/veasnawt/src/vos-r2-console-line/build/console-host/release-differential"
+      ],
+      "log": "release-build.txt",
+      "exit_code": 1
+    }
+  ],
+  "Rust_sanitized": false,
+  "archive_sha256": "1073b5a14bba2f74ff203aa8a44dc24ad24ad4b685033bf2cd33e9797f9d2203",
+  "seed": "a76c209ecf315b84",
+  "source_sha256": {
+    "kernel/rust/input/console_line.rs": "c0d46ca34e804e3acdceb3d126c6d14be9f0c311175fb10c5a0aa6dc6e596f10",
+    "arch/x86_64/rust/console_line.rs": "dbc47286d3c42c84bd63ff96a7877218439f8839c2681b9341d749cd0d5300fb",
+    "arch/x86_64/input_console.c": "f1e2e83d4595b70878cd923394248f9232ff39497b1f8bd2bd61770ed040bef4",
+    "arch/x86_64/input_console.h": "6c15e09bb182334f8bf0f5637b6857b44d2d148fd6ff20e896c7680bf6c4f119",
+    "tests/reference/input-console-take-line.c": "5923e5f55f257426fccabd12f335abc4af30792fdda5e678e0e5f96dae0e2dc1",
+    "tests/host/console-line-differential.c": "3b2108f2e1a01b20437873aa4c3fe192afba50b13fd58ec2386760840de98f71",
+    "tests/rust/console_line.rs": "4cd18560b188221e8bafbf8844a7f2553fc4fd11e394e9672965bf74d0d00846"
+  },
+  "sanitizer": "ABI/guard PASS: 144B align4 offsets0/4/136/140, null/wrap, both editor edges, exact output edge, oversized refusal\ndifferential PASS: 222017 cases including exhaustive valid lengths/capacities, noncanonical flags, forward overlaps and seed=a76c209ecf315b84\n",
+  "error": "unexpected exit: release-build.txt"
+}

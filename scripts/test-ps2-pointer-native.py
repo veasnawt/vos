@@ -245,6 +245,25 @@ def boot(out,fw,mode,iso,symbols,disk,memory="128M",tag_memory=False):
             def command(s,expected):
                 before=data();n=prompts(before);text(s);q.tap('ret');b=wait(lambda b:prompts(b)>n)
                 need(expected.encode() in b[len(before):],'shell response '+s)
+            if 'input_console_take_line' in symbols:
+                before=data();n=prompts(before);q.execute('stop');g=GDB(folder/'gdb')
+                try:
+                    need(g.command('?').startswith(('T','S')),'stopped line-proof target')
+                    addr=symbols['input_console_take_line']
+                    need(g.command('Z0,%x,1'%addr)=='OK','install extraction breakpoint')
+                    g.send('c');text('echo rust line');q.tap('ret')
+                    stop=g.receive();need(stop.startswith(('T05','S05')),'actual extraction trap')
+                    registers=q.execute('human-monitor-command',{'command-line':'info registers'})
+                    match=re.search(r'RIP=([0-9a-fA-F]+)',registers)
+                    need(match and int(match[1],16)==addr,'Rust extraction RIP')
+                    need(g.command('z0,%x,1'%addr)=='OK','remove extraction breakpoint')
+                    row={'symbol':'input_console_take_line','RIP':hex(addr),'stop':stop}
+                    (folder/'rust-line-execution.json').write_text(json.dumps(row,indent=2)+'\n')
+                    result['native_line_call']=row;g.send('c')
+                finally:g.s.close()
+                b=wait(lambda b:prompts(b)>n)
+                need(b'user[vsh]: rust line\r\n' in b[len(before):],'native extraction command result')
+                shots['rust-line']=capture(q,folder,'rust-line')
             command('apps','hello');command('hello','Hello from VOS!')
             before=data();n=prompts(before);text('rixie');q.tap('ret')
             wait(lambda b:b.count(b'user[rixie]: Rixie> ')>before.count(b'user[rixie]: Rixie> '))
@@ -295,6 +314,7 @@ def main():
     ap.add_argument('--out',type=Path,required=True)
     ap.add_argument('--mode',choices=['normal','verify','both'],default='both')
     ap.add_argument('--memory',action='append',choices=['128M','2G'],help='reuse checked images for selected RAM sizes; default is 128M')
+    ap.add_argument('--console-line-proof',action='store_true',help='trap Rust line extraction and require genuine shell output')
     ap.add_argument('--keyboard-proof',action='store_true',help='also trap the real Rust keyboard_decode entry')
     ap.add_argument('--firmware',choices=['both','bios','uefi'],default='both',help='focused firmware retest')
     args=ap.parse_args();out=args.out.resolve();disk=args.disk.resolve()
@@ -313,7 +333,7 @@ def main():
         for mode in modes:
             kernel=(args.normal_kernel if mode=='normal' else args.verify_kernel).resolve()
             syms=subprocess.check_output(['nm','-S','--defined-only',str(kernel)],text=True)
-            symbols={n:int(next(l.split()[0] for l in syms.splitlines() if l.endswith(' '+n)),16) for n in ('pointer_decode','pointer_idle',*(['keyboard_decode'] if args.keyboard_proof else []))}
+            symbols={n:int(next(l.split()[0] for l in syms.splitlines() if l.endswith(' '+n)),16) for n in ('pointer_decode','pointer_idle',*(['keyboard_decode'] if args.keyboard_proof else []),*(['input_console_take_line'] if args.console_line_proof else []))}
             # GUI verification cases exist only in a -DVOS_GUI_VERIFY kernel.
             verify_only=any(l.endswith(' gui_test_alloc_budget') for l in syms.splitlines())
             need(verify_only==(mode=='verify'),'kernel built with matching VOS_GUI_VERIFY for '+mode)

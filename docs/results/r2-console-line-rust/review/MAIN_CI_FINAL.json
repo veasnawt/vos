@@ -1,0 +1,21 @@
+{
+  "workflows": [
+    {
+      "id": 41338602094,
+      "name": "Build smoke",
+      "status": "completed",
+      "conclusion": "success",
+      "head_sha": "9ab5e9f58e85dfe57f039a6a7072496f21cc9779",
+      "url": "https://github.com/veasnawt/vos/actions/runs/41338602094"
+    },
+    {
+      "id": 41338602121,
+      "name": "Secret history audit",
+      "status": "completed",
+      "conclusion": "success",
+      "head_sha": "9ab5e9f58e85dfe57f039a6a7072496f21cc9779",
+      "url": "https://github.com/veasnawt/vos/actions/runs/41338602121"
+    }
+  ],
+  "baseline": "9ab5e9f58e85dfe57f039a6a7072496f21cc9779"
+}

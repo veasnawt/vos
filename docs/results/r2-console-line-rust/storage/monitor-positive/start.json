@@ -1,0 +1,20 @@
+{
+  "utc": "2026-11-01T18:57:54.871401+00:00",
+  "command": [
+    "true"
+  ],
+  "projection": 0,
+  "before": {
+    "utc": "2026-11-01T18:57:47.044705+00:00",
+    "tree": 0,
+    "shared_git": 20368977,
+    "controls": 3986212,
+    "C_free": 58145722368,
+    "E_free": 124597628928,
+    "tmpfs_used": 0
+  },
+  "physical_E_required": 2136612736,
+  "physical_E_reserve": 1610612736,
+  "external_growth_allowance": 3000000,
+  "temporary_output_policy": "TMPDIR within guarded worktree; no Cargo/rustup installs; shared Git and controller growth separately counted"
+}

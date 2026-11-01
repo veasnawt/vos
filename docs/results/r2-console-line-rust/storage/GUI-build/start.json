@@ -1,0 +1,26 @@
+{
+  "utc": "2026-11-01T19:08:36.017578+00:00",
+  "command": [
+    "make",
+    "-j1",
+    "ARCH=x86_64",
+    "BUILD=build/gui-verify",
+    "USER_BUILD=build/user",
+    "TEST_DEFS=-DVOS_GUI_VERIFY",
+    "verify"
+  ],
+  "projection": 17000000,
+  "before": {
+    "utc": "2026-11-01T19:08:35.820946+00:00",
+    "tree": 112383864,
+    "shared_git": 20969754,
+    "controls": 4209230,
+    "C_free": 58141155328,
+    "E_free": 124597628928,
+    "tmpfs_used": 0
+  },
+  "physical_E_required": 1911845008,
+  "physical_E_reserve": 1610612736,
+  "external_growth_allowance": 3000000,
+  "temporary_output_policy": "TMPDIR within guarded worktree; no Cargo/rustup installs; shared Git and controller growth separately counted"
+}

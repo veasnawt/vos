@@ -1,0 +1,25 @@
+{
+  "utc": "2026-11-01T19:03:23.786086+00:00",
+  "command": [
+    "make",
+    "-j1",
+    "ARCH=x86_64",
+    "BUILD=build/candidate-opt",
+    "USER_BUILD=build/user",
+    "verify"
+  ],
+  "projection": 16000000,
+  "before": {
+    "utc": "2026-11-01T19:03:23.592466+00:00",
+    "tree": 49164443,
+    "shared_git": 20969754,
+    "controls": 4092306,
+    "C_free": 58142040064,
+    "E_free": 124597628928,
+    "tmpfs_used": 0
+  },
+  "physical_E_required": 2038283850,
+  "physical_E_reserve": 1610612736,
+  "external_growth_allowance": 3000000,
+  "temporary_output_policy": "TMPDIR within guarded worktree; no Cargo/rustup installs; shared Git and controller growth separately counted"
+}

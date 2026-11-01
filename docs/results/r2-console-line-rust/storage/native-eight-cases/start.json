@@ -1,0 +1,40 @@
+{
+  "utc": "2026-11-01T19:09:10.917547+00:00",
+  "command": [
+    "python3",
+    "-B",
+    "scripts/test-ps2-pointer-native.py",
+    "--normal-kernel",
+    "build/final/vos.bin",
+    "--verify-kernel",
+    "build/gui-verify/vos.bin",
+    "--apps-manifest",
+    "/home/veasnawt/src/vos-r2b/build/b1-storage/r-series-program/r2-keyboard/native-apps.json",
+    "--efi",
+    "/home/veasnawt/.cache/vos-n36-stage2-reverify-mdud6o1v/efi-tools/usr/lib/grub/x86_64-efi",
+    "--disk",
+    "/home/veasnawt/src/myos/build/app-console-20261025T051241Z/attempt-1/disk.img",
+    "--out",
+    "build/native",
+    "--memory",
+    "128M",
+    "--memory",
+    "2G",
+    "--keyboard-proof",
+    "--console-line-proof"
+  ],
+  "projection": 48000000,
+  "before": {
+    "utc": "2026-11-01T19:09:10.718552+00:00",
+    "tree": 129809350,
+    "shared_git": 20969754,
+    "controls": 4242219,
+    "C_free": 58141155328,
+    "E_free": 124597628928,
+    "tmpfs_used": 0
+  },
+  "physical_E_required": 1876994036,
+  "physical_E_reserve": 1610612736,
+  "external_growth_allowance": 3000000,
+  "temporary_output_policy": "TMPDIR within guarded worktree; no Cargo/rustup installs; shared Git and controller growth separately counted"
+}

@@ -1,0 +1,5 @@
+In function 'bench',
+    inlined from 'main' at tests/host/console-line-differential.c:68:42:
+tests/host/console-line-differential.c:64:36: error: SSE register return with SSE disabled
+   64 |   sink=sum;unsigned calls=5000*256;printf("%s,%s,%u,%u,%llu,%.4f,%.1f\n",names[work],impl?"Rust":"C",sample,calls,(unsigned long long)elapsed,(double)elapsed/calls,(double)calls*1e9/elapsed);
+      |                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

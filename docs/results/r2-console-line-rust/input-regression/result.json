@@ -1,0 +1,18 @@
+{
+  "passed": true,
+  "archive_sha256": "d5645ff8e105eb1ad8a71704e6b27884dc84075e20dbc148ec67271dc5c9dd3f",
+  "rust_sanitized": false,
+  "sanitizer": "invalid-state/null/alignment/overlap/overflow checks PASS\ndifferential PASS: 16777216 triplets; 52394348 byte/idle comparisons; C ABI 5/6 bytes\n",
+  "release": "invalid-state/null/alignment/overlap/overflow checks PASS\ndifferential PASS: 16777216 triplets; 52394348 byte/idle comparisons; C ABI 5/6 bytes\n",
+  "benchmark_cpu": 0,
+  "performance": "bench,C,0,3.5268,392446860740\nbench,Rust,0,5.1396,392446860740\nbench,C,1,2.2919,25769803770000000\nbench,Rust,1,3.4844,25769803770000000\nbench,C,2,4.7586,392446860740\nbench,Rust,2,6.7000,392446860740\nbench,C,0,3.3890,392446860740\nbench,Rust,0,5.0334,392446860740\nbench,C,1,2.3559,25769803770000000\nbench,Rust,1,3.4236,25769803770000000\nbench,C,2,4.7680,392446860740\nbench,Rust,2,7.1037,392446860740\nbench,C,0,3.4223,392446860740\nbench,Rust,0,5.0077,392446860740\nbench,C,1,2.3533,25769803770000000\nbench,Rust,1,3.5152,25769803770000000\nbench,C,2,4.9562,392446860740\nbench,Rust,2,6.7188,392446860740\nbench,C,0,3.3654,392446860740\nbench,Rust,0,5.1135,392446860740\nbench,C,1,2.2792,25769803770000000\nbench,Rust,1,3.5306,25769803770000000\nbench,C,2,4.7397,392446860740\nbench,Rust,2,6.8930,392446860740\nbench,C,0,3.5729,392446860740\nbench,Rust,0,5.3078,392446860740\nbench,C,1,2.7465,25769803770000000\nbench,Rust,1,4.5198,25769803770000000\nbench,C,2,5.1521,392446860740\nbench,Rust,2,6.9908,392446860740\nbench,C,0,3.5366,392446860740\nbench,Rust,0,5.2183,392446860740\nbench,C,1,2.3205,25769803770000000\nbench,Rust,1,3.4770,25769803770000000\nbench,C,2,4.8419,392446860740\nbench,Rust,2,6.8975,392446860740\nbench,C,0,3.3439,392446860740\nbench,Rust,0,5.1061,392446860740\nbench,C,1,2.3979,25769803770000000\nbench,Rust,1,3.4403,25769803770000000\nbench,C,2,4.7124,392446860740\nbench,Rust,2,6.7103,392446860740\n",
+  "rust": "\nrunning 2 tests\ntest exact_idle_and_corrupt_state ... ok\ntest layout_and_boundaries ... ok\n\ntest result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n",
+  "regressions": {
+    "xhci": "xhci host: 45713 assertions PASS; bounded read-only probing, malformed input, mapping and opt-in coverage\n",
+    "keyboard": "PASS: decoder modifiers, repeat, release, extended/Pause and unsupported keys\nPASS: acknowledged setup, bounded timeouts/drain, aux/errors and fail-closed readiness\nPASS: exact opt-in token, prompt boundary, 128-cell limit, editing, Enter and overflow rejection\n",
+    "diagnostics": "input diagnostics: default silent, explicit enable, stage/results and disable PASS\n",
+    "console": "console-handoff: 49499 assertions PASS; actual console+keyboard+editor; bounded modeled hardware/scheduler; transfers=1007 restored=1003\n"
+  },
+  "pointer_service": "GUI service PASS 978127 assertions; actual GUI+console+keyboard, allocation rollback, ownership, pointers, bounds, overflow/revocation\npointer driver context=88 decoder=5 bytes; fixed bounds\\npointer service PASS 987802 assertions; actual decoder/demux/GUI, failure, bounds, grants, transitions, overflow snapshot, cleanup\n",
+  "renderer": "PASS 562325 assertions: actual refined renderer/console; single header/full captions/no PASS badge, stride/padding/guards, viewport and fallback\npointer renderer PASS 2179862 assertions; clipping, stride, underlay restoration, surface redraw\n"
+}

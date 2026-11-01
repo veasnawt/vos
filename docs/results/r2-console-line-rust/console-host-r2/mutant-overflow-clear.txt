@@ -1,0 +1,18 @@
+
+running 1 test
+test overflow_reset ... FAILED
+
+failures:
+
+---- overflow_reset stdout ----
+
+thread 'overflow_reset' (30477) panicked at tests/rust/console_line.rs:14:137:
+assertion failed: s.cleared
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    overflow_reset
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 9 filtered out; finished in 0.00s
+

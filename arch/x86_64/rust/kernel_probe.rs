@@ -22,6 +22,7 @@ pub mod efi_memory;
 mod efi_exclusion;
 mod ps2_pointer;
 mod ps2_keyboard;
+mod console_line;
 mod elf_validate;
 mod mb2_parse;
 mod fb_validate;

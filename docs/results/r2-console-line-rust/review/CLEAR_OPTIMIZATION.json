@@ -1,0 +1,14 @@
+{
+  "cause": "LLVM lowers write_bytes and wide stores to C byte-loop memset; accepted C uses rep stosq",
+  "change": "Exact 144-byte rep stosq in existing unsafe arch memory adapter; preserves ABI, checks, forward copy and reset",
+  "why_assembly": "Minimal x86-64 memory primitive; typed Rust wide/field alternatives measured in retained clear-probe also lower to memset",
+  "invariants": [
+    "mapped exclusively owned editor",
+    "exact18 qword stores",
+    "SysV DF=0 as already required by accepted C",
+    "no stack or flags changes",
+    "compiler memory clobber retained"
+  ],
+  "checks_removed": false,
+  "previous_evidence": "build/console-host-r2"
+}

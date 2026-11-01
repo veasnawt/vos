@@ -1,0 +1,56 @@
+{
+  "status": "PASS",
+  "cases": [
+    {
+      "case": "pass",
+      "exit": 0,
+      "expected": 0
+    },
+    {
+      "case": "forecast",
+      "exit": 99,
+      "expected": 99
+    },
+    {
+      "case": "forecast-retained-stop",
+      "exit": 98
+    },
+    {
+      "case": "hard-cap",
+      "exit": 99,
+      "expected": 99
+    },
+    {
+      "case": "hard-cap-retained-stop",
+      "exit": 98
+    },
+    {
+      "case": "floor",
+      "exit": 99,
+      "expected": 99
+    },
+    {
+      "case": "floor-retained-stop",
+      "exit": 98
+    },
+    {
+      "case": "growth",
+      "exit": 98,
+      "expected": 98
+    },
+    {
+      "case": "growth-retained-stop",
+      "exit": 98
+    },
+    {
+      "case": "exclusive-lock-contention",
+      "refused": true
+    }
+  ],
+  "original_limits_preserved": true,
+  "H2_activated": false,
+  "guard_sha256": "9f8f7ddf7ef07a94488c33b92c7d51477e293b377e8f27095ac71217f28fffb0",
+  "app_input_bytes": 1403872,
+  "temporary_paths": "new root build/tmp only",
+  "approved_peak": 212250000
+}

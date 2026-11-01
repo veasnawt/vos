@@ -1,0 +1,5 @@
+{
+  "symbol": "input_console_take_line",
+  "RIP": "0xffffffff801400e0",
+  "stop": "T05thread:01;"
+}

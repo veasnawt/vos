@@ -1,0 +1,11 @@
+{
+  "status": "PASS",
+  "final_core_tests": 10,
+  "added_mutant": "empty-reset",
+  "detected_by": "zero_length",
+  "prior_9_mutations": "unchanged production core and unchanged assertions, retained console-host-final results",
+  "production_source_unchanged": true,
+  "core_sha256": "27f99d9ba83ef63a7bdb686814b42a0a0beb35fb920877cc81f330397d8d009f",
+  "final_test_sha256": "8e9954530f36074a157d03af8da238a2e12d94d816da0522c1b5d35828216c8b",
+  "driver_sha256": "6058f3301bda3c2cc20a2388ddfc76aef18d3b9d846157073c14ebcac7aa1911"
+}

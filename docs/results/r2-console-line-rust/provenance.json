@@ -1,0 +1,23 @@
+{
+  "utc": "2026-11-01T19:14:47.488273+00:00",
+  "baseline": "9ab5e9f58e85dfe57f039a6a7072496f21cc9779",
+  "source_sha256": {
+    "kernel/rust/input/console_line.rs": "27f99d9ba83ef63a7bdb686814b42a0a0beb35fb920877cc81f330397d8d009f",
+    "arch/x86_64/rust/console_line.rs": "32bdf0d337db975f6fe9f9d7373275428cd01d53073016e6ee505a18f9fe351e",
+    "arch/x86_64/input_console.c": "f1e2e83d4595b70878cd923394248f9232ff39497b1f8bd2bd61770ed040bef4",
+    "arch/x86_64/input_console.h": "6c15e09bb182334f8bf0f5637b6857b44d2d148fd6ff20e896c7680bf6c4f119",
+    "tests/reference/input-console-take-line.c": "5923e5f55f257426fccabd12f335abc4af30792fdda5e678e0e5f96dae0e2dc1",
+    "tests/rust/console_line.rs": "8e9954530f36074a157d03af8da238a2e12d94d816da0522c1b5d35828216c8b",
+    "tests/host/console-line-differential.c": "3b2108f2e1a01b20437873aa4c3fe192afba50b13fd58ec2386760840de98f71",
+    "scripts/test-console-line-rust.py": "0542508e2146f8118e4250dbf88956153f861d65af6239b77f9a0aa1a0523b7e",
+    "scripts/test-ps2-pointer-native.py": "d364dcfbacb9244f7336e8d2c08d5f4956135d653e52f9be377792cfeb6b7768"
+  },
+  "final_archive_sha256": "d5645ff8e105eb1ad8a71704e6b27884dc84075e20dbc148ec67271dc5c9dd3f",
+  "coverage_note": "Final core/FFI match console-host-final, three differential variants and nine original assertion controls. Later test-only zero_length reset assertion and tenth empty-reset mutant pass in empty-reset-control; existing nine intended assertions unchanged. Driver now includes all ten by default plus explicit separate performance-review metadata. No production source changed after final archive/native verification.",
+  "screenshots": "Unmodified QMP PNG captures from separate actual BIOS and UEFI executions; serial output and real RIP traps corroborate execution",
+  "tools": {
+    "rustc": "rustc 1.100.0-nightly (2e2b193f8 2026-09-02)",
+    "gcc": "gcc (Ubuntu 15.2.0-16ubuntu1) 15.2.0",
+    "qemu": "QEMU emulator version 10.2.1 (Debian 1:10.2.1+ds-1ubuntu3.2)"
+  }
+}
