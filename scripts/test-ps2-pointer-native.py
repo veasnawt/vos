@@ -138,12 +138,14 @@ def execution_proof(q,folder,symbols,trace):
     rows=[]
     try:
         need(g.command('?').startswith(('T','S')),'stopped owned target')
-        for name in ('pointer_idle','pointer_decode'):
+        for name in ('pointer_idle','pointer_decode',*(['keyboard_decode'] if 'keyboard_decode' in symbols else [])):
             addr=symbols[name]
             need(g.command('Z0,%x,1'%addr)=='OK','install one-shot breakpoint')
             g.send('c')
             if name=='pointer_decode':
                 q.execute('input-send-event',{'events':[{'type':'rel','data':{'axis':'x','value':0}}]})
+            if name=='keyboard_decode':
+                q.tap('shift')  # Real Set-1 call, without changing the panel.
             stop=g.receive();need(stop.startswith('T05') or stop.startswith('S05'),'actual breakpoint trap')
             regs=q.execute('human-monitor-command',{'command-line':'info registers'})
             match=re.search(r'RIP=([0-9a-fA-F]+)',regs)
@@ -159,10 +161,10 @@ def execution_proof(q,folder,symbols,trace):
     (folder/'rust-execution.json').write_text(json.dumps(rows,indent=2)+'\n')
     return rows
 
-def boot(out,fw,mode,iso,symbols,disk):
-    folder=out/(fw+'-'+mode);folder.mkdir();serial=folder/'serial.log';sock=folder/'qmp'
+def boot(out,fw,mode,iso,symbols,disk,memory="128M",tag_memory=False):
+    folder=out/(fw+'-'+mode+('-'+memory if tag_memory else ''));folder.mkdir();serial=folder/'serial.log';sock=folder/'qmp'
     events=[];shots={};oracles={};started=time.monotonic()
-    argv=['qemu-system-x86_64','-machine','q35','-accel','tcg','-m','128M','-cdrom',str(iso),
+    argv=['qemu-system-x86_64','-machine','q35','-accel','tcg','-m',memory,'-cdrom',str(iso),
           '-boot','d','-display','none','-nic','none','-vga','none',
           '-device','VGA,edid=on,xres=1024,yres=768','-serial','file:'+str(serial),
           '-qmp','unix:'+str(sock)+',server=on,wait=off','-no-reboot','-no-shutdown',
@@ -174,7 +176,7 @@ def boot(out,fw,mode,iso,symbols,disk):
         argv+=['-drive','if=pflash,format=raw,unit=0,readonly=on,file=/usr/share/OVMF/OVMF_CODE_4M.fd',
                '-drive','if=pflash,format=raw,unit=1,file='+str(variables)]
     (folder/'command.json').write_text(json.dumps(argv,indent=2)+'\n')
-    result={'passed':False,'firmware':fw,'mode':mode};q=None
+    result={'passed':False,'firmware':fw,'mode':mode,'memory':memory};q=None
     with (folder/'qemu.log').open('x') as log:
         process=subprocess.Popen(argv,cwd=REPO,stdout=log,stderr=log)
         try:
@@ -249,6 +251,19 @@ def boot(out,fw,mode,iso,symbols,disk):
             text('about');q.tap('ret');wait(lambda b:b'deterministic prototype' in b[len(before):])
             text('exit');q.tap('ret');wait(lambda b:prompts(b)>n)
             command('echo input restored','input restored')
+            if 'keyboard_decode' in symbols:
+                before=data();n=prompts(before);text('echo ')
+                q.tap('caps_lock');time.sleep(.02);q.tap('a');time.sleep(.02)
+                def shift(down):
+                    q.execute('input-send-event',{'events':[{'type':'key','data':{'down':down,'key':{'type':'qcode','data':'shift'}}}]})
+                    time.sleep(.02)
+                shift(True);q.tap('a');shift(False)
+                q.tap('caps_lock');time.sleep(.02)
+                shift(True);q.tap('1');shift(False);q.tap('ret')
+                b=wait(lambda b:prompts(b)>n)
+                need(b'user[vsh]: Aa!\r\n' in b[len(before):],'real Caps/Shift/punctuation shell output')
+                shots['keyboard-text']=capture(q,folder,'keyboard-text')
+                result['keyboard_text']={'passed':True,'expected':'Aa!','caps_shift_release':True}
             need(b'user[vsh]: q\r\n' not in data(),'pointer-demo key did not leak into shell')
             command('pwd','/')
             text('exit');q.tap('ret');final=wait(lambda b:b'native: vsh PASS, process reclaimed' in b)
@@ -279,6 +294,9 @@ def main():
     ap.add_argument('--disk',type=Path,required=True,help='accepted read-only ext2 disk image')
     ap.add_argument('--out',type=Path,required=True)
     ap.add_argument('--mode',choices=['normal','verify','both'],default='both')
+    ap.add_argument('--memory',action='append',choices=['128M','2G'],help='reuse checked images for selected RAM sizes; default is 128M')
+    ap.add_argument('--keyboard-proof',action='store_true',help='also trap the real Rust keyboard_decode entry')
+    ap.add_argument('--firmware',choices=['both','bios','uefi'],default='both',help='focused firmware retest')
     args=ap.parse_args();out=args.out.resolve();disk=args.disk.resolve()
     need(not out.exists() and out.is_relative_to(REPO/'build'),'fresh isolated output')
     need(disk.is_file() and sha(disk)==DISK_SHA256,'accepted read-only disk')
@@ -295,11 +313,12 @@ def main():
         for mode in modes:
             kernel=(args.normal_kernel if mode=='normal' else args.verify_kernel).resolve()
             syms=subprocess.check_output(['nm','-S','--defined-only',str(kernel)],text=True)
-            symbols={n:int(next(l.split()[0] for l in syms.splitlines() if l.endswith(' '+n)),16) for n in ('pointer_decode','pointer_idle')}
+            symbols={n:int(next(l.split()[0] for l in syms.splitlines() if l.endswith(' '+n)),16) for n in ('pointer_decode','pointer_idle',*(['keyboard_decode'] if args.keyboard_proof else []))}
             # GUI verification cases exist only in a -DVOS_GUI_VERIFY kernel.
             verify_only=any(l.endswith(' gui_test_alloc_budget') for l in syms.splitlines())
             need(verify_only==(mode=='verify'),'kernel built with matching VOS_GUI_VERIFY for '+mode)
             for fw,modules in [('bios',Path('/usr/lib/grub/i386-pc')),('uefi',args.efi)]:
+                if args.firmware!='both' and fw!=args.firmware:continue
                 names=['vsh','hello','rixie','gui-demo','pointer-demo']+(['gui-probe','pointer-probe'] if mode=='verify' else [])
                 cfg=out/(mode+'-'+fw+'.cfg')
                 cfg.write_text(((REPO/'arch/x86_64/grub-uefi-head.cfg').read_text() if fw=='uefi' else '')+
@@ -314,8 +333,9 @@ def main():
                        *[n+'='+str(p) for n,p in expected.items()]],out/(mode+'-'+fw+'-producer.log'),
                       dict(os.environ,TMPDIR=str(tmp),PYTHONDONTWRITEBYTECODE='1'))
                 V.validate(iso,expected,fw,out/(mode+'-'+fw+'-image-validation.log'))
-                report['cases'].append(boot(out,fw,mode,iso,symbols,disk))
-                print(mode,fw,'PASS',flush=True)
+                for memory in args.memory or ['128M']:
+                    report['cases'].append(boot(out,fw,mode,iso,symbols,disk,memory,bool(args.memory)))
+                    print(mode,fw,memory,'PASS',flush=True)
         report['passed']=True
     finally:(out/'result.json').write_text(json.dumps(report,indent=2)+'\n')
 

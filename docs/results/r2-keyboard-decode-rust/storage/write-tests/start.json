@@ -1,0 +1,22 @@
+{
+  "utc": "2026-11-01T14:20:19.351328+00:00",
+  "command": [
+    "python3",
+    "-B",
+    "/home/veasnawt/src/vos-r2b/build/b1-storage/r-series-program/r2-keyboard/write-tests.py"
+  ],
+  "projection": 1000000,
+  "before": {
+    "utc": "2026-11-01T14:20:19.162279+00:00",
+    "tree": 57216191,
+    "shared_git": 20199870,
+    "controls": 3564727,
+    "C_free": 57627283456,
+    "E_free": 124597628928,
+    "tmpfs_used": 0
+  },
+  "physical_E_required": 2022180354,
+  "physical_E_reserve": 1610612736,
+  "external_growth_allowance": 3000000,
+  "temporary_output_policy": "TMPDIR within guarded worktree; no Cargo/rustup installs; shared Git and controller growth separately counted"
+}

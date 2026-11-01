@@ -1,0 +1,22 @@
+{
+  "utc": "2026-11-01T14:45:16.391842+00:00",
+  "command": [
+    "python3",
+    "-B",
+    "/home/veasnawt/src/vos-r2b/build/b1-storage/r-series-program/r2-keyboard/publish-evidence.py"
+  ],
+  "projection": 4000000,
+  "before": {
+    "utc": "2026-11-01T14:45:14.180748+00:00",
+    "tree": 144146434,
+    "shared_git": 20199870,
+    "controls": 3711056,
+    "C_free": 57620832256,
+    "E_free": 124597628928,
+    "tmpfs_used": 0
+  },
+  "physical_E_required": 1848319868,
+  "physical_E_reserve": 1610612736,
+  "external_growth_allowance": 3000000,
+  "temporary_output_policy": "TMPDIR within guarded worktree; no Cargo/rustup installs; shared Git and controller growth separately counted"
+}

@@ -1,0 +1,145 @@
+
+/home/veasnawt/src/vos-r2-keyboard/build/keyboard-host/target-ffi.o:     file format elf64-x86-64
+
+
+Disassembly of section .text.keyboard_decode:
+
+0000000000000000 <keyboard_decode>:
+   0:	48 8d 47 ff          	lea    -0x1(%rdi),%rax
+   4:	48 83 f8 f7          	cmp    $0xfffffffffffffff7,%rax
+   8:	77 55                	ja     5f <keyboard_decode+0x5f>
+   a:	53                   	push   %rbx
+   b:	48 83 ec 02          	sub    $0x2,%rsp
+   f:	0f b6 17             	movzbl (%rdi),%edx
+  12:	44 0f b6 57 01       	movzbl 0x1(%rdi),%r10d
+  17:	44 88 14 24          	mov    %r10b,(%rsp)
+  1b:	44 0f b6 4f 02       	movzbl 0x2(%rdi),%r9d
+  20:	44 88 4c 24 01       	mov    %r9b,0x1(%rsp)
+  25:	0f b6 4f 03          	movzbl 0x3(%rdi),%ecx
+  29:	44 0f b6 47 04       	movzbl 0x4(%rdi),%r8d
+  2e:	0f b6 5f 05          	movzbl 0x5(%rdi),%ebx
+  32:	44 0f b6 5f 06       	movzbl 0x6(%rdi),%r11d
+  37:	45 84 db             	test   %r11b,%r11b
+  3a:	74 26                	je     62 <keyboard_decode+0x62>
+  3c:	41 fe cb             	dec    %r11b
+  3f:	31 c0                	xor    %eax,%eax
+  41:	88 17                	mov    %dl,(%rdi)
+  43:	44 88 57 01          	mov    %r10b,0x1(%rdi)
+  47:	44 88 4f 02          	mov    %r9b,0x2(%rdi)
+  4b:	88 4f 03             	mov    %cl,0x3(%rdi)
+  4e:	44 88 47 04          	mov    %r8b,0x4(%rdi)
+  52:	88 5f 05             	mov    %bl,0x5(%rdi)
+  55:	44 88 5f 06          	mov    %r11b,0x6(%rdi)
+  59:	48 83 c4 02          	add    $0x2,%rsp
+  5d:	5b                   	pop    %rbx
+  5e:	c3                   	ret
+  5f:	31 c0                	xor    %eax,%eax
+  61:	c3                   	ret
+  62:	40 80 fe e1          	cmp    $0xe1,%sil
+  66:	74 14                	je     7c <keyboard_decode+0x7c>
+  68:	44 0f b6 de          	movzbl %sil,%r11d
+  6c:	41 81 fb e0 00 00 00 	cmp    $0xe0,%r11d
+  73:	75 0e                	jne    83 <keyboard_decode+0x83>
+  75:	b3 01                	mov    $0x1,%bl
+  77:	45 31 db             	xor    %r11d,%r11d
+  7a:	eb c3                	jmp    3f <keyboard_decode+0x3f>
+  7c:	41 b3 05             	mov    $0x5,%r11b
+  7f:	31 db                	xor    %ebx,%ebx
+  81:	eb bc                	jmp    3f <keyboard_decode+0x3f>
+  83:	41 83 e3 7f          	and    $0x7f,%r11d
+  87:	84 db                	test   %bl,%bl
+  89:	74 17                	je     a2 <keyboard_decode+0xa2>
+  8b:	b0 02                	mov    $0x2,%al
+  8d:	41 80 fb 1d          	cmp    $0x1d,%r11b
+  91:	74 24                	je     b7 <keyboard_decode+0xb7>
+  93:	45 0f b6 db          	movzbl %r11b,%r11d
+  97:	41 83 fb 38          	cmp    $0x38,%r11d
+  9b:	74 22                	je     bf <keyboard_decode+0xbf>
+  9d:	e9 ac 00 00 00       	jmp    14e <keyboard_decode+0x14e>
+  a2:	41 0f b6 db          	movzbl %r11b,%ebx
+  a6:	83 c3 e3             	add    $0xffffffe3,%ebx
+  a9:	83 fb 1d             	cmp    $0x1d,%ebx
+  ac:	77 48                	ja     f6 <keyboard_decode+0xf6>
+  ae:	b0 01                	mov    $0x1,%al
+  b0:	ff 24 dd 00 00 00 00 	jmp    *0x0(,%rbx,8)
+			b3: R_X86_64_32S	.rodata.keyboard_decode
+  b7:	49 89 e3             	mov    %rsp,%r11
+  ba:	45 89 d1             	mov    %r10d,%r9d
+  bd:	eb 05                	jmp    c4 <keyboard_decode+0xc4>
+  bf:	4c 8d 5c 24 01       	lea    0x1(%rsp),%r11
+  c4:	41 89 c2             	mov    %eax,%r10d
+  c7:	41 f6 d2             	not    %r10b
+  ca:	45 20 ca             	and    %r9b,%r10b
+  cd:	41 08 c1             	or     %al,%r9b
+  d0:	40 84 f6             	test   %sil,%sil
+  d3:	41 0f b6 c1          	movzbl %r9b,%eax
+  d7:	41 0f b6 f2          	movzbl %r10b,%esi
+  db:	0f 49 f0             	cmovns %eax,%esi
+  de:	41 88 33             	mov    %sil,(%r11)
+  e1:	44 0f b6 14 24       	movzbl (%rsp),%r10d
+  e6:	45 31 db             	xor    %r11d,%r11d
+  e9:	44 0f b6 4c 24 01    	movzbl 0x1(%rsp),%r9d
+  ef:	31 db                	xor    %ebx,%ebx
+  f1:	e9 49 ff ff ff       	jmp    3f <keyboard_decode+0x3f>
+  f6:	40 84 f6             	test   %sil,%sil
+  f9:	0f 99 c0             	setns  %al
+  fc:	44 89 d6             	mov    %r10d,%esi
+  ff:	44 08 ce             	or     %r9b,%sil
+ 102:	40 0f 94 c6          	sete   %sil
+ 106:	40 20 c6             	and    %al,%sil
+ 109:	40 80 fe 01          	cmp    $0x1,%sil
+ 10d:	75 3f                	jne    14e <keyboard_decode+0x14e>
+ 10f:	41 0f b6 83 00 00 00 	movzbl 0x0(%r11),%eax
+ 116:	00 
+			113: R_X86_64_32S	.rodata..Lanon.c86901d9f683afd0375ca6e3bb0f6ba5.0
+ 117:	3c 60                	cmp    $0x60,%al
+ 119:	76 5d                	jbe    178 <keyboard_decode+0x178>
+ 11b:	84 d2                	test   %dl,%dl
+ 11d:	40 0f 95 c6          	setne  %sil
+ 121:	44 8d 48 e0          	lea    -0x20(%rax),%r9d
+ 125:	40 38 f1             	cmp    %sil,%cl
+ 128:	0f b6 f0             	movzbl %al,%esi
+ 12b:	41 0f b6 c1          	movzbl %r9b,%eax
+ 12f:	0f 44 c6             	cmove  %esi,%eax
+ 132:	eb 59                	jmp    18d <keyboard_decode+0x18d>
+ 134:	b0 02                	mov    $0x2,%al
+ 136:	41 89 c3             	mov    %eax,%r11d
+ 139:	41 f6 d3             	not    %r11b
+ 13c:	41 20 d3             	and    %dl,%r11b
+ 13f:	08 d0                	or     %dl,%al
+ 141:	40 84 f6             	test   %sil,%sil
+ 144:	0f b6 c0             	movzbl %al,%eax
+ 147:	41 0f b6 d3          	movzbl %r11b,%edx
+ 14b:	0f 49 d0             	cmovns %eax,%edx
+ 14e:	45 31 db             	xor    %r11d,%r11d
+ 151:	31 db                	xor    %ebx,%ebx
+ 153:	e9 e7 fe ff ff       	jmp    3f <keyboard_decode+0x3f>
+ 158:	40 84 f6             	test   %sil,%sil
+ 15b:	0f 99 c0             	setns  %al
+ 15e:	45 84 c0             	test   %r8b,%r8b
+ 161:	40 0f 94 c6          	sete   %sil
+ 165:	40 20 c6             	and    %al,%sil
+ 168:	40 30 f1             	xor    %sil,%cl
+ 16b:	45 31 db             	xor    %r11d,%r11d
+ 16e:	31 db                	xor    %ebx,%ebx
+ 170:	41 89 c0             	mov    %eax,%r8d
+ 173:	e9 c7 fe ff ff       	jmp    3f <keyboard_decode+0x3f>
+ 178:	84 d2                	test   %dl,%dl
+ 17a:	74 21                	je     19d <keyboard_decode+0x19d>
+ 17c:	41 0f b6 b3 00 00 00 	movzbl 0x0(%r11),%esi
+ 183:	00 
+			180: R_X86_64_32S	.rodata..Lanon.c86901d9f683afd0375ca6e3bb0f6ba5.1
+ 184:	40 84 f6             	test   %sil,%sil
+ 187:	0f b6 c0             	movzbl %al,%eax
+ 18a:	0f 45 c6             	cmovne %esi,%eax
+ 18d:	45 31 c9             	xor    %r9d,%r9d
+ 190:	45 31 d2             	xor    %r10d,%r10d
+ 193:	45 31 db             	xor    %r11d,%r11d
+ 196:	31 db                	xor    %ebx,%ebx
+ 198:	e9 a4 fe ff ff       	jmp    41 <keyboard_decode+0x41>
+ 19d:	45 31 c9             	xor    %r9d,%r9d
+ 1a0:	45 31 d2             	xor    %r10d,%r10d
+ 1a3:	45 31 db             	xor    %r11d,%r11d
+ 1a6:	31 db                	xor    %ebx,%ebx
+ 1a8:	31 d2                	xor    %edx,%edx
+ 1aa:	e9 92 fe ff ff       	jmp    41 <keyboard_decode+0x41>

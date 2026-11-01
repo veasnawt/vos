@@ -1,0 +1,96 @@
+{
+  "loaded_sections_identical_sizes": true,
+  "baseline": {
+    ".boot.text": {
+      "bytes": 4096,
+      "flags": 6
+    },
+    ".boot.data": {
+      "bytes": 40,
+      "flags": 3
+    },
+    ".boot.bss": {
+      "bytes": 20480,
+      "flags": 3
+    },
+    ".text": {
+      "bytes": 274432,
+      "flags": 6
+    },
+    ".rodata": {
+      "bytes": 57344,
+      "flags": 2
+    },
+    ".data": {
+      "bytes": 464,
+      "flags": 3
+    },
+    ".got": {
+      "bytes": 24,
+      "flags": 3
+    },
+    ".got.plt": {
+      "bytes": 24,
+      "flags": 3
+    },
+    ".bss": {
+      "bytes": 597504,
+      "flags": 3
+    }
+  },
+  "candidate": {
+    ".boot.text": {
+      "bytes": 4096,
+      "flags": 6
+    },
+    ".boot.data": {
+      "bytes": 40,
+      "flags": 3
+    },
+    ".boot.bss": {
+      "bytes": 20480,
+      "flags": 3
+    },
+    ".text": {
+      "bytes": 274432,
+      "flags": 6
+    },
+    ".rodata": {
+      "bytes": 57344,
+      "flags": 2
+    },
+    ".data": {
+      "bytes": 464,
+      "flags": 3
+    },
+    ".got": {
+      "bytes": 24,
+      "flags": 3
+    },
+    ".got.plt": {
+      "bytes": 24,
+      "flags": 3
+    },
+    ".bss": {
+      "bytes": 597504,
+      "flags": 3
+    }
+  },
+  "Rust_symbol_owner": [
+    "/home/veasnawt/src/vos-r2-keyboard/build/candidate/rust/libvos_kernel.a:libvos_kernel.vos_kernel.45b20e7284a592af-cgu.0.rcgu.o:0000000000000000 T keyboard_decode"
+  ],
+  "C_driver_only_imports_decoder": true,
+  "leaf_general_register_function": true,
+  "compiler_stack_frame_bytes": 10,
+  "new_state_bytes": 0,
+  "existing_state_bytes": 7,
+  "new_allocations": 0,
+  "DMA_pages": 0,
+  "host_release_median_ns": {
+    "C": 3.9064,
+    "Rust": 5.9738
+  },
+  "Rust_to_C_ratio": 1.5292340774114273,
+  "timing_scope": "host single-CPU release loop, seven samples x6000000; not kernel latency",
+  "target_object_sections": "/home/veasnawt/src/vos-r2-keyboard/build/keyboard-host/target-ffi.o  :\nsection                                             size   addr\n.text                                                  0      0\n.text.keyboard_decode                                431      0\n.rodata.keyboard_decode                              240      0\n.stack_sizes                                           9      0\n.rodata..Lanon.c86901d9f683afd0375ca6e3bb0f6ba5.0    128      0\n.rodata..Lanon.c86901d9f683afd0375ca6e3bb0f6ba5.1    128      0\n.comment                                              54      0\n.note.GNU-stack                                        0      0\nTotal                                                990\n\n\n"
+}

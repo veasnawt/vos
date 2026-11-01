@@ -1,0 +1,922 @@
+{
+  "passed": true,
+  "physical_hardware": false,
+  "cases": [
+    {
+      "passed": true,
+      "firmware": "bios",
+      "mode": "normal",
+      "memory": "128M",
+      "native_Rust_calls": [
+        {
+          "symbol": "pointer_idle",
+          "RIP": "0xffffffff801405b0",
+          "stop": "T05thread:01;"
+        },
+        {
+          "symbol": "pointer_decode",
+          "RIP": "0xffffffff801404d0",
+          "stop": "T05thread:01;"
+        },
+        {
+          "symbol": "keyboard_decode",
+          "RIP": "0xffffffff80140200",
+          "stop": "T05thread:01;"
+        }
+      ],
+      "keyboard_text": {
+        "passed": true,
+        "expected": "Aa!",
+        "caps_shift_release": true
+      },
+      "screenshots": {
+        "initial": {
+          "path": "/home/veasnawt/src/vos-r2-keyboard/build/native/bios-normal-128M/initial.png",
+          "sha256": "f498dd815f89358990086ecc48f94680f1d1abd2e83517ceedb3c1521c37558b"
+        },
+        "movement": {
+          "path": "/home/veasnawt/src/vos-r2-keyboard/build/native/bios-normal-128M/movement.png",
+          "sha256": "0a7fae58fbe30b8c016eef0d63bc04efbdfbf48887ccbd556115109bdacc4e58"
+        },
+        "press": {
+          "path": "/home/veasnawt/src/vos-r2-keyboard/build/native/bios-normal-128M/press.png",
+          "sha256": "2ccf213f2b9084a3b7b6d3006310ba4d052d21786d5e809a37e0c888c0f6bbce"
+        },
+        "click": {
+          "path": "/home/veasnawt/src/vos-r2-keyboard/build/native/bios-normal-128M/click.png",
+          "sha256": "3814e66733e1139bf7cd48891ad88d18cfcdc30c7114c2f2739a6241d2566b09"
+        },
+        "top-left": {
+          "path": "/home/veasnawt/src/vos-r2-keyboard/build/native/bios-normal-128M/top-left.png",
+          "sha256": "6fa27543f1f507ab7f51909705a5434a9e6cbe425d8c00130689f555e1ea8797"
+        },
+        "top-right": {
+          "path": "/home/veasnawt/src/vos-r2-keyboard/build/native/bios-normal-128M/top-right.png",
+          "sha256": "4a6ea51c0841bcb0d5adc058f278624e9532793c8be9840778d084aef9f567d6"
+        },
+        "bottom-right": {
+          "path": "/home/veasnawt/src/vos-r2-keyboard/build/native/bios-normal-128M/bottom-right.png",
+          "sha256": "c678e1d76abfad6e980a5667dd0627b6162e37a805ec1c11e9a83ecc57d49edc"
+        },
+        "bottom-left": {
+          "path": "/home/veasnawt/src/vos-r2-keyboard/build/native/bios-normal-128M/bottom-left.png",
+          "sha256": "5845f32844733336ab5d29eaded357d670cefdd3dacd7462b9ebfd73849816d7"
+        },
+        "final": {
+          "path": "/home/veasnawt/src/vos-r2-keyboard/build/native/bios-normal-128M/final.png",
+          "sha256": "22247cbc3428c122e571f499cc21e5a520eb86c8fbaac6a832654af304e3ded9"
+        },
+        "keyboard-text": {
+          "path": "/home/veasnawt/src/vos-r2-keyboard/build/native/bios-normal-128M/keyboard-text.png",
+          "sha256": "f135400e4054b1ccff7ad8745db7d3d4048899e145f4fdc2d4435f3f8f294d1d"
+        }
+      },
+      "pixels": {
+        "initial": {
+          "passed": true,
+          "cursor": [
+            512,
+            390
+          ],
+          "panel_rgb": "0x409ddd",
+          "width": 1024,
+          "height": 768
+        },
+        "movement": {
+          "passed": true,
+          "cursor": [
+            524,
+            382
+          ],
+          "panel_rgb": "0x409ddd",
+          "width": 1024,
+          "height": 768
+        },
+        "press": {
+          "passed": true,
+          "cursor": [
+            524,
+            382
+          ],
+          "panel_rgb": "0xe8b34e",
+          "width": 1024,
+          "height": 768
+        },
+        "click": {
+          "passed": true,
+          "cursor": [
+            524,
+            382
+          ],
+          "panel_rgb": "0x42c497",
+          "width": 1024,
+          "height": 768
+        }
+      },
+      "exact_corners": true,
+      "keyboard_mouse": true,
+      "held_exit_cleanup": true,
+      "shell_hello_rixie": true,
+      "native_cases": 0,
+      "elapsed_seconds": 18.531575861999954,
+      "serial_sha256": "80ddd1a3901e594a161fac557e0614bc8f7e87d72eaa1663df58763ca4b48fbd"
+    },
+    {
+      "passed": true,
+      "firmware": "bios",
+      "mode": "normal",
+      "memory": "2G",
+      "native_Rust_calls": [
+        {
+          "symbol": "pointer_idle",
+          "RIP": "0xffffffff801405b0",
+          "stop": "T05thread:01;"
+        },
+        {
+          "symbol": "pointer_decode",
+          "RIP": "0xffffffff801404d0",
+          "stop": "T05thread:01;"
+        },
+        {
+          "symbol": "keyboard_decode",
+          "RIP": "0xffffffff80140200",
+          "stop": "T05thread:01;"
+        }
+      ],
+      "keyboard_text": {
+        "passed": true,
+        "expected": "Aa!",
+        "caps_shift_release": true
+      },
+      "screenshots": {
+        "initial": {
+          "path": "/home/veasnawt/src/vos-r2-keyboard/build/native/bios-normal-2G/initial.png",
+          "sha256": "f498dd815f89358990086ecc48f94680f1d1abd2e83517ceedb3c1521c37558b"
+        },
+        "movement": {
+          "path": "/home/veasnawt/src/vos-r2-keyboard/build/native/bios-normal-2G/movement.png",
+          "sha256": "0a7fae58fbe30b8c016eef0d63bc04efbdfbf48887ccbd556115109bdacc4e58"
+        },
+        "press": {
+          "path": "/home/veasnawt/src/vos-r2-keyboard/build/native/bios-normal-2G/press.png",
+          "sha256": "2ccf213f2b9084a3b7b6d3006310ba4d052d21786d5e809a37e0c888c0f6bbce"
+        },
+        "click": {
+          "path": "/home/veasnawt/src/vos-r2-keyboard/build/native/bios-normal-2G/click.png",
+          "sha256": "3814e66733e1139bf7cd48891ad88d18cfcdc30c7114c2f2739a6241d2566b09"
+        },
+        "top-left": {
+          "path": "/home/veasnawt/src/vos-r2-keyboard/build/native/bios-normal-2G/top-left.png",
+          "sha256": "6fa27543f1f507ab7f51909705a5434a9e6cbe425d8c00130689f555e1ea8797"
+        },
+        "top-right": {
+          "path": "/home/veasnawt/src/vos-r2-keyboard/build/native/bios-normal-2G/top-right.png",
+          "sha256": "4a6ea51c0841bcb0d5adc058f278624e9532793c8be9840778d084aef9f567d6"
+        },
+        "bottom-right": {
+          "path": "/home/veasnawt/src/vos-r2-keyboard/build/native/bios-normal-2G/bottom-right.png",
+          "sha256": "c678e1d76abfad6e980a5667dd0627b6162e37a805ec1c11e9a83ecc57d49edc"
+        },
+        "bottom-left": {
+          "path": "/home/veasnawt/src/vos-r2-keyboard/build/native/bios-normal-2G/bottom-left.png",
+          "sha256": "5845f32844733336ab5d29eaded357d670cefdd3dacd7462b9ebfd73849816d7"
+        },
+        "final": {
+          "path": "/home/veasnawt/src/vos-r2-keyboard/build/native/bios-normal-2G/final.png",
+          "sha256": "101d2db2871c052602f669c94cdfab0497c252b5508ff5a34e2033ca2a08ebcc"
+        },
+        "keyboard-text": {
+          "path": "/home/veasnawt/src/vos-r2-keyboard/build/native/bios-normal-2G/keyboard-text.png",
+          "sha256": "f135400e4054b1ccff7ad8745db7d3d4048899e145f4fdc2d4435f3f8f294d1d"
+        }
+      },
+      "pixels": {
+        "initial": {
+          "passed": true,
+          "cursor": [
+            512,
+            390
+          ],
+          "panel_rgb": "0x409ddd",
+          "width": 1024,
+          "height": 768
+        },
+        "movement": {
+          "passed": true,
+          "cursor": [
+            524,
+            382
+          ],
+          "panel_rgb": "0x409ddd",
+          "width": 1024,
+          "height": 768
+        },
+        "press": {
+          "passed": true,
+          "cursor": [
+            524,
+            382
+          ],
+          "panel_rgb": "0xe8b34e",
+          "width": 1024,
+          "height": 768
+        },
+        "click": {
+          "passed": true,
+          "cursor": [
+            524,
+            382
+          ],
+          "panel_rgb": "0x42c497",
+          "width": 1024,
+          "height": 768
+        }
+      },
+      "exact_corners": true,
+      "keyboard_mouse": true,
+      "held_exit_cleanup": true,
+      "shell_hello_rixie": true,
+      "native_cases": 0,
+      "elapsed_seconds": 16.90974612899845,
+      "serial_sha256": "2e289ef7c41633f56e212b220ad1feed937b428cfdb8788fd14b46395fbed4b9"
+    },
+    {
+      "passed": true,
+      "firmware": "uefi",
+      "mode": "normal",
+      "memory": "128M",
+      "native_Rust_calls": [
+        {
+          "symbol": "pointer_idle",
+          "RIP": "0xffffffff801405b0",
+          "stop": "T05thread:01;"
+        },
+        {
+          "symbol": "pointer_decode",
+          "RIP": "0xffffffff801404d0",
+          "stop": "T05thread:01;"
+        },
+        {
+          "symbol": "keyboard_decode",
+          "RIP": "0xffffffff80140200",
+          "stop": "T05thread:01;"
+        }
+      ],
+      "keyboard_text": {
+        "passed": true,
+        "expected": "Aa!",
+        "caps_shift_release": true
+      },
+      "screenshots": {
+        "initial": {
+          "path": "/home/veasnawt/src/vos-r2-keyboard/build/native/uefi-normal-128M/initial.png",
+          "sha256": "f498dd815f89358990086ecc48f94680f1d1abd2e83517ceedb3c1521c37558b"
+        },
+        "movement": {
+          "path": "/home/veasnawt/src/vos-r2-keyboard/build/native/uefi-normal-128M/movement.png",
+          "sha256": "0a7fae58fbe30b8c016eef0d63bc04efbdfbf48887ccbd556115109bdacc4e58"
+        },
+        "press": {
+          "path": "/home/veasnawt/src/vos-r2-keyboard/build/native/uefi-normal-128M/press.png",
+          "sha256": "2ccf213f2b9084a3b7b6d3006310ba4d052d21786d5e809a37e0c888c0f6bbce"
+        },
+        "click": {
+          "path": "/home/veasnawt/src/vos-r2-keyboard/build/native/uefi-normal-128M/click.png",
+          "sha256": "3814e66733e1139bf7cd48891ad88d18cfcdc30c7114c2f2739a6241d2566b09"
+        },
+        "top-left": {
+          "path": "/home/veasnawt/src/vos-r2-keyboard/build/native/uefi-normal-128M/top-left.png",
+          "sha256": "6fa27543f1f507ab7f51909705a5434a9e6cbe425d8c00130689f555e1ea8797"
+        },
+        "top-right": {
+          "path": "/home/veasnawt/src/vos-r2-keyboard/build/native/uefi-normal-128M/top-right.png",
+          "sha256": "4a6ea51c0841bcb0d5adc058f278624e9532793c8be9840778d084aef9f567d6"
+        },
+        "bottom-right": {
+          "path": "/home/veasnawt/src/vos-r2-keyboard/build/native/uefi-normal-128M/bottom-right.png",
+          "sha256": "c678e1d76abfad6e980a5667dd0627b6162e37a805ec1c11e9a83ecc57d49edc"
+        },
+        "bottom-left": {
+          "path": "/home/veasnawt/src/vos-r2-keyboard/build/native/uefi-normal-128M/bottom-left.png",
+          "sha256": "5845f32844733336ab5d29eaded357d670cefdd3dacd7462b9ebfd73849816d7"
+        },
+        "final": {
+          "path": "/home/veasnawt/src/vos-r2-keyboard/build/native/uefi-normal-128M/final.png",
+          "sha256": "101d2db2871c052602f669c94cdfab0497c252b5508ff5a34e2033ca2a08ebcc"
+        },
+        "keyboard-text": {
+          "path": "/home/veasnawt/src/vos-r2-keyboard/build/native/uefi-normal-128M/keyboard-text.png",
+          "sha256": "f135400e4054b1ccff7ad8745db7d3d4048899e145f4fdc2d4435f3f8f294d1d"
+        }
+      },
+      "pixels": {
+        "initial": {
+          "passed": true,
+          "cursor": [
+            512,
+            390
+          ],
+          "panel_rgb": "0x409ddd",
+          "width": 1024,
+          "height": 768
+        },
+        "movement": {
+          "passed": true,
+          "cursor": [
+            524,
+            382
+          ],
+          "panel_rgb": "0x409ddd",
+          "width": 1024,
+          "height": 768
+        },
+        "press": {
+          "passed": true,
+          "cursor": [
+            524,
+            382
+          ],
+          "panel_rgb": "0xe8b34e",
+          "width": 1024,
+          "height": 768
+        },
+        "click": {
+          "passed": true,
+          "cursor": [
+            524,
+            382
+          ],
+          "panel_rgb": "0x42c497",
+          "width": 1024,
+          "height": 768
+        }
+      },
+      "exact_corners": true,
+      "keyboard_mouse": true,
+      "held_exit_cleanup": true,
+      "shell_hello_rixie": true,
+      "native_cases": 0,
+      "elapsed_seconds": 19.900100745999225,
+      "serial_sha256": "6dea06374eb8a071b4577e6d53144b0a6c170c567aaa3208fa89bd5e3028a0e9"
+    },
+    {
+      "passed": true,
+      "firmware": "uefi",
+      "mode": "normal",
+      "memory": "2G",
+      "native_Rust_calls": [
+        {
+          "symbol": "pointer_idle",
+          "RIP": "0xffffffff801405b0",
+          "stop": "T05thread:01;"
+        },
+        {
+          "symbol": "pointer_decode",
+          "RIP": "0xffffffff801404d0",
+          "stop": "T05thread:01;"
+        },
+        {
+          "symbol": "keyboard_decode",
+          "RIP": "0xffffffff80140200",
+          "stop": "T05thread:01;"
+        }
+      ],
+      "keyboard_text": {
+        "passed": true,
+        "expected": "Aa!",
+        "caps_shift_release": true
+      },
+      "screenshots": {
+        "initial": {
+          "path": "/home/veasnawt/src/vos-r2-keyboard/build/native/uefi-normal-2G/initial.png",
+          "sha256": "f498dd815f89358990086ecc48f94680f1d1abd2e83517ceedb3c1521c37558b"
+        },
+        "movement": {
+          "path": "/home/veasnawt/src/vos-r2-keyboard/build/native/uefi-normal-2G/movement.png",
+          "sha256": "0a7fae58fbe30b8c016eef0d63bc04efbdfbf48887ccbd556115109bdacc4e58"
+        },
+        "press": {
+          "path": "/home/veasnawt/src/vos-r2-keyboard/build/native/uefi-normal-2G/press.png",
+          "sha256": "2ccf213f2b9084a3b7b6d3006310ba4d052d21786d5e809a37e0c888c0f6bbce"
+        },
+        "click": {
+          "path": "/home/veasnawt/src/vos-r2-keyboard/build/native/uefi-normal-2G/click.png",
+          "sha256": "3814e66733e1139bf7cd48891ad88d18cfcdc30c7114c2f2739a6241d2566b09"
+        },
+        "top-left": {
+          "path": "/home/veasnawt/src/vos-r2-keyboard/build/native/uefi-normal-2G/top-left.png",
+          "sha256": "6fa27543f1f507ab7f51909705a5434a9e6cbe425d8c00130689f555e1ea8797"
+        },
+        "top-right": {
+          "path": "/home/veasnawt/src/vos-r2-keyboard/build/native/uefi-normal-2G/top-right.png",
+          "sha256": "4a6ea51c0841bcb0d5adc058f278624e9532793c8be9840778d084aef9f567d6"
+        },
+        "bottom-right": {
+          "path": "/home/veasnawt/src/vos-r2-keyboard/build/native/uefi-normal-2G/bottom-right.png",
+          "sha256": "c678e1d76abfad6e980a5667dd0627b6162e37a805ec1c11e9a83ecc57d49edc"
+        },
+        "bottom-left": {
+          "path": "/home/veasnawt/src/vos-r2-keyboard/build/native/uefi-normal-2G/bottom-left.png",
+          "sha256": "5845f32844733336ab5d29eaded357d670cefdd3dacd7462b9ebfd73849816d7"
+        },
+        "final": {
+          "path": "/home/veasnawt/src/vos-r2-keyboard/build/native/uefi-normal-2G/final.png",
+          "sha256": "101d2db2871c052602f669c94cdfab0497c252b5508ff5a34e2033ca2a08ebcc"
+        },
+        "keyboard-text": {
+          "path": "/home/veasnawt/src/vos-r2-keyboard/build/native/uefi-normal-2G/keyboard-text.png",
+          "sha256": "f135400e4054b1ccff7ad8745db7d3d4048899e145f4fdc2d4435f3f8f294d1d"
+        }
+      },
+      "pixels": {
+        "initial": {
+          "passed": true,
+          "cursor": [
+            512,
+            390
+          ],
+          "panel_rgb": "0x409ddd",
+          "width": 1024,
+          "height": 768
+        },
+        "movement": {
+          "passed": true,
+          "cursor": [
+            524,
+            382
+          ],
+          "panel_rgb": "0x409ddd",
+          "width": 1024,
+          "height": 768
+        },
+        "press": {
+          "passed": true,
+          "cursor": [
+            524,
+            382
+          ],
+          "panel_rgb": "0xe8b34e",
+          "width": 1024,
+          "height": 768
+        },
+        "click": {
+          "passed": true,
+          "cursor": [
+            524,
+            382
+          ],
+          "panel_rgb": "0x42c497",
+          "width": 1024,
+          "height": 768
+        }
+      },
+      "exact_corners": true,
+      "keyboard_mouse": true,
+      "held_exit_cleanup": true,
+      "shell_hello_rixie": true,
+      "native_cases": 0,
+      "elapsed_seconds": 20.238942240999677,
+      "serial_sha256": "8fe987baa048614bd2ce5de261da723021bb86793d0acaed870aa5fa7dba3456"
+    },
+    {
+      "passed": true,
+      "firmware": "bios",
+      "mode": "verify",
+      "memory": "128M",
+      "keyboard_text": {
+        "passed": true,
+        "expected": "Aa!",
+        "caps_shift_release": true
+      },
+      "screenshots": {
+        "checkerboard-initial": {
+          "path": "/home/veasnawt/src/vos-r2-keyboard/build/native/bios-verify-128M/checkerboard-regression-initial.png",
+          "sha256": "236ab33329494f770d3a05cc74bbfa4d3226f265c25798907d81733782f6af17"
+        },
+        "checkerboard-a": {
+          "path": "/home/veasnawt/src/vos-r2-keyboard/build/native/bios-verify-128M/checkerboard-regression-a.png",
+          "sha256": "f2d193fb15ad4348fe1c026ab89c9cedfb1a57ba0d33de886c7c148f6d9b575e"
+        },
+        "initial": {
+          "path": "/home/veasnawt/src/vos-r2-keyboard/build/native/bios-verify-128M/initial.png",
+          "sha256": "ab3b32706c100da094a11718b7b1c119c01d7cfbfbe045a9770bad91bc897af0"
+        },
+        "movement": {
+          "path": "/home/veasnawt/src/vos-r2-keyboard/build/native/bios-verify-128M/movement.png",
+          "sha256": "3addb95d8518f541cc51d635d17424468844821e79674f6b3e1b98ff3904f150"
+        },
+        "press": {
+          "path": "/home/veasnawt/src/vos-r2-keyboard/build/native/bios-verify-128M/press.png",
+          "sha256": "c5693b7d21df304a00a42260fa2efa5eab72d95caef9da1f15be844fc90fb929"
+        },
+        "click": {
+          "path": "/home/veasnawt/src/vos-r2-keyboard/build/native/bios-verify-128M/click.png",
+          "sha256": "2d74c8424da262ee4eb18aefb2237d84ffe1bf9113d5c4417bf853a48e64c12a"
+        },
+        "top-left": {
+          "path": "/home/veasnawt/src/vos-r2-keyboard/build/native/bios-verify-128M/top-left.png",
+          "sha256": "b9b42d93c19c7d462edda7c2aa8858aacfb17e299022404ba8c4890b0dc17959"
+        },
+        "top-right": {
+          "path": "/home/veasnawt/src/vos-r2-keyboard/build/native/bios-verify-128M/top-right.png",
+          "sha256": "7525261f59686c2b2b615f9e3385f313392cfec700447b3c72c3fa6a22add46e"
+        },
+        "bottom-right": {
+          "path": "/home/veasnawt/src/vos-r2-keyboard/build/native/bios-verify-128M/bottom-right.png",
+          "sha256": "75d708b8f3afb5cb386ea6d7b75a43a4adbd1744964e54f606b0c24c9a03d431"
+        },
+        "bottom-left": {
+          "path": "/home/veasnawt/src/vos-r2-keyboard/build/native/bios-verify-128M/bottom-left.png",
+          "sha256": "d85b3a11489333ba4c3ad306ef52c5f179cb73f19b10e8a914e2652c9501c955"
+        },
+        "final": {
+          "path": "/home/veasnawt/src/vos-r2-keyboard/build/native/bios-verify-128M/final.png",
+          "sha256": "009a27d95cad9c80da39190c1a16bf2571fdeb318dda70db5a53ccacfc7d455c"
+        },
+        "keyboard-text": {
+          "path": "/home/veasnawt/src/vos-r2-keyboard/build/native/bios-verify-128M/keyboard-text.png",
+          "sha256": "c6924444c927c9ccab0dbd1313b96c9d8b5c3257b9b2ebe5c225d98b41996175"
+        }
+      },
+      "pixels": {
+        "initial": {
+          "passed": true,
+          "cursor": [
+            512,
+            390
+          ],
+          "panel_rgb": "0x409ddd",
+          "width": 1024,
+          "height": 768
+        },
+        "movement": {
+          "passed": true,
+          "cursor": [
+            524,
+            382
+          ],
+          "panel_rgb": "0x409ddd",
+          "width": 1024,
+          "height": 768
+        },
+        "press": {
+          "passed": true,
+          "cursor": [
+            524,
+            382
+          ],
+          "panel_rgb": "0xe8b34e",
+          "width": 1024,
+          "height": 768
+        },
+        "click": {
+          "passed": true,
+          "cursor": [
+            524,
+            382
+          ],
+          "panel_rgb": "0x42c497",
+          "width": 1024,
+          "height": 768
+        }
+      },
+      "exact_corners": true,
+      "keyboard_mouse": true,
+      "held_exit_cleanup": true,
+      "shell_hello_rixie": true,
+      "native_cases": 16,
+      "elapsed_seconds": 24.293652463999024,
+      "serial_sha256": "0486961dd022226d4eddf1c9314831376944735c5bf5d54d9f14219da44f7033"
+    },
+    {
+      "passed": true,
+      "firmware": "bios",
+      "mode": "verify",
+      "memory": "2G",
+      "keyboard_text": {
+        "passed": true,
+        "expected": "Aa!",
+        "caps_shift_release": true
+      },
+      "screenshots": {
+        "checkerboard-initial": {
+          "path": "/home/veasnawt/src/vos-r2-keyboard/build/native/bios-verify-2G/checkerboard-regression-initial.png",
+          "sha256": "236ab33329494f770d3a05cc74bbfa4d3226f265c25798907d81733782f6af17"
+        },
+        "checkerboard-a": {
+          "path": "/home/veasnawt/src/vos-r2-keyboard/build/native/bios-verify-2G/checkerboard-regression-a.png",
+          "sha256": "f2d193fb15ad4348fe1c026ab89c9cedfb1a57ba0d33de886c7c148f6d9b575e"
+        },
+        "initial": {
+          "path": "/home/veasnawt/src/vos-r2-keyboard/build/native/bios-verify-2G/initial.png",
+          "sha256": "ab3b32706c100da094a11718b7b1c119c01d7cfbfbe045a9770bad91bc897af0"
+        },
+        "movement": {
+          "path": "/home/veasnawt/src/vos-r2-keyboard/build/native/bios-verify-2G/movement.png",
+          "sha256": "3addb95d8518f541cc51d635d17424468844821e79674f6b3e1b98ff3904f150"
+        },
+        "press": {
+          "path": "/home/veasnawt/src/vos-r2-keyboard/build/native/bios-verify-2G/press.png",
+          "sha256": "c5693b7d21df304a00a42260fa2efa5eab72d95caef9da1f15be844fc90fb929"
+        },
+        "click": {
+          "path": "/home/veasnawt/src/vos-r2-keyboard/build/native/bios-verify-2G/click.png",
+          "sha256": "2d74c8424da262ee4eb18aefb2237d84ffe1bf9113d5c4417bf853a48e64c12a"
+        },
+        "top-left": {
+          "path": "/home/veasnawt/src/vos-r2-keyboard/build/native/bios-verify-2G/top-left.png",
+          "sha256": "b9b42d93c19c7d462edda7c2aa8858aacfb17e299022404ba8c4890b0dc17959"
+        },
+        "top-right": {
+          "path": "/home/veasnawt/src/vos-r2-keyboard/build/native/bios-verify-2G/top-right.png",
+          "sha256": "7525261f59686c2b2b615f9e3385f313392cfec700447b3c72c3fa6a22add46e"
+        },
+        "bottom-right": {
+          "path": "/home/veasnawt/src/vos-r2-keyboard/build/native/bios-verify-2G/bottom-right.png",
+          "sha256": "75d708b8f3afb5cb386ea6d7b75a43a4adbd1744964e54f606b0c24c9a03d431"
+        },
+        "bottom-left": {
+          "path": "/home/veasnawt/src/vos-r2-keyboard/build/native/bios-verify-2G/bottom-left.png",
+          "sha256": "d85b3a11489333ba4c3ad306ef52c5f179cb73f19b10e8a914e2652c9501c955"
+        },
+        "final": {
+          "path": "/home/veasnawt/src/vos-r2-keyboard/build/native/bios-verify-2G/final.png",
+          "sha256": "009a27d95cad9c80da39190c1a16bf2571fdeb318dda70db5a53ccacfc7d455c"
+        },
+        "keyboard-text": {
+          "path": "/home/veasnawt/src/vos-r2-keyboard/build/native/bios-verify-2G/keyboard-text.png",
+          "sha256": "c6924444c927c9ccab0dbd1313b96c9d8b5c3257b9b2ebe5c225d98b41996175"
+        }
+      },
+      "pixels": {
+        "initial": {
+          "passed": true,
+          "cursor": [
+            512,
+            390
+          ],
+          "panel_rgb": "0x409ddd",
+          "width": 1024,
+          "height": 768
+        },
+        "movement": {
+          "passed": true,
+          "cursor": [
+            524,
+            382
+          ],
+          "panel_rgb": "0x409ddd",
+          "width": 1024,
+          "height": 768
+        },
+        "press": {
+          "passed": true,
+          "cursor": [
+            524,
+            382
+          ],
+          "panel_rgb": "0xe8b34e",
+          "width": 1024,
+          "height": 768
+        },
+        "click": {
+          "passed": true,
+          "cursor": [
+            524,
+            382
+          ],
+          "panel_rgb": "0x42c497",
+          "width": 1024,
+          "height": 768
+        }
+      },
+      "exact_corners": true,
+      "keyboard_mouse": true,
+      "held_exit_cleanup": true,
+      "shell_hello_rixie": true,
+      "native_cases": 16,
+      "elapsed_seconds": 24.2945157260001,
+      "serial_sha256": "1b896a774dd989844a5893f277fba3b6c047020b3823e598aa5c67d897910323"
+    },
+    {
+      "passed": true,
+      "firmware": "uefi",
+      "mode": "verify",
+      "memory": "128M",
+      "keyboard_text": {
+        "passed": true,
+        "expected": "Aa!",
+        "caps_shift_release": true
+      },
+      "screenshots": {
+        "checkerboard-initial": {
+          "path": "/home/veasnawt/src/vos-r2-keyboard/build/native/uefi-verify-128M/checkerboard-regression-initial.png",
+          "sha256": "236ab33329494f770d3a05cc74bbfa4d3226f265c25798907d81733782f6af17"
+        },
+        "checkerboard-a": {
+          "path": "/home/veasnawt/src/vos-r2-keyboard/build/native/uefi-verify-128M/checkerboard-regression-a.png",
+          "sha256": "f2d193fb15ad4348fe1c026ab89c9cedfb1a57ba0d33de886c7c148f6d9b575e"
+        },
+        "initial": {
+          "path": "/home/veasnawt/src/vos-r2-keyboard/build/native/uefi-verify-128M/initial.png",
+          "sha256": "ab3b32706c100da094a11718b7b1c119c01d7cfbfbe045a9770bad91bc897af0"
+        },
+        "movement": {
+          "path": "/home/veasnawt/src/vos-r2-keyboard/build/native/uefi-verify-128M/movement.png",
+          "sha256": "3addb95d8518f541cc51d635d17424468844821e79674f6b3e1b98ff3904f150"
+        },
+        "press": {
+          "path": "/home/veasnawt/src/vos-r2-keyboard/build/native/uefi-verify-128M/press.png",
+          "sha256": "c5693b7d21df304a00a42260fa2efa5eab72d95caef9da1f15be844fc90fb929"
+        },
+        "click": {
+          "path": "/home/veasnawt/src/vos-r2-keyboard/build/native/uefi-verify-128M/click.png",
+          "sha256": "2d74c8424da262ee4eb18aefb2237d84ffe1bf9113d5c4417bf853a48e64c12a"
+        },
+        "top-left": {
+          "path": "/home/veasnawt/src/vos-r2-keyboard/build/native/uefi-verify-128M/top-left.png",
+          "sha256": "b9b42d93c19c7d462edda7c2aa8858aacfb17e299022404ba8c4890b0dc17959"
+        },
+        "top-right": {
+          "path": "/home/veasnawt/src/vos-r2-keyboard/build/native/uefi-verify-128M/top-right.png",
+          "sha256": "7525261f59686c2b2b615f9e3385f313392cfec700447b3c72c3fa6a22add46e"
+        },
+        "bottom-right": {
+          "path": "/home/veasnawt/src/vos-r2-keyboard/build/native/uefi-verify-128M/bottom-right.png",
+          "sha256": "75d708b8f3afb5cb386ea6d7b75a43a4adbd1744964e54f606b0c24c9a03d431"
+        },
+        "bottom-left": {
+          "path": "/home/veasnawt/src/vos-r2-keyboard/build/native/uefi-verify-128M/bottom-left.png",
+          "sha256": "d85b3a11489333ba4c3ad306ef52c5f179cb73f19b10e8a914e2652c9501c955"
+        },
+        "final": {
+          "path": "/home/veasnawt/src/vos-r2-keyboard/build/native/uefi-verify-128M/final.png",
+          "sha256": "b840dcc416b45f8d26efacf8b1559fa0f8c548b6fd673d93ada8e5662f4e641b"
+        },
+        "keyboard-text": {
+          "path": "/home/veasnawt/src/vos-r2-keyboard/build/native/uefi-verify-128M/keyboard-text.png",
+          "sha256": "c6924444c927c9ccab0dbd1313b96c9d8b5c3257b9b2ebe5c225d98b41996175"
+        }
+      },
+      "pixels": {
+        "initial": {
+          "passed": true,
+          "cursor": [
+            512,
+            390
+          ],
+          "panel_rgb": "0x409ddd",
+          "width": 1024,
+          "height": 768
+        },
+        "movement": {
+          "passed": true,
+          "cursor": [
+            524,
+            382
+          ],
+          "panel_rgb": "0x409ddd",
+          "width": 1024,
+          "height": 768
+        },
+        "press": {
+          "passed": true,
+          "cursor": [
+            524,
+            382
+          ],
+          "panel_rgb": "0xe8b34e",
+          "width": 1024,
+          "height": 768
+        },
+        "click": {
+          "passed": true,
+          "cursor": [
+            524,
+            382
+          ],
+          "panel_rgb": "0x42c497",
+          "width": 1024,
+          "height": 768
+        }
+      },
+      "exact_corners": true,
+      "keyboard_mouse": true,
+      "held_exit_cleanup": true,
+      "shell_hello_rixie": true,
+      "native_cases": 16,
+      "elapsed_seconds": 27.176295754999956,
+      "serial_sha256": "8fc9d3c9f956aefb78f239725835da65d8f2a71437655b44900b32986464cb12"
+    },
+    {
+      "passed": true,
+      "firmware": "uefi",
+      "mode": "verify",
+      "memory": "2G",
+      "keyboard_text": {
+        "passed": true,
+        "expected": "Aa!",
+        "caps_shift_release": true
+      },
+      "screenshots": {
+        "checkerboard-initial": {
+          "path": "/home/veasnawt/src/vos-r2-keyboard/build/native/uefi-verify-2G/checkerboard-regression-initial.png",
+          "sha256": "236ab33329494f770d3a05cc74bbfa4d3226f265c25798907d81733782f6af17"
+        },
+        "checkerboard-a": {
+          "path": "/home/veasnawt/src/vos-r2-keyboard/build/native/uefi-verify-2G/checkerboard-regression-a.png",
+          "sha256": "f2d193fb15ad4348fe1c026ab89c9cedfb1a57ba0d33de886c7c148f6d9b575e"
+        },
+        "initial": {
+          "path": "/home/veasnawt/src/vos-r2-keyboard/build/native/uefi-verify-2G/initial.png",
+          "sha256": "ab3b32706c100da094a11718b7b1c119c01d7cfbfbe045a9770bad91bc897af0"
+        },
+        "movement": {
+          "path": "/home/veasnawt/src/vos-r2-keyboard/build/native/uefi-verify-2G/movement.png",
+          "sha256": "3addb95d8518f541cc51d635d17424468844821e79674f6b3e1b98ff3904f150"
+        },
+        "press": {
+          "path": "/home/veasnawt/src/vos-r2-keyboard/build/native/uefi-verify-2G/press.png",
+          "sha256": "c5693b7d21df304a00a42260fa2efa5eab72d95caef9da1f15be844fc90fb929"
+        },
+        "click": {
+          "path": "/home/veasnawt/src/vos-r2-keyboard/build/native/uefi-verify-2G/click.png",
+          "sha256": "2d74c8424da262ee4eb18aefb2237d84ffe1bf9113d5c4417bf853a48e64c12a"
+        },
+        "top-left": {
+          "path": "/home/veasnawt/src/vos-r2-keyboard/build/native/uefi-verify-2G/top-left.png",
+          "sha256": "b9b42d93c19c7d462edda7c2aa8858aacfb17e299022404ba8c4890b0dc17959"
+        },
+        "top-right": {
+          "path": "/home/veasnawt/src/vos-r2-keyboard/build/native/uefi-verify-2G/top-right.png",
+          "sha256": "7525261f59686c2b2b615f9e3385f313392cfec700447b3c72c3fa6a22add46e"
+        },
+        "bottom-right": {
+          "path": "/home/veasnawt/src/vos-r2-keyboard/build/native/uefi-verify-2G/bottom-right.png",
+          "sha256": "75d708b8f3afb5cb386ea6d7b75a43a4adbd1744964e54f606b0c24c9a03d431"
+        },
+        "bottom-left": {
+          "path": "/home/veasnawt/src/vos-r2-keyboard/build/native/uefi-verify-2G/bottom-left.png",
+          "sha256": "d85b3a11489333ba4c3ad306ef52c5f179cb73f19b10e8a914e2652c9501c955"
+        },
+        "final": {
+          "path": "/home/veasnawt/src/vos-r2-keyboard/build/native/uefi-verify-2G/final.png",
+          "sha256": "009a27d95cad9c80da39190c1a16bf2571fdeb318dda70db5a53ccacfc7d455c"
+        },
+        "keyboard-text": {
+          "path": "/home/veasnawt/src/vos-r2-keyboard/build/native/uefi-verify-2G/keyboard-text.png",
+          "sha256": "c6924444c927c9ccab0dbd1313b96c9d8b5c3257b9b2ebe5c225d98b41996175"
+        }
+      },
+      "pixels": {
+        "initial": {
+          "passed": true,
+          "cursor": [
+            512,
+            390
+          ],
+          "panel_rgb": "0x409ddd",
+          "width": 1024,
+          "height": 768
+        },
+        "movement": {
+          "passed": true,
+          "cursor": [
+            524,
+            382
+          ],
+          "panel_rgb": "0x409ddd",
+          "width": 1024,
+          "height": 768
+        },
+        "press": {
+          "passed": true,
+          "cursor": [
+            524,
+            382
+          ],
+          "panel_rgb": "0xe8b34e",
+          "width": 1024,
+          "height": 768
+        },
+        "click": {
+          "passed": true,
+          "cursor": [
+            524,
+            382
+          ],
+          "panel_rgb": "0x42c497",
+          "width": 1024,
+          "height": 768
+        }
+      },
+      "exact_corners": true,
+      "keyboard_mouse": true,
+      "held_exit_cleanup": true,
+      "shell_hello_rixie": true,
+      "native_cases": 16,
+      "elapsed_seconds": 27.33852754200052,
+      "serial_sha256": "54113d067434c1d5c8029d4c0ecc17855ffdec2158b67daca21c59dbe5613c24"
+    }
+  ]
+}

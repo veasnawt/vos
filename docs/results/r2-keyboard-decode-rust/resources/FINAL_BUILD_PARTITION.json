@@ -1,0 +1,22 @@
+{
+  "source": 26000000,
+  "kernel_outputs": {
+    "baseline": 16000000,
+    "candidate": 16000000,
+    "candidate_repro": 16000000,
+    "GUI_verify": 17000000
+  },
+  "native_media_four_ISOs": 50000000,
+  "total_kernel_plus_media": 115000000,
+  "previous_kernel_media_allowance": 115976695,
+  "reason": "Additional reproducibility kernel fits by packaging four native images once and reusing exact-provenance accepted baseline runtime evidence; no default ISO duplication",
+  "hosted": 18000000,
+  "apps": 4000000,
+  "runtime_evidence": 12000000,
+  "transient_scratch": 16000000,
+  "reference_peak_with_25percent": 232250000,
+  "limits_unchanged": [
+    240000000,
+    260000000
+  ]
+}

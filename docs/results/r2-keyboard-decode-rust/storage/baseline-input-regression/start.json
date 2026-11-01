@@ -1,0 +1,28 @@
+{
+  "utc": "2026-11-01T14:14:44.830235+00:00",
+  "command": [
+    "python3",
+    "-B",
+    "scripts/test-ps2-pointer-rust.py",
+    "--archive",
+    "build/baseline/rust/libvos_kernel.a",
+    "--rustc",
+    "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+    "--out",
+    "build/baseline-input"
+  ],
+  "projection": 12000000,
+  "before": {
+    "utc": "2026-11-01T14:14:44.638169+00:00",
+    "tree": 39795196,
+    "shared_git": 20199870,
+    "controls": 3516425,
+    "C_free": 57652420608,
+    "E_free": 124597628928,
+    "tmpfs_used": 0
+  },
+  "physical_E_required": 2057022344,
+  "physical_E_reserve": 1610612736,
+  "external_growth_allowance": 3000000,
+  "temporary_output_policy": "TMPDIR within guarded worktree; no Cargo/rustup installs; shared Git and controller growth separately counted"
+}

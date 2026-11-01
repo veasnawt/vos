@@ -1,0 +1,7 @@
+{
+  "baseline": "77045d829f60475b7110e05816a82e75eea62da2",
+  "source": "arch/x86_64/keyboard.c",
+  "original_source_sha256": "fb75b7e97b693d688ae2456b0f129d047e5fec33b33474200a788d4fec8e96eb",
+  "reference_sha256": "7024bcd4db5f6618de8ce360c66e00febf6dad4959b3e0b9f26a29ac3f0e952f",
+  "scope": "unchanged accepted tables and keyboard_decode; differential only, never production"
+}

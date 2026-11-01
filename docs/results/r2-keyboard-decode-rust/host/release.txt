@@ -1,0 +1,2 @@
+ABI PASS: size=7 align=1 offsets=0..6, null/wrap, both guard-page boundaries and unaligned byte state
+differential PASS: 3703936 state/byte comparisons; 3072 encoded states; 1792 reachable states; seed=72b15e7deca0de01; hostile field bytes and 1000000-step stream

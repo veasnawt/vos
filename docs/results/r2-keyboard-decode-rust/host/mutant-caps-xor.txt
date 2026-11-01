@@ -1,0 +1,20 @@
+
+running 1 test
+test caps_xor ... FAILED
+
+failures:
+
+---- caps_xor stdout ----
+
+thread 'caps_xor' (18794) panicked at tests/rust/ps2_keyboard.rs:5:83:
+assertion `left == right` failed
+  left: 65
+ right: 97
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    caps_xor
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 10 filtered out; finished in 0.00s
+

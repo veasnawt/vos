@@ -1,0 +1,35 @@
+{
+  "utc": "2026-11-01T14:18:53.460068+00:00",
+  "exit_code": 0,
+  "violation": null,
+  "before": {
+    "utc": "2026-11-01T14:18:33.417907+00:00",
+    "tree": 42162500,
+    "shared_git": 20199870,
+    "controls": 3530919,
+    "C_free": 57628217344,
+    "E_free": 124597628928,
+    "tmpfs_used": 0
+  },
+  "after": {
+    "utc": "2026-11-01T14:18:53.271778+00:00",
+    "tree": 57216191,
+    "shared_git": 20199870,
+    "controls": 3557036,
+    "C_free": 57628086272,
+    "E_free": 124597628928,
+    "tmpfs_used": 0
+  },
+  "peak": {
+    "utc": "2026-11-01T14:18:33.417907+00:00",
+    "tree": 57216191,
+    "shared_git": 20199870,
+    "controls": 3556865,
+    "C_free": 57628086272,
+    "E_free": 124597628928,
+    "tmpfs_used": 0
+  },
+  "guard_STOP_present": false,
+  "physical_E_net_delta": 0,
+  "external_shared_git_growth": 0
+}

@@ -200,8 +200,8 @@ assembly, FFI, interrupts and DMA ownership. Rust application support remains
 implemented independently of this kernel proof.
 
 Following the merged [A2 parser](results/a2-mb2-parse-rust.md) and [A3 framebuffer validation](results/a3-fb-validate-rust.md),
-the [B1 candidate](results/b1-rust-boot-foundations.md) moves boot reservations, reservation tables and the EFI boundary into Rust.
-It is locally verified in hosted tests and BIOS/UEFI QEMU, pending PR review; this does not complete the wider Rust migration or
+the [B1 migration](results/b1-rust-boot-foundations.md), merged through PR #50 at `77045d8`, moves boot reservations, reservation tables and the EFI boundary into Rust.
+It is verified in hosted tests and BIOS/UEFI QEMU; this does not complete the wider Rust migration or
 authorize another increment. Its unchanged ABI, bounded resources, failure history and authentic boot screenshots are recorded in the report.
 
 USB.2-A's [portable Rust core](results/usb2a-rust-core.md) is merged through
@@ -299,3 +299,5 @@ QEMU-only verification, trusted immutable read-only media, RAM tracked below
 1 GiB, UEFI polling, bounded operations without real-time/fairness guarantees,
 retained DMA quarantine after unconfirmed reset, incomplete full dynamic stack
 high-water proof and the documented deep/sparse-directory progress limits.
+
+The [R2 Rust PS/2 keyboard decoder candidate](results/r2-keyboard-decode-rust.md) moves only `keyboard_decode()` and its two tables behind the unchanged seven-byte C ABI. Local hosted and BIOS/UEFI 128 MiB/2 GiB gates pass; PR CI and human review/merge remain required. Controller I/O and routing remain C; USB input and physical hardware are NOT TESTED. Loaded section growth is zero; the hosted decoder microbenchmark is 1.529× the C baseline and is disclosed for review. Wider R2 and R3–R5 remain incomplete.

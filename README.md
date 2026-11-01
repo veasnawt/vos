@@ -22,8 +22,8 @@ application language. VOS is not a Linux distribution and
 does not use Linux or a hosted C library inside the guest. GRUB supplies a
 Multiboot2 handoff through BIOS or UEFI; a legacy i386 baseline is also retained.
 
-The [B1 boot-reservation candidate](docs/results/b1-rust-boot-foundations.md) moves the remaining bootinfo/reservation and EFI boundary
-into the Rust archive behind the existing C ABI, with hosted and BIOS/UEFI QEMU evidence. It is locally verified and awaiting PR review.
+The [B1 boot-reservation migration](docs/results/b1-rust-boot-foundations.md), merged through [PR #50](https://github.com/veasnawt/vos/pull/50) at `77045d8`, moves the remaining bootinfo/reservation and EFI boundary
+into the Rust archive behind the existing C ABI, with hosted and BIOS/UEFI QEMU evidence.
 
 - Higher-half kernel, protected memory/stacks, timer-preempted isolated ring-3
   processes, kernel threads and bounded IPC.
@@ -198,3 +198,5 @@ records. Historical checkpoint wording is preserved there.
 
 Every milestone publication reviews README, STATUS and ROADMAP together using
 the [documentation publication checklist](docs/milestone-publication-checklist.md).
+
+The [R2 Rust PS/2 keyboard decoder candidate](docs/results/r2-keyboard-decode-rust.md) moves only `keyboard_decode()` and its two tables behind the unchanged seven-byte C ABI. Local hosted and BIOS/UEFI 128 MiB/2 GiB gates pass; PR CI and human review/merge remain required. Controller I/O and routing remain C; USB input and physical hardware are NOT TESTED. Loaded section growth is zero; the hosted decoder microbenchmark is 1.529× the C baseline and is disclosed for review. Wider R2 and R3–R5 remain incomplete.

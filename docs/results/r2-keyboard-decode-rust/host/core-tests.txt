@@ -1,0 +1,16 @@
+
+running 11 tests
+test alt ... ok
+test breaks ... ok
+test caps_repeat ... ok
+test caps_xor ... ok
+test ctrl ... ok
+test fake_shift ... ok
+test independent_shift ... ok
+test layout ... ok
+test noncanonical_bytes ... ok
+test pause ... ok
+test punctuation ... ok
+
+test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

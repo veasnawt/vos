@@ -1,0 +1,1 @@
+{"error": "nested Python triple-quote delimiter in tool input", "source_changes": false, "guarded_step_started": false, "correction": "use distinct outer string delimiter"}
