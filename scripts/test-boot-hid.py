@@ -45,7 +45,14 @@ def main():
     names.update(['arch/x86_64/syscall.c','arch/x86_64/rust/ps2_pointer.rs','kernel/rust/input/ps2_pointer.rs'])
     report['existing_input_sha256']={str(Path(n)):sha(ROOT/n) for n in sorted(names)}
     def run(args,name,expected=0):
-        args=list(map(str,args));p=subprocess.run(args,cwd=ROOT,stdout=subprocess.PIPE,stderr=subprocess.STDOUT,text=True,timeout=180)
+        args=list(map(str,args))
+        try:p=subprocess.run(args,cwd=ROOT,stdout=subprocess.PIPE,stderr=subprocess.STDOUT,text=True,timeout=180)
+        except subprocess.TimeoutExpired as e:
+            output=e.stdout or ''
+            if isinstance(output,bytes):output=output.decode(errors='replace')
+            (out/name).write_text(output)
+            report['commands'].append({'argv':args,'exit_code':None,'timed_out':True,'log':name})
+            raise RuntimeError(name+' timed out; captured output retained') from e
         (out/name).write_text(p.stdout);report['commands'].append({'argv':args,'exit_code':p.returncode,'log':name})
         if (expected==0 and p.returncode!=0) or (expected!=0 and p.returncode==0):raise RuntimeError(name+' unexpected exit '+str(p.returncode))
         return p.stdout

@@ -505,3 +505,22 @@ fn bounded_interface_numbers_and_mouse_oracle() {
     }
     println!("65536 independent mouse motion cases PASS");
 }
+
+#[test]
+fn strict_unbound_bulk_packet_sizes() {
+    let good = vec![9, 4, 0, 0, 1, 0xff, 0, 0, 0, 7, 5, 0x83, 2, 64, 0, 0];
+    for packet in [1u16, 7, 9, 63, 65, 512, 2048] {
+        let mut bulk = good.clone();
+        bulk[13..15].copy_from_slice(&packet.to_le_bytes());
+        assert!(Selection::parse(device(), &config(&[bulk, interface(1, 1, 0x81)])).is_err());
+    }
+    let d = Device::parse(
+        &[18, 1, 0, 2, 0, 0, 0, 64, 1, 0, 2, 0, 0, 1, 0, 0, 0, 1],
+        Speed::High,
+    )
+    .unwrap();
+    assert!(Selection::parse(d, &config(&[good.clone(), interface(1, 1, 0x81)])).is_err());
+    let mut bulk = good;
+    bulk[13..15].copy_from_slice(&512u16.to_le_bytes());
+    assert!(Selection::parse(d, &config(&[bulk, interface(1, 1, 0x81)])).is_ok());
+}

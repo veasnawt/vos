@@ -185,7 +185,15 @@ impl Selection {
                         (Speed::High, 2) => 512,
                         (Speed::High, _) => 1024,
                     };
-                    if packet == 0 || packet > limit {
+                    if packet == 0
+                        || packet > limit
+                        || (typ == 2
+                            && match device.speed {
+                                Speed::Full => !matches!(packet, 8 | 16 | 32 | 64),
+                                Speed::High => packet != 512,
+                                Speed::Low => true,
+                            })
+                    {
                         return Err(Error::Descriptor);
                     }
                     if typ == 3
