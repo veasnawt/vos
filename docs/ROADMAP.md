@@ -200,8 +200,8 @@ assembly, FFI, interrupts and DMA ownership. Rust application support remains
 implemented independently of this kernel proof.
 
 Following the merged [A2 parser](results/a2-mb2-parse-rust.md) and [A3 framebuffer validation](results/a3-fb-validate-rust.md),
-the [B1 candidate](results/b1-rust-boot-foundations.md) moves boot reservations, reservation tables and the EFI boundary into Rust.
-It is locally verified in hosted tests and BIOS/UEFI QEMU, pending PR review; this does not complete the wider Rust migration or
+the [B1 migration](results/b1-rust-boot-foundations.md) moves boot reservations, reservation tables and the EFI boundary into Rust.
+It is locally verified in hosted tests and BIOS/UEFI QEMU, merged through PR #50 (`77045d8`); this does not complete the wider Rust migration or
 authorize another increment. Its unchanged ABI, bounded resources, failure history and authentic boot screenshots are recorded in the report.
 
 USB.2-A's [portable Rust core](results/usb2a-rust-core.md) is merged through
@@ -299,3 +299,7 @@ QEMU-only verification, trusted immutable read-only media, RAM tracked below
 1 GiB, UEFI polling, bounded operations without real-time/fairness guarantees,
 retained DMA quarantine after unconfirmed reset, incomplete full dynamic stack
 high-water proof and the documented deep/sparse-directory progress limits.
+
+## H1-B USB boot-HID core candidate
+
+B1 is merged through PR #50 at `77045d8`. The [H1-B result](results/h1b-rust-boot-hid.md) records a locally verified, allocation-free Rust descriptor/report library and hosted checks against existing console/GUI contracts. It is not linked into a kernel or ISO and adds no native USB input, controller operation or physical qualification. Transport, DMA publication and Dell EHCI/hub work require separate authorization; existing storage and safety controls remain unchanged.

@@ -1,0 +1,151 @@
+{
+  "status": "PASS",
+  "scope": "hosted fixtures, NOT native USB input",
+  "commands": [
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--version"
+      ],
+      "exit_code": 0,
+      "log": "rustc.txt"
+    },
+    {
+      "argv": [
+        "gcc",
+        "--version"
+      ],
+      "exit_code": 0,
+      "log": "gcc.txt"
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "--crate-name",
+        "boot_hid",
+        "--crate-type=rlib",
+        "-Dwarnings",
+        "-Coverflow-checks=yes",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "/home/veasnawt/src/vos-b1-boot/kernel/rust/usb/hid/lib.rs",
+        "-o",
+        "/home/veasnawt/src/vos-b1-boot/build/h1b/resources-reviewed/libboot_hid.rlib"
+      ],
+      "exit_code": 0,
+      "log": "libboot_hid.rlib.build.txt"
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "--crate-name",
+        "boot_hid",
+        "--crate-type=lib",
+        "--target=x86_64-unknown-none",
+        "-Copt-level=2",
+        "-Cpanic=abort",
+        "-Cforce-frame-pointers=yes",
+        "-Cno-redzone=yes",
+        "-Zemit-stack-sizes",
+        "--emit=obj",
+        "/home/veasnawt/src/vos-b1-boot/kernel/rust/usb/hid/lib.rs",
+        "-o",
+        "/home/veasnawt/src/vos-b1-boot/build/h1b/resources-reviewed/hid.o"
+      ],
+      "exit_code": 0,
+      "log": "freestanding-build.txt"
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "--crate-name",
+        "boot_hid",
+        "--crate-type=rlib",
+        "--target=x86_64-unknown-none",
+        "-Copt-level=2",
+        "-Cpanic=abort",
+        "/home/veasnawt/src/vos-b1-boot/kernel/rust/usb/hid/lib.rs",
+        "-o",
+        "/home/veasnawt/src/vos-b1-boot/build/h1b/resources-reviewed/libtarget.rlib"
+      ],
+      "exit_code": 0,
+      "log": "target-library.txt"
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "--crate-type=lib",
+        "--target=x86_64-unknown-none",
+        "-Copt-level=2",
+        "-Cpanic=abort",
+        "-Cforce-frame-pointers=yes",
+        "-Cno-redzone=yes",
+        "-Zemit-stack-sizes",
+        "--extern",
+        "boot_hid=/home/veasnawt/src/vos-b1-boot/build/h1b/resources-reviewed/libtarget.rlib",
+        "--emit=obj",
+        "/home/veasnawt/src/vos-b1-boot/build/h1b/resources-reviewed/api.rs",
+        "-o",
+        "/home/veasnawt/src/vos-b1-boot/build/h1b/resources-reviewed/api.o"
+      ],
+      "exit_code": 0,
+      "log": "api-build.txt"
+    },
+    {
+      "argv": [
+        "size",
+        "-A",
+        "/home/veasnawt/src/vos-b1-boot/build/h1b/resources-reviewed/hid.o"
+      ],
+      "exit_code": 0,
+      "log": "sections.txt"
+    },
+    {
+      "argv": [
+        "nm",
+        "-u",
+        "/home/veasnawt/src/vos-b1-boot/build/h1b/resources-reviewed/hid.o",
+        "/home/veasnawt/src/vos-b1-boot/build/h1b/resources-reviewed/api.o"
+      ],
+      "exit_code": 0,
+      "log": "undefined.txt"
+    }
+  ],
+  "source_sha256": {
+    "kernel/rust/usb/hid/descriptor.rs": "6c6d4f74d16124a1a8bc3e189bfe98ded36bb6d549c8cd4daa0dd9cb863f5d54",
+    "kernel/rust/usb/hid/input.rs": "d0fbc4cd350814e5c6302047cb064971ee60d2912ac748d5de1d47b7478e4f33",
+    "kernel/rust/usb/hid/lib.rs": "a1a4a4c055f1f996d16355199da026d355d434b3c601309a6c178b1eb8b71353",
+    "scripts/test-boot-hid.py": "2bf4e570571d68b25b3bf143dd2b1491b5f32689aab3908fb5fb818b60aa56aa",
+    "tests/host/boot-hid-adapter.h": "ad663064a4c80a0ebaf56322b6e1229f7e2419cebb649dac0010d9ac764382f5",
+    "tests/host/boot-hid-console.c": "5a7808d20ee28aa2d70fc70a7b5733943056c3b025d70183f4ae908763ddd34f",
+    "tests/host/boot-hid-ffi.rs": "4ecb8a380b6d433c952e79e5a0436d4cdd7aa4b23797acbd6a8f59d2ebb9cf9e",
+    "tests/host/boot-hid-gui.c": "3942157361fd9f5faa480e18120d0190844f1d3b876d8399e3567e7d939037c0",
+    "tests/rust/boot_hid.rs": "d645db115351ad77757b53e2217061ee4e4c6134ec2b60dde9b45a0985544a44"
+  },
+  "rustc": "rustc 1.100.0-nightly (2e2b193f8 2026-09-02)",
+  "gcc": "gcc (Ubuntu 15.2.0-16ubuntu1) 15.2.0",
+  "stack_frames": {
+    "<boot_hid[e7f6412f0f032535]::descriptor::Device>::parse": 14,
+    "<boot_hid[e7f6412f0f032535]::descriptor::Selection>::parse": 128,
+    "<boot_hid[e7f6412f0f032535]::input::Session>::report": 344,
+    "<boot_hid[e7f6412f0f032535]::input::Session>::enqueue": 16,
+    "api_confirm": 24,
+    "api_disconnect": 8,
+    "api_focus": 8,
+    "api_new": 232,
+    "api_request": 8,
+    "api_reset": 8,
+    "api_revoke": 8,
+    "api_setup": 8,
+    "api_take": 8
+  },
+  "max_frame": 344,
+  "sections": "/home/veasnawt/src/vos-b1-boot/build/h1b/resources-reviewed/hid.o  :\nsection                                                                      size   addr\n.text                                                                           0      0\n.text._RNvMNtCsjUJ887UfcZl_8boot_hid10descriptorNtB2_6Device5parse            269      0\n.stack_sizes                                                                    9      0\n.text._RNvMs0_NtCsjUJ887UfcZl_8boot_hid10descriptorNtB5_9Selection5parse     2056      0\n.rodata._RNvMs0_NtCsjUJ887UfcZl_8boot_hid10descriptorNtB5_9Selection5parse    592      0\n.stack_sizes                                                                   10      0\n.text._RNvMs_NtCsjUJ887UfcZl_8boot_hid5inputNtB4_7Session6report             3524      0\n.stack_sizes                                                                   10      0\n.text._RNvMs_NtCsjUJ887UfcZl_8boot_hid5inputNtB4_7Session7enqueue             795      0\n.stack_sizes                                                                    9      0\n.comment                                                                       54      0\n.note.GNU-stack                                                                 0      0\nTotal                                                                        7328\n\n\n",
+  "undefined": "\n/home/veasnawt/src/vos-b1-boot/build/h1b/resources-reviewed/hid.o:\n                 U memset\n\n/home/veasnawt/src/vos-b1-boot/build/h1b/resources-reviewed/api.o:\n                 U memcpy\n                 U memset\n",
+  "dma_pages": 0,
+  "heap_allocations": 0
+}

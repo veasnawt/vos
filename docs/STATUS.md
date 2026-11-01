@@ -561,3 +561,7 @@ zero ahead/three behind main. Local main/origin-main stay bbca69d; closure stays
 uncommitted. The original final audit passed before interruption. Its historical
 remote pin is preserved; the independently checked resume record links the new
 owner merge, unchanged runtime evidence and final accounting.
+
+## H1-B USB boot-HID core candidate
+
+B1 is merged through PR #50 at `77045d8`. The [H1-B result](results/h1b-rust-boot-hid.md) records a locally verified, allocation-free Rust descriptor/report library and hosted checks against existing console/GUI contracts. It is not linked into a kernel or ISO and adds no native USB input, controller operation or physical qualification. Transport, DMA publication and Dell EHCI/hub work require separate authorization; existing storage and safety controls remain unchanged.

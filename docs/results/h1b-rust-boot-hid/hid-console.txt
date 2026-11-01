@@ -1,0 +1,2 @@
+console-handoff: 49500 assertions PASS; actual console+keyboard+editor; bounded modeled hardware/scheduler; transfers=1007 restored=1003
+HID fixture adapter: actual console foreground handoff, epochs, stale-owner rejection, line delivery and disconnect PASS; NOT native USB input

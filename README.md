@@ -22,8 +22,10 @@ application language. VOS is not a Linux distribution and
 does not use Linux or a hosted C library inside the guest. GRUB supplies a
 Multiboot2 handoff through BIOS or UEFI; a legacy i386 baseline is also retained.
 
-The [B1 boot-reservation candidate](docs/results/b1-rust-boot-foundations.md) moves the remaining bootinfo/reservation and EFI boundary
-into the Rust archive behind the existing C ABI, with hosted and BIOS/UEFI QEMU evidence. It is locally verified and awaiting PR review.
+The [B1 boot-reservation migration](docs/results/b1-rust-boot-foundations.md) moves the remaining bootinfo/reservation and EFI boundary
+into the Rust archive behind the existing C ABI, with hosted and BIOS/UEFI QEMU evidence. It is merged through PR #50 (`77045d8`).
+
+The [H1-B boot-HID core](docs/results/h1b-rust-boot-hid.md) is a locally verified candidate: bounded Rust descriptor/report logic and hosted input-contract adapters. It is not connected to a USB transport or the production kernel; native USB input remains unavailable.
 
 - Higher-half kernel, protected memory/stacks, timer-preempted isolated ring-3
   processes, kernel threads and bounded IPC.
