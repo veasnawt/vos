@@ -1,0 +1,20 @@
+
+running 1 test
+test punctuation ... FAILED
+
+failures:
+
+---- punctuation stdout ----
+
+thread 'punctuation' (18956) panicked at tests/rust/ps2_keyboard.rs:11:70:
+assertion `left == right` failed
+  left: 63
+ right: 33
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    punctuation
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 10 filtered out; finished in 0.00s
+

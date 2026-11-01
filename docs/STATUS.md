@@ -217,8 +217,7 @@ At that merge, `boot_mmap_entry` and `boot_reserve` remained C (B1 below moves t
 physical hardware NOT TESTED. Its gate runs as one step of the Build smoke job, which passed together with the other required
 checks on the merge commit.
 
-The [B1 Rust boot-reservation candidate](results/b1-rust-boot-foundations.md) is locally verified on `feat/b1-rust-boot-foundations`,
-not merged. Nine reservation/EFI boundary symbols are Rust-owned behind unchanged C ABIs; the three remaining C implementation files
+The [B1 Rust boot-reservation migration](results/b1-rust-boot-foundations.md) is merged through [PR #50](https://github.com/veasnawt/vos/pull/50) at `77045d829f60475b7110e05816a82e75eea62da2`. Nine reservation/EFI boundary symbols are Rust-owned behind unchanged C ABIs; the three remaining C implementation files
 are retired into frozen test references. Differential, compatibility, main-image selftests and BIOS/UEFI 128 MiB/2 GiB native proofs pass.
 Loaded image growth is zero; unsafe glue remains audited and physical hardware is NOT TESTED. Further migration requires separate authorization.
 
@@ -561,3 +560,5 @@ zero ahead/three behind main. Local main/origin-main stay bbca69d; closure stays
 uncommitted. The original final audit passed before interruption. Its historical
 remote pin is preserved; the independently checked resume record links the new
 owner merge, unchanged runtime evidence and final accounting.
+
+The [R2 Rust PS/2 keyboard decoder candidate](results/r2-keyboard-decode-rust.md) moves only `keyboard_decode()` and its two tables behind the unchanged seven-byte C ABI. Local hosted and BIOS/UEFI 128 MiB/2 GiB gates pass; PR CI and human review/merge remain required. Controller I/O and routing remain C; USB input and physical hardware are NOT TESTED. Loaded section growth is zero; the hosted decoder microbenchmark is 1.529× the C baseline and is disclosed for review. Wider R2 and R3–R5 remain incomplete.

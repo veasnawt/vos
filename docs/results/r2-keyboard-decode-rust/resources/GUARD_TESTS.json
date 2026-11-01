@@ -1,0 +1,57 @@
+{
+  "pass": true,
+  "cases": [
+    {
+      "case": "pass",
+      "exit": 0,
+      "expected": 0
+    },
+    {
+      "case": "stop-forecast",
+      "exit": 99,
+      "expected": 99
+    },
+    {
+      "case": "stop-forecast-active-stop",
+      "exit": 98
+    },
+    {
+      "case": "hard-forecast",
+      "exit": 99,
+      "expected": 99
+    },
+    {
+      "case": "hard-forecast-active-stop",
+      "exit": 98
+    },
+    {
+      "case": "C-floor",
+      "exit": 99,
+      "expected": 99
+    },
+    {
+      "case": "C-floor-active-stop",
+      "exit": 98
+    },
+    {
+      "case": "growth",
+      "exit": 98,
+      "expected": 98
+    },
+    {
+      "case": "growth-active-stop",
+      "exit": 98
+    },
+    {
+      "case": "actual-monitor-pass",
+      "exit": 0
+    },
+    {
+      "case": "monitor-lock-contention",
+      "refused": true
+    }
+  ],
+  "guard_sha256": "2f45aedf473f2ea36aa78fac8193966d88d858a455b8af7dae6b6ff10f7ef981",
+  "old_guard_unchanged": true,
+  "H2_used": false
+}

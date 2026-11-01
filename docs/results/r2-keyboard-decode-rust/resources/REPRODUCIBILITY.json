@@ -1,0 +1,8 @@
+{
+  "candidate_and_repro_byte_identical": true,
+  "GUI_archive_matches_candidate": true,
+  "sha256": {
+    "vos.bin": "02fd50c46661abe979ef43179d8473edf7e7bc5334fb3c27d42ff7e4d3df10df",
+    "rust/libvos_kernel.a": "7feb5eaa927af1478ebe919ca771e9b8c215c3a33dd1c07b66ab27729940f6e1"
+  }
+}

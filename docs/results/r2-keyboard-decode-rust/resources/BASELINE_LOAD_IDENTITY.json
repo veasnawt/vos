@@ -1,0 +1,47 @@
+{
+  "loaded_segments_identical": true,
+  "segments": [
+    {
+      "flags": 5,
+      "vaddr": 1048576,
+      "paddr": 1048576,
+      "filesz": 4096,
+      "memsz": 4096,
+      "sha256": "a51f87b7319ff92fe9113999d0bef84153fd2f3ae3cc4c6b6b64ea7e95a5b204"
+    },
+    {
+      "flags": 6,
+      "vaddr": 1052672,
+      "paddr": 1052672,
+      "filesz": 40,
+      "memsz": 24576,
+      "sha256": "8a47426e96a1316b74be84dda219975ca6c74163287f8042c84699ccd235d58d"
+    },
+    {
+      "flags": 5,
+      "vaddr": 18446744071563145216,
+      "paddr": 1077248,
+      "filesz": 274432,
+      "memsz": 274432,
+      "sha256": "b22dd0fbde4fd031ceae9435fe01db9780473c38a616817703695803bf36729a"
+    },
+    {
+      "flags": 4,
+      "vaddr": 18446744071563419648,
+      "paddr": 1351680,
+      "filesz": 57344,
+      "memsz": 57344,
+      "sha256": "ff7f0934813e05b4fe339d051c6caf84021c31931d742ae179ebe48170c79aa6"
+    },
+    {
+      "flags": 6,
+      "vaddr": 18446744071563476992,
+      "paddr": 1409024,
+      "filesz": 512,
+      "memsz": 598016,
+      "sha256": "7af4380514b3e56908a74cb44ce81063d6e807548bf7ac7fdb2f793621833c31"
+    }
+  ],
+  "accepted_runtime_evidence": "main B1 four BIOS/UEFI 128MiB/2GiB cases, exact matching production inputs",
+  "new_baseline_archive_sha256": "eae331c5a97703f8ebe146d7890df1acc1f9b43db32ab84645fb31fc46c4040e"
+}

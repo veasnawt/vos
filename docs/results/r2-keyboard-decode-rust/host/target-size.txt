@@ -1,0 +1,13 @@
+/home/veasnawt/src/vos-r2-keyboard/build/keyboard-host/target-ffi.o  :
+section                                             size   addr
+.text                                                  0      0
+.text.keyboard_decode                                431      0
+.rodata.keyboard_decode                              240      0
+.stack_sizes                                           9      0
+.rodata..Lanon.c86901d9f683afd0375ca6e3bb0f6ba5.0    128      0
+.rodata..Lanon.c86901d9f683afd0375ca6e3bb0f6ba5.1    128      0
+.comment                                              54      0
+.note.GNU-stack                                        0      0
+Total                                                990
+
+

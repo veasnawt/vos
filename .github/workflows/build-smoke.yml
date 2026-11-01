@@ -104,6 +104,11 @@ jobs:
             --archive build/x86_64/rust/libvos_kernel.a \
             --rustc "$RUSTC" --out build/r2b-pointer-ci
 
+      - name: Verify Rust PS/2 keyboard decoder and frozen C equivalence
+        run: |
+          python3 -I -B scripts/test-ps2-keyboard-rust.py \
+            --archive build/x86_64/rust/libvos_kernel.a \
+            --rustc "$RUSTC" --out build/r2-keyboard-ci
       - name: Verify USB.2-C1 read-only xHCI qualification and USB.2-B ownership
         run: |
           python3 -I -B scripts/test-usb2c1.py \

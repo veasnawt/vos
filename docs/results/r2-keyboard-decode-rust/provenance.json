@@ -1,0 +1,26 @@
+{
+  "utc": "2026-11-01T14:45:39.183845+00:00",
+  "baseline": "77045d829f60475b7110e05816a82e75eea62da2",
+  "status": "LOCAL_GATES_PASS_AWAITING_PR_CI",
+  "H1B": "PR51 open; no source dependency",
+  "screenshot_provenance": "Byte-for-byte QMP screendump format=png from separate actual BIOS/UEFI normal 128M executions; original outputs retained",
+  "production_source_sha256": {
+    "kernel/rust/input/ps2_keyboard.rs": "955ea062d40f840c6d287095cc9c5ec9123507b6f9252ccb5bb9bb0fbf41d535",
+    "arch/x86_64/rust/ps2_keyboard.rs": "70df2669a69454f524c6fb3b8a125942b1f507a134e86bab6e582da653c30e22",
+    "arch/x86_64/keyboard.c": "3459345b0ef745eebb1d4e445a155df1c0c6b9e5be4806fd9229d0af160ddde6",
+    "arch/x86_64/keyboard.h": "c6104c37cd72472e32a16471a22c2149e15e68f4baff2c64072a054b088a68b7",
+    "tests/reference/ps2-keyboard.c": "7024bcd4db5f6618de8ce360c66e00febf6dad4959b3e0b9f26a29ac3f0e952f",
+    "tests/host/ps2-keyboard-differential.c": "61681662bc540db1294fa0ab30e197931ef934caf032226f73f938d03ec5c8ae",
+    "tests/rust/ps2_keyboard.rs": "892f3e6feaf699a87fbede4bb97e751f9eff4fb9548a4edd34a877f2c89c3cf5"
+  },
+  "test_driver_sha256": {
+    "scripts/test-ps2-keyboard-rust.py": "3543c6fe6058876ae867a8ad2446a795a637c7a90ca3880b3c5f07a5e6fca72e",
+    "scripts/test-ps2-pointer-native.py": "a9981c62910a87e5d51e1544f89f2a5533eb8ce1647f2a768107f51d568d7f36"
+  },
+  "tools": {
+    "rustc": "rustc 1.100.0-nightly (2e2b193f8 2026-09-02)",
+    "gcc": "gcc (Ubuntu 15.2.0-16ubuntu1) 15.2.0",
+    "ld": "GNU ld (GNU Binutils for Ubuntu) 2.46",
+    "qemu": "QEMU emulator version 10.2.1 (Debian 1:10.2.1+ds-1ubuntu3.2)"
+  }
+}
