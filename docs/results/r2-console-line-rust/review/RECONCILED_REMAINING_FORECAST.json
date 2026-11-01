@@ -1,0 +1,20 @@
+{
+  "utc": "2026-11-01T19:07:22.435528+00:00",
+  "retained_current": 73279368,
+  "remaining_projections": {
+    "final_kernel": 16000000,
+    "repeat_kernel": 16000000,
+    "GUI_kernel": 17000000,
+    "final_hosted": 10000000,
+    "native_media_and_all_8_case_outputs": 48000000,
+    "temporary_scratch_reserve": 16000000,
+    "input_regression": 3000000,
+    "keyboard_focused": 1000000,
+    "documentation_evidence": 2000000
+  },
+  "peak_with_remaining_25percent": 234529368,
+  "STOP": 240000000,
+  "caps_changed": false,
+  "all_previous_outputs_retained": true,
+  "basis": "Kernel15.05/15.06MB measured, full hosted9.0MB measured; prior eight-case native directory45.194MB includes ISOs, all serial/PNG/QMP evidence and producer staging. Count native48MB once rather than adding duplicate runtime12MB. Temporary16MB retained. Existing keyboard source/mutations reused by identity; rerun focused production-archive differential. No verification matrix reduced."
+}

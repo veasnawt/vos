@@ -1,0 +1,20 @@
+
+running 1 test
+test zero_length ... FAILED
+
+failures:
+
+---- zero_length stdout ----
+
+thread 'zero_length' (30699) panicked at tests/rust/console_line.rs:17:68:
+assertion `left == right` failed
+  left: 1
+ right: 0
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    zero_length
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 9 filtered out; finished in 0.00s
+

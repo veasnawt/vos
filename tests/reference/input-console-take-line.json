@@ -1,0 +1,6 @@
+{
+  "baseline": "9ab5e9f58e85dfe57f039a6a7072496f21cc9779",
+  "reference_sha256": "5923e5f55f257426fccabd12f335abc4af30792fdda5e678e0e5f96dae0e2dc1",
+  "original_source_sha256": "0297f0c2a2a053a9af9e5d33ac57e3ebd94b8353a8a5be366024a0c6eb194551",
+  "role": "frozen differential oracle only"
+}

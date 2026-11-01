@@ -1,0 +1,80 @@
+
+/home/veasnawt/src/vos-r2-console-line/build/console-host-opt/target-ffi.o:     file format elf64-x86-64
+
+
+Disassembly of section .text.input_console_take_line:
+
+0000000000000000 <input_console_take_line>:
+   0:	48 85 ff             	test   %rdi,%rdi
+   3:	0f 94 c0             	sete   %al
+   6:	48 81 ff 70 ff ff ff 	cmp    $0xffffffffffffff70,%rdi
+   d:	0f 93 c1             	setae  %cl
+  10:	08 c1                	or     %al,%cl
+  12:	b8 fe ff ff ff       	mov    $0xfffffffe,%eax
+  17:	74 01                	je     1a <input_console_take_line+0x1a>
+  19:	c3                   	ret
+  1a:	83 bf 88 00 00 00 00 	cmpl   $0x0,0x88(%rdi)
+  21:	74 19                	je     3c <input_console_take_line+0x3c>
+  23:	83 bf 8c 00 00 00 00 	cmpl   $0x0,0x8c(%rdi)
+  2a:	74 16                	je     42 <input_console_take_line+0x42>
+  2c:	b9 12 00 00 00       	mov    $0x12,%ecx
+  31:	31 c0                	xor    %eax,%eax
+  33:	f3 48 ab             	rep stos %rax,(%rdi)
+  36:	b8 fd ff ff ff       	mov    $0xfffffffd,%eax
+  3b:	c3                   	ret
+  3c:	b8 ff ff ff ff       	mov    $0xffffffff,%eax
+  41:	c3                   	ret
+  42:	4c 63 07             	movslq (%rdi),%r8
+  45:	49 81 f8 80 00 00 00 	cmp    $0x80,%r8
+  4c:	77 cb                	ja     19 <input_console_take_line+0x19>
+  4e:	48 85 f6             	test   %rsi,%rsi
+  51:	0f 95 c1             	setne  %cl
+  54:	41 39 d0             	cmp    %edx,%r8d
+  57:	0f 92 c2             	setb   %dl
+  5a:	20 ca                	and    %cl,%dl
+  5c:	48 c7 c1 fe ff ff ff 	mov    $0xfffffffffffffffe,%rcx
+  63:	4c 29 c1             	sub    %r8,%rcx
+  66:	48 39 ce             	cmp    %rcx,%rsi
+  69:	0f 96 c1             	setbe  %cl
+  6c:	20 d1                	and    %dl,%cl
+  6e:	80 f9 01             	cmp    $0x1,%cl
+  71:	75 a6                	jne    19 <input_console_take_line+0x19>
+  73:	44 89 c1             	mov    %r8d,%ecx
+  76:	48 ff c1             	inc    %rcx
+  79:	89 c8                	mov    %ecx,%eax
+  7b:	83 e0 03             	and    $0x3,%eax
+  7e:	41 83 f8 03          	cmp    $0x3,%r8d
+  82:	73 04                	jae    88 <input_console_take_line+0x88>
+  84:	31 d2                	xor    %edx,%edx
+  86:	eb 41                	jmp    c9 <input_console_take_line+0xc9>
+  88:	81 e1 fc 01 00 00    	and    $0x1fc,%ecx
+  8e:	31 d2                	xor    %edx,%edx
+  90:	44 0f b6 4c 17 04    	movzbl 0x4(%rdi,%rdx,1),%r9d
+  96:	44 88 0c 16          	mov    %r9b,(%rsi,%rdx,1)
+  9a:	44 0f b6 4c 17 05    	movzbl 0x5(%rdi,%rdx,1),%r9d
+  a0:	44 88 4c 16 01       	mov    %r9b,0x1(%rsi,%rdx,1)
+  a5:	44 0f b6 4c 17 06    	movzbl 0x6(%rdi,%rdx,1),%r9d
+  ab:	44 88 4c 16 02       	mov    %r9b,0x2(%rsi,%rdx,1)
+  b0:	44 0f b6 4c 17 07    	movzbl 0x7(%rdi,%rdx,1),%r9d
+  b6:	44 88 4c 16 03       	mov    %r9b,0x3(%rsi,%rdx,1)
+  bb:	48 83 c2 04          	add    $0x4,%rdx
+  bf:	48 39 d1             	cmp    %rdx,%rcx
+  c2:	75 cc                	jne    90 <input_console_take_line+0x90>
+  c4:	48 85 c0             	test   %rax,%rax
+  c7:	74 28                	je     f1 <input_console_take_line+0xf1>
+  c9:	48 01 d6             	add    %rdx,%rsi
+  cc:	48 8d 0c 3a          	lea    (%rdx,%rdi,1),%rcx
+  d0:	48 83 c1 04          	add    $0x4,%rcx
+  d4:	31 d2                	xor    %edx,%edx
+  d6:	66 2e 0f 1f 84 00 00 	cs nopw 0x0(%rax,%rax,1)
+  dd:	00 00 00 
+  e0:	44 0f b6 0c 11       	movzbl (%rcx,%rdx,1),%r9d
+  e5:	44 88 0c 16          	mov    %r9b,(%rsi,%rdx,1)
+  e9:	48 ff c2             	inc    %rdx
+  ec:	48 39 d0             	cmp    %rdx,%rax
+  ef:	75 ef                	jne    e0 <input_console_take_line+0xe0>
+  f1:	b9 12 00 00 00       	mov    $0x12,%ecx
+  f6:	31 c0                	xor    %eax,%eax
+  f8:	f3 48 ab             	rep stos %rax,(%rdi)
+  fb:	44 89 c0             	mov    %r8d,%eax
+  fe:	c3                   	ret

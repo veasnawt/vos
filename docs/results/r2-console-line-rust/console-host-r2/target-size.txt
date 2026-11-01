@@ -1,0 +1,10 @@
+/home/veasnawt/src/vos-r2-console-line/build/console-host-r2/target-ffi.o  :
+section                         size   addr
+.text                              0      0
+.text.input_console_take_line    262      0
+.stack_sizes                       9      0
+.comment                          54      0
+.note.GNU-stack                    0      0
+Total                            325
+
+

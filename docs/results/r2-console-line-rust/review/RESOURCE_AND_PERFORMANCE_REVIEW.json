@@ -1,0 +1,108 @@
+{
+  "utc": "2026-11-01T19:12:47.959426+00:00",
+  "status": "CORRECTNESS_RESOURCE_NATIVE_PASS_PERFORMANCE_APPROVAL_REQUIRED",
+  "reproducible_sha256": {
+    "vos.bin": "c36de4ba5922ee4689411269fc85888e4923868a3e87557105cec664aba16ab4",
+    "rust/libvos_kernel.a": "d5645ff8e105eb1ad8a71704e6b27884dc84075e20dbc148ec67271dc5c9dd3f"
+  },
+  "GUI_archive_matches": true,
+  "allocated_sections_before": {
+    ".boot.text": 4096,
+    ".boot.data": 40,
+    ".boot.bss": 20480,
+    ".text": 274432,
+    ".rodata": 57344,
+    ".data": 464,
+    ".got": 24,
+    ".got.plt": 24,
+    ".bss": 597504
+  },
+  "allocated_sections_after": {
+    ".boot.text": 4096,
+    ".boot.data": 40,
+    ".boot.bss": 20480,
+    ".text": 274432,
+    ".rodata": 57344,
+    ".data": 464,
+    ".got": 24,
+    ".got.plt": 24,
+    ".bss": 597504
+  },
+  "loaded_growth_bytes": 0,
+  "stack_frame_bytes": 0,
+  "permanent_state_growth": 0,
+  "heap_allocations": 0,
+  "DMA_pages": 0,
+  "no_helper_calls_or_SIMD": true,
+  "Rust_symbol_owner": [
+    "/home/veasnawt/src/vos-r2-console-line/build/final/rust/libvos_kernel.a:libvos_kernel.vos_kernel.45b20e7284a592af-cgu.0.rcgu.o:0000000000000000 T input_console_take_line"
+  ],
+  "C_only_imports": true,
+  "existing_editor_bytes": 144,
+  "output_max_bytes": 129,
+  "native_cases": 8,
+  "core_tests": 10,
+  "mutations_detected": 10,
+  "differential_cases_per_variant": 222017,
+  "variants": 3,
+  "benchmark": {
+    "medians": {
+      "empty": {
+        "C_ns": 13.2786,
+        "Rust_ns": 12.9109,
+        "ratio": 0.9723088277378639,
+        "investigation_required": false
+      },
+      "max128": {
+        "C_ns": 67.1644,
+        "Rust_ns": 54.1706,
+        "ratio": 0.806537391832578,
+        "investigation_required": false
+      },
+      "nospace": {
+        "C_ns": 2.0634,
+        "Rust_ns": 3.5352,
+        "ratio": 1.7132887467287001,
+        "investigation_required": true
+      },
+      "overflow": {
+        "C_ns": 12.3988,
+        "Rust_ns": 11.9762,
+        "ratio": 0.9659160563925542,
+        "investigation_required": false
+      },
+      "pending": {
+        "C_ns": 1.9151,
+        "Rust_ns": 2.184,
+        "ratio": 1.140410422432249,
+        "investigation_required": true
+      },
+      "short16": {
+        "C_ns": 18.1627,
+        "Rust_ns": 17.3656,
+        "ratio": 0.9561133531908802,
+        "investigation_required": false
+      }
+    },
+    "method": "7 alternating-order samples, 5000 batches x256 calls; 10 warm-up batches; identical state preparation outside each timed batch; monotonic clock aggregate, common timing overhead retained; CPU affinity; production Rust archive vs O2 integer-only freestanding C oracle",
+    "scope": "hosted function-call latency/throughput, not BIOS/UEFI runtime timing",
+    "raw": "performance.csv",
+    "C_release_flags": [
+      "-O2",
+      "-ffreestanding",
+      "-fno-builtin",
+      "-fno-stack-protector",
+      "-mgeneral-regs-only",
+      "-mno-red-zone",
+      "-fcf-protection=none",
+      "-fno-stack-clash-protection"
+    ]
+  },
+  "C_compiler_default_target": [
+    "-march=                     \t\tx86-64",
+    "-mtune=                     \t\tgeneric"
+  ],
+  "source_and_policy": "Standing Rust Performance Policy; remaining pending and NOSPACE hosted regressions need explicit owner approval",
+  "actual_BIOS_UEFI_runtime_performance": "NOT TESTED; eight functional native runs and instruction traps are not guest latency measurements",
+  "baseline": "9ab5e9f58e85dfe57f039a6a7072496f21cc9779"
+}

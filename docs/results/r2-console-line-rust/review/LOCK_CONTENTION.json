@@ -1,0 +1,8 @@
+{
+  "utc": "2026-11-01T19:12:22.000519+00:00",
+  "attempt": "empty-reset-control",
+  "status": "REFUSED_BEFORE_EXECUTION",
+  "cause": "owned native-eight-cases step held exclusive postmigration.lock",
+  "worktree_writes_occurred": false,
+  "resolution": "waited for native step exit0, now scheduling the unstarted focused check; no lock bypass"
+}

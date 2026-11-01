@@ -1,0 +1,5 @@
+{
+  "change": "capacity refusal before length/output validation; all same necessary checks retained, no side effects before admission; explicit one-byte empty extraction avoids general-loop setup",
+  "evidence": "build/branch-probe",
+  "prototype_only": "Final kernel, hosted, resource and native gates remain required"
+}

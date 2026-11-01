@@ -1,0 +1,17 @@
+{
+  "status": "PASS",
+  "checks": {
+    "sanitizer": "ABI PASS: size=7 align=1 offsets=0..6, null/wrap, both guard-page boundaries and unaligned byte state\ndifferential PASS: 3703936 state/byte comparisons; 3072 encoded states; 1792 reachable states; seed=72b15e7deca0de01; hostile field bytes and 1000000-step stream\n",
+    "release": "ABI PASS: size=7 align=1 offsets=0..6, null/wrap, both guard-page boundaries and unaligned byte state\ndifferential PASS: 3703936 state/byte comparisons; 3072 encoded states; 1792 reachable states; seed=72b15e7deca0de01; hostile field bytes and 1000000-step stream\n"
+  },
+  "source_sha256": {
+    "kernel/rust/input/ps2_keyboard.rs": "955ea062d40f840c6d287095cc9c5ec9123507b6f9252ccb5bb9bb0fbf41d535",
+    "arch/x86_64/rust/ps2_keyboard.rs": "70df2669a69454f524c6fb3b8a125942b1f507a134e86bab6e582da653c30e22",
+    "arch/x86_64/keyboard.c": "3459345b0ef745eebb1d4e445a155df1c0c6b9e5be4806fd9229d0af160ddde6",
+    "arch/x86_64/keyboard.h": "c6104c37cd72472e32a16471a22c2149e15e68f4baff2c64072a054b088a68b7",
+    "tests/reference/ps2-keyboard.c": "7024bcd4db5f6618de8ce360c66e00febf6dad4959b3e0b9f26a29ac3f0e952f",
+    "tests/host/ps2-keyboard-differential.c": "61681662bc540db1294fa0ab30e197931ef934caf032226f73f938d03ec5c8ae",
+    "tests/rust/ps2_keyboard.rs": "892f3e6feaf699a87fbede4bb97e751f9eff4fb9548a4edd34a877f2c89c3cf5"
+  },
+  "unchanged_unit_mutation_evidence_reused": "PR52 exact source; no standalone mutant campaign repeated"
+}

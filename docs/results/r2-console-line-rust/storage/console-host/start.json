@@ -1,0 +1,29 @@
+{
+  "utc": "2026-11-01T19:01:22.194188+00:00",
+  "command": [
+    "python3",
+    "-I",
+    "-B",
+    "scripts/test-console-line-rust.py",
+    "--archive",
+    "build/candidate/rust/libvos_kernel.a",
+    "--rustc",
+    "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+    "--out",
+    "build/console-host"
+  ],
+  "projection": 18000000,
+  "before": {
+    "utc": "2026-11-01T19:01:21.898435+00:00",
+    "tree": 40058637,
+    "shared_git": 20969754,
+    "controls": 4069112,
+    "C_free": 58144006144,
+    "E_free": 124597628928,
+    "tmpfs_used": 0
+  },
+  "physical_E_required": 2056495462,
+  "physical_E_reserve": 1610612736,
+  "external_growth_allowance": 3000000,
+  "temporary_output_policy": "TMPDIR within guarded worktree; no Cargo/rustup installs; shared Git and controller growth separately counted"
+}

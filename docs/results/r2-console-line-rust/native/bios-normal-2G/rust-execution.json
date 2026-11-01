@@ -1,0 +1,17 @@
+[
+  {
+    "symbol": "pointer_idle",
+    "RIP": "0xffffffff80140590",
+    "stop": "T05thread:01;"
+  },
+  {
+    "symbol": "pointer_decode",
+    "RIP": "0xffffffff801404b0",
+    "stop": "T05thread:01;"
+  },
+  {
+    "symbol": "keyboard_decode",
+    "RIP": "0xffffffff801401e0",
+    "stop": "T05thread:01;"
+  }
+]

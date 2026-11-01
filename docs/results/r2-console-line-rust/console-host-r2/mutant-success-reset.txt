@@ -1,0 +1,20 @@
+
+running 1 test
+test repeated_reset ... FAILED
+
+failures:
+
+---- repeated_reset stdout ----
+
+thread 'repeated_reset' (30668) panicked at tests/rust/console_line.rs:22:88:
+assertion `left == right` failed
+  left: 2
+ right: -1
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    repeated_reset
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 9 filtered out; finished in 0.00s
+

@@ -1,0 +1,6 @@
+{
+  "proof": "valid iff 1<=address<=MAX-count; (address-1 mod 2^N)<MAX-count is identical. Exhaustive 8/9/10-bit models, 64-bit boundaries for all sizes1..144",
+  "checks_removed": false,
+  "previous_output": "build/console-host-opt",
+  "purpose": "same null/overflow checks in one interval compare rather than materialized boolean chain"
+}

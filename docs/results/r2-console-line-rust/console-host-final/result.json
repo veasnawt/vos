@@ -1,0 +1,817 @@
+{
+  "status": "PASS",
+  "commands": [
+    {
+      "argv": [
+        "gcc",
+        "-std=gnu11",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-Iarch/x86_64",
+        "-ffunction-sections",
+        "-fdata-sections",
+        "-Wl,--gc-sections",
+        "-fno-pie",
+        "-no-pie",
+        "-O1",
+        "-g",
+        "-fsanitize=address,undefined",
+        "-fno-sanitize-recover=all",
+        "-fno-omit-frame-pointer",
+        "-Dinput_console_take_line=input_console_take_line_reference",
+        "-c",
+        "tests/reference/input-console-take-line.c",
+        "-o",
+        "/home/veasnawt/src/vos-r2-console-line/build/console-host-final/sanitizer-reference.o"
+      ],
+      "log": "sanitizer-reference-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "gcc",
+        "-std=gnu11",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-Iarch/x86_64",
+        "-ffunction-sections",
+        "-fdata-sections",
+        "-Wl,--gc-sections",
+        "-fno-pie",
+        "-no-pie",
+        "-O1",
+        "-g",
+        "-fsanitize=address,undefined",
+        "-fno-sanitize-recover=all",
+        "-fno-omit-frame-pointer",
+        "tests/host/console-line-differential.c",
+        "/home/veasnawt/src/vos-r2-console-line/build/console-host-final/sanitizer-reference.o",
+        "/home/veasnawt/src/vos-r2-console-line/build/final/rust/libvos_kernel.a",
+        "-o",
+        "/home/veasnawt/src/vos-r2-console-line/build/console-host-final/sanitizer-differential"
+      ],
+      "log": "sanitizer-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/home/veasnawt/src/vos-r2-console-line/build/console-host-final/sanitizer-differential"
+      ],
+      "log": "sanitizer.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "gcc",
+        "-std=gnu11",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-Iarch/x86_64",
+        "-ffunction-sections",
+        "-fdata-sections",
+        "-Wl,--gc-sections",
+        "-fno-pie",
+        "-no-pie",
+        "-O2",
+        "-ffreestanding",
+        "-fno-builtin",
+        "-fno-stack-protector",
+        "-mgeneral-regs-only",
+        "-mno-red-zone",
+        "-fcf-protection=none",
+        "-fno-stack-clash-protection",
+        "-Dinput_console_take_line=input_console_take_line_reference",
+        "-c",
+        "tests/reference/input-console-take-line.c",
+        "-o",
+        "/home/veasnawt/src/vos-r2-console-line/build/console-host-final/release-reference.o"
+      ],
+      "log": "release-reference-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "gcc",
+        "-std=gnu11",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-Iarch/x86_64",
+        "-ffunction-sections",
+        "-fdata-sections",
+        "-Wl,--gc-sections",
+        "-fno-pie",
+        "-no-pie",
+        "-O2",
+        "-ffreestanding",
+        "-fno-builtin",
+        "-fno-stack-protector",
+        "-mno-red-zone",
+        "-fcf-protection=none",
+        "-fno-stack-clash-protection",
+        "tests/host/console-line-differential.c",
+        "/home/veasnawt/src/vos-r2-console-line/build/console-host-final/release-reference.o",
+        "/home/veasnawt/src/vos-r2-console-line/build/final/rust/libvos_kernel.a",
+        "-o",
+        "/home/veasnawt/src/vos-r2-console-line/build/console-host-final/release-differential"
+      ],
+      "log": "release-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/home/veasnawt/src/vos-r2-console-line/build/console-host-final/release-differential"
+      ],
+      "log": "release.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "taskset",
+        "-c",
+        "0",
+        "/home/veasnawt/src/vos-r2-console-line/build/console-host-final/release-differential",
+        "--bench"
+      ],
+      "log": "performance.csv",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Coverflow-checks=yes",
+        "--crate-type=rlib",
+        "--crate-name=console_line_core",
+        "/home/veasnawt/src/vos-r2-console-line/build/console-host-final/core-root.rs",
+        "-o",
+        "/home/veasnawt/src/vos-r2-console-line/build/console-host-final/libconsole_line_core.rlib"
+      ],
+      "log": "core-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Coverflow-checks=yes",
+        "--test",
+        "-Cstrip=symbols",
+        "--extern",
+        "console_line_core=/home/veasnawt/src/vos-r2-console-line/build/console-host-final/libconsole_line_core.rlib",
+        "tests/rust/console_line.rs",
+        "-o",
+        "/home/veasnawt/src/vos-r2-console-line/build/console-host-final/core-tests"
+      ],
+      "log": "core-tests-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/home/veasnawt/src/vos-r2-console-line/build/console-host-final/core-tests",
+        "--test-threads=1"
+      ],
+      "log": "core-tests.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Coverflow-checks=yes",
+        "--crate-type=rlib",
+        "--crate-name=console_line_core",
+        "/home/veasnawt/src/vos-r2-console-line/build/console-host-final/mutant-readiness/root.rs",
+        "-o",
+        "/home/veasnawt/src/vos-r2-console-line/build/console-host-final/mutant-readiness/libconsole_line_core.rlib"
+      ],
+      "log": "mutant-readiness-core-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Coverflow-checks=yes",
+        "--test",
+        "-Cstrip=symbols",
+        "--extern",
+        "console_line_core=/home/veasnawt/src/vos-r2-console-line/build/console-host-final/mutant-readiness/libconsole_line_core.rlib",
+        "tests/rust/console_line.rs",
+        "-o",
+        "/home/veasnawt/src/vos-r2-console-line/build/console-host-final/mutant-readiness/tests"
+      ],
+      "log": "mutant-readiness-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/home/veasnawt/src/vos-r2-console-line/build/console-host-final/mutant-readiness/tests",
+        "--test-threads=1",
+        "pending_precedence"
+      ],
+      "log": "mutant-readiness.txt",
+      "exit_code": 101
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Coverflow-checks=yes",
+        "--crate-type=rlib",
+        "--crate-name=console_line_core",
+        "/home/veasnawt/src/vos-r2-console-line/build/console-host-final/mutant-overflow-clear/root.rs",
+        "-o",
+        "/home/veasnawt/src/vos-r2-console-line/build/console-host-final/mutant-overflow-clear/libconsole_line_core.rlib"
+      ],
+      "log": "mutant-overflow-clear-core-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Coverflow-checks=yes",
+        "--test",
+        "-Cstrip=symbols",
+        "--extern",
+        "console_line_core=/home/veasnawt/src/vos-r2-console-line/build/console-host-final/mutant-overflow-clear/libconsole_line_core.rlib",
+        "tests/rust/console_line.rs",
+        "-o",
+        "/home/veasnawt/src/vos-r2-console-line/build/console-host-final/mutant-overflow-clear/tests"
+      ],
+      "log": "mutant-overflow-clear-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/home/veasnawt/src/vos-r2-console-line/build/console-host-final/mutant-overflow-clear/tests",
+        "--test-threads=1",
+        "overflow_reset"
+      ],
+      "log": "mutant-overflow-clear.txt",
+      "exit_code": 101
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Coverflow-checks=yes",
+        "--crate-type=rlib",
+        "--crate-name=console_line_core",
+        "/home/veasnawt/src/vos-r2-console-line/build/console-host-final/mutant-capacity-count/root.rs",
+        "-o",
+        "/home/veasnawt/src/vos-r2-console-line/build/console-host-final/mutant-capacity-count/libconsole_line_core.rlib"
+      ],
+      "log": "mutant-capacity-count-core-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Coverflow-checks=yes",
+        "--test",
+        "-Cstrip=symbols",
+        "--extern",
+        "console_line_core=/home/veasnawt/src/vos-r2-console-line/build/console-host-final/mutant-capacity-count/libconsole_line_core.rlib",
+        "tests/rust/console_line.rs",
+        "-o",
+        "/home/veasnawt/src/vos-r2-console-line/build/console-host-final/mutant-capacity-count/tests"
+      ],
+      "log": "mutant-capacity-count-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/home/veasnawt/src/vos-r2-console-line/build/console-host-final/mutant-capacity-count/tests",
+        "--test-threads=1",
+        "capacity_equality"
+      ],
+      "log": "mutant-capacity-count.txt",
+      "exit_code": 101
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Coverflow-checks=yes",
+        "--crate-type=rlib",
+        "--crate-name=console_line_core",
+        "/home/veasnawt/src/vos-r2-console-line/build/console-host-final/mutant-missing-output-check/root.rs",
+        "-o",
+        "/home/veasnawt/src/vos-r2-console-line/build/console-host-final/mutant-missing-output-check/libconsole_line_core.rlib"
+      ],
+      "log": "mutant-missing-output-check-core-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Coverflow-checks=yes",
+        "--test",
+        "-Cstrip=symbols",
+        "--extern",
+        "console_line_core=/home/veasnawt/src/vos-r2-console-line/build/console-host-final/mutant-missing-output-check/libconsole_line_core.rlib",
+        "tests/rust/console_line.rs",
+        "-o",
+        "/home/veasnawt/src/vos-r2-console-line/build/console-host-final/mutant-missing-output-check/tests"
+      ],
+      "log": "mutant-missing-output-check-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/home/veasnawt/src/vos-r2-console-line/build/console-host-final/mutant-missing-output-check/tests",
+        "--test-threads=1",
+        "null_output"
+      ],
+      "log": "mutant-missing-output-check.txt",
+      "exit_code": 101
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Coverflow-checks=yes",
+        "--crate-type=rlib",
+        "--crate-name=console_line_core",
+        "/home/veasnawt/src/vos-r2-console-line/build/console-host-final/mutant-terminator/root.rs",
+        "-o",
+        "/home/veasnawt/src/vos-r2-console-line/build/console-host-final/mutant-terminator/libconsole_line_core.rlib"
+      ],
+      "log": "mutant-terminator-core-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Coverflow-checks=yes",
+        "--test",
+        "-Cstrip=symbols",
+        "--extern",
+        "console_line_core=/home/veasnawt/src/vos-r2-console-line/build/console-host-final/mutant-terminator/libconsole_line_core.rlib",
+        "tests/rust/console_line.rs",
+        "-o",
+        "/home/veasnawt/src/vos-r2-console-line/build/console-host-final/mutant-terminator/tests"
+      ],
+      "log": "mutant-terminator-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/home/veasnawt/src/vos-r2-console-line/build/console-host-final/mutant-terminator/tests",
+        "--test-threads=1",
+        "includes_terminator"
+      ],
+      "log": "mutant-terminator.txt",
+      "exit_code": 101
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Coverflow-checks=yes",
+        "--crate-type=rlib",
+        "--crate-name=console_line_core",
+        "/home/veasnawt/src/vos-r2-console-line/build/console-host-final/mutant-copy-order/root.rs",
+        "-o",
+        "/home/veasnawt/src/vos-r2-console-line/build/console-host-final/mutant-copy-order/libconsole_line_core.rlib"
+      ],
+      "log": "mutant-copy-order-core-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Coverflow-checks=yes",
+        "--test",
+        "-Cstrip=symbols",
+        "--extern",
+        "console_line_core=/home/veasnawt/src/vos-r2-console-line/build/console-host-final/mutant-copy-order/libconsole_line_core.rlib",
+        "tests/rust/console_line.rs",
+        "-o",
+        "/home/veasnawt/src/vos-r2-console-line/build/console-host-final/mutant-copy-order/tests"
+      ],
+      "log": "mutant-copy-order-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/home/veasnawt/src/vos-r2-console-line/build/console-host-final/mutant-copy-order/tests",
+        "--test-threads=1",
+        "forward_overlap"
+      ],
+      "log": "mutant-copy-order.txt",
+      "exit_code": 101
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Coverflow-checks=yes",
+        "--crate-type=rlib",
+        "--crate-name=console_line_core",
+        "/home/veasnawt/src/vos-r2-console-line/build/console-host-final/mutant-length-bound/root.rs",
+        "-o",
+        "/home/veasnawt/src/vos-r2-console-line/build/console-host-final/mutant-length-bound/libconsole_line_core.rlib"
+      ],
+      "log": "mutant-length-bound-core-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Coverflow-checks=yes",
+        "--test",
+        "-Cstrip=symbols",
+        "--extern",
+        "console_line_core=/home/veasnawt/src/vos-r2-console-line/build/console-host-final/mutant-length-bound/libconsole_line_core.rlib",
+        "tests/rust/console_line.rs",
+        "-o",
+        "/home/veasnawt/src/vos-r2-console-line/build/console-host-final/mutant-length-bound/tests"
+      ],
+      "log": "mutant-length-bound-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/home/veasnawt/src/vos-r2-console-line/build/console-host-final/mutant-length-bound/tests",
+        "--test-threads=1",
+        "invalid_length"
+      ],
+      "log": "mutant-length-bound.txt",
+      "exit_code": 101
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Coverflow-checks=yes",
+        "--crate-type=rlib",
+        "--crate-name=console_line_core",
+        "/home/veasnawt/src/vos-r2-console-line/build/console-host-final/mutant-success-reset/root.rs",
+        "-o",
+        "/home/veasnawt/src/vos-r2-console-line/build/console-host-final/mutant-success-reset/libconsole_line_core.rlib"
+      ],
+      "log": "mutant-success-reset-core-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Coverflow-checks=yes",
+        "--test",
+        "-Cstrip=symbols",
+        "--extern",
+        "console_line_core=/home/veasnawt/src/vos-r2-console-line/build/console-host-final/mutant-success-reset/libconsole_line_core.rlib",
+        "tests/rust/console_line.rs",
+        "-o",
+        "/home/veasnawt/src/vos-r2-console-line/build/console-host-final/mutant-success-reset/tests"
+      ],
+      "log": "mutant-success-reset-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/home/veasnawt/src/vos-r2-console-line/build/console-host-final/mutant-success-reset/tests",
+        "--test-threads=1",
+        "repeated_reset"
+      ],
+      "log": "mutant-success-reset.txt",
+      "exit_code": 101
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Coverflow-checks=yes",
+        "--crate-type=rlib",
+        "--crate-name=console_line_core",
+        "/home/veasnawt/src/vos-r2-console-line/build/console-host-final/mutant-return-length/root.rs",
+        "-o",
+        "/home/veasnawt/src/vos-r2-console-line/build/console-host-final/mutant-return-length/libconsole_line_core.rlib"
+      ],
+      "log": "mutant-return-length-core-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Coverflow-checks=yes",
+        "--test",
+        "-Cstrip=symbols",
+        "--extern",
+        "console_line_core=/home/veasnawt/src/vos-r2-console-line/build/console-host-final/mutant-return-length/libconsole_line_core.rlib",
+        "tests/rust/console_line.rs",
+        "-o",
+        "/home/veasnawt/src/vos-r2-console-line/build/console-host-final/mutant-return-length/tests"
+      ],
+      "log": "mutant-return-length-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/home/veasnawt/src/vos-r2-console-line/build/console-host-final/mutant-return-length/tests",
+        "--test-threads=1",
+        "includes_terminator"
+      ],
+      "log": "mutant-return-length.txt",
+      "exit_code": 101
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Coverflow-checks=yes",
+        "--crate-type=lib",
+        "-Cpanic=abort",
+        "--emit=obj",
+        "/home/veasnawt/src/vos-r2-console-line/build/console-host-final/ffi-root.rs",
+        "-o",
+        "/home/veasnawt/src/vos-r2-console-line/build/console-host-final/host-ffi.o"
+      ],
+      "log": "overflow-ffi-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "gcc",
+        "-std=gnu11",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-Iarch/x86_64",
+        "-ffunction-sections",
+        "-fdata-sections",
+        "-Wl,--gc-sections",
+        "-fno-pie",
+        "-no-pie",
+        "-O1",
+        "-g",
+        "-fsanitize=address,undefined",
+        "-fno-sanitize-recover=all",
+        "tests/host/console-line-differential.c",
+        "/home/veasnawt/src/vos-r2-console-line/build/console-host-final/sanitizer-reference.o",
+        "/home/veasnawt/src/vos-r2-console-line/build/console-host-final/host-ffi.o",
+        "-o",
+        "/home/veasnawt/src/vos-r2-console-line/build/console-host-final/overflow-differential"
+      ],
+      "log": "overflow-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/home/veasnawt/src/vos-r2-console-line/build/console-host-final/overflow-differential"
+      ],
+      "log": "overflow.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Coverflow-checks=yes",
+        "--crate-type=lib",
+        "--target=x86_64-unknown-none",
+        "-Cpanic=abort",
+        "-Ccode-model=kernel",
+        "-Crelocation-model=static",
+        "-Cno-redzone=yes",
+        "-Cforce-unwind-tables=no",
+        "-Zemit-stack-sizes",
+        "--emit=obj",
+        "/home/veasnawt/src/vos-r2-console-line/build/console-host-final/ffi-root.rs",
+        "-o",
+        "/home/veasnawt/src/vos-r2-console-line/build/console-host-final/target-ffi.o"
+      ],
+      "log": "target-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "nm",
+        "-u",
+        "/home/veasnawt/src/vos-r2-console-line/build/console-host-final/target-ffi.o"
+      ],
+      "log": "target-undefined.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "size",
+        "-A",
+        "/home/veasnawt/src/vos-r2-console-line/build/console-host-final/target-ffi.o"
+      ],
+      "log": "target-size.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "objdump",
+        "-dr",
+        "/home/veasnawt/src/vos-r2-console-line/build/console-host-final/target-ffi.o"
+      ],
+      "log": "target-disassembly.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "objdump",
+        "-dr",
+        "/home/veasnawt/src/vos-r2-console-line/build/console-host-final/release-reference.o"
+      ],
+      "log": "C-release-disassembly.txt",
+      "exit_code": 0
+    }
+  ],
+  "Rust_sanitized": false,
+  "archive_sha256": "d5645ff8e105eb1ad8a71704e6b27884dc84075e20dbc148ec67271dc5c9dd3f",
+  "seed": "a76c209ecf315b84",
+  "source_sha256": {
+    "kernel/rust/input/console_line.rs": "27f99d9ba83ef63a7bdb686814b42a0a0beb35fb920877cc81f330397d8d009f",
+    "arch/x86_64/rust/console_line.rs": "32bdf0d337db975f6fe9f9d7373275428cd01d53073016e6ee505a18f9fe351e",
+    "arch/x86_64/input_console.c": "f1e2e83d4595b70878cd923394248f9232ff39497b1f8bd2bd61770ed040bef4",
+    "arch/x86_64/input_console.h": "6c15e09bb182334f8bf0f5637b6857b44d2d148fd6ff20e896c7680bf6c4f119",
+    "tests/reference/input-console-take-line.c": "5923e5f55f257426fccabd12f335abc4af30792fdda5e678e0e5f96dae0e2dc1",
+    "tests/host/console-line-differential.c": "3b2108f2e1a01b20437873aa4c3fe192afba50b13fd58ec2386760840de98f71",
+    "tests/rust/console_line.rs": "376a78fcddbe16aca0412064f32ede9c87bfc4dcc119e67a88fc2235ec552760"
+  },
+  "sanitizer": "ABI/guard PASS: 144B align4 offsets0/4/136/140, null/wrap, both editor edges, exact output edge, oversized refusal\ndifferential PASS: 222017 cases including exhaustive valid lengths/capacities, noncanonical flags, forward overlaps and seed=a76c209ecf315b84\n",
+  "release": "ABI/guard PASS: 144B align4 offsets0/4/136/140, null/wrap, both editor edges, exact output edge, oversized refusal\ndifferential PASS: 222017 cases including exhaustive valid lengths/capacities, noncanonical flags, forward overlaps and seed=a76c209ecf315b84\n",
+  "performance": {
+    "medians": {
+      "empty": {
+        "C_ns": 13.2786,
+        "Rust_ns": 12.9109,
+        "ratio": 0.9723088277378639,
+        "investigation_required": false
+      },
+      "max128": {
+        "C_ns": 67.1644,
+        "Rust_ns": 54.1706,
+        "ratio": 0.806537391832578,
+        "investigation_required": false
+      },
+      "nospace": {
+        "C_ns": 2.0634,
+        "Rust_ns": 3.5352,
+        "ratio": 1.7132887467287001,
+        "investigation_required": true
+      },
+      "overflow": {
+        "C_ns": 12.3988,
+        "Rust_ns": 11.9762,
+        "ratio": 0.9659160563925542,
+        "investigation_required": false
+      },
+      "pending": {
+        "C_ns": 1.9151,
+        "Rust_ns": 2.184,
+        "ratio": 1.140410422432249,
+        "investigation_required": true
+      },
+      "short16": {
+        "C_ns": 18.1627,
+        "Rust_ns": 17.3656,
+        "ratio": 0.9561133531908802,
+        "investigation_required": false
+      }
+    },
+    "method": "7 alternating-order samples, 5000 batches x256 calls; 10 warm-up batches; identical state preparation outside each timed batch; monotonic clock aggregate, common timing overhead retained; CPU affinity; production Rust archive vs O2 integer-only freestanding C oracle",
+    "scope": "hosted function-call latency/throughput, not BIOS/UEFI runtime timing",
+    "raw": "performance.csv",
+    "C_release_flags": [
+      "-O2",
+      "-ffreestanding",
+      "-fno-builtin",
+      "-fno-stack-protector",
+      "-mgeneral-regs-only",
+      "-mno-red-zone",
+      "-fcf-protection=none",
+      "-fno-stack-clash-protection"
+    ]
+  },
+  "core_tests": "\nrunning 10 tests\ntest capacity_equality ... ok\ntest forward_overlap ... ok\ntest includes_terminator ... ok\ntest invalid_length ... ok\ntest maximum ... ok\ntest null_output ... ok\ntest overflow_reset ... ok\ntest pending_precedence ... ok\ntest repeated_reset ... ok\ntest zero_length ... ok\n\ntest result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n",
+  "mutations": {
+    "readiness": {
+      "assertion": "pending_precedence",
+      "detected": true
+    },
+    "overflow-clear": {
+      "assertion": "overflow_reset",
+      "detected": true
+    },
+    "capacity-count": {
+      "assertion": "capacity_equality",
+      "detected": true
+    },
+    "missing-output-check": {
+      "assertion": "null_output",
+      "detected": true
+    },
+    "terminator": {
+      "assertion": "includes_terminator",
+      "detected": true
+    },
+    "copy-order": {
+      "assertion": "forward_overlap",
+      "detected": true
+    },
+    "length-bound": {
+      "assertion": "invalid_length",
+      "detected": true
+    },
+    "success-reset": {
+      "assertion": "repeated_reset",
+      "detected": true
+    },
+    "return-length": {
+      "assertion": "includes_terminator",
+      "detected": true
+    }
+  },
+  "overflow_ffi": "ABI/guard PASS: 144B align4 offsets0/4/136/140, null/wrap, both editor edges, exact output edge, oversized refusal\ndifferential PASS: 222017 cases including exhaustive valid lengths/capacities, noncanonical flags, forward overlaps and seed=a76c209ecf315b84\n",
+  "stack_frames": {
+    "input_console_take_line": 0
+  },
+  "undefined": "",
+  "sections": "/home/veasnawt/src/vos-r2-console-line/build/console-host-final/target-ffi.o  :\nsection                         size   addr\n.text                              0      0\n.text.input_console_take_line    255      0\n.stack_sizes                       9      0\n.comment                          54      0\n.note.GNU-stack                    0      0\nTotal                            318\n\n\n",
+  "disassembly": "\n/home/veasnawt/src/vos-r2-console-line/build/console-host-final/target-ffi.o:     file format elf64-x86-64\n\n\nDisassembly of section .text.input_console_take_line:\n\n0000000000000000 <input_console_take_line>:\n   0:\t48 8d 8f 90 00 00 00 \tlea    0x90(%rdi),%rcx\n   7:\tb8 fe ff ff ff       \tmov    $0xfffffffe,%eax\n   c:\t48 81 f9 91 00 00 00 \tcmp    $0x91,%rcx\n  13:\t73 01                \tjae    16 <input_console_take_line+0x16>\n  15:\tc3                   \tret\n  16:\t83 bf 88 00 00 00 00 \tcmpl   $0x0,0x88(%rdi)\n  1d:\t74 19                \tje     38 <input_console_take_line+0x38>\n  1f:\t83 bf 8c 00 00 00 00 \tcmpl   $0x0,0x8c(%rdi)\n  26:\t74 16                \tje     3e <input_console_take_line+0x3e>\n  28:\tb9 12 00 00 00       \tmov    $0x12,%ecx\n  2d:\t31 c0                \txor    %eax,%eax\n  2f:\tf3 48 ab             \trep stos %rax,(%rdi)\n  32:\tb8 fd ff ff ff       \tmov    $0xfffffffd,%eax\n  37:\tc3                   \tret\n  38:\tb8 ff ff ff ff       \tmov    $0xffffffff,%eax\n  3d:\tc3                   \tret\n  3e:\t44 8b 07             \tmov    (%rdi),%r8d\n  41:\t81 fa 81 00 00 00    \tcmp    $0x81,%edx\n  47:\tb9 81 00 00 00       \tmov    $0x81,%ecx\n  4c:\t0f 42 ca             \tcmovb  %edx,%ecx\n  4f:\t41 39 c8             \tcmp    %ecx,%r8d\n  52:\t73 c1                \tjae    15 <input_console_take_line+0x15>\n  54:\t49 8d 48 01          \tlea    0x1(%r8),%rcx\n  58:\t48 89 f2             \tmov    %rsi,%rdx\n  5b:\t48 f7 da             \tneg    %rdx\n  5e:\t48 39 ca             \tcmp    %rcx,%rdx\n  61:\t76 b2                \tjbe    15 <input_console_take_line+0x15>\n  63:\t45 85 c0             \ttest   %r8d,%r8d\n  66:\t74 0f                \tje     77 <input_console_take_line+0x77>\n  68:\t89 c8                \tmov    %ecx,%eax\n  6a:\t83 e0 03             \tand    $0x3,%eax\n  6d:\t41 83 f8 03          \tcmp    $0x3,%r8d\n  71:\t73 17                \tjae    8a <input_console_take_line+0x8a>\n  73:\t31 d2                \txor    %edx,%edx\n  75:\teb 52                \tjmp    c9 <input_console_take_line+0xc9>\n  77:\t0f b6 47 04          \tmovzbl 0x4(%rdi),%eax\n  7b:\t88 06                \tmov    %al,(%rsi)\n  7d:\tb9 12 00 00 00       \tmov    $0x12,%ecx\n  82:\t31 c0                \txor    %eax,%eax\n  84:\tf3 48 ab             \trep stos %rax,(%rdi)\n  87:\t31 c0                \txor    %eax,%eax\n  89:\tc3                   \tret\n  8a:\t83 e1 fc             \tand    $0xfffffffc,%ecx\n  8d:\t31 d2                \txor    %edx,%edx\n  8f:\t90                   \tnop\n  90:\t44 0f b6 4c 17 04    \tmovzbl 0x4(%rdi,%rdx,1),%r9d\n  96:\t44 88 0c 16          \tmov    %r9b,(%rsi,%rdx,1)\n  9a:\t44 0f b6 4c 17 05    \tmovzbl 0x5(%rdi,%rdx,1),%r9d\n  a0:\t44 88 4c 16 01       \tmov    %r9b,0x1(%rsi,%rdx,1)\n  a5:\t44 0f b6 4c 17 06    \tmovzbl 0x6(%rdi,%rdx,1),%r9d\n  ab:\t44 88 4c 16 02       \tmov    %r9b,0x2(%rsi,%rdx,1)\n  b0:\t44 0f b6 4c 17 07    \tmovzbl 0x7(%rdi,%rdx,1),%r9d\n  b6:\t44 88 4c 16 03       \tmov    %r9b,0x3(%rsi,%rdx,1)\n  bb:\t48 83 c2 04          \tadd    $0x4,%rdx\n  bf:\t48 39 d1             \tcmp    %rdx,%rcx\n  c2:\t75 cc                \tjne    90 <input_console_take_line+0x90>\n  c4:\t48 85 c0             \ttest   %rax,%rax\n  c7:\t74 28                \tje     f1 <input_console_take_line+0xf1>\n  c9:\t48 01 d6             \tadd    %rdx,%rsi\n  cc:\t48 8d 0c 3a          \tlea    (%rdx,%rdi,1),%rcx\n  d0:\t48 83 c1 04          \tadd    $0x4,%rcx\n  d4:\t31 d2                \txor    %edx,%edx\n  d6:\t66 2e 0f 1f 84 00 00 \tcs nopw 0x0(%rax,%rax,1)\n  dd:\t00 00 00 \n  e0:\t44 0f b6 0c 11       \tmovzbl (%rcx,%rdx,1),%r9d\n  e5:\t44 88 0c 16          \tmov    %r9b,(%rsi,%rdx,1)\n  e9:\t48 ff c2             \tinc    %rdx\n  ec:\t48 39 d0             \tcmp    %rdx,%rax\n  ef:\t75 ef                \tjne    e0 <input_console_take_line+0xe0>\n  f1:\tb9 12 00 00 00       \tmov    $0x12,%ecx\n  f6:\t31 c0                \txor    %eax,%eax\n  f8:\tf3 48 ab             \trep stos %rax,(%rdi)\n  fb:\t44 89 c0             \tmov    %r8d,%eax\n  fe:\tc3                   \tret\n",
+  "C_reference_disassembly": "\n/home/veasnawt/src/vos-r2-console-line/build/console-host-final/release-reference.o:     file format elf64-x86-64\n\n\nDisassembly of section .text.input_console_take_line_reference:\n\n0000000000000000 <input_console_take_line_reference>:\n   0:\t48 89 f9             \tmov    %rdi,%rcx\n   3:\t8b bf 88 00 00 00    \tmov    0x88(%rdi),%edi\n   9:\t85 ff                \ttest   %edi,%edi\n   b:\t0f 84 a6 00 00 00    \tje     b7 <input_console_take_line_reference+0xb7>\n  11:\t8b 81 8c 00 00 00    \tmov    0x8c(%rcx),%eax\n  17:\t85 c0                \ttest   %eax,%eax\n  19:\t75 6b                \tjne    86 <input_console_take_line_reference+0x86>\n  1b:\t48 85 f6             \ttest   %rsi,%rsi\n  1e:\t74 60                \tje     80 <input_console_take_line_reference+0x80>\n  20:\t44 8b 01             \tmov    (%rcx),%r8d\n  23:\t41 39 d0             \tcmp    %edx,%r8d\n  26:\t73 58                \tjae    80 <input_console_take_line_reference+0x80>\n  28:\t44 89 c2             \tmov    %r8d,%edx\n  2b:\t31 c0                \txor    %eax,%eax\n  2d:\t48 8d 7a 01          \tlea    0x1(%rdx),%rdi\n  31:\t0f 1f 40 00          \tnopl   0x0(%rax)\n  35:\t66 66 2e 0f 1f 84 00 \tdata16 cs nopw 0x0(%rax,%rax,1)\n  3c:\t00 00 00 00 \n  40:\t0f b6 54 01 04       \tmovzbl 0x4(%rcx,%rax,1),%edx\n  45:\t88 14 06             \tmov    %dl,(%rsi,%rax,1)\n  48:\t48 83 c0 01          \tadd    $0x1,%rax\n  4c:\t48 39 c7             \tcmp    %rax,%rdi\n  4f:\t75 ef                \tjne    40 <input_console_take_line_reference+0x40>\n  51:\t48 8d 79 08          \tlea    0x8(%rcx),%rdi\n  55:\t48 c7 01 00 00 00 00 \tmovq   $0x0,(%rcx)\n  5c:\t31 c0                \txor    %eax,%eax\n  5e:\t48 c7 81 88 00 00 00 \tmovq   $0x0,0x88(%rcx)\n  65:\t00 00 00 00 \n  69:\t48 83 e7 f8          \tand    $0xfffffffffffffff8,%rdi\n  6d:\t48 29 f9             \tsub    %rdi,%rcx\n  70:\t81 c1 90 00 00 00    \tadd    $0x90,%ecx\n  76:\tc1 e9 03             \tshr    $0x3,%ecx\n  79:\tf3 48 ab             \trep stos %rax,(%rdi)\n  7c:\t44 89 c0             \tmov    %r8d,%eax\n  7f:\tc3                   \tret\n  80:\tb8 fe ff ff ff       \tmov    $0xfffffffe,%eax\n  85:\tc3                   \tret\n  86:\t48 8d 79 08          \tlea    0x8(%rcx),%rdi\n  8a:\t48 c7 01 00 00 00 00 \tmovq   $0x0,(%rcx)\n  91:\t31 c0                \txor    %eax,%eax\n  93:\t48 c7 81 88 00 00 00 \tmovq   $0x0,0x88(%rcx)\n  9a:\t00 00 00 00 \n  9e:\t48 83 e7 f8          \tand    $0xfffffffffffffff8,%rdi\n  a2:\t48 29 f9             \tsub    %rdi,%rcx\n  a5:\t81 c1 90 00 00 00    \tadd    $0x90,%ecx\n  ab:\tc1 e9 03             \tshr    $0x3,%ecx\n  ae:\tf3 48 ab             \trep stos %rax,(%rdi)\n  b1:\tb8 fd ff ff ff       \tmov    $0xfffffffd,%eax\n  b6:\tc3                   \tret\n  b7:\tb8 ff ff ff ff       \tmov    $0xffffffff,%eax\n  bc:\tc3                   \tret\n"
+}

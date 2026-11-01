@@ -1,0 +1,22 @@
+{
+  "utc": "2026-11-01T19:03:22.827174+00:00",
+  "command": [
+    "python3",
+    "-B",
+    "/home/veasnawt/src/vos-r2b/build/b1-storage/r-series-program/r2-console-line/optimize-clear.py"
+  ],
+  "projection": 1000000,
+  "before": {
+    "utc": "2026-11-01T19:03:22.629305+00:00",
+    "tree": 49164070,
+    "shared_git": 20969754,
+    "controls": 4089641,
+    "C_free": 58142040064,
+    "E_free": 124597628928,
+    "tmpfs_used": 0
+  },
+  "physical_E_required": 2038284596,
+  "physical_E_reserve": 1610612736,
+  "external_growth_allowance": 3000000,
+  "temporary_output_policy": "TMPDIR within guarded worktree; no Cargo/rustup installs; shared Git and controller growth separately counted"
+}

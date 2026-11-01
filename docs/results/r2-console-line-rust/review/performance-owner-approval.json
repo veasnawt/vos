@@ -1,0 +1,26 @@
+{
+  "utc": "2026-11-01T19:40:25.614605+00:00",
+  "client_date": "2026-11-02",
+  "timezone": "Asia/Bangkok",
+  "owner_answer": "Approve these regressions and gated publication",
+  "scope": "This exact console-line implementation and documented hosted fallback measurements; commit/PR publication after final gates, no merge or PR52/history modification",
+  "approved_production_source_sha256": {
+    "kernel/rust/input/console_line.rs": "27f99d9ba83ef63a7bdb686814b42a0a0beb35fb920877cc81f330397d8d009f",
+    "arch/x86_64/rust/console_line.rs": "32bdf0d337db975f6fe9f9d7373275428cd01d53073016e6ee505a18f9fe351e"
+  },
+  "measurements": {
+    "PENDING": {
+      "C_ns": 1.9151,
+      "Rust_ns": 2.184,
+      "ratio": 1.1404104224
+    },
+    "NOSPACE": {
+      "C_ns": 2.0634,
+      "Rust_ns": 3.5352,
+      "ratio": 1.7132887467
+    }
+  },
+  "justification": "Extra bounded/refusal checks preserved after practical machine-code optimization; reader already admits readiness/full capacity; normal extraction/overflow at parity or faster; hosted only, guest performance NOT TESTED",
+  "standing_policy_sha256": "2576c2554b02a2830a6a7bbfabe479ff236d96a042d15fb8429da529eb3dcd8b",
+  "approval_is_not_blanket_for_future_migrations": true
+}
