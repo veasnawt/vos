@@ -1,0 +1,29 @@
+{
+  "utc": "2026-11-01T20:16:39.594071+00:00",
+  "command": [
+    "python3",
+    "-I",
+    "-B",
+    "scripts/test-boot-hid.py",
+    "--rustc",
+    "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+    "--stage",
+    "adapters",
+    "--out",
+    "build/h1b-link-before"
+  ],
+  "projection": 6000000,
+  "before": {
+    "utc": "2026-11-01T20:16:39.388503+00:00",
+    "tree": 177682729,
+    "shared_git": 21347536,
+    "controls": 4661020,
+    "C_free": 58119057408,
+    "E_free": 124597465088,
+    "tmpfs_used": 0
+  },
+  "physical_E_required": 1787247278,
+  "physical_E_reserve": 1610612736,
+  "external_growth_allowance": 6000000,
+  "temporary_output_policy": "TMPDIR within guarded worktree; no Cargo/rustup installs; shared Git and controller growth separately counted"
+}

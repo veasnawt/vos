@@ -302,4 +302,10 @@ high-water proof and the documented deep/sparse-directory progress limits.
 
 The [R2 Rust PS/2 keyboard decoder](results/r2-keyboard-decode-rust.md) is merged through [PR #52](https://github.com/veasnawt/vos/pull/52) at `9ab5e9f58e85dfe57f039a6a7072496f21cc9779`. Its hosted 1.529x result remains an optimization candidate requiring separate source authorization; accepted evidence is preserved. Wider R2 and R3–R5 remain incomplete.
 
-The [R2 Rust console line extraction candidate](results/r2-console-line-rust.md) passes local equivalence, resource and eight BIOS/UEFI native gates. Normal extraction paths are at parity or faster in hosted measurements; the owner explicitly accepted the documented pending/capacity hosted fallback regressions for gated publication. C ABI, input ownership and controller I/O are preserved. No native USB or physical hardware claim is made.
+The [R2 Rust console line extraction migration](results/r2-console-line-rust.md) is merged through [PR #53](https://github.com/veasnawt/vos/pull/53) at `fbf11d98d66c6bca4cb457c12b7f952879ad7858`, with equivalence, resource and eight BIOS/UEFI native gates. Normal extraction paths are at parity or faster in hosted measurements; the owner explicitly accepted the documented pending/capacity hosted fallback regressions for gated publication. C ABI, input ownership and controller I/O are preserved. No native USB or physical hardware claim is made.
+
+## H1-B USB boot-HID core candidate
+
+B1 is merged through PR #50 at `77045d8`. The [H1-B result](results/h1b-rust-boot-hid.md) records a locally verified, allocation-free Rust descriptor/report library and hosted checks against existing console/GUI contracts. It is not linked into a kernel or ISO and adds no native USB input, controller operation or physical qualification. Transport, DMA publication and Dell EHCI/hub work require separate authorization; existing storage and safety controls remain unchanged.
+
+[H1-B accepted-main reconciliation](results/h1b-main-reconciliation.md) updates the unmerged PR #51 hosted adapters for the Rust keyboard/console ABI from merged PRs #52/#53. HID semantics and production kernel sources are unchanged. Local component gates pass; final new-head CI and human merge review remain required. This is hosted compatibility work, not native USB activation.

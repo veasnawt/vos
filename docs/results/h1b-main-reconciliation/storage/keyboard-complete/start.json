@@ -1,0 +1,29 @@
+{
+  "utc": "2026-11-01T20:19:50.576365+00:00",
+  "command": [
+    "python3",
+    "-I",
+    "-B",
+    "scripts/test-ps2-keyboard-rust.py",
+    "--archive",
+    "build/final/rust/libvos_kernel.a",
+    "--rustc",
+    "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+    "--out",
+    "build/h1b-keyboard-regression"
+  ],
+  "projection": 10000000,
+  "before": {
+    "utc": "2026-11-01T20:19:50.369651+00:00",
+    "tree": 197779719,
+    "shared_git": 21347536,
+    "controls": 4687207,
+    "C_free": 58126479360,
+    "E_free": 124597424128,
+    "tmpfs_used": 0
+  },
+  "physical_E_required": 1747053298,
+  "physical_E_reserve": 1610612736,
+  "external_growth_allowance": 6000000,
+  "temporary_output_policy": "TMPDIR within guarded worktree; no Cargo/rustup installs; shared Git and controller growth separately counted"
+}

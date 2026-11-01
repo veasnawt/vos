@@ -1,0 +1,17 @@
+
+running 1 test
+
+thread 'ambiguity_and_counts' (44514) panicked at tests/rust/boot_hid.rs:185:9:
+assertion `left == right` failed
+  left: Ok(Selection { keyboard: Some(Binding { interface: 1, endpoint: 130, packet: 8, interval: 10, kind: Keyboard, configuration: 1 }), mouse: None })
+ right: Err(Ambiguous)
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+test ambiguity_and_counts ... FAILED
+
+failures:
+
+failures:
+    ambiguity_and_counts
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 14 filtered out; finished in 0.00s
+

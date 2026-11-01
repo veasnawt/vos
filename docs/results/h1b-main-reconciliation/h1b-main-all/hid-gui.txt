@@ -1,0 +1,2 @@
+GUI service PASS 978127 assertions; actual GUI+console+keyboard, allocation rollback, ownership, pointers, bounds, overflow/revocation
+HID fixture adapter: actual GUI grants, screen-oriented motion, button delivery, queue overflow/snapshot recovery and disconnect PASS; NOT native USB input

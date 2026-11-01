@@ -1,0 +1,189 @@
+{
+  "status": "FAIL",
+  "scope": "hosted fixtures, NOT native USB input",
+  "commands": [
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--version"
+      ],
+      "exit_code": 0,
+      "log": "rustc.txt"
+    },
+    {
+      "argv": [
+        "gcc",
+        "--version"
+      ],
+      "exit_code": 0,
+      "log": "gcc.txt"
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "--crate-name",
+        "boot_hid",
+        "--crate-type=rlib",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "/home/veasnawt/src/vos-b1-boot/kernel/rust/usb/hid/lib.rs",
+        "-o",
+        "/home/veasnawt/src/vos-b1-boot/build/h1b/adapters/libboot_hid.rlib"
+      ],
+      "exit_code": 0,
+      "log": "libboot_hid.rlib.build.txt"
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "--crate-name",
+        "hid_fixture",
+        "--crate-type=staticlib",
+        "-Cpanic=abort",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "--extern",
+        "boot_hid=/home/veasnawt/src/vos-b1-boot/build/h1b/adapters/libboot_hid.rlib",
+        "/home/veasnawt/src/vos-b1-boot/build/h1b/adapters/ffi.rs",
+        "-o",
+        "/home/veasnawt/src/vos-b1-boot/build/h1b/adapters/libfixture.a"
+      ],
+      "exit_code": 0,
+      "log": "ffi-build.txt"
+    },
+    {
+      "argv": [
+        "gcc",
+        "-std=gnu11",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-ffunction-sections",
+        "-fdata-sections",
+        "-Iarch/x86_64",
+        "-Itests/host",
+        "-fno-pie",
+        "-no-pie",
+        "-O1",
+        "-g",
+        "-fsanitize=address,undefined",
+        "-fno-sanitize-recover=all",
+        "-fno-omit-frame-pointer",
+        "-Dkeyboard_init=ps2_init",
+        "-Dkeyboard_poll=ps2_poll",
+        "-Dkeyboard_suspend=ps2_suspend",
+        "-Dkeyboard_resume=ps2_resume",
+        "-Dkeyboard_pointer_start=ps2_pointer_start",
+        "-Dkeyboard_pointer_stop=ps2_pointer_stop",
+        "-Dkeyboard_pointer_poll=ps2_pointer_poll",
+        "-Dkeyboard_pointer_lost=ps2_pointer_lost",
+        "-c",
+        "arch/x86_64/keyboard.c",
+        "-o",
+        "/home/veasnawt/src/vos-b1-boot/build/h1b/adapters/keyboard.o"
+      ],
+      "exit_code": 0,
+      "log": "keyboard-build.txt"
+    },
+    {
+      "argv": [
+        "gcc",
+        "-std=gnu11",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-ffunction-sections",
+        "-fdata-sections",
+        "-Iarch/x86_64",
+        "-Itests/host",
+        "-fno-pie",
+        "-no-pie",
+        "-O1",
+        "-g",
+        "-fsanitize=address,undefined",
+        "-fno-sanitize-recover=all",
+        "-fno-omit-frame-pointer",
+        "-DVOS_CONSOLE_HOST",
+        "tests/host/boot-hid-console.c",
+        "arch/x86_64/user_console.c",
+        "arch/x86_64/input_console.c",
+        "/home/veasnawt/src/vos-b1-boot/build/h1b/adapters/debug.c",
+        "/home/veasnawt/src/vos-b1-boot/build/h1b/adapters/keyboard.o",
+        "/home/veasnawt/src/vos-b1-boot/build/h1b/adapters/libfixture.a",
+        "-Wl,--gc-sections",
+        "-o",
+        "/home/veasnawt/src/vos-b1-boot/build/h1b/adapters/hid-console"
+      ],
+      "exit_code": 0,
+      "log": "hid-console.build.txt"
+    },
+    {
+      "argv": [
+        "/home/veasnawt/src/vos-b1-boot/build/h1b/adapters/hid-console"
+      ],
+      "exit_code": 0,
+      "log": "hid-console.txt"
+    },
+    {
+      "argv": [
+        "gcc",
+        "-std=gnu11",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-ffunction-sections",
+        "-fdata-sections",
+        "-Iarch/x86_64",
+        "-Itests/host",
+        "-fno-pie",
+        "-no-pie",
+        "-O1",
+        "-g",
+        "-fsanitize=address,undefined",
+        "-fno-sanitize-recover=all",
+        "-fno-omit-frame-pointer",
+        "-DVOS_CONSOLE_HOST",
+        "-DVOS_GUI_HOST",
+        "arch/x86_64/gui.c",
+        "tests/host/boot-hid-gui.c",
+        "arch/x86_64/user_console.c",
+        "arch/x86_64/input_console.c",
+        "/home/veasnawt/src/vos-b1-boot/build/h1b/adapters/debug.c",
+        "/home/veasnawt/src/vos-b1-boot/build/h1b/adapters/keyboard.o",
+        "/home/veasnawt/src/vos-b1-boot/build/h1b/adapters/libfixture.a",
+        "-Wl,--gc-sections",
+        "-o",
+        "/home/veasnawt/src/vos-b1-boot/build/h1b/adapters/hid-gui"
+      ],
+      "exit_code": 0,
+      "log": "hid-gui.build.txt"
+    },
+    {
+      "argv": [
+        "/home/veasnawt/src/vos-b1-boot/build/h1b/adapters/hid-gui"
+      ],
+      "exit_code": 1,
+      "log": "hid-gui.txt"
+    }
+  ],
+  "source_sha256": {
+    "kernel/rust/usb/hid/descriptor.rs": "a78a50b080ed2fb6e8b27383f7bee35e3f6c7fbef0be9d3a63674440fa7d9c5f",
+    "kernel/rust/usb/hid/input.rs": "dadaabb2b52201bc9e2731a8804c71e628a93833636dd92cad581ec27e955839",
+    "kernel/rust/usb/hid/lib.rs": "a1a4a4c055f1f996d16355199da026d355d434b3c601309a6c178b1eb8b71353",
+    "scripts/test-boot-hid.py": "854b65b74918026a40c59467ee1ae4967b4dcb6a11fa56e42ab1e3a33d46cbd5",
+    "tests/host/boot-hid-adapter.h": "ad663064a4c80a0ebaf56322b6e1229f7e2419cebb649dac0010d9ac764382f5",
+    "tests/host/boot-hid-console.c": "5a7808d20ee28aa2d70fc70a7b5733943056c3b025d70183f4ae908763ddd34f",
+    "tests/host/boot-hid-ffi.rs": "4ecb8a380b6d433c952e79e5a0436d4cdd7aa4b23797acbd6a8f59d2ebb9cf9e",
+    "tests/host/boot-hid-gui.c": "ede576ff2124a72356e1e0c440ae3c4213ebf8112443aa366041dfda073d4d42",
+    "tests/rust/boot_hid.rs": "9e157aba80fefc33e4de65a6e8dcae79f410b96bb591f3b89c0fb065566cf92a"
+  },
+  "rustc": "rustc 1.100.0-nightly (2e2b193f8 2026-09-02)",
+  "gcc": "gcc (Ubuntu 15.2.0-16ubuntu1) 15.2.0",
+  "adapters": {
+    "hid-console": "console-handoff: 49500 assertions PASS; actual console+keyboard+editor; bounded modeled hardware/scheduler; transfers=1007 restored=1003\nHID fixture adapter: actual console foreground handoff, epochs, stale-owner rejection, line delivery and disconnect PASS; NOT native USB input\n"
+  },
+  "failure": "hid-gui.txt unexpected exit 1"
+}

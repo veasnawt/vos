@@ -1,0 +1,32 @@
+{
+  "production_or_HID_core_changed": false,
+  "corrected_ownership_proof": {
+    "hid-console": [
+      "pointer_decode",
+      "keyboard_decode",
+      "input_console_take_line"
+    ],
+    "hid-gui": [
+      "pointer_decode",
+      "pointer_idle",
+      "keyboard_decode"
+    ],
+    "ps2-regression": [
+      "pointer_decode",
+      "pointer_idle",
+      "keyboard_decode"
+    ]
+  },
+  "retained_current": 188973857,
+  "remaining": {
+    "HID_mutations": 9000000,
+    "HID_resources": 1000000,
+    "keyboard": 10000000,
+    "console": 10000000,
+    "GUI": 3000000,
+    "docs": 2000000
+  },
+  "peak_with_25percent": 232723857,
+  "STOP": 240000000,
+  "no_cleanup": true
+}

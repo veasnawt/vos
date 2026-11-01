@@ -1,0 +1,15 @@
+
+running 10 tests
+test capacity_equality ... ok
+test forward_overlap ... ok
+test includes_terminator ... ok
+test invalid_length ... ok
+test maximum ... ok
+test null_output ... ok
+test overflow_reset ... ok
+test pending_precedence ... ok
+test repeated_reset ... ok
+test zero_length ... ok
+
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

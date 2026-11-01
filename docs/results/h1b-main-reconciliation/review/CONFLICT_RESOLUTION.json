@@ -1,0 +1,11 @@
+{
+  "conflicts": [
+    "README.md",
+    "docs/STATUS.md",
+    "docs/ROADMAP.md"
+  ],
+  "resolution": "Keep accepted main summaries and append existing H1 candidate status; mark PR53 merged",
+  "all_production_main_unchanged": true,
+  "HID_core_matches_original": true,
+  "CI_gates_preserved": true
+}

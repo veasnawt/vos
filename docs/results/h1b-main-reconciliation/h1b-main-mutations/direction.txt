@@ -1,0 +1,17 @@
+
+running 1 test
+
+thread 'mouse_direction_buttons_and_relative_repetition' (44353) panicked at tests/rust/boot_hid.rs:375:5:
+assertion `left == right` failed
+  left: [Pointer { dx: -128, dy: -127, buttons: 1 }]
+ right: [Pointer { dx: -128, dy: 127, buttons: 1 }]
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+test mouse_direction_buttons_and_relative_repetition ... FAILED
+
+failures:
+
+failures:
+    mouse_direction_buttons_and_relative_repetition
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 14 filtered out; finished in 0.00s
+

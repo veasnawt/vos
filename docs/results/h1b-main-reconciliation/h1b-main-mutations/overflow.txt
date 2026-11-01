@@ -1,0 +1,17 @@
+
+running 1 test
+
+thread 'queue_saturation_is_atomic_and_reset_cannot_be_lost' (44386) panicked at tests/rust/boot_hid.rs:358:5:
+assertion `left == right` failed
+  left: [Key { usage: 4, down: true }, Key { usage: 4, down: false }, Key { usage: 4, down: true }, Key { usage: 4, down: false }, Key { usage: 4, down: true }, Key { usage: 4, down: false }, Key { usage: 4, down: true }, Key { usage: 4, down: false }, Key { usage: 4, down: true }, Key { usage: 4, down: false }, Key { usage: 4, down: true }, Key { usage: 4, down: false }, Key { usage: 4, down: true }, Key { usage: 4, down: false }, Key { usage: 4, down: true }, Key { usage: 4, down: false }, Key { usage: 4, down: true }, Key { usage: 4, down: false }, Key { usage: 4, down: true }, Key { usage: 4, down: false }, Key { usage: 4, down: true }, Key { usage: 4, down: false }, Key { usage: 4, down: true }, Key { usage: 4, down: false }, Key { usage: 4, down: true }, Key { usage: 4, down: false }, Key { usage: 4, down: true }, Key { usage: 4, down: false }, Key { usage: 4, down: true }, Key { usage: 4, down: false }, Key { usage: 4, down: true }, Key { usage: 4, down: false }]
+ right: [Reset]
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+test queue_saturation_is_atomic_and_reset_cannot_be_lost ... FAILED
+
+failures:
+
+failures:
+    queue_saturation_is_atomic_and_reset_cannot_be_lost
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 14 filtered out; finished in 0.00s
+

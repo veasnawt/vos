@@ -1,0 +1,2 @@
+GUI service PASS 978127 assertions; actual GUI+console+keyboard, allocation rollback, ownership, pointers, bounds, overflow/revocation
+pointer driver context=88 decoder=5 bytes; fixed bounds\npointer service PASS 987802 assertions; actual decoder/demux/GUI, failure, bounds, grants, transitions, overflow snapshot, cleanup

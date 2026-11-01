@@ -1,0 +1,12 @@
+{
+  "change": "Extend one existing hosted fixture with accepted keyboard and console Rust ABI source; track all Rust transitive input hashes and assert single owners + actual linked PS2 symbols",
+  "HID_core_unchanged": {
+    "kernel/rust/usb/hid/descriptor.rs": "02d959043e5c81aa0847100532558fb08f62ae7b60e882b709c87d98964f84f9",
+    "kernel/rust/usb/hid/input.rs": "d0fbc4cd350814e5c6302047cb064971ee60d2912ac748d5de1d47b7478e4f33",
+    "kernel/rust/usb/hid/lib.rs": "a1a4a4c055f1f996d16355199da026d355d434b3c601309a6c178b1eb8b71353"
+  },
+  "production_arch_source_unchanged": true,
+  "panic_handler_not_duplicated": true,
+  "new_public_C_ABI": false,
+  "fixture_not_native_USB": true
+}

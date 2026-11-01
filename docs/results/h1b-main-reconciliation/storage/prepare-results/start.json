@@ -1,0 +1,22 @@
+{
+  "utc": "2026-11-01T20:24:17.362278+00:00",
+  "command": [
+    "python3",
+    "-B",
+    "/home/veasnawt/src/vos-r2b/build/b1-storage/r-series-program/h1b-main-reconcile-20261101T201434Z-2a096c6a/prepare-results.py"
+  ],
+  "projection": 2000000,
+  "before": {
+    "utc": "2026-11-01T20:24:07.272550+00:00",
+    "tree": 219238532,
+    "shared_git": 21347536,
+    "controls": 4722469,
+    "C_free": 58124963840,
+    "E_free": 124597424128,
+    "tmpfs_used": 0
+  },
+  "physical_E_required": 1704135672,
+  "physical_E_reserve": 1610612736,
+  "external_growth_allowance": 6000000,
+  "temporary_output_policy": "TMPDIR within guarded worktree; no Cargo/rustup installs; shared Git and controller growth separately counted"
+}

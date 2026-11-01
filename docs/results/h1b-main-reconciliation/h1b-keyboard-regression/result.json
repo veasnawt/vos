@@ -1,0 +1,744 @@
+{
+  "status": "PASS",
+  "commands": [
+    {
+      "argv": [
+        "gcc",
+        "-std=gnu11",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-Iarch/x86_64",
+        "-ffunction-sections",
+        "-fdata-sections",
+        "-Wl,--gc-sections",
+        "-fno-pie",
+        "-no-pie",
+        "-O1",
+        "-g",
+        "-fsanitize=address,undefined",
+        "-fno-sanitize-recover=all",
+        "-fno-omit-frame-pointer",
+        "-Dkeyboard_decode=keyboard_decode_reference",
+        "-c",
+        "tests/reference/ps2-keyboard.c",
+        "-o",
+        "/home/veasnawt/src/vos-r2-console-line/build/h1b-keyboard-regression/sanitizer-reference.o"
+      ],
+      "log": "sanitizer-reference-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "gcc",
+        "-std=gnu11",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-Iarch/x86_64",
+        "-ffunction-sections",
+        "-fdata-sections",
+        "-Wl,--gc-sections",
+        "-fno-pie",
+        "-no-pie",
+        "-O1",
+        "-g",
+        "-fsanitize=address,undefined",
+        "-fno-sanitize-recover=all",
+        "-fno-omit-frame-pointer",
+        "tests/host/ps2-keyboard-differential.c",
+        "/home/veasnawt/src/vos-r2-console-line/build/h1b-keyboard-regression/sanitizer-reference.o",
+        "/home/veasnawt/src/vos-r2-console-line/build/final/rust/libvos_kernel.a",
+        "-o",
+        "/home/veasnawt/src/vos-r2-console-line/build/h1b-keyboard-regression/sanitizer-differential"
+      ],
+      "log": "sanitizer-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/home/veasnawt/src/vos-r2-console-line/build/h1b-keyboard-regression/sanitizer-differential"
+      ],
+      "log": "sanitizer.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "gcc",
+        "-std=gnu11",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-Iarch/x86_64",
+        "-ffunction-sections",
+        "-fdata-sections",
+        "-Wl,--gc-sections",
+        "-fno-pie",
+        "-no-pie",
+        "-O2",
+        "-fno-lto",
+        "-Dkeyboard_decode=keyboard_decode_reference",
+        "-c",
+        "tests/reference/ps2-keyboard.c",
+        "-o",
+        "/home/veasnawt/src/vos-r2-console-line/build/h1b-keyboard-regression/release-reference.o"
+      ],
+      "log": "release-reference-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "gcc",
+        "-std=gnu11",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-Iarch/x86_64",
+        "-ffunction-sections",
+        "-fdata-sections",
+        "-Wl,--gc-sections",
+        "-fno-pie",
+        "-no-pie",
+        "-O2",
+        "-fno-lto",
+        "tests/host/ps2-keyboard-differential.c",
+        "/home/veasnawt/src/vos-r2-console-line/build/h1b-keyboard-regression/release-reference.o",
+        "/home/veasnawt/src/vos-r2-console-line/build/final/rust/libvos_kernel.a",
+        "-o",
+        "/home/veasnawt/src/vos-r2-console-line/build/h1b-keyboard-regression/release-differential"
+      ],
+      "log": "release-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/home/veasnawt/src/vos-r2-console-line/build/h1b-keyboard-regression/release-differential"
+      ],
+      "log": "release.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "taskset",
+        "-c",
+        "0",
+        "/home/veasnawt/src/vos-r2-console-line/build/h1b-keyboard-regression/release-differential",
+        "--bench"
+      ],
+      "log": "performance.csv",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Coverflow-checks=yes",
+        "--crate-type=rlib",
+        "--crate-name=ps2_keyboard_core",
+        "/home/veasnawt/src/vos-r2-console-line/build/h1b-keyboard-regression/core-root.rs",
+        "-o",
+        "/home/veasnawt/src/vos-r2-console-line/build/h1b-keyboard-regression/libps2_keyboard_core.rlib"
+      ],
+      "log": "core-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Coverflow-checks=yes",
+        "--test",
+        "-Cstrip=symbols",
+        "--extern",
+        "ps2_keyboard_core=/home/veasnawt/src/vos-r2-console-line/build/h1b-keyboard-regression/libps2_keyboard_core.rlib",
+        "tests/rust/ps2_keyboard.rs",
+        "-o",
+        "/home/veasnawt/src/vos-r2-console-line/build/h1b-keyboard-regression/core-tests"
+      ],
+      "log": "core-tests-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/home/veasnawt/src/vos-r2-console-line/build/h1b-keyboard-regression/core-tests",
+        "--test-threads=1"
+      ],
+      "log": "core-tests.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Coverflow-checks=yes",
+        "--crate-type=rlib",
+        "--crate-name=ps2_keyboard_core",
+        "/home/veasnawt/src/vos-r2-console-line/build/h1b-keyboard-regression/mutant-shift/root.rs",
+        "-o",
+        "/home/veasnawt/src/vos-r2-console-line/build/h1b-keyboard-regression/mutant-shift/libps2_keyboard_core.rlib"
+      ],
+      "log": "mutant-shift-core-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Coverflow-checks=yes",
+        "--test",
+        "-Cstrip=symbols",
+        "--extern",
+        "ps2_keyboard_core=/home/veasnawt/src/vos-r2-console-line/build/h1b-keyboard-regression/mutant-shift/libps2_keyboard_core.rlib",
+        "tests/rust/ps2_keyboard.rs",
+        "-o",
+        "/home/veasnawt/src/vos-r2-console-line/build/h1b-keyboard-regression/mutant-shift/tests"
+      ],
+      "log": "mutant-shift-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/home/veasnawt/src/vos-r2-console-line/build/h1b-keyboard-regression/mutant-shift/tests",
+        "--test-threads=1",
+        "independent_shift"
+      ],
+      "log": "mutant-shift.txt",
+      "exit_code": 101
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Coverflow-checks=yes",
+        "--crate-type=rlib",
+        "--crate-name=ps2_keyboard_core",
+        "/home/veasnawt/src/vos-r2-console-line/build/h1b-keyboard-regression/mutant-caps-repeat/root.rs",
+        "-o",
+        "/home/veasnawt/src/vos-r2-console-line/build/h1b-keyboard-regression/mutant-caps-repeat/libps2_keyboard_core.rlib"
+      ],
+      "log": "mutant-caps-repeat-core-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Coverflow-checks=yes",
+        "--test",
+        "-Cstrip=symbols",
+        "--extern",
+        "ps2_keyboard_core=/home/veasnawt/src/vos-r2-console-line/build/h1b-keyboard-regression/mutant-caps-repeat/libps2_keyboard_core.rlib",
+        "tests/rust/ps2_keyboard.rs",
+        "-o",
+        "/home/veasnawt/src/vos-r2-console-line/build/h1b-keyboard-regression/mutant-caps-repeat/tests"
+      ],
+      "log": "mutant-caps-repeat-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/home/veasnawt/src/vos-r2-console-line/build/h1b-keyboard-regression/mutant-caps-repeat/tests",
+        "--test-threads=1",
+        "caps_repeat"
+      ],
+      "log": "mutant-caps-repeat.txt",
+      "exit_code": 101
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Coverflow-checks=yes",
+        "--crate-type=rlib",
+        "--crate-name=ps2_keyboard_core",
+        "/home/veasnawt/src/vos-r2-console-line/build/h1b-keyboard-regression/mutant-caps-xor/root.rs",
+        "-o",
+        "/home/veasnawt/src/vos-r2-console-line/build/h1b-keyboard-regression/mutant-caps-xor/libps2_keyboard_core.rlib"
+      ],
+      "log": "mutant-caps-xor-core-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Coverflow-checks=yes",
+        "--test",
+        "-Cstrip=symbols",
+        "--extern",
+        "ps2_keyboard_core=/home/veasnawt/src/vos-r2-console-line/build/h1b-keyboard-regression/mutant-caps-xor/libps2_keyboard_core.rlib",
+        "tests/rust/ps2_keyboard.rs",
+        "-o",
+        "/home/veasnawt/src/vos-r2-console-line/build/h1b-keyboard-regression/mutant-caps-xor/tests"
+      ],
+      "log": "mutant-caps-xor-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/home/veasnawt/src/vos-r2-console-line/build/h1b-keyboard-regression/mutant-caps-xor/tests",
+        "--test-threads=1",
+        "caps_xor"
+      ],
+      "log": "mutant-caps-xor.txt",
+      "exit_code": 101
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Coverflow-checks=yes",
+        "--crate-type=rlib",
+        "--crate-name=ps2_keyboard_core",
+        "/home/veasnawt/src/vos-r2-console-line/build/h1b-keyboard-regression/mutant-extended/root.rs",
+        "-o",
+        "/home/veasnawt/src/vos-r2-console-line/build/h1b-keyboard-regression/mutant-extended/libps2_keyboard_core.rlib"
+      ],
+      "log": "mutant-extended-core-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Coverflow-checks=yes",
+        "--test",
+        "-Cstrip=symbols",
+        "--extern",
+        "ps2_keyboard_core=/home/veasnawt/src/vos-r2-console-line/build/h1b-keyboard-regression/mutant-extended/libps2_keyboard_core.rlib",
+        "tests/rust/ps2_keyboard.rs",
+        "-o",
+        "/home/veasnawt/src/vos-r2-console-line/build/h1b-keyboard-regression/mutant-extended/tests"
+      ],
+      "log": "mutant-extended-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/home/veasnawt/src/vos-r2-console-line/build/h1b-keyboard-regression/mutant-extended/tests",
+        "--test-threads=1",
+        "fake_shift"
+      ],
+      "log": "mutant-extended.txt",
+      "exit_code": 101
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Coverflow-checks=yes",
+        "--crate-type=rlib",
+        "--crate-name=ps2_keyboard_core",
+        "/home/veasnawt/src/vos-r2-console-line/build/h1b-keyboard-regression/mutant-pause/root.rs",
+        "-o",
+        "/home/veasnawt/src/vos-r2-console-line/build/h1b-keyboard-regression/mutant-pause/libps2_keyboard_core.rlib"
+      ],
+      "log": "mutant-pause-core-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Coverflow-checks=yes",
+        "--test",
+        "-Cstrip=symbols",
+        "--extern",
+        "ps2_keyboard_core=/home/veasnawt/src/vos-r2-console-line/build/h1b-keyboard-regression/mutant-pause/libps2_keyboard_core.rlib",
+        "tests/rust/ps2_keyboard.rs",
+        "-o",
+        "/home/veasnawt/src/vos-r2-console-line/build/h1b-keyboard-regression/mutant-pause/tests"
+      ],
+      "log": "mutant-pause-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/home/veasnawt/src/vos-r2-console-line/build/h1b-keyboard-regression/mutant-pause/tests",
+        "--test-threads=1",
+        "pause"
+      ],
+      "log": "mutant-pause.txt",
+      "exit_code": 101
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Coverflow-checks=yes",
+        "--crate-type=rlib",
+        "--crate-name=ps2_keyboard_core",
+        "/home/veasnawt/src/vos-r2-console-line/build/h1b-keyboard-regression/mutant-ctrl/root.rs",
+        "-o",
+        "/home/veasnawt/src/vos-r2-console-line/build/h1b-keyboard-regression/mutant-ctrl/libps2_keyboard_core.rlib"
+      ],
+      "log": "mutant-ctrl-core-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Coverflow-checks=yes",
+        "--test",
+        "-Cstrip=symbols",
+        "--extern",
+        "ps2_keyboard_core=/home/veasnawt/src/vos-r2-console-line/build/h1b-keyboard-regression/mutant-ctrl/libps2_keyboard_core.rlib",
+        "tests/rust/ps2_keyboard.rs",
+        "-o",
+        "/home/veasnawt/src/vos-r2-console-line/build/h1b-keyboard-regression/mutant-ctrl/tests"
+      ],
+      "log": "mutant-ctrl-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/home/veasnawt/src/vos-r2-console-line/build/h1b-keyboard-regression/mutant-ctrl/tests",
+        "--test-threads=1",
+        "ctrl"
+      ],
+      "log": "mutant-ctrl.txt",
+      "exit_code": 101
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Coverflow-checks=yes",
+        "--crate-type=rlib",
+        "--crate-name=ps2_keyboard_core",
+        "/home/veasnawt/src/vos-r2-console-line/build/h1b-keyboard-regression/mutant-alt/root.rs",
+        "-o",
+        "/home/veasnawt/src/vos-r2-console-line/build/h1b-keyboard-regression/mutant-alt/libps2_keyboard_core.rlib"
+      ],
+      "log": "mutant-alt-core-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Coverflow-checks=yes",
+        "--test",
+        "-Cstrip=symbols",
+        "--extern",
+        "ps2_keyboard_core=/home/veasnawt/src/vos-r2-console-line/build/h1b-keyboard-regression/mutant-alt/libps2_keyboard_core.rlib",
+        "tests/rust/ps2_keyboard.rs",
+        "-o",
+        "/home/veasnawt/src/vos-r2-console-line/build/h1b-keyboard-regression/mutant-alt/tests"
+      ],
+      "log": "mutant-alt-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/home/veasnawt/src/vos-r2-console-line/build/h1b-keyboard-regression/mutant-alt/tests",
+        "--test-threads=1",
+        "alt"
+      ],
+      "log": "mutant-alt.txt",
+      "exit_code": 101
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Coverflow-checks=yes",
+        "--crate-type=rlib",
+        "--crate-name=ps2_keyboard_core",
+        "/home/veasnawt/src/vos-r2-console-line/build/h1b-keyboard-regression/mutant-break/root.rs",
+        "-o",
+        "/home/veasnawt/src/vos-r2-console-line/build/h1b-keyboard-regression/mutant-break/libps2_keyboard_core.rlib"
+      ],
+      "log": "mutant-break-core-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Coverflow-checks=yes",
+        "--test",
+        "-Cstrip=symbols",
+        "--extern",
+        "ps2_keyboard_core=/home/veasnawt/src/vos-r2-console-line/build/h1b-keyboard-regression/mutant-break/libps2_keyboard_core.rlib",
+        "tests/rust/ps2_keyboard.rs",
+        "-o",
+        "/home/veasnawt/src/vos-r2-console-line/build/h1b-keyboard-regression/mutant-break/tests"
+      ],
+      "log": "mutant-break-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/home/veasnawt/src/vos-r2-console-line/build/h1b-keyboard-regression/mutant-break/tests",
+        "--test-threads=1",
+        "breaks"
+      ],
+      "log": "mutant-break.txt",
+      "exit_code": 101
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Coverflow-checks=yes",
+        "--crate-type=rlib",
+        "--crate-name=ps2_keyboard_core",
+        "/home/veasnawt/src/vos-r2-console-line/build/h1b-keyboard-regression/mutant-punctuation/root.rs",
+        "-o",
+        "/home/veasnawt/src/vos-r2-console-line/build/h1b-keyboard-regression/mutant-punctuation/libps2_keyboard_core.rlib"
+      ],
+      "log": "mutant-punctuation-core-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Coverflow-checks=yes",
+        "--test",
+        "-Cstrip=symbols",
+        "--extern",
+        "ps2_keyboard_core=/home/veasnawt/src/vos-r2-console-line/build/h1b-keyboard-regression/mutant-punctuation/libps2_keyboard_core.rlib",
+        "tests/rust/ps2_keyboard.rs",
+        "-o",
+        "/home/veasnawt/src/vos-r2-console-line/build/h1b-keyboard-regression/mutant-punctuation/tests"
+      ],
+      "log": "mutant-punctuation-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/home/veasnawt/src/vos-r2-console-line/build/h1b-keyboard-regression/mutant-punctuation/tests",
+        "--test-threads=1",
+        "punctuation"
+      ],
+      "log": "mutant-punctuation.txt",
+      "exit_code": 101
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Coverflow-checks=yes",
+        "--crate-type=lib",
+        "-Cpanic=abort",
+        "--emit=obj",
+        "/home/veasnawt/src/vos-r2-console-line/build/h1b-keyboard-regression/ffi-root.rs",
+        "-o",
+        "/home/veasnawt/src/vos-r2-console-line/build/h1b-keyboard-regression/host-ffi.o"
+      ],
+      "log": "overflow-ffi-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "gcc",
+        "-std=gnu11",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-Iarch/x86_64",
+        "-ffunction-sections",
+        "-fdata-sections",
+        "-Wl,--gc-sections",
+        "-fno-pie",
+        "-no-pie",
+        "-O1",
+        "-g",
+        "-fsanitize=address,undefined",
+        "-fno-sanitize-recover=all",
+        "tests/host/ps2-keyboard-differential.c",
+        "/home/veasnawt/src/vos-r2-console-line/build/h1b-keyboard-regression/sanitizer-reference.o",
+        "/home/veasnawt/src/vos-r2-console-line/build/h1b-keyboard-regression/host-ffi.o",
+        "-o",
+        "/home/veasnawt/src/vos-r2-console-line/build/h1b-keyboard-regression/overflow-differential"
+      ],
+      "log": "overflow-differential-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/home/veasnawt/src/vos-r2-console-line/build/h1b-keyboard-regression/overflow-differential"
+      ],
+      "log": "overflow-differential.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Coverflow-checks=yes",
+        "--crate-type=lib",
+        "--target=x86_64-unknown-none",
+        "-Cpanic=abort",
+        "-Ccode-model=kernel",
+        "-Crelocation-model=static",
+        "-Cno-redzone=yes",
+        "-Cforce-unwind-tables=no",
+        "-Zemit-stack-sizes",
+        "--emit=obj",
+        "/home/veasnawt/src/vos-r2-console-line/build/h1b-keyboard-regression/ffi-root.rs",
+        "-o",
+        "/home/veasnawt/src/vos-r2-console-line/build/h1b-keyboard-regression/target-ffi.o"
+      ],
+      "log": "target-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "nm",
+        "-u",
+        "/home/veasnawt/src/vos-r2-console-line/build/h1b-keyboard-regression/target-ffi.o"
+      ],
+      "log": "target-undefined.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "size",
+        "-A",
+        "/home/veasnawt/src/vos-r2-console-line/build/h1b-keyboard-regression/target-ffi.o"
+      ],
+      "log": "target-size.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "objdump",
+        "-dr",
+        "/home/veasnawt/src/vos-r2-console-line/build/h1b-keyboard-regression/target-ffi.o"
+      ],
+      "log": "target-disassembly.txt",
+      "exit_code": 0
+    }
+  ],
+  "Rust_sanitized": false,
+  "archive_sha256": "d5645ff8e105eb1ad8a71704e6b27884dc84075e20dbc148ec67271dc5c9dd3f",
+  "seed": "72b15e7deca0de01",
+  "source_sha256": {
+    "kernel/rust/input/ps2_keyboard.rs": "955ea062d40f840c6d287095cc9c5ec9123507b6f9252ccb5bb9bb0fbf41d535",
+    "arch/x86_64/rust/ps2_keyboard.rs": "70df2669a69454f524c6fb3b8a125942b1f507a134e86bab6e582da653c30e22",
+    "arch/x86_64/keyboard.c": "3459345b0ef745eebb1d4e445a155df1c0c6b9e5be4806fd9229d0af160ddde6",
+    "arch/x86_64/keyboard.h": "c6104c37cd72472e32a16471a22c2149e15e68f4baff2c64072a054b088a68b7",
+    "tests/reference/ps2-keyboard.c": "7024bcd4db5f6618de8ce360c66e00febf6dad4959b3e0b9f26a29ac3f0e952f",
+    "tests/host/ps2-keyboard-differential.c": "61681662bc540db1294fa0ab30e197931ef934caf032226f73f938d03ec5c8ae",
+    "tests/rust/ps2_keyboard.rs": "892f3e6feaf699a87fbede4bb97e751f9eff4fb9548a4edd34a877f2c89c3cf5"
+  },
+  "sanitizer": "ABI PASS: size=7 align=1 offsets=0..6, null/wrap, both guard-page boundaries and unaligned byte state\ndifferential PASS: 3703936 state/byte comparisons; 3072 encoded states; 1792 reachable states; seed=72b15e7deca0de01; hostile field bytes and 1000000-step stream\n",
+  "release": "ABI PASS: size=7 align=1 offsets=0..6, null/wrap, both guard-page boundaries and unaligned byte state\ndifferential PASS: 3703936 state/byte comparisons; 3072 encoded states; 1792 reachable states; seed=72b15e7deca0de01; hostile field bytes and 1000000-step stream\n",
+  "performance": "C,0,6000000,41724046,6.9540\nRust,0,6000000,38276842,6.3795\nC,1,6000000,23376126,3.8960\nRust,1,6000000,35457039,5.9095\nC,2,6000000,25067628,4.1779\nRust,2,6000000,39931245,6.6552\nC,3,6000000,25120928,4.1868\nRust,3,6000000,35349439,5.8916\nC,4,6000000,23452627,3.9088\nRust,4,6000000,37469241,6.2449\nC,5,6000000,26733529,4.4556\nRust,5,6000000,36496741,6.0828\nC,6,6000000,23179526,3.8633\nRust,6,6000000,35953540,5.9923\n",
+  "core_tests": "\nrunning 11 tests\ntest alt ... ok\ntest breaks ... ok\ntest caps_repeat ... ok\ntest caps_xor ... ok\ntest ctrl ... ok\ntest fake_shift ... ok\ntest independent_shift ... ok\ntest layout ... ok\ntest noncanonical_bytes ... ok\ntest pause ... ok\ntest punctuation ... ok\n\ntest result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n",
+  "mutations": {
+    "shift": {
+      "assertion": "independent_shift",
+      "detected": true
+    },
+    "caps-repeat": {
+      "assertion": "caps_repeat",
+      "detected": true
+    },
+    "caps-xor": {
+      "assertion": "caps_xor",
+      "detected": true
+    },
+    "extended": {
+      "assertion": "fake_shift",
+      "detected": true
+    },
+    "pause": {
+      "assertion": "pause",
+      "detected": true
+    },
+    "ctrl": {
+      "assertion": "ctrl",
+      "detected": true
+    },
+    "alt": {
+      "assertion": "alt",
+      "detected": true
+    },
+    "break": {
+      "assertion": "breaks",
+      "detected": true
+    },
+    "punctuation": {
+      "assertion": "punctuation",
+      "detected": true
+    }
+  },
+  "overflow_ffi": "ABI PASS: size=7 align=1 offsets=0..6, null/wrap, both guard-page boundaries and unaligned byte state\ndifferential PASS: 3703936 state/byte comparisons; 3072 encoded states; 1792 reachable states; seed=72b15e7deca0de01; hostile field bytes and 1000000-step stream\n",
+  "stack_frames": {
+    "keyboard_decode": 10
+  },
+  "undefined": "",
+  "sections": "/home/veasnawt/src/vos-r2-console-line/build/h1b-keyboard-regression/target-ffi.o  :\nsection                                             size   addr\n.text                                                  0      0\n.text.keyboard_decode                                431      0\n.rodata.keyboard_decode                              240      0\n.stack_sizes                                           9      0\n.rodata..Lanon.c86901d9f683afd0375ca6e3bb0f6ba5.0    128      0\n.rodata..Lanon.c86901d9f683afd0375ca6e3bb0f6ba5.1    128      0\n.comment                                              54      0\n.note.GNU-stack                                        0      0\nTotal                                                990\n\n\n",
+  "disassembly": "\n/home/veasnawt/src/vos-r2-console-line/build/h1b-keyboard-regression/target-ffi.o:     file format elf64-x86-64\n\n\nDisassembly of section .text.keyboard_decode:\n\n0000000000000000 <keyboard_decode>:\n   0:\t48 8d 47 ff          \tlea    -0x1(%rdi),%rax\n   4:\t48 83 f8 f7          \tcmp    $0xfffffffffffffff7,%rax\n   8:\t77 55                \tja     5f <keyboard_decode+0x5f>\n   a:\t53                   \tpush   %rbx\n   b:\t48 83 ec 02          \tsub    $0x2,%rsp\n   f:\t0f b6 17             \tmovzbl (%rdi),%edx\n  12:\t44 0f b6 57 01       \tmovzbl 0x1(%rdi),%r10d\n  17:\t44 88 14 24          \tmov    %r10b,(%rsp)\n  1b:\t44 0f b6 4f 02       \tmovzbl 0x2(%rdi),%r9d\n  20:\t44 88 4c 24 01       \tmov    %r9b,0x1(%rsp)\n  25:\t0f b6 4f 03          \tmovzbl 0x3(%rdi),%ecx\n  29:\t44 0f b6 47 04       \tmovzbl 0x4(%rdi),%r8d\n  2e:\t0f b6 5f 05          \tmovzbl 0x5(%rdi),%ebx\n  32:\t44 0f b6 5f 06       \tmovzbl 0x6(%rdi),%r11d\n  37:\t45 84 db             \ttest   %r11b,%r11b\n  3a:\t74 26                \tje     62 <keyboard_decode+0x62>\n  3c:\t41 fe cb             \tdec    %r11b\n  3f:\t31 c0                \txor    %eax,%eax\n  41:\t88 17                \tmov    %dl,(%rdi)\n  43:\t44 88 57 01          \tmov    %r10b,0x1(%rdi)\n  47:\t44 88 4f 02          \tmov    %r9b,0x2(%rdi)\n  4b:\t88 4f 03             \tmov    %cl,0x3(%rdi)\n  4e:\t44 88 47 04          \tmov    %r8b,0x4(%rdi)\n  52:\t88 5f 05             \tmov    %bl,0x5(%rdi)\n  55:\t44 88 5f 06          \tmov    %r11b,0x6(%rdi)\n  59:\t48 83 c4 02          \tadd    $0x2,%rsp\n  5d:\t5b                   \tpop    %rbx\n  5e:\tc3                   \tret\n  5f:\t31 c0                \txor    %eax,%eax\n  61:\tc3                   \tret\n  62:\t40 80 fe e1          \tcmp    $0xe1,%sil\n  66:\t74 14                \tje     7c <keyboard_decode+0x7c>\n  68:\t44 0f b6 de          \tmovzbl %sil,%r11d\n  6c:\t41 81 fb e0 00 00 00 \tcmp    $0xe0,%r11d\n  73:\t75 0e                \tjne    83 <keyboard_decode+0x83>\n  75:\tb3 01                \tmov    $0x1,%bl\n  77:\t45 31 db             \txor    %r11d,%r11d\n  7a:\teb c3                \tjmp    3f <keyboard_decode+0x3f>\n  7c:\t41 b3 05             \tmov    $0x5,%r11b\n  7f:\t31 db                \txor    %ebx,%ebx\n  81:\teb bc                \tjmp    3f <keyboard_decode+0x3f>\n  83:\t41 83 e3 7f          \tand    $0x7f,%r11d\n  87:\t84 db                \ttest   %bl,%bl\n  89:\t74 17                \tje     a2 <keyboard_decode+0xa2>\n  8b:\tb0 02                \tmov    $0x2,%al\n  8d:\t41 80 fb 1d          \tcmp    $0x1d,%r11b\n  91:\t74 24                \tje     b7 <keyboard_decode+0xb7>\n  93:\t45 0f b6 db          \tmovzbl %r11b,%r11d\n  97:\t41 83 fb 38          \tcmp    $0x38,%r11d\n  9b:\t74 22                \tje     bf <keyboard_decode+0xbf>\n  9d:\te9 ac 00 00 00       \tjmp    14e <keyboard_decode+0x14e>\n  a2:\t41 0f b6 db          \tmovzbl %r11b,%ebx\n  a6:\t83 c3 e3             \tadd    $0xffffffe3,%ebx\n  a9:\t83 fb 1d             \tcmp    $0x1d,%ebx\n  ac:\t77 48                \tja     f6 <keyboard_decode+0xf6>\n  ae:\tb0 01                \tmov    $0x1,%al\n  b0:\tff 24 dd 00 00 00 00 \tjmp    *0x0(,%rbx,8)\n\t\t\tb3: R_X86_64_32S\t.rodata.keyboard_decode\n  b7:\t49 89 e3             \tmov    %rsp,%r11\n  ba:\t45 89 d1             \tmov    %r10d,%r9d\n  bd:\teb 05                \tjmp    c4 <keyboard_decode+0xc4>\n  bf:\t4c 8d 5c 24 01       \tlea    0x1(%rsp),%r11\n  c4:\t41 89 c2             \tmov    %eax,%r10d\n  c7:\t41 f6 d2             \tnot    %r10b\n  ca:\t45 20 ca             \tand    %r9b,%r10b\n  cd:\t41 08 c1             \tor     %al,%r9b\n  d0:\t40 84 f6             \ttest   %sil,%sil\n  d3:\t41 0f b6 c1          \tmovzbl %r9b,%eax\n  d7:\t41 0f b6 f2          \tmovzbl %r10b,%esi\n  db:\t0f 49 f0             \tcmovns %eax,%esi\n  de:\t41 88 33             \tmov    %sil,(%r11)\n  e1:\t44 0f b6 14 24       \tmovzbl (%rsp),%r10d\n  e6:\t45 31 db             \txor    %r11d,%r11d\n  e9:\t44 0f b6 4c 24 01    \tmovzbl 0x1(%rsp),%r9d\n  ef:\t31 db                \txor    %ebx,%ebx\n  f1:\te9 49 ff ff ff       \tjmp    3f <keyboard_decode+0x3f>\n  f6:\t40 84 f6             \ttest   %sil,%sil\n  f9:\t0f 99 c0             \tsetns  %al\n  fc:\t44 89 d6             \tmov    %r10d,%esi\n  ff:\t44 08 ce             \tor     %r9b,%sil\n 102:\t40 0f 94 c6          \tsete   %sil\n 106:\t40 20 c6             \tand    %al,%sil\n 109:\t40 80 fe 01          \tcmp    $0x1,%sil\n 10d:\t75 3f                \tjne    14e <keyboard_decode+0x14e>\n 10f:\t41 0f b6 83 00 00 00 \tmovzbl 0x0(%r11),%eax\n 116:\t00 \n\t\t\t113: R_X86_64_32S\t.rodata..Lanon.c86901d9f683afd0375ca6e3bb0f6ba5.0\n 117:\t3c 60                \tcmp    $0x60,%al\n 119:\t76 5d                \tjbe    178 <keyboard_decode+0x178>\n 11b:\t84 d2                \ttest   %dl,%dl\n 11d:\t40 0f 95 c6          \tsetne  %sil\n 121:\t44 8d 48 e0          \tlea    -0x20(%rax),%r9d\n 125:\t40 38 f1             \tcmp    %sil,%cl\n 128:\t0f b6 f0             \tmovzbl %al,%esi\n 12b:\t41 0f b6 c1          \tmovzbl %r9b,%eax\n 12f:\t0f 44 c6             \tcmove  %esi,%eax\n 132:\teb 59                \tjmp    18d <keyboard_decode+0x18d>\n 134:\tb0 02                \tmov    $0x2,%al\n 136:\t41 89 c3             \tmov    %eax,%r11d\n 139:\t41 f6 d3             \tnot    %r11b\n 13c:\t41 20 d3             \tand    %dl,%r11b\n 13f:\t08 d0                \tor     %dl,%al\n 141:\t40 84 f6             \ttest   %sil,%sil\n 144:\t0f b6 c0             \tmovzbl %al,%eax\n 147:\t41 0f b6 d3          \tmovzbl %r11b,%edx\n 14b:\t0f 49 d0             \tcmovns %eax,%edx\n 14e:\t45 31 db             \txor    %r11d,%r11d\n 151:\t31 db                \txor    %ebx,%ebx\n 153:\te9 e7 fe ff ff       \tjmp    3f <keyboard_decode+0x3f>\n 158:\t40 84 f6             \ttest   %sil,%sil\n 15b:\t0f 99 c0             \tsetns  %al\n 15e:\t45 84 c0             \ttest   %r8b,%r8b\n 161:\t40 0f 94 c6          \tsete   %sil\n 165:\t40 20 c6             \tand    %al,%sil\n 168:\t40 30 f1             \txor    %sil,%cl\n 16b:\t45 31 db             \txor    %r11d,%r11d\n 16e:\t31 db                \txor    %ebx,%ebx\n 170:\t41 89 c0             \tmov    %eax,%r8d\n 173:\te9 c7 fe ff ff       \tjmp    3f <keyboard_decode+0x3f>\n 178:\t84 d2                \ttest   %dl,%dl\n 17a:\t74 21                \tje     19d <keyboard_decode+0x19d>\n 17c:\t41 0f b6 b3 00 00 00 \tmovzbl 0x0(%r11),%esi\n 183:\t00 \n\t\t\t180: R_X86_64_32S\t.rodata..Lanon.c86901d9f683afd0375ca6e3bb0f6ba5.1\n 184:\t40 84 f6             \ttest   %sil,%sil\n 187:\t0f b6 c0             \tmovzbl %al,%eax\n 18a:\t0f 45 c6             \tcmovne %esi,%eax\n 18d:\t45 31 c9             \txor    %r9d,%r9d\n 190:\t45 31 d2             \txor    %r10d,%r10d\n 193:\t45 31 db             \txor    %r11d,%r11d\n 196:\t31 db                \txor    %ebx,%ebx\n 198:\te9 a4 fe ff ff       \tjmp    41 <keyboard_decode+0x41>\n 19d:\t45 31 c9             \txor    %r9d,%r9d\n 1a0:\t45 31 d2             \txor    %r10d,%r10d\n 1a3:\t45 31 db             \txor    %r11d,%r11d\n 1a6:\t31 db                \txor    %ebx,%ebx\n 1a8:\t31 d2                \txor    %edx,%edx\n 1aa:\te9 92 fe ff ff       \tjmp    41 <keyboard_decode+0x41>\n"
+}
