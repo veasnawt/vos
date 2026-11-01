@@ -1,0 +1,15 @@
+
+running 1 test
+
+thread 'keyboard_owner_epoch_and_disconnect' (44289) panicked at tests/rust/boot_hid.rs:334:5:
+assertion failed: s.take(next).is_err()
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+test keyboard_owner_epoch_and_disconnect ... FAILED
+
+failures:
+
+failures:
+    keyboard_owner_epoch_and_disconnect
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 14 filtered out; finished in 0.00s
+

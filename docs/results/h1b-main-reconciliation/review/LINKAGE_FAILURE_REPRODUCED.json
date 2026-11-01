@@ -1,0 +1,10 @@
+{
+  "status": "REPRODUCED_UNMODIFIED_OLD_DRIVER",
+  "failure": "hid-console.build.txt unexpected exit 1",
+  "undefined_symbols": [
+    "keyboard_decode",
+    "input_console_take_line"
+  ],
+  "path": "build/h1b-link-before",
+  "not_relabelled_as_passing": true
+}

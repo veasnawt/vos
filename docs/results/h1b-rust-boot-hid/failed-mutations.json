@@ -1,0 +1,121 @@
+{
+  "status": "FAIL",
+  "scope": "hosted fixtures, NOT native USB input",
+  "commands": [
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--version"
+      ],
+      "exit_code": 0,
+      "log": "rustc.txt"
+    },
+    {
+      "argv": [
+        "gcc",
+        "--version"
+      ],
+      "exit_code": 0,
+      "log": "gcc.txt"
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "--crate-name",
+        "boot_hid",
+        "--crate-type=rlib",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "/home/veasnawt/src/vos-b1-boot/kernel/rust/usb/hid/lib.rs",
+        "-o",
+        "/home/veasnawt/src/vos-b1-boot/build/h1b/mutations/libboot_hid.rlib"
+      ],
+      "exit_code": 0,
+      "log": "libboot_hid.rlib.build.txt"
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "--crate-name",
+        "boot_hid",
+        "--crate-type=rlib",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "/home/veasnawt/src/vos-b1-boot/build/h1b/mutations/mutant-protocol/lib.rs",
+        "-o",
+        "/home/veasnawt/src/vos-b1-boot/build/h1b/mutations/mutant-protocol/libboot_hid.rlib"
+      ],
+      "exit_code": 0,
+      "log": "libboot_hid.rlib.build.txt"
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "--test",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Cstrip=symbols",
+        "--extern",
+        "boot_hid=/home/veasnawt/src/vos-b1-boot/build/h1b/mutations/mutant-protocol/libboot_hid.rlib",
+        "tests/rust/boot_hid.rs",
+        "-o",
+        "/home/veasnawt/src/vos-b1-boot/build/h1b/mutations/mutant-protocol/tests"
+      ],
+      "exit_code": 0,
+      "log": "tests.build.txt"
+    },
+    {
+      "argv": [
+        "/home/veasnawt/src/vos-b1-boot/build/h1b/mutations/mutant-protocol/tests",
+        "--exact",
+        "no_boot_data_before_transport_success",
+        "--nocapture"
+      ],
+      "exit_code": 101,
+      "log": "protocol.txt"
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "--crate-name",
+        "boot_hid",
+        "--crate-type=rlib",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "/home/veasnawt/src/vos-b1-boot/build/h1b/mutations/mutant-owner/lib.rs",
+        "-o",
+        "/home/veasnawt/src/vos-b1-boot/build/h1b/mutations/mutant-owner/libboot_hid.rlib"
+      ],
+      "exit_code": 1,
+      "log": "libboot_hid.rlib.build.txt"
+    }
+  ],
+  "source_sha256": {
+    "kernel/rust/usb/hid/descriptor.rs": "a78a50b080ed2fb6e8b27383f7bee35e3f6c7fbef0be9d3a63674440fa7d9c5f",
+    "kernel/rust/usb/hid/input.rs": "d0fbc4cd350814e5c6302047cb064971ee60d2912ac748d5de1d47b7478e4f33",
+    "kernel/rust/usb/hid/lib.rs": "a1a4a4c055f1f996d16355199da026d355d434b3c601309a6c178b1eb8b71353",
+    "scripts/test-boot-hid.py": "89793edc9472a8b1ba5dfea6da1dde6e5a6a216671ba0f6f76a72da8ccabfbe8",
+    "tests/host/boot-hid-adapter.h": "ad663064a4c80a0ebaf56322b6e1229f7e2419cebb649dac0010d9ac764382f5",
+    "tests/host/boot-hid-console.c": "5a7808d20ee28aa2d70fc70a7b5733943056c3b025d70183f4ae908763ddd34f",
+    "tests/host/boot-hid-ffi.rs": "4ecb8a380b6d433c952e79e5a0436d4cdd7aa4b23797acbd6a8f59d2ebb9cf9e",
+    "tests/host/boot-hid-gui.c": "21cb92dea9bf5bddfa1158c000ae224b0b3d5d465d2ca07fa41b3b033716c795",
+    "tests/rust/boot_hid.rs": "9e157aba80fefc33e4de65a6e8dcae79f410b96bb591f3b89c0fb065566cf92a"
+  },
+  "rustc": "rustc 1.100.0-nightly (2e2b193f8 2026-09-02)",
+  "gcc": "gcc (Ubuntu 15.2.0-16ubuntu1) 15.2.0",
+  "mutations": [
+    {
+      "name": "protocol",
+      "caught_by": "no_boot_data_before_transport_success",
+      "binary_sha256": "513d02cf25f1717b7b3f802248cbf6b1589bb23f80c6ef152bc866c63cf472f5"
+    }
+  ],
+  "failure": "libboot_hid.rlib.build.txt unexpected exit 1"
+}

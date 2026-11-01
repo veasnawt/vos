@@ -1,0 +1,9 @@
+/usr/bin/x86_64-linux-gnu-ld.bfd: /tmp/ccdhqEsz.o: in function `keyboard_poll':
+/home/veasnawt/src/vos-r2-console-line/tests/host/boot-hid-adapter.h:28:(.text.keyboard_poll+0x359): undefined reference to `keyboard_decode'
+/usr/bin/x86_64-linux-gnu-ld.bfd: /tmp/ccVdYkXe.o: in function `input_console_read_line_for':
+/home/veasnawt/src/vos-r2-console-line/arch/x86_64/input_console.c:76:(.text.input_console_read_line_for+0x25e): undefined reference to `input_console_take_line'
+/usr/bin/x86_64-linux-gnu-ld.bfd: /home/veasnawt/src/vos-r2-console-line/build/h1b-link-before/keyboard.o: in function `routed_drain':
+/home/veasnawt/src/vos-r2-console-line/arch/x86_64/keyboard.c:143:(.text.routed_drain+0x35e): undefined reference to `keyboard_decode'
+/usr/bin/x86_64-linux-gnu-ld.bfd: /home/veasnawt/src/vos-r2-console-line/build/h1b-link-before/keyboard.o: in function `ps2_poll':
+/home/veasnawt/src/vos-r2-console-line/arch/x86_64/keyboard.c:90:(.text.ps2_poll+0x356): undefined reference to `keyboard_decode'
+collect2: error: ld returned 1 exit status

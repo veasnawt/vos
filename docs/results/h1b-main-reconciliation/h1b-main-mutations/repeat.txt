@@ -1,0 +1,15 @@
+
+running 1 test
+
+thread 'keyboard_transitions_and_duplicates' (44320) panicked at tests/rust/boot_hid.rs:266:5:
+assertion failed: drain(&mut s).is_empty()
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+test keyboard_transitions_and_duplicates ... FAILED
+
+failures:
+
+failures:
+    keyboard_transitions_and_duplicates
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 14 filtered out; finished in 0.00s
+

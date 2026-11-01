@@ -1,0 +1,23 @@
+
+running 15 tests
+test ambiguity_and_counts ... ok
+test bounded_hostile_inputs_and_independent_key_oracle ... 50000 hostile descriptor mutations; 10000 independent keyboard transitions PASS
+ok
+test bounded_interface_numbers_and_mouse_oracle ... 65536 independent mouse motion cases PASS
+ok
+test devices_and_speeds ... ok
+test keyboard_owner_epoch_and_disconnect ... ok
+test keyboard_transitions_and_duplicates ... ok
+test malformed_descriptor_fields ... ok
+test mouse_direction_buttons_and_relative_repetition ... ok
+test no_boot_data_before_transport_success ... ok
+test queue_saturation_is_atomic_and_reset_cannot_be_lost ... ok
+test resources ... Session=264 Event=6 descriptor_buffer=4096 two_sessions_plus_buffer=4624
+ok
+test rollover_bad_reports_release_and_rearm ... ok
+test stale_foreign_confirmations ... ok
+test strict_unbound_bulk_packet_sizes ... ok
+test valid_composite_and_unbound_interface ... ok
+
+test result: ok. 15 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+

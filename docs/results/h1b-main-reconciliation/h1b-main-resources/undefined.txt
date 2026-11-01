@@ -1,0 +1,7 @@
+
+/home/veasnawt/src/vos-r2-console-line/build/h1b-main-resources/hid.o:
+                 U memset
+
+/home/veasnawt/src/vos-r2-console-line/build/h1b-main-resources/api.o:
+                 U memcpy
+                 U memset

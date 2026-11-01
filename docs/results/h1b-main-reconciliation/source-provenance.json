@@ -1,0 +1,24 @@
+{
+  "script_sha256": "35a7ba5ef08de3d297a609d009fc5b2cadb552262a78d71c0946af92080afb30",
+  "H1_core": {
+    "kernel/rust/usb/hid/descriptor.rs": "02d959043e5c81aa0847100532558fb08f62ae7b60e882b709c87d98964f84f9",
+    "kernel/rust/usb/hid/input.rs": "d0fbc4cd350814e5c6302047cb064971ee60d2912ac748d5de1d47b7478e4f33",
+    "kernel/rust/usb/hid/lib.rs": "a1a4a4c055f1f996d16355199da026d355d434b3c601309a6c178b1eb8b71353",
+    "tests/host/boot-hid-adapter.h": "ad663064a4c80a0ebaf56322b6e1229f7e2419cebb649dac0010d9ac764382f5",
+    "tests/host/boot-hid-console.c": "5a7808d20ee28aa2d70fc70a7b5733943056c3b025d70183f4ae908763ddd34f",
+    "tests/host/boot-hid-ffi.rs": "4ecb8a380b6d433c952e79e5a0436d4cdd7aa4b23797acbd6a8f59d2ebb9cf9e",
+    "tests/host/boot-hid-gui.c": "3942157361fd9f5faa480e18120d0190844f1d3b876d8399e3567e7d939037c0",
+    "tests/rust/boot_hid.rs": "42c95780b32546d2d010d45b35c68970210b82d9cf4749c7c2bb211c5f9764ad"
+  },
+  "input_abi_source": {
+    "arch/x86_64/rust/ps2_pointer.rs": "361be441fbd5d6efc553be99879ba3f8afc000a69ac5130654603dbf0cfbebf5",
+    "kernel/rust/input/ps2_pointer.rs": "7e0cc27a4af7f80dce3c99985feca064b407bba7752f11b318c6eb3ce0f7fd4c",
+    "arch/x86_64/rust/ps2_keyboard.rs": "70df2669a69454f524c6fb3b8a125942b1f507a134e86bab6e582da653c30e22",
+    "kernel/rust/input/ps2_keyboard.rs": "955ea062d40f840c6d287095cc9c5ec9123507b6f9252ccb5bb9bb0fbf41d535",
+    "arch/x86_64/rust/console_line.rs": "32bdf0d337db975f6fe9f9d7373275428cd01d53073016e6ee505a18f9fe351e",
+    "kernel/rust/input/console_line.rs": "27f99d9ba83ef63a7bdb686814b42a0a0beb35fb920877cc81f330397d8d009f",
+    "arch/x86_64/keyboard.c": "3459345b0ef745eebb1d4e445a155df1c0c6b9e5be4806fd9229d0af160ddde6",
+    "arch/x86_64/input_console.c": "f1e2e83d4595b70878cd923394248f9232ff39497b1f8bd2bd61770ed040bef4"
+  },
+  "scope": "No production C/Rust ownership or HID semantics changed; test-only linkage reconciliation"
+}

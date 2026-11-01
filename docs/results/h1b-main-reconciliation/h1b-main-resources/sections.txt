@@ -1,0 +1,17 @@
+/home/veasnawt/src/vos-r2-console-line/build/h1b-main-resources/hid.o  :
+section                                                                      size   addr
+.text                                                                           0      0
+.text._RNvMNtCsjUJ887UfcZl_8boot_hid10descriptorNtB2_6Device5parse            269      0
+.stack_sizes                                                                    9      0
+.text._RNvMs0_NtCsjUJ887UfcZl_8boot_hid10descriptorNtB5_9Selection5parse     2141      0
+.rodata._RNvMs0_NtCsjUJ887UfcZl_8boot_hid10descriptorNtB5_9Selection5parse    592      0
+.stack_sizes                                                                   10      0
+.text._RNvMs_NtCsjUJ887UfcZl_8boot_hid5inputNtB4_7Session6report             3524      0
+.stack_sizes                                                                   10      0
+.text._RNvMs_NtCsjUJ887UfcZl_8boot_hid5inputNtB4_7Session7enqueue             795      0
+.stack_sizes                                                                    9      0
+.comment                                                                       54      0
+.note.GNU-stack                                                                 0      0
+Total                                                                        7413
+
+

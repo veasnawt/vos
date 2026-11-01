@@ -1,0 +1,2 @@
+ABI/guard PASS: 144B align4 offsets0/4/136/140, null/wrap, both editor edges, exact output edge, oversized refusal
+differential PASS: 222017 cases including exhaustive valid lengths/capacities, noncanonical flags, forward overlaps and seed=a76c209ecf315b84

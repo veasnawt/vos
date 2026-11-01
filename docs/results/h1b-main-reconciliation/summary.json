@@ -1,0 +1,107 @@
+{
+  "utc": "2026-11-01T20:24:18.736758+00:00",
+  "status": "ALL_REQUIRED_LOCAL_COMPONENT_GATES_PASS",
+  "baseline": "fbf11d98d66c6bca4cb457c12b7f952879ad7858",
+  "original_H1": "b9e3cf6d5278a4ff2d507480fed0ec5cc37e5a76",
+  "H1_core_test_count": 15,
+  "hostile_descriptor_mutations": 50000,
+  "keyboard_transitions": 10000,
+  "mouse_pairs": 65536,
+  "HID_mutants_detected": 8,
+  "HID_frame_max": 344,
+  "Session_bytes": 264,
+  "two_sessions_and_descriptor": 4624,
+  "heap_allocations": 0,
+  "DMA_pages": 0,
+  "HID_core_unchanged": {
+    "kernel/rust/usb/hid/descriptor.rs": "02d959043e5c81aa0847100532558fb08f62ae7b60e882b709c87d98964f84f9",
+    "kernel/rust/usb/hid/input.rs": "d0fbc4cd350814e5c6302047cb064971ee60d2912ac748d5de1d47b7478e4f33",
+    "kernel/rust/usb/hid/lib.rs": "a1a4a4c055f1f996d16355199da026d355d434b3c601309a6c178b1eb8b71353",
+    "tests/host/boot-hid-adapter.h": "ad663064a4c80a0ebaf56322b6e1229f7e2419cebb649dac0010d9ac764382f5",
+    "tests/host/boot-hid-console.c": "5a7808d20ee28aa2d70fc70a7b5733943056c3b025d70183f4ae908763ddd34f",
+    "tests/host/boot-hid-ffi.rs": "4ecb8a380b6d433c952e79e5a0436d4cdd7aa4b23797acbd6a8f59d2ebb9cf9e",
+    "tests/host/boot-hid-gui.c": "3942157361fd9f5faa480e18120d0190844f1d3b876d8399e3567e7d939037c0",
+    "tests/rust/boot_hid.rs": "42c95780b32546d2d010d45b35c68970210b82d9cf4749c7c2bb211c5f9764ad"
+  },
+  "original_H1_manifest_entries": 15,
+  "production_source_unchanged": true,
+  "accepted_kernel_archive_sha256": "d5645ff8e105eb1ad8a71704e6b27884dc84075e20dbc148ec67271dc5c9dd3f",
+  "adapter_proof": {
+    "hid-console": [
+      "pointer_decode",
+      "keyboard_decode",
+      "input_console_take_line"
+    ],
+    "hid-gui": [
+      "pointer_decode",
+      "pointer_idle",
+      "keyboard_decode"
+    ],
+    "ps2-regression": [
+      "pointer_decode",
+      "pointer_idle",
+      "keyboard_decode"
+    ]
+  },
+  "keyboard": {
+    "core_tests": 11,
+    "semantic_mutants": 9,
+    "comparisons_per_variant": 3703936,
+    "variants": 3,
+    "stack": 10,
+    "hosted_release": {
+      "C": 4.1779,
+      "Rust": 6.0828,
+      "ratio": 1.4559467675147801
+    }
+  },
+  "console": {
+    "core_tests": 10,
+    "mutants": 10,
+    "cases_per_variant": 222017,
+    "variants": 3,
+    "stack": 0,
+    "hosted_release": {
+      "empty": {
+        "C_ns": 13.3818,
+        "Rust_ns": 12.8669,
+        "ratio": 0.9615223661988671,
+        "investigation_required": false
+      },
+      "max128": {
+        "C_ns": 59.2451,
+        "Rust_ns": 51.4133,
+        "ratio": 0.8678067890846669,
+        "investigation_required": false
+      },
+      "nospace": {
+        "C_ns": 2.1108,
+        "Rust_ns": 3.5191,
+        "ratio": 1.6671877960962669,
+        "investigation_required": true
+      },
+      "overflow": {
+        "C_ns": 12.3713,
+        "Rust_ns": 12.1262,
+        "ratio": 0.980188015810788,
+        "investigation_required": false
+      },
+      "pending": {
+        "C_ns": 1.9373,
+        "Rust_ns": 2.2313,
+        "ratio": 1.151757600784597,
+        "investigation_required": true
+      },
+      "short16": {
+        "C_ns": 18.9737,
+        "Rust_ns": 17.8758,
+        "ratio": 0.9421356930909628,
+        "investigation_required": false
+      }
+    }
+  },
+  "GUI_pointer_regressions": "PASS; actual console/GUI/renderer/PS2 paths",
+  "coverage_note": "The first final-driver attempt passed all15 core tests and all3 adapters but an added post-test ownership assertion incorrectly required a gc-discarded extractor in the PS2 binary. Failed result is retained. Corrected per-binary proof and fresh adapter executions PASS; eight HID mutations/resources run separately on final driver. Published-head CI must run final default all-stage driver. No original FAIL relabelled.",
+  "performance_note": "No production implementation or HID core change. Accepted input source/actual archive are byte-identical to main. Fresh diagnostic samples preserve inherited keyboard optimization candidate and source-bound console exceptions; not new kernel-speed claims.",
+  "BIOS_UEFI_evidence_reuse": "Accepted PR53 eight actual runs/screenshots reused by production source/archive identity; required new-head CI rebuilds and boots actual source. Hosted HID is not native USB."
+}

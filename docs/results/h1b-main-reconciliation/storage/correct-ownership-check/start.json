@@ -1,0 +1,22 @@
+{
+  "utc": "2026-11-01T20:19:33.819536+00:00",
+  "command": [
+    "python3",
+    "-B",
+    "/home/veasnawt/src/vos-r2b/build/b1-storage/r-series-program/h1b-main-reconcile-20261101T201434Z-2a096c6a/correct-ownership-check.py"
+  ],
+  "projection": 1000000,
+  "before": {
+    "utc": "2026-11-01T20:19:33.456342+00:00",
+    "tree": 188965971,
+    "shared_git": 21347536,
+    "controls": 4678253,
+    "C_free": 58118230016,
+    "E_free": 124597424128,
+    "tmpfs_used": 0
+  },
+  "physical_E_required": 1764680794,
+  "physical_E_reserve": 1610612736,
+  "external_growth_allowance": 6000000,
+  "temporary_output_policy": "TMPDIR within guarded worktree; no Cargo/rustup installs; shared Git and controller growth separately counted"
+}

@@ -1,0 +1,455 @@
+{
+  "status": "PASS",
+  "scope": "hosted fixtures, NOT native USB input",
+  "commands": [
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--version"
+      ],
+      "exit_code": 0,
+      "log": "rustc.txt"
+    },
+    {
+      "argv": [
+        "gcc",
+        "--version"
+      ],
+      "exit_code": 0,
+      "log": "gcc.txt"
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "--crate-name",
+        "boot_hid",
+        "--crate-type=rlib",
+        "-Dwarnings",
+        "-Coverflow-checks=yes",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "/home/veasnawt/src/vos-b1-boot/kernel/rust/usb/hid/lib.rs",
+        "-o",
+        "/home/veasnawt/src/vos-b1-boot/build/h1b/mutations-r2/libboot_hid.rlib"
+      ],
+      "exit_code": 0,
+      "log": "libboot_hid.rlib.build.txt"
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "--crate-name",
+        "boot_hid",
+        "--crate-type=rlib",
+        "-Dwarnings",
+        "-Coverflow-checks=yes",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "/home/veasnawt/src/vos-b1-boot/build/h1b/mutations-r2/mutant-protocol/lib.rs",
+        "-o",
+        "/home/veasnawt/src/vos-b1-boot/build/h1b/mutations-r2/mutant-protocol/libboot_hid.rlib"
+      ],
+      "exit_code": 0,
+      "log": "mutant-protocol/libboot_hid.rlib.build.txt"
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "--test",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Cstrip=symbols",
+        "--extern",
+        "boot_hid=/home/veasnawt/src/vos-b1-boot/build/h1b/mutations-r2/mutant-protocol/libboot_hid.rlib",
+        "tests/rust/boot_hid.rs",
+        "-o",
+        "/home/veasnawt/src/vos-b1-boot/build/h1b/mutations-r2/mutant-protocol/tests"
+      ],
+      "exit_code": 0,
+      "log": "mutant-protocol/tests.build.txt"
+    },
+    {
+      "argv": [
+        "/home/veasnawt/src/vos-b1-boot/build/h1b/mutations-r2/mutant-protocol/tests",
+        "--exact",
+        "no_boot_data_before_transport_success",
+        "--nocapture"
+      ],
+      "exit_code": 101,
+      "log": "protocol.txt"
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "--crate-name",
+        "boot_hid",
+        "--crate-type=rlib",
+        "-Dwarnings",
+        "-Coverflow-checks=yes",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "/home/veasnawt/src/vos-b1-boot/build/h1b/mutations-r2/mutant-owner/lib.rs",
+        "-o",
+        "/home/veasnawt/src/vos-b1-boot/build/h1b/mutations-r2/mutant-owner/libboot_hid.rlib"
+      ],
+      "exit_code": 0,
+      "log": "mutant-owner/libboot_hid.rlib.build.txt"
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "--test",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Cstrip=symbols",
+        "--extern",
+        "boot_hid=/home/veasnawt/src/vos-b1-boot/build/h1b/mutations-r2/mutant-owner/libboot_hid.rlib",
+        "tests/rust/boot_hid.rs",
+        "-o",
+        "/home/veasnawt/src/vos-b1-boot/build/h1b/mutations-r2/mutant-owner/tests"
+      ],
+      "exit_code": 0,
+      "log": "mutant-owner/tests.build.txt"
+    },
+    {
+      "argv": [
+        "/home/veasnawt/src/vos-b1-boot/build/h1b/mutations-r2/mutant-owner/tests",
+        "--exact",
+        "keyboard_owner_epoch_and_disconnect",
+        "--nocapture"
+      ],
+      "exit_code": 101,
+      "log": "owner.txt"
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "--crate-name",
+        "boot_hid",
+        "--crate-type=rlib",
+        "-Dwarnings",
+        "-Coverflow-checks=yes",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "/home/veasnawt/src/vos-b1-boot/build/h1b/mutations-r2/mutant-repeat/lib.rs",
+        "-o",
+        "/home/veasnawt/src/vos-b1-boot/build/h1b/mutations-r2/mutant-repeat/libboot_hid.rlib"
+      ],
+      "exit_code": 0,
+      "log": "mutant-repeat/libboot_hid.rlib.build.txt"
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "--test",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Cstrip=symbols",
+        "--extern",
+        "boot_hid=/home/veasnawt/src/vos-b1-boot/build/h1b/mutations-r2/mutant-repeat/libboot_hid.rlib",
+        "tests/rust/boot_hid.rs",
+        "-o",
+        "/home/veasnawt/src/vos-b1-boot/build/h1b/mutations-r2/mutant-repeat/tests"
+      ],
+      "exit_code": 0,
+      "log": "mutant-repeat/tests.build.txt"
+    },
+    {
+      "argv": [
+        "/home/veasnawt/src/vos-b1-boot/build/h1b/mutations-r2/mutant-repeat/tests",
+        "--exact",
+        "keyboard_transitions_and_duplicates",
+        "--nocapture"
+      ],
+      "exit_code": 101,
+      "log": "repeat.txt"
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "--crate-name",
+        "boot_hid",
+        "--crate-type=rlib",
+        "-Dwarnings",
+        "-Coverflow-checks=yes",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "/home/veasnawt/src/vos-b1-boot/build/h1b/mutations-r2/mutant-direction/lib.rs",
+        "-o",
+        "/home/veasnawt/src/vos-b1-boot/build/h1b/mutations-r2/mutant-direction/libboot_hid.rlib"
+      ],
+      "exit_code": 0,
+      "log": "mutant-direction/libboot_hid.rlib.build.txt"
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "--test",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Cstrip=symbols",
+        "--extern",
+        "boot_hid=/home/veasnawt/src/vos-b1-boot/build/h1b/mutations-r2/mutant-direction/libboot_hid.rlib",
+        "tests/rust/boot_hid.rs",
+        "-o",
+        "/home/veasnawt/src/vos-b1-boot/build/h1b/mutations-r2/mutant-direction/tests"
+      ],
+      "exit_code": 0,
+      "log": "mutant-direction/tests.build.txt"
+    },
+    {
+      "argv": [
+        "/home/veasnawt/src/vos-b1-boot/build/h1b/mutations-r2/mutant-direction/tests",
+        "--exact",
+        "mouse_direction_buttons_and_relative_repetition",
+        "--nocapture"
+      ],
+      "exit_code": 101,
+      "log": "direction.txt"
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "--crate-name",
+        "boot_hid",
+        "--crate-type=rlib",
+        "-Dwarnings",
+        "-Coverflow-checks=yes",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "/home/veasnawt/src/vos-b1-boot/build/h1b/mutations-r2/mutant-overflow/lib.rs",
+        "-o",
+        "/home/veasnawt/src/vos-b1-boot/build/h1b/mutations-r2/mutant-overflow/libboot_hid.rlib"
+      ],
+      "exit_code": 0,
+      "log": "mutant-overflow/libboot_hid.rlib.build.txt"
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "--test",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Cstrip=symbols",
+        "--extern",
+        "boot_hid=/home/veasnawt/src/vos-b1-boot/build/h1b/mutations-r2/mutant-overflow/libboot_hid.rlib",
+        "tests/rust/boot_hid.rs",
+        "-o",
+        "/home/veasnawt/src/vos-b1-boot/build/h1b/mutations-r2/mutant-overflow/tests"
+      ],
+      "exit_code": 0,
+      "log": "mutant-overflow/tests.build.txt"
+    },
+    {
+      "argv": [
+        "/home/veasnawt/src/vos-b1-boot/build/h1b/mutations-r2/mutant-overflow/tests",
+        "--exact",
+        "queue_saturation_is_atomic_and_reset_cannot_be_lost",
+        "--nocapture"
+      ],
+      "exit_code": 101,
+      "log": "overflow.txt"
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "--crate-name",
+        "boot_hid",
+        "--crate-type=rlib",
+        "-Dwarnings",
+        "-Coverflow-checks=yes",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "/home/veasnawt/src/vos-b1-boot/build/h1b/mutations-r2/mutant-length/lib.rs",
+        "-o",
+        "/home/veasnawt/src/vos-b1-boot/build/h1b/mutations-r2/mutant-length/libboot_hid.rlib"
+      ],
+      "exit_code": 0,
+      "log": "mutant-length/libboot_hid.rlib.build.txt"
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "--test",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Cstrip=symbols",
+        "--extern",
+        "boot_hid=/home/veasnawt/src/vos-b1-boot/build/h1b/mutations-r2/mutant-length/libboot_hid.rlib",
+        "tests/rust/boot_hid.rs",
+        "-o",
+        "/home/veasnawt/src/vos-b1-boot/build/h1b/mutations-r2/mutant-length/tests"
+      ],
+      "exit_code": 0,
+      "log": "mutant-length/tests.build.txt"
+    },
+    {
+      "argv": [
+        "/home/veasnawt/src/vos-b1-boot/build/h1b/mutations-r2/mutant-length/tests",
+        "--exact",
+        "malformed_descriptor_fields",
+        "--nocapture"
+      ],
+      "exit_code": 101,
+      "log": "length.txt"
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "--crate-name",
+        "boot_hid",
+        "--crate-type=rlib",
+        "-Dwarnings",
+        "-Coverflow-checks=yes",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "/home/veasnawt/src/vos-b1-boot/build/h1b/mutations-r2/mutant-count/lib.rs",
+        "-o",
+        "/home/veasnawt/src/vos-b1-boot/build/h1b/mutations-r2/mutant-count/libboot_hid.rlib"
+      ],
+      "exit_code": 0,
+      "log": "mutant-count/libboot_hid.rlib.build.txt"
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "--test",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Cstrip=symbols",
+        "--extern",
+        "boot_hid=/home/veasnawt/src/vos-b1-boot/build/h1b/mutations-r2/mutant-count/libboot_hid.rlib",
+        "tests/rust/boot_hid.rs",
+        "-o",
+        "/home/veasnawt/src/vos-b1-boot/build/h1b/mutations-r2/mutant-count/tests"
+      ],
+      "exit_code": 0,
+      "log": "mutant-count/tests.build.txt"
+    },
+    {
+      "argv": [
+        "/home/veasnawt/src/vos-b1-boot/build/h1b/mutations-r2/mutant-count/tests",
+        "--exact",
+        "malformed_descriptor_fields",
+        "--nocapture"
+      ],
+      "exit_code": 101,
+      "log": "count.txt"
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "--crate-name",
+        "boot_hid",
+        "--crate-type=rlib",
+        "-Dwarnings",
+        "-Coverflow-checks=yes",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "/home/veasnawt/src/vos-b1-boot/build/h1b/mutations-r2/mutant-ambiguous/lib.rs",
+        "-o",
+        "/home/veasnawt/src/vos-b1-boot/build/h1b/mutations-r2/mutant-ambiguous/libboot_hid.rlib"
+      ],
+      "exit_code": 0,
+      "log": "mutant-ambiguous/libboot_hid.rlib.build.txt"
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "--test",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Cstrip=symbols",
+        "--extern",
+        "boot_hid=/home/veasnawt/src/vos-b1-boot/build/h1b/mutations-r2/mutant-ambiguous/libboot_hid.rlib",
+        "tests/rust/boot_hid.rs",
+        "-o",
+        "/home/veasnawt/src/vos-b1-boot/build/h1b/mutations-r2/mutant-ambiguous/tests"
+      ],
+      "exit_code": 0,
+      "log": "mutant-ambiguous/tests.build.txt"
+    },
+    {
+      "argv": [
+        "/home/veasnawt/src/vos-b1-boot/build/h1b/mutations-r2/mutant-ambiguous/tests",
+        "--exact",
+        "ambiguity_and_counts",
+        "--nocapture"
+      ],
+      "exit_code": 101,
+      "log": "ambiguous.txt"
+    }
+  ],
+  "source_sha256": {
+    "kernel/rust/usb/hid/descriptor.rs": "a78a50b080ed2fb6e8b27383f7bee35e3f6c7fbef0be9d3a63674440fa7d9c5f",
+    "kernel/rust/usb/hid/input.rs": "d0fbc4cd350814e5c6302047cb064971ee60d2912ac748d5de1d47b7478e4f33",
+    "kernel/rust/usb/hid/lib.rs": "a1a4a4c055f1f996d16355199da026d355d434b3c601309a6c178b1eb8b71353",
+    "scripts/test-boot-hid.py": "5535bebd5ccf0c5c7c2406afb8341ac095068f0bd2768385b31b4e765811feef",
+    "tests/host/boot-hid-adapter.h": "ad663064a4c80a0ebaf56322b6e1229f7e2419cebb649dac0010d9ac764382f5",
+    "tests/host/boot-hid-console.c": "5a7808d20ee28aa2d70fc70a7b5733943056c3b025d70183f4ae908763ddd34f",
+    "tests/host/boot-hid-ffi.rs": "4ecb8a380b6d433c952e79e5a0436d4cdd7aa4b23797acbd6a8f59d2ebb9cf9e",
+    "tests/host/boot-hid-gui.c": "3942157361fd9f5faa480e18120d0190844f1d3b876d8399e3567e7d939037c0",
+    "tests/rust/boot_hid.rs": "9e157aba80fefc33e4de65a6e8dcae79f410b96bb591f3b89c0fb065566cf92a"
+  },
+  "rustc": "rustc 1.100.0-nightly (2e2b193f8 2026-09-02)",
+  "gcc": "gcc (Ubuntu 15.2.0-16ubuntu1) 15.2.0",
+  "mutations": [
+    {
+      "name": "protocol",
+      "caught_by": "no_boot_data_before_transport_success",
+      "binary_sha256": "b86ba90d8bae27e33f43306d74d3396b4aad780c1e4a2e6e5cb31f37318e9457"
+    },
+    {
+      "name": "owner",
+      "caught_by": "keyboard_owner_epoch_and_disconnect",
+      "binary_sha256": "c5625b6fb15d689a2d20dac3b05211f58cdb5f077cab6b8b725fa4b9c8e8961a"
+    },
+    {
+      "name": "repeat",
+      "caught_by": "keyboard_transitions_and_duplicates",
+      "binary_sha256": "b43215b00d6a9d8e74d232d647d4a7af0f5175bd50f8713773effeb53c5bc0a2"
+    },
+    {
+      "name": "direction",
+      "caught_by": "mouse_direction_buttons_and_relative_repetition",
+      "binary_sha256": "0b83d88421c49f521e8ace308b332563af0e0c6a90a090c4981d0f2d83fa3178"
+    },
+    {
+      "name": "overflow",
+      "caught_by": "queue_saturation_is_atomic_and_reset_cannot_be_lost",
+      "binary_sha256": "7cebc9c4729d1b9db85031fda5618b9633b1daf164e1fcc54aea70ca05496b23"
+    },
+    {
+      "name": "length",
+      "caught_by": "malformed_descriptor_fields",
+      "binary_sha256": "1387143749718caa1c6e26731eaf57ef9aecb67274e7848ee6c5276d335d3c16"
+    },
+    {
+      "name": "count",
+      "caught_by": "malformed_descriptor_fields",
+      "binary_sha256": "f67f82bfca55bd1a5d553a1f52eedb09abfe79355c60a7e93437ae962362ee89"
+    },
+    {
+      "name": "ambiguous",
+      "caught_by": "ambiguity_and_counts",
+      "binary_sha256": "41066c6a3714d5a495ee274033073456e3006e043977d62d8e188b9a988bb1d3"
+    }
+  ]
+}

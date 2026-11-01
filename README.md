@@ -25,6 +25,8 @@ Multiboot2 handoff through BIOS or UEFI; a legacy i386 baseline is also retained
 The [B1 boot-reservation migration](docs/results/b1-rust-boot-foundations.md), merged through [PR #50](https://github.com/veasnawt/vos/pull/50) at `77045d8`, moves the remaining bootinfo/reservation and EFI boundary
 into the Rust archive behind the existing C ABI, with hosted and BIOS/UEFI QEMU evidence.
 
+The [H1-B boot-HID core](docs/results/h1b-rust-boot-hid.md) is a locally verified candidate: bounded Rust descriptor/report logic and hosted input-contract adapters. It is not connected to a USB transport or the production kernel; native USB input remains unavailable.
+
 - Higher-half kernel, protected memory/stacks, timer-preempted isolated ring-3
   processes, kernel threads and bounded IPC.
 - Read-only virtio-blk, block caching and ext2, with process-owned file handles
@@ -201,4 +203,6 @@ the [documentation publication checklist](docs/milestone-publication-checklist.m
 
 The [R2 Rust PS/2 keyboard decoder](docs/results/r2-keyboard-decode-rust.md) is merged through [PR #52](https://github.com/veasnawt/vos/pull/52) at `9ab5e9f58e85dfe57f039a6a7072496f21cc9779`. Its hosted 1.529x result remains an optimization candidate requiring separate source authorization; accepted evidence is preserved. Wider R2 and R3–R5 remain incomplete.
 
-The [R2 Rust console line extraction candidate](docs/results/r2-console-line-rust.md) passes local equivalence, resource and eight BIOS/UEFI native gates. Normal extraction paths are at parity or faster in hosted measurements; the owner explicitly accepted the documented pending/capacity hosted fallback regressions for gated publication. C ABI, input ownership and controller I/O are preserved. No native USB or physical hardware claim is made.
+The [R2 Rust console line extraction migration](docs/results/r2-console-line-rust.md) is merged through [PR #53](https://github.com/veasnawt/vos/pull/53) at `fbf11d98d66c6bca4cb457c12b7f952879ad7858`, with equivalence, resource and eight BIOS/UEFI native gates. Normal extraction paths are at parity or faster in hosted measurements; the owner explicitly accepted the documented pending/capacity hosted fallback regressions for gated publication. C ABI, input ownership and controller I/O are preserved. No native USB or physical hardware claim is made.
+
+[H1-B accepted-main reconciliation](docs/results/h1b-main-reconciliation.md) updates the unmerged PR #51 hosted adapters for the Rust keyboard/console ABI from merged PRs #52/#53. HID semantics and production kernel sources are unchanged. Local component gates pass; final new-head CI and human merge review remain required. This is hosted compatibility work, not native USB activation.

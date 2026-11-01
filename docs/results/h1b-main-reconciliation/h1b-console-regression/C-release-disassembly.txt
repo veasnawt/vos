@@ -1,0 +1,58 @@
+
+/home/veasnawt/src/vos-r2-console-line/build/h1b-console-regression/release-reference.o:     file format elf64-x86-64
+
+
+Disassembly of section .text.input_console_take_line_reference:
+
+0000000000000000 <input_console_take_line_reference>:
+   0:	48 89 f9             	mov    %rdi,%rcx
+   3:	8b bf 88 00 00 00    	mov    0x88(%rdi),%edi
+   9:	85 ff                	test   %edi,%edi
+   b:	0f 84 a6 00 00 00    	je     b7 <input_console_take_line_reference+0xb7>
+  11:	8b 81 8c 00 00 00    	mov    0x8c(%rcx),%eax
+  17:	85 c0                	test   %eax,%eax
+  19:	75 6b                	jne    86 <input_console_take_line_reference+0x86>
+  1b:	48 85 f6             	test   %rsi,%rsi
+  1e:	74 60                	je     80 <input_console_take_line_reference+0x80>
+  20:	44 8b 01             	mov    (%rcx),%r8d
+  23:	41 39 d0             	cmp    %edx,%r8d
+  26:	73 58                	jae    80 <input_console_take_line_reference+0x80>
+  28:	44 89 c2             	mov    %r8d,%edx
+  2b:	31 c0                	xor    %eax,%eax
+  2d:	48 8d 7a 01          	lea    0x1(%rdx),%rdi
+  31:	0f 1f 40 00          	nopl   0x0(%rax)
+  35:	66 66 2e 0f 1f 84 00 	data16 cs nopw 0x0(%rax,%rax,1)
+  3c:	00 00 00 00 
+  40:	0f b6 54 01 04       	movzbl 0x4(%rcx,%rax,1),%edx
+  45:	88 14 06             	mov    %dl,(%rsi,%rax,1)
+  48:	48 83 c0 01          	add    $0x1,%rax
+  4c:	48 39 c7             	cmp    %rax,%rdi
+  4f:	75 ef                	jne    40 <input_console_take_line_reference+0x40>
+  51:	48 8d 79 08          	lea    0x8(%rcx),%rdi
+  55:	48 c7 01 00 00 00 00 	movq   $0x0,(%rcx)
+  5c:	31 c0                	xor    %eax,%eax
+  5e:	48 c7 81 88 00 00 00 	movq   $0x0,0x88(%rcx)
+  65:	00 00 00 00 
+  69:	48 83 e7 f8          	and    $0xfffffffffffffff8,%rdi
+  6d:	48 29 f9             	sub    %rdi,%rcx
+  70:	81 c1 90 00 00 00    	add    $0x90,%ecx
+  76:	c1 e9 03             	shr    $0x3,%ecx
+  79:	f3 48 ab             	rep stos %rax,(%rdi)
+  7c:	44 89 c0             	mov    %r8d,%eax
+  7f:	c3                   	ret
+  80:	b8 fe ff ff ff       	mov    $0xfffffffe,%eax
+  85:	c3                   	ret
+  86:	48 8d 79 08          	lea    0x8(%rcx),%rdi
+  8a:	48 c7 01 00 00 00 00 	movq   $0x0,(%rcx)
+  91:	31 c0                	xor    %eax,%eax
+  93:	48 c7 81 88 00 00 00 	movq   $0x0,0x88(%rcx)
+  9a:	00 00 00 00 
+  9e:	48 83 e7 f8          	and    $0xfffffffffffffff8,%rdi
+  a2:	48 29 f9             	sub    %rdi,%rcx
+  a5:	81 c1 90 00 00 00    	add    $0x90,%ecx
+  ab:	c1 e9 03             	shr    $0x3,%ecx
+  ae:	f3 48 ab             	rep stos %rax,(%rdi)
+  b1:	b8 fd ff ff ff       	mov    $0xfffffffd,%eax
+  b6:	c3                   	ret
+  b7:	b8 ff ff ff ff       	mov    $0xffffffff,%eax
+  bc:	c3                   	ret

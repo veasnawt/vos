@@ -1,0 +1,14 @@
+{
+  "utc": "2026-11-01T20:14:52.732689+00:00",
+  "main": "fbf11d98d66c6bca4cb457c12b7f952879ad7858",
+  "H1_head": "b9e3cf6d5278a4ff2d507480fed0ec5cc37e5a76",
+  "merge_exit": 1,
+  "conflicts": [
+    "README.md",
+    "docs/ROADMAP.md",
+    "docs/STATUS.md"
+  ],
+  "original_R2_ref_preserved": true,
+  "original_H1_ref_preserved": true,
+  "committed": false
+}

@@ -1,0 +1,79 @@
+{
+  "status": "FAIL",
+  "scope": "hosted fixtures, NOT native USB input",
+  "commands": [
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--version"
+      ],
+      "exit_code": 0,
+      "log": "rustc.txt"
+    },
+    {
+      "argv": [
+        "gcc",
+        "--version"
+      ],
+      "exit_code": 0,
+      "log": "gcc.txt"
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "--crate-name",
+        "boot_hid",
+        "--crate-type=rlib",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "/home/veasnawt/src/vos-b1-boot/kernel/rust/usb/hid/lib.rs",
+        "-o",
+        "/home/veasnawt/src/vos-b1-boot/build/h1b/core/libboot_hid.rlib"
+      ],
+      "exit_code": 0,
+      "log": "libboot_hid.rlib.build.txt"
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "--test",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Cstrip=symbols",
+        "--extern",
+        "boot_hid=/home/veasnawt/src/vos-b1-boot/build/h1b/core/libboot_hid.rlib",
+        "tests/rust/boot_hid.rs",
+        "-o",
+        "/home/veasnawt/src/vos-b1-boot/build/h1b/core/core-tests"
+      ],
+      "exit_code": 0,
+      "log": "core-tests.build.txt"
+    },
+    {
+      "argv": [
+        "/home/veasnawt/src/vos-b1-boot/build/h1b/core/core-tests",
+        "--test-threads=1",
+        "--nocapture"
+      ],
+      "exit_code": 101,
+      "log": "core-tests.txt"
+    }
+  ],
+  "source_sha256": {
+    "kernel/rust/usb/hid/descriptor.rs": "48405c4463f32de244c5453c921450472a92be5040863f54340f53dd41775e3b",
+    "kernel/rust/usb/hid/input.rs": "9ade6c884eb95c7eaa680c333d8e3e065beeb07e9a853223302e5411ab2592cf",
+    "kernel/rust/usb/hid/lib.rs": "8e547b5ec609c4565c2040e8821d6305637b5636658c218733271da59619f558",
+    "scripts/test-boot-hid.py": "8228aa9a57b2fa696c7890d8e0bfa630d61440def4f8051ffa424832ce42908e",
+    "tests/host/boot-hid-adapter.h": "ad663064a4c80a0ebaf56322b6e1229f7e2419cebb649dac0010d9ac764382f5",
+    "tests/host/boot-hid-console.c": "5a7808d20ee28aa2d70fc70a7b5733943056c3b025d70183f4ae908763ddd34f",
+    "tests/host/boot-hid-ffi.rs": "90ae444eedcaf4b0bbfe27e6234be0bf7c004a8e1a8f70039e05514da68fd29e",
+    "tests/host/boot-hid-gui.c": "ede576ff2124a72356e1e0c440ae3c4213ebf8112443aa366041dfda073d4d42",
+    "tests/rust/boot_hid.rs": "870b3968137025551d4b95fdff0a08ec7bbbb9a6a537936ce544232ac6f2713b"
+  },
+  "rustc": "rustc 1.100.0-nightly (2e2b193f8 2026-09-02)",
+  "gcc": "gcc (Ubuntu 15.2.0-16ubuntu1) 15.2.0",
+  "failure": "core-tests.txt unexpected exit 101"
+}
