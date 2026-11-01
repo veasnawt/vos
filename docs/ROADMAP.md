@@ -199,6 +199,11 @@ interoperable boundaries, preserve ABIs/capabilities, and audit unsafe Rust,
 assembly, FFI, interrupts and DMA ownership. Rust application support remains
 implemented independently of this kernel proof.
 
+Following the merged [A2 parser](results/a2-mb2-parse-rust.md) and [A3 framebuffer validation](results/a3-fb-validate-rust.md),
+the [B1 candidate](results/b1-rust-boot-foundations.md) moves boot reservations, reservation tables and the EFI boundary into Rust.
+It is locally verified in hosted tests and BIOS/UEFI QEMU, pending PR review; this does not complete the wider Rust migration or
+authorize another increment. Its unchanged ABI, bounded resources, failure history and authentic boot screenshots are recorded in the report.
+
 USB.2-A's [portable Rust core](results/usb2a-rust-core.md) is merged through
 PR #23. It models bounded validation, rings and lifecycle without operating a
 controller. The separately authorized

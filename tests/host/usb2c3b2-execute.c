@@ -44,15 +44,11 @@ static void mmio_write(uint64_t va, uint32_t v);
 #include "../../arch/x86_64/devmap.c"
 #include "../../arch/x86_64/usb_resources.c"
 #include "../../arch/x86_64/xhci_qualify.c"
-#include "../../arch/x86_64/resv.c"
-#include "../../arch/x86_64/efi_memory.c"
 
 static uint64_t root;
 uint64_t vmm_kernel_root(void) { return root; }
 int irq_in_handler(void) { return in_irq; }
 int thread_state(uint64_t id) { (void)id; return THREAD_FREE; }
-const struct mb2_mmap_entry *boot_mmap_entry(const struct boot_info *bi,uint32_t i)
-{ return (const void *)((const uint8_t *)bi->mmap+sizeof(*bi->mmap)+i*bi->mmap->entry_size); }
 __attribute__((noreturn)) void panic(const char *s) { fprintf(stderr,"unexpected panic: %s\n",s); abort(); }
 
 static char out[16384];

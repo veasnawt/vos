@@ -1,0 +1,43 @@
+{
+  "status": "PASS",
+  "scope": "Final hosted EFI source/label retest; Rust subchecks unchanged and verified in referenced complete compatibility result",
+  "prior_complete_result_sha256": "039c5e213702e0d746f640f205d57f4d9de79265d0c942a4fb987cdab1d9a733",
+  "archive_sha256": "eae331c5a97703f8ebe146d7890df1acc1f9b43db32ab84645fb31fc46c4040e",
+  "hosted_source_sha256": {
+    "tests/host/usb2c3a2-efi.c": "5268aa5584568faf4f8e9bdb41700c2af2440fc17494db3b59c88ce6958d1242",
+    "arch/x86_64/efi_memory.h": "20d85b2ccd5b0edbf000f1b5bf4584a09353d757fd901814a62bf96f44ffc6c0",
+    "arch/x86_64/pmm.c": "fb02c276cc23ae010c86c1c5deb274b0411d31153db7e03c5aa3e6a85353137b",
+    "scripts/test-usb2c3a2.py": "75699e168d67dfa2989f460cf4f1dd0689d4c9206e0f8f6a58661e75c552ba50"
+  },
+  "commands": [
+    [
+      "gcc",
+      "-std=gnu11",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-ffunction-sections",
+      "-fdata-sections",
+      "-Wl,--gc-sections",
+      "-fno-pie",
+      "-no-pie",
+      "-Iarch/x86_64",
+      "-O1",
+      "-g",
+      "-fsanitize=address,undefined",
+      "-fno-sanitize-recover=all",
+      "-fno-omit-frame-pointer",
+      "tests/host/usb2c3a2-efi.c",
+      "/home/veasnawt/src/vos-b1-boot/build/b1/kernel/rust/libvos_kernel.a",
+      "-o",
+      "/home/veasnawt/src/vos-b1-boot/build/b1/usb/usb2c3a2-label-r4/sanitizer"
+    ],
+    [
+      "/home/veasnawt/src/vos-b1-boot/build/b1/usb/usb2c3a2-label-r4/sanitizer",
+      "tests/rust/fixtures"
+    ]
+  ],
+  "sanitizer": "OVMF map: boot-services frames excluded before the first allocation, exact vs model: 31 checks PASS\n  allocate until exhausted: no excluded frame; reserving one is refused (reference hands all out): 9 checks PASS\n  SeaBIOS map: not EFI, PMM identical to the e820-only reference: 12 checks PASS\n  UEFI without a map, boot services active, duplicate map: refused, nothing entered: 44 checks PASS\n  malformed EFI maps (version, size, alignment, overflow, empty): refused, nothing entered: 70 checks PASS\n  one free table slot: one widened range (superset); full table: refused: 87 checks PASS\n  EFI map can only remove: conventional claims add nothing; BS + runtime RAM removed exactly: 262183 checks PASS\n  direct ABI: null/misaligned report, null input/sink, policy codes: 7 checks PASS\nPASS: 262450 checks; Rust bootinfo/resv/efi_memory with the actual C PMM",
+  "normal_public_gate_always_runs_full_suite": true,
+  "temporary_resumption_driver_preserved_sha256": "dfe6e4c08d3e7b0696cd52934130b4ffb9db06dd753b223a886cbfc1ce34bb0a"
+}

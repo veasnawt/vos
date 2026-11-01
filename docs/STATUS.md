@@ -213,12 +213,16 @@ hosted tests and QEMU only (BIOS and UEFI); physical hardware NOT TESTED. Its ga
 The [A3 Rust framebuffer validation](results/a3-fb-validate-rust.md) is merged through PR #48 at
 `cf23fa727d92ec7fa5f965ff2eb615f38becdd50` (implementation commit `563612a`): `boot_framebuffer` runs in Rust behind the unchanged
 `bootinfo.h` ABI, and the accepted C is kept only as a frozen differential reference (`tests/host/reference/bootinfo_ref.c`).
-`boot_mmap_entry` and `boot_reserve` remain C. Verified in hosted tests and QEMU only (BIOS and UEFI, including the no-GOP image);
+At that merge, `boot_mmap_entry` and `boot_reserve` remained C (B1 below moves them). Verified in hosted tests and QEMU only (BIOS and UEFI, including the no-GOP image);
 physical hardware NOT TESTED. Its gate runs as one step of the Build smoke job, which passed together with the other required
 checks on the merge commit.
 
-Rust-first kernel migration beyond the merged R1 helper and broader
-physical-hardware/architecture portability remain proposals. They require separate compatibility, unsafe/FFI/DMA,
+The [B1 Rust boot-reservation candidate](results/b1-rust-boot-foundations.md) is locally verified on `feat/b1-rust-boot-foundations`,
+not merged. Nine reservation/EFI boundary symbols are Rust-owned behind unchanged C ABIs; the three remaining C implementation files
+are retired into frozen test references. Differential, compatibility, main-image selftests and BIOS/UEFI 128 MiB/2 GiB native proofs pass.
+Loaded image growth is zero; unsafe glue remains audited and physical hardware is NOT TESTED. Further migration requires separate authorization.
+
+Further Rust kernel migration and broader physical-hardware/architecture portability remain separately authorized proposals. They require separate compatibility, unsafe/FFI/DMA,
 boot/interrupt/device and resource-management plans with reproducible checks.
 VOS targets real x86_64 computers; QEMU success does not establish firmware,
 GPU, USB, storage or input support on physical systems.

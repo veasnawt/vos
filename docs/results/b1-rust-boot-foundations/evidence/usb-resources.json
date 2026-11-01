@@ -1,0 +1,98 @@
+{
+  "commands": [
+    [
+      "gcc",
+      "-std=gnu11",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-ffunction-sections",
+      "-fdata-sections",
+      "-Wl,--gc-sections",
+      "-fno-pie",
+      "-no-pie",
+      "-Iarch/x86_64",
+      "-O1",
+      "-g",
+      "-fsanitize=address,undefined",
+      "-fno-omit-frame-pointer",
+      "tests/host/usb-resources.c",
+      "build/b1/kernel/rust/libvos_kernel.a",
+      "-o",
+      "/home/veasnawt/src/vos-b1-boot/build/b1/usb/resources/sanitizer"
+    ],
+    [
+      "/home/veasnawt/src/vos-b1-boot/build/b1/usb/resources/sanitizer"
+    ],
+    [
+      "gcc",
+      "-std=gnu11",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-ffunction-sections",
+      "-fdata-sections",
+      "-Wl,--gc-sections",
+      "-fno-pie",
+      "-no-pie",
+      "-Iarch/x86_64",
+      "-O2",
+      "-DUSB2B_BENCH",
+      "tests/host/usb-resources.c",
+      "build/b1/kernel/rust/libvos_kernel.a",
+      "-o",
+      "/home/veasnawt/src/vos-b1-boot/build/b1/usb/resources/release"
+    ],
+    [
+      "/home/veasnawt/src/vos-b1-boot/build/b1/usb/resources/release"
+    ],
+    [
+      "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+      "--edition=2024",
+      "-Dwarnings",
+      "--test",
+      "/home/veasnawt/src/vos-b1-boot/tests/rust/usb_platform.rs",
+      "-o",
+      "/home/veasnawt/src/vos-b1-boot/build/b1/usb/resources/rust-tests"
+    ],
+    [
+      "/home/veasnawt/src/vos-b1-boot/build/b1/usb/resources/rust-tests"
+    ],
+    [
+      "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+      "--edition=2024",
+      "-Dwarnings",
+      "/home/veasnawt/src/vos-b1-boot/build/b1/usb/resources/copy.rs",
+      "-o",
+      "/home/veasnawt/src/vos-b1-boot/build/b1/usb/resources/Copy"
+    ],
+    [
+      "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+      "--edition=2024",
+      "-Dwarnings",
+      "/home/veasnawt/src/vos-b1-boot/build/b1/usb/resources/send.rs",
+      "-o",
+      "/home/veasnawt/src/vos-b1-boot/build/b1/usb/resources/Send"
+    ],
+    [
+      "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+      "--edition=2024",
+      "-Dwarnings",
+      "/home/veasnawt/src/vos-b1-boot/build/b1/usb/resources/sync.rs",
+      "-o",
+      "/home/veasnawt/src/vos-b1-boot/build/b1/usb/resources/Sync"
+    ]
+  ],
+  "rust_sanitized": false,
+  "native_hardware": false,
+  "archive_sha256": "eae331c5a97703f8ebe146d7890df1acc1f9b43db32ab84645fb31fc46c4040e",
+  "sanitizer": "PASS: 1016 assertions; actual PMM/devmap/C-Rust ownership, rollback, stale tokens, context and retention",
+  "release": "PASS: 1016 assertions; actual PMM/devmap/C-Rust ownership, rollback, stale tokens, context and retention\nsample=0 path=0 ns_per_operation=1189\nsample=0 path=1 ns_per_operation=1178\nsample=0 path=2 ns_per_operation=98\nsample=0 path=3 ns_per_operation=197\nsample=1 path=0 ns_per_operation=1230\nsample=1 path=1 ns_per_operation=1180\nsample=1 path=2 ns_per_operation=90\nsample=1 path=3 ns_per_operation=178\nsample=2 path=0 ns_per_operation=1263\nsample=2 path=1 ns_per_operation=1554\nsample=2 path=2 ns_per_operation=101\nsample=2 path=3 ns_per_operation=166\nsample=3 path=0 ns_per_operation=1196\nsample=3 path=1 ns_per_operation=1316\nsample=3 path=2 ns_per_operation=100\nsample=3 path=3 ns_per_operation=156\nsample=4 path=0 ns_per_operation=1146\nsample=4 path=1 ns_per_operation=1091\nsample=4 path=2 ns_per_operation=89\nsample=4 path=3 ns_per_operation=147\nsample=5 path=0 ns_per_operation=1315\nsample=5 path=1 ns_per_operation=1247\nsample=5 path=2 ns_per_operation=106\nsample=5 path=3 ns_per_operation=146\nsample=6 path=0 ns_per_operation=1094\nsample=6 path=1 ns_per_operation=1144\nsample=6 path=2 ns_per_operation=99\nsample=6 path=3 ns_per_operation=145",
+  "rust": "running 1 test\ntest resource_ownership::tests::layout_and_budget ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+  "ownership_compile_rejections": [
+    "Copy",
+    "Send",
+    "Sync"
+  ],
+  "status": "PASS"
+}

@@ -1,0 +1,49 @@
+{
+  "kind": "Publication summary of distinct immutable attempts, not a relabeling of the failed attempt",
+  "complete_status": "PASS",
+  "archive_sha256": "eae331c5a97703f8ebe146d7890df1acc1f9b43db32ab84645fb31fc46c4040e",
+  "Rust_and_fixture_sha256": {
+    "kernel/rust/boot/efi_memory.rs": "c25cd6f5807235926d0229b7109606674f3c9b889936c41eaac1c269afb6923d",
+    "kernel/rust/boot/lib.rs": "3fbbb17da750bf6b108d63b249521f6a1c483aab5269808fb51221153462a9a3",
+    "kernel/rust/boot/reserve.rs": "08546d2e6c3ffa43068cb88158c8dbc41feb4fb969bce63b8e8a168f1bc17f9f",
+    "tests/rust/fixtures/ovmf-tag17.bin": "82f75879e3700945ebcf2673b049aa574eaa722e45a43981304cb3cf42476f83",
+    "tests/rust/fixtures/ovmf-tag6.bin": "cdbdc4ff4213520a98f121fa8e3381bae37c24ce7c40dfcdc84982d773d6171e",
+    "tests/rust/fixtures/seabios-tag6.bin": "7bd3eb077b321cf4733bfe8763503536ac8fe3b9a535ad50d4999cb929015da4"
+  },
+  "Rust_tests": "test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 4.27s",
+  "compile_fail_controls": {
+    "efi-map-only-from-parse": "rejected with E0451",
+    "memory-map-only-from-parse": "rejected with E0451",
+    "no-release-plan": "rejected with E0599"
+  },
+  "mutation_controls": {
+    "boot-services-allowed": "detected by ovmf_fixture_excludes_exactly_boot_services_and_firmware_dma_pages (exit 101)",
+    "uncovered-ram-allowed": "detected by overlaps_contradictions_and_attributes_resolve_toward_exclusion (exit 101)",
+    "unchecked-end": "detected by malformed_efi_maps_are_rejected (exit 101)",
+    "coalesce-drops-range": "detected by capacity_coalesces_conservatively_and_fails_closed (exit 101)",
+    "missing-map-accepted": "detected by bios_and_policy_decisions_fail_closed (exit 101)",
+    "frame-partial-ram": "detected by firmware_frames_require_whole_ram_and_no_unavailable_overlap (exit 101)",
+    "frame-ignores-unavailable": "detected by firmware_frames_require_whole_ram_and_no_unavailable_overlap (exit 101)"
+  },
+  "original_attempt_status": "FAIL",
+  "original_result_sha256": "cf7375cc5def50d73386f293466bb98001fb372b74bfe4e8ae4608801da5d2a0",
+  "reuse_validation": {
+    "directory": "/home/veasnawt/src/vos-b1-boot/build/b1/usb/usb2c3a2-r2",
+    "original_attempt_status": "FAIL",
+    "original_result_sha256": "cf7375cc5def50d73386f293466bb98001fb372b74bfe4e8ae4608801da5d2a0",
+    "manifest": "/home/veasnawt/src/vos-r2b/build/b1-storage/postmigration-20261101T063753Z-1ec07eeb/failed-efi-files.sha256.json",
+    "manifest_sha256": "f8e7218570e1083f9b3767f5ce91593d44b1362fba2b1ccae9a7a9bed30a22bc",
+    "verified_artifact_count": 69,
+    "canonical_rust_test_sha256": "d39c4886623aa1ea910097e7b70afd98bfc185be1046c757e95c4500f075ba4a",
+    "note": "Only passing Rust subchecks reused; the original whole attempt remains FAIL. Hosted C runs below."
+  },
+  "final_hosted_status": "PASS",
+  "final_hosted_source_sha256": {
+    "tests/host/usb2c3a2-efi.c": "5268aa5584568faf4f8e9bdb41700c2af2440fc17494db3b59c88ce6958d1242",
+    "arch/x86_64/efi_memory.h": "20d85b2ccd5b0edbf000f1b5bf4584a09353d757fd901814a62bf96f44ffc6c0",
+    "arch/x86_64/pmm.c": "fb02c276cc23ae010c86c1c5deb274b0411d31153db7e03c5aa3e6a85353137b",
+    "scripts/test-usb2c3a2.py": "75699e168d67dfa2989f460cf4f1dd0689d4c9206e0f8f6a58661e75c552ba50"
+  },
+  "final_hosted_summary": "PASS: 262450 checks; Rust bootinfo/resv/efi_memory with the actual C PMM",
+  "public_reproduction": "scripts/test-usb2c3a2.py always runs the full gate; the one-off owner-approved resume controller is retained in local maintenance evidence."
+}

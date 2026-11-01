@@ -1,0 +1,23 @@
+[
+  "qemu-system-x86_64",
+  "-machine",
+  "q35",
+  "-accel",
+  "tcg",
+  "-m",
+  "128M",
+  "-cdrom",
+  "/home/veasnawt/src/vos-b1-boot/build/b1/kernel/vos.iso",
+  "-boot",
+  "d",
+  "-display",
+  "none",
+  "-nic",
+  "none",
+  "-serial",
+  "file:/home/veasnawt/src/vos-b1-boot/build/b1/screens/bios-r2/serial.txt",
+  "-qmp",
+  "unix:/home/veasnawt/src/vos-b1-boot/build/b1/screens/bios-r2/qmp,server=on,wait=off",
+  "-no-reboot",
+  "-no-shutdown"
+]

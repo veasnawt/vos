@@ -1,7 +1,6 @@
 //! Existing bootinfo.h ABI: `mb2_parse` is now Rust. The callers (kernel.c, the self-tests), `struct boot_info` and every
 //! constant are unchanged. The accepted C parser is kept only as the frozen differential reference
-//! (tests/host/reference/bootinfo_ref.c) and is not linked into the kernel. `boot_framebuffer`, `boot_mmap_entry` and
-//! `boot_reserve` stay C in bootinfo.c.
+//! (tests/host/reference/bootinfo_ref.c) and is not linked into the kernel. The rest of bootinfo.c moved in A3 and B1.
 //!
 //! This glue is the only unsafe code: it reads the loader's block, which is untrusted memory, and writes the caller's
 //! `struct boot_info`. The walk itself (kernel/rust/mb2/parse.rs) is safe and pure.
@@ -11,28 +10,28 @@ use self::parse::{Out, BOOT_MAX_MODULES, E_ADDRESS, E_SIZE};
 
 #[repr(C)]
 pub struct BootModule {
-    start: u64,
-    end: u64,
+    pub(crate) start: u64,
+    pub(crate) end: u64,
     cmdline: *const u8,
 }
 
 #[repr(C)]
 pub struct BootInfo {
-    info_start: u64,
-    info_end: u64,
+    pub(crate) info_start: u64,
+    pub(crate) info_end: u64,
     loader: *const u8,
     cmdline: *const u8,
-    mmap: *const u8,
-    mmap_entries: u32,
-    modules: [BootModule; BOOT_MAX_MODULES as usize],
-    module_count: u32,
-    /// A3 (`boot_framebuffer`) reads these two; every other field stays private to this module.
+    /// A3 (`boot_framebuffer`) and B1 (`boot_reserve`, the EFI exclusion) read these fields; the rest stay private to this module.
+    pub(crate) mmap: *const u8,
+    pub(crate) mmap_entries: u32,
+    pub(crate) modules: [BootModule; BOOT_MAX_MODULES as usize],
+    pub(crate) module_count: u32,
     pub(crate) fb: *const u8,
     pub(crate) fb_tags: u32,
-    efi: i32,
-    efi_mmap: *const u8,
-    efi_mmap_tags: u32,
-    efi_bs_active: i32,
+    pub(crate) efi: i32,
+    pub(crate) efi_mmap: *const u8,
+    pub(crate) efi_mmap_tags: u32,
+    pub(crate) efi_bs_active: i32,
 }
 
 // The layout of `struct boot_info` in bootinfo.h, pinned. tests/host/mb2-differential.c asserts the same numbers against

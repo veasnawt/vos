@@ -1,0 +1,32 @@
+{
+  "utc": "2026-11-01T07:30:36.986983+00:00",
+  "case": "bios",
+  "memory": "128M",
+  "method": "QEMU QMP screendump directly to PNG; no image modification",
+  "kernel_sha256": "e49439e2d7d6bef5d0254a0e24add80e138cf9533ed441dc566f0c643018dcd8",
+  "iso_sha256": "d7de47a0cbf9d863b879b8995d94d92c65d8beb34cf9859dd5502a112cc4ab87",
+  "passed": true,
+  "width": 1280,
+  "height": 800,
+  "image_bytes": 32325,
+  "image_sha256": "b33be4cec020161c3e23a0217cd2b0038af3ebd92a52c95aa5ac3d2ed18d5816",
+  "qemu_running_at_capture": true,
+  "serial_sha256": "4e050155ec7a9df966824da49ec9330801150ef57405dd2280a30a13bdf5d2e6",
+  "QMP_ImageFormat": {
+    "name": "416",
+    "members": [
+      {
+        "name": "ppm"
+      },
+      {
+        "name": "png"
+      }
+    ],
+    "meta-type": "enum",
+    "values": [
+      "ppm",
+      "png"
+    ]
+  },
+  "qemu_exit": 0
+}

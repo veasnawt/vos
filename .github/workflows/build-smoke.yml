@@ -91,6 +91,10 @@ jobs:
             --archive build/x86_64/rust/libvos_kernel.a \
             --kernel-dir build/x86_64 --rustc "$RUSTC" --out build/a3-fb-ci
 
+      - name: Verify Rust boot reservations and EFI boundary (B1)
+        run: |
+          python3 -I -B scripts/test-boot-resv.py --archive build/x86_64/rust/libvos_kernel.a --kernel-dir build/x86_64 --rustc "$RUSTC" --out build/b1-boot-ci
+
       - name: Verify read-only USB.1 probing and input diagnostics
         run: python3 -I -B scripts/test-usb-probe.py --host-only --archive build/x86_64/rust/libvos_kernel.a --output build/usb1-host-ci
 
@@ -172,6 +176,7 @@ jobs:
           name: build-smoke-logs
           path: |
             build/*-ci/result.json
+            build/*-ci/results.json
             build/*-ci/*.txt
           retention-days: 7
           if-no-files-found: ignore
@@ -248,15 +253,20 @@ jobs:
           python3 -I -B scripts/test-usb-inc2-regression.py \
             --kernel build/x86_64/vos.bin --hello build/x86_64/user/hello.elf --out build/usb-inc2-regression-ci
 
+      - name: Verify native Rust boot reservations at 128 MiB and 2 GiB (B1)
+        timeout-minutes: 5
+        run: |
+          python3 -I -B scripts/test-boot-resv-native.py --kernel-dir build/x86_64 --archive build/x86_64/rust/libvos_kernel.a --out build/b1-native-ci
+
       # Evidence that the images really booted (not only built) and that no healthy boot shows a fault marker.
       - name: Check that every case produced a VOS boot log without fault markers
         shell: bash
         run: |
           set -euo pipefail
           shopt -s nullglob
-          logs=(build/usb-survey-native-ci/*/serial.txt build/usb-inc2-regression-ci/*/serial.txt)
-          echo "serial logs: ${#logs[@]} (12 native cases + 4 regression entries expected)"
-          [ "${#logs[@]}" -eq 16 ] || { echo "unexpected number of serial logs"; exit 1; }
+          logs=(build/usb-survey-native-ci/*/serial.txt build/usb-inc2-regression-ci/*/serial.txt build/b1-native-ci/*/serial.txt)
+          echo "serial logs: ${#logs[@]} (12 survey cases + 4 regression entries + 4 B1 cases expected)"
+          [ "${#logs[@]}" -eq 20 ] || { echo "unexpected number of serial logs"; exit 1; }
           if grep -L 'boot: kernel command line' "${logs[@]}" | grep .; then
             echo "a log above is not a VOS boot log"; exit 1
           fi
@@ -278,5 +288,7 @@ jobs:
             build/usb-inc2-regression-ci/**/*.txt
             build/usb-inc2-regression-ci/**/*.json
             build/usb-inc2-regression-ci/grub.cfg
+            build/b1-native-ci/**/*.txt
+            build/b1-native-ci/**/*.json
           retention-days: 7
           if-no-files-found: ignore

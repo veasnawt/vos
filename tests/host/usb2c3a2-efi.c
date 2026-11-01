@@ -1,6 +1,6 @@
 /*
- * USB.2-C3a.2 hosted test: the real mb2_parse/boot_reserve, efi_memory.c,
- * resv.c and pmm.c C code against the bare-metal Rust archive, on Multiboot2
+ * USB.2-C3a.2 hosted test: the real mb2_parse/boot_reserve, efi_memory_*,
+ * resv_* (all Rust since B1, from the archive) and the pmm.c C code, on Multiboot2
  * blocks built from the captured OVMF/SeaBIOS tags and adversarial variants.
  * Expectations come from an independent per-frame model written here.
  * Built with -fsanitize=address,undefined (the Rust code is not instrumented).
@@ -11,12 +11,16 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "../../arch/x86_64/bootinfo.c"
-#include "../../arch/x86_64/resv.c"
+#include "../../arch/x86_64/efi_memory.h"
 #include "../../arch/x86_64/pmm.c"
-#include "../../arch/x86_64/efi_memory.c"
 
 __attribute__((noreturn)) void panic(const char *s) { fprintf(stderr, "unexpected panic: %s\n", s); abort(); }
+
+/* Test-only sink for direct ABI refusals; the reservation operation is Rust. */
+static int add(void *ctx, uint64_t start, uint64_t end)
+{
+    return resv_add(ctx, start, end, EFI_MEMORY_WHAT) != RESV_OK;
+}
 
 #define INFO_PHYS   0x300000ULL
 #define KSTART      0x100000ULL
@@ -281,6 +285,6 @@ int main(int argc, char **argv)
     CHECK(!strcmp(efi_memory_strerror(1), "UEFI without an EFI memory map") && !strcmp(efi_memory_strerror(99), "unknown"));
     end_group("direct ABI: null/misaligned report, null input/sink, policy codes");
 
-    printf("PASS: %u checks; real bootinfo/resv/pmm/efi_memory C with the bare-metal Rust archive\n", checks);
+    printf("PASS: %u checks; Rust bootinfo/resv/efi_memory with the actual C PMM\n", checks);
     return 0;
 }

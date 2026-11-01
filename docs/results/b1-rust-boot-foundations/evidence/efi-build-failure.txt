@@ -1,0 +1,221 @@
+tests/host/usb2c3a2-efi.c: In function 'prepare':
+tests/host/usb2c3a2-efi.c:136:29: error: invalid application of 'sizeof' to incomplete type 'struct efi_memory_report'
+  136 |     memset(&r, 0xa5, sizeof r);
+      |                             ^
+tests/host/usb2c3a2-efi.c:137:18: error: implicit declaration of function 'efi_memory_exclude' [-Wimplicit-function-declaration]
+  137 |     int status = efi_memory_exclude(&bi, &t, &r);
+      |                  ^~~~~~~~~~~~~~~~~~
+tests/host/usb2c3a2-efi.c:138:22: error: invalid use of undefined type 'struct efi_memory_report'
+  138 |     CHECK(status == r.status);
+      |                      ^
+tests/host/usb2c3a2-efi.c:25:29: note: in definition of macro 'CHECK'
+   25 | #define CHECK(c) do { if (!(c)) { fprintf(stderr, "FAIL %s:%d: %s\n", __FILE__, __LINE__, #c); exit(1); } checks++; group++; } while (0)
+      |                             ^
+tests/host/usb2c3a2-efi.c:139:19: error: 'EFI_MEMORY_APPLIED' undeclared (first use in this function)
+  139 |     if (status != EFI_MEMORY_APPLIED)
+      |                   ^~~~~~~~~~~~~~~~~~
+tests/host/usb2c3a2-efi.c:139:19: note: each undeclared identifier is reported only once for each function it appears in
+tests/host/usb2c3a2-efi.c:142:36: error: 'EFI_MEMORY_WHAT' undeclared (first use in this function)
+  142 |         CHECK(!strcmp(t.r[i].what, EFI_MEMORY_WHAT) && t.r[i].start % 4096 == 0 && t.r[i].end % 4096 == 0);
+      |                                    ^~~~~~~~~~~~~~~
+tests/host/usb2c3a2-efi.c:25:29: note: in definition of macro 'CHECK'
+   25 | #define CHECK(c) do { if (!(c)) { fprintf(stderr, "FAIL %s:%d: %s\n", __FILE__, __LINE__, #c); exit(1); } checks++; group++; } while (0)
+      |                             ^
+tests/host/usb2c3a2-efi.c: In function 'main':
+tests/host/usb2c3a2-efi.c:161:24: error: 'EFI_MEMORY_APPLIED' undeclared (first use in this function)
+  161 |     CHECK(prepare() == EFI_MEMORY_APPLIED && r.error == 0 && r.descriptors == 121 && !r.coalesced);
+      |                        ^~~~~~~~~~~~~~~~~~
+tests/host/usb2c3a2-efi.c:25:29: note: in definition of macro 'CHECK'
+   25 | #define CHECK(c) do { if (!(c)) { fprintf(stderr, "FAIL %s:%d: %s\n", __FILE__, __LINE__, #c); exit(1); } checks++; group++; } while (0)
+      |                             ^
+tests/host/usb2c3a2-efi.c:161:47: error: invalid use of undefined type 'struct efi_memory_report'
+  161 |     CHECK(prepare() == EFI_MEMORY_APPLIED && r.error == 0 && r.descriptors == 121 && !r.coalesced);
+      |                                               ^
+tests/host/usb2c3a2-efi.c:25:29: note: in definition of macro 'CHECK'
+   25 | #define CHECK(c) do { if (!(c)) { fprintf(stderr, "FAIL %s:%d: %s\n", __FILE__, __LINE__, #c); exit(1); } checks++; group++; } while (0)
+      |                             ^
+tests/host/usb2c3a2-efi.c:161:63: error: invalid use of undefined type 'struct efi_memory_report'
+  161 |     CHECK(prepare() == EFI_MEMORY_APPLIED && r.error == 0 && r.descriptors == 121 && !r.coalesced);
+      |                                                               ^
+tests/host/usb2c3a2-efi.c:25:29: note: in definition of macro 'CHECK'
+   25 | #define CHECK(c) do { if (!(c)) { fprintf(stderr, "FAIL %s:%d: %s\n", __FILE__, __LINE__, #c); exit(1); } checks++; group++; } while (0)
+      |                             ^
+tests/host/usb2c3a2-efi.c:161:88: error: invalid use of undefined type 'struct efi_memory_report'
+  161 |     CHECK(prepare() == EFI_MEMORY_APPLIED && r.error == 0 && r.descriptors == 121 && !r.coalesced);
+      |                                                                                        ^
+tests/host/usb2c3a2-efi.c:25:29: note: in definition of macro 'CHECK'
+   25 | #define CHECK(c) do { if (!(c)) { fprintf(stderr, "FAIL %s:%d: %s\n", __FILE__, __LINE__, #c); exit(1); } checks++; group++; } while (0)
+      |                             ^
+tests/host/usb2c3a2-efi.c:169:28: error: invalid use of undefined type 'struct efi_memory_report'
+  169 |     CHECK(want == 9765 && r.frames == want && diffs == 0);
+      |                            ^
+tests/host/usb2c3a2-efi.c:25:29: note: in definition of macro 'CHECK'
+   25 | #define CHECK(c) do { if (!(c)) { fprintf(stderr, "FAIL %s:%d: %s\n", __FILE__, __LINE__, #c); exit(1); } checks++; group++; } while (0)
+      |                             ^
+tests/host/usb2c3a2-efi.c:193:24: error: 'EFI_MEMORY_NOT_EFI' undeclared (first use in this function)
+  193 |     CHECK(prepare() == EFI_MEMORY_NOT_EFI && t.count == rt.count);
+      |                        ^~~~~~~~~~~~~~~~~~
+tests/host/usb2c3a2-efi.c:25:29: note: in definition of macro 'CHECK'
+   25 | #define CHECK(c) do { if (!(c)) { fprintf(stderr, "FAIL %s:%d: %s\n", __FILE__, __LINE__, #c); exit(1); } checks++; group++; } while (0)
+      |                             ^
+tests/host/usb2c3a2-efi.c:199:24: error: 'EFI_MEMORY_REFUSED' undeclared (first use in this function)
+  199 |     CHECK(prepare() == EFI_MEMORY_REFUSED && r.error == 1);
+      |                        ^~~~~~~~~~~~~~~~~~
+tests/host/usb2c3a2-efi.c:25:29: note: in definition of macro 'CHECK'
+   25 | #define CHECK(c) do { if (!(c)) { fprintf(stderr, "FAIL %s:%d: %s\n", __FILE__, __LINE__, #c); exit(1); } checks++; group++; } while (0)
+      |                             ^
+tests/host/usb2c3a2-efi.c:199:47: error: invalid use of undefined type 'struct efi_memory_report'
+  199 |     CHECK(prepare() == EFI_MEMORY_REFUSED && r.error == 1);
+      |                                               ^
+tests/host/usb2c3a2-efi.c:25:29: note: in definition of macro 'CHECK'
+   25 | #define CHECK(c) do { if (!(c)) { fprintf(stderr, "FAIL %s:%d: %s\n", __FILE__, __LINE__, #c); exit(1); } checks++; group++; } while (0)
+      |                             ^
+tests/host/usb2c3a2-efi.c:201:47: error: invalid use of undefined type 'struct efi_memory_report'
+  201 |     CHECK(prepare() == EFI_MEMORY_REFUSED && r.error == 2);
+      |                                               ^
+tests/host/usb2c3a2-efi.c:25:29: note: in definition of macro 'CHECK'
+   25 | #define CHECK(c) do { if (!(c)) { fprintf(stderr, "FAIL %s:%d: %s\n", __FILE__, __LINE__, #c); exit(1); } checks++; group++; } while (0)
+      |                             ^
+tests/host/usb2c3a2-efi.c:203:47: error: invalid use of undefined type 'struct efi_memory_report'
+  203 |     CHECK(prepare() == EFI_MEMORY_REFUSED && r.error == 3);
+      |                                               ^
+tests/host/usb2c3a2-efi.c:25:29: note: in definition of macro 'CHECK'
+   25 | #define CHECK(c) do { if (!(c)) { fprintf(stderr, "FAIL %s:%d: %s\n", __FILE__, __LINE__, #c); exit(1); } checks++; group++; } while (0)
+      |                             ^
+tests/host/usb2c3a2-efi.c:211:47: error: invalid use of undefined type 'struct efi_memory_report'
+  211 |     CHECK(prepare() == EFI_MEMORY_REFUSED && r.error == 6);
+      |                                               ^
+tests/host/usb2c3a2-efi.c:25:29: note: in definition of macro 'CHECK'
+   25 | #define CHECK(c) do { if (!(c)) { fprintf(stderr, "FAIL %s:%d: %s\n", __FILE__, __LINE__, #c); exit(1); } checks++; group++; } while (0)
+      |                             ^
+tests/host/usb2c3a2-efi.c:215:47: error: invalid use of undefined type 'struct efi_memory_report'
+  215 |     CHECK(prepare() == EFI_MEMORY_REFUSED && r.error == 5);
+      |                                               ^
+tests/host/usb2c3a2-efi.c:25:29: note: in definition of macro 'CHECK'
+   25 | #define CHECK(c) do { if (!(c)) { fprintf(stderr, "FAIL %s:%d: %s\n", __FILE__, __LINE__, #c); exit(1); } checks++; group++; } while (0)
+      |                             ^
+tests/host/usb2c3a2-efi.c:219:47: error: invalid use of undefined type 'struct efi_memory_report'
+  219 |     CHECK(prepare() == EFI_MEMORY_REFUSED && r.error == 8);
+      |                                               ^
+tests/host/usb2c3a2-efi.c:25:29: note: in definition of macro 'CHECK'
+   25 | #define CHECK(c) do { if (!(c)) { fprintf(stderr, "FAIL %s:%d: %s\n", __FILE__, __LINE__, #c); exit(1); } checks++; group++; } while (0)
+      |                             ^
+tests/host/usb2c3a2-efi.c:223:47: error: invalid use of undefined type 'struct efi_memory_report'
+  223 |     CHECK(prepare() == EFI_MEMORY_REFUSED && r.error == 9);
+      |                                               ^
+tests/host/usb2c3a2-efi.c:25:29: note: in definition of macro 'CHECK'
+   25 | #define CHECK(c) do { if (!(c)) { fprintf(stderr, "FAIL %s:%d: %s\n", __FILE__, __LINE__, #c); exit(1); } checks++; group++; } while (0)
+      |                             ^
+tests/host/usb2c3a2-efi.c:227:47: error: invalid use of undefined type 'struct efi_memory_report'
+  227 |     CHECK(prepare() == EFI_MEMORY_REFUSED && r.error == 7);
+      |                                               ^
+tests/host/usb2c3a2-efi.c:25:29: note: in definition of macro 'CHECK'
+   25 | #define CHECK(c) do { if (!(c)) { fprintf(stderr, "FAIL %s:%d: %s\n", __FILE__, __LINE__, #c); exit(1); } checks++; group++; } while (0)
+      |                             ^
+tests/host/usb2c3a2-efi.c:237:69: error: invalid use of undefined type 'struct efi_memory_report'
+  237 |     CHECK(efi_memory_exclude(&bi, &t, &r) == EFI_MEMORY_APPLIED && r.ranges == 1 && r.coalesced == 1 && t.count == RESV_MAX);
+      |                                                                     ^
+tests/host/usb2c3a2-efi.c:25:29: note: in definition of macro 'CHECK'
+   25 | #define CHECK(c) do { if (!(c)) { fprintf(stderr, "FAIL %s:%d: %s\n", __FILE__, __LINE__, #c); exit(1); } checks++; group++; } while (0)
+      |                             ^
+tests/host/usb2c3a2-efi.c:237:86: error: invalid use of undefined type 'struct efi_memory_report'
+  237 |     CHECK(efi_memory_exclude(&bi, &t, &r) == EFI_MEMORY_APPLIED && r.ranges == 1 && r.coalesced == 1 && t.count == RESV_MAX);
+      |                                                                                      ^
+tests/host/usb2c3a2-efi.c:25:29: note: in definition of macro 'CHECK'
+   25 | #define CHECK(c) do { if (!(c)) { fprintf(stderr, "FAIL %s:%d: %s\n", __FILE__, __LINE__, #c); exit(1); } checks++; group++; } while (0)
+      |                             ^
+tests/host/usb2c3a2-efi.c:245:69: error: invalid use of undefined type 'struct efi_memory_report'
+  245 |     CHECK(efi_memory_exclude(&bi, &t, &r) == EFI_MEMORY_REFUSED && r.error == 12);
+      |                                                                     ^
+tests/host/usb2c3a2-efi.c:25:29: note: in definition of macro 'CHECK'
+   25 | #define CHECK(c) do { if (!(c)) { fprintf(stderr, "FAIL %s:%d: %s\n", __FILE__, __LINE__, #c); exit(1); } checks++; group++; } while (0)
+      |                             ^
+tests/host/usb2c3a2-efi.c:254:47: error: invalid use of undefined type 'struct efi_memory_report'
+  254 |     CHECK(prepare() == EFI_MEMORY_APPLIED && r.ranges == 0 && r.frames == 0);
+      |                                               ^
+tests/host/usb2c3a2-efi.c:25:29: note: in definition of macro 'CHECK'
+   25 | #define CHECK(c) do { if (!(c)) { fprintf(stderr, "FAIL %s:%d: %s\n", __FILE__, __LINE__, #c); exit(1); } checks++; group++; } while (0)
+      |                             ^
+tests/host/usb2c3a2-efi.c:254:64: error: invalid use of undefined type 'struct efi_memory_report'
+  254 |     CHECK(prepare() == EFI_MEMORY_APPLIED && r.ranges == 0 && r.frames == 0);
+      |                                                                ^
+tests/host/usb2c3a2-efi.c:25:29: note: in definition of macro 'CHECK'
+   25 | #define CHECK(c) do { if (!(c)) { fprintf(stderr, "FAIL %s:%d: %s\n", __FILE__, __LINE__, #c); exit(1); } checks++; group++; } while (0)
+      |                             ^
+tests/host/usb2c3a2-efi.c:261:47: error: invalid use of undefined type 'struct efi_memory_report'
+  261 |     CHECK(prepare() == EFI_MEMORY_APPLIED && r.ranges == 1 && r.frames == 512);
+      |                                               ^
+tests/host/usb2c3a2-efi.c:25:29: note: in definition of macro 'CHECK'
+   25 | #define CHECK(c) do { if (!(c)) { fprintf(stderr, "FAIL %s:%d: %s\n", __FILE__, __LINE__, #c); exit(1); } checks++; group++; } while (0)
+      |                             ^
+tests/host/usb2c3a2-efi.c:261:64: error: invalid use of undefined type 'struct efi_memory_report'
+  261 |     CHECK(prepare() == EFI_MEMORY_APPLIED && r.ranges == 1 && r.frames == 512);
+      |                                                                ^
+tests/host/usb2c3a2-efi.c:25:29: note: in definition of macro 'CHECK'
+   25 | #define CHECK(c) do { if (!(c)) { fprintf(stderr, "FAIL %s:%d: %s\n", __FILE__, __LINE__, #c); exit(1); } checks++; group++; } while (0)
+      |                             ^
+tests/host/usb2c3a2-efi.c:268:12: error: variable 'in' has initializer but incomplete type
+  268 |     struct efi_memory_input in = { 0 };
+      |            ^~~~~~~~~~~~~~~~
+tests/host/usb2c3a2-efi.c:268:36: error: excess elements in struct initializer [-Werror]
+  268 |     struct efi_memory_input in = { 0 };
+      |                                    ^
+tests/host/usb2c3a2-efi.c:268:36: note: (near initialization for 'in')
+tests/host/usb2c3a2-efi.c:268:29: error: storage size of 'in' isn't known
+  268 |     struct efi_memory_input in = { 0 };
+      |                             ^~
+tests/host/usb2c3a2-efi.c:269:30: error: storage size of 'rep' isn't known
+  269 |     struct efi_memory_report rep;
+      |                              ^~~
+tests/host/usb2c3a2-efi.c:270:11: error: implicit declaration of function 'vos_efi_exclusions_v1' [-Wimplicit-function-declaration]
+  270 |     CHECK(vos_efi_exclusions_v1(&in, add, &t, NULL) == -2);
+      |           ^~~~~~~~~~~~~~~~~~~~~
+tests/host/usb2c3a2-efi.c:25:29: note: in definition of macro 'CHECK'
+   25 | #define CHECK(c) do { if (!(c)) { fprintf(stderr, "FAIL %s:%d: %s\n", __FILE__, __LINE__, #c); exit(1); } checks++; group++; } while (0)
+      |                             ^
+tests/host/usb2c3a2-efi.c:270:38: error: 'add' undeclared (first use in this function)
+  270 |     CHECK(vos_efi_exclusions_v1(&in, add, &t, NULL) == -2);
+      |                                      ^~~
+tests/host/usb2c3a2-efi.c:25:29: note: in definition of macro 'CHECK'
+   25 | #define CHECK(c) do { if (!(c)) { fprintf(stderr, "FAIL %s:%d: %s\n", __FILE__, __LINE__, #c); exit(1); } checks++; group++; } while (0)
+      |                             ^
+tests/host/usb2c3a2-efi.c:278:19: error: implicit declaration of function 'efi_memory_strerror' [-Wimplicit-function-declaration]
+  278 |     CHECK(!strcmp(efi_memory_strerror(1), "UEFI without an EFI memory map") && !strcmp(efi_memory_strerror(99), "unknown"));
+      |                   ^~~~~~~~~~~~~~~~~~~
+tests/host/usb2c3a2-efi.c:25:29: note: in definition of macro 'CHECK'
+   25 | #define CHECK(c) do { if (!(c)) { fprintf(stderr, "FAIL %s:%d: %s\n", __FILE__, __LINE__, #c); exit(1); } checks++; group++; } while (0)
+      |                             ^
+tests/host/usb2c3a2-efi.c:278:19: error: passing argument 1 of 'strcmp' makes pointer from integer without a cast [-Wint-conversion]
+  278 |     CHECK(!strcmp(efi_memory_strerror(1), "UEFI without an EFI memory map") && !strcmp(efi_memory_strerror(99), "unknown"));
+      |                   ^~~~~~~~~~~~~~~~~~~~~~
+      |                   |
+      |                   int
+tests/host/usb2c3a2-efi.c:25:29: note: in definition of macro 'CHECK'
+   25 | #define CHECK(c) do { if (!(c)) { fprintf(stderr, "FAIL %s:%d: %s\n", __FILE__, __LINE__, #c); exit(1); } checks++; group++; } while (0)
+      |                             ^
+In file included from tests/host/usb2c3a2-efi.c:12:
+/usr/include/string.h:171:32: note: expected 'const char *' but argument is of type 'int'
+  171 | extern int strcmp (const char *__s1, const char *__s2)
+      |                    ~~~~~~~~~~~~^~~~
+tests/host/usb2c3a2-efi.c:278:88: error: passing argument 1 of 'strcmp' makes pointer from integer without a cast [-Wint-conversion]
+  278 |     CHECK(!strcmp(efi_memory_strerror(1), "UEFI without an EFI memory map") && !strcmp(efi_memory_strerror(99), "unknown"));
+      |                                                                                        ^~~~~~~~~~~~~~~~~~~~~~~
+      |                                                                                        |
+      |                                                                                        int
+tests/host/usb2c3a2-efi.c:25:29: note: in definition of macro 'CHECK'
+   25 | #define CHECK(c) do { if (!(c)) { fprintf(stderr, "FAIL %s:%d: %s\n", __FILE__, __LINE__, #c); exit(1); } checks++; group++; } while (0)
+      |                             ^
+/usr/include/string.h:171:32: note: expected 'const char *' but argument is of type 'int'
+  171 | extern int strcmp (const char *__s1, const char *__s2)
+      |                    ~~~~~~~~~~~~^~~~
+tests/host/usb2c3a2-efi.c:269:30: error: unused variable 'rep' [-Werror=unused-variable]
+  269 |     struct efi_memory_report rep;
+      |                              ^~~
+tests/host/usb2c3a2-efi.c:268:29: error: unused variable 'in' [-Werror=unused-variable]
+  268 |     struct efi_memory_input in = { 0 };
+      |                             ^~
+tests/host/usb2c3a2-efi.c: At top level:
+tests/host/usb2c3a2-efi.c:124:33: error: storage size of 'r' isn't known
+  124 | static struct efi_memory_report r;
+      |                                 ^
+cc1: all warnings being treated as errors

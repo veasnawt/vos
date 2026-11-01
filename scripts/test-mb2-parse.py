@@ -30,7 +30,8 @@ REF = ROOT / 'tests/host/reference/bootinfo_ref.c'
 # SHA-256 of arch/x86_64/bootinfo.c at the accepted baseline c77dabb2d84228120109c1e0f547264d99e6485e.
 REF_SHA256 = '8a10854a27f94f5b4de9fdb2bdc9306beffa5149f556d48461e5fea7609251da'
 RENAMES = ['-Dmb2_parse=mb2_parse_reference', '-Dboot_framebuffer=boot_framebuffer_reference',
-           '-Dboot_mmap_entry=boot_mmap_entry_reference', '-Dboot_reserve=boot_reserve_reference']
+           '-Dboot_mmap_entry=boot_mmap_entry_reference', '-Dboot_reserve=boot_reserve_reference',
+           '-Dresv_add=resv_add_reference']
 MUTANTS = [
     ('tag-size-bound', 'tag->size > total - off', 'tag->size >= total - off'),
     ('tag-size-minimum', 'tag->size < sizeof(*tag) ||', 'tag->size <= sizeof(*tag) ||'),
@@ -94,7 +95,9 @@ def main():
     ref_src = REF.read_text()
     if hashlib.sha256(REF.read_bytes()).hexdigest() != REF_SHA256:
         raise RuntimeError('tests/host/reference/bootinfo_ref.c is not the accepted arch/x86_64/bootinfo.c')
-    prod = (ROOT / 'arch/x86_64/bootinfo.c').read_text()
+    # B1 retired arch/x86_64/bootinfo.c altogether: an absent file defines nothing, which is the strongest form of this check.
+    prod_file = ROOT / 'arch/x86_64/bootinfo.c'
+    prod = prod_file.read_text() if prod_file.exists() else ''
     glue = (ROOT / 'arch/x86_64/rust/mb2_parse.rs').read_text()
     walk = re.sub(r'//.*$', '', (ROOT / 'kernel/rust/mb2/parse.rs').read_text(), flags=re.M)
     if re.search(r'^const char \*mb2_parse\(', prod, re.M) or 'static int terminated' in prod:
@@ -107,7 +110,7 @@ def main():
     # 2. production ownership
     if ' T mb2_parse\n' not in subprocess.check_output(['nm', str(archive)], text=True):
         raise RuntimeError('the archive does not define mb2_parse')
-    if ' T mb2_parse\n' in subprocess.check_output(['nm', str(kdir / 'bootinfo.o')], text=True):
+    if (kdir / 'bootinfo.o').exists() and ' T mb2_parse\n' in subprocess.check_output(['nm', str(kdir / 'bootinfo.o')], text=True):
         raise RuntimeError('bootinfo.o still defines mb2_parse')
     vos = kdir / 'vos.bin'
     nm = subprocess.check_output(['nm', str(vos)], text=True)

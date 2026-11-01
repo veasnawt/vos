@@ -1,0 +1,123 @@
+{
+ "archive_sha256": "eae331c5a97703f8ebe146d7890df1acc1f9b43db32ab84645fb31fc46c4040e",
+ "references": {
+  "bootinfo_ref": "8a10854a27f94f5b4de9fdb2bdc9306beffa5149f556d48461e5fea7609251da",
+  "resv_ref": "3f28530b5a04bcd206eefc14ee4805ebdee8be638633ecd7213915204408c656",
+  "efi_memory_ref": "31aee19eba755c0a1d0bcf306e9ed1742c956f7b86908878c86afa10d11eef1f"
+ },
+ "retired_c_files": [
+  "arch/x86_64/bootinfo.c",
+  "arch/x86_64/resv.c",
+  "arch/x86_64/efi_memory.c"
+ ],
+ "ownership": {
+  "symbols": {
+   "resv_init": {
+    "address": "ffffffff80140620",
+    "call_sites": 1,
+    "defined_by": "libvos_kernel.a"
+   },
+   "resv_add": {
+    "address": "ffffffff801405a0",
+    "call_sites": 0,
+    "defined_by": "libvos_kernel.a"
+   },
+   "resv_overlaps": {
+    "address": "ffffffff80140640",
+    "call_sites": 1,
+    "defined_by": "libvos_kernel.a"
+   },
+   "boot_mmap_entry": {
+    "address": "ffffffff8013f0d0",
+    "call_sites": 3,
+    "defined_by": "libvos_kernel.a"
+   },
+   "boot_reserve": {
+    "address": "ffffffff8013f100",
+    "call_sites": 1,
+    "defined_by": "libvos_kernel.a"
+   },
+   "efi_memory_exclude": {
+    "address": "ffffffff8013f510",
+    "call_sites": 1,
+    "defined_by": "libvos_kernel.a"
+   },
+   "efi_memory_firmware_frame": {
+    "address": "ffffffff8013f6e0",
+    "call_sites": 1,
+    "defined_by": "libvos_kernel.a"
+   },
+   "efi_memory_strerror": {
+    "address": "ffffffff8013f890",
+    "call_sites": 1,
+    "defined_by": "libvos_kernel.a"
+   },
+   "efi_memory_what": {
+    "address": "ffffffff80155c60",
+    "call_sites": null,
+    "defined_by": "libvos_kernel.a"
+   }
+  },
+  "panic_fmt_symbols": 0,
+  "retired_objects_built": false
+ },
+ "stack": {
+  "out_of_line_callees": 2,
+  "ceiling": 512,
+  "increase_ceiling": 256,
+  "boot_reserve": {
+   "rust_chain_bytes": 168,
+   "c_reference_bytes": 152
+  },
+  "efi_memory_exclude": {
+   "rust_chain_bytes": 72,
+   "c_reference_bytes": 88
+  },
+  "efi_memory_firmware_frame": {
+   "rust_chain_bytes": 72,
+   "c_reference_bytes": 72
+  },
+  "resv_add": {
+   "rust_chain_bytes": 0,
+   "c_reference_bytes": 0
+  },
+  "resv_overlaps": {
+   "rust_chain_bytes": 0,
+   "c_reference_bytes": 0
+  },
+  "boot_mmap_entry": {
+   "rust_chain_bytes": 0,
+   "c_reference_bytes": 0
+  }
+ },
+ "differential_archive_build": "B1 boot reservation differential: 548051 boot_reserve inputs PASS (293943 deterministic over 6 shapes, 254108 random), 344694 table operations, 20260 EFI glue inputs; result, whole table (count, ranges, reasons, untouched slots) and boot_mmap_entry agree, guard pages never touched",
+ "differential_outcomes": [
+  "boot_reserve outcomes (all inputs): success=38535 e1=4156 e2=8677 e3=72356 e4=250190 e5=1394 e6=5658 e7=3017 e8=18997 e9=30945 e10=1040 e11=3813 e12=17697 e13=5901 e14=85675",
+  "boot_reserve outcomes (random phase): success=35356 e1=4153 e2=8013 e3=16424 e4=157836 e5=340 e6=3198 e7=1902 e8=11031 e9=6642 e10=592 e11=61 e12=558 e13=505 e14=7497",
+  "efi_memory_exclude: applied=13407 not-efi=775 refused=6078 other=0; refusal codes seen: 1=1 2=786 3=686 4=539 5=3 6=1 7=2 8=832 9=2 10=2996 11=0 12=230 13=0 (11 of 13)"
+ ],
+ "differential_overflow_checked_host_build": "B1 boot reservation differential: 548051 boot_reserve inputs PASS (293943 deterministic over 6 shapes, 254108 random), 344694 table operations, 20260 EFI glue inputs; result, whole table (count, ranges, reasons, untouched slots) and boot_mmap_entry agree, guard pages never touched",
+ "differential_detects_broken_references": {
+  "page-zero-boundary": "mismatch",
+  "legacy-hole-start": "mismatch",
+  "kernel-last-page": "mismatch",
+  "usable-containment": "mismatch",
+  "empty-reserved-entry": "mismatch",
+  "unavailable-overflow-extent": "mismatch",
+  "kernel-below-1MiB": "mismatch",
+  "module-overlaps-info": "mismatch",
+  "table-full-at-low-1MiB": "mismatch",
+  "mmap-entry-stride": "mismatch",
+  "resv-round-up": "mismatch",
+  "resv-capacity": "mismatch",
+  "resv-overlap-strictness": "mismatch",
+  "efi-capacity": "mismatch",
+  "efi-sink-sense": "mismatch",
+  "efi-provenance-identity": "mismatch",
+  "efi-firmware-flag": "mismatch",
+  "efi-frame-end": "mismatch",
+  "efi-error-text": "mismatch",
+  "boot-services-flag": "mismatch"
+ },
+ "pass": true
+}

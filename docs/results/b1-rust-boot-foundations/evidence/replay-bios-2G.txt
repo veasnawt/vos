@@ -1,0 +1,12 @@
+reserve: (null)
+table: 4
+e: 0x0 0x100000 low 1 MiB
+e: 0x100000 0x1ea000 kernel image
+e: 0x2c1000 0x2c2000 multiboot2 info
+e: 0x2c2000 0x2c6000 module
+efi: 1 frames 0 error 0 descriptors 0 ranges 0 coalesced 0
+table: 4
+e: 0x0 0x100000 low 1 MiB
+e: 0x100000 0x1ea000 kernel image
+e: 0x2c1000 0x2c2000 multiboot2 info
+e: 0x2c2000 0x2c6000 module

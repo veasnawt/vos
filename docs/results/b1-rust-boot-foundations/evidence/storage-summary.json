@@ -1,0 +1,452 @@
+{
+  "kind": "Publication summary; complete original receipts retained locally",
+  "limits": {
+    "forecast": 125000000,
+    "expected_peak": 145000000,
+    "stop": 160000000,
+    "hard_cap": 175000000,
+    "mandatory_C_floor": 22548578304,
+    "per_step_growth": "1.25x projection"
+  },
+  "guard_sha256": "010b45c89c64e9d9e3a1490e87709d8c6c5a7aba2281fb523d4c6e0be67bd5c2",
+  "observed_campaign_peak": 139389017,
+  "steps": [
+    {
+      "step": "production-isos",
+      "exit_code": 2,
+      "before_tree": 40996569,
+      "after_tree": 49023195,
+      "peak_tree": 49023195,
+      "min_C_free": 57088307200,
+      "min_E_free": 124597628928,
+      "shared_git_growth": 0,
+      "STOP_present": false
+    },
+    {
+      "step": "fix-efi-comment-scanner",
+      "exit_code": 0,
+      "before_tree": 63542001,
+      "after_tree": 63542237,
+      "peak_tree": 63542237,
+      "min_C_free": 57087320064,
+      "min_E_free": 124597628928,
+      "shared_git_growth": 0,
+      "STOP_present": false
+    },
+    {
+      "step": "usb2c3a2-r2",
+      "exit_code": 98,
+      "before_tree": 63542237,
+      "after_tree": 124386236,
+      "peak_tree": 124386236,
+      "min_C_free": 57087254528,
+      "min_E_free": 124597628928,
+      "shared_git_growth": 0,
+      "STOP_present": true
+    },
+    {
+      "step": "usb2c3a2",
+      "exit_code": 1,
+      "before_tree": 63542001,
+      "after_tree": 63542001,
+      "peak_tree": 63542001,
+      "min_C_free": 57088237568,
+      "min_E_free": 124597628928,
+      "shared_git_growth": 0,
+      "STOP_present": false
+    },
+    {
+      "step": "cleanup-usb2c3a",
+      "exit_code": 0,
+      "before_tree": 139389017,
+      "after_tree": 63542001,
+      "peak_tree": 139389017,
+      "min_C_free": 57088237568,
+      "min_E_free": 124597628928,
+      "shared_git_growth": 0,
+      "STOP_present": false
+    },
+    {
+      "step": "cleanup-resources",
+      "exit_code": 0,
+      "before_tree": 69088586,
+      "after_tree": 61592386,
+      "peak_tree": 69088586,
+      "min_C_free": 57090179072,
+      "min_E_free": 124597628928,
+      "shared_git_growth": 0,
+      "STOP_present": false
+    },
+    {
+      "step": "usb2c2",
+      "exit_code": 0,
+      "before_tree": 61592386,
+      "after_tree": 99364495,
+      "peak_tree": 99364495,
+      "min_C_free": 57089531904,
+      "min_E_free": 124597628928,
+      "shared_git_growth": 0,
+      "STOP_present": false
+    },
+    {
+      "step": "setup-temp",
+      "exit_code": 0,
+      "before_tree": 40996569,
+      "after_tree": 40996569,
+      "peak_tree": 40996569,
+      "min_C_free": 57088450560,
+      "min_E_free": 124597628928,
+      "shared_git_growth": 0,
+      "STOP_present": false
+    },
+    {
+      "step": "usb2c3a",
+      "exit_code": 0,
+      "before_tree": 62184911,
+      "after_tree": 139389017,
+      "peak_tree": 139389017,
+      "min_C_free": 57088630784,
+      "min_E_free": 124597628928,
+      "shared_git_growth": 0,
+      "STOP_present": false
+    },
+    {
+      "step": "usb-resources",
+      "exit_code": 0,
+      "before_tree": 61581704,
+      "after_tree": 69088586,
+      "peak_tree": 69088586,
+      "min_C_free": 57087053824,
+      "min_E_free": 124597628928,
+      "shared_git_growth": 0,
+      "STOP_present": false
+    },
+    {
+      "step": "production-uefi-existing-tools",
+      "exit_code": 0,
+      "before_tree": 49023195,
+      "after_tree": 61581704,
+      "peak_tree": 61581704,
+      "min_C_free": 57087053824,
+      "min_E_free": 124597628928,
+      "shared_git_growth": 0,
+      "STOP_present": false
+    },
+    {
+      "step": "cleanup-usb2c2",
+      "exit_code": 0,
+      "before_tree": 99364495,
+      "after_tree": 62184911,
+      "peak_tree": 99364495,
+      "min_C_free": 57088958464,
+      "min_E_free": 124597628928,
+      "shared_git_growth": 0,
+      "STOP_present": false
+    },
+    {
+      "step": "cleanup-containment-kernel",
+      "exit_code": 0,
+      "before_tree": 79074885,
+      "after_tree": 64217123,
+      "peak_tree": 79074885,
+      "min_C_free": 57068818432,
+      "min_E_free": 124597628928,
+      "shared_git_growth": 0,
+      "STOP_present": false
+    },
+    {
+      "step": "selftest-bios-2G",
+      "exit_code": 0,
+      "before_tree": 109065966,
+      "after_tree": 109080126,
+      "peak_tree": 109080126,
+      "min_C_free": 57067302912,
+      "min_E_free": 124597628928,
+      "shared_git_growth": 0,
+      "STOP_present": false
+    },
+    {
+      "step": "containment-test-kernel",
+      "exit_code": 0,
+      "before_tree": 63751385,
+      "after_tree": 78875832,
+      "peak_tree": 78875832,
+      "min_C_free": 57087713280,
+      "min_E_free": 124597628928,
+      "shared_git_growth": 0,
+      "STOP_present": false
+    },
+    {
+      "step": "screenshot-bios-r2",
+      "exit_code": 0,
+      "before_tree": 110194989,
+      "after_tree": 110231292,
+      "peak_tree": 110231292,
+      "min_C_free": 57068544000,
+      "min_E_free": 124597628928,
+      "shared_git_growth": 0,
+      "STOP_present": false
+    },
+    {
+      "step": "screenshot-uefi-r2",
+      "exit_code": 0,
+      "before_tree": 110231292,
+      "after_tree": 110809201,
+      "peak_tree": 110809201,
+      "min_C_free": 57068544000,
+      "min_E_free": 124597628928,
+      "shared_git_growth": 0,
+      "STOP_present": false
+    },
+    {
+      "step": "bounded-replay-review",
+      "exit_code": 0,
+      "before_tree": 111002437,
+      "after_tree": 112171131,
+      "peak_tree": 112171131,
+      "min_C_free": 57058222080,
+      "min_E_free": 124597628928,
+      "shared_git_growth": 0,
+      "STOP_present": false
+    },
+    {
+      "step": "cleanup-efi-hosted",
+      "exit_code": 0,
+      "before_tree": 63943969,
+      "after_tree": 63751385,
+      "peak_tree": 63943969,
+      "min_C_free": 57087901696,
+      "min_E_free": 124597628928,
+      "shared_git_growth": 0,
+      "STOP_present": false
+    },
+    {
+      "step": "selftest-uefi-2G",
+      "exit_code": 0,
+      "before_tree": 109636000,
+      "after_tree": 110191435,
+      "peak_tree": 110191435,
+      "min_C_free": 57067675648,
+      "min_E_free": 124597628928,
+      "shared_git_growth": 0,
+      "STOP_present": false
+    },
+    {
+      "step": "cleanup-usb2c3b2",
+      "exit_code": 0,
+      "before_tree": 98054673,
+      "after_tree": 79071137,
+      "peak_tree": 98054673,
+      "min_C_free": 57070211072,
+      "min_E_free": 124597628928,
+      "shared_git_growth": 0,
+      "STOP_present": false
+    },
+    {
+      "step": "a2-regression",
+      "exit_code": 0,
+      "before_tree": 79071137,
+      "after_tree": 79361261,
+      "peak_tree": 88255645,
+      "min_C_free": 57069572096,
+      "min_E_free": 124597628928,
+      "shared_git_growth": 0,
+      "STOP_present": false
+    },
+    {
+      "step": "fix-efi-harness",
+      "exit_code": 0,
+      "before_tree": 124386236,
+      "after_tree": 124390116,
+      "peak_tree": 124390116,
+      "min_C_free": 57088233472,
+      "min_E_free": 124597628928,
+      "shared_git_growth": 0,
+      "STOP_present": false
+    },
+    {
+      "step": "cleanup-a3",
+      "exit_code": 0,
+      "before_tree": 64494581,
+      "after_tree": 64220749,
+      "peak_tree": 64494581,
+      "min_C_free": 57068621824,
+      "min_E_free": 124597628928,
+      "shared_git_growth": 0,
+      "STOP_present": false
+    },
+    {
+      "step": "usb2c3a2-hosted-r3",
+      "exit_code": 0,
+      "before_tree": 124390116,
+      "after_tree": 124588339,
+      "peak_tree": 125578330,
+      "min_C_free": 57088229376,
+      "min_E_free": 124597628928,
+      "shared_git_growth": 0,
+      "STOP_present": false
+    },
+    {
+      "step": "screenshot-bios",
+      "exit_code": 1,
+      "before_tree": 110191435,
+      "after_tree": 110194989,
+      "peak_tree": 110194989,
+      "min_C_free": 57067962368,
+      "min_E_free": 124597628928,
+      "shared_git_growth": 0,
+      "STOP_present": false
+    },
+    {
+      "step": "final-source-ci-and-efi-label",
+      "exit_code": 2,
+      "before_tree": 110809201,
+      "after_tree": 110809201,
+      "peak_tree": 110809201,
+      "min_C_free": 57065766912,
+      "min_E_free": 124597628928,
+      "shared_git_growth": 0,
+      "STOP_present": false
+    },
+    {
+      "step": "final-source-ci-and-efi-label-r2",
+      "exit_code": 0,
+      "before_tree": 110809201,
+      "after_tree": 111002437,
+      "peak_tree": 111994650,
+      "min_C_free": 57060679680,
+      "min_E_free": 124597628928,
+      "shared_git_growth": 0,
+      "STOP_present": false
+    },
+    {
+      "step": "selftest-bios-128M",
+      "exit_code": 0,
+      "before_tree": 109051829,
+      "after_tree": 109065966,
+      "peak_tree": 109065966,
+      "min_C_free": 57067302912,
+      "min_E_free": 124597628928,
+      "shared_git_growth": 0,
+      "STOP_present": false
+    },
+    {
+      "step": "native-boot-proof",
+      "exit_code": 0,
+      "before_tree": 107813940,
+      "after_tree": 109051829,
+      "peak_tree": 109051829,
+      "min_C_free": 57067163648,
+      "min_E_free": 124597628928,
+      "shared_git_growth": 0,
+      "STOP_present": false
+    },
+    {
+      "step": "selftest-uefi-128M",
+      "exit_code": 0,
+      "before_tree": 109080126,
+      "after_tree": 109636000,
+      "peak_tree": 109636000,
+      "min_C_free": 57067302912,
+      "min_E_free": 124597628928,
+      "shared_git_growth": 0,
+      "STOP_present": false
+    },
+    {
+      "step": "a3-regression",
+      "exit_code": 0,
+      "before_tree": 64217123,
+      "after_tree": 64494581,
+      "peak_tree": 73366686,
+      "min_C_free": 57068752896,
+      "min_E_free": 124597628928,
+      "shared_git_growth": 0,
+      "STOP_present": false
+    },
+    {
+      "step": "usb2c3b2",
+      "exit_code": 0,
+      "before_tree": 78875832,
+      "after_tree": 98054673,
+      "peak_tree": 114049096,
+      "min_C_free": 57071607808,
+      "min_E_free": 124597628928,
+      "shared_git_growth": 0,
+      "STOP_present": false
+    },
+    {
+      "step": "cleanup-efi-completed-rust",
+      "exit_code": 0,
+      "before_tree": 124588339,
+      "after_tree": 63943969,
+      "peak_tree": 124588339,
+      "min_C_free": 57087836160,
+      "min_E_free": 124597628928,
+      "shared_git_growth": 0,
+      "STOP_present": false
+    },
+    {
+      "step": "review-convergence-and-footprint",
+      "exit_code": 0,
+      "before_tree": 112171131,
+      "after_tree": 112171407,
+      "peak_tree": 112171407,
+      "min_C_free": 57057779712,
+      "min_E_free": 124597628928,
+      "shared_git_growth": 0,
+      "STOP_present": false
+    },
+    {
+      "step": "cleanup-a2",
+      "exit_code": 0,
+      "before_tree": 79361261,
+      "after_tree": 79074885,
+      "peak_tree": 79361261,
+      "min_C_free": 57068818432,
+      "min_E_free": 124597628928,
+      "shared_git_growth": 0,
+      "STOP_present": false
+    },
+    {
+      "step": "c3b1-rust-ownership-audit",
+      "exit_code": 0,
+      "before_tree": 112171407,
+      "after_tree": 112172296,
+      "peak_tree": 112172296,
+      "min_C_free": 57059131392,
+      "min_E_free": 124597628928,
+      "shared_git_growth": 0,
+      "STOP_present": false
+    },
+    {
+      "step": "selftest-build-isos",
+      "exit_code": 0,
+      "before_tree": 64220749,
+      "after_tree": 107813940,
+      "peak_tree": 107813940,
+      "min_C_free": 57067687936,
+      "min_E_free": 124597628928,
+      "shared_git_growth": 0,
+      "STOP_present": false
+    }
+  ],
+  "incidents": [
+    {
+      "step": "usb-usb2c1",
+      "projection": 12000000,
+      "actual_growth": 28528642,
+      "archived_stop_sha256": "3861d59a5ca9de13145375edeaa3602a83f28ff44e61767097db192fdf6d1ab6",
+      "readmission": "Previously owner-approved, preserved unchanged; not repeated here"
+    },
+    {
+      "step": "usb2c3a2-r2",
+      "projection": 23000000,
+      "actual_growth": 60843999,
+      "archived_stop_sha256": "c6b5e01f3c71725cb151ee20d638aa3feb49d6189752688988b6eb27467e5313",
+      "readmission": "Explicit owner-approved bounded readmission; matching passed Rust subchecks reused, corrected hosted portion rerun; failed attempt remains FAIL"
+    }
+  ],
+  "supplement": "Physical C/E availability, shared Git/controller growth, tmpfs and tree peaks monitored; owned TMPDIR within guarded checkout. No threshold weakened.",
+  "cleanup": "Only hashed reproducible ELF/ar files removed after new complete passing evidence under owner approval. Raw failures, results, logs and source inputs preserved.",
+  "active_STOP_present": false
+}
