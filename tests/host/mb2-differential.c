@@ -30,8 +30,8 @@
 
 const char *mb2_parse_reference(const void *, uint64_t, struct boot_info *);
 
-/* The reference object also carries boot_reserve, which is never called here; it needs resv_add to link. */
-int resv_add(struct resv_table *t, uint64_t start, uint64_t end, const char *what)
+/* The reference object also carries boot_reserve, which is never called here; it needs its (renamed) resv_add to link. */
+int resv_add_reference(struct resv_table *t, uint64_t start, uint64_t end, const char *what)
 {
     (void)t, (void)start, (void)end, (void)what;
     return RESV_OK;

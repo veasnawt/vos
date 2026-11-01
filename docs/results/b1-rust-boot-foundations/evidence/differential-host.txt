@@ -1,0 +1,5 @@
+random phase: 254108 inputs; 95 structural classes (outcome x modules x table fill), last new at input 498051; stopped on the plateau rule with every outcome seen at least 10 times
+B1 boot reservation differential: 548051 boot_reserve inputs PASS (293943 deterministic over 6 shapes, 254108 random), 344694 table operations, 20260 EFI glue inputs; result, whole table (count, ranges, reasons, untouched slots) and boot_mmap_entry agree, guard pages never touched
+boot_reserve outcomes (all inputs): success=38535 e1=4156 e2=8677 e3=72356 e4=250190 e5=1394 e6=5658 e7=3017 e8=18997 e9=30945 e10=1040 e11=3813 e12=17697 e13=5901 e14=85675
+boot_reserve outcomes (random phase): success=35356 e1=4153 e2=8013 e3=16424 e4=157836 e5=340 e6=3198 e7=1902 e8=11031 e9=6642 e10=592 e11=61 e12=558 e13=505 e14=7497
+efi_memory_exclude: applied=13407 not-efi=775 refused=6078 other=0; refusal codes seen: 1=1 2=786 3=686 4=539 5=3 6=1 7=2 8=832 9=2 10=2996 11=0 12=230 13=0 (11 of 13)

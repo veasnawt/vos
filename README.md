@@ -22,6 +22,9 @@ application language. VOS is not a Linux distribution and
 does not use Linux or a hosted C library inside the guest. GRUB supplies a
 Multiboot2 handoff through BIOS or UEFI; a legacy i386 baseline is also retained.
 
+The [B1 boot-reservation candidate](docs/results/b1-rust-boot-foundations.md) moves the remaining bootinfo/reservation and EFI boundary
+into the Rust archive behind the existing C ABI, with hosted and BIOS/UEFI QEMU evidence. It is locally verified and awaiting PR review.
+
 - Higher-half kernel, protected memory/stacks, timer-preempted isolated ring-3
   processes, kernel threads and bounded IPC.
 - Read-only virtio-blk, block caching and ext2, with process-owned file handles

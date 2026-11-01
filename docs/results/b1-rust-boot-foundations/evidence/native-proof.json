@@ -1,0 +1,133 @@
+{
+ "passed": true,
+ "cases": [
+  {
+   "case": "bios-128M",
+   "iso": "vos.iso",
+   "memory": "128M",
+   "addresses": {
+    "boot_reserve": "0xffffffff8013f100",
+    "efi_memory_exclude": "0xffffffff8013f510",
+    "efi_memory_what": "0xffffffff80155c60"
+   },
+   "passed": true,
+   "boot_reserve": {
+    "entry_rip": "0xffffffff8013f100",
+    "kernel": [
+     "0x100000",
+     "0x1ea000"
+    ],
+    "table_entries": 4,
+    "result": "NULL"
+   },
+   "efi_memory_exclude": {
+    "entry_rip": "0xffffffff8013f510",
+    "status": 1,
+    "frames": 0,
+    "error": 0,
+    "descriptors": 0,
+    "ranges": 0,
+    "coalesced": 0,
+    "table_entries": 4
+   },
+   "reserved_lines": 4,
+   "replay_identical": true
+  },
+  {
+   "case": "bios-2G",
+   "iso": "vos.iso",
+   "memory": "2G",
+   "addresses": {
+    "boot_reserve": "0xffffffff8013f100",
+    "efi_memory_exclude": "0xffffffff8013f510",
+    "efi_memory_what": "0xffffffff80155c60"
+   },
+   "passed": true,
+   "boot_reserve": {
+    "entry_rip": "0xffffffff8013f100",
+    "kernel": [
+     "0x100000",
+     "0x1ea000"
+    ],
+    "table_entries": 4,
+    "result": "NULL"
+   },
+   "efi_memory_exclude": {
+    "entry_rip": "0xffffffff8013f510",
+    "status": 1,
+    "frames": 0,
+    "error": 0,
+    "descriptors": 0,
+    "ranges": 0,
+    "coalesced": 0,
+    "table_entries": 4
+   },
+   "reserved_lines": 4,
+   "replay_identical": true
+  },
+  {
+   "case": "uefi-128M",
+   "iso": "vos-uefi.iso",
+   "memory": "128M",
+   "addresses": {
+    "boot_reserve": "0xffffffff8013f100",
+    "efi_memory_exclude": "0xffffffff8013f510",
+    "efi_memory_what": "0xffffffff80155c60"
+   },
+   "passed": true,
+   "boot_reserve": {
+    "entry_rip": "0xffffffff8013f100",
+    "kernel": [
+     "0x100000",
+     "0x1ea000"
+    ],
+    "table_entries": 4,
+    "result": "NULL"
+   },
+   "efi_memory_exclude": {
+    "entry_rip": "0xffffffff8013f510",
+    "status": 0,
+    "frames": 9725,
+    "error": 0,
+    "descriptors": 120,
+    "ranges": 8,
+    "coalesced": 0,
+    "table_entries": 12
+   },
+   "reserved_lines": 12,
+   "replay_identical": true
+  },
+  {
+   "case": "uefi-2G",
+   "iso": "vos-uefi.iso",
+   "memory": "2G",
+   "addresses": {
+    "boot_reserve": "0xffffffff8013f100",
+    "efi_memory_exclude": "0xffffffff8013f510",
+    "efi_memory_what": "0xffffffff80155c60"
+   },
+   "passed": true,
+   "boot_reserve": {
+    "entry_rip": "0xffffffff8013f100",
+    "kernel": [
+     "0x100000",
+     "0x1ea000"
+    ],
+    "table_entries": 4,
+    "result": "NULL"
+   },
+   "efi_memory_exclude": {
+    "entry_rip": "0xffffffff8013f510",
+    "status": 0,
+    "frames": 3712,
+    "error": 0,
+    "descriptors": 119,
+    "ranges": 1,
+    "coalesced": 0,
+    "table_entries": 5
+   },
+   "reserved_lines": 5,
+   "replay_identical": true
+  }
+ ]
+}

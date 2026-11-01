@@ -1,0 +1,33 @@
+{
+  "status": "PASS",
+  "scope": "Bounded replay/observer input validation; guest and kernel source unchanged",
+  "archive_sha256": "eae331c5a97703f8ebe146d7890df1acc1f9b43db32ab84645fb31fc46c4040e",
+  "prior_native_proof_sha256": "a4639080cc882494b656401b59d622652d9ab9dc5539b2a968a36b153bc3d59f",
+  "replay_cases": [
+    {
+      "case": "bios-128M",
+      "replay_identical": true
+    },
+    {
+      "case": "bios-2G",
+      "replay_identical": true
+    },
+    {
+      "case": "uefi-128M",
+      "replay_identical": true
+    },
+    {
+      "case": "uefi-2G",
+      "replay_identical": true
+    }
+  ],
+  "malformed_file_controls": [
+    "truncated",
+    "oversized",
+    "zero-stride",
+    "bad-number"
+  ],
+  "guest_tag_bound_controls": 6,
+  "replay_source_sha256": "cf331b056dcb971d069d65d6b78fc283d6302af7dd902d126df966994bd273d1",
+  "observer_source_sha256": "cf9caf7e15bddcfce43afc57a3550e089bb1a53d031ef79e552ed0e630865315"
+}

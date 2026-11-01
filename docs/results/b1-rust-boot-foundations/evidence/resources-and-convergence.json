@@ -1,0 +1,62 @@
+{
+  "utc": "2026-11-01T07:45:41.434195+00:00",
+  "status": "PASS",
+  "baseline": "Accepted A3 implementation 563612a; kernel/arch/Makefile/user source unchanged from that commit to B1 base HEAD 1b1cb5d",
+  "baseline_measurement_sha256": "493338eac4a0fca34c5a260320860d966486669ed6eb4e23bd161b85aec56759",
+  "baseline_input_bytes": {
+    ".text": 271631,
+    ".rodata": 53842,
+    ".data": 456
+  },
+  "B1_input_bytes": {
+    ".text": 272525,
+    ".rodata": 53885,
+    ".data": 456
+  },
+  "net_input_growth_bytes": 937,
+  "loaded_growth_bytes": 0,
+  "load_segments": [
+    {
+      "physical_address": 1048576,
+      "memory_bytes": 4096,
+      "flags": "RE"
+    },
+    {
+      "physical_address": 1052672,
+      "memory_bytes": 24576,
+      "flags": "RW"
+    },
+    {
+      "physical_address": 1077248,
+      "memory_bytes": 274432,
+      "flags": "RE"
+    },
+    {
+      "physical_address": 1351680,
+      "memory_bytes": 57344,
+      "flags": "R"
+    },
+    {
+      "physical_address": 1409024,
+      "memory_bytes": 598016,
+      "flags": "RW"
+    }
+  ],
+  "size_output": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n 335872\t    552\t 617984\t 954408\t  e9028\t/home/veasnawt/src/vos-b1-boot/build/b1/kernel/vos.bin\n",
+  "kernel_sha256": "e49439e2d7d6bef5d0254a0e24add80e138cf9533ed441dc566f0c643018dcd8",
+  "production_archive_sha256": "eae331c5a97703f8ebe146d7890df1acc1f9b43db32ab84645fb31fc46c4040e",
+  "recorded_converged_logs": [
+    {
+      "log": "differential.txt",
+      "first_line": "random phase: 254108 inputs; 95 structural classes (outcome x modules x table fill), last new at input 498051; stopped on the plateau rule with every outcome seen at least 10 times",
+      "sha256": "e0cd565e268872cae7d4c9f223c97227e9f4b22bd40179006a38c24aa4db7e51"
+    },
+    {
+      "log": "differential-host.txt",
+      "first_line": "random phase: 254108 inputs; 95 structural classes (outcome x modules x table fill), last new at input 498051; stopped on the plateau rule with every outcome seen at least 10 times",
+      "sha256": "e0cd565e268872cae7d4c9f223c97227e9f4b22bd40179006a38c24aa4db7e51"
+    }
+  ],
+  "cap_or_missing_convergence_rejected": true,
+  "driver_sha256": "1a5e8d049751db2f459d068891aed2afa5e44d7bef71005a11be4d3894fcd083"
+}

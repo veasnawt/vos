@@ -1,0 +1,43 @@
+  OVMF-like residue: complete, reserved, plan valid, once per boot: 18 checks PASS
+  already-allocated frame: hazard, not reserved: 8 checks PASS
+  residue in a reserved map entry: uninspected, refused: 10 checks PASS
+  registry exhaustion fails closed: 7 checks PASS
+  running controller refused, structures protected: 5 checks PASS
+  device context present: protected, incomplete: 6 checks PASS
+  unsupported controller: refused, no MMIO, nothing reserved: 6 checks PASS
+  no controller: refused, nothing reserved: 5 checks PASS
+  state change mid-guard: integrity failure, reservations kept: 6 checks PASS
+  bad context: lease refused, nothing reserved: 5 checks PASS
+  direct PMM and registry API: 15 checks PASS
+  C3a.3 excluded firmware RAM: inspected in place, plan valid, nothing reserved or changed: 32 checks PASS
+  C3a.3 excluded RAM without boot inputs: uninspected, refused: 11 checks PASS
+  C3a.3 map-reserved (not EFI-excluded) residue: uninspected, refused: 11 checks PASS
+  C3a.3 excluded page touching reserved bytes: that page uninspected, refused: 12 checks PASS
+  C3a.3 EFI map invalid at guard time: fail closed: 11 checks PASS
+  C3a.3 excluded and free frames: free one reserved, excluded read in place: 12 checks PASS
+  C3a.3 direct classification, read gating and loader-evidence refusals: 18 checks PASS
+  C3b.1 eligible idle UEFI profile: dry-run complete, exact proposed writes, nothing written: 24 checks PASS
+  C3b.1 refused, nothing written: BIOS: 16 checks PASS
+  C3b.1 refused, nothing written: command 0x107: 16 checks PASS
+  C3b.1 refused, nothing written: PCI status INTx: 16 checks PASS
+  C3b.1 refused, nothing written: running controller: 16 checks PASS
+  C3b.1 refused, nothing written: USBSTS.EINT: 16 checks PASS
+  C3b.1 refused, nothing written: USBCMD.INTE: 16 checks PASS
+  C3b.1 refused, nothing written: IMAN.IP: 16 checks PASS
+  C3b.1 refused, nothing written: MSI-X enabled: 16 checks PASS
+  C3b.1 refused, nothing written: active slot: 16 checks PASS
+  C3b.1 refused, nothing written: port connected: 16 checks PASS
+  C3b.1 refused, nothing written: PCIe transactions pending: 16 checks PASS
+  C3b.1 refused, nothing written: no PCIe capability: 16 checks PASS
+  C3b.1 refused, nothing written: profile mismatch: 16 checks PASS
+  C3b.1 refused, nothing written: scratchpads: 16 checks PASS
+  C3b.1 refused, nothing written: NEC controller: 16 checks PASS
+  C3b.1 refused, nothing written: no controller: 16 checks PASS
+  C3b.1 refused, nothing written: two controllers: 16 checks PASS
+  C3b.1 refused, nothing written: PCI capability cycle: 16 checks PASS
+  C3b.1 refused, nothing written: malformed extended capability: 16 checks PASS
+  C3b.1 refused, nothing written: bad context: 16 checks PASS
+  C3b.1 freeze: free-RAM residue is never reserved by the dry-run; the guard still reserves: 24 checks PASS
+  C3b.1 revalidation catches a port change in pass 2 and pass 3: 18 checks PASS
+  C3b.1 PCI command change mid-session: integrity failure, freeze released: 11 checks PASS
+PASS: real PMM/devmap/qualification/residue C with the bare-metal Rust archive; zero PCI writes

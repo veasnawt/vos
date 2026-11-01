@@ -9,16 +9,16 @@ use core::mem::{align_of, offset_of, size_of};
 /// `struct efi_memory_input` in efi_memory.h.
 #[repr(C)]
 pub struct EfiInput {
-    mmap: *const u8,
-    efi_mmap: *const u8,
-    window_lo: u64,
-    window_hi: u64,
-    mmap_size: u32,
-    efi_mmap_size: u32,
-    efi_mmap_tags: u32,
-    efi_firmware: u32,
-    boot_services_active: u32,
-    capacity: u32,
+    pub(crate) mmap: *const u8,
+    pub(crate) efi_mmap: *const u8,
+    pub(crate) window_lo: u64,
+    pub(crate) window_hi: u64,
+    pub(crate) mmap_size: u32,
+    pub(crate) efi_mmap_size: u32,
+    pub(crate) efi_mmap_tags: u32,
+    pub(crate) efi_firmware: u32,
+    pub(crate) boot_services_active: u32,
+    pub(crate) capacity: u32,
 }
 
 /// `struct efi_memory_report` in efi_memory.h.

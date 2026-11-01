@@ -29,8 +29,6 @@ static uint64_t read_rflags(void) { return flags; }
 static uint64_t root;
 uint64_t vmm_kernel_root(void) { return root; }
 int irq_in_handler(void) { return in_irq; }
-const struct mb2_mmap_entry *boot_mmap_entry(const struct boot_info *bi,uint32_t i)
-{ return (const void *)((const uint8_t *)bi->mmap+sizeof(*bi->mmap)+i*bi->mmap->entry_size); }
 __attribute__((noreturn)) void panic(const char *s) { fprintf(stderr,"unexpected panic: %s\n",s); abort(); }
 
 static char out[8192];

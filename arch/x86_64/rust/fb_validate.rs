@@ -1,6 +1,6 @@
 //! Existing bootinfo.h ABI: `boot_framebuffer` is now Rust. Its caller (screen.c), the self-tests, `struct boot_fb`, `struct
 //! boot_info` and every constant and message are unchanged. The accepted C is kept only as the frozen differential reference
-//! (tests/host/reference/bootinfo_ref.c) and is not linked into the kernel. `boot_mmap_entry` and `boot_reserve` stay C.
+//! (tests/host/reference/bootinfo_ref.c) and is not linked into the kernel.
 //!
 //! This glue is the only unsafe code: it reads two fields of the caller's `struct boot_info`, the tag they point at (loader
 //! memory, untrusted) and writes the caller's `struct boot_fb`. The validation (kernel/rust/mb2/framebuffer.rs) is safe and pure.

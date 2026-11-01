@@ -108,7 +108,10 @@ def main():
         if any(named.values()):
             raise RuntimeError('a dry-run source names a write primitive: ' + json.dumps(named))
         refs = {}
-        for f in (archive, kb / 'xhci_qualify.o', kb / 'efi_memory.o'):
+        # B1 moved EFI glue into the Rust archive audited below.
+        if (kb / 'efi_memory.o').exists():
+            raise RuntimeError('retired C EFI object remains in the production build')
+        for f in (archive, kb / 'xhci_qualify.o'):
             undefined = subprocess.run(['nm', '-u', f], capture_output=True, text=True, check=True).stdout
             refs[f.name] = sorted(set(m.group(0) for m in PCI_WRITE_SYMBOLS.finditer(undefined)))
         if any(refs.values()):

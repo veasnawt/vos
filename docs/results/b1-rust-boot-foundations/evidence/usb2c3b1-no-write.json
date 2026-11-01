@@ -1,0 +1,16 @@
+{
+  "status": "PASS",
+  "scope": "Affected C3b1 production no-write audit only; portable/adapter behavior also covered by completed C3a gate",
+  "source_sha256": {
+    "kernel/rust/usb/xhci/containment.rs": "4e8479d5f5ee8ff516d24eaad9c8379edc28ecd96ea21ff546b357aff3054644",
+    "arch/x86_64/rust/xhci_contain.rs": "72e5c0dc42492a198c7d640436aa3e68470eea850ce311c054d901fcfe5d6517"
+  },
+  "audited_imports": {
+    "libvos_kernel.a": [],
+    "xhci_qualify.o": []
+  },
+  "retired_efi_object_absent": true,
+  "EFI_glue_owner": "Rust archive",
+  "archive_sha256": "eae331c5a97703f8ebe146d7890df1acc1f9b43db32ab84645fb31fc46c4040e",
+  "driver_sha256": "a38fea9683c098c44494e644bf9360f8169bc5065882627ad04edc988ce8efc4"
+}

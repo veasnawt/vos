@@ -63,8 +63,12 @@ def main():
     report = {'commands': [], 'rust_sanitized': False, 'hardware': False,
               'archive_sha256': hashlib.sha256(archive.read_bytes()).hexdigest(), 'source_sha256': {}}
     for p in sorted(CORE.glob('*.rs')) + sorted((ROOT / 'tests/rust/fixtures').glob('*.bin')):
-        if p.suffix == '.rs' and re.search(r'\bunsafe\b|\bextern\b|\basm!|\balloc::|\bstd::', p.read_text()):
-            raise SystemExit('nonportable/unsafe core source: ' + str(p))
+        if p.suffix == '.rs':
+            # Full-line Rust documentation/comments are not executable tokens.
+            # Keep trailing/block comments fail-closed; never strip a code line.
+            code = re.sub(r'(?m)^[ \t]*//[^\n]*', '', p.read_text())
+            if re.search(r'\bunsafe\b|\bextern\b|\basm!|\balloc::|\bstd::', code):
+                raise SystemExit('nonportable/unsafe core source: ' + str(p))
         report['source_sha256'][str(p.relative_to(ROOT))] = hashlib.sha256(p.read_bytes()).hexdigest()
 
     def run(argv, name, expected=0):
@@ -127,6 +131,7 @@ def main():
                     '-fno-omit-frame-pointer', 'tests/host/usb2c3a2-efi.c', archive, '-o', out / 'sanitizer'],
             'sanitizer-build.txt')
         report['sanitizer'] = run([out / 'sanitizer', 'tests/rust/fixtures'], 'sanitizer.txt').strip()
+        report['hosted_source_sha256'] = {name: hashlib.sha256((ROOT / name).read_bytes()).hexdigest() for name in ('tests/host/usb2c3a2-efi.c', 'arch/x86_64/efi_memory.h', 'arch/x86_64/pmm.c', 'scripts/test-usb2c3a2.py')}
         report['status'] = 'PASS'
     except Exception as error:
         report['status'] = 'FAIL'
