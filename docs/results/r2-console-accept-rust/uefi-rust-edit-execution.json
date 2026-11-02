@@ -1,0 +1,6 @@
+{
+  "symbol": "input_console_accept",
+  "RIP": "0xffffffff80140020",
+  "stop": "T05thread:01;",
+  "scope": "actual poll-loop entry; byte may be NUL, not a latency measurement"
+}

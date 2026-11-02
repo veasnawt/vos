@@ -29,28 +29,7 @@ static uint8_t port_in(uint16_t port) { return inb(port); }
 static void port_out(uint16_t port, uint8_t value) { outb(port, value); }
 static const struct keyboard_io port_io = { port_in, port_out };
 
-void input_console_accept(struct input_console_line *line, char c)
-{
-    if (line->ready)
-        return;
-    if (c == '\n') {
-        serial_puts("\r\n");
-        line->ready = 1;
-    } else if (c == '\b') {
-        if (line->length) {
-            console_erase_previous();
-            line->bytes[--line->length] = 0;
-        }
-    } else if (c >= ' ' && c <= '~') {
-        if (line->length == INPUT_CONSOLE_LINE_MAX) {
-            line->overflow = 1;         /* never deliver a silently truncated command */
-        } else {
-            line->bytes[line->length++] = c;
-            line->bytes[line->length] = 0;
-            serial_putc(c);
-        }
-    }
-}
+/* input_console_accept is Rust-owned behind input_console.h. */
 
 /* input_console_take_line is Rust-owned behind input_console.h. */
 

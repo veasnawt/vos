@@ -1,0 +1,12 @@
+{
+  "failed_checks_retained": [
+    "steps/accept-performance-publication",
+    "steps/commit"
+  ],
+  "cause": [
+    "Whitespace-only rejection of untouched objdump continuation bytes and frozen reference blank EOF",
+    "Stale copied commit controller omitted previously reviewed scripts/test-boot-hid.py"
+  ],
+  "correction": "Permit only exact immutable raw-evidence whitespace paths; keep strict source whitespace check. Include the already reviewed and hashed H1 adapter, no new source scope.",
+  "production_source_and_raw_evidence_unchanged": true
+}

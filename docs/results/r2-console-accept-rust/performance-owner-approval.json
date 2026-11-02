@@ -1,0 +1,53 @@
+{
+  "utc": "2026-11-02T01:08:25.696144+00:00",
+  "client_date": "2026-11-02",
+  "timezone": "Asia/Bangkok",
+  "owner_answer": "Approve these regressions and gated publication",
+  "scope": "Exact input_console_accept implementation and documented remaining hosted medians; gated commit/PR publication, no merge or H2-A",
+  "approved_production_source_sha256": {
+    "kernel/rust/input/console_accept.rs": "1501c8e38a33983a927d37bc90a583d2a1bb30369a6107a71716b98b886410cc",
+    "arch/x86_64/rust/console_accept.rs": "f40cafbdf93d5c7d9d8513ac96733b9353e65f631538f372fbc542fb8177b72e"
+  },
+  "production_archive_sha256": "330349d70235d0515cb2d481af80227a1ffaead855acc909e6001ecc7f929ae5",
+  "measurements": {
+    "append": {
+      "C_ns": 3.1688,
+      "Rust_ns": 4.0237,
+      "ratio": 1.26978667003282,
+      "investigation_required": true
+    },
+    "backspace": {
+      "C_ns": 4.6005,
+      "Rust_ns": 4.6022,
+      "ratio": 1.0003695250516247,
+      "investigation_required": false
+    },
+    "ignored": {
+      "C_ns": 2.3236,
+      "Rust_ns": 2.0506,
+      "ratio": 0.8825098984334654,
+      "investigation_required": false
+    },
+    "newline": {
+      "C_ns": 4.3123,
+      "Rust_ns": 4.588,
+      "ratio": 1.0639333998098464,
+      "investigation_required": true
+    },
+    "overflow": {
+      "C_ns": 2.1856,
+      "Rust_ns": 3.1266,
+      "ratio": 1.4305453879941434,
+      "investigation_required": true
+    },
+    "ready": {
+      "C_ns": 2.0364,
+      "Rust_ns": 2.0634,
+      "ratio": 1.013258691809075,
+      "investigation_required": false
+    }
+  },
+  "justification": "No-key optimization improves frequent polling no-op. Pointer interval, bounded edit and post-callback reload checks and exact ordering remain; documented direct branches and callback code retained after disassembly review. Small ready/Backspace medians may be noise, no parity claim. Hosted only; guest latency NOT TESTED.",
+  "standing_policy_sha256": "2576c2554b02a2830a6a7bbfabe479ff236d96a042d15fb8429da529eb3dcd8b",
+  "not_blanket_for_future_migrations": true
+}
