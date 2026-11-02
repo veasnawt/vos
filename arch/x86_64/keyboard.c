@@ -1,4 +1,5 @@
 #include "keyboard.h"
+#include "rust_kernel.h"
 
 #define DATA    0x60
 #define STATUS  0x64
@@ -126,24 +127,9 @@ int keyboard_resume(struct keyboard *k)
 }
 
 /* One controller owner, two decoders. Never interpret auxiliary bytes as keys. */
+/* R2: bounded shared PS/2 routing is Rust-owned; I/O backend stays C. */
 static void routed_drain(struct keyboard *k) {
-    for(unsigned i=0;i<KEYBOARD_DRAIN_LIMIT;i++) {
-        if(k->pointer_pending || k->key_count==KEYBOARD_DRAIN_LIMIT)break;
-        uint8_t status=k->io->in(STATUS);
-        if(!(status&OBF))break;
-        uint8_t b=k->io->in(DATA);
-        if(status&AUX) {
-            if(status&ERR) {k->pointer=(struct pointer_decoder){0};if(k->pointer_lost!=UINT32_MAX)k->pointer_lost++;continue;}
-            int n=pointer_decode(&k->pointer,b,&k->packet);
-            if(n<0)if(k->pointer_lost!=UINT32_MAX)k->pointer_lost++;
-            if(n>0)k->pointer_pending=1;
-        } else if(status&ERR || b==0 || b==0xff) {
-            k->decoder=(struct keyboard_decoder){0};
-        } else {
-            char c=keyboard_decode(&k->decoder,b);
-            if(c) {k->keys[(k->key_head+k->key_count)%KEYBOARD_DRAIN_LIMIT]=c;k->key_count++;}
-        }
-    }
+    vos_rust_keyboard_routed_drain(k);
 }
 static char routed_poll(struct keyboard *k) {
     if(!k->ready)return 0;

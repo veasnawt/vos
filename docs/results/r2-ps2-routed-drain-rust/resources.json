@@ -1,0 +1,195 @@
+{
+  "status": "PASS_LOCAL_RESOURCE_NATIVE_CORRECTNESS_PERFORMANCE_APPROVED",
+  "baseline": "f6e9603865a935e6624d45910fae4582f7b4acbf",
+  "kernel_sha256": "af66c9af59565b3d9d03ba5cd046f445c0e11dfd3a4537dc5db70a60cfb6b9c8",
+  "archive_sha256": "e8db6afa0b3e3246156620b75c6fea9b40e1f53a59f4ee11357e71cdab49573c",
+  "kernel_archive_reproducible": true,
+  "GUI_archive_matches": true,
+  "production_routing_frames": {
+    "_RNvNtCs5YZeFliBs6N_10vos_kernel10ps2_routed12pointer_step": 0,
+    "vos_rust_keyboard_routed_drain": 40
+  },
+  "own_active_frame_sum": 40,
+  "frame_limit_excluding_returns": 40,
+  "accepted_C_stack_su_including_return": 48,
+  "context_bytes": 88,
+  "queue_limit": 32,
+  "drain_iterations": 32,
+  "maximum_controller_reads": 64,
+  "new_heap": 0,
+  "DMA": 0,
+  "new_persistent_state": 0,
+  "loaded_growth_bytes": 4096,
+  "ELF_file_growth_bytes": 3504,
+  "baseline_loads": [
+    {
+      "address": "0x100000",
+      "filesz": 4096,
+      "memsz": 4096
+    },
+    {
+      "address": "0x101000",
+      "filesz": 40,
+      "memsz": 24576
+    },
+    {
+      "address": "0xffffffff80107000",
+      "filesz": 274432,
+      "memsz": 274432
+    },
+    {
+      "address": "0xffffffff8014a000",
+      "filesz": 57344,
+      "memsz": 57344
+    },
+    {
+      "address": "0xffffffff80158000",
+      "filesz": 512,
+      "memsz": 598016
+    }
+  ],
+  "Rust_loads": [
+    {
+      "address": "0x100000",
+      "filesz": 4096,
+      "memsz": 4096
+    },
+    {
+      "address": "0x101000",
+      "filesz": 40,
+      "memsz": 24576
+    },
+    {
+      "address": "0xffffffff80107000",
+      "filesz": 278528,
+      "memsz": 278528
+    },
+    {
+      "address": "0xffffffff8014b000",
+      "filesz": 57344,
+      "memsz": 57344
+    },
+    {
+      "address": "0xffffffff80159000",
+      "filesz": 512,
+      "memsz": 598016
+    }
+  ],
+  "data_bss_unchanged": true,
+  "source_sha256": {
+    "arch/x86_64/rust/ps2_routed.rs": "f606e7acebd94e52e7430b19ce6069793f17d8be96174c39d04ccdc0d46cfc84",
+    "kernel/rust/input/ps2_routed.rs": "9b502ed046fd5be3bac5d2b777748046a76a1ec1abda88ae59b4a72d5c5cb996",
+    "arch/x86_64/keyboard.c": "a86fc196a8840298a0546b9a5770aa8f37e529d636fefaaca33987b413491a79",
+    "tests/host/ps2-routed-differential.c": "a8d40a72e4bb43ec230b766379c80f0bc14c4e95f893672819ca102db5452a4f",
+    "scripts/test-ps2-routed-rust.py": "5c44c1007004b81469ffdad82d551a78042a79a5c7fe7fa2cfa2eef8eb94d393"
+  },
+  "native_cases": 8,
+  "default_compatibility_cases": 1,
+  "performance": {
+    "empty": {
+      "C_ns": 8.635,
+      "Rust_ns": 8.305,
+      "median_ratio": 0.9617834394904459,
+      "regression_percent": -3.821656050955413,
+      "paired_ratio_median": 0.9357266936884772,
+      "paired_ratio_min": 0.6365786361844697,
+      "paired_ratio_max": 1.3039912520503008,
+      "samples": 81
+    },
+    "keyboard": {
+      "C_ns": 22.16,
+      "Rust_ns": 22.05,
+      "median_ratio": 0.9950361010830325,
+      "regression_percent": -0.49638989169674685,
+      "paired_ratio_median": 0.9872727272727272,
+      "paired_ratio_min": 0.8522660388463802,
+      "paired_ratio_max": 1.1854967037963173,
+      "samples": 81
+    },
+    "pointer_complete": {
+      "C_ns": 41.24,
+      "Rust_ns": 40.23,
+      "median_ratio": 0.975509214354995,
+      "regression_percent": -2.4490785645004953,
+      "paired_ratio_median": 0.9663778162911613,
+      "paired_ratio_min": 0.8780954524988744,
+      "paired_ratio_max": 1.2138295259150085,
+      "samples": 81
+    },
+    "pointer_partial": {
+      "C_ns": 20.36,
+      "Rust_ns": 19.5201,
+      "median_ratio": 0.9587475442043222,
+      "regression_percent": -4.125245579567782,
+      "paired_ratio_median": 0.9592037355615631,
+      "paired_ratio_min": 0.8271809303095514,
+      "paired_ratio_max": 1.3407079646017699,
+      "samples": 81
+    },
+    "mixed": {
+      "C_ns": 70.675,
+      "Rust_ns": 68.1,
+      "median_ratio": 0.9635656172621153,
+      "regression_percent": -3.6434382737884685,
+      "paired_ratio_median": 0.9563595917299136,
+      "paired_ratio_min": 0.8333934539087137,
+      "paired_ratio_max": 1.1304835318850737,
+      "samples": 81
+    },
+    "full_queue": {
+      "C_ns": 4.46,
+      "Rust_ns": 4.57,
+      "median_ratio": 1.024663677130045,
+      "regression_percent": 2.4663677130045025,
+      "paired_ratio_median": 1.021324354657688,
+      "paired_ratio_min": 0.7659932659932659,
+      "paired_ratio_max": 1.5332606324972737,
+      "samples": 81
+    },
+    "errors32": {
+      "C_ns": 306.6,
+      "Rust_ns": 302.6,
+      "median_ratio": 0.9869536855838226,
+      "regression_percent": -1.304631441617743,
+      "paired_ratio_median": 0.9866598340331272,
+      "paired_ratio_min": 0.8806660494135365,
+      "paired_ratio_max": 1.1070332439505057,
+      "samples": 81
+    },
+    "keyboard32": {
+      "C_ns": 438.04,
+      "Rust_ns": 432.63,
+      "median_ratio": 0.9876495297233129,
+      "regression_percent": -1.235047027668712,
+      "paired_ratio_median": 0.9921040844175459,
+      "paired_ratio_min": 0.9282075798658539,
+      "paired_ratio_max": 1.054632765772166,
+      "samples": 81
+    }
+  },
+  "performance_approved": true,
+  "guest_latency": "NOT TESTED",
+  "physical_hardware": "NOT TESTED",
+  "unchanged_production_inputs": {
+    "arch/x86_64/keyboard.h": "c6104c37cd72472e32a16471a22c2149e15e68f4baff2c64072a054b088a68b7",
+    "arch/x86_64/pointer.h": "7ed1b6597f0155f9cd4720a2c0fe712e08d6b7cf51ad6acc010841e7f8f291b7",
+    "arch/x86_64/input_console.c": "c675847e56ba380b07a58d2248d8c656405ec9557d62af208aab47cba4ed3ac5",
+    "arch/x86_64/input_console.h": "6c15e09bb182334f8bf0f5637b6857b44d2d148fd6ff20e896c7680bf6c4f119",
+    "arch/x86_64/user_console.c": "c5a35faa2bc290c9224b3dfa7dbe8835f3178f68714aa4c7d515825ea675949a",
+    "arch/x86_64/thread.c": "8f8685d5878e49338c60977f1acda8a500a7897a0a8f04fafe2f0c8e0c1a35b0",
+    "arch/x86_64/rust/ps2_keyboard.rs": "70df2669a69454f524c6fb3b8a125942b1f507a134e86bab6e582da653c30e22",
+    "kernel/rust/input/ps2_keyboard.rs": "955ea062d40f840c6d287095cc9c5ec9123507b6f9252ccb5bb9bb0fbf41d535",
+    "arch/x86_64/rust/ps2_pointer.rs": "361be441fbd5d6efc553be99879ba3f8afc000a69ac5130654603dbf0cfbebf5",
+    "kernel/rust/input/ps2_pointer.rs": "7e0cc27a4af7f80dce3c99985feca064b407bba7752f11b318c6eb3ce0f7fd4c",
+    "arch/x86_64/rust/console_reader.rs": "f9a43d25526569fc7e2d502b6768df8504ca6b663e07a68f00454a8b7dc58b27",
+    "kernel/rust/input/console_reader.rs": "f8473373d0c0a88bcf51800104211bee27d8891146eaae2adf160241682cf006",
+    "arch/x86_64/rust/console_accept.rs": "f40cafbdf93d5c7d9d8513ac96733b9353e65f631538f372fbc542fb8177b72e",
+    "kernel/rust/input/console_accept.rs": "1501c8e38a33983a927d37bc90a583d2a1bb30369a6107a71716b98b886410cc",
+    "arch/x86_64/rust/console_line.rs": "32bdf0d337db975f6fe9f9d7373275428cd01d53073016e6ee505a18f9fe351e",
+    "kernel/rust/input/console_line.rs": "27f99d9ba83ef63a7bdb686814b42a0a0beb35fb920877cc81f330397d8d009f",
+    "kernel/rust/usb/hid/lib.rs": "a1a4a4c055f1f996d16355199da026d355d434b3c601309a6c178b1eb8b71353",
+    "kernel/rust/usb/hid/input.rs": "d0fbc4cd350814e5c6302047cb064971ee60d2912ac748d5de1d47b7478e4f33",
+    "kernel/rust/usb/hid/descriptor.rs": "02d959043e5c81aa0847100532558fb08f62ae7b60e882b709c87d98964f84f9"
+  },
+  "performance_approval_receipt": "performance-owner-approval.json"
+}

@@ -1,0 +1,27 @@
+{
+  "utc": "2026-11-02T04:10:37.742928+00:00",
+  "status": "PASS",
+  "baseline": "f6e9603865a935e6624d45910fae4582f7b4acbf",
+  "accepted_archive": "/home/veasnawt/src/vos-r2-console-reader/build/optimized/rust/libvos_kernel.a",
+  "archive_sha256": "b2387394ec2b4819894b22a7504b9ad1c4f4e59b312b219de313fd006ba5202d",
+  "results": {
+    "xhci": "xhci host: 45713 assertions PASS; bounded read-only probing, malformed input, mapping and opt-in coverage\n",
+    "keyboard": "PASS: decoder modifiers, repeat, release, extended/Pause and unsupported keys\nPASS: acknowledged setup, bounded timeouts/drain, aux/errors and fail-closed readiness\nPASS: exact opt-in token, prompt boundary, 128-cell limit, editing, Enter and overflow rejection\n",
+    "diagnostics": "input diagnostics: default silent, explicit enable, stage/results and disable PASS\n",
+    "console": "console-handoff: 49499 assertions PASS; actual console+keyboard+editor; bounded modeled hardware/scheduler; transfers=1007 restored=1003\n"
+  },
+  "versions": {
+    "gcc": "gcc (Ubuntu 15.2.0-16ubuntu1) 15.2.0\nCopyright (C) 2025 Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\n",
+    "ld": "GNU ld (GNU Binutils for Ubuntu) 2.46\nCopyright (C) 2026 Free Software Foundation, Inc.\nThis program is free software; you may redistribute it under the terms of\nthe GNU General Public License version 3 or (at your option) a later version.\nThis program has absolutely no warranty.\n",
+    "rustc": "rustc 1.100.0-nightly (2e2b193f8 2026-09-02)\nbinary: rustc\ncommit-hash: 2e2b193f8ada105f27608b7be81c293e0d7292cb\ncommit-date: 2026-09-02\nhost: x86_64-unknown-linux-gnu\nrelease: 1.100.0-nightly\nLLVM version: 23.1.1\n",
+    "qemu": "QEMU emulator version 10.2.1 (Debian 1:10.2.1+ds-1ubuntu3.2)\nCopyright (c) 2003-2025 Fabrice Bellard and the QEMU Project developers\n"
+  },
+  "meminfo": "MemTotal:        8088144 kB\nMemFree:         7050360 kB\nMemAvailable:    7504336 kB\nBuffers:           48052 kB\nCached:           526976 kB\nSwapCached:            0 kB\nActive:           164400 kB\nInactive:         570028 kB\nActive(anon):       3296 kB\nInactive(anon):   160484 kB\nActive(file):     161104 kB\nInactive(file):   409544 kB\nUnevictable:           0 kB\nMlocked:               0 kB\nSwapTotal:       2097152 kB\nSwapFree:        2097152 kB\nDirty:               604 kB\nWriteback:             0 kB\nAnonPages:        159556 kB\nMapped:           116920 kB\nShmem:              4444 kB\nKReclaimable:      46648 kB\nSlab:              86668 kB\nSReclaimable:      46648 kB\nSUnreclaim:        40020 kB\nKernelStack:        3040 kB\nPageTables:         5124 kB\nSecPageTables:         0 kB\nNFS_Unstable:          0 kB\nBounce:                0 kB\nWritebackTmp:          0 kB\nCommitLimit:     6141224 kB\nCommitted_AS:     663156 kB\nVmallocTotal:   34359738367 kB\nVmallocUsed:       28840 kB\nVmallocChunk:          0 kB\nPercpu:             1648 kB\nHardwareCorrupted:     0 kB\nAnonHugePages:         0 kB\nShmemHugePages:        0 kB\nShmemPmdMapped:        0 kB\nFileHugePages:         0 kB\nFilePmdMapped:         0 kB\nBalloon:               0 kB\nHugePages_Total:       0\nHugePages_Free:        0\nHugePages_Rsvd:        0\nHugePages_Surp:        0\nHugepagesize:       2048 kB\nHugetlb:               0 kB\nDirectMap4k:       41984 kB\nDirectMap2M:     5152768 kB\nDirectMap1G:    12582912 kB\n",
+  "distro": "Ubuntu-VOS-E-20261101T025327Z-d5832e96",
+  "uid": 1000,
+  "source_hashes": {
+    "arch/x86_64/keyboard.c": "3459345b0ef745eebb1d4e445a155df1c0c6b9e5be4806fd9229d0af160ddde6",
+    "arch/x86_64/keyboard.h": "c6104c37cd72472e32a16471a22c2149e15e68f4baff2c64072a054b088a68b7",
+    "arch/x86_64/pointer.h": "7ed1b6597f0155f9cd4720a2c0fe712e08d6b7cf51ad6acc010841e7f8f291b7"
+  }
+}

@@ -1,0 +1,126 @@
+{
+  "passed": true,
+  "physical_hardware": false,
+  "cases": [
+    {
+      "passed": true,
+      "firmware": "bios",
+      "mode": "normal",
+      "memory": "128M",
+      "native_Rust_calls": [
+        {
+          "symbol": "pointer_idle",
+          "RIP": "0xffffffff801405e0",
+          "stop": "T05thread:01;"
+        },
+        {
+          "symbol": "routed_pointer_step",
+          "RIP": "0xffffffff80138760",
+          "stop": "T05thread:01;",
+          "scope": "ELF-resolved Rust private helper contains inlined accepted pointer_decode body; actual emitted/consumed packets checked separately"
+        },
+        {
+          "symbol": "keyboard_decode",
+          "RIP": "0xffffffff80140230",
+          "stop": "T05thread:01;"
+        }
+      ],
+      "keyboard_text": {
+        "passed": true,
+        "expected": "Aa!",
+        "caps_shift_release": true
+      },
+      "screenshots": {
+        "initial": {
+          "path": "build/native-default-compatibility/bios-normal-128M/initial.png",
+          "sha256": "f498dd815f89358990086ecc48f94680f1d1abd2e83517ceedb3c1521c37558b"
+        },
+        "movement": {
+          "path": "build/native-default-compatibility/bios-normal-128M/movement.png",
+          "sha256": "0a7fae58fbe30b8c016eef0d63bc04efbdfbf48887ccbd556115109bdacc4e58"
+        },
+        "press": {
+          "path": "build/native-default-compatibility/bios-normal-128M/press.png",
+          "sha256": "2ccf213f2b9084a3b7b6d3006310ba4d052d21786d5e809a37e0c888c0f6bbce"
+        },
+        "click": {
+          "path": "build/native-default-compatibility/bios-normal-128M/click.png",
+          "sha256": "3814e66733e1139bf7cd48891ad88d18cfcdc30c7114c2f2739a6241d2566b09"
+        },
+        "top-left": {
+          "path": "build/native-default-compatibility/bios-normal-128M/top-left.png",
+          "sha256": "6fa27543f1f507ab7f51909705a5434a9e6cbe425d8c00130689f555e1ea8797"
+        },
+        "top-right": {
+          "path": "build/native-default-compatibility/bios-normal-128M/top-right.png",
+          "sha256": "4a6ea51c0841bcb0d5adc058f278624e9532793c8be9840778d084aef9f567d6"
+        },
+        "bottom-right": {
+          "path": "build/native-default-compatibility/bios-normal-128M/bottom-right.png",
+          "sha256": "c678e1d76abfad6e980a5667dd0627b6162e37a805ec1c11e9a83ecc57d49edc"
+        },
+        "bottom-left": {
+          "path": "build/native-default-compatibility/bios-normal-128M/bottom-left.png",
+          "sha256": "5845f32844733336ab5d29eaded357d670cefdd3dacd7462b9ebfd73849816d7"
+        },
+        "final": {
+          "path": "build/native-default-compatibility/bios-normal-128M/final.png",
+          "sha256": "22247cbc3428c122e571f499cc21e5a520eb86c8fbaac6a832654af304e3ded9"
+        },
+        "keyboard-text": {
+          "path": "build/native-default-compatibility/bios-normal-128M/keyboard-text.png",
+          "sha256": "f135400e4054b1ccff7ad8745db7d3d4048899e145f4fdc2d4435f3f8f294d1d"
+        }
+      },
+      "pixels": {
+        "initial": {
+          "passed": true,
+          "cursor": [
+            512,
+            390
+          ],
+          "panel_rgb": "0x409ddd",
+          "width": 1024,
+          "height": 768
+        },
+        "movement": {
+          "passed": true,
+          "cursor": [
+            524,
+            382
+          ],
+          "panel_rgb": "0x409ddd",
+          "width": 1024,
+          "height": 768
+        },
+        "press": {
+          "passed": true,
+          "cursor": [
+            524,
+            382
+          ],
+          "panel_rgb": "0xe8b34e",
+          "width": 1024,
+          "height": 768
+        },
+        "click": {
+          "passed": true,
+          "cursor": [
+            524,
+            382
+          ],
+          "panel_rgb": "0x42c497",
+          "width": 1024,
+          "height": 768
+        }
+      },
+      "exact_corners": true,
+      "keyboard_mouse": true,
+      "held_exit_cleanup": true,
+      "shell_hello_rixie": true,
+      "native_cases": 0,
+      "elapsed_seconds": 18.453967702997033,
+      "serial_sha256": "f72692cee6076be16eed3b7ab362d8059ccd3ecb02e2db8fb5289b5e2395e728"
+    }
+  ]
+}

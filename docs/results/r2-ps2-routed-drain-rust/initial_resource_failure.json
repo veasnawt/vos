@@ -1,0 +1,8 @@
+{
+  "status": "FAIL_FRAME_GATE",
+  "measured": 56,
+  "ceiling": 40,
+  "kernel_sha256": "0b6b0c5ebffdbc26952b18ee8d65f261f5486317e7637c4abcc569a765a39670",
+  "cause_evidence": "Accepted pointer_decode is inlined into routing; full body and prologue retained. No storage or production execution violation.",
+  "action": "Bounded code-generation correction, no resource ceiling increase; no accepted decoder source changes."
+}

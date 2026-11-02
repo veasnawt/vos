@@ -1,0 +1,1126 @@
+{
+  "status": "PASS",
+  "commands": [
+    {
+      "argv": [
+        "gcc",
+        "-std=gnu11",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-Iarch/x86_64",
+        "-ffunction-sections",
+        "-fdata-sections",
+        "-fno-pie",
+        "-no-pie",
+        "-Wl,--gc-sections",
+        "-O1",
+        "-g",
+        "-fsanitize=address,undefined",
+        "-fno-sanitize-recover=all",
+        "-fno-omit-frame-pointer",
+        "-Dkeyboard_init=keyboard_init_reference",
+        "-Dkeyboard_poll=keyboard_poll_reference",
+        "-Dkeyboard_suspend=keyboard_suspend_reference",
+        "-Dkeyboard_resume=keyboard_resume_reference",
+        "-Dkeyboard_pointer_start=keyboard_pointer_start_reference",
+        "-Dkeyboard_pointer_stop=keyboard_pointer_stop_reference",
+        "-Dkeyboard_pointer_poll=keyboard_pointer_poll_reference",
+        "-Dkeyboard_pointer_lost=keyboard_pointer_lost_reference",
+        "-c",
+        "tests/reference/ps2-routed-drain.c",
+        "-o",
+        "build/routed-corrected/sanitizer-reference.o"
+      ],
+      "log": "sanitizer-reference-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "gcc",
+        "-std=gnu11",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-Iarch/x86_64",
+        "-ffunction-sections",
+        "-fdata-sections",
+        "-fno-pie",
+        "-no-pie",
+        "-Wl,--gc-sections",
+        "-O1",
+        "-g",
+        "-fsanitize=address,undefined",
+        "-fno-sanitize-recover=all",
+        "-fno-omit-frame-pointer",
+        "-c",
+        "arch/x86_64/keyboard.c",
+        "-o",
+        "build/routed-corrected/sanitizer-driver.o"
+      ],
+      "log": "sanitizer-driver-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "gcc",
+        "-std=gnu11",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-Iarch/x86_64",
+        "-ffunction-sections",
+        "-fdata-sections",
+        "-fno-pie",
+        "-no-pie",
+        "-Wl,--gc-sections",
+        "-O1",
+        "-g",
+        "-fsanitize=address,undefined",
+        "-fno-sanitize-recover=all",
+        "-fno-omit-frame-pointer",
+        "tests/host/ps2-routed-differential.c",
+        "build/routed-corrected/sanitizer-reference.o",
+        "build/routed-corrected/sanitizer-driver.o",
+        "build/production/rust/libvos_kernel.a",
+        "-o",
+        "build/routed-corrected/sanitizer-differential"
+      ],
+      "log": "sanitizer-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "build/routed-corrected/sanitizer-differential"
+      ],
+      "log": "sanitizer.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "gcc",
+        "-std=gnu11",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-Iarch/x86_64",
+        "-ffunction-sections",
+        "-fdata-sections",
+        "-fno-pie",
+        "-no-pie",
+        "-Wl,--gc-sections",
+        "-O2",
+        "-fno-lto",
+        "-ffreestanding",
+        "-fno-builtin",
+        "-mno-red-zone",
+        "-mgeneral-regs-only",
+        "-Dkeyboard_init=keyboard_init_reference",
+        "-Dkeyboard_poll=keyboard_poll_reference",
+        "-Dkeyboard_suspend=keyboard_suspend_reference",
+        "-Dkeyboard_resume=keyboard_resume_reference",
+        "-Dkeyboard_pointer_start=keyboard_pointer_start_reference",
+        "-Dkeyboard_pointer_stop=keyboard_pointer_stop_reference",
+        "-Dkeyboard_pointer_poll=keyboard_pointer_poll_reference",
+        "-Dkeyboard_pointer_lost=keyboard_pointer_lost_reference",
+        "-c",
+        "tests/reference/ps2-routed-drain.c",
+        "-o",
+        "build/routed-corrected/release-reference.o"
+      ],
+      "log": "release-reference-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "gcc",
+        "-std=gnu11",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-Iarch/x86_64",
+        "-ffunction-sections",
+        "-fdata-sections",
+        "-fno-pie",
+        "-no-pie",
+        "-Wl,--gc-sections",
+        "-O2",
+        "-fno-lto",
+        "-ffreestanding",
+        "-fno-builtin",
+        "-mno-red-zone",
+        "-mgeneral-regs-only",
+        "-c",
+        "arch/x86_64/keyboard.c",
+        "-o",
+        "build/routed-corrected/release-driver.o"
+      ],
+      "log": "release-driver-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "gcc",
+        "-std=gnu11",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-Iarch/x86_64",
+        "-ffunction-sections",
+        "-fdata-sections",
+        "-fno-pie",
+        "-no-pie",
+        "-Wl,--gc-sections",
+        "-O2",
+        "-fno-lto",
+        "tests/host/ps2-routed-differential.c",
+        "build/routed-corrected/release-reference.o",
+        "build/routed-corrected/release-driver.o",
+        "build/production/rust/libvos_kernel.a",
+        "-o",
+        "build/routed-corrected/release-differential"
+      ],
+      "log": "release-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "build/routed-corrected/release-differential"
+      ],
+      "log": "release.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "taskset",
+        "-c",
+        "0",
+        "build/routed-corrected/release-differential",
+        "--bench"
+      ],
+      "log": "performance.csv",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Coverflow-checks=yes",
+        "--crate-type=rlib",
+        "--crate-name=ps2_routed_core",
+        "build/routed-corrected/core-root.rs",
+        "-o",
+        "build/routed-corrected/libps2_routed_core.rlib"
+      ],
+      "log": "core-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Coverflow-checks=yes",
+        "--test",
+        "-Cstrip=symbols",
+        "--extern",
+        "ps2_routed_core=build/routed-corrected/libps2_routed_core.rlib",
+        "tests/rust/ps2_routed.rs",
+        "-o",
+        "build/routed-corrected/core-tests"
+      ],
+      "log": "core-tests-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "build/routed-corrected/core-tests",
+        "--test-threads=1"
+      ],
+      "log": "core-tests.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Coverflow-checks=yes",
+        "--crate-type=rlib",
+        "--crate-name=ps2_routed_core",
+        "build/routed-corrected/mutant-limit/root.rs",
+        "-o",
+        "build/routed-corrected/mutant-limit/libps2_routed_core.rlib"
+      ],
+      "log": "limit-core-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Coverflow-checks=yes",
+        "--test",
+        "-Cstrip=symbols",
+        "--extern",
+        "ps2_routed_core=build/routed-corrected/mutant-limit/libps2_routed_core.rlib",
+        "tests/rust/ps2_routed.rs",
+        "-o",
+        "build/routed-corrected/mutant-limit/tests"
+      ],
+      "log": "limit-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "build/routed-corrected/mutant-limit/tests",
+        "--test-threads=1",
+        "bound_and_enqueue"
+      ],
+      "log": "limit.txt",
+      "exit_code": 101
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Coverflow-checks=yes",
+        "--crate-type=rlib",
+        "--crate-name=ps2_routed_core",
+        "build/routed-corrected/mutant-pending/root.rs",
+        "-o",
+        "build/routed-corrected/mutant-pending/libps2_routed_core.rlib"
+      ],
+      "log": "pending-core-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Coverflow-checks=yes",
+        "--test",
+        "-Cstrip=symbols",
+        "--extern",
+        "ps2_routed_core=build/routed-corrected/mutant-pending/libps2_routed_core.rlib",
+        "tests/rust/ps2_routed.rs",
+        "-o",
+        "build/routed-corrected/mutant-pending/tests"
+      ],
+      "log": "pending-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "build/routed-corrected/mutant-pending/tests",
+        "--test-threads=1",
+        "pending_blocks"
+      ],
+      "log": "pending.txt",
+      "exit_code": 101
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Coverflow-checks=yes",
+        "--crate-type=rlib",
+        "--crate-name=ps2_routed_core",
+        "build/routed-corrected/mutant-obf/root.rs",
+        "-o",
+        "build/routed-corrected/mutant-obf/libps2_routed_core.rlib"
+      ],
+      "log": "obf-core-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Coverflow-checks=yes",
+        "--test",
+        "-Cstrip=symbols",
+        "--extern",
+        "ps2_routed_core=build/routed-corrected/mutant-obf/libps2_routed_core.rlib",
+        "tests/rust/ps2_routed.rs",
+        "-o",
+        "build/routed-corrected/mutant-obf/tests"
+      ],
+      "log": "obf-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "build/routed-corrected/mutant-obf/tests",
+        "--test-threads=1",
+        "bound_and_enqueue"
+      ],
+      "log": "obf.txt",
+      "exit_code": 101
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Coverflow-checks=yes",
+        "--crate-type=rlib",
+        "--crate-name=ps2_routed_core",
+        "build/routed-corrected/mutant-aux/root.rs",
+        "-o",
+        "build/routed-corrected/mutant-aux/libps2_routed_core.rlib"
+      ],
+      "log": "aux-core-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Coverflow-checks=yes",
+        "--test",
+        "-Cstrip=symbols",
+        "--extern",
+        "ps2_routed_core=build/routed-corrected/mutant-aux/libps2_routed_core.rlib",
+        "tests/rust/ps2_routed.rs",
+        "-o",
+        "build/routed-corrected/mutant-aux/tests"
+      ],
+      "log": "aux-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "build/routed-corrected/mutant-aux/tests",
+        "--test-threads=1",
+        "pointer_complete"
+      ],
+      "log": "aux.txt",
+      "exit_code": 101
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Coverflow-checks=yes",
+        "--crate-type=rlib",
+        "--crate-name=ps2_routed_core",
+        "build/routed-corrected/mutant-aux-error/root.rs",
+        "-o",
+        "build/routed-corrected/mutant-aux-error/libps2_routed_core.rlib"
+      ],
+      "log": "aux-error-core-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Coverflow-checks=yes",
+        "--test",
+        "-Cstrip=symbols",
+        "--extern",
+        "ps2_routed_core=build/routed-corrected/mutant-aux-error/libps2_routed_core.rlib",
+        "tests/rust/ps2_routed.rs",
+        "-o",
+        "build/routed-corrected/mutant-aux-error/tests"
+      ],
+      "log": "aux-error-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "build/routed-corrected/mutant-aux-error/tests",
+        "--test-threads=1",
+        "aux_error_precedence"
+      ],
+      "log": "aux-error.txt",
+      "exit_code": 101
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Coverflow-checks=yes",
+        "--crate-type=rlib",
+        "--crate-name=ps2_routed_core",
+        "build/routed-corrected/mutant-pointer-negative/root.rs",
+        "-o",
+        "build/routed-corrected/mutant-pointer-negative/libps2_routed_core.rlib"
+      ],
+      "log": "pointer-negative-core-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Coverflow-checks=yes",
+        "--test",
+        "-Cstrip=symbols",
+        "--extern",
+        "ps2_routed_core=build/routed-corrected/mutant-pointer-negative/libps2_routed_core.rlib",
+        "tests/rust/ps2_routed.rs",
+        "-o",
+        "build/routed-corrected/mutant-pointer-negative/tests"
+      ],
+      "log": "pointer-negative-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "build/routed-corrected/mutant-pointer-negative/tests",
+        "--test-threads=1",
+        "pointer_reject"
+      ],
+      "log": "pointer-negative.txt",
+      "exit_code": 101
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Coverflow-checks=yes",
+        "--crate-type=rlib",
+        "--crate-name=ps2_routed_core",
+        "build/routed-corrected/mutant-pointer-pending/root.rs",
+        "-o",
+        "build/routed-corrected/mutant-pointer-pending/libps2_routed_core.rlib"
+      ],
+      "log": "pointer-pending-core-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Coverflow-checks=yes",
+        "--test",
+        "-Cstrip=symbols",
+        "--extern",
+        "ps2_routed_core=build/routed-corrected/mutant-pointer-pending/libps2_routed_core.rlib",
+        "tests/rust/ps2_routed.rs",
+        "-o",
+        "build/routed-corrected/mutant-pointer-pending/tests"
+      ],
+      "log": "pointer-pending-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "build/routed-corrected/mutant-pointer-pending/tests",
+        "--test-threads=1",
+        "pointer_partial"
+      ],
+      "log": "pointer-pending.txt",
+      "exit_code": 101
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Coverflow-checks=yes",
+        "--crate-type=rlib",
+        "--crate-name=ps2_routed_core",
+        "build/routed-corrected/mutant-keyboard-error/root.rs",
+        "-o",
+        "build/routed-corrected/mutant-keyboard-error/libps2_routed_core.rlib"
+      ],
+      "log": "keyboard-error-core-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Coverflow-checks=yes",
+        "--test",
+        "-Cstrip=symbols",
+        "--extern",
+        "ps2_routed_core=build/routed-corrected/mutant-keyboard-error/libps2_routed_core.rlib",
+        "tests/rust/ps2_routed.rs",
+        "-o",
+        "build/routed-corrected/mutant-keyboard-error/tests"
+      ],
+      "log": "keyboard-error-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "build/routed-corrected/mutant-keyboard-error/tests",
+        "--test-threads=1",
+        "keyboard_error"
+      ],
+      "log": "keyboard-error.txt",
+      "exit_code": 101
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Coverflow-checks=yes",
+        "--crate-type=rlib",
+        "--crate-name=ps2_routed_core",
+        "build/routed-corrected/mutant-zero/root.rs",
+        "-o",
+        "build/routed-corrected/mutant-zero/libps2_routed_core.rlib"
+      ],
+      "log": "zero-core-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Coverflow-checks=yes",
+        "--test",
+        "-Cstrip=symbols",
+        "--extern",
+        "ps2_routed_core=build/routed-corrected/mutant-zero/libps2_routed_core.rlib",
+        "tests/rust/ps2_routed.rs",
+        "-o",
+        "build/routed-corrected/mutant-zero/tests"
+      ],
+      "log": "zero-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "build/routed-corrected/mutant-zero/tests",
+        "--test-threads=1",
+        "zero_resets"
+      ],
+      "log": "zero.txt",
+      "exit_code": 101
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Coverflow-checks=yes",
+        "--crate-type=rlib",
+        "--crate-name=ps2_routed_core",
+        "build/routed-corrected/mutant-ff/root.rs",
+        "-o",
+        "build/routed-corrected/mutant-ff/libps2_routed_core.rlib"
+      ],
+      "log": "ff-core-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Coverflow-checks=yes",
+        "--test",
+        "-Cstrip=symbols",
+        "--extern",
+        "ps2_routed_core=build/routed-corrected/mutant-ff/libps2_routed_core.rlib",
+        "tests/rust/ps2_routed.rs",
+        "-o",
+        "build/routed-corrected/mutant-ff/tests"
+      ],
+      "log": "ff-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "build/routed-corrected/mutant-ff/tests",
+        "--test-threads=1",
+        "ff_resets"
+      ],
+      "log": "ff.txt",
+      "exit_code": 101
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Coverflow-checks=yes",
+        "--crate-type=rlib",
+        "--crate-name=ps2_routed_core",
+        "build/routed-corrected/mutant-saturation/root.rs",
+        "-o",
+        "build/routed-corrected/mutant-saturation/libps2_routed_core.rlib"
+      ],
+      "log": "saturation-core-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Coverflow-checks=yes",
+        "--test",
+        "-Cstrip=symbols",
+        "--extern",
+        "ps2_routed_core=build/routed-corrected/mutant-saturation/libps2_routed_core.rlib",
+        "tests/rust/ps2_routed.rs",
+        "-o",
+        "build/routed-corrected/mutant-saturation/tests"
+      ],
+      "log": "saturation-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "build/routed-corrected/mutant-saturation/tests",
+        "--test-threads=1",
+        "saturation"
+      ],
+      "log": "saturation.txt",
+      "exit_code": 101
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Coverflow-checks=yes",
+        "--crate-type=rlib",
+        "--crate-name=ps2_routed_core",
+        "build/routed-corrected/mutant-index/root.rs",
+        "-o",
+        "build/routed-corrected/mutant-index/libps2_routed_core.rlib"
+      ],
+      "log": "index-core-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Coverflow-checks=yes",
+        "--test",
+        "-Cstrip=symbols",
+        "--extern",
+        "ps2_routed_core=build/routed-corrected/mutant-index/libps2_routed_core.rlib",
+        "tests/rust/ps2_routed.rs",
+        "-o",
+        "build/routed-corrected/mutant-index/tests"
+      ],
+      "log": "index-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "build/routed-corrected/mutant-index/tests",
+        "--test-threads=1",
+        "wrapping_queue"
+      ],
+      "log": "index.txt",
+      "exit_code": 101
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Coverflow-checks=yes",
+        "--crate-type=rlib",
+        "--crate-name=ps2_routed_core",
+        "build/routed-corrected/mutant-count/root.rs",
+        "-o",
+        "build/routed-corrected/mutant-count/libps2_routed_core.rlib"
+      ],
+      "log": "count-core-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Coverflow-checks=yes",
+        "--test",
+        "-Cstrip=symbols",
+        "--extern",
+        "ps2_routed_core=build/routed-corrected/mutant-count/libps2_routed_core.rlib",
+        "tests/rust/ps2_routed.rs",
+        "-o",
+        "build/routed-corrected/mutant-count/tests"
+      ],
+      "log": "count-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "build/routed-corrected/mutant-count/tests",
+        "--test-threads=1",
+        "bound_and_enqueue"
+      ],
+      "log": "count.txt",
+      "exit_code": 101
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Coverflow-checks=yes",
+        "--crate-type=rlib",
+        "--crate-name=ps2_routed_core",
+        "build/routed-corrected/mutant-zero-character/root.rs",
+        "-o",
+        "build/routed-corrected/mutant-zero-character/libps2_routed_core.rlib"
+      ],
+      "log": "zero-character-core-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Coverflow-checks=yes",
+        "--test",
+        "-Cstrip=symbols",
+        "--extern",
+        "ps2_routed_core=build/routed-corrected/mutant-zero-character/libps2_routed_core.rlib",
+        "tests/rust/ps2_routed.rs",
+        "-o",
+        "build/routed-corrected/mutant-zero-character/tests"
+      ],
+      "log": "zero-character-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "build/routed-corrected/mutant-zero-character/tests",
+        "--test-threads=1",
+        "zero_character"
+      ],
+      "log": "zero-character.txt",
+      "exit_code": 101
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Coverflow-checks=yes",
+        "--crate-type=staticlib",
+        "-Cpanic=abort",
+        "build/routed-corrected/ffi-root.rs",
+        "-o",
+        "build/routed-corrected/libchecked_ffi.a"
+      ],
+      "log": "checked-ffi-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "gcc",
+        "-std=gnu11",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-Iarch/x86_64",
+        "-ffunction-sections",
+        "-fdata-sections",
+        "-fno-pie",
+        "-no-pie",
+        "-Wl,--gc-sections",
+        "-O1",
+        "-g",
+        "-fsanitize=address,undefined",
+        "-fno-sanitize-recover=all",
+        "tests/host/ps2-routed-differential.c",
+        "build/routed-corrected/sanitizer-reference.o",
+        "build/routed-corrected/sanitizer-driver.o",
+        "build/routed-corrected/libchecked_ffi.a",
+        "-o",
+        "build/routed-corrected/checked-differential"
+      ],
+      "log": "checked-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "build/routed-corrected/checked-differential"
+      ],
+      "log": "checked.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Coverflow-checks=yes",
+        "--crate-type=lib",
+        "--target=x86_64-unknown-none",
+        "-Cpanic=abort",
+        "-Ccode-model=kernel",
+        "-Crelocation-model=static",
+        "-Cno-redzone=yes",
+        "-Cforce-unwind-tables=no",
+        "-Zemit-stack-sizes",
+        "--emit=obj",
+        "build/routed-corrected/ffi-root.rs",
+        "-o",
+        "build/routed-corrected/target.o"
+      ],
+      "log": "target-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "objdump",
+        "-dr",
+        "build/routed-corrected/target.o"
+      ],
+      "log": "target-disassembly.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "objdump",
+        "-d",
+        "build/production/rust/libvos_kernel.a"
+      ],
+      "log": "production-disassembly.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "nm",
+        "--defined-only",
+        "build/production/rust/libvos_kernel.a"
+      ],
+      "log": "archive-owners.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "nm",
+        "build/routed-corrected/release-driver.o"
+      ],
+      "log": "driver-symbols.txt",
+      "exit_code": 0
+    }
+  ],
+  "Rust_sanitized": false,
+  "archive_sha256": "e8db6afa0b3e3246156620b75c6fea9b40e1f53a59f4ee11357e71cdab49573c",
+  "seed": "7232647261696e31",
+  "sanitizer": "PASS 185637 routed driver comparisons; seed=7232647261696e31; callback mutations, exact read trace, boundary object; no controller writes\n",
+  "release": "PASS 185637 routed driver comparisons; seed=7232647261696e31; callback mutations, exact read trace, boundary object; no controller writes\n",
+  "benchmark_cpu": 0,
+  "performance": {
+    "0": {
+      "C_ns": 31.74,
+      "Rust_ns": 30.78,
+      "ratio": 0.9697542533081286,
+      "regression_percent": -3.024574669187141
+    },
+    "1": {
+      "C_ns": 36.81,
+      "Rust_ns": 35.64,
+      "ratio": 0.9682151589242053,
+      "regression_percent": -3.178484107579471
+    },
+    "2": {
+      "C_ns": 66.85,
+      "Rust_ns": 67.29,
+      "ratio": 1.0065818997756173,
+      "regression_percent": 0.6581899775617295
+    },
+    "3": {
+      "C_ns": 20.77,
+      "Rust_ns": 19.98,
+      "ratio": 0.9619643716899374,
+      "regression_percent": -3.8035628310062575
+    },
+    "4": {
+      "C_ns": 71.68,
+      "Rust_ns": 71.51,
+      "ratio": 0.9976283482142857,
+      "regression_percent": -0.23716517857143016
+    },
+    "5": {
+      "C_ns": 4.46,
+      "Rust_ns": 4.555,
+      "ratio": 1.0213004484304933,
+      "regression_percent": 2.130044843049328
+    },
+    "6": {
+      "C_ns": 325.6599,
+      "Rust_ns": 328.4349,
+      "ratio": 1.0085211596515262,
+      "regression_percent": 0.8521159651526222
+    },
+    "7": {
+      "C_ns": 463.365,
+      "Rust_ns": 464.2749,
+      "ratio": 1.001963678741381,
+      "regression_percent": 0.19636787413810364
+    }
+  },
+  "core_tests": "\nrunning 16 tests\ntest aux_error_precedence ... ok\ntest bound_and_enqueue ... ok\ntest callback_change ... ok\ntest count_wrap ... ok\ntest empty ... ok\ntest ff_resets ... ok\ntest full_blocks ... ok\ntest keyboard_error ... ok\ntest pending_blocks ... ok\ntest pointer_complete ... ok\ntest pointer_partial ... ok\ntest pointer_reject ... ok\ntest saturation ... ok\ntest wrapping_queue ... ok\ntest zero_character ... ok\ntest zero_resets ... ok\n\ntest result: ok. 16 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s\n\n",
+  "mutations": {
+    "limit": {
+      "assertion": "bound_and_enqueue",
+      "detected": true
+    },
+    "pending": {
+      "assertion": "pending_blocks",
+      "detected": true
+    },
+    "obf": {
+      "assertion": "bound_and_enqueue",
+      "detected": true
+    },
+    "aux": {
+      "assertion": "pointer_complete",
+      "detected": true
+    },
+    "aux-error": {
+      "assertion": "aux_error_precedence",
+      "detected": true
+    },
+    "pointer-negative": {
+      "assertion": "pointer_reject",
+      "detected": true
+    },
+    "pointer-pending": {
+      "assertion": "pointer_partial",
+      "detected": true
+    },
+    "keyboard-error": {
+      "assertion": "keyboard_error",
+      "detected": true
+    },
+    "zero": {
+      "assertion": "zero_resets",
+      "detected": true
+    },
+    "ff": {
+      "assertion": "ff_resets",
+      "detected": true
+    },
+    "saturation": {
+      "assertion": "saturation",
+      "detected": true
+    },
+    "index": {
+      "assertion": "wrapping_queue",
+      "detected": true
+    },
+    "count": {
+      "assertion": "bound_and_enqueue",
+      "detected": true
+    },
+    "zero-character": {
+      "assertion": "zero_character",
+      "detected": true
+    }
+  },
+  "checked_Rust": "PASS 185637 routed driver comparisons; seed=7232647261696e31; callback mutations, exact read trace, boundary object; no controller writes\n",
+  "target_frames": {
+    "_RNvCsgpO44WCzh3m_7___rustc17rust_begin_unwind": 8,
+    "_RNvNtCskZxhfE7tfM_8ffi_root10ps2_routed12pointer_step": 0,
+    "keyboard_decode": 10,
+    "pointer_decode": 8,
+    "pointer_idle": 0,
+    "vos_rust_keyboard_routed_drain": 40
+  },
+  "production_routing_frames": {
+    "_RNvNtCs5YZeFliBs6N_10vos_kernel10ps2_routed12pointer_step": 0,
+    "vos_rust_keyboard_routed_drain": 40
+  },
+  "source_sha256": {
+    "kernel/rust/input/ps2_routed.rs": "9b502ed046fd5be3bac5d2b777748046a76a1ec1abda88ae59b4a72d5c5cb996",
+    "arch/x86_64/rust/ps2_routed.rs": "f606e7acebd94e52e7430b19ce6069793f17d8be96174c39d04ccdc0d46cfc84",
+    "arch/x86_64/keyboard.c": "a86fc196a8840298a0546b9a5770aa8f37e529d636fefaaca33987b413491a79",
+    "arch/x86_64/keyboard.h": "c6104c37cd72472e32a16471a22c2149e15e68f4baff2c64072a054b088a68b7",
+    "tests/host/ps2-routed-differential.c": "a8d40a72e4bb43ec230b766379c80f0bc14c4e95f893672819ca102db5452a4f",
+    "tests/rust/ps2_routed.rs": "e899cce471ef496f0dc4c20df955c54825ba42ca696e5683131f7fe6c217ba3c",
+    "tests/reference/ps2-routed-drain.c": "d90c9f1063ac65515ca6f3482a149c0cc85482203a7cf40646d64ac74e967d42"
+  }
+}

@@ -139,11 +139,11 @@ def execution_proof(q,folder,symbols,trace):
     rows=[]
     try:
         need(g.command('?').startswith(('T','S')),'stopped owned target')
-        for name in ('pointer_idle','pointer_decode',*(['keyboard_decode'] if 'keyboard_decode' in symbols else [])):
+        for name in ('pointer_idle',*(['vos_rust_keyboard_routed_drain'] if 'vos_rust_keyboard_routed_drain' in symbols else []),*(['routed_pointer_step'] if 'routed_pointer_step' in symbols else ['pointer_decode']),*(['keyboard_decode'] if 'keyboard_decode' in symbols else [])):
             addr=symbols[name]
             need(g.command('Z0,%x,1'%addr)=='OK','install one-shot breakpoint')
             g.send('c')
-            if name=='pointer_decode':
+            if name in ('pointer_decode','routed_pointer_step'):
                 q.execute('input-send-event',{'events':[{'type':'rel','data':{'axis':'x','value':0}}]})
             if name=='keyboard_decode':
                 q.tap('shift')  # Real Set-1 call, without changing the panel.
@@ -152,7 +152,20 @@ def execution_proof(q,folder,symbols,trace):
             match=re.search(r'RIP=([0-9a-fA-F]+)',regs)
             need(match and int(match[1],16)==addr,'native RIP equals Rust symbol entry')
             need(g.command('z0,%x,1'%addr)=='OK','remove one-shot breakpoint')
-            rows.append({'symbol':name,'RIP':hex(addr),'stop':stop})
+            row={'symbol':name,'RIP':hex(addr),'stop':stop}
+            if name=='vos_rust_keyboard_routed_drain':
+                reg=re.search(r'RDI=([0-9a-fA-F]+)',regs)
+                need(reg is not None,'routing C ABI keyboard pointer')
+                raw=g.command('m%x,58'%int(reg[1],16))
+                need(len(raw)==176,'complete live 88-byte keyboard context')
+                state=bytes.fromhex(raw)
+                ready,pointer_ready=struct.unpack_from('<ii',state,16)
+                head,count=struct.unpack_from('<II',state,44)
+                need(ready==1 and pointer_ready==1 and head<32 and count<=32,'actual leased PS/2 routing context')
+                row.update(ready=ready,pointer_ready=pointer_ready,key_head=head,key_count=count,scope='actual production Rust entry, not guest latency')
+            if name=='routed_pointer_step':
+                row['scope']='ELF-resolved Rust private helper contains inlined accepted pointer_decode body; actual emitted/consumed packets checked separately'
+            rows.append(row)
         g.send('c')
         # Do not await a stop: normal guest execution must remain running.
         end=time.monotonic()+10
@@ -211,7 +224,9 @@ def boot(out,fw,mode,iso,symbols,disk,memory="128M",tag_memory=False):
             wait(lambda b:b'pointer-demo: READY;' in b,45)
             if q is None:q=QMP(sock)
             tracker=PS2Motion(q,folder/'ps2.trace',events,started)
-            if mode=='normal':result['native_Rust_calls']=execution_proof(q,folder,symbols,folder/'ps2.trace')
+            if mode=='normal' or 'vos_rust_keyboard_routed_drain' in symbols:
+                result['native_Rust_calls']=execution_proof(q,folder,symbols,folder/'ps2.trace')
+                if 'vos_rust_keyboard_routed_drain' in symbols:shots['rust-routing']=capture(q,folder,'rust-routing')
             def shot(name,x,y,color=None):
                 s=capture(q,folder,name);shots[name]=s
                 w,h,pixel=rgb(Path(s['path']));need((w,h)==(1024,768),'exact native framebuffer')
@@ -365,6 +380,7 @@ def main():
     ap.add_argument('--out',type=Path,required=True)
     ap.add_argument('--mode',choices=['normal','verify','both'],default='both')
     ap.add_argument('--memory',action='append',choices=['128M','2G'],help='reuse checked images for selected RAM sizes; default is 128M')
+    ap.add_argument('--routed-drain-proof',action='store_true',help='trap actual Rust routing entry/private accepted decoder body in all selected cases')
     ap.add_argument('--console-reader-proof',action='store_true',help='trap actual Rust blocking reader and verify shell output')
     ap.add_argument('--console-accept-proof',action='store_true',help='trap actual Rust edit entry and verify genuine edited shell output')
     ap.add_argument('--console-line-proof',action='store_true',help='trap Rust line extraction and require genuine shell output')
@@ -386,7 +402,14 @@ def main():
         for mode in modes:
             kernel=(args.normal_kernel if mode=='normal' else args.verify_kernel).resolve()
             syms=subprocess.check_output(['nm','-S','--defined-only',str(kernel)],text=True)
-            symbols={n:int(next(l.split()[0] for l in syms.splitlines() if l.endswith(' '+n)),16) for n in ('pointer_decode','pointer_idle',*(['keyboard_decode'] if args.keyboard_proof else []),*(['input_console_take_line'] if args.console_line_proof else []),*(['input_console_accept'] if args.console_accept_proof else []),*(['input_console_read_line_for'] if args.console_reader_proof else []))}
+            symbols={n:int(next(l.split()[0] for l in syms.splitlines() if l.endswith(' '+n)),16) for n in ('pointer_decode','pointer_idle',*(['keyboard_decode'] if args.keyboard_proof else []),*(['input_console_take_line'] if args.console_line_proof else []),*(['input_console_accept'] if args.console_accept_proof else []),*(['input_console_read_line_for'] if args.console_reader_proof else []),*(['vos_rust_keyboard_routed_drain'] if args.routed_drain_proof else []))}
+            # The compiler may inline the accepted decoder into this Rust helper.
+            # Default pointer proofs must follow the executed body too; opting in
+            # to the additional driver-entry/context proof is independent.
+            helper=[l.split()[0] for l in syms.splitlines() if 'ps2_routed12pointer_step' in l]
+            if args.routed_drain_proof or helper:
+                need(len(helper)==1,'unique private Rust pointer helper, accepted decoder source unchanged')
+                symbols['routed_pointer_step']=int(helper[0],16)
             if args.console_reader_proof and args.console_line_proof:
                 # LLVM may inline the accepted extraction into the Rust reader.
                 # Identify its real memcpy call through the ELF-resolved GOT,

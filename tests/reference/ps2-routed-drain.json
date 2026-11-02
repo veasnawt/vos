@@ -1,0 +1,7 @@
+{
+  "baseline": "f6e9603865a935e6624d45910fae4582f7b4acbf",
+  "source": "arch/x86_64/keyboard.c",
+  "accepted_source_sha256": "3459345b0ef745eebb1d4e445a155df1c0c6b9e5be4806fd9229d0af160ddde6",
+  "reference_sha256": "d90c9f1063ac65515ca6f3482a149c0cc85482203a7cf40646d64ac74e967d42",
+  "transformation": "Exact accepted file plus test-only wrapper. Compile public APIs with _reference names; existing Rust decoders shared unchanged."
+}

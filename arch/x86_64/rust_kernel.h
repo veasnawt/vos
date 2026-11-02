@@ -3,6 +3,12 @@
 #define VOS_X86_64_RUST_KERNEL_H
 #include <stdint.h>
 
+struct keyboard;
+/* R2 private synchronous driver bridge. Same thread/IF=0 ownership as
+ * keyboard_poll; valid initialized keyboard and read callback required.
+ * No Rust borrow spans the C io->in callback; no port writes or allocation. */
+void vos_rust_keyboard_routed_drain(struct keyboard *keyboard);
+
 uint64_t vos_rust_probe(uint64_t seed, uint64_t salt);
 /* R1: exactly 0 or 1; valid iff off <= size && len <= size - off. */
 int vos_rust_elf_inside(uint64_t size, uint64_t off, uint64_t len);
