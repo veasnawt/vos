@@ -1,0 +1,985 @@
+{
+  "status": "PASS",
+  "commands": [
+    {
+      "argv": [
+        "gcc",
+        "-std=gnu11",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-Iarch/x86_64",
+        "-ffunction-sections",
+        "-fdata-sections",
+        "-Wl,--gc-sections",
+        "-fno-pie",
+        "-no-pie",
+        "-O1",
+        "-g",
+        "-fsanitize=address,undefined",
+        "-fno-sanitize-recover=all",
+        "-fno-omit-frame-pointer",
+        "-Dinput_console_read_line_for=input_console_read_line_for_reference",
+        "-c",
+        "tests/reference/input-console-reader.c",
+        "-o",
+        "/home/veasnawt/src/vos-r2-console-reader/build/reader-hosted/sanitizer-reference.o"
+      ],
+      "log": "sanitizer-reference-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "gcc",
+        "-std=gnu11",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-Iarch/x86_64",
+        "-ffunction-sections",
+        "-fdata-sections",
+        "-Wl,--gc-sections",
+        "-fno-pie",
+        "-no-pie",
+        "-O1",
+        "-g",
+        "-fsanitize=address,undefined",
+        "-fno-sanitize-recover=all",
+        "-fno-omit-frame-pointer",
+        "tests/host/console-reader-differential.c",
+        "/home/veasnawt/src/vos-r2-console-reader/build/reader-hosted/sanitizer-reference.o",
+        "/home/veasnawt/src/vos-r2-console-reader/build/candidate/rust/libvos_kernel.a",
+        "-o",
+        "/home/veasnawt/src/vos-r2-console-reader/build/reader-hosted/sanitizer-differential"
+      ],
+      "log": "sanitizer-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/home/veasnawt/src/vos-r2-console-reader/build/reader-hosted/sanitizer-differential"
+      ],
+      "log": "sanitizer.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "gcc",
+        "-std=gnu11",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-Iarch/x86_64",
+        "-ffunction-sections",
+        "-fdata-sections",
+        "-Wl,--gc-sections",
+        "-fno-pie",
+        "-no-pie",
+        "-O2",
+        "-ffreestanding",
+        "-fno-builtin",
+        "-fno-stack-protector",
+        "-mgeneral-regs-only",
+        "-mno-red-zone",
+        "-fcf-protection=none",
+        "-fno-stack-clash-protection",
+        "-Dinput_console_read_line_for=input_console_read_line_for_reference",
+        "-c",
+        "tests/reference/input-console-reader.c",
+        "-o",
+        "/home/veasnawt/src/vos-r2-console-reader/build/reader-hosted/release-reference.o"
+      ],
+      "log": "release-reference-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "gcc",
+        "-std=gnu11",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-Iarch/x86_64",
+        "-ffunction-sections",
+        "-fdata-sections",
+        "-Wl,--gc-sections",
+        "-fno-pie",
+        "-no-pie",
+        "-O2",
+        "-ffreestanding",
+        "-fno-builtin",
+        "-fno-stack-protector",
+        "-mno-red-zone",
+        "-fcf-protection=none",
+        "-fno-stack-clash-protection",
+        "tests/host/console-reader-differential.c",
+        "/home/veasnawt/src/vos-r2-console-reader/build/reader-hosted/release-reference.o",
+        "/home/veasnawt/src/vos-r2-console-reader/build/candidate/rust/libvos_kernel.a",
+        "-o",
+        "/home/veasnawt/src/vos-r2-console-reader/build/reader-hosted/release-differential"
+      ],
+      "log": "release-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/home/veasnawt/src/vos-r2-console-reader/build/reader-hosted/release-differential"
+      ],
+      "log": "release.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "taskset",
+        "-c",
+        "0",
+        "/home/veasnawt/src/vos-r2-console-reader/build/reader-hosted/release-differential",
+        "--bench"
+      ],
+      "log": "performance.csv",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Coverflow-checks=yes",
+        "--crate-type=rlib",
+        "--crate-name=console_reader_core",
+        "/home/veasnawt/src/vos-r2-console-reader/build/reader-hosted/core-root.rs",
+        "-o",
+        "/home/veasnawt/src/vos-r2-console-reader/build/reader-hosted/libconsole_reader_core.rlib"
+      ],
+      "log": "core-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Coverflow-checks=yes",
+        "--test",
+        "-Cstrip=symbols",
+        "--extern",
+        "console_reader_core=/home/veasnawt/src/vos-r2-console-reader/build/reader-hosted/libconsole_reader_core.rlib",
+        "tests/rust/console_reader.rs",
+        "-o",
+        "/home/veasnawt/src/vos-r2-console-reader/build/reader-hosted/core-tests"
+      ],
+      "log": "core-tests-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/home/veasnawt/src/vos-r2-console-reader/build/reader-hosted/core-tests",
+        "--test-threads=1"
+      ],
+      "log": "core-tests.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Coverflow-checks=yes",
+        "--crate-type=rlib",
+        "--crate-name=console_reader_core",
+        "/home/veasnawt/src/vos-r2-console-reader/build/reader-hosted/mutant-admission/root.rs",
+        "-o",
+        "/home/veasnawt/src/vos-r2-console-reader/build/reader-hosted/mutant-admission/libconsole_reader_core.rlib"
+      ],
+      "log": "mutant-admission-core-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Coverflow-checks=yes",
+        "--test",
+        "-Cstrip=symbols",
+        "--extern",
+        "console_reader_core=/home/veasnawt/src/vos-r2-console-reader/build/reader-hosted/mutant-admission/libconsole_reader_core.rlib",
+        "tests/rust/console_reader.rs",
+        "-o",
+        "/home/veasnawt/src/vos-r2-console-reader/build/reader-hosted/mutant-admission/tests"
+      ],
+      "log": "mutant-admission-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/home/veasnawt/src/vos-r2-console-reader/build/reader-hosted/mutant-admission/tests",
+        "--test-threads=1",
+        "unavailable_precedence"
+      ],
+      "log": "mutant-admission.txt",
+      "exit_code": 101
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Coverflow-checks=yes",
+        "--crate-type=rlib",
+        "--crate-name=console_reader_core",
+        "/home/veasnawt/src/vos-r2-console-reader/build/reader-hosted/mutant-capacity/root.rs",
+        "-o",
+        "/home/veasnawt/src/vos-r2-console-reader/build/reader-hosted/mutant-capacity/libconsole_reader_core.rlib"
+      ],
+      "log": "mutant-capacity-core-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Coverflow-checks=yes",
+        "--test",
+        "-Cstrip=symbols",
+        "--extern",
+        "console_reader_core=/home/veasnawt/src/vos-r2-console-reader/build/reader-hosted/mutant-capacity/libconsole_reader_core.rlib",
+        "tests/rust/console_reader.rs",
+        "-o",
+        "/home/veasnawt/src/vos-r2-console-reader/build/reader-hosted/mutant-capacity/tests"
+      ],
+      "log": "mutant-capacity-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/home/veasnawt/src/vos-r2-console-reader/build/reader-hosted/mutant-capacity/tests",
+        "--test-threads=1",
+        "capacity_boundary"
+      ],
+      "log": "mutant-capacity.txt",
+      "exit_code": 101
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Coverflow-checks=yes",
+        "--crate-type=rlib",
+        "--crate-name=console_reader_core",
+        "/home/veasnawt/src/vos-r2-console-reader/build/reader-hosted/mutant-initialize/root.rs",
+        "-o",
+        "/home/veasnawt/src/vos-r2-console-reader/build/reader-hosted/mutant-initialize/libconsole_reader_core.rlib"
+      ],
+      "log": "mutant-initialize-core-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Coverflow-checks=yes",
+        "--test",
+        "-Cstrip=symbols",
+        "--extern",
+        "console_reader_core=/home/veasnawt/src/vos-r2-console-reader/build/reader-hosted/mutant-initialize/libconsole_reader_core.rlib",
+        "tests/rust/console_reader.rs",
+        "-o",
+        "/home/veasnawt/src/vos-r2-console-reader/build/reader-hosted/mutant-initialize/tests"
+      ],
+      "log": "mutant-initialize-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/home/veasnawt/src/vos-r2-console-reader/build/reader-hosted/mutant-initialize/tests",
+        "--test-threads=1",
+        "initialization"
+      ],
+      "log": "mutant-initialize.txt",
+      "exit_code": 101
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Coverflow-checks=yes",
+        "--crate-type=rlib",
+        "--crate-name=console_reader_core",
+        "/home/veasnawt/src/vos-r2-console-reader/build/reader-hosted/mutant-initial-prompt/root.rs",
+        "-o",
+        "/home/veasnawt/src/vos-r2-console-reader/build/reader-hosted/mutant-initial-prompt/libconsole_reader_core.rlib"
+      ],
+      "log": "mutant-initial-prompt-core-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Coverflow-checks=yes",
+        "--test",
+        "-Cstrip=symbols",
+        "--extern",
+        "console_reader_core=/home/veasnawt/src/vos-r2-console-reader/build/reader-hosted/mutant-initial-prompt/libconsole_reader_core.rlib",
+        "tests/rust/console_reader.rs",
+        "-o",
+        "/home/veasnawt/src/vos-r2-console-reader/build/reader-hosted/mutant-initial-prompt/tests"
+      ],
+      "log": "mutant-initial-prompt-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/home/veasnawt/src/vos-r2-console-reader/build/reader-hosted/mutant-initial-prompt/tests",
+        "--test-threads=1",
+        "initialization"
+      ],
+      "log": "mutant-initial-prompt.txt",
+      "exit_code": 101
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Coverflow-checks=yes",
+        "--crate-type=rlib",
+        "--crate-name=console_reader_core",
+        "/home/veasnawt/src/vos-r2-console-reader/build/reader-hosted/mutant-cancel/root.rs",
+        "-o",
+        "/home/veasnawt/src/vos-r2-console-reader/build/reader-hosted/mutant-cancel/libconsole_reader_core.rlib"
+      ],
+      "log": "mutant-cancel-core-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Coverflow-checks=yes",
+        "--test",
+        "-Cstrip=symbols",
+        "--extern",
+        "console_reader_core=/home/veasnawt/src/vos-r2-console-reader/build/reader-hosted/mutant-cancel/libconsole_reader_core.rlib",
+        "tests/rust/console_reader.rs",
+        "-o",
+        "/home/veasnawt/src/vos-r2-console-reader/build/reader-hosted/mutant-cancel/tests"
+      ],
+      "log": "mutant-cancel-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/home/veasnawt/src/vos-r2-console-reader/build/reader-hosted/mutant-cancel/tests",
+        "--test-threads=1",
+        "cancel_before_poll"
+      ],
+      "log": "mutant-cancel.txt",
+      "exit_code": 101
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Coverflow-checks=yes",
+        "--crate-type=rlib",
+        "--crate-name=console_reader_core",
+        "/home/veasnawt/src/vos-r2-console-reader/build/reader-hosted/mutant-poll-before-cancel/root.rs",
+        "-o",
+        "/home/veasnawt/src/vos-r2-console-reader/build/reader-hosted/mutant-poll-before-cancel/libconsole_reader_core.rlib"
+      ],
+      "log": "mutant-poll-before-cancel-core-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Coverflow-checks=yes",
+        "--test",
+        "-Cstrip=symbols",
+        "--extern",
+        "console_reader_core=/home/veasnawt/src/vos-r2-console-reader/build/reader-hosted/mutant-poll-before-cancel/libconsole_reader_core.rlib",
+        "tests/rust/console_reader.rs",
+        "-o",
+        "/home/veasnawt/src/vos-r2-console-reader/build/reader-hosted/mutant-poll-before-cancel/tests"
+      ],
+      "log": "mutant-poll-before-cancel-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/home/veasnawt/src/vos-r2-console-reader/build/reader-hosted/mutant-poll-before-cancel/tests",
+        "--test-threads=1",
+        "cancel_before_poll"
+      ],
+      "log": "mutant-poll-before-cancel.txt",
+      "exit_code": 101
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Coverflow-checks=yes",
+        "--crate-type=rlib",
+        "--crate-name=console_reader_core",
+        "/home/veasnawt/src/vos-r2-console-reader/build/reader-hosted/mutant-success-sleep/root.rs",
+        "-o",
+        "/home/veasnawt/src/vos-r2-console-reader/build/reader-hosted/mutant-success-sleep/libconsole_reader_core.rlib"
+      ],
+      "log": "mutant-success-sleep-core-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Coverflow-checks=yes",
+        "--test",
+        "-Cstrip=symbols",
+        "--extern",
+        "console_reader_core=/home/veasnawt/src/vos-r2-console-reader/build/reader-hosted/mutant-success-sleep/libconsole_reader_core.rlib",
+        "tests/rust/console_reader.rs",
+        "-o",
+        "/home/veasnawt/src/vos-r2-console-reader/build/reader-hosted/mutant-success-sleep/tests"
+      ],
+      "log": "mutant-success-sleep-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/home/veasnawt/src/vos-r2-console-reader/build/reader-hosted/mutant-success-sleep/tests",
+        "--test-threads=1",
+        "success_no_sleep"
+      ],
+      "log": "mutant-success-sleep.txt",
+      "exit_code": 101
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Coverflow-checks=yes",
+        "--crate-type=rlib",
+        "--crate-name=console_reader_core",
+        "/home/veasnawt/src/vos-r2-console-reader/build/reader-hosted/mutant-overflow-result/root.rs",
+        "-o",
+        "/home/veasnawt/src/vos-r2-console-reader/build/reader-hosted/mutant-overflow-result/libconsole_reader_core.rlib"
+      ],
+      "log": "mutant-overflow-result-core-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Coverflow-checks=yes",
+        "--test",
+        "-Cstrip=symbols",
+        "--extern",
+        "console_reader_core=/home/veasnawt/src/vos-r2-console-reader/build/reader-hosted/mutant-overflow-result/libconsole_reader_core.rlib",
+        "tests/rust/console_reader.rs",
+        "-o",
+        "/home/veasnawt/src/vos-r2-console-reader/build/reader-hosted/mutant-overflow-result/tests"
+      ],
+      "log": "mutant-overflow-result-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/home/veasnawt/src/vos-r2-console-reader/build/reader-hosted/mutant-overflow-result/tests",
+        "--test-threads=1",
+        "overflow_recovery"
+      ],
+      "log": "mutant-overflow-result.txt",
+      "exit_code": 101
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Coverflow-checks=yes",
+        "--crate-type=rlib",
+        "--crate-name=console_reader_core",
+        "/home/veasnawt/src/vos-r2-console-reader/build/reader-hosted/mutant-overlong-message/root.rs",
+        "-o",
+        "/home/veasnawt/src/vos-r2-console-reader/build/reader-hosted/mutant-overlong-message/libconsole_reader_core.rlib"
+      ],
+      "log": "mutant-overlong-message-core-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Coverflow-checks=yes",
+        "--test",
+        "-Cstrip=symbols",
+        "--extern",
+        "console_reader_core=/home/veasnawt/src/vos-r2-console-reader/build/reader-hosted/mutant-overlong-message/libconsole_reader_core.rlib",
+        "tests/rust/console_reader.rs",
+        "-o",
+        "/home/veasnawt/src/vos-r2-console-reader/build/reader-hosted/mutant-overlong-message/tests"
+      ],
+      "log": "mutant-overlong-message-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/home/veasnawt/src/vos-r2-console-reader/build/reader-hosted/mutant-overlong-message/tests",
+        "--test-threads=1",
+        "overflow_recovery"
+      ],
+      "log": "mutant-overlong-message.txt",
+      "exit_code": 101
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Coverflow-checks=yes",
+        "--crate-type=rlib",
+        "--crate-name=console_reader_core",
+        "/home/veasnawt/src/vos-r2-console-reader/build/reader-hosted/mutant-reprompt/root.rs",
+        "-o",
+        "/home/veasnawt/src/vos-r2-console-reader/build/reader-hosted/mutant-reprompt/libconsole_reader_core.rlib"
+      ],
+      "log": "mutant-reprompt-core-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Coverflow-checks=yes",
+        "--test",
+        "-Cstrip=symbols",
+        "--extern",
+        "console_reader_core=/home/veasnawt/src/vos-r2-console-reader/build/reader-hosted/mutant-reprompt/libconsole_reader_core.rlib",
+        "tests/rust/console_reader.rs",
+        "-o",
+        "/home/veasnawt/src/vos-r2-console-reader/build/reader-hosted/mutant-reprompt/tests"
+      ],
+      "log": "mutant-reprompt-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/home/veasnawt/src/vos-r2-console-reader/build/reader-hosted/mutant-reprompt/tests",
+        "--test-threads=1",
+        "overflow_recovery"
+      ],
+      "log": "mutant-reprompt.txt",
+      "exit_code": 101
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Coverflow-checks=yes",
+        "--crate-type=rlib",
+        "--crate-name=console_reader_core",
+        "/home/veasnawt/src/vos-r2-console-reader/build/reader-hosted/mutant-sleep/root.rs",
+        "-o",
+        "/home/veasnawt/src/vos-r2-console-reader/build/reader-hosted/mutant-sleep/libconsole_reader_core.rlib"
+      ],
+      "log": "mutant-sleep-core-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Coverflow-checks=yes",
+        "--test",
+        "-Cstrip=symbols",
+        "--extern",
+        "console_reader_core=/home/veasnawt/src/vos-r2-console-reader/build/reader-hosted/mutant-sleep/libconsole_reader_core.rlib",
+        "tests/rust/console_reader.rs",
+        "-o",
+        "/home/veasnawt/src/vos-r2-console-reader/build/reader-hosted/mutant-sleep/tests"
+      ],
+      "log": "mutant-sleep-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/home/veasnawt/src/vos-r2-console-reader/build/reader-hosted/mutant-sleep/tests",
+        "--test-threads=1",
+        "pending_wait"
+      ],
+      "log": "mutant-sleep.txt",
+      "exit_code": 101
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Coverflow-checks=yes",
+        "--crate-type=rlib",
+        "--crate-name=console_reader_core",
+        "/home/veasnawt/src/vos-r2-console-reader/build/reader-hosted/mutant-return-result/root.rs",
+        "-o",
+        "/home/veasnawt/src/vos-r2-console-reader/build/reader-hosted/mutant-return-result/libconsole_reader_core.rlib"
+      ],
+      "log": "mutant-return-result-core-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Coverflow-checks=yes",
+        "--test",
+        "-Cstrip=symbols",
+        "--extern",
+        "console_reader_core=/home/veasnawt/src/vos-r2-console-reader/build/reader-hosted/mutant-return-result/libconsole_reader_core.rlib",
+        "tests/rust/console_reader.rs",
+        "-o",
+        "/home/veasnawt/src/vos-r2-console-reader/build/reader-hosted/mutant-return-result/tests"
+      ],
+      "log": "mutant-return-result-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/home/veasnawt/src/vos-r2-console-reader/build/reader-hosted/mutant-return-result/tests",
+        "--test-threads=1",
+        "empty_success"
+      ],
+      "log": "mutant-return-result.txt",
+      "exit_code": 101
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Coverflow-checks=yes",
+        "--crate-type=lib",
+        "-Cpanic=abort",
+        "--emit=obj",
+        "/home/veasnawt/src/vos-r2-console-reader/build/reader-hosted/ffi-root.rs",
+        "-o",
+        "/home/veasnawt/src/vos-r2-console-reader/build/reader-hosted/host-ffi.o"
+      ],
+      "log": "overflow-ffi-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "gcc",
+        "-std=gnu11",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-Iarch/x86_64",
+        "-ffunction-sections",
+        "-fdata-sections",
+        "-Wl,--gc-sections",
+        "-fno-pie",
+        "-no-pie",
+        "-O1",
+        "-g",
+        "-fsanitize=address,undefined",
+        "-fno-sanitize-recover=all",
+        "tests/host/console-reader-differential.c",
+        "/home/veasnawt/src/vos-r2-console-reader/build/reader-hosted/sanitizer-reference.o",
+        "/home/veasnawt/src/vos-r2-console-reader/build/reader-hosted/host-ffi.o",
+        "-o",
+        "/home/veasnawt/src/vos-r2-console-reader/build/reader-hosted/overflow-differential"
+      ],
+      "log": "overflow-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/home/veasnawt/src/vos-r2-console-reader/build/reader-hosted/overflow-differential"
+      ],
+      "log": "overflow.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Coverflow-checks=yes",
+        "--crate-type=lib",
+        "--target=x86_64-unknown-none",
+        "-Cpanic=abort",
+        "-Ccode-model=kernel",
+        "-Crelocation-model=static",
+        "-Cno-redzone=yes",
+        "-Cforce-unwind-tables=no",
+        "-Zemit-stack-sizes",
+        "--emit=obj",
+        "/home/veasnawt/src/vos-r2-console-reader/build/reader-hosted/ffi-root.rs",
+        "-o",
+        "/home/veasnawt/src/vos-r2-console-reader/build/reader-hosted/target-ffi.o"
+      ],
+      "log": "target-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "nm",
+        "-u",
+        "/home/veasnawt/src/vos-r2-console-reader/build/reader-hosted/target-ffi.o"
+      ],
+      "log": "target-undefined.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "size",
+        "-A",
+        "/home/veasnawt/src/vos-r2-console-reader/build/reader-hosted/target-ffi.o"
+      ],
+      "log": "target-size.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "objdump",
+        "-dr",
+        "/home/veasnawt/src/vos-r2-console-reader/build/reader-hosted/target-ffi.o"
+      ],
+      "log": "target-disassembly.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "objdump",
+        "-dr",
+        "/home/veasnawt/src/vos-r2-console-reader/build/reader-hosted/release-reference.o"
+      ],
+      "log": "C-release-disassembly.txt",
+      "exit_code": 0
+    }
+  ],
+  "Rust_sanitized": false,
+  "archive_sha256": "78103977cbcfd5fa2b22b79e0ea48d97ad7d4b24069ae9b2dd241f0b61811d8b",
+  "seed": "c0a2d5e720261102",
+  "source_sha256": {
+    "kernel/rust/input/console_reader.rs": "56d2f3fea114c6471b8628ce8df0dd73e41da9357393891dc5bd5dbe1d67f73f",
+    "arch/x86_64/rust/console_reader.rs": "e7449de4d4d72e9ebfdfd88c114514f0d4f10ae2d6b0490635a64568372995a4",
+    "arch/x86_64/input_console.c": "c675847e56ba380b07a58d2248d8c656405ec9557d62af208aab47cba4ed3ac5",
+    "arch/x86_64/input_console.h": "6c15e09bb182334f8bf0f5637b6857b44d2d148fd6ff20e896c7680bf6c4f119",
+    "tests/reference/input-console-reader.c": "3ea2dd0e88a721bce5fb843466009e5027c554dc3deff8bc83f24f104f761e95",
+    "tests/host/console-reader-differential.c": "ca9a6ab6d38bab9fbc7d80020258589dedf2f68d200c92e6b925216d6e6e54e6",
+    "tests/rust/console_reader.rs": "1b47ad7f6ac04fb6bb999459ecd3a184d24be447c2e311d7cb83ff5f3b20086b"
+  },
+  "sanitizer": "ABI/guard PASS: keyboard88/ready16, editor144, null/wrap, exact129-byte output edge\ndifferential PASS: 422096 cases; exhaustive lengths/capacity/readiness/null/cancellation, all input bytes, random streams seed=c0a2d5e720261102\n",
+  "release": "ABI/guard PASS: keyboard88/ready16, editor144, null/wrap, exact129-byte output edge\ndifferential PASS: 422096 cases; exhaustive lengths/capacity/readiness/null/cancellation, all input bytes, random streams seed=c0a2d5e720261102\n",
+  "performance": {
+    "medians": {
+      "empty": {
+        "C_ns": 34.1406,
+        "Rust_ns": 62.9672,
+        "ratio": 1.8443495427731205,
+        "investigation_required": true
+      },
+      "idle16": {
+        "C_ns": 121.5851,
+        "Rust_ns": 149.9508,
+        "ratio": 1.233299146030229,
+        "investigation_required": true
+      },
+      "initial-cancel": {
+        "C_ns": 17.0023,
+        "Rust_ns": 46.4312,
+        "ratio": 2.7308775871499735,
+        "investigation_required": true
+      },
+      "maximum": {
+        "C_ns": 962.4078,
+        "Rust_ns": 956.2289,
+        "ratio": 0.9935797486263099,
+        "investigation_required": false
+      },
+      "mid-cancel": {
+        "C_ns": 23.5359,
+        "Rust_ns": 52.0461,
+        "ratio": 2.2113494703835417,
+        "investigation_required": true
+      },
+      "nospace": {
+        "C_ns": 2.8742,
+        "Rust_ns": 4.2016,
+        "ratio": 1.461832857838703,
+        "investigation_required": true
+      },
+      "overflow-retry": {
+        "C_ns": 980.4297,
+        "Rust_ns": 1004.0422,
+        "ratio": 1.0240838277339006,
+        "investigation_required": false
+      },
+      "short16": {
+        "C_ns": 151.55,
+        "Rust_ns": 202.1164,
+        "ratio": 1.333661497855493,
+        "investigation_required": true
+      },
+      "unavailable": {
+        "C_ns": 2.9383,
+        "Rust_ns": 4.2859,
+        "ratio": 1.4586325426266888,
+        "investigation_required": true
+      }
+    },
+    "method": "9 alternating-order samples, 2000 batches x64 calls; 10 warm-up batches; identical scripted counters reset inside each timed call; fresh private editor initialization included; monotonic clock aggregate, common timing overhead retained; CPU affinity; production Rust archive vs O2 integer-only freestanding C oracle",
+    "scope": "hosted function-call latency/throughput, not BIOS/UEFI runtime timing",
+    "raw": "performance.csv",
+    "C_release_flags": [
+      "-O2",
+      "-ffreestanding",
+      "-fno-builtin",
+      "-fno-stack-protector",
+      "-mgeneral-regs-only",
+      "-mno-red-zone",
+      "-fcf-protection=none",
+      "-fno-stack-clash-protection"
+    ],
+    "acceptance": "EXPLICIT_REVIEW_REQUIRED_FOR_REMAINING_REGRESSIONS"
+  },
+  "core_tests": "\nrunning 12 tests\ntest cancel_before_poll ... ok\ntest capacity_boundary ... ok\ntest empty_success ... ok\ntest error_propagation ... ok\ntest initialization ... ok\ntest mid_wait_cancel ... ok\ntest null_output ... ok\ntest overflow_recovery ... ok\ntest pending_wait ... ok\ntest prompt_before_cancel ... ok\ntest success_no_sleep ... ok\ntest unavailable_precedence ... ok\n\ntest result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n",
+  "mutations": {
+    "admission": {
+      "assertion": "unavailable_precedence",
+      "detected": true
+    },
+    "capacity": {
+      "assertion": "capacity_boundary",
+      "detected": true
+    },
+    "initialize": {
+      "assertion": "initialization",
+      "detected": true
+    },
+    "initial-prompt": {
+      "assertion": "initialization",
+      "detected": true
+    },
+    "cancel": {
+      "assertion": "cancel_before_poll",
+      "detected": true
+    },
+    "poll-before-cancel": {
+      "assertion": "cancel_before_poll",
+      "detected": true
+    },
+    "success-sleep": {
+      "assertion": "success_no_sleep",
+      "detected": true
+    },
+    "overflow-result": {
+      "assertion": "overflow_recovery",
+      "detected": true
+    },
+    "overlong-message": {
+      "assertion": "overflow_recovery",
+      "detected": true
+    },
+    "reprompt": {
+      "assertion": "overflow_recovery",
+      "detected": true
+    },
+    "sleep": {
+      "assertion": "pending_wait",
+      "detected": true
+    },
+    "return-result": {
+      "assertion": "empty_success",
+      "detected": true
+    }
+  },
+  "overflow_ffi": "ABI/guard PASS: keyboard88/ready16, editor144, null/wrap, exact129-byte output edge\ndifferential PASS: 422096 cases; exhaustive lengths/capacity/readiness/null/cancellation, all input bytes, random streams seed=c0a2d5e720261102\n",
+  "stack_frames": {
+    "input_console_accept": 8,
+    "input_console_read_line_for": 200,
+    "input_console_take_line": 0
+  },
+  "undefined": "                 U console_erase_previous\n                 U keyboard_poll\n                 U memcpy\n                 U memset\n                 U serial_putc\n                 U serial_puts\n                 U thread_sleep\n",
+  "sections": "/home/veasnawt/src/vos-r2-console-reader/build/reader-hosted/target-ffi.o  :\nsection                             size   addr\n.text                                  0      0\n.text.input_console_accept           176      0\n.stack_sizes                           9      0\n.text.input_console_read_line_for    378      0\n.stack_sizes                          10      0\n.text.input_console_take_line        255      0\n.stack_sizes                           9      0\n.rodata.str1.1                        62      0\n.comment                              54      0\n.note.GNU-stack                        0      0\nTotal                                953\n\n\n",
+  "disassembly": "\n/home/veasnawt/src/vos-r2-console-reader/build/reader-hosted/target-ffi.o:     file format elf64-x86-64\n\n\nDisassembly of section .text.input_console_accept:\n\n0000000000000000 <input_console_accept>:\n   0:\t53                   \tpush   %rbx\n   1:\t40 84 f6             \ttest   %sil,%sil\n   4:\t0f 95 c0             \tsetne  %al\n   7:\t48 8d 8f 90 00 00 00 \tlea    0x90(%rdi),%rcx\n   e:\t48 81 f9 91 00 00 00 \tcmp    $0x91,%rcx\n  15:\t0f 93 c1             \tsetae  %cl\n  18:\t84 c8                \ttest   %cl,%al\n  1a:\t74 09                \tje     25 <input_console_accept+0x25>\n  1c:\t83 bf 88 00 00 00 00 \tcmpl   $0x0,0x88(%rdi)\n  23:\t74 02                \tje     27 <input_console_accept+0x27>\n  25:\t5b                   \tpop    %rbx\n  26:\tc3                   \tret\n  27:\t40 0f be c6          \tmovsbl %sil,%eax\n  2b:\t83 f8 08             \tcmp    $0x8,%eax\n  2e:\t74 20                \tje     50 <input_console_accept+0x50>\n  30:\t83 f8 0a             \tcmp    $0xa,%eax\n  33:\t75 3f                \tjne    74 <input_console_accept+0x74>\n  35:\t48 89 fb             \tmov    %rdi,%rbx\n  38:\t48 c7 c7 00 00 00 00 \tmov    $0x0,%rdi\n\t\t\t3b: R_X86_64_32S\t.rodata.str1.1\n  3f:\te8 00 00 00 00       \tcall   44 <input_console_accept+0x44>\n\t\t\t40: R_X86_64_PLT32\tserial_puts-0x4\n  44:\tc7 83 88 00 00 00 01 \tmovl   $0x1,0x88(%rbx)\n  4b:\t00 00 00 \n  4e:\t5b                   \tpop    %rbx\n  4f:\tc3                   \tret\n  50:\t83 3f 00             \tcmpl   $0x0,(%rdi)\n  53:\t74 d0                \tje     25 <input_console_accept+0x25>\n  55:\t48 89 fb             \tmov    %rdi,%rbx\n  58:\te8 00 00 00 00       \tcall   5d <input_console_accept+0x5d>\n\t\t\t59: R_X86_64_PLT32\tconsole_erase_previous-0x4\n  5d:\t8b 0b                \tmov    (%rbx),%ecx\n  5f:\tff c9                \tdec    %ecx\n  61:\t81 f9 80 00 00 00    \tcmp    $0x80,%ecx\n  67:\t77 bc                \tja     25 <input_console_accept+0x25>\n  69:\t89 0b                \tmov    %ecx,(%rbx)\n  6b:\t89 c9                \tmov    %ecx,%ecx\n  6d:\tc6 44 0b 04 00       \tmovb   $0x0,0x4(%rbx,%rcx,1)\n  72:\t5b                   \tpop    %rbx\n  73:\tc3                   \tret\n  74:\t8d 4e e0             \tlea    -0x20(%rsi),%ecx\n  77:\t80 f9 5f             \tcmp    $0x5f,%cl\n  7a:\t73 a9                \tjae    25 <input_console_accept+0x25>\n  7c:\t8b 0f                \tmov    (%rdi),%ecx\n  7e:\t48 81 f9 80 00 00 00 \tcmp    $0x80,%rcx\n  85:\t75 0c                \tjne    93 <input_console_accept+0x93>\n  87:\tc7 87 8c 00 00 00 01 \tmovl   $0x1,0x8c(%rdi)\n  8e:\t00 00 00 \n  91:\t5b                   \tpop    %rbx\n  92:\tc3                   \tret\n  93:\t83 f9 7f             \tcmp    $0x7f,%ecx\n  96:\t77 8d                \tja     25 <input_console_accept+0x25>\n  98:\t48 8d 51 01          \tlea    0x1(%rcx),%rdx\n  9c:\t89 17                \tmov    %edx,(%rdi)\n  9e:\t40 88 74 0f 04       \tmov    %sil,0x4(%rdi,%rcx,1)\n  a3:\tc6 44 0f 05 00       \tmovb   $0x0,0x5(%rdi,%rcx,1)\n  a8:\t89 c7                \tmov    %eax,%edi\n  aa:\t5b                   \tpop    %rbx\n  ab:\te9 00 00 00 00       \tjmp    b0 <input_console_accept+0xb0>\n\t\t\tac: R_X86_64_PLT32\tserial_putc-0x4\n\nDisassembly of section .text.input_console_read_line_for:\n\n0000000000000000 <input_console_read_line_for>:\n   0:\t55                   \tpush   %rbp\n   1:\t41 57                \tpush   %r15\n   3:\t41 56                \tpush   %r14\n   5:\t41 55                \tpush   %r13\n   7:\t41 54                \tpush   %r12\n   9:\t53                   \tpush   %rbx\n   a:\t48 81 ec 98 00 00 00 \tsub    $0x98,%rsp\n  11:\t49 89 cc             \tmov    %rcx,%r12\n  14:\t48 8d 4f 14          \tlea    0x14(%rdi),%rcx\n  18:\tb8 fc ff ff ff       \tmov    $0xfffffffc,%eax\n  1d:\t48 83 f9 15          \tcmp    $0x15,%rcx\n  21:\t0f 82 29 01 00 00    \tjb     150 <input_console_read_line_for+0x150>\n  27:\t49 89 fd             \tmov    %rdi,%r13\n  2a:\t83 7f 10 00          \tcmpl   $0x0,0x10(%rdi)\n  2e:\t0f 84 1c 01 00 00    \tje     150 <input_console_read_line_for+0x150>\n  34:\t48 85 f6             \ttest   %rsi,%rsi\n  37:\t0f 94 c0             \tsete   %al\n  3a:\t81 fa 81 00 00 00    \tcmp    $0x81,%edx\n  40:\t0f 92 c1             \tsetb   %cl\n  43:\t08 c1                \tor     %al,%cl\n  45:\tb8 fe ff ff ff       \tmov    $0xfffffffe,%eax\n  4a:\t0f 85 00 01 00 00    \tjne    150 <input_console_read_line_for+0x150>\n  50:\t4d 89 ce             \tmov    %r9,%r14\n  53:\t4d 89 c7             \tmov    %r8,%r15\n  56:\t48 89 34 24          \tmov    %rsi,(%rsp)\n  5a:\t48 8d 5c 24 08       \tlea    0x8(%rsp),%rbx\n  5f:\tba 90 00 00 00       \tmov    $0x90,%edx\n  64:\t48 89 df             \tmov    %rbx,%rdi\n  67:\t31 f6                \txor    %esi,%esi\n  69:\tff 15 00 00 00 00    \tcall   *0x0(%rip)        # 6f <input_console_read_line_for+0x6f>\n\t\t\t6b: R_X86_64_GOTPCREL\tmemset-0x4\n  6f:\t4c 89 e7             \tmov    %r12,%rdi\n  72:\te8 00 00 00 00       \tcall   77 <input_console_read_line_for+0x77>\n\t\t\t73: R_X86_64_PLT32\tserial_puts-0x4\n  77:\t48 8d ac 24 98 00 00 \tlea    0x98(%rsp),%rbp\n  7e:\t00 \n  7f:\teb 19                \tjmp    9a <input_console_read_line_for+0x9a>\n  81:\t66 66 66 66 66 66 2e \tdata16 data16 data16 data16 data16 cs nopw 0x0(%rax,%rax,1)\n  88:\t0f 1f 84 00 00 00 00 \n  8f:\t00 \n  90:\tbf 01 00 00 00       \tmov    $0x1,%edi\n  95:\te8 00 00 00 00       \tcall   9a <input_console_read_line_for+0x9a>\n\t\t\t96: R_X86_64_PLT32\tthread_sleep-0x4\n  9a:\t4d 85 ff             \ttest   %r15,%r15\n  9d:\t74 0a                \tje     a9 <input_console_read_line_for+0xa9>\n  9f:\t4c 89 f7             \tmov    %r14,%rdi\n  a2:\t41 ff d7             \tcall   *%r15\n  a5:\t85 c0                \ttest   %eax,%eax\n  a7:\t75 53                \tjne    fc <input_console_read_line_for+0xfc>\n  a9:\t4c 89 ef             \tmov    %r13,%rdi\n  ac:\te8 00 00 00 00       \tcall   b1 <input_console_read_line_for+0xb1>\n\t\t\tad: R_X86_64_PLT32\tkeyboard_poll-0x4\n  b1:\t0f be f0             \tmovsbl %al,%esi\n  b4:\t48 89 df             \tmov    %rbx,%rdi\n  b7:\te8 00 00 00 00       \tcall   bc <input_console_read_line_for+0xbc>\n\t\t\tb8: R_X86_64_PLT32\tinput_console_accept-0x4\n  bc:\t83 bc 24 90 00 00 00 \tcmpl   $0x0,0x90(%rsp)\n  c3:\t00 \n  c4:\t74 ca                \tje     90 <input_console_read_line_for+0x90>\n  c6:\t48 81 fd 91 00 00 00 \tcmp    $0x91,%rbp\n  cd:\t72 7c                \tjb     14b <input_console_read_line_for+0x14b>\n  cf:\t83 bc 24 94 00 00 00 \tcmpl   $0x0,0x94(%rsp)\n  d6:\t00 \n  d7:\t74 2a                \tje     103 <input_console_read_line_for+0x103>\n  d9:\tb9 12 00 00 00       \tmov    $0x12,%ecx\n  de:\t31 c0                \txor    %eax,%eax\n  e0:\t48 89 df             \tmov    %rbx,%rdi\n  e3:\tf3 48 ab             \trep stos %rax,(%rdi)\n  e6:\t48 c7 c7 00 00 00 00 \tmov    $0x0,%rdi\n\t\t\te9: R_X86_64_32S\t.rodata.str1.1+0x3\n  ed:\te8 00 00 00 00       \tcall   f2 <input_console_read_line_for+0xf2>\n\t\t\tee: R_X86_64_PLT32\tserial_puts-0x4\n  f2:\t4c 89 e7             \tmov    %r12,%rdi\n  f5:\te8 00 00 00 00       \tcall   fa <input_console_read_line_for+0xfa>\n\t\t\tf6: R_X86_64_PLT32\tserial_puts-0x4\n  fa:\teb 94                \tjmp    90 <input_console_read_line_for+0x90>\n  fc:\tb8 fb ff ff ff       \tmov    $0xfffffffb,%eax\n 101:\teb 4d                \tjmp    150 <input_console_read_line_for+0x150>\n 103:\t44 8b 74 24 08       \tmov    0x8(%rsp),%r14d\n 108:\t49 81 fe 80 00 00 00 \tcmp    $0x80,%r14\n 10f:\t77 3a                \tja     14b <input_console_read_line_for+0x14b>\n 111:\t49 8d 56 01          \tlea    0x1(%r14),%rdx\n 115:\t48 8b 3c 24          \tmov    (%rsp),%rdi\n 119:\t48 89 f8             \tmov    %rdi,%rax\n 11c:\t48 f7 d8             \tneg    %rax\n 11f:\t48 39 d0             \tcmp    %rdx,%rax\n 122:\tb8 fe ff ff ff       \tmov    $0xfffffffe,%eax\n 127:\t76 27                \tjbe    150 <input_console_read_line_for+0x150>\n 129:\t45 85 f6             \ttest   %r14d,%r14d\n 12c:\t74 34                \tje     162 <input_console_read_line_for+0x162>\n 12e:\t48 8d 74 24 0c       \tlea    0xc(%rsp),%rsi\n 133:\tff 15 00 00 00 00    \tcall   *0x0(%rip)        # 139 <input_console_read_line_for+0x139>\n\t\t\t135: R_X86_64_GOTPCREL\tmemcpy-0x4\n 139:\tb9 12 00 00 00       \tmov    $0x12,%ecx\n 13e:\t31 c0                \txor    %eax,%eax\n 140:\t48 89 df             \tmov    %rbx,%rdi\n 143:\tf3 48 ab             \trep stos %rax,(%rdi)\n 146:\t44 89 f0             \tmov    %r14d,%eax\n 149:\teb 05                \tjmp    150 <input_console_read_line_for+0x150>\n 14b:\tb8 fe ff ff ff       \tmov    $0xfffffffe,%eax\n 150:\t48 81 c4 98 00 00 00 \tadd    $0x98,%rsp\n 157:\t5b                   \tpop    %rbx\n 158:\t41 5c                \tpop    %r12\n 15a:\t41 5d                \tpop    %r13\n 15c:\t41 5e                \tpop    %r14\n 15e:\t41 5f                \tpop    %r15\n 160:\t5d                   \tpop    %rbp\n 161:\tc3                   \tret\n 162:\t0f b6 44 24 0c       \tmovzbl 0xc(%rsp),%eax\n 167:\t88 07                \tmov    %al,(%rdi)\n 169:\tb9 12 00 00 00       \tmov    $0x12,%ecx\n 16e:\t31 c0                \txor    %eax,%eax\n 170:\t48 89 df             \tmov    %rbx,%rdi\n 173:\tf3 48 ab             \trep stos %rax,(%rdi)\n 176:\t31 c0                \txor    %eax,%eax\n 178:\teb d6                \tjmp    150 <input_console_read_line_for+0x150>\n\nDisassembly of section .text.input_console_take_line:\n\n0000000000000000 <input_console_take_line>:\n   0:\t48 8d 8f 90 00 00 00 \tlea    0x90(%rdi),%rcx\n   7:\tb8 fe ff ff ff       \tmov    $0xfffffffe,%eax\n   c:\t48 81 f9 91 00 00 00 \tcmp    $0x91,%rcx\n  13:\t73 01                \tjae    16 <input_console_take_line+0x16>\n  15:\tc3                   \tret\n  16:\t83 bf 88 00 00 00 00 \tcmpl   $0x0,0x88(%rdi)\n  1d:\t74 19                \tje     38 <input_console_take_line+0x38>\n  1f:\t83 bf 8c 00 00 00 00 \tcmpl   $0x0,0x8c(%rdi)\n  26:\t74 16                \tje     3e <input_console_take_line+0x3e>\n  28:\tb9 12 00 00 00       \tmov    $0x12,%ecx\n  2d:\t31 c0                \txor    %eax,%eax\n  2f:\tf3 48 ab             \trep stos %rax,(%rdi)\n  32:\tb8 fd ff ff ff       \tmov    $0xfffffffd,%eax\n  37:\tc3                   \tret\n  38:\tb8 ff ff ff ff       \tmov    $0xffffffff,%eax\n  3d:\tc3                   \tret\n  3e:\t44 8b 07             \tmov    (%rdi),%r8d\n  41:\t81 fa 81 00 00 00    \tcmp    $0x81,%edx\n  47:\tb9 81 00 00 00       \tmov    $0x81,%ecx\n  4c:\t0f 42 ca             \tcmovb  %edx,%ecx\n  4f:\t41 39 c8             \tcmp    %ecx,%r8d\n  52:\t73 c1                \tjae    15 <input_console_take_line+0x15>\n  54:\t49 8d 48 01          \tlea    0x1(%r8),%rcx\n  58:\t48 89 f2             \tmov    %rsi,%rdx\n  5b:\t48 f7 da             \tneg    %rdx\n  5e:\t48 39 ca             \tcmp    %rcx,%rdx\n  61:\t76 b2                \tjbe    15 <input_console_take_line+0x15>\n  63:\t45 85 c0             \ttest   %r8d,%r8d\n  66:\t74 0f                \tje     77 <input_console_take_line+0x77>\n  68:\t89 c8                \tmov    %ecx,%eax\n  6a:\t83 e0 03             \tand    $0x3,%eax\n  6d:\t41 83 f8 03          \tcmp    $0x3,%r8d\n  71:\t73 17                \tjae    8a <input_console_take_line+0x8a>\n  73:\t31 d2                \txor    %edx,%edx\n  75:\teb 52                \tjmp    c9 <input_console_take_line+0xc9>\n  77:\t0f b6 47 04          \tmovzbl 0x4(%rdi),%eax\n  7b:\t88 06                \tmov    %al,(%rsi)\n  7d:\tb9 12 00 00 00       \tmov    $0x12,%ecx\n  82:\t31 c0                \txor    %eax,%eax\n  84:\tf3 48 ab             \trep stos %rax,(%rdi)\n  87:\t31 c0                \txor    %eax,%eax\n  89:\tc3                   \tret\n  8a:\t83 e1 fc             \tand    $0xfffffffc,%ecx\n  8d:\t31 d2                \txor    %edx,%edx\n  8f:\t90                   \tnop\n  90:\t44 0f b6 4c 17 04    \tmovzbl 0x4(%rdi,%rdx,1),%r9d\n  96:\t44 88 0c 16          \tmov    %r9b,(%rsi,%rdx,1)\n  9a:\t44 0f b6 4c 17 05    \tmovzbl 0x5(%rdi,%rdx,1),%r9d\n  a0:\t44 88 4c 16 01       \tmov    %r9b,0x1(%rsi,%rdx,1)\n  a5:\t44 0f b6 4c 17 06    \tmovzbl 0x6(%rdi,%rdx,1),%r9d\n  ab:\t44 88 4c 16 02       \tmov    %r9b,0x2(%rsi,%rdx,1)\n  b0:\t44 0f b6 4c 17 07    \tmovzbl 0x7(%rdi,%rdx,1),%r9d\n  b6:\t44 88 4c 16 03       \tmov    %r9b,0x3(%rsi,%rdx,1)\n  bb:\t48 83 c2 04          \tadd    $0x4,%rdx\n  bf:\t48 39 d1             \tcmp    %rdx,%rcx\n  c2:\t75 cc                \tjne    90 <input_console_take_line+0x90>\n  c4:\t48 85 c0             \ttest   %rax,%rax\n  c7:\t74 28                \tje     f1 <input_console_take_line+0xf1>\n  c9:\t48 01 d6             \tadd    %rdx,%rsi\n  cc:\t48 8d 0c 3a          \tlea    (%rdx,%rdi,1),%rcx\n  d0:\t48 83 c1 04          \tadd    $0x4,%rcx\n  d4:\t31 d2                \txor    %edx,%edx\n  d6:\t66 2e 0f 1f 84 00 00 \tcs nopw 0x0(%rax,%rax,1)\n  dd:\t00 00 00 \n  e0:\t44 0f b6 0c 11       \tmovzbl (%rcx,%rdx,1),%r9d\n  e5:\t44 88 0c 16          \tmov    %r9b,(%rsi,%rdx,1)\n  e9:\t48 ff c2             \tinc    %rdx\n  ec:\t48 39 d0             \tcmp    %rdx,%rax\n  ef:\t75 ef                \tjne    e0 <input_console_take_line+0xe0>\n  f1:\tb9 12 00 00 00       \tmov    $0x12,%ecx\n  f6:\t31 c0                \txor    %eax,%eax\n  f8:\tf3 48 ab             \trep stos %rax,(%rdi)\n  fb:\t44 89 c0             \tmov    %r8d,%eax\n  fe:\tc3                   \tret\n",
+  "C_reference_disassembly": "\n/home/veasnawt/src/vos-r2-console-reader/build/reader-hosted/release-reference.o:     file format elf64-x86-64\n\n\nDisassembly of section .text.input_console_read_line_for_reference:\n\n0000000000000000 <input_console_read_line_for_reference>:\n   0:\t48 85 ff             \ttest   %rdi,%rdi\n   3:\t0f 84 e1 00 00 00    \tje     ea <input_console_read_line_for_reference+0xea>\n   9:\t44 8b 57 10          \tmov    0x10(%rdi),%r10d\n   d:\t45 85 d2             \ttest   %r10d,%r10d\n  10:\t0f 84 d4 00 00 00    \tje     ea <input_console_read_line_for_reference+0xea>\n  16:\t48 85 f6             \ttest   %rsi,%rsi\n  19:\t0f 84 c5 00 00 00    \tje     e4 <input_console_read_line_for_reference+0xe4>\n  1f:\t81 fa 80 00 00 00    \tcmp    $0x80,%edx\n  25:\t0f 86 b9 00 00 00    \tjbe    e4 <input_console_read_line_for_reference+0xe4>\n  2b:\t41 57                \tpush   %r15\n  2d:\t31 c0                \txor    %eax,%eax\n  2f:\t49 89 cf             \tmov    %rcx,%r15\n  32:\tb9 12 00 00 00       \tmov    $0x12,%ecx\n  37:\t41 56                \tpush   %r14\n  39:\t41 89 d6             \tmov    %edx,%r14d\n  3c:\t41 55                \tpush   %r13\n  3e:\t4d 89 cd             \tmov    %r9,%r13\n  41:\t41 54                \tpush   %r12\n  43:\t49 89 fc             \tmov    %rdi,%r12\n  46:\t55                   \tpush   %rbp\n  47:\t53                   \tpush   %rbx\n  48:\t4c 89 c3             \tmov    %r8,%rbx\n  4b:\t48 81 ec a8 00 00 00 \tsub    $0xa8,%rsp\n  52:\t48 8d 6c 24 10       \tlea    0x10(%rsp),%rbp\n  57:\t48 89 74 24 08       \tmov    %rsi,0x8(%rsp)\n  5c:\t48 89 ef             \tmov    %rbp,%rdi\n  5f:\tf3 48 ab             \trep stos %rax,(%rdi)\n  62:\t4c 89 ff             \tmov    %r15,%rdi\n  65:\te8 00 00 00 00       \tcall   6a <input_console_read_line_for_reference+0x6a>\n\t\t\t66: R_X86_64_PLT32\tserial_puts-0x4\n  6a:\teb 53                \tjmp    bf <input_console_read_line_for_reference+0xbf>\n  6c:\t0f 1f 40 00          \tnopl   0x0(%rax)\n  70:\t4c 89 e7             \tmov    %r12,%rdi\n  73:\te8 00 00 00 00       \tcall   78 <input_console_read_line_for_reference+0x78>\n\t\t\t74: R_X86_64_PLT32\tkeyboard_poll-0x4\n  78:\t48 89 ef             \tmov    %rbp,%rdi\n  7b:\t0f be f0             \tmovsbl %al,%esi\n  7e:\te8 00 00 00 00       \tcall   83 <input_console_read_line_for_reference+0x83>\n\t\t\t7f: R_X86_64_PLT32\tinput_console_accept-0x4\n  83:\t8b 84 24 98 00 00 00 \tmov    0x98(%rsp),%eax\n  8a:\t85 c0                \ttest   %eax,%eax\n  8c:\t74 27                \tje     b5 <input_console_read_line_for_reference+0xb5>\n  8e:\t48 8b 74 24 08       \tmov    0x8(%rsp),%rsi\n  93:\t44 89 f2             \tmov    %r14d,%edx\n  96:\t48 89 ef             \tmov    %rbp,%rdi\n  99:\te8 00 00 00 00       \tcall   9e <input_console_read_line_for_reference+0x9e>\n\t\t\t9a: R_X86_64_PLT32\tinput_console_take_line-0x4\n  9e:\t83 f8 fd             \tcmp    $0xfffffffd,%eax\n  a1:\t75 2f                \tjne    d2 <input_console_read_line_for_reference+0xd2>\n  a3:\tbf 00 00 00 00       \tmov    $0x0,%edi\n\t\t\ta4: R_X86_64_32\t.rodata.input_console_read_line_for_reference.str1.8\n  a8:\te8 00 00 00 00       \tcall   ad <input_console_read_line_for_reference+0xad>\n\t\t\ta9: R_X86_64_PLT32\tserial_puts-0x4\n  ad:\t4c 89 ff             \tmov    %r15,%rdi\n  b0:\te8 00 00 00 00       \tcall   b5 <input_console_read_line_for_reference+0xb5>\n\t\t\tb1: R_X86_64_PLT32\tserial_puts-0x4\n  b5:\tbf 01 00 00 00       \tmov    $0x1,%edi\n  ba:\te8 00 00 00 00       \tcall   bf <input_console_read_line_for_reference+0xbf>\n\t\t\tbb: R_X86_64_PLT32\tthread_sleep-0x4\n  bf:\t48 85 db             \ttest   %rbx,%rbx\n  c2:\t74 ac                \tje     70 <input_console_read_line_for_reference+0x70>\n  c4:\t4c 89 ef             \tmov    %r13,%rdi\n  c7:\tff d3                \tcall   *%rbx\n  c9:\t85 c0                \ttest   %eax,%eax\n  cb:\t74 a3                \tje     70 <input_console_read_line_for_reference+0x70>\n  cd:\tb8 fb ff ff ff       \tmov    $0xfffffffb,%eax\n  d2:\t48 81 c4 a8 00 00 00 \tadd    $0xa8,%rsp\n  d9:\t5b                   \tpop    %rbx\n  da:\t5d                   \tpop    %rbp\n  db:\t41 5c                \tpop    %r12\n  dd:\t41 5d                \tpop    %r13\n  df:\t41 5e                \tpop    %r14\n  e1:\t41 5f                \tpop    %r15\n  e3:\tc3                   \tret\n  e4:\tb8 fe ff ff ff       \tmov    $0xfffffffe,%eax\n  e9:\tc3                   \tret\n  ea:\tb8 fc ff ff ff       \tmov    $0xfffffffc,%eax\n  ef:\tc3                   \tret\n"
+}

@@ -1,0 +1,6 @@
+{
+  "baseline": "9134d1cbce7eb38ed4d87b53fc478620631f3077",
+  "source": "arch/x86_64/input_console.c",
+  "accepted_source_sha256": "d3f65b4ec3fdb306d4a1cd4c890b3993355b7cfa7053f6385c0e7c212b2bec1d",
+  "reference_sha256": "3ea2dd0e88a721bce5fb843466009e5027c554dc3deff8bc83f24f104f761e95"
+}

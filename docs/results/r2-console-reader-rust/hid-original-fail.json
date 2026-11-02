@@ -1,0 +1,325 @@
+{
+  "status": "FAIL",
+  "scope": "hosted fixtures, NOT native USB input",
+  "commands": [
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--version"
+      ],
+      "exit_code": 0,
+      "log": "rustc.txt"
+    },
+    {
+      "argv": [
+        "gcc",
+        "--version"
+      ],
+      "exit_code": 0,
+      "log": "gcc.txt"
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "--crate-name",
+        "boot_hid",
+        "--crate-type=rlib",
+        "-Dwarnings",
+        "-Coverflow-checks=yes",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "/home/veasnawt/src/vos-r2-console-reader/kernel/rust/usb/hid/lib.rs",
+        "-o",
+        "/home/veasnawt/src/vos-r2-console-reader/build/hid-adapters/libboot_hid.rlib"
+      ],
+      "exit_code": 0,
+      "log": "libboot_hid.rlib.build.txt"
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "--crate-name",
+        "hid_fixture",
+        "--crate-type=staticlib",
+        "-Cpanic=abort",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "--extern",
+        "boot_hid=/home/veasnawt/src/vos-r2-console-reader/build/hid-adapters/libboot_hid.rlib",
+        "/home/veasnawt/src/vos-r2-console-reader/build/hid-adapters/ffi.rs",
+        "-o",
+        "/home/veasnawt/src/vos-r2-console-reader/build/hid-adapters/libfixture.a"
+      ],
+      "exit_code": 0,
+      "log": "ffi-build.txt"
+    },
+    {
+      "argv": [
+        "strip",
+        "--strip-debug",
+        "/home/veasnawt/src/vos-r2-console-reader/build/hid-adapters/libfixture.a"
+      ],
+      "exit_code": 0,
+      "log": "ffi-strip-debug.txt"
+    },
+    {
+      "argv": [
+        "gcc",
+        "-std=gnu11",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-ffunction-sections",
+        "-fdata-sections",
+        "-Iarch/x86_64",
+        "-Itests/host",
+        "-fno-pie",
+        "-no-pie",
+        "-O1",
+        "-g",
+        "-fsanitize=address,undefined",
+        "-fno-sanitize-recover=all",
+        "-fno-omit-frame-pointer",
+        "-Dkeyboard_init=ps2_init",
+        "-Dkeyboard_poll=ps2_poll",
+        "-Dkeyboard_suspend=ps2_suspend",
+        "-Dkeyboard_resume=ps2_resume",
+        "-Dkeyboard_pointer_start=ps2_pointer_start",
+        "-Dkeyboard_pointer_stop=ps2_pointer_stop",
+        "-Dkeyboard_pointer_poll=ps2_pointer_poll",
+        "-Dkeyboard_pointer_lost=ps2_pointer_lost",
+        "-c",
+        "arch/x86_64/keyboard.c",
+        "-o",
+        "/home/veasnawt/src/vos-r2-console-reader/build/hid-adapters/keyboard.o"
+      ],
+      "exit_code": 0,
+      "log": "keyboard-build.txt"
+    },
+    {
+      "argv": [
+        "gcc",
+        "-std=gnu11",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-ffunction-sections",
+        "-fdata-sections",
+        "-Iarch/x86_64",
+        "-Itests/host",
+        "-fno-pie",
+        "-no-pie",
+        "-O1",
+        "-g",
+        "-fsanitize=address,undefined",
+        "-fno-sanitize-recover=all",
+        "-fno-omit-frame-pointer",
+        "-DVOS_CONSOLE_HOST",
+        "tests/host/boot-hid-console.c",
+        "arch/x86_64/user_console.c",
+        "arch/x86_64/input_console.c",
+        "/home/veasnawt/src/vos-r2-console-reader/build/hid-adapters/debug.c",
+        "/home/veasnawt/src/vos-r2-console-reader/build/hid-adapters/keyboard.o",
+        "/home/veasnawt/src/vos-r2-console-reader/build/hid-adapters/libfixture.a",
+        "-Wl,--gc-sections",
+        "-o",
+        "/home/veasnawt/src/vos-r2-console-reader/build/hid-adapters/hid-console"
+      ],
+      "exit_code": 0,
+      "log": "hid-console.build.txt"
+    },
+    {
+      "argv": [
+        "/home/veasnawt/src/vos-r2-console-reader/build/hid-adapters/hid-console"
+      ],
+      "exit_code": 0,
+      "log": "hid-console.txt"
+    },
+    {
+      "argv": [
+        "gcc",
+        "-std=gnu11",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-ffunction-sections",
+        "-fdata-sections",
+        "-Iarch/x86_64",
+        "-Itests/host",
+        "-fno-pie",
+        "-no-pie",
+        "-O1",
+        "-g",
+        "-fsanitize=address,undefined",
+        "-fno-sanitize-recover=all",
+        "-fno-omit-frame-pointer",
+        "-DVOS_CONSOLE_HOST",
+        "-DVOS_GUI_HOST",
+        "arch/x86_64/gui.c",
+        "tests/host/boot-hid-gui.c",
+        "arch/x86_64/user_console.c",
+        "arch/x86_64/input_console.c",
+        "/home/veasnawt/src/vos-r2-console-reader/build/hid-adapters/debug.c",
+        "/home/veasnawt/src/vos-r2-console-reader/build/hid-adapters/keyboard.o",
+        "/home/veasnawt/src/vos-r2-console-reader/build/hid-adapters/libfixture.a",
+        "-Wl,--gc-sections",
+        "-o",
+        "/home/veasnawt/src/vos-r2-console-reader/build/hid-adapters/hid-gui"
+      ],
+      "exit_code": 0,
+      "log": "hid-gui.build.txt"
+    },
+    {
+      "argv": [
+        "/home/veasnawt/src/vos-r2-console-reader/build/hid-adapters/hid-gui"
+      ],
+      "exit_code": 0,
+      "log": "hid-gui.txt"
+    },
+    {
+      "argv": [
+        "gcc",
+        "-std=gnu11",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-ffunction-sections",
+        "-fdata-sections",
+        "-Iarch/x86_64",
+        "-Itests/host",
+        "-fno-pie",
+        "-no-pie",
+        "-O1",
+        "-g",
+        "-fsanitize=address,undefined",
+        "-fno-sanitize-recover=all",
+        "-fno-omit-frame-pointer",
+        "-DVOS_CONSOLE_HOST",
+        "-DVOS_GUI_HOST",
+        "tests/host/pointer.c",
+        "arch/x86_64/gui.c",
+        "arch/x86_64/user_console.c",
+        "arch/x86_64/keyboard.c",
+        "arch/x86_64/input_console.c",
+        "/home/veasnawt/src/vos-r2-console-reader/build/hid-adapters/debug.c",
+        "/home/veasnawt/src/vos-r2-console-reader/build/hid-adapters/libfixture.a",
+        "-Wl,--gc-sections",
+        "-o",
+        "/home/veasnawt/src/vos-r2-console-reader/build/hid-adapters/ps2-regression"
+      ],
+      "exit_code": 0,
+      "log": "ps2-regression.build.txt"
+    },
+    {
+      "argv": [
+        "/home/veasnawt/src/vos-r2-console-reader/build/hid-adapters/ps2-regression"
+      ],
+      "exit_code": 0,
+      "log": "ps2-regression.txt"
+    }
+  ],
+  "source_sha256": {
+    "kernel/rust/usb/hid/descriptor.rs": "02d959043e5c81aa0847100532558fb08f62ae7b60e882b709c87d98964f84f9",
+    "kernel/rust/usb/hid/input.rs": "d0fbc4cd350814e5c6302047cb064971ee60d2912ac748d5de1d47b7478e4f33",
+    "kernel/rust/usb/hid/lib.rs": "a1a4a4c055f1f996d16355199da026d355d434b3c601309a6c178b1eb8b71353",
+    "scripts/test-boot-hid.py": "a8d894a217ffcc4daf24a54e116290dd8ff4437e842cfa908fa0258206d42c73",
+    "tests/host/boot-hid-adapter.h": "ad663064a4c80a0ebaf56322b6e1229f7e2419cebb649dac0010d9ac764382f5",
+    "tests/host/boot-hid-console.c": "5a7808d20ee28aa2d70fc70a7b5733943056c3b025d70183f4ae908763ddd34f",
+    "tests/host/boot-hid-ffi.rs": "4ecb8a380b6d433c952e79e5a0436d4cdd7aa4b23797acbd6a8f59d2ebb9cf9e",
+    "tests/host/boot-hid-gui.c": "3942157361fd9f5faa480e18120d0190844f1d3b876d8399e3567e7d939037c0",
+    "tests/rust/boot_hid.rs": "42c95780b32546d2d010d45b35c68970210b82d9cf4749c7c2bb211c5f9764ad"
+  },
+  "existing_input_sha256": {
+    "arch/x86_64/../../user/include/vos/apps.h": "483ad03e6623fdd797b99198e9f26288aeed434d296f7453e2226ab83fda26e7",
+    "arch/x86_64/../../user/include/vos/gui.h": "4f2adec6c21e06d47b0fed13acb4fe55f99ca8ea45b16a060e28efe0e89318cc",
+    "arch/x86_64/app_catalog.h": "b2fa038727b064c09e31ab7d3147d410a45d89afc4353c52a820c9d7c879f014",
+    "arch/x86_64/bootinfo.h": "dee2dc79290b8547353f124744e32c3637e116e2cd783ca5a3322e7dadb2819c",
+    "arch/x86_64/channel.h": "2b30cc21d17301e7e475893a39fb0895ea298b6bfef66bdaee3bb12fa48e0952",
+    "arch/x86_64/console.h": "0a02544e459b46586548862127bfeb24f76af8a6752d055c9bf24508addfe5fd",
+    "arch/x86_64/cpu.h": "0c40e35db562a0fdb06ae9dd17d0f2de7697340bf6716bc3dae1c27ef6aceee0",
+    "arch/x86_64/exception.h": "71a461f19b5b41f0a4ea5caa42a1146f626b25ce3dbfb0338642febfb5281098",
+    "arch/x86_64/exec.h": "2cea67a74278f0c87075a54b3c6ee36e4de67bb4d42d5bf9ed1e16e6b3e5e1fa",
+    "arch/x86_64/gui.c": "a66f681a42336a18ad2ac0f6d6dcd0e7ecc058f1adfb1879dbc98a1db4397d9a",
+    "arch/x86_64/gui.h": "71697b09dd553b44c2307b94c006ed85c2b80e46b460b0634cc98347c966b410",
+    "arch/x86_64/gui_verify.h": "dbf9569b2639211f9f898702bc194d7e61293aaed5d5b9dcbb01ef7c95b0b3c3",
+    "arch/x86_64/input_console.c": "c675847e56ba380b07a58d2248d8c656405ec9557d62af208aab47cba4ed3ac5",
+    "arch/x86_64/input_console.h": "6c15e09bb182334f8bf0f5637b6857b44d2d148fd6ff20e896c7680bf6c4f119",
+    "arch/x86_64/keyboard.c": "3459345b0ef745eebb1d4e445a155df1c0c6b9e5be4806fd9229d0af160ddde6",
+    "arch/x86_64/keyboard.h": "c6104c37cd72472e32a16471a22c2149e15e68f4baff2c64072a054b088a68b7",
+    "arch/x86_64/lib.h": "90c223eb1175ea00f4c82c83a73a893f0062288cc2f08f02d1f1db0d8bec4a31",
+    "arch/x86_64/memlayout.h": "9887adc7633f93f0ae296d40363de6a880dd21fc8ae9289d7ddfd8cf2a0ac8eb",
+    "arch/x86_64/multiboot2.h": "479b38b37410df97a23ce31986f5d567b4602e22b1541bdd26dd3991bee23fa4",
+    "arch/x86_64/panic.h": "9a6b30ebd91eec05082053612eebe827dc840aa29ee6fd0ca318ea22c846f9bb",
+    "arch/x86_64/pmm.h": "5e52f6c667854b06d2cafdd2e6ebc32e019981e6814789e15252cf772185ff00",
+    "arch/x86_64/pointer.h": "7ed1b6597f0155f9cd4720a2c0fe712e08d6b7cf51ad6acc010841e7f8f291b7",
+    "arch/x86_64/process.h": "04ad253a4ad6830a89ad9a549a12f80bf313228feeed3b5689f385dfe8e72a81",
+    "arch/x86_64/resv.h": "628451431b905a983b4b5860d92ae72ce7bc8b66652b7410713cebeaf131bfdd",
+    "arch/x86_64/rust/console_accept.rs": "f40cafbdf93d5c7d9d8513ac96733b9353e65f631538f372fbc542fb8177b72e",
+    "arch/x86_64/rust/console_line.rs": "32bdf0d337db975f6fe9f9d7373275428cd01d53073016e6ee505a18f9fe351e",
+    "arch/x86_64/rust/console_reader.rs": "f9a43d25526569fc7e2d502b6768df8504ca6b663e07a68f00454a8b7dc58b27",
+    "arch/x86_64/rust/ps2_keyboard.rs": "70df2669a69454f524c6fb3b8a125942b1f507a134e86bab6e582da653c30e22",
+    "arch/x86_64/rust/ps2_pointer.rs": "361be441fbd5d6efc553be99879ba3f8afc000a69ac5130654603dbf0cfbebf5",
+    "arch/x86_64/screen.h": "bbc701a44ce7ceb8de84a81e3286099cc570ba9ce40f6f06512ff5922396bf8c",
+    "arch/x86_64/syscall.c": "6f0b4e52214bb407ddc25c6493ab48a362f0408867c9e0f8e664b10ce3ae7282",
+    "arch/x86_64/syscall.h": "ecdcf12b6c114cb8c560cebe3cd251decaed909903556911a61c8554f887790d",
+    "arch/x86_64/thread.h": "0a7d339ead67d3640c2a357b860391fc1af9fe29ad65a1e673c84249d9229f3e",
+    "arch/x86_64/user_console.c": "c5a35faa2bc290c9224b3dfa7dbe8835f3178f68714aa4c7d515825ea675949a",
+    "arch/x86_64/user_console.h": "072c072f5ad03de09a86a2ce0c1f3f430e5a7fa1da971cc39fe728b5d552b237",
+    "arch/x86_64/usercopy.h": "d88f71d6a287eba4546213bbb3e2f9343e140a6d8300cf350b5fc6e8d71cb5a7",
+    "arch/x86_64/vmm.h": "af44213515f2e7d4d0df96f59ebdaceb3da2c4959f3450887f090871a75b87ed",
+    "kernel/rust/input/console_accept.rs": "1501c8e38a33983a927d37bc90a583d2a1bb30369a6107a71716b98b886410cc",
+    "kernel/rust/input/console_line.rs": "27f99d9ba83ef63a7bdb686814b42a0a0beb35fb920877cc81f330397d8d009f",
+    "kernel/rust/input/console_reader.rs": "f8473373d0c0a88bcf51800104211bee27d8891146eaae2adf160241682cf006",
+    "kernel/rust/input/ps2_keyboard.rs": "955ea062d40f840c6d287095cc9c5ec9123507b6f9252ccb5bb9bb0fbf41d535",
+    "kernel/rust/input/ps2_pointer.rs": "7e0cc27a4af7f80dce3c99985feca064b407bba7752f11b318c6eb3ce0f7fd4c",
+    "tests/host/boot-hid-adapter.h": "ad663064a4c80a0ebaf56322b6e1229f7e2419cebb649dac0010d9ac764382f5",
+    "tests/host/boot-hid-console.c": "5a7808d20ee28aa2d70fc70a7b5733943056c3b025d70183f4ae908763ddd34f",
+    "tests/host/boot-hid-gui.c": "3942157361fd9f5faa480e18120d0190844f1d3b876d8399e3567e7d939037c0",
+    "tests/host/gui.c": "a50218d37f605fa41eb12c1852586ba8c32f320b14a23db9039371501889ba0b",
+    "tests/host/pointer.c": "461b19543f976fb2b37cfe148b82dc7e6d86a4a87e96b60c458e41fb3effeb3b",
+    "tests/host/user-console-handoff.c": "a73661c7b3b88aee4136ef296da4df3caed13b30cf7039124725b336838a02f4"
+  },
+  "rustc": "rustc 1.100.0-nightly (2e2b193f8 2026-09-02)",
+  "gcc": "gcc (Ubuntu 15.2.0-16ubuntu1) 15.2.0",
+  "input_abi_glue": {
+    "arch/x86_64/rust/ps2_pointer.rs": "361be441fbd5d6efc553be99879ba3f8afc000a69ac5130654603dbf0cfbebf5",
+    "arch/x86_64/rust/ps2_keyboard.rs": "70df2669a69454f524c6fb3b8a125942b1f507a134e86bab6e582da653c30e22",
+    "arch/x86_64/rust/console_line.rs": "32bdf0d337db975f6fe9f9d7373275428cd01d53073016e6ee505a18f9fe351e",
+    "arch/x86_64/rust/console_accept.rs": "f40cafbdf93d5c7d9d8513ac96733b9353e65f631538f372fbc542fb8177b72e",
+    "arch/x86_64/rust/console_reader.rs": "f9a43d25526569fc7e2d502b6768df8504ca6b663e07a68f00454a8b7dc58b27"
+  },
+  "linkage_scope": "Actual accepted input Rust source compiled into the one hosted fixture; one panic handler, no C decoder/extraction substitutes. HID remains test-only, not production transport.",
+  "input_symbol_owners": {
+    "pointer_decode": [
+      "/home/veasnawt/src/vos-r2-console-reader/build/hid-adapters/libfixture.a:libfixture.hid_fixture.8220b58fe3307ab9-cgu.0.rcgu.o:0000000000000000 T pointer_decode"
+    ],
+    "pointer_idle": [
+      "/home/veasnawt/src/vos-r2-console-reader/build/hid-adapters/libfixture.a:libfixture.hid_fixture.8220b58fe3307ab9-cgu.0.rcgu.o:0000000000000000 T pointer_idle"
+    ],
+    "keyboard_decode": [
+      "/home/veasnawt/src/vos-r2-console-reader/build/hid-adapters/libfixture.a:libfixture.hid_fixture.8220b58fe3307ab9-cgu.0.rcgu.o:0000000000000000 T keyboard_decode"
+    ],
+    "input_console_take_line": [
+      "/home/veasnawt/src/vos-r2-console-reader/build/hid-adapters/libfixture.a:libfixture.hid_fixture.8220b58fe3307ab9-cgu.0.rcgu.o:0000000000000000 T input_console_take_line"
+    ],
+    "input_console_accept": [
+      "/home/veasnawt/src/vos-r2-console-reader/build/hid-adapters/libfixture.a:libfixture.hid_fixture.8220b58fe3307ab9-cgu.0.rcgu.o:0000000000000000 T input_console_accept"
+    ],
+    "input_console_read_line_for": [
+      "/home/veasnawt/src/vos-r2-console-reader/build/hid-adapters/libfixture.a:libfixture.hid_fixture.8220b58fe3307ab9-cgu.0.rcgu.o:0000000000000000 T input_console_read_line_for"
+    ]
+  },
+  "adapters": {
+    "hid-console": "console-handoff: 49500 assertions PASS; actual console+keyboard+editor; bounded modeled hardware/scheduler; transfers=1007 restored=1003\nHID fixture adapter: actual console foreground handoff, epochs, stale-owner rejection, line delivery and disconnect PASS; NOT native USB input\n",
+    "hid-gui": "GUI service PASS 978127 assertions; actual GUI+console+keyboard, allocation rollback, ownership, pointers, bounds, overflow/revocation\nHID fixture adapter: actual GUI grants, screen-oriented motion, button delivery, queue overflow/snapshot recovery and disconnect PASS; NOT native USB input\n",
+    "ps2-regression": "GUI service PASS 978127 assertions; actual GUI+console+keyboard, allocation rollback, ownership, pointers, bounds, overflow/revocation\npointer driver context=88 decoder=5 bytes; fixed bounds\\npointer service PASS 987802 assertions; actual decoder/demux/GUI, failure, bounds, grants, transitions, overflow snapshot, cleanup\n"
+  },
+  "ps2_linked_input_symbols": [
+    "pointer_decode",
+    "pointer_idle",
+    "keyboard_decode"
+  ],
+  "failure": "console adapter missing actual Rust extraction"
+}

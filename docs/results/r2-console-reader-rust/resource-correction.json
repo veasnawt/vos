@@ -1,0 +1,41 @@
+{
+  "status": "PASS",
+  "scope": "Corrected reader entry/core measurement, excluding unchanged accepted editor/extractor helpers present only in the composite test object",
+  "frames": {
+    "_RNvNtCs4FFZVXmNcg7_4root6bridge8admitted": 200,
+    "input_console_read_line_for": 0
+  },
+  "limit": 216,
+  "old_aggregate_fail_retained": "build/reader-optimized/result.json",
+  "unchanged_helper_frame": 8,
+  "functional_reuse": "Same source hashes,12 core tests/12 mutants/422096 cases x3 all passed before the overbroad aggregate check; no relabeling of original FAIL.",
+  "archive_sha256": "b2387394ec2b4819894b22a7504b9ad1c4f4e59b312b219de313fd006ba5202d",
+  "source_sha256": {
+    "kernel/rust/input/console_reader.rs": "f8473373d0c0a88bcf51800104211bee27d8891146eaae2adf160241682cf006",
+    "arch/x86_64/rust/console_reader.rs": "f9a43d25526569fc7e2d502b6768df8504ca6b663e07a68f00454a8b7dc58b27",
+    "arch/x86_64/input_console.c": "c675847e56ba380b07a58d2248d8c656405ec9557d62af208aab47cba4ed3ac5",
+    "arch/x86_64/input_console.h": "6c15e09bb182334f8bf0f5637b6857b44d2d148fd6ff20e896c7680bf6c4f119",
+    "tests/reference/input-console-reader.c": "3ea2dd0e88a721bce5fb843466009e5027c554dc3deff8bc83f24f104f761e95",
+    "tests/host/console-reader-differential.c": "ca9a6ab6d38bab9fbc7d80020258589dedf2f68d200c92e6b925216d6e6e54e6",
+    "tests/rust/console_reader.rs": "1b47ad7f6ac04fb6bb999459ecd3a184d24be447c2e311d7cb83ff5f3b20086b"
+  },
+  "command": [
+    "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+    "--edition=2024",
+    "-Dwarnings",
+    "--crate-type=lib",
+    "--target=x86_64-unknown-none",
+    "-Copt-level=2",
+    "-Cpanic=abort",
+    "-Ccode-model=kernel",
+    "-Crelocation-model=static",
+    "-Cno-redzone=yes",
+    "-Zemit-stack-sizes",
+    "--emit=obj",
+    "/home/veasnawt/src/vos-r2-console-reader/build/reader-resources-corrected/root.rs",
+    "-o",
+    "/home/veasnawt/src/vos-r2-console-reader/build/reader-resources-corrected/target.o"
+  ],
+  "production_asm": "production-reader.asm",
+  "default_driver_fix": "Use a reader-only target root; checked hosted differential still uses composite real ABIs."
+}

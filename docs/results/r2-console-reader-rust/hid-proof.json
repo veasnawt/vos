@@ -1,0 +1,33 @@
+{
+  "status": "PASS",
+  "original_fail_retained": "build/hid-adapters/result.json",
+  "proof": {
+    "mode": "accepted Rust extractor inlined into Rust reader",
+    "reader": "00000000004084f0 T input_console_read_line_for",
+    "private_body": "0000000000407da0 t _RNvNtCsbaFmd61aTHN_11hid_fixture14console_reader8admitted",
+    "extractor_archive_owner": "/home/veasnawt/src/vos-r2-console-reader/build/hid-adapters/libfixture.a:libfixture.hid_fixture.8220b58fe3307ab9-cgu.0.rcgu.o:0000000000000000 T input_console_take_line",
+    "no_C_extractor_definition": true
+  },
+  "negative_controls": [
+    "reader-removed",
+    "missing-owner",
+    "C-fallback"
+  ],
+  "binaries": {
+    "hid-console": {
+      "sha256": "7152fc5f8a74bf5cf89d675e3496f9739ef941c09315deccb613f7ff2ae3ea85",
+      "stdout": "console-handoff: 49500 assertions PASS; actual console+keyboard+editor; bounded modeled hardware/scheduler; transfers=1007 restored=1003\nHID fixture adapter: actual console foreground handoff, epochs, stale-owner rejection, line delivery and disconnect PASS; NOT native USB input\n"
+    },
+    "hid-gui": {
+      "sha256": "6723f3ba012b3265e386a8cf9efe45eae370849454484ab14a4f75c7faaafdea",
+      "stdout": "GUI service PASS 978127 assertions; actual GUI+console+keyboard, allocation rollback, ownership, pointers, bounds, overflow/revocation\nHID fixture adapter: actual GUI grants, screen-oriented motion, button delivery, queue overflow/snapshot recovery and disconnect PASS; NOT native USB input\n"
+    },
+    "ps2-regression": {
+      "sha256": "8dc7469909dcaddd57e265e1db56bd6326e5fa8e875fed00a29f66fcce1d16f4",
+      "stdout": "GUI service PASS 978127 assertions; actual GUI+console+keyboard, allocation rollback, ownership, pointers, bounds, overflow/revocation\npointer driver context=88 decoder=5 bytes; fixed bounds\\npointer service PASS 987802 assertions; actual decoder/demux/GUI, failure, bounds, grants, transitions, overflow snapshot, cleanup\n"
+    }
+  },
+  "source_inputs_match_original_compilation": true,
+  "metadata_only_driver_correction": true,
+  "core_mutations_reused": "HID core/tests unchanged from accepted main; only affected adapter binaries re-executed."
+}

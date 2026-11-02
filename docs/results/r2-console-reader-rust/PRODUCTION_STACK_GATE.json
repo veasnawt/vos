@@ -1,0 +1,10 @@
+{
+  "status": "PASS",
+  "frames": {
+    "input_console_read_line_for": 0,
+    "_RNvNtCs5YZeFliBs6N_10vos_kernel14console_reader8admitted": 216
+  },
+  "limit": 216,
+  "default_driver_now_checks_actual_production_archive": true,
+  "unchanged_functional_inputs": "build/reader-final/result.json"
+}

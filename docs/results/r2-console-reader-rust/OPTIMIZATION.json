@@ -1,0 +1,13 @@
+{
+  "first_outputs_retained": [
+    "build/candidate",
+    "build/final",
+    "build/reader-hosted"
+  ],
+  "setup_failure": "Quoting error prevented first optimize script creation; following build was unchanged. Both original rc2 and redundant build receipts retained.",
+  "changes": "Full144-byte18-qword initialization; safe admission separated from private frame-owning path. Checks/order unchanged.",
+  "revised_peak_forecast": 237767048,
+  "forecast_basis": "Retained68.017MB +1.25x remaining three kernel15.1MB each, host12.5/native48/adapters12/scratch16/docs2MB. Kernel projections based measured15.049MB per complete build; no acceptance or safety cap weakened.",
+  "STOP": 240000000,
+  "hard_cap": 260000000
+}
