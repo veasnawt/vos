@@ -1,0 +1,27 @@
+{
+  "utc": "2026-11-02T21:36:24.983091+00:00",
+  "client_date": "2026-11-03",
+  "timezone": "Asia/Bangkok",
+  "owner_answer": "I approve the documented pointer_poll_packet (+6.60%, +0.595 ns/call) and pointer_lost_and_clear (+7.69%, +0.295 ns/call) hosted performance exceptions for the exact R2 PS/2 Pointer Polling implementation.",
+  "scope": "Exact R2 PS/2 Pointer Polling implementation and documented hosted throughput regressions; gated publication authorized, no merge or waiver of safety checks",
+  "approved_production_source_sha256": {
+    "kernel/rust/input/ps2_routed.rs": "6bf301b2a7b1eb7633cfe8fd5c4c3661265c4cc2ebade273369074e86aa96aa3",
+    "arch/x86_64/rust/ps2_routed.rs": "0d970e73418b32b86a1b27b1da4a17fc343f7ec21e6a4f410be1e68f8c1b5c7a",
+    "arch/x86_64/keyboard.c": "f8860bff2a561d271151ac11a5da7e890a080e1a7beb7e47db9570393b3f5511"
+  },
+  "production_archive_sha256": "950a4c946c834e5b8a0a99b7d7998c01f346b208bc39ce24c5627f5653de321f",
+  "approved_exceptions": {
+    "pointer_poll_packet": {
+      "regression_percent": 6.6,
+      "delta_ns_per_call": 0.595,
+      "justification": "Explicit boundary pointer validation, 8-byte alignment verification, and arithmetic address overflow checking across C FFI boundary"
+    },
+    "pointer_lost_and_clear": {
+      "regression_percent": 7.69,
+      "delta_ns_per_call": 0.295,
+      "justification": "Explicit pointer validation and bounds check on loss counter manipulation"
+    }
+  },
+  "standing_policy_sha256": "2576c2554b02a2830a6a7bbfabe479ff236d96a042d15fb8429da529eb3dcd8b",
+  "not_blanket_for_future_migrations": true
+}

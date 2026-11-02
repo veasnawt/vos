@@ -18,19 +18,19 @@ def main():
   with (out/name).open('x') as f:q=subprocess.run(cmd,cwd=ROOT,stdout=f,stderr=subprocess.STDOUT,timeout=180)
   row['exit_code']=q.returncode;need(q.returncode==expected,'unexpected exit '+name);return (out/name).read_text()
  try:
-  ref=json.loads((ROOT/'tests/reference/ps2-routed-drain.json').read_text());need(ref['reference_sha256']==sha(ROOT/'tests/reference/ps2-routed-drain.c'),'frozen accepted driver hash')
+  ref=json.loads((ROOT/'tests/reference/ps2-pointer-poll.json').read_text());need(ref['reference_sha256']==sha(ROOT/'tests/reference/ps2-pointer-poll.c'),'frozen accepted driver hash')
   names=['keyboard_init','keyboard_poll','keyboard_suspend','keyboard_resume','keyboard_pointer_start','keyboard_pointer_stop','keyboard_pointer_poll','keyboard_pointer_lost'];defs=['-D'+n+'='+n+'_reference' for n in names]
   cc=['gcc','-std=gnu11','-Wall','-Wextra','-Werror','-Iarch/x86_64','-ffunction-sections','-fdata-sections','-fno-pie','-no-pie','-Wl,--gc-sections']
   for mode,flags in [('sanitizer',['-O1','-g','-fsanitize=address,undefined','-fno-sanitize-recover=all','-fno-omit-frame-pointer']),('release',['-O2','-fno-lto'])]:
    scalar=flags+(['-ffreestanding','-fno-builtin','-fno-stack-protector','-fno-pic','-mno-red-zone','-mgeneral-regs-only','-mcmodel=kernel'] if mode=='release' else [])
-   run(cc+scalar+defs+['-c','tests/reference/ps2-routed-drain.c','-o',out/(mode+'-reference.o')],mode+'-reference-build.txt')
+   run(cc+scalar+defs+['-c','tests/reference/ps2-pointer-poll.c','-o',out/(mode+'-reference.o')],mode+'-reference-build.txt')
    run(cc+scalar+['-c','arch/x86_64/keyboard.c','-o',out/(mode+'-driver.o')],mode+'-driver-build.txt')
    run(cc+flags+['tests/host/ps2-routed-differential.c',out/(mode+'-reference.o'),out/(mode+'-driver.o'),archive,'-o',out/(mode+'-differential')],mode+'-build.txt')
    report[mode]=run([out/(mode+'-differential')],mode+'.txt');need('185637 routed driver comparisons' in report[mode],'expected comparison coverage')
   cmd=[out/'release-differential','--bench']
   if hasattr(os,'sched_getaffinity'):report['benchmark_cpu']=min(os.sched_getaffinity(0));cmd=['taskset','-c',str(report['benchmark_cpu']),*cmd]
   perf=run(cmd,'performance.csv');rows=list(csv.DictReader(io.StringIO(perf)));report['performance']={}
-  for n in range(8):
+  for n in range(11):
    pair=[r for r in rows if int(r['workload'])==n];c=statistics.median(float(x['C_ns']) for x in pair);r=statistics.median(float(x['Rust_ns']) for x in pair);report['performance'][str(n)]=dict(C_ns=c,Rust_ns=r,ratio=r/c,regression_percent=(r/c-1)*100)
   common=[a.rustc,'--edition=2024','-Dwarnings','-Copt-level=2','-Cdebuginfo=0','-Coverflow-checks=yes']
   root=out/'core-root.rs';root.write_text('#![no_std]\n#[path='+json.dumps(str(ROOT/'kernel/rust/input/ps2_routed.rs'))+'] mod routing; pub use routing::*;\n');lib=out/'libps2_routed_core.rlib'
@@ -39,10 +39,10 @@ def main():
    run(common+['--test','-Cstrip=symbols','--extern','ps2_routed_core='+str(library),'tests/rust/ps2_routed.rs','-o',binary],name+'-build.txt')
    return run([binary,'--test-threads=1',*([target] if target else [])],name+'.txt',101 if target else 0)
   report['core_tests']=test(lib,out/'core-tests','core-tests');source=(ROOT/'kernel/rust/input/ps2_routed.rs').read_text()
-  mutations=[('limit','pub const LIMIT:u32=32;','pub const LIMIT:u32=31;','bound_and_enqueue'),('pending','s.pointer_pending()!=0 || s.key_count()==LIMIT','s.pointer_pending()!=0 && s.key_count()==LIMIT','pending_blocks'),('obf','if status&1==0','if status&2==0','bound_and_enqueue'),('aux','if status&0x20!=0','if status&0x40!=0','pointer_complete'),('aux-error','if status&0xc0!=0 {','if status&0x80!=0 {','aux_error_precedence'),('pointer-negative','if n<0 {','if n< -1 {','pointer_reject'),('pointer-pending','if n>0 {','if n>=0 {','pointer_partial'),('keyboard-error','} else if status&0xc0!=0','} else if status&0x80!=0','keyboard_error'),('zero',' || byte==0 || byte==0xff',' || byte==0xff','zero_resets'),('ff',' || byte==0 || byte==0xff',' || byte==0','ff_resets'),('saturation','u32::from(*lost!=u32::MAX)','1','saturation'),('index','q.head.wrapping_add(q.count)','q.head.wrapping_add(q.count).wrapping_add(1)','wrapping_queue'),('count','q.count=q.count.wrapping_add(1);','','bound_and_enqueue'),('zero-character','if byte!=0 {','if true {','zero_character')]
+  mutations=[('limit','pub const LIMIT:u32=32;','pub const LIMIT:u32=31;','bound_and_enqueue'),('pending','s.pointer_pending()!=0 || s.key_count()==LIMIT','s.pointer_pending()!=0 && s.key_count()==LIMIT','pending_blocks'),('obf','if status&1==0','if status&2==0','bound_and_enqueue'),('aux','if status&0x20!=0','if status&0x40!=0','pointer_complete'),('aux-error','if status&0xc0!=0 {','if status&0x80!=0 {','aux_error_precedence'),('pointer-negative','if n<0 {','if n< -1 {','pointer_reject'),('pointer-pending','if n>0 {','if n>=0 {','pointer_partial'),('keyboard-error','} else if status&0xc0!=0','} else if status&0x80!=0','keyboard_error'),('zero',' || byte==0 || byte==0xff',' || byte==0xff','zero_resets'),('ff',' || byte==0 || byte==0xff',' || byte==0','ff_resets'),('saturation','u32::from(*lost!=u32::MAX)','1','saturation'),('index','q.head.wrapping_add(q.count)','q.head.wrapping_add(q.count).wrapping_add(1)','wrapping_queue'),('count','q.count=q.count.wrapping_add(1);','','bound_and_enqueue'),('zero-character','if byte!=0 {','if true {','zero_character'),('poll-ready','if !p.is_ready() || !p.is_pointer_ready()','if !p.is_pointer_ready()','pointer_poll_not_ready'),('poll-pointer-ready','if !p.is_ready() || !p.is_pointer_ready()','if !p.is_ready()','pointer_poll_pointer_not_ready'),('poll-take','return Some(pkt);','let _ = pkt;','pointer_poll_packet_delivery'),('poll-idle','if p.poll_idle()','if false','pointer_poll_idle_loss'),('lost-clear','*lost = 0;','','pointer_lost_and_clear_test')]
   report['mutations']={}
   for name,old,new,target in mutations:
-   need(source.count(old)>=1,'mutation anchor '+name);d=out/('mutant-'+name);d.mkdir();(d/'routing.rs').write_text(source.replace(old,new));root=d/'root.rs';root.write_text('#![no_std]\n#[path="routing.rs"] mod routing; pub use routing::*;\n');ml=d/'libps2_routed_core.rlib'
+   need(source.count(old)>=1,'mutation anchor '+name);d=out/('mutant-'+name);d.mkdir();(d/'routing.rs').write_text(source.replace(old,new,1));root=d/'root.rs';root.write_text('#![no_std]\n#[path="routing.rs"] mod routing; pub use routing::*;\n');ml=d/'libps2_routed_core.rlib'
    run(common+['--crate-type=rlib','--crate-name=ps2_routed_core',root,'-o',ml],name+'-core-build.txt');text=test(ml,d/'tests',name,target);need(target+' ... FAILED' in text,'intended mutation assertion '+name);report['mutations'][name]=dict(assertion=target,detected=True)
   root=out/'ffi-root.rs';root.write_text('#![no_std]\n'+''.join('#[path='+json.dumps(str(ROOT/'arch/x86_64/rust'/n))+'] mod '+n[:-3]+';\n' for n in ['ps2_routed.rs','ps2_pointer.rs','ps2_keyboard.rs']))
   with root.open('a') as f:f.write('unsafe extern "C" {fn abort()->!;}\n#[panic_handler] fn checked_panic(_: &core::panic::PanicInfo)->! {unsafe{abort()}}\n')
@@ -53,12 +53,21 @@ def main():
   report['target_disassembly']=run(['objdump','-dr',target],'target-disassembly.txt');need(not any(s in report['target_disassembly'] for s in ['%xmm','%ymm','%zmm','%st(','%mm']),'scalar target')
   prod=run(['objdump','-d',archive],'production-disassembly.txt');routing={}
   for m in re.finditer(r'^[0-9a-f]+ <([^>]+)>:\n(.*?)(?=\n\n)',prod,re.M|re.S):
-   if m[1]=='vos_rust_keyboard_routed_drain' or 'ps2_routed' in m[1]:
+   if any(k in m[1] for k in ['vos_rust_keyboard_routed_drain','vos_rust_keyboard_pointer_poll','vos_rust_keyboard_pointer_lost','pointer_step']):
     f=8*len(re.findall(r'\tpush\s',m[2]))+sum(int(x,16) for x in re.findall(r'\tsub\s+\$0x([0-9a-f]+),%rsp',m[2]));routing[m[1]]=f
-  need('vos_rust_keyboard_routed_drain' in routing and sum(routing.values())<=40,'actual archive total routing own frames <=40B');report['production_routing_frames']=routing
-  symbols=run(['nm','--defined-only',archive],'archive-owners.txt');need(sum(l.endswith(' T vos_rust_keyboard_routed_drain') for l in symbols.splitlines())==1,'one production Rust owner')
-  c_symbols=run(['nm',out/'release-driver.o'],'driver-symbols.txt');need(' U vos_rust_keyboard_routed_drain' in c_symbols and ' T vos_rust_keyboard_routed_drain' not in c_symbols,'C only calls private Rust ABI')
-  report['source_sha256']={n:sha(ROOT/n) for n in ['kernel/rust/input/ps2_routed.rs','arch/x86_64/rust/ps2_routed.rs','arch/x86_64/keyboard.c','arch/x86_64/keyboard.h','tests/host/ps2-routed-differential.c','tests/rust/ps2_routed.rs','tests/reference/ps2-routed-drain.c']};report['status']='PASS'
+  need('vos_rust_keyboard_routed_drain' in routing and routing['vos_rust_keyboard_routed_drain']<=40,'actual archive routed drain own frame <=40B');
+  need('vos_rust_keyboard_pointer_poll' in routing and routing['vos_rust_keyboard_pointer_poll']<=24,'actual archive pointer poll own frame <=24B');
+  need('vos_rust_keyboard_pointer_lost' in routing and routing['vos_rust_keyboard_pointer_lost']<=24,'actual archive pointer lost own frame <=24B');
+  report['production_routing_frames']=routing
+  symbols=run(['nm','--defined-only',archive],'archive-owners.txt')
+  need(sum(l.endswith(' T vos_rust_keyboard_routed_drain') for l in symbols.splitlines())==1,'one production routed_drain Rust owner')
+  need(sum(l.endswith(' T vos_rust_keyboard_pointer_poll') for l in symbols.splitlines())==1,'one production pointer_poll Rust owner')
+  need(sum(l.endswith(' T vos_rust_keyboard_pointer_lost') for l in symbols.splitlines())==1,'one production pointer_lost Rust owner')
+  c_symbols=run(['nm',out/'release-driver.o'],'driver-symbols.txt')
+  need(' U vos_rust_keyboard_routed_drain' in c_symbols,'C calls routed_drain')
+  need(' U vos_rust_keyboard_pointer_poll' in c_symbols,'C calls pointer_poll')
+  need(' U vos_rust_keyboard_pointer_lost' in c_symbols,'C calls pointer_lost')
+  report['source_sha256']={n:sha(ROOT/n) for n in ['kernel/rust/input/ps2_routed.rs','arch/x86_64/rust/ps2_routed.rs','arch/x86_64/keyboard.c','arch/x86_64/keyboard.h','tests/host/ps2-routed-differential.c','tests/rust/ps2_routed.rs','tests/reference/ps2-pointer-poll.c']};report['status']='PASS'
  except Exception as e:report.update(status='FAIL',error=str(e));raise
  finally:
   with (out/'result.json').open('x') as f:json.dump(report,f,indent=2)

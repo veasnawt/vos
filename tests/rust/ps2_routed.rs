@@ -26,3 +26,64 @@ impl Route for F {
 #[test] fn count_wrap(){let mut f=F::new();f.q.count=u32::MAX;f.script[0]=(1,b'b');drain(&mut f);assert_eq!((f.q.keys[31],f.q.count),(b'b',0));}
 #[test] fn zero_character(){let mut f=F::new();f.script[0]=(1,3);drain(&mut f);assert_eq!((f.q.count,f.kcalls),(0,1));}
 #[test] fn callback_change(){let mut f=F::new();f.mutate=true;f.script[0]=(1,b'z');drain(&mut f);assert_eq!((f.q.keys[31],f.q.count),(b'z',1));}
+
+use ps2_routed_core::{Packet, PointerQueue, pointer_poll, pointer_lost_and_clear};
+
+impl PointerQueue for F {
+    fn is_ready(&self) -> bool { self.kreset != 999 }
+    fn is_pointer_ready(&self) -> bool { self.preset != 999 }
+    fn drain(&mut self) { drain(self); }
+    fn poll_idle(&mut self) -> bool { self.preset == 100 }
+    fn take_packet(&mut self) -> Option<Packet> {
+        if self.pending != 0 {
+            self.pending = 0;
+            Some(Packet { dx: 12, dy: -34, buttons: 1 })
+        } else {
+            None
+        }
+    }
+}
+
+#[test] fn pointer_poll_not_ready() {
+    let mut f = F::new();
+    f.kreset = 999;
+    f.pending = 1;
+    assert_eq!(pointer_poll(&mut f), None);
+    assert_eq!(f.pending, 1);
+}
+
+#[test] fn pointer_poll_pointer_not_ready() {
+    let mut f = F::new();
+    f.preset = 999;
+    f.pending = 1;
+    assert_eq!(pointer_poll(&mut f), None);
+    assert_eq!(f.pending, 1);
+}
+
+#[test] fn pointer_poll_packet_delivery() {
+    let mut f = F::new();
+    f.pending = 1;
+    assert_eq!(pointer_poll(&mut f), Some(Packet { dx: 12, dy: -34, buttons: 1 }));
+    assert_eq!(f.pending, 0);
+}
+
+#[test] fn pointer_poll_idle_loss() {
+    let mut f = F::new();
+    f.preset = 100; // causes poll_idle to return true
+    assert_eq!(pointer_poll(&mut f), None);
+    assert_eq!(f.lost, 1);
+}
+
+#[test] fn pointer_poll_idle_saturated() {
+    let mut f = F::new();
+    f.preset = 100;
+    f.lost = u32::MAX;
+    assert_eq!(pointer_poll(&mut f), None);
+    assert_eq!(f.lost, u32::MAX);
+}
+
+#[test] fn pointer_lost_and_clear_test() {
+    let mut lost = 42u32;
+    assert_eq!(pointer_lost_and_clear(&mut lost), 42);
+    assert_eq!(lost, 0);
+}
