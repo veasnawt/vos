@@ -42,7 +42,7 @@ def main():
     units=['tests/host/boot-hid-console.c','tests/host/boot-hid-gui.c','tests/host/pointer.c','arch/x86_64/keyboard.c','arch/x86_64/gui.c','arch/x86_64/user_console.c','arch/x86_64/input_console.c']
     deps=subprocess.check_output(['gcc','-MM','-DVOS_GUI_HOST','-DVOS_CONSOLE_HOST','-Iarch/x86_64','-Itests/host',*units],cwd=ROOT,text=True).replace('\\\n',' ')
     names={x for line in deps.splitlines() for x in line.split(':',1)[-1].split()}
-    names.update(['arch/x86_64/syscall.c','arch/x86_64/rust/ps2_pointer.rs','kernel/rust/input/ps2_pointer.rs','arch/x86_64/rust/ps2_keyboard.rs','kernel/rust/input/ps2_keyboard.rs','arch/x86_64/rust/console_line.rs','kernel/rust/input/console_line.rs'])
+    names.update(['arch/x86_64/syscall.c','arch/x86_64/rust/ps2_pointer.rs','kernel/rust/input/ps2_pointer.rs','arch/x86_64/rust/ps2_keyboard.rs','kernel/rust/input/ps2_keyboard.rs','arch/x86_64/rust/console_line.rs','kernel/rust/input/console_line.rs','arch/x86_64/rust/console_accept.rs','kernel/rust/input/console_accept.rs'])
     report['existing_input_sha256']={str(Path(n)):sha(ROOT/n) for n in sorted(names)}
     def run(args,name,expected=0):
         args=list(map(str,args))
@@ -66,7 +66,7 @@ def main():
         if a.stage in ('all','adapters'):
             # Include the existing production PS/2 ABI glue unchanged in the test-only archive.
             bridge=out/'ffi.rs'
-            glue=[('ps2','arch/x86_64/rust/ps2_pointer.rs'),('ps2_keyboard','arch/x86_64/rust/ps2_keyboard.rs'),('console_line','arch/x86_64/rust/console_line.rs')]
+            glue=[('ps2','arch/x86_64/rust/ps2_pointer.rs'),('ps2_keyboard','arch/x86_64/rust/ps2_keyboard.rs'),('console_line','arch/x86_64/rust/console_line.rs'),('console_accept','arch/x86_64/rust/console_accept.rs')]
             bridge.write_text((ROOT/'tests/host/boot-hid-ffi.rs').read_text()+''.join('\n#[path='+json.dumps(str(ROOT/path))+'] mod '+name+';\n' for name,path in glue))
             report['input_abi_glue']={path:sha(ROOT/path) for _,path in glue}
             report['linkage_scope']='Actual accepted input Rust source compiled into the one hosted fixture; one panic handler, no C decoder/extraction substitutes. HID remains test-only, not production transport.'
@@ -74,7 +74,7 @@ def main():
             run(['strip','--strip-debug',out/'libfixture.a'],'ffi-strip-debug.txt')
             # Every migrated input ABI has one actual Rust owner in this fixture.
             symbols=subprocess.check_output(['nm','-A','--defined-only',str(out/'libfixture.a')],stderr=subprocess.DEVNULL,text=True)
-            report['input_symbol_owners']={name:[row for row in symbols.splitlines() if row.endswith(' T '+name)] for name in ('pointer_decode','pointer_idle','keyboard_decode','input_console_take_line')}
+            report['input_symbol_owners']={name:[row for row in symbols.splitlines() if row.endswith(' T '+name)] for name in ('pointer_decode','pointer_idle','keyboard_decode','input_console_take_line','input_console_accept')}
             if any(len(rows)!=1 for rows in report['input_symbol_owners'].values()):raise RuntimeError('missing/duplicate input Rust ABI owner')
             cc=['gcc','-std=gnu11','-Wall','-Wextra','-Werror','-ffunction-sections','-fdata-sections','-Iarch/x86_64','-Itests/host','-fno-pie','-no-pie','-O1','-g','-fsanitize=address,undefined','-fno-sanitize-recover=all','-fno-omit-frame-pointer']
             ren=['-Dkeyboard_'+k+'=ps2_'+v for k,v in [('init','init'),('poll','poll'),('suspend','suspend'),('resume','resume'),('pointer_start','pointer_start'),('pointer_stop','pointer_stop'),('pointer_poll','pointer_poll'),('pointer_lost','pointer_lost')]]

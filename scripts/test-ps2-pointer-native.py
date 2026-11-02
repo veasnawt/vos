@@ -245,6 +245,27 @@ def boot(out,fw,mode,iso,symbols,disk,memory="128M",tag_memory=False):
             def command(s,expected):
                 before=data();n=prompts(before);text(s);q.tap('ret');b=wait(lambda b:prompts(b)>n)
                 need(expected.encode() in b[len(before):],'shell response '+s)
+            if 'input_console_accept' in symbols:
+                before=data();n=prompts(before);q.execute('stop');g=GDB(folder/'gdb')
+                try:
+                    need(g.command('?').startswith(('T','S')),'stopped edit-proof target')
+                    addr=symbols['input_console_accept']
+                    need(g.command('Z0,%x,1'%addr)=='OK','install edit breakpoint')
+                    g.send('c');stop=g.receive()
+                    need(stop.startswith(('T05','S05')),'actual Rust edit entry trap')
+                    registers=q.execute('human-monitor-command',{'command-line':'info registers'})
+                    match=re.search(r'RIP=([0-9a-fA-F]+)',registers)
+                    need(match and int(match[1],16)==addr,'Rust edit RIP')
+                    need(g.command('z0,%x,1'%addr)=='OK','remove edit breakpoint')
+                    row={'symbol':'input_console_accept','RIP':hex(addr),'stop':stop,
+                         'scope':'actual poll-loop entry; byte may be NUL, not a latency measurement'}
+                    (folder/'rust-edit-execution.json').write_text(json.dumps(row,indent=2)+'\n')
+                    result['native_edit_call']=row;g.send('c')
+                finally:g.s.close()
+                text('echo rust editx');q.tap('backspace');text('z');q.tap('ret')
+                b=wait(lambda b:prompts(b)>n)
+                need(b'user[vsh]: rust editz\r\n' in b[len(before):],'native Rust append/backspace/seal output')
+                shots['rust-edit']=capture(q,folder,'rust-edit')
             if 'input_console_take_line' in symbols:
                 before=data();n=prompts(before);q.execute('stop');g=GDB(folder/'gdb')
                 try:
@@ -314,6 +335,7 @@ def main():
     ap.add_argument('--out',type=Path,required=True)
     ap.add_argument('--mode',choices=['normal','verify','both'],default='both')
     ap.add_argument('--memory',action='append',choices=['128M','2G'],help='reuse checked images for selected RAM sizes; default is 128M')
+    ap.add_argument('--console-accept-proof',action='store_true',help='trap actual Rust edit entry and verify genuine edited shell output')
     ap.add_argument('--console-line-proof',action='store_true',help='trap Rust line extraction and require genuine shell output')
     ap.add_argument('--keyboard-proof',action='store_true',help='also trap the real Rust keyboard_decode entry')
     ap.add_argument('--firmware',choices=['both','bios','uefi'],default='both',help='focused firmware retest')
@@ -333,7 +355,7 @@ def main():
         for mode in modes:
             kernel=(args.normal_kernel if mode=='normal' else args.verify_kernel).resolve()
             syms=subprocess.check_output(['nm','-S','--defined-only',str(kernel)],text=True)
-            symbols={n:int(next(l.split()[0] for l in syms.splitlines() if l.endswith(' '+n)),16) for n in ('pointer_decode','pointer_idle',*(['keyboard_decode'] if args.keyboard_proof else []),*(['input_console_take_line'] if args.console_line_proof else []))}
+            symbols={n:int(next(l.split()[0] for l in syms.splitlines() if l.endswith(' '+n)),16) for n in ('pointer_decode','pointer_idle',*(['keyboard_decode'] if args.keyboard_proof else []),*(['input_console_take_line'] if args.console_line_proof else []),*(['input_console_accept'] if args.console_accept_proof else []))}
             # GUI verification cases exist only in a -DVOS_GUI_VERIFY kernel.
             verify_only=any(l.endswith(' gui_test_alloc_budget') for l in syms.splitlines())
             need(verify_only==(mode=='verify'),'kernel built with matching VOS_GUI_VERIFY for '+mode)

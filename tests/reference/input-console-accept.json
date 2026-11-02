@@ -1,0 +1,7 @@
+{
+  "baseline": "159528f27d785c9ed26ecfb1d82f7f6ed2e17018",
+  "source": "arch/x86_64/input_console.c",
+  "reference_sha256": "dbd7e0a961bb06fbc957c5f38dbe7e034867ff1853fbccf93dccf426327680a5",
+  "scope": "Exact accepted C function body, includes only; symbol renamed at test compile time",
+  "accepted_source_sha256": "f1e2e83d4595b70878cd923394248f9232ff39497b1f8bd2bd61770ed040bef4"
+}

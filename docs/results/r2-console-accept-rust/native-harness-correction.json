@@ -1,0 +1,6 @@
+{
+  "failure": "QMP input-send-event rejects raw qcode !; text helper accepts simple qcodes only. Rust entry breakpoint succeeded first.",
+  "retained": "build/native",
+  "correction": "Use supported z qcode for appended post-backspace byte, preserving same edit/echo/seal assertion. Existing independent shift/punctuation case unchanged.",
+  "production_unchanged": true
+}

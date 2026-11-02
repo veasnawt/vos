@@ -1,0 +1,162 @@
+{
+  "status": "PASS",
+  "baseline": "159528f27d785c9ed26ecfb1d82f7f6ed2e17018",
+  "production_kernel_sha256": "c6c5ba8df005d31a52e27dcfba6ebf72eee64ee6a410344fd4a5b73cdba7ee3e",
+  "production_archive_sha256": "330349d70235d0515cb2d481af80227a1ffaead855acc909e6001ecc7f929ae5",
+  "reproducible_kernel_archive": true,
+  "baseline_load_segments": [
+    {
+      "address": "0x100000",
+      "file_bytes": 4096,
+      "memory_bytes": 4096
+    },
+    {
+      "address": "0x101000",
+      "file_bytes": 40,
+      "memory_bytes": 24576
+    },
+    {
+      "address": "0xffffffff80107000",
+      "file_bytes": 274432,
+      "memory_bytes": 274432
+    },
+    {
+      "address": "0xffffffff8014a000",
+      "file_bytes": 57344,
+      "memory_bytes": 57344
+    },
+    {
+      "address": "0xffffffff80158000",
+      "file_bytes": 512,
+      "memory_bytes": 598016
+    }
+  ],
+  "Rust_load_segments": [
+    {
+      "address": "0x100000",
+      "file_bytes": 4096,
+      "memory_bytes": 4096
+    },
+    {
+      "address": "0x101000",
+      "file_bytes": 40,
+      "memory_bytes": 24576
+    },
+    {
+      "address": "0xffffffff80107000",
+      "file_bytes": 274432,
+      "memory_bytes": 274432
+    },
+    {
+      "address": "0xffffffff8014a000",
+      "file_bytes": 57344,
+      "memory_bytes": 57344
+    },
+    {
+      "address": "0xffffffff80158000",
+      "file_bytes": 512,
+      "memory_bytes": 598016
+    }
+  ],
+  "loaded_growth_bytes": 0,
+  "ELF_file_growth_bytes": -720,
+  "C_stack_usage_raw": "tests/reference/input-console-accept.c:3:6:input_console_accept_reference\t32\tstatic\n",
+  "C_stack_measurement_command": [
+    "gcc",
+    "-std=gnu11",
+    "-O2",
+    "-ffreestanding",
+    "-fno-builtin",
+    "-fno-stack-protector",
+    "-mgeneral-regs-only",
+    "-mno-red-zone",
+    "-fcf-protection=none",
+    "-fno-stack-clash-protection",
+    "-fstack-usage",
+    "-Iarch/x86_64",
+    "-Dinput_console_accept=input_console_accept_reference",
+    "-c",
+    "tests/reference/input-console-accept.c",
+    "-o",
+    "/home/veasnawt/src/vos-r2-console-accept/build/resource-review/reference.o"
+  ],
+  "C_accepted_symbol": [
+    "ffffffff801246b0 00000000000000b4 T input_console_accept"
+  ],
+  "state_bytes": 144,
+  "new_persistent_state": 0,
+  "heap_allocations": 0,
+  "DMA_pages": 0,
+  "stack_frames": {
+    "input_console_accept": 8
+  },
+  "stack_limit": 128,
+  "loaded_growth_limit": 4096,
+  "actual_symbol": [
+    "ffffffff80140020 00000000000000b0 T input_console_accept"
+  ],
+  "Rust_core_safe": true,
+  "FFI_external_dependencies": "                 U console_erase_previous\n                 U serial_putc\n                 U serial_puts\n",
+  "source_sha256": {
+    "kernel/rust/input/console_accept.rs": "1501c8e38a33983a927d37bc90a583d2a1bb30369a6107a71716b98b886410cc",
+    "arch/x86_64/rust/console_accept.rs": "f40cafbdf93d5c7d9d8513ac96733b9353e65f631538f372fbc542fb8177b72e"
+  },
+  "native_cases": 8,
+  "physical_hardware": false,
+  "performance": {
+    "medians": {
+      "append": {
+        "C_ns": 3.1688,
+        "Rust_ns": 4.0237,
+        "ratio": 1.26978667003282,
+        "investigation_required": true
+      },
+      "backspace": {
+        "C_ns": 4.6005,
+        "Rust_ns": 4.6022,
+        "ratio": 1.0003695250516247,
+        "investigation_required": false
+      },
+      "ignored": {
+        "C_ns": 2.3236,
+        "Rust_ns": 2.0506,
+        "ratio": 0.8825098984334654,
+        "investigation_required": false
+      },
+      "newline": {
+        "C_ns": 4.3123,
+        "Rust_ns": 4.588,
+        "ratio": 1.0639333998098464,
+        "investigation_required": true
+      },
+      "overflow": {
+        "C_ns": 2.1856,
+        "Rust_ns": 3.1266,
+        "ratio": 1.4305453879941434,
+        "investigation_required": true
+      },
+      "ready": {
+        "C_ns": 2.0364,
+        "Rust_ns": 2.0634,
+        "ratio": 1.013258691809075,
+        "investigation_required": false
+      }
+    },
+    "method": "9 alternating-order samples, 5000 batches x256 calls; 10 warm-up batches; identical state preparation outside each timed batch; monotonic clock aggregate, common timing overhead retained; CPU affinity; production Rust archive vs O2 integer-only freestanding C oracle",
+    "scope": "hosted function-call latency/throughput, not BIOS/UEFI runtime timing",
+    "raw": "performance.csv",
+    "C_release_flags": [
+      "-O2",
+      "-ffreestanding",
+      "-fno-builtin",
+      "-fno-stack-protector",
+      "-mgeneral-regs-only",
+      "-mno-red-zone",
+      "-fcf-protection=none",
+      "-fno-stack-clash-protection"
+    ],
+    "acceptance": "EXPLICIT_REVIEW_REQUIRED_FOR_REMAINING_REGRESSIONS"
+  },
+  "publication": "AWAITING_EXPLICIT_PERFORMANCE_DECISION",
+  "unchanged_existing_ownership": true
+}
