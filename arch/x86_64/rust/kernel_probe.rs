@@ -22,6 +22,7 @@ pub mod efi_memory;
 mod efi_exclusion;
 mod ps2_pointer;
 mod ps2_keyboard;
+mod ps2_routed;
 mod console_line;
 mod console_accept;
 mod console_reader;

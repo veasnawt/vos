@@ -1,0 +1,5 @@
+{
+  "eight_case_script_sha256": "69c339368ceb75636dd64b5f98c43e5ed48989062cac4bd4043dce00609bf8dd",
+  "corrected_script_sha256": "4ee8fccdd9dee1d92d9f4ffe3cfcac7c52fc47c51ef8284da9df8f82f4ac4e9b",
+  "reason": "Default pointer proof must also follow the accepted decoder inlined into the Rust helper, independently of optional additional routed-entry proof. Explicit routed-proof path retains identical symbol order and assertions. Test one newly affected default BIOS path, preserving the eight completed cases."
+}

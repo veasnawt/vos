@@ -1,0 +1,98 @@
+{
+  "utc": "2026-11-02T16:29:13.497934+00:00",
+  "client_date": "2026-11-02",
+  "timezone": "Asia/Bangkok",
+  "owner_answer": "I approve the documented +2.47% (+0.11 ns/call) hosted full_queue regression for the exact R2 PS/2 Routed Drain implementation identified below.",
+  "scope": "Exact R2 PS/2 Routed Drain implementation and documented +2.47% (+0.11 ns/call) hosted full_queue regression; gated publication authorized, no merge or waiver of safety checks",
+  "approved_production_source_sha256": {
+    "kernel/rust/input/ps2_routed.rs": "9b502ed046fd5be3bac5d2b777748046a76a1ec1abda88ae59b4a72d5c5cb996",
+    "arch/x86_64/rust/ps2_routed.rs": "f606e7acebd94e52e7430b19ce6069793f17d8be96174c39d04ccdc0d46cfc84",
+    "arch/x86_64/keyboard.c": "a86fc196a8840298a0546b9a5770aa8f37e529d636fefaaca33987b413491a79"
+  },
+  "production_archive_sha256": "e8db6afa0b3e3246156620b75c6fea9b40e1f53a59f4ee11357e71cdab49573c",
+  "measurements": {
+    "empty": {
+      "C_ns": 8.635,
+      "Rust_ns": 8.305,
+      "median_ratio": 0.9617834394904459,
+      "regression_percent": -3.821656050955413,
+      "paired_ratio_median": 0.9357266936884772,
+      "paired_ratio_min": 0.6365786361844697,
+      "paired_ratio_max": 1.3039912520503008,
+      "samples": 81
+    },
+    "keyboard": {
+      "C_ns": 22.16,
+      "Rust_ns": 22.05,
+      "median_ratio": 0.9950361010830325,
+      "regression_percent": -0.49638989169674685,
+      "paired_ratio_median": 0.9872727272727272,
+      "paired_ratio_min": 0.8522660388463802,
+      "paired_ratio_max": 1.1854967037963173,
+      "samples": 81
+    },
+    "pointer_complete": {
+      "C_ns": 41.24,
+      "Rust_ns": 40.23,
+      "median_ratio": 0.975509214354995,
+      "regression_percent": -2.4490785645004953,
+      "paired_ratio_median": 0.9663778162911613,
+      "paired_ratio_min": 0.8780954524988744,
+      "paired_ratio_max": 1.2138295259150085,
+      "samples": 81
+    },
+    "pointer_partial": {
+      "C_ns": 20.36,
+      "Rust_ns": 19.5201,
+      "median_ratio": 0.9587475442043222,
+      "regression_percent": -4.125245579567782,
+      "paired_ratio_median": 0.9592037355615631,
+      "paired_ratio_min": 0.8271809303095514,
+      "paired_ratio_max": 1.3407079646017699,
+      "samples": 81
+    },
+    "mixed": {
+      "C_ns": 70.675,
+      "Rust_ns": 68.1,
+      "median_ratio": 0.9635656172621153,
+      "regression_percent": -3.6434382737884685,
+      "paired_ratio_median": 0.9563595917299136,
+      "paired_ratio_min": 0.8333934539087137,
+      "paired_ratio_max": 1.1304835318850737,
+      "samples": 81
+    },
+    "full_queue": {
+      "C_ns": 4.46,
+      "Rust_ns": 4.57,
+      "median_ratio": 1.024663677130045,
+      "regression_percent": 2.4663677130045025,
+      "paired_ratio_median": 1.021324354657688,
+      "paired_ratio_min": 0.7659932659932659,
+      "paired_ratio_max": 1.5332606324972737,
+      "samples": 81
+    },
+    "errors32": {
+      "C_ns": 306.6,
+      "Rust_ns": 302.6,
+      "median_ratio": 0.9869536855838226,
+      "regression_percent": -1.304631441617743,
+      "paired_ratio_median": 0.9866598340331272,
+      "paired_ratio_min": 0.8806660494135365,
+      "paired_ratio_max": 1.1070332439505057,
+      "samples": 81
+    },
+    "keyboard32": {
+      "C_ns": 438.04,
+      "Rust_ns": 432.63,
+      "median_ratio": 0.9876495297233129,
+      "regression_percent": -1.235047027668712,
+      "paired_ratio_median": 0.9921040844175459,
+      "paired_ratio_min": 0.9282075798658539,
+      "paired_ratio_max": 1.054632765772166,
+      "samples": 81
+    }
+  },
+  "justification": "Fast-return null/alignment guards consistent with +0.11 ns/call difference; bounds and safety guards intact; hosted only, guest latency NOT TESTED.",
+  "standing_policy_sha256": "2576c2554b02a2830a6a7bbfabe479ff236d96a042d15fb8429da529eb3dcd8b",
+  "not_blanket_for_future_migrations": true
+}

@@ -56,7 +56,7 @@ def main():
     units=['tests/host/boot-hid-console.c','tests/host/boot-hid-gui.c','tests/host/pointer.c','arch/x86_64/keyboard.c','arch/x86_64/gui.c','arch/x86_64/user_console.c','arch/x86_64/input_console.c']
     deps=subprocess.check_output(['gcc','-MM','-DVOS_GUI_HOST','-DVOS_CONSOLE_HOST','-Iarch/x86_64','-Itests/host',*units],cwd=ROOT,text=True).replace('\\\n',' ')
     names={x for line in deps.splitlines() for x in line.split(':',1)[-1].split()}
-    names.update(['arch/x86_64/syscall.c','arch/x86_64/rust/ps2_pointer.rs','kernel/rust/input/ps2_pointer.rs','arch/x86_64/rust/ps2_keyboard.rs','kernel/rust/input/ps2_keyboard.rs','arch/x86_64/rust/console_line.rs','kernel/rust/input/console_line.rs','arch/x86_64/rust/console_accept.rs','kernel/rust/input/console_accept.rs','arch/x86_64/rust/console_reader.rs','kernel/rust/input/console_reader.rs'])
+    names.update(['arch/x86_64/syscall.c','arch/x86_64/rust/ps2_pointer.rs','kernel/rust/input/ps2_pointer.rs','arch/x86_64/rust/ps2_keyboard.rs','kernel/rust/input/ps2_keyboard.rs','arch/x86_64/rust/console_line.rs','kernel/rust/input/console_line.rs','arch/x86_64/rust/console_accept.rs','kernel/rust/input/console_accept.rs','arch/x86_64/rust/console_reader.rs','kernel/rust/input/console_reader.rs','arch/x86_64/rust/ps2_routed.rs','kernel/rust/input/ps2_routed.rs'])
     report['existing_input_sha256']={str(Path(n)):sha(ROOT/n) for n in sorted(names)}
     def run(args,name,expected=0):
         args=list(map(str,args))
@@ -80,7 +80,7 @@ def main():
         if a.stage in ('all','adapters'):
             # Include the existing production PS/2 ABI glue unchanged in the test-only archive.
             bridge=out/'ffi.rs'
-            glue=[('ps2','arch/x86_64/rust/ps2_pointer.rs'),('ps2_keyboard','arch/x86_64/rust/ps2_keyboard.rs'),('console_line','arch/x86_64/rust/console_line.rs'),('console_accept','arch/x86_64/rust/console_accept.rs'),('console_reader','arch/x86_64/rust/console_reader.rs')]
+            glue=[('ps2','arch/x86_64/rust/ps2_pointer.rs'),('ps2_keyboard','arch/x86_64/rust/ps2_keyboard.rs'),('console_line','arch/x86_64/rust/console_line.rs'),('console_accept','arch/x86_64/rust/console_accept.rs'),('console_reader','arch/x86_64/rust/console_reader.rs'),('ps2_routed','arch/x86_64/rust/ps2_routed.rs')]
             bridge.write_text((ROOT/'tests/host/boot-hid-ffi.rs').read_text()+''.join('\n#[path='+json.dumps(str(ROOT/path))+'] mod '+name+';\n' for name,path in glue))
             report['input_abi_glue']={path:sha(ROOT/path) for _,path in glue}
             report['linkage_scope']='Actual accepted input Rust source compiled into the one hosted fixture; one panic handler, no C decoder/extraction substitutes. HID remains test-only, not production transport.'

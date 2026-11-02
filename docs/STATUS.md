@@ -573,4 +573,6 @@ B1 is merged through PR #50 at `77045d8`. The [H1-B result](results/h1b-rust-boo
 
 The [R2 Rust console editor migration](results/r2-console-accept-rust.md) is merged through [PR #54](https://github.com/veasnawt/vos/pull/54) at `9134d1cbce7eb38ed4d87b53fc478620631f3077`. Its source-bound performance decision, genuine evidence and passing CI remain preserved; native USB and guest performance are not implied.
 
-The [R2 Rust blocking console reader](results/r2-console-reader-rust.md) passes local correctness/resource and eight BIOS/UEFI gates. The owner approved the documented source-bound hosted regressions; gated PR publication and final CI remain pending; it is not yet accepted main.
+The [R2 Rust blocking console reader](results/r2-console-reader-rust.md) is accepted through owner-merged [PR #55](https://github.com/veasnawt/vos/pull/55) at `f6e9603865a935e6624d45910fae4582f7b4acbf`. Its source-bound performance approval, verification and CI records remain preserved.
+
+The [R2 Rust shared PS/2 routing candidate](results/r2-ps2-routed-drain-rust.md) passes local differential, mutation, resource and BIOS/UEFI gates. The owner approved the documented source-bound hosted regressions; gated PR publication and final CI remain pending; it is not accepted main. Controller backend, public input ABI and device ownership are preserved. R2 remains partial; H2-A and physical hardware work remain inactive.

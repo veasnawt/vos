@@ -1,0 +1,265 @@
+{
+  "status": "PASS_MEASURED_NOT_PERFORMANCE_APPROVED",
+  "start_utc": "2026-11-02T05:53:12.403552+00:00",
+  "end_utc": "2026-11-02T05:53:15.830682+00:00",
+  "commands": [
+    [
+      "gcc",
+      "-std=gnu11",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-Iarch/x86_64",
+      "-ffunction-sections",
+      "-fdata-sections",
+      "-fno-pie",
+      "-no-pie",
+      "-Wl,--gc-sections",
+      "-O2",
+      "-fno-lto",
+      "-ffreestanding",
+      "-fno-builtin",
+      "-fno-stack-protector",
+      "-fno-pic",
+      "-mno-red-zone",
+      "-mgeneral-regs-only",
+      "-mcmodel=kernel",
+      "-Dkeyboard_init=keyboard_init_reference",
+      "-Dkeyboard_poll=keyboard_poll_reference",
+      "-Dkeyboard_suspend=keyboard_suspend_reference",
+      "-Dkeyboard_resume=keyboard_resume_reference",
+      "-Dkeyboard_pointer_start=keyboard_pointer_start_reference",
+      "-Dkeyboard_pointer_stop=keyboard_pointer_stop_reference",
+      "-Dkeyboard_pointer_poll=keyboard_pointer_poll_reference",
+      "-Dkeyboard_pointer_lost=keyboard_pointer_lost_reference",
+      "-c",
+      "tests/reference/ps2-routed-drain.c",
+      "-o",
+      "build/performance-confirmation/reference.o"
+    ],
+    [
+      "gcc",
+      "-std=gnu11",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-Iarch/x86_64",
+      "-ffunction-sections",
+      "-fdata-sections",
+      "-fno-pie",
+      "-no-pie",
+      "-Wl,--gc-sections",
+      "-O2",
+      "-fno-lto",
+      "-ffreestanding",
+      "-fno-builtin",
+      "-fno-stack-protector",
+      "-fno-pic",
+      "-mno-red-zone",
+      "-mgeneral-regs-only",
+      "-mcmodel=kernel",
+      "-c",
+      "arch/x86_64/keyboard.c",
+      "-o",
+      "build/performance-confirmation/driver.o"
+    ],
+    [
+      "gcc",
+      "-std=gnu11",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-Iarch/x86_64",
+      "-ffunction-sections",
+      "-fdata-sections",
+      "-fno-pie",
+      "-no-pie",
+      "-Wl,--gc-sections",
+      "-O2",
+      "-fno-lto",
+      "tests/host/ps2-routed-differential.c",
+      "build/performance-confirmation/reference.o",
+      "build/performance-confirmation/driver.o",
+      "build/production/rust/libvos_kernel.a",
+      "-o",
+      "build/performance-confirmation/differential"
+    ],
+    [
+      "build/performance-confirmation/differential"
+    ],
+    [
+      "taskset",
+      "-c",
+      "0",
+      "build/performance-confirmation/differential",
+      "--bench"
+    ],
+    [
+      "taskset",
+      "-c",
+      "0",
+      "build/performance-confirmation/differential",
+      "--bench"
+    ],
+    [
+      "taskset",
+      "-c",
+      "0",
+      "build/performance-confirmation/differential",
+      "--bench"
+    ],
+    [
+      "taskset",
+      "-c",
+      "0",
+      "build/performance-confirmation/differential",
+      "--bench"
+    ],
+    [
+      "taskset",
+      "-c",
+      "0",
+      "build/performance-confirmation/differential",
+      "--bench"
+    ],
+    [
+      "taskset",
+      "-c",
+      "0",
+      "build/performance-confirmation/differential",
+      "--bench"
+    ],
+    [
+      "taskset",
+      "-c",
+      "0",
+      "build/performance-confirmation/differential",
+      "--bench"
+    ],
+    [
+      "taskset",
+      "-c",
+      "0",
+      "build/performance-confirmation/differential",
+      "--bench"
+    ],
+    [
+      "taskset",
+      "-c",
+      "0",
+      "build/performance-confirmation/differential",
+      "--bench"
+    ]
+  ],
+  "method": "Nine independent process blocks; each eight workloads x nine alternating C/Rust samples x20000 calls plus warmup. All81 pairs/workload retained; aggregate medians, not best-run selection. C reference/driver match kernel scalar release flags. Same fixture resets/clock overhead included. Linux CPU affinity is not physical-core isolation. Host frequency is uncontrolled. Hosted model timings, NOT guest/device latency.",
+  "cpu": 0,
+  "cpuinfo": {
+    "vendor_id\t": " GenuineIntel",
+    "cpu family\t": " 6",
+    "model name\t": " Intel(R) Core(TM) i5-4570 CPU @ 3.20GHz",
+    "stepping\t": " 3"
+  },
+  "summary": {
+    "empty": {
+      "C_ns": 8.635,
+      "Rust_ns": 8.305,
+      "median_ratio": 0.9617834394904459,
+      "regression_percent": -3.821656050955413,
+      "paired_ratio_median": 0.9357266936884772,
+      "paired_ratio_min": 0.6365786361844697,
+      "paired_ratio_max": 1.3039912520503008,
+      "samples": 81
+    },
+    "keyboard": {
+      "C_ns": 22.16,
+      "Rust_ns": 22.05,
+      "median_ratio": 0.9950361010830325,
+      "regression_percent": -0.49638989169674685,
+      "paired_ratio_median": 0.9872727272727272,
+      "paired_ratio_min": 0.8522660388463802,
+      "paired_ratio_max": 1.1854967037963173,
+      "samples": 81
+    },
+    "pointer_complete": {
+      "C_ns": 41.24,
+      "Rust_ns": 40.23,
+      "median_ratio": 0.975509214354995,
+      "regression_percent": -2.4490785645004953,
+      "paired_ratio_median": 0.9663778162911613,
+      "paired_ratio_min": 0.8780954524988744,
+      "paired_ratio_max": 1.2138295259150085,
+      "samples": 81
+    },
+    "pointer_partial": {
+      "C_ns": 20.36,
+      "Rust_ns": 19.5201,
+      "median_ratio": 0.9587475442043222,
+      "regression_percent": -4.125245579567782,
+      "paired_ratio_median": 0.9592037355615631,
+      "paired_ratio_min": 0.8271809303095514,
+      "paired_ratio_max": 1.3407079646017699,
+      "samples": 81
+    },
+    "mixed": {
+      "C_ns": 70.675,
+      "Rust_ns": 68.1,
+      "median_ratio": 0.9635656172621153,
+      "regression_percent": -3.6434382737884685,
+      "paired_ratio_median": 0.9563595917299136,
+      "paired_ratio_min": 0.8333934539087137,
+      "paired_ratio_max": 1.1304835318850737,
+      "samples": 81
+    },
+    "full_queue": {
+      "C_ns": 4.46,
+      "Rust_ns": 4.57,
+      "median_ratio": 1.024663677130045,
+      "regression_percent": 2.4663677130045025,
+      "paired_ratio_median": 1.021324354657688,
+      "paired_ratio_min": 0.7659932659932659,
+      "paired_ratio_max": 1.5332606324972737,
+      "samples": 81
+    },
+    "errors32": {
+      "C_ns": 306.6,
+      "Rust_ns": 302.6,
+      "median_ratio": 0.9869536855838226,
+      "regression_percent": -1.304631441617743,
+      "paired_ratio_median": 0.9866598340331272,
+      "paired_ratio_min": 0.8806660494135365,
+      "paired_ratio_max": 1.1070332439505057,
+      "samples": 81
+    },
+    "keyboard32": {
+      "C_ns": 438.04,
+      "Rust_ns": 432.63,
+      "median_ratio": 0.9876495297233129,
+      "regression_percent": -1.235047027668712,
+      "paired_ratio_median": 0.9921040844175459,
+      "paired_ratio_min": 0.9282075798658539,
+      "paired_ratio_max": 1.054632765772166,
+      "samples": 81
+    }
+  },
+  "original_C_text_identical_after_explicit_kernel_flags": true,
+  "functional": "PASS 185637 routed driver comparisons; seed=7232647261696e31; callback mutations, exact read trace, boundary object; no controller writes\n",
+  "source_sha256": {
+    "arch/x86_64/rust/ps2_routed.rs": "f606e7acebd94e52e7430b19ce6069793f17d8be96174c39d04ccdc0d46cfc84",
+    "kernel/rust/input/ps2_routed.rs": "9b502ed046fd5be3bac5d2b777748046a76a1ec1abda88ae59b4a72d5c5cb996",
+    "arch/x86_64/keyboard.c": "a86fc196a8840298a0546b9a5770aa8f37e529d636fefaaca33987b413491a79",
+    "tests/host/ps2-routed-differential.c": "a8d40a72e4bb43ec230b766379c80f0bc14c4e95f893672819ca102db5452a4f",
+    "scripts/test-ps2-routed-rust.py": "5c44c1007004b81469ffdad82d551a78042a79a5c7fe7fa2cfa2eef8eb94d393"
+  },
+  "production_archive_sha256": "e8db6afa0b3e3246156620b75c6fea9b40e1f53a59f4ee11357e71cdab49573c",
+  "raw_blocks": [
+    "build/performance-confirmation/block-0.csv",
+    "build/performance-confirmation/block-1.csv",
+    "build/performance-confirmation/block-2.csv",
+    "build/performance-confirmation/block-3.csv",
+    "build/performance-confirmation/block-4.csv",
+    "build/performance-confirmation/block-5.csv",
+    "build/performance-confirmation/block-6.csv",
+    "build/performance-confirmation/block-7.csv",
+    "build/performance-confirmation/block-8.csv"
+  ]
+}

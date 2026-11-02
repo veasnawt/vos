@@ -1,0 +1,6 @@
+{
+  "status": "FAIL_FRAME_GATE",
+  "frame": 56,
+  "limit": 40,
+  "cause": "Out-of-line trait method takes &mut Raw and forces a stack slot; pointer-by-value helper avoids retaining that wrapper address."
+}
