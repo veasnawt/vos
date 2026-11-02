@@ -1,0 +1,295 @@
+{
+  "status": "PASS_MEASURED_NOT_PERFORMANCE_APPROVED",
+  "start_utc": "2026-11-02T20:53:15.176821+00:00",
+  "end_utc": "2026-11-02T20:53:22.273167+00:00",
+  "commands": [
+    [
+      "gcc",
+      "-std=gnu11",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-Iarch/x86_64",
+      "-ffunction-sections",
+      "-fdata-sections",
+      "-fno-pie",
+      "-no-pie",
+      "-Wl,--gc-sections",
+      "-O2",
+      "-fno-lto",
+      "-ffreestanding",
+      "-fno-builtin",
+      "-fno-stack-protector",
+      "-fno-pic",
+      "-mno-red-zone",
+      "-mgeneral-regs-only",
+      "-mcmodel=kernel",
+      "-Dkeyboard_init=keyboard_init_reference",
+      "-Dkeyboard_poll=keyboard_poll_reference",
+      "-Dkeyboard_suspend=keyboard_suspend_reference",
+      "-Dkeyboard_resume=keyboard_resume_reference",
+      "-Dkeyboard_pointer_start=keyboard_pointer_start_reference",
+      "-Dkeyboard_pointer_stop=keyboard_pointer_stop_reference",
+      "-Dkeyboard_pointer_poll=keyboard_pointer_poll_reference",
+      "-Dkeyboard_pointer_lost=keyboard_pointer_lost_reference",
+      "-c",
+      "tests/reference/ps2-pointer-poll.c",
+      "-o",
+      "/home/veasnawt/src/vos-r2-pointer-poll/build/performance-confirmation/reference.o"
+    ],
+    [
+      "gcc",
+      "-std=gnu11",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-Iarch/x86_64",
+      "-ffunction-sections",
+      "-fdata-sections",
+      "-fno-pie",
+      "-no-pie",
+      "-Wl,--gc-sections",
+      "-O2",
+      "-fno-lto",
+      "-ffreestanding",
+      "-fno-builtin",
+      "-fno-stack-protector",
+      "-fno-pic",
+      "-mno-red-zone",
+      "-mgeneral-regs-only",
+      "-mcmodel=kernel",
+      "-c",
+      "arch/x86_64/keyboard.c",
+      "-o",
+      "/home/veasnawt/src/vos-r2-pointer-poll/build/performance-confirmation/driver.o"
+    ],
+    [
+      "gcc",
+      "-std=gnu11",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-Iarch/x86_64",
+      "-ffunction-sections",
+      "-fdata-sections",
+      "-fno-pie",
+      "-no-pie",
+      "-Wl,--gc-sections",
+      "-O2",
+      "-fno-lto",
+      "tests/host/ps2-routed-differential.c",
+      "/home/veasnawt/src/vos-r2-pointer-poll/build/performance-confirmation/reference.o",
+      "/home/veasnawt/src/vos-r2-pointer-poll/build/performance-confirmation/driver.o",
+      "build/production/rust/libvos_kernel.a",
+      "-o",
+      "/home/veasnawt/src/vos-r2-pointer-poll/build/performance-confirmation/differential"
+    ],
+    [
+      "/home/veasnawt/src/vos-r2-pointer-poll/build/performance-confirmation/differential"
+    ],
+    [
+      "taskset",
+      "-c",
+      "0",
+      "/home/veasnawt/src/vos-r2-pointer-poll/build/performance-confirmation/differential",
+      "--bench"
+    ],
+    [
+      "taskset",
+      "-c",
+      "0",
+      "/home/veasnawt/src/vos-r2-pointer-poll/build/performance-confirmation/differential",
+      "--bench"
+    ],
+    [
+      "taskset",
+      "-c",
+      "0",
+      "/home/veasnawt/src/vos-r2-pointer-poll/build/performance-confirmation/differential",
+      "--bench"
+    ],
+    [
+      "taskset",
+      "-c",
+      "0",
+      "/home/veasnawt/src/vos-r2-pointer-poll/build/performance-confirmation/differential",
+      "--bench"
+    ],
+    [
+      "taskset",
+      "-c",
+      "0",
+      "/home/veasnawt/src/vos-r2-pointer-poll/build/performance-confirmation/differential",
+      "--bench"
+    ],
+    [
+      "taskset",
+      "-c",
+      "0",
+      "/home/veasnawt/src/vos-r2-pointer-poll/build/performance-confirmation/differential",
+      "--bench"
+    ],
+    [
+      "taskset",
+      "-c",
+      "0",
+      "/home/veasnawt/src/vos-r2-pointer-poll/build/performance-confirmation/differential",
+      "--bench"
+    ],
+    [
+      "taskset",
+      "-c",
+      "0",
+      "/home/veasnawt/src/vos-r2-pointer-poll/build/performance-confirmation/differential",
+      "--bench"
+    ],
+    [
+      "taskset",
+      "-c",
+      "0",
+      "/home/veasnawt/src/vos-r2-pointer-poll/build/performance-confirmation/differential",
+      "--bench"
+    ]
+  ],
+  "method": "Nine independent process blocks; each eleven workloads x nine alternating C/Rust samples x20000 calls plus warmup. All 81 pairs/workload retained; aggregate medians, not best-run selection. C reference/driver match kernel scalar release flags. Same fixture resets/clock overhead included. Linux CPU affinity is not physical-core isolation. Host frequency is uncontrolled. Hosted model timings, NOT guest/device latency.",
+  "cpu": 0,
+  "cpuinfo": {
+    "vendor_id\t": " GenuineIntel",
+    "cpu family\t": " 6",
+    "model name\t": " Intel(R) Core(TM) i5-4570 CPU @ 3.20GHz",
+    "stepping\t": " 3"
+  },
+  "summary": {
+    "empty": {
+      "C_ns": 9.735,
+      "Rust_ns": 8.555,
+      "median_ratio": 0.8787878787878788,
+      "regression_percent": -12.121212121212121,
+      "paired_ratio_median": 0.8787255909558068,
+      "paired_ratio_min": 0.06502148370660482,
+      "paired_ratio_max": 50.91530800821355,
+      "samples": 81
+    },
+    "keyboard": {
+      "C_ns": 25.81,
+      "Rust_ns": 24.67,
+      "median_ratio": 0.9558310732274313,
+      "regression_percent": -4.416892677256867,
+      "paired_ratio_median": 0.957504873294347,
+      "paired_ratio_min": 0.042359517092744124,
+      "paired_ratio_max": 20.796849417949684,
+      "samples": 81
+    },
+    "pointer_complete": {
+      "C_ns": 42.285,
+      "Rust_ns": 41.135,
+      "median_ratio": 0.9728035946553152,
+      "regression_percent": -2.7196405344684815,
+      "paired_ratio_median": 0.9720514400013319,
+      "paired_ratio_min": 0.0724803013822195,
+      "paired_ratio_max": 13.580026004728134,
+      "samples": 81
+    },
+    "pointer_partial": {
+      "C_ns": 22.055,
+      "Rust_ns": 20.84,
+      "median_ratio": 0.9449104511448652,
+      "regression_percent": -5.508954885513484,
+      "paired_ratio_median": 0.9456445993031359,
+      "paired_ratio_min": 0.040168888631828575,
+      "paired_ratio_max": 21.693108974358974,
+      "samples": 81
+    },
+    "mixed": {
+      "C_ns": 74.11,
+      "Rust_ns": 72.725,
+      "median_ratio": 0.9813115638915125,
+      "regression_percent": -1.8688436108487472,
+      "paired_ratio_median": 0.9776816371377558,
+      "paired_ratio_min": 0.11283297963320771,
+      "paired_ratio_max": 8.404520547945205,
+      "samples": 81
+    },
+    "full_queue": {
+      "C_ns": 5.605,
+      "Rust_ns": 4.86,
+      "median_ratio": 0.8670829616413916,
+      "regression_percent": -13.291703835860835,
+      "paired_ratio_median": 0.8673383711167086,
+      "paired_ratio_min": 0.008553174257198174,
+      "paired_ratio_max": 2.0767172167707404,
+      "samples": 81
+    },
+    "errors32": {
+      "C_ns": 798.765,
+      "Rust_ns": 760.91,
+      "median_ratio": 0.9526080887369877,
+      "regression_percent": -4.739191126301234,
+      "paired_ratio_median": 1.005723305369618,
+      "paired_ratio_min": 0.3852328323272855,
+      "paired_ratio_max": 4.115896509926544,
+      "samples": 81
+    },
+    "keyboard32": {
+      "C_ns": 614.625,
+      "Rust_ns": 620.495,
+      "median_ratio": 1.009550538946512,
+      "regression_percent": 0.9550538946512033,
+      "paired_ratio_median": 0.9938918053035859,
+      "paired_ratio_min": 0.5258577406638422,
+      "paired_ratio_max": 2.1801923509231473,
+      "samples": 81
+    },
+    "pointer_poll_packet": {
+      "C_ns": 9.015,
+      "Rust_ns": 9.61,
+      "median_ratio": 1.0660011092623405,
+      "regression_percent": 6.6001109262340485,
+      "paired_ratio_median": 1.0638179800221976,
+      "paired_ratio_min": 0.6749824314827828,
+      "paired_ratio_max": 65.17157417893544,
+      "samples": 81
+    },
+    "pointer_poll_idle": {
+      "C_ns": 13.27,
+      "Rust_ns": 12.685,
+      "median_ratio": 0.9559155990957047,
+      "regression_percent": -4.408440090429533,
+      "paired_ratio_median": 0.9555388093443858,
+      "paired_ratio_min": 0.021649343778267032,
+      "paired_ratio_max": 43.80935192162773,
+      "samples": 81
+    },
+    "pointer_lost_and_clear": {
+      "C_ns": 3.835,
+      "Rust_ns": 4.13,
+      "median_ratio": 1.0769230769230769,
+      "regression_percent": 7.692307692307687,
+      "paired_ratio_median": 1.0769230769230769,
+      "paired_ratio_min": 0.843718079673136,
+      "paired_ratio_max": 2.183833116036506,
+      "samples": 81
+    }
+  },
+  "functional": "PASS 185637 routed driver comparisons; seed=7232647261696e31; callback mutations, exact read trace, boundary object; no controller writes\n",
+  "source_sha256": {
+    "arch/x86_64/rust/ps2_routed.rs": "0d970e73418b32b86a1b27b1da4a17fc343f7ec21e6a4f410be1e68f8c1b5c7a",
+    "kernel/rust/input/ps2_routed.rs": "6bf301b2a7b1eb7633cfe8fd5c4c3661265c4cc2ebade273369074e86aa96aa3",
+    "arch/x86_64/keyboard.c": "f8860bff2a561d271151ac11a5da7e890a080e1a7beb7e47db9570393b3f5511",
+    "tests/host/ps2-routed-differential.c": "760c6d11b6439330a0b492cded5e098f4516b52ff921c87d9debf89fec8cee97",
+    "scripts/test-ps2-routed-rust.py": "0d5c02a2da29151e4b3861a4180e246c540f63aa9df257627d80f06446330fad",
+    "tests/reference/ps2-pointer-poll.c": "38f14bd071fcb70fcb11264b250f3e4c86a3047bd0449c5abed9fb1afd7daffa"
+  },
+  "production_archive_sha256": "950a4c946c834e5b8a0a99b7d7998c01f346b208bc39ce24c5627f5653de321f",
+  "raw_blocks": [
+    "/home/veasnawt/src/vos-r2-pointer-poll/build/performance-confirmation/block-0.csv",
+    "/home/veasnawt/src/vos-r2-pointer-poll/build/performance-confirmation/block-1.csv",
+    "/home/veasnawt/src/vos-r2-pointer-poll/build/performance-confirmation/block-2.csv",
+    "/home/veasnawt/src/vos-r2-pointer-poll/build/performance-confirmation/block-3.csv",
+    "/home/veasnawt/src/vos-r2-pointer-poll/build/performance-confirmation/block-4.csv",
+    "/home/veasnawt/src/vos-r2-pointer-poll/build/performance-confirmation/block-5.csv",
+    "/home/veasnawt/src/vos-r2-pointer-poll/build/performance-confirmation/block-6.csv",
+    "/home/veasnawt/src/vos-r2-pointer-poll/build/performance-confirmation/block-7.csv",
+    "/home/veasnawt/src/vos-r2-pointer-poll/build/performance-confirmation/block-8.csv"
+  ]
+}

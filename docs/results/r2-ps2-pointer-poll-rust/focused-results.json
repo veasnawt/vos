@@ -1,0 +1,1400 @@
+{
+  "status": "PASS",
+  "commands": [
+    {
+      "argv": [
+        "gcc",
+        "-std=gnu11",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-Iarch/x86_64",
+        "-ffunction-sections",
+        "-fdata-sections",
+        "-fno-pie",
+        "-no-pie",
+        "-Wl,--gc-sections",
+        "-O1",
+        "-g",
+        "-fsanitize=address,undefined",
+        "-fno-sanitize-recover=all",
+        "-fno-omit-frame-pointer",
+        "-Dkeyboard_init=keyboard_init_reference",
+        "-Dkeyboard_poll=keyboard_poll_reference",
+        "-Dkeyboard_suspend=keyboard_suspend_reference",
+        "-Dkeyboard_resume=keyboard_resume_reference",
+        "-Dkeyboard_pointer_start=keyboard_pointer_start_reference",
+        "-Dkeyboard_pointer_stop=keyboard_pointer_stop_reference",
+        "-Dkeyboard_pointer_poll=keyboard_pointer_poll_reference",
+        "-Dkeyboard_pointer_lost=keyboard_pointer_lost_reference",
+        "-c",
+        "tests/reference/ps2-pointer-poll.c",
+        "-o",
+        "/home/veasnawt/src/vos-r2-pointer-poll/build/routed-differential/sanitizer-reference.o"
+      ],
+      "log": "sanitizer-reference-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "gcc",
+        "-std=gnu11",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-Iarch/x86_64",
+        "-ffunction-sections",
+        "-fdata-sections",
+        "-fno-pie",
+        "-no-pie",
+        "-Wl,--gc-sections",
+        "-O1",
+        "-g",
+        "-fsanitize=address,undefined",
+        "-fno-sanitize-recover=all",
+        "-fno-omit-frame-pointer",
+        "-c",
+        "arch/x86_64/keyboard.c",
+        "-o",
+        "/home/veasnawt/src/vos-r2-pointer-poll/build/routed-differential/sanitizer-driver.o"
+      ],
+      "log": "sanitizer-driver-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "gcc",
+        "-std=gnu11",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-Iarch/x86_64",
+        "-ffunction-sections",
+        "-fdata-sections",
+        "-fno-pie",
+        "-no-pie",
+        "-Wl,--gc-sections",
+        "-O1",
+        "-g",
+        "-fsanitize=address,undefined",
+        "-fno-sanitize-recover=all",
+        "-fno-omit-frame-pointer",
+        "tests/host/ps2-routed-differential.c",
+        "/home/veasnawt/src/vos-r2-pointer-poll/build/routed-differential/sanitizer-reference.o",
+        "/home/veasnawt/src/vos-r2-pointer-poll/build/routed-differential/sanitizer-driver.o",
+        "/home/veasnawt/src/vos-r2-pointer-poll/build/candidate/rust/libvos_kernel.a",
+        "-o",
+        "/home/veasnawt/src/vos-r2-pointer-poll/build/routed-differential/sanitizer-differential"
+      ],
+      "log": "sanitizer-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/home/veasnawt/src/vos-r2-pointer-poll/build/routed-differential/sanitizer-differential"
+      ],
+      "log": "sanitizer.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "gcc",
+        "-std=gnu11",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-Iarch/x86_64",
+        "-ffunction-sections",
+        "-fdata-sections",
+        "-fno-pie",
+        "-no-pie",
+        "-Wl,--gc-sections",
+        "-O2",
+        "-fno-lto",
+        "-ffreestanding",
+        "-fno-builtin",
+        "-fno-stack-protector",
+        "-fno-pic",
+        "-mno-red-zone",
+        "-mgeneral-regs-only",
+        "-mcmodel=kernel",
+        "-Dkeyboard_init=keyboard_init_reference",
+        "-Dkeyboard_poll=keyboard_poll_reference",
+        "-Dkeyboard_suspend=keyboard_suspend_reference",
+        "-Dkeyboard_resume=keyboard_resume_reference",
+        "-Dkeyboard_pointer_start=keyboard_pointer_start_reference",
+        "-Dkeyboard_pointer_stop=keyboard_pointer_stop_reference",
+        "-Dkeyboard_pointer_poll=keyboard_pointer_poll_reference",
+        "-Dkeyboard_pointer_lost=keyboard_pointer_lost_reference",
+        "-c",
+        "tests/reference/ps2-pointer-poll.c",
+        "-o",
+        "/home/veasnawt/src/vos-r2-pointer-poll/build/routed-differential/release-reference.o"
+      ],
+      "log": "release-reference-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "gcc",
+        "-std=gnu11",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-Iarch/x86_64",
+        "-ffunction-sections",
+        "-fdata-sections",
+        "-fno-pie",
+        "-no-pie",
+        "-Wl,--gc-sections",
+        "-O2",
+        "-fno-lto",
+        "-ffreestanding",
+        "-fno-builtin",
+        "-fno-stack-protector",
+        "-fno-pic",
+        "-mno-red-zone",
+        "-mgeneral-regs-only",
+        "-mcmodel=kernel",
+        "-c",
+        "arch/x86_64/keyboard.c",
+        "-o",
+        "/home/veasnawt/src/vos-r2-pointer-poll/build/routed-differential/release-driver.o"
+      ],
+      "log": "release-driver-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "gcc",
+        "-std=gnu11",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-Iarch/x86_64",
+        "-ffunction-sections",
+        "-fdata-sections",
+        "-fno-pie",
+        "-no-pie",
+        "-Wl,--gc-sections",
+        "-O2",
+        "-fno-lto",
+        "tests/host/ps2-routed-differential.c",
+        "/home/veasnawt/src/vos-r2-pointer-poll/build/routed-differential/release-reference.o",
+        "/home/veasnawt/src/vos-r2-pointer-poll/build/routed-differential/release-driver.o",
+        "/home/veasnawt/src/vos-r2-pointer-poll/build/candidate/rust/libvos_kernel.a",
+        "-o",
+        "/home/veasnawt/src/vos-r2-pointer-poll/build/routed-differential/release-differential"
+      ],
+      "log": "release-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/home/veasnawt/src/vos-r2-pointer-poll/build/routed-differential/release-differential"
+      ],
+      "log": "release.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "taskset",
+        "-c",
+        "0",
+        "/home/veasnawt/src/vos-r2-pointer-poll/build/routed-differential/release-differential",
+        "--bench"
+      ],
+      "log": "performance.csv",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Coverflow-checks=yes",
+        "--crate-type=rlib",
+        "--crate-name=ps2_routed_core",
+        "/home/veasnawt/src/vos-r2-pointer-poll/build/routed-differential/core-root.rs",
+        "-o",
+        "/home/veasnawt/src/vos-r2-pointer-poll/build/routed-differential/libps2_routed_core.rlib"
+      ],
+      "log": "core-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Coverflow-checks=yes",
+        "--test",
+        "-Cstrip=symbols",
+        "--extern",
+        "ps2_routed_core=/home/veasnawt/src/vos-r2-pointer-poll/build/routed-differential/libps2_routed_core.rlib",
+        "tests/rust/ps2_routed.rs",
+        "-o",
+        "/home/veasnawt/src/vos-r2-pointer-poll/build/routed-differential/core-tests"
+      ],
+      "log": "core-tests-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/home/veasnawt/src/vos-r2-pointer-poll/build/routed-differential/core-tests",
+        "--test-threads=1"
+      ],
+      "log": "core-tests.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Coverflow-checks=yes",
+        "--crate-type=rlib",
+        "--crate-name=ps2_routed_core",
+        "/home/veasnawt/src/vos-r2-pointer-poll/build/routed-differential/mutant-limit/root.rs",
+        "-o",
+        "/home/veasnawt/src/vos-r2-pointer-poll/build/routed-differential/mutant-limit/libps2_routed_core.rlib"
+      ],
+      "log": "limit-core-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Coverflow-checks=yes",
+        "--test",
+        "-Cstrip=symbols",
+        "--extern",
+        "ps2_routed_core=/home/veasnawt/src/vos-r2-pointer-poll/build/routed-differential/mutant-limit/libps2_routed_core.rlib",
+        "tests/rust/ps2_routed.rs",
+        "-o",
+        "/home/veasnawt/src/vos-r2-pointer-poll/build/routed-differential/mutant-limit/tests"
+      ],
+      "log": "limit-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/home/veasnawt/src/vos-r2-pointer-poll/build/routed-differential/mutant-limit/tests",
+        "--test-threads=1",
+        "bound_and_enqueue"
+      ],
+      "log": "limit.txt",
+      "exit_code": 101
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Coverflow-checks=yes",
+        "--crate-type=rlib",
+        "--crate-name=ps2_routed_core",
+        "/home/veasnawt/src/vos-r2-pointer-poll/build/routed-differential/mutant-pending/root.rs",
+        "-o",
+        "/home/veasnawt/src/vos-r2-pointer-poll/build/routed-differential/mutant-pending/libps2_routed_core.rlib"
+      ],
+      "log": "pending-core-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Coverflow-checks=yes",
+        "--test",
+        "-Cstrip=symbols",
+        "--extern",
+        "ps2_routed_core=/home/veasnawt/src/vos-r2-pointer-poll/build/routed-differential/mutant-pending/libps2_routed_core.rlib",
+        "tests/rust/ps2_routed.rs",
+        "-o",
+        "/home/veasnawt/src/vos-r2-pointer-poll/build/routed-differential/mutant-pending/tests"
+      ],
+      "log": "pending-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/home/veasnawt/src/vos-r2-pointer-poll/build/routed-differential/mutant-pending/tests",
+        "--test-threads=1",
+        "pending_blocks"
+      ],
+      "log": "pending.txt",
+      "exit_code": 101
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Coverflow-checks=yes",
+        "--crate-type=rlib",
+        "--crate-name=ps2_routed_core",
+        "/home/veasnawt/src/vos-r2-pointer-poll/build/routed-differential/mutant-obf/root.rs",
+        "-o",
+        "/home/veasnawt/src/vos-r2-pointer-poll/build/routed-differential/mutant-obf/libps2_routed_core.rlib"
+      ],
+      "log": "obf-core-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Coverflow-checks=yes",
+        "--test",
+        "-Cstrip=symbols",
+        "--extern",
+        "ps2_routed_core=/home/veasnawt/src/vos-r2-pointer-poll/build/routed-differential/mutant-obf/libps2_routed_core.rlib",
+        "tests/rust/ps2_routed.rs",
+        "-o",
+        "/home/veasnawt/src/vos-r2-pointer-poll/build/routed-differential/mutant-obf/tests"
+      ],
+      "log": "obf-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/home/veasnawt/src/vos-r2-pointer-poll/build/routed-differential/mutant-obf/tests",
+        "--test-threads=1",
+        "bound_and_enqueue"
+      ],
+      "log": "obf.txt",
+      "exit_code": 101
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Coverflow-checks=yes",
+        "--crate-type=rlib",
+        "--crate-name=ps2_routed_core",
+        "/home/veasnawt/src/vos-r2-pointer-poll/build/routed-differential/mutant-aux/root.rs",
+        "-o",
+        "/home/veasnawt/src/vos-r2-pointer-poll/build/routed-differential/mutant-aux/libps2_routed_core.rlib"
+      ],
+      "log": "aux-core-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Coverflow-checks=yes",
+        "--test",
+        "-Cstrip=symbols",
+        "--extern",
+        "ps2_routed_core=/home/veasnawt/src/vos-r2-pointer-poll/build/routed-differential/mutant-aux/libps2_routed_core.rlib",
+        "tests/rust/ps2_routed.rs",
+        "-o",
+        "/home/veasnawt/src/vos-r2-pointer-poll/build/routed-differential/mutant-aux/tests"
+      ],
+      "log": "aux-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/home/veasnawt/src/vos-r2-pointer-poll/build/routed-differential/mutant-aux/tests",
+        "--test-threads=1",
+        "pointer_complete"
+      ],
+      "log": "aux.txt",
+      "exit_code": 101
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Coverflow-checks=yes",
+        "--crate-type=rlib",
+        "--crate-name=ps2_routed_core",
+        "/home/veasnawt/src/vos-r2-pointer-poll/build/routed-differential/mutant-aux-error/root.rs",
+        "-o",
+        "/home/veasnawt/src/vos-r2-pointer-poll/build/routed-differential/mutant-aux-error/libps2_routed_core.rlib"
+      ],
+      "log": "aux-error-core-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Coverflow-checks=yes",
+        "--test",
+        "-Cstrip=symbols",
+        "--extern",
+        "ps2_routed_core=/home/veasnawt/src/vos-r2-pointer-poll/build/routed-differential/mutant-aux-error/libps2_routed_core.rlib",
+        "tests/rust/ps2_routed.rs",
+        "-o",
+        "/home/veasnawt/src/vos-r2-pointer-poll/build/routed-differential/mutant-aux-error/tests"
+      ],
+      "log": "aux-error-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/home/veasnawt/src/vos-r2-pointer-poll/build/routed-differential/mutant-aux-error/tests",
+        "--test-threads=1",
+        "aux_error_precedence"
+      ],
+      "log": "aux-error.txt",
+      "exit_code": 101
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Coverflow-checks=yes",
+        "--crate-type=rlib",
+        "--crate-name=ps2_routed_core",
+        "/home/veasnawt/src/vos-r2-pointer-poll/build/routed-differential/mutant-pointer-negative/root.rs",
+        "-o",
+        "/home/veasnawt/src/vos-r2-pointer-poll/build/routed-differential/mutant-pointer-negative/libps2_routed_core.rlib"
+      ],
+      "log": "pointer-negative-core-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Coverflow-checks=yes",
+        "--test",
+        "-Cstrip=symbols",
+        "--extern",
+        "ps2_routed_core=/home/veasnawt/src/vos-r2-pointer-poll/build/routed-differential/mutant-pointer-negative/libps2_routed_core.rlib",
+        "tests/rust/ps2_routed.rs",
+        "-o",
+        "/home/veasnawt/src/vos-r2-pointer-poll/build/routed-differential/mutant-pointer-negative/tests"
+      ],
+      "log": "pointer-negative-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/home/veasnawt/src/vos-r2-pointer-poll/build/routed-differential/mutant-pointer-negative/tests",
+        "--test-threads=1",
+        "pointer_reject"
+      ],
+      "log": "pointer-negative.txt",
+      "exit_code": 101
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Coverflow-checks=yes",
+        "--crate-type=rlib",
+        "--crate-name=ps2_routed_core",
+        "/home/veasnawt/src/vos-r2-pointer-poll/build/routed-differential/mutant-pointer-pending/root.rs",
+        "-o",
+        "/home/veasnawt/src/vos-r2-pointer-poll/build/routed-differential/mutant-pointer-pending/libps2_routed_core.rlib"
+      ],
+      "log": "pointer-pending-core-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Coverflow-checks=yes",
+        "--test",
+        "-Cstrip=symbols",
+        "--extern",
+        "ps2_routed_core=/home/veasnawt/src/vos-r2-pointer-poll/build/routed-differential/mutant-pointer-pending/libps2_routed_core.rlib",
+        "tests/rust/ps2_routed.rs",
+        "-o",
+        "/home/veasnawt/src/vos-r2-pointer-poll/build/routed-differential/mutant-pointer-pending/tests"
+      ],
+      "log": "pointer-pending-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/home/veasnawt/src/vos-r2-pointer-poll/build/routed-differential/mutant-pointer-pending/tests",
+        "--test-threads=1",
+        "pointer_partial"
+      ],
+      "log": "pointer-pending.txt",
+      "exit_code": 101
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Coverflow-checks=yes",
+        "--crate-type=rlib",
+        "--crate-name=ps2_routed_core",
+        "/home/veasnawt/src/vos-r2-pointer-poll/build/routed-differential/mutant-keyboard-error/root.rs",
+        "-o",
+        "/home/veasnawt/src/vos-r2-pointer-poll/build/routed-differential/mutant-keyboard-error/libps2_routed_core.rlib"
+      ],
+      "log": "keyboard-error-core-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Coverflow-checks=yes",
+        "--test",
+        "-Cstrip=symbols",
+        "--extern",
+        "ps2_routed_core=/home/veasnawt/src/vos-r2-pointer-poll/build/routed-differential/mutant-keyboard-error/libps2_routed_core.rlib",
+        "tests/rust/ps2_routed.rs",
+        "-o",
+        "/home/veasnawt/src/vos-r2-pointer-poll/build/routed-differential/mutant-keyboard-error/tests"
+      ],
+      "log": "keyboard-error-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/home/veasnawt/src/vos-r2-pointer-poll/build/routed-differential/mutant-keyboard-error/tests",
+        "--test-threads=1",
+        "keyboard_error"
+      ],
+      "log": "keyboard-error.txt",
+      "exit_code": 101
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Coverflow-checks=yes",
+        "--crate-type=rlib",
+        "--crate-name=ps2_routed_core",
+        "/home/veasnawt/src/vos-r2-pointer-poll/build/routed-differential/mutant-zero/root.rs",
+        "-o",
+        "/home/veasnawt/src/vos-r2-pointer-poll/build/routed-differential/mutant-zero/libps2_routed_core.rlib"
+      ],
+      "log": "zero-core-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Coverflow-checks=yes",
+        "--test",
+        "-Cstrip=symbols",
+        "--extern",
+        "ps2_routed_core=/home/veasnawt/src/vos-r2-pointer-poll/build/routed-differential/mutant-zero/libps2_routed_core.rlib",
+        "tests/rust/ps2_routed.rs",
+        "-o",
+        "/home/veasnawt/src/vos-r2-pointer-poll/build/routed-differential/mutant-zero/tests"
+      ],
+      "log": "zero-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/home/veasnawt/src/vos-r2-pointer-poll/build/routed-differential/mutant-zero/tests",
+        "--test-threads=1",
+        "zero_resets"
+      ],
+      "log": "zero.txt",
+      "exit_code": 101
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Coverflow-checks=yes",
+        "--crate-type=rlib",
+        "--crate-name=ps2_routed_core",
+        "/home/veasnawt/src/vos-r2-pointer-poll/build/routed-differential/mutant-ff/root.rs",
+        "-o",
+        "/home/veasnawt/src/vos-r2-pointer-poll/build/routed-differential/mutant-ff/libps2_routed_core.rlib"
+      ],
+      "log": "ff-core-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Coverflow-checks=yes",
+        "--test",
+        "-Cstrip=symbols",
+        "--extern",
+        "ps2_routed_core=/home/veasnawt/src/vos-r2-pointer-poll/build/routed-differential/mutant-ff/libps2_routed_core.rlib",
+        "tests/rust/ps2_routed.rs",
+        "-o",
+        "/home/veasnawt/src/vos-r2-pointer-poll/build/routed-differential/mutant-ff/tests"
+      ],
+      "log": "ff-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/home/veasnawt/src/vos-r2-pointer-poll/build/routed-differential/mutant-ff/tests",
+        "--test-threads=1",
+        "ff_resets"
+      ],
+      "log": "ff.txt",
+      "exit_code": 101
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Coverflow-checks=yes",
+        "--crate-type=rlib",
+        "--crate-name=ps2_routed_core",
+        "/home/veasnawt/src/vos-r2-pointer-poll/build/routed-differential/mutant-saturation/root.rs",
+        "-o",
+        "/home/veasnawt/src/vos-r2-pointer-poll/build/routed-differential/mutant-saturation/libps2_routed_core.rlib"
+      ],
+      "log": "saturation-core-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Coverflow-checks=yes",
+        "--test",
+        "-Cstrip=symbols",
+        "--extern",
+        "ps2_routed_core=/home/veasnawt/src/vos-r2-pointer-poll/build/routed-differential/mutant-saturation/libps2_routed_core.rlib",
+        "tests/rust/ps2_routed.rs",
+        "-o",
+        "/home/veasnawt/src/vos-r2-pointer-poll/build/routed-differential/mutant-saturation/tests"
+      ],
+      "log": "saturation-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/home/veasnawt/src/vos-r2-pointer-poll/build/routed-differential/mutant-saturation/tests",
+        "--test-threads=1",
+        "saturation"
+      ],
+      "log": "saturation.txt",
+      "exit_code": 101
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Coverflow-checks=yes",
+        "--crate-type=rlib",
+        "--crate-name=ps2_routed_core",
+        "/home/veasnawt/src/vos-r2-pointer-poll/build/routed-differential/mutant-index/root.rs",
+        "-o",
+        "/home/veasnawt/src/vos-r2-pointer-poll/build/routed-differential/mutant-index/libps2_routed_core.rlib"
+      ],
+      "log": "index-core-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Coverflow-checks=yes",
+        "--test",
+        "-Cstrip=symbols",
+        "--extern",
+        "ps2_routed_core=/home/veasnawt/src/vos-r2-pointer-poll/build/routed-differential/mutant-index/libps2_routed_core.rlib",
+        "tests/rust/ps2_routed.rs",
+        "-o",
+        "/home/veasnawt/src/vos-r2-pointer-poll/build/routed-differential/mutant-index/tests"
+      ],
+      "log": "index-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/home/veasnawt/src/vos-r2-pointer-poll/build/routed-differential/mutant-index/tests",
+        "--test-threads=1",
+        "wrapping_queue"
+      ],
+      "log": "index.txt",
+      "exit_code": 101
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Coverflow-checks=yes",
+        "--crate-type=rlib",
+        "--crate-name=ps2_routed_core",
+        "/home/veasnawt/src/vos-r2-pointer-poll/build/routed-differential/mutant-count/root.rs",
+        "-o",
+        "/home/veasnawt/src/vos-r2-pointer-poll/build/routed-differential/mutant-count/libps2_routed_core.rlib"
+      ],
+      "log": "count-core-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Coverflow-checks=yes",
+        "--test",
+        "-Cstrip=symbols",
+        "--extern",
+        "ps2_routed_core=/home/veasnawt/src/vos-r2-pointer-poll/build/routed-differential/mutant-count/libps2_routed_core.rlib",
+        "tests/rust/ps2_routed.rs",
+        "-o",
+        "/home/veasnawt/src/vos-r2-pointer-poll/build/routed-differential/mutant-count/tests"
+      ],
+      "log": "count-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/home/veasnawt/src/vos-r2-pointer-poll/build/routed-differential/mutant-count/tests",
+        "--test-threads=1",
+        "bound_and_enqueue"
+      ],
+      "log": "count.txt",
+      "exit_code": 101
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Coverflow-checks=yes",
+        "--crate-type=rlib",
+        "--crate-name=ps2_routed_core",
+        "/home/veasnawt/src/vos-r2-pointer-poll/build/routed-differential/mutant-zero-character/root.rs",
+        "-o",
+        "/home/veasnawt/src/vos-r2-pointer-poll/build/routed-differential/mutant-zero-character/libps2_routed_core.rlib"
+      ],
+      "log": "zero-character-core-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Coverflow-checks=yes",
+        "--test",
+        "-Cstrip=symbols",
+        "--extern",
+        "ps2_routed_core=/home/veasnawt/src/vos-r2-pointer-poll/build/routed-differential/mutant-zero-character/libps2_routed_core.rlib",
+        "tests/rust/ps2_routed.rs",
+        "-o",
+        "/home/veasnawt/src/vos-r2-pointer-poll/build/routed-differential/mutant-zero-character/tests"
+      ],
+      "log": "zero-character-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/home/veasnawt/src/vos-r2-pointer-poll/build/routed-differential/mutant-zero-character/tests",
+        "--test-threads=1",
+        "zero_character"
+      ],
+      "log": "zero-character.txt",
+      "exit_code": 101
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Coverflow-checks=yes",
+        "--crate-type=rlib",
+        "--crate-name=ps2_routed_core",
+        "/home/veasnawt/src/vos-r2-pointer-poll/build/routed-differential/mutant-poll-ready/root.rs",
+        "-o",
+        "/home/veasnawt/src/vos-r2-pointer-poll/build/routed-differential/mutant-poll-ready/libps2_routed_core.rlib"
+      ],
+      "log": "poll-ready-core-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Coverflow-checks=yes",
+        "--test",
+        "-Cstrip=symbols",
+        "--extern",
+        "ps2_routed_core=/home/veasnawt/src/vos-r2-pointer-poll/build/routed-differential/mutant-poll-ready/libps2_routed_core.rlib",
+        "tests/rust/ps2_routed.rs",
+        "-o",
+        "/home/veasnawt/src/vos-r2-pointer-poll/build/routed-differential/mutant-poll-ready/tests"
+      ],
+      "log": "poll-ready-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/home/veasnawt/src/vos-r2-pointer-poll/build/routed-differential/mutant-poll-ready/tests",
+        "--test-threads=1",
+        "pointer_poll_not_ready"
+      ],
+      "log": "poll-ready.txt",
+      "exit_code": 101
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Coverflow-checks=yes",
+        "--crate-type=rlib",
+        "--crate-name=ps2_routed_core",
+        "/home/veasnawt/src/vos-r2-pointer-poll/build/routed-differential/mutant-poll-pointer-ready/root.rs",
+        "-o",
+        "/home/veasnawt/src/vos-r2-pointer-poll/build/routed-differential/mutant-poll-pointer-ready/libps2_routed_core.rlib"
+      ],
+      "log": "poll-pointer-ready-core-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Coverflow-checks=yes",
+        "--test",
+        "-Cstrip=symbols",
+        "--extern",
+        "ps2_routed_core=/home/veasnawt/src/vos-r2-pointer-poll/build/routed-differential/mutant-poll-pointer-ready/libps2_routed_core.rlib",
+        "tests/rust/ps2_routed.rs",
+        "-o",
+        "/home/veasnawt/src/vos-r2-pointer-poll/build/routed-differential/mutant-poll-pointer-ready/tests"
+      ],
+      "log": "poll-pointer-ready-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/home/veasnawt/src/vos-r2-pointer-poll/build/routed-differential/mutant-poll-pointer-ready/tests",
+        "--test-threads=1",
+        "pointer_poll_pointer_not_ready"
+      ],
+      "log": "poll-pointer-ready.txt",
+      "exit_code": 101
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Coverflow-checks=yes",
+        "--crate-type=rlib",
+        "--crate-name=ps2_routed_core",
+        "/home/veasnawt/src/vos-r2-pointer-poll/build/routed-differential/mutant-poll-take/root.rs",
+        "-o",
+        "/home/veasnawt/src/vos-r2-pointer-poll/build/routed-differential/mutant-poll-take/libps2_routed_core.rlib"
+      ],
+      "log": "poll-take-core-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Coverflow-checks=yes",
+        "--test",
+        "-Cstrip=symbols",
+        "--extern",
+        "ps2_routed_core=/home/veasnawt/src/vos-r2-pointer-poll/build/routed-differential/mutant-poll-take/libps2_routed_core.rlib",
+        "tests/rust/ps2_routed.rs",
+        "-o",
+        "/home/veasnawt/src/vos-r2-pointer-poll/build/routed-differential/mutant-poll-take/tests"
+      ],
+      "log": "poll-take-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/home/veasnawt/src/vos-r2-pointer-poll/build/routed-differential/mutant-poll-take/tests",
+        "--test-threads=1",
+        "pointer_poll_packet_delivery"
+      ],
+      "log": "poll-take.txt",
+      "exit_code": 101
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Coverflow-checks=yes",
+        "--crate-type=rlib",
+        "--crate-name=ps2_routed_core",
+        "/home/veasnawt/src/vos-r2-pointer-poll/build/routed-differential/mutant-poll-idle/root.rs",
+        "-o",
+        "/home/veasnawt/src/vos-r2-pointer-poll/build/routed-differential/mutant-poll-idle/libps2_routed_core.rlib"
+      ],
+      "log": "poll-idle-core-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Coverflow-checks=yes",
+        "--test",
+        "-Cstrip=symbols",
+        "--extern",
+        "ps2_routed_core=/home/veasnawt/src/vos-r2-pointer-poll/build/routed-differential/mutant-poll-idle/libps2_routed_core.rlib",
+        "tests/rust/ps2_routed.rs",
+        "-o",
+        "/home/veasnawt/src/vos-r2-pointer-poll/build/routed-differential/mutant-poll-idle/tests"
+      ],
+      "log": "poll-idle-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/home/veasnawt/src/vos-r2-pointer-poll/build/routed-differential/mutant-poll-idle/tests",
+        "--test-threads=1",
+        "pointer_poll_idle_loss"
+      ],
+      "log": "poll-idle.txt",
+      "exit_code": 101
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Coverflow-checks=yes",
+        "--crate-type=rlib",
+        "--crate-name=ps2_routed_core",
+        "/home/veasnawt/src/vos-r2-pointer-poll/build/routed-differential/mutant-lost-clear/root.rs",
+        "-o",
+        "/home/veasnawt/src/vos-r2-pointer-poll/build/routed-differential/mutant-lost-clear/libps2_routed_core.rlib"
+      ],
+      "log": "lost-clear-core-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Coverflow-checks=yes",
+        "--test",
+        "-Cstrip=symbols",
+        "--extern",
+        "ps2_routed_core=/home/veasnawt/src/vos-r2-pointer-poll/build/routed-differential/mutant-lost-clear/libps2_routed_core.rlib",
+        "tests/rust/ps2_routed.rs",
+        "-o",
+        "/home/veasnawt/src/vos-r2-pointer-poll/build/routed-differential/mutant-lost-clear/tests"
+      ],
+      "log": "lost-clear-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/home/veasnawt/src/vos-r2-pointer-poll/build/routed-differential/mutant-lost-clear/tests",
+        "--test-threads=1",
+        "pointer_lost_and_clear_test"
+      ],
+      "log": "lost-clear.txt",
+      "exit_code": 101
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Coverflow-checks=yes",
+        "--crate-type=staticlib",
+        "-Cpanic=abort",
+        "/home/veasnawt/src/vos-r2-pointer-poll/build/routed-differential/ffi-root.rs",
+        "-o",
+        "/home/veasnawt/src/vos-r2-pointer-poll/build/routed-differential/libchecked_ffi.a"
+      ],
+      "log": "checked-ffi-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "gcc",
+        "-std=gnu11",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-Iarch/x86_64",
+        "-ffunction-sections",
+        "-fdata-sections",
+        "-fno-pie",
+        "-no-pie",
+        "-Wl,--gc-sections",
+        "-O1",
+        "-g",
+        "-fsanitize=address,undefined",
+        "-fno-sanitize-recover=all",
+        "tests/host/ps2-routed-differential.c",
+        "/home/veasnawt/src/vos-r2-pointer-poll/build/routed-differential/sanitizer-reference.o",
+        "/home/veasnawt/src/vos-r2-pointer-poll/build/routed-differential/sanitizer-driver.o",
+        "/home/veasnawt/src/vos-r2-pointer-poll/build/routed-differential/libchecked_ffi.a",
+        "-o",
+        "/home/veasnawt/src/vos-r2-pointer-poll/build/routed-differential/checked-differential"
+      ],
+      "log": "checked-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/home/veasnawt/src/vos-r2-pointer-poll/build/routed-differential/checked-differential"
+      ],
+      "log": "checked.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/home/veasnawt/.rustup/toolchains/nightly-2026-09-03-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2024",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Coverflow-checks=yes",
+        "--crate-type=lib",
+        "--target=x86_64-unknown-none",
+        "-Cpanic=abort",
+        "-Ccode-model=kernel",
+        "-Crelocation-model=static",
+        "-Cno-redzone=yes",
+        "-Cforce-unwind-tables=no",
+        "-Zemit-stack-sizes",
+        "--emit=obj",
+        "/home/veasnawt/src/vos-r2-pointer-poll/build/routed-differential/ffi-root.rs",
+        "-o",
+        "/home/veasnawt/src/vos-r2-pointer-poll/build/routed-differential/target.o"
+      ],
+      "log": "target-build.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "objdump",
+        "-dr",
+        "/home/veasnawt/src/vos-r2-pointer-poll/build/routed-differential/target.o"
+      ],
+      "log": "target-disassembly.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "objdump",
+        "-d",
+        "/home/veasnawt/src/vos-r2-pointer-poll/build/candidate/rust/libvos_kernel.a"
+      ],
+      "log": "production-disassembly.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "nm",
+        "--defined-only",
+        "/home/veasnawt/src/vos-r2-pointer-poll/build/candidate/rust/libvos_kernel.a"
+      ],
+      "log": "archive-owners.txt",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "nm",
+        "/home/veasnawt/src/vos-r2-pointer-poll/build/routed-differential/release-driver.o"
+      ],
+      "log": "driver-symbols.txt",
+      "exit_code": 0
+    }
+  ],
+  "Rust_sanitized": false,
+  "archive_sha256": "950a4c946c834e5b8a0a99b7d7998c01f346b208bc39ce24c5627f5653de321f",
+  "seed": "7232647261696e31",
+  "sanitizer": "PASS 185637 routed driver comparisons; seed=7232647261696e31; callback mutations, exact read trace, boundary object; no controller writes\n",
+  "release": "PASS 185637 routed driver comparisons; seed=7232647261696e31; callback mutations, exact read trace, boundary object; no controller writes\n",
+  "benchmark_cpu": 0,
+  "performance": {
+    "0": {
+      "C_ns": 9.73,
+      "Rust_ns": 8.55,
+      "ratio": 0.8787255909558068,
+      "regression_percent": -12.127440904419318
+    },
+    "1": {
+      "C_ns": 25.795,
+      "Rust_ns": 24.865,
+      "ratio": 0.963946501259934,
+      "regression_percent": -3.6053498740066026
+    },
+    "2": {
+      "C_ns": 43.94,
+      "Rust_ns": 40.965,
+      "ratio": 0.9322940373236233,
+      "regression_percent": -6.770596267637674
+    },
+    "3": {
+      "C_ns": 22.12,
+      "Rust_ns": 21.08,
+      "ratio": 0.9529837251356238,
+      "regression_percent": -4.701627486437621
+    },
+    "4": {
+      "C_ns": 73.955,
+      "Rust_ns": 74.62,
+      "ratio": 1.0089919545669666,
+      "regression_percent": 0.8991954566966553
+    },
+    "5": {
+      "C_ns": 5.605,
+      "Rust_ns": 5.165,
+      "ratio": 0.9214986619090098,
+      "regression_percent": -7.850133809099025
+    },
+    "6": {
+      "C_ns": 535.575,
+      "Rust_ns": 520.02,
+      "ratio": 0.9709564486766558,
+      "regression_percent": -2.904355132334424
+    },
+    "7": {
+      "C_ns": 1117.6899,
+      "Rust_ns": 923.59,
+      "ratio": 0.8263383251472524,
+      "regression_percent": -17.366167485274765
+    },
+    "8": {
+      "C_ns": 9.43,
+      "Rust_ns": 9.585,
+      "ratio": 1.0164369034994698,
+      "regression_percent": 1.6436903499469802
+    },
+    "9": {
+      "C_ns": 14.11,
+      "Rust_ns": 13.145,
+      "ratio": 0.9316087880935506,
+      "regression_percent": -6.839121190644937
+    },
+    "10": {
+      "C_ns": 3.845,
+      "Rust_ns": 4.17,
+      "ratio": 1.0845253576072822,
+      "regression_percent": 8.45253576072822
+    }
+  },
+  "core_tests": "\nrunning 22 tests\ntest aux_error_precedence ... ok\ntest bound_and_enqueue ... ok\ntest callback_change ... ok\ntest count_wrap ... ok\ntest empty ... ok\ntest ff_resets ... ok\ntest full_blocks ... ok\ntest keyboard_error ... ok\ntest pending_blocks ... ok\ntest pointer_complete ... ok\ntest pointer_lost_and_clear_test ... ok\ntest pointer_partial ... ok\ntest pointer_poll_idle_loss ... ok\ntest pointer_poll_idle_saturated ... ok\ntest pointer_poll_not_ready ... ok\ntest pointer_poll_packet_delivery ... ok\ntest pointer_poll_pointer_not_ready ... ok\ntest pointer_reject ... ok\ntest saturation ... ok\ntest wrapping_queue ... ok\ntest zero_character ... ok\ntest zero_resets ... ok\n\ntest result: ok. 22 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s\n\n",
+  "mutations": {
+    "limit": {
+      "assertion": "bound_and_enqueue",
+      "detected": true
+    },
+    "pending": {
+      "assertion": "pending_blocks",
+      "detected": true
+    },
+    "obf": {
+      "assertion": "bound_and_enqueue",
+      "detected": true
+    },
+    "aux": {
+      "assertion": "pointer_complete",
+      "detected": true
+    },
+    "aux-error": {
+      "assertion": "aux_error_precedence",
+      "detected": true
+    },
+    "pointer-negative": {
+      "assertion": "pointer_reject",
+      "detected": true
+    },
+    "pointer-pending": {
+      "assertion": "pointer_partial",
+      "detected": true
+    },
+    "keyboard-error": {
+      "assertion": "keyboard_error",
+      "detected": true
+    },
+    "zero": {
+      "assertion": "zero_resets",
+      "detected": true
+    },
+    "ff": {
+      "assertion": "ff_resets",
+      "detected": true
+    },
+    "saturation": {
+      "assertion": "saturation",
+      "detected": true
+    },
+    "index": {
+      "assertion": "wrapping_queue",
+      "detected": true
+    },
+    "count": {
+      "assertion": "bound_and_enqueue",
+      "detected": true
+    },
+    "zero-character": {
+      "assertion": "zero_character",
+      "detected": true
+    },
+    "poll-ready": {
+      "assertion": "pointer_poll_not_ready",
+      "detected": true
+    },
+    "poll-pointer-ready": {
+      "assertion": "pointer_poll_pointer_not_ready",
+      "detected": true
+    },
+    "poll-take": {
+      "assertion": "pointer_poll_packet_delivery",
+      "detected": true
+    },
+    "poll-idle": {
+      "assertion": "pointer_poll_idle_loss",
+      "detected": true
+    },
+    "lost-clear": {
+      "assertion": "pointer_lost_and_clear_test",
+      "detected": true
+    }
+  },
+  "checked_Rust": "PASS 185637 routed driver comparisons; seed=7232647261696e31; callback mutations, exact read trace, boundary object; no controller writes\n",
+  "target_frames": {
+    "_RNvCsgpO44WCzh3m_7___rustc17rust_begin_unwind": 8,
+    "_RNvNtCskZxhfE7tfM_8ffi_root10ps2_routed12pointer_step": 0,
+    "keyboard_decode": 10,
+    "pointer_decode": 8,
+    "pointer_idle": 0,
+    "vos_rust_keyboard_pointer_lost": 0,
+    "vos_rust_keyboard_pointer_poll": 24,
+    "vos_rust_keyboard_routed_drain": 40
+  },
+  "target_disassembly": "\n/home/veasnawt/src/vos-r2-pointer-poll/build/routed-differential/target.o:     file format elf64-x86-64\n\n\nDisassembly of section .text.unlikely._RNvCsgpO44WCzh3m_7___rustc17rust_begin_unwind:\n\n0000000000000000 <_RNvCsgpO44WCzh3m_7___rustc17rust_begin_unwind>:\n   0:\t50                   \tpush   %rax\n   1:\te8 00 00 00 00       \tcall   6 <_RNvCsgpO44WCzh3m_7___rustc17rust_begin_unwind+0x6>\n\t\t\t2: R_X86_64_PLT32\tabort-0x4\n\nDisassembly of section .text._RNvNtCskZxhfE7tfM_8ffi_root10ps2_routed12pointer_step:\n\n0000000000000000 <_RNvNtCskZxhfE7tfM_8ffi_root10ps2_routed12pointer_step>:\n   0:\t48 8d 47 1c          \tlea    0x1c(%rdi),%rax\n   4:\t48 8d 57 22          \tlea    0x22(%rdi),%rdx\n   8:\t40 0f b6 f6          \tmovzbl %sil,%esi\n   c:\t48 89 c7             \tmov    %rax,%rdi\n   f:\te9 00 00 00 00       \tjmp    14 <_RNvNtCskZxhfE7tfM_8ffi_root10ps2_routed12pointer_step+0x14>\n\t\t\t10: R_X86_64_PLT32\tpointer_decode-0x4\n\nDisassembly of section .text.keyboard_decode:\n\n0000000000000000 <keyboard_decode>:\n   0:\t48 8d 47 ff          \tlea    -0x1(%rdi),%rax\n   4:\t48 83 f8 f7          \tcmp    $0xfffffffffffffff7,%rax\n   8:\t77 55                \tja     5f <keyboard_decode+0x5f>\n   a:\t53                   \tpush   %rbx\n   b:\t48 83 ec 02          \tsub    $0x2,%rsp\n   f:\t0f b6 17             \tmovzbl (%rdi),%edx\n  12:\t44 0f b6 57 01       \tmovzbl 0x1(%rdi),%r10d\n  17:\t44 88 14 24          \tmov    %r10b,(%rsp)\n  1b:\t44 0f b6 4f 02       \tmovzbl 0x2(%rdi),%r9d\n  20:\t44 88 4c 24 01       \tmov    %r9b,0x1(%rsp)\n  25:\t0f b6 4f 03          \tmovzbl 0x3(%rdi),%ecx\n  29:\t44 0f b6 47 04       \tmovzbl 0x4(%rdi),%r8d\n  2e:\t0f b6 5f 05          \tmovzbl 0x5(%rdi),%ebx\n  32:\t44 0f b6 5f 06       \tmovzbl 0x6(%rdi),%r11d\n  37:\t45 84 db             \ttest   %r11b,%r11b\n  3a:\t74 26                \tje     62 <keyboard_decode+0x62>\n  3c:\t41 fe cb             \tdec    %r11b\n  3f:\t31 c0                \txor    %eax,%eax\n  41:\t88 17                \tmov    %dl,(%rdi)\n  43:\t44 88 57 01          \tmov    %r10b,0x1(%rdi)\n  47:\t44 88 4f 02          \tmov    %r9b,0x2(%rdi)\n  4b:\t88 4f 03             \tmov    %cl,0x3(%rdi)\n  4e:\t44 88 47 04          \tmov    %r8b,0x4(%rdi)\n  52:\t88 5f 05             \tmov    %bl,0x5(%rdi)\n  55:\t44 88 5f 06          \tmov    %r11b,0x6(%rdi)\n  59:\t48 83 c4 02          \tadd    $0x2,%rsp\n  5d:\t5b                   \tpop    %rbx\n  5e:\tc3                   \tret\n  5f:\t31 c0                \txor    %eax,%eax\n  61:\tc3                   \tret\n  62:\t40 80 fe e1          \tcmp    $0xe1,%sil\n  66:\t74 14                \tje     7c <keyboard_decode+0x7c>\n  68:\t44 0f b6 de          \tmovzbl %sil,%r11d\n  6c:\t41 81 fb e0 00 00 00 \tcmp    $0xe0,%r11d\n  73:\t75 0e                \tjne    83 <keyboard_decode+0x83>\n  75:\tb3 01                \tmov    $0x1,%bl\n  77:\t45 31 db             \txor    %r11d,%r11d\n  7a:\teb c3                \tjmp    3f <keyboard_decode+0x3f>\n  7c:\t41 b3 05             \tmov    $0x5,%r11b\n  7f:\t31 db                \txor    %ebx,%ebx\n  81:\teb bc                \tjmp    3f <keyboard_decode+0x3f>\n  83:\t41 83 e3 7f          \tand    $0x7f,%r11d\n  87:\t84 db                \ttest   %bl,%bl\n  89:\t74 17                \tje     a2 <keyboard_decode+0xa2>\n  8b:\tb0 02                \tmov    $0x2,%al\n  8d:\t41 80 fb 1d          \tcmp    $0x1d,%r11b\n  91:\t74 24                \tje     b7 <keyboard_decode+0xb7>\n  93:\t45 0f b6 db          \tmovzbl %r11b,%r11d\n  97:\t41 83 fb 38          \tcmp    $0x38,%r11d\n  9b:\t74 22                \tje     bf <keyboard_decode+0xbf>\n  9d:\te9 ac 00 00 00       \tjmp    14e <keyboard_decode+0x14e>\n  a2:\t41 0f b6 db          \tmovzbl %r11b,%ebx\n  a6:\t83 c3 e3             \tadd    $0xffffffe3,%ebx\n  a9:\t83 fb 1d             \tcmp    $0x1d,%ebx\n  ac:\t77 48                \tja     f6 <keyboard_decode+0xf6>\n  ae:\tb0 01                \tmov    $0x1,%al\n  b0:\tff 24 dd 00 00 00 00 \tjmp    *0x0(,%rbx,8)\n\t\t\tb3: R_X86_64_32S\t.rodata.keyboard_decode\n  b7:\t49 89 e3             \tmov    %rsp,%r11\n  ba:\t45 89 d1             \tmov    %r10d,%r9d\n  bd:\teb 05                \tjmp    c4 <keyboard_decode+0xc4>\n  bf:\t4c 8d 5c 24 01       \tlea    0x1(%rsp),%r11\n  c4:\t41 89 c2             \tmov    %eax,%r10d\n  c7:\t41 f6 d2             \tnot    %r10b\n  ca:\t45 20 ca             \tand    %r9b,%r10b\n  cd:\t41 08 c1             \tor     %al,%r9b\n  d0:\t40 84 f6             \ttest   %sil,%sil\n  d3:\t41 0f b6 c1          \tmovzbl %r9b,%eax\n  d7:\t41 0f b6 f2          \tmovzbl %r10b,%esi\n  db:\t0f 49 f0             \tcmovns %eax,%esi\n  de:\t41 88 33             \tmov    %sil,(%r11)\n  e1:\t44 0f b6 14 24       \tmovzbl (%rsp),%r10d\n  e6:\t45 31 db             \txor    %r11d,%r11d\n  e9:\t44 0f b6 4c 24 01    \tmovzbl 0x1(%rsp),%r9d\n  ef:\t31 db                \txor    %ebx,%ebx\n  f1:\te9 49 ff ff ff       \tjmp    3f <keyboard_decode+0x3f>\n  f6:\t40 84 f6             \ttest   %sil,%sil\n  f9:\t0f 99 c0             \tsetns  %al\n  fc:\t44 89 d6             \tmov    %r10d,%esi\n  ff:\t44 08 ce             \tor     %r9b,%sil\n 102:\t40 0f 94 c6          \tsete   %sil\n 106:\t40 20 c6             \tand    %al,%sil\n 109:\t40 80 fe 01          \tcmp    $0x1,%sil\n 10d:\t75 3f                \tjne    14e <keyboard_decode+0x14e>\n 10f:\t41 0f b6 83 00 00 00 \tmovzbl 0x0(%r11),%eax\n 116:\t00 \n\t\t\t113: R_X86_64_32S\t.rodata..Lanon.cb3eb596475d652dc10ec043711ce312.2\n 117:\t3c 60                \tcmp    $0x60,%al\n 119:\t76 5d                \tjbe    178 <keyboard_decode+0x178>\n 11b:\t84 d2                \ttest   %dl,%dl\n 11d:\t40 0f 95 c6          \tsetne  %sil\n 121:\t44 8d 48 e0          \tlea    -0x20(%rax),%r9d\n 125:\t40 38 f1             \tcmp    %sil,%cl\n 128:\t0f b6 f0             \tmovzbl %al,%esi\n 12b:\t41 0f b6 c1          \tmovzbl %r9b,%eax\n 12f:\t0f 44 c6             \tcmove  %esi,%eax\n 132:\teb 59                \tjmp    18d <keyboard_decode+0x18d>\n 134:\tb0 02                \tmov    $0x2,%al\n 136:\t41 89 c3             \tmov    %eax,%r11d\n 139:\t41 f6 d3             \tnot    %r11b\n 13c:\t41 20 d3             \tand    %dl,%r11b\n 13f:\t08 d0                \tor     %dl,%al\n 141:\t40 84 f6             \ttest   %sil,%sil\n 144:\t0f b6 c0             \tmovzbl %al,%eax\n 147:\t41 0f b6 d3          \tmovzbl %r11b,%edx\n 14b:\t0f 49 d0             \tcmovns %eax,%edx\n 14e:\t45 31 db             \txor    %r11d,%r11d\n 151:\t31 db                \txor    %ebx,%ebx\n 153:\te9 e7 fe ff ff       \tjmp    3f <keyboard_decode+0x3f>\n 158:\t40 84 f6             \ttest   %sil,%sil\n 15b:\t0f 99 c0             \tsetns  %al\n 15e:\t45 84 c0             \ttest   %r8b,%r8b\n 161:\t40 0f 94 c6          \tsete   %sil\n 165:\t40 20 c6             \tand    %al,%sil\n 168:\t40 30 f1             \txor    %sil,%cl\n 16b:\t45 31 db             \txor    %r11d,%r11d\n 16e:\t31 db                \txor    %ebx,%ebx\n 170:\t41 89 c0             \tmov    %eax,%r8d\n 173:\te9 c7 fe ff ff       \tjmp    3f <keyboard_decode+0x3f>\n 178:\t84 d2                \ttest   %dl,%dl\n 17a:\t74 21                \tje     19d <keyboard_decode+0x19d>\n 17c:\t41 0f b6 b3 00 00 00 \tmovzbl 0x0(%r11),%esi\n 183:\t00 \n\t\t\t180: R_X86_64_32S\t.rodata..Lanon.cb3eb596475d652dc10ec043711ce312.3\n 184:\t40 84 f6             \ttest   %sil,%sil\n 187:\t0f b6 c0             \tmovzbl %al,%eax\n 18a:\t0f 45 c6             \tcmovne %esi,%eax\n 18d:\t45 31 c9             \txor    %r9d,%r9d\n 190:\t45 31 d2             \txor    %r10d,%r10d\n 193:\t45 31 db             \txor    %r11d,%r11d\n 196:\t31 db                \txor    %ebx,%ebx\n 198:\te9 a4 fe ff ff       \tjmp    41 <keyboard_decode+0x41>\n 19d:\t45 31 c9             \txor    %r9d,%r9d\n 1a0:\t45 31 d2             \txor    %r10d,%r10d\n 1a3:\t45 31 db             \txor    %r11d,%r11d\n 1a6:\t31 db                \txor    %ebx,%ebx\n 1a8:\t31 d2                \txor    %edx,%edx\n 1aa:\te9 92 fe ff ff       \tjmp    41 <keyboard_decode+0x41>\n\nDisassembly of section .text.pointer_decode:\n\n0000000000000000 <pointer_decode>:\n   0:\t48 85 ff             \ttest   %rdi,%rdi\n   3:\t0f 94 c0             \tsete   %al\n   6:\t48 85 d2             \ttest   %rdx,%rdx\n   9:\t0f 94 c1             \tsete   %cl\n   c:\t08 c1                \tor     %al,%cl\n   e:\tb8 ff ff ff ff       \tmov    $0xffffffff,%eax\n  13:\t41 89 d0             \tmov    %edx,%r8d\n  16:\t41 08 c8             \tor     %cl,%r8b\n  19:\t41 f6 c0 01          \ttest   $0x1,%r8b\n  1d:\t0f 85 bb 00 00 00    \tjne    de <pointer_decode+0xde>\n  23:\t4c 8d 47 05          \tlea    0x5(%rdi),%r8\n  27:\t48 8d 4a 06          \tlea    0x6(%rdx),%rcx\n  2b:\t48 39 f9             \tcmp    %rdi,%rcx\n  2e:\t0f 97 c1             \tseta   %cl\n  31:\t49 39 d0             \tcmp    %rdx,%r8\n  34:\t41 0f 97 c0          \tseta   %r8b\n  38:\t48 83 ff fa          \tcmp    $0xfffffffffffffffa,%rdi\n  3c:\t0f 87 9c 00 00 00    \tja     de <pointer_decode+0xde>\n  42:\t48 83 fa f9          \tcmp    $0xfffffffffffffff9,%rdx\n  46:\t0f 87 92 00 00 00    \tja     de <pointer_decode+0xde>\n  4c:\t41 20 c8             \tand    %cl,%r8b\n  4f:\t0f 85 89 00 00 00    \tjne    de <pointer_decode+0xde>\n  55:\t0f b6 4f 03          \tmovzbl 0x3(%rdi),%ecx\n  59:\t48 83 f9 02          \tcmp    $0x2,%rcx\n  5d:\t77 0b                \tja     6a <pointer_decode+0x6a>\n  5f:\t48 85 c9             \ttest   %rcx,%rcx\n  62:\t74 0d                \tje     71 <pointer_decode+0x71>\n  64:\t80 7f 04 10          \tcmpb   $0x10,0x4(%rdi)\n  68:\t72 07                \tjb     71 <pointer_decode+0x71>\n  6a:\t66 c7 47 03 00 00    \tmovw   $0x0,0x3(%rdi)\n  70:\tc3                   \tret\n  71:\tc6 47 04 00          \tmovb   $0x0,0x4(%rdi)\n  75:\t41 89 f0             \tmov    %esi,%r8d\n  78:\t41 80 e0 08          \tand    $0x8,%r8b\n  7c:\t41 08 c8             \tor     %cl,%r8b\n  7f:\t74 5d                \tje     de <pointer_decode+0xde>\n  81:\t40 88 34 0f          \tmov    %sil,(%rdi,%rcx,1)\n  85:\t0f b6 4f 03          \tmovzbl 0x3(%rdi),%ecx\n  89:\t80 f9 ff             \tcmp    $0xff,%cl\n  8c:\t74 51                \tje     df <pointer_decode+0xdf>\n  8e:\t8d 41 01             \tlea    0x1(%rcx),%eax\n  91:\t88 47 03             \tmov    %al,0x3(%rdi)\n  94:\t31 c0                \txor    %eax,%eax\n  96:\t80 f9 02             \tcmp    $0x2,%cl\n  99:\t72 43                \tjb     de <pointer_decode+0xde>\n  9b:\tc6 47 03 00          \tmovb   $0x0,0x3(%rdi)\n  9f:\t0f b6 0f             \tmovzbl (%rdi),%ecx\n  a2:\tb8 ff ff ff ff       \tmov    $0xffffffff,%eax\n  a7:\t80 f9 3f             \tcmp    $0x3f,%cl\n  aa:\t77 32                \tja     de <pointer_decode+0xde>\n  ac:\t0f b6 47 01          \tmovzbl 0x1(%rdi),%eax\n  b0:\t8d b0 00 ff ff ff    \tlea    -0x100(%rax),%esi\n  b6:\tf6 c1 10             \ttest   $0x10,%cl\n  b9:\t0f 45 c6             \tcmovne %esi,%eax\n  bc:\t0f b6 77 02          \tmovzbl 0x2(%rdi),%esi\n  c0:\t8d be 00 ff ff ff    \tlea    -0x100(%rsi),%edi\n  c6:\t80 f9 20             \tcmp    $0x20,%cl\n  c9:\t0f 43 f7             \tcmovae %edi,%esi\n  cc:\t80 e1 01             \tand    $0x1,%cl\n  cf:\t66 89 02             \tmov    %ax,(%rdx)\n  d2:\t66 89 72 02          \tmov    %si,0x2(%rdx)\n  d6:\t88 4a 04             \tmov    %cl,0x4(%rdx)\n  d9:\tb8 01 00 00 00       \tmov    $0x1,%eax\n  de:\tc3                   \tret\n  df:\t50                   \tpush   %rax\n  e0:\t48 c7 c7 00 00 00 00 \tmov    $0x0,%rdi\n\t\t\te3: R_X86_64_32S\t.rodata..Lanon.cb3eb596475d652dc10ec043711ce312.1\n  e7:\te8 00 00 00 00       \tcall   ec <pointer_decode+0xec>\n\t\t\te8: R_X86_64_PLT32\t_RNvNtNtCs5DY3uuhqWn8_4core9panicking11panic_const24panic_const_add_overflow-0x4\n\nDisassembly of section .text.pointer_idle:\n\n0000000000000000 <pointer_idle>:\n   0:\t31 c0                \txor    %eax,%eax\n   2:\t48 85 ff             \ttest   %rdi,%rdi\n   5:\t74 2b                \tje     32 <pointer_idle+0x32>\n   7:\t0f b6 4f 03          \tmovzbl 0x3(%rdi),%ecx\n   b:\t80 f9 02             \tcmp    $0x2,%cl\n   e:\t77 17                \tja     27 <pointer_idle+0x27>\n  10:\t84 c9                \ttest   %cl,%cl\n  12:\t74 1e                \tje     32 <pointer_idle+0x32>\n  14:\t0f b6 4f 04          \tmovzbl 0x4(%rdi),%ecx\n  18:\t80 f9 0f             \tcmp    $0xf,%cl\n  1b:\t77 0a                \tja     27 <pointer_idle+0x27>\n  1d:\tfe c1                \tinc    %cl\n  1f:\t88 4f 04             \tmov    %cl,0x4(%rdi)\n  22:\t80 f9 10             \tcmp    $0x10,%cl\n  25:\t75 0b                \tjne    32 <pointer_idle+0x32>\n  27:\t66 c7 47 03 00 00    \tmovw   $0x0,0x3(%rdi)\n  2d:\tb8 01 00 00 00       \tmov    $0x1,%eax\n  32:\tc3                   \tret\n\nDisassembly of section .text.vos_rust_keyboard_pointer_lost:\n\n0000000000000000 <vos_rust_keyboard_pointer_lost>:\n   0:\t31 c0                \txor    %eax,%eax\n   2:\t48 85 ff             \ttest   %rdi,%rdi\n   5:\t74 1c                \tje     23 <vos_rust_keyboard_pointer_lost+0x23>\n   7:\t40 f6 c7 07          \ttest   $0x7,%dil\n   b:\t0f 95 c1             \tsetne  %cl\n   e:\t48 83 ff a8          \tcmp    $0xffffffffffffffa8,%rdi\n  12:\t0f 93 c2             \tsetae  %dl\n  15:\t08 ca                \tor     %cl,%dl\n  17:\t75 0a                \tjne    23 <vos_rust_keyboard_pointer_lost+0x23>\n  19:\t8b 47 28             \tmov    0x28(%rdi),%eax\n  1c:\tc7 47 28 00 00 00 00 \tmovl   $0x0,0x28(%rdi)\n  23:\tc3                   \tret\n\nDisassembly of section .text.vos_rust_keyboard_pointer_poll:\n\n0000000000000000 <vos_rust_keyboard_pointer_poll>:\n   0:\t48 85 ff             \ttest   %rdi,%rdi\n   3:\t0f 94 c0             \tsete   %al\n   6:\t48 85 f6             \ttest   %rsi,%rsi\n   9:\t0f 94 c1             \tsete   %cl\n   c:\t08 c1                \tor     %al,%cl\n   e:\t40 f6 c7 07          \ttest   $0x7,%dil\n  12:\t0f 95 c2             \tsetne  %dl\n  15:\t31 c0                \txor    %eax,%eax\n  17:\t08 ca                \tor     %cl,%dl\n  19:\t0f 85 9c 00 00 00    \tjne    bb <vos_rust_keyboard_pointer_poll+0xbb>\n  1f:\t48 83 ff a8          \tcmp    $0xffffffffffffffa8,%rdi\n  23:\t0f 93 c1             \tsetae  %cl\n  26:\t40 08 f1             \tor     %sil,%cl\n  29:\t48 83 fe fa          \tcmp    $0xfffffffffffffffa,%rsi\n  2d:\t0f 93 c2             \tsetae  %dl\n  30:\t08 ca                \tor     %cl,%dl\n  32:\tf6 c2 01             \ttest   $0x1,%dl\n  35:\t0f 85 80 00 00 00    \tjne    bb <vos_rust_keyboard_pointer_poll+0xbb>\n  3b:\t83 7f 10 00          \tcmpl   $0x0,0x10(%rdi)\n  3f:\t74 7a                \tje     bb <vos_rust_keyboard_pointer_poll+0xbb>\n  41:\t83 7f 14 00          \tcmpl   $0x0,0x14(%rdi)\n  45:\t74 74                \tje     bb <vos_rust_keyboard_pointer_poll+0xbb>\n  47:\t41 56                \tpush   %r14\n  49:\t53                   \tpush   %rbx\n  4a:\t50                   \tpush   %rax\n  4b:\t49 89 f6             \tmov    %rsi,%r14\n  4e:\t48 89 fb             \tmov    %rdi,%rbx\n  51:\te8 00 00 00 00       \tcall   56 <vos_rust_keyboard_pointer_poll+0x56>\n\t\t\t52: R_X86_64_PLT32\tvos_rust_keyboard_routed_drain-0x4\n  56:\t83 7b 18 00          \tcmpl   $0x0,0x18(%rbx)\n  5a:\t74 1d                \tje     79 <vos_rust_keyboard_pointer_poll+0x79>\n  5c:\t8b 43 22             \tmov    0x22(%rbx),%eax\n  5f:\t0f b7 4b 26          \tmovzwl 0x26(%rbx),%ecx\n  63:\tc7 43 18 00 00 00 00 \tmovl   $0x0,0x18(%rbx)\n  6a:\t66 41 89 4e 04       \tmov    %cx,0x4(%r14)\n  6f:\t41 89 06             \tmov    %eax,(%r14)\n  72:\tb8 01 00 00 00       \tmov    $0x1,%eax\n  77:\teb 3b                \tjmp    b4 <vos_rust_keyboard_pointer_poll+0xb4>\n  79:\t0f b6 4b 1f          \tmovzbl 0x1f(%rbx),%ecx\n  7d:\t80 f9 02             \tcmp    $0x2,%cl\n  80:\tb8 00 00 00 00       \tmov    $0x0,%eax\n  85:\t77 17                \tja     9e <vos_rust_keyboard_pointer_poll+0x9e>\n  87:\t84 c9                \ttest   %cl,%cl\n  89:\t74 29                \tje     b4 <vos_rust_keyboard_pointer_poll+0xb4>\n  8b:\t0f b6 4b 20          \tmovzbl 0x20(%rbx),%ecx\n  8f:\t80 f9 0f             \tcmp    $0xf,%cl\n  92:\t77 0a                \tja     9e <vos_rust_keyboard_pointer_poll+0x9e>\n  94:\tfe c1                \tinc    %cl\n  96:\t88 4b 20             \tmov    %cl,0x20(%rbx)\n  99:\t80 f9 10             \tcmp    $0x10,%cl\n  9c:\t75 16                \tjne    b4 <vos_rust_keyboard_pointer_poll+0xb4>\n  9e:\t66 c7 43 1f 00 00    \tmovw   $0x0,0x1f(%rbx)\n  a4:\t8b 4b 28             \tmov    0x28(%rbx),%ecx\n  a7:\t31 d2                \txor    %edx,%edx\n  a9:\t83 f9 ff             \tcmp    $0xffffffff,%ecx\n  ac:\t0f 95 c2             \tsetne  %dl\n  af:\t01 ca                \tadd    %ecx,%edx\n  b1:\t89 53 28             \tmov    %edx,0x28(%rbx)\n  b4:\t48 83 c4 08          \tadd    $0x8,%rsp\n  b8:\t5b                   \tpop    %rbx\n  b9:\t41 5e                \tpop    %r14\n  bb:\tc3                   \tret\n\nDisassembly of section .text.vos_rust_keyboard_routed_drain:\n\n0000000000000000 <vos_rust_keyboard_routed_drain>:\n   0:\t48 85 ff             \ttest   %rdi,%rdi\n   3:\t74 24                \tje     29 <vos_rust_keyboard_routed_drain+0x29>\n   5:\t55                   \tpush   %rbp\n   6:\t41 57                \tpush   %r15\n   8:\t41 56                \tpush   %r14\n   a:\t41 54                \tpush   %r12\n   c:\t53                   \tpush   %rbx\n   d:\t48 89 fb             \tmov    %rdi,%rbx\n  10:\tf6 c3 07             \ttest   $0x7,%bl\n  13:\t0f 95 c0             \tsetne  %al\n  16:\t48 83 ff a8          \tcmp    $0xffffffffffffffa8,%rdi\n  1a:\t0f 93 c1             \tsetae  %cl\n  1d:\t08 c1                \tor     %al,%cl\n  1f:\t74 09                \tje     2a <vos_rust_keyboard_routed_drain+0x2a>\n  21:\t5b                   \tpop    %rbx\n  22:\t41 5c                \tpop    %r12\n  24:\t41 5e                \tpop    %r14\n  26:\t41 5f                \tpop    %r15\n  28:\t5d                   \tpop    %rbp\n  29:\tc3                   \tret\n  2a:\t4c 8d 7b 1c          \tlea    0x1c(%rbx),%r15\n  2e:\t4c 8d 73 08          \tlea    0x8(%rbx),%r14\n  32:\t41 bc 20 00 00 00    \tmov    $0x20,%r12d\n  38:\teb 1a                \tjmp    54 <vos_rust_keyboard_routed_drain+0x54>\n  3a:\t66 0f 1f 44 00 00    \tnopw   0x0(%rax,%rax,1)\n  40:\t41 c7 46 03 00 00 00 \tmovl   $0x0,0x3(%r14)\n  47:\t00 \n  48:\t41 c7 06 00 00 00 00 \tmovl   $0x0,(%r14)\n  4f:\t41 ff cc             \tdec    %r12d\n  52:\t74 cd                \tje     21 <vos_rust_keyboard_routed_drain+0x21>\n  54:\t83 7b 18 00          \tcmpl   $0x0,0x18(%rbx)\n  58:\t75 c7                \tjne    21 <vos_rust_keyboard_routed_drain+0x21>\n  5a:\t83 7b 30 20          \tcmpl   $0x20,0x30(%rbx)\n  5e:\t74 c1                \tje     21 <vos_rust_keyboard_routed_drain+0x21>\n  60:\t48 8b 03             \tmov    (%rbx),%rax\n  63:\tbf 64 00 00 00       \tmov    $0x64,%edi\n  68:\tff 10                \tcall   *(%rax)\n  6a:\ta8 01                \ttest   $0x1,%al\n  6c:\t74 b3                \tje     21 <vos_rust_keyboard_routed_drain+0x21>\n  6e:\t89 c5                \tmov    %eax,%ebp\n  70:\t48 8b 03             \tmov    (%rbx),%rax\n  73:\tbf 60 00 00 00       \tmov    $0x60,%edi\n  78:\tff 10                \tcall   *(%rax)\n  7a:\t40 f6 c5 20          \ttest   $0x20,%bpl\n  7e:\t75 40                \tjne    c0 <vos_rust_keyboard_routed_drain+0xc0>\n  80:\t40 80 fd 40          \tcmp    $0x40,%bpl\n  84:\t0f 92 c1             \tsetb   %cl\n  87:\t8d 50 ff             \tlea    -0x1(%rax),%edx\n  8a:\t80 fa fe             \tcmp    $0xfe,%dl\n  8d:\t0f 92 c2             \tsetb   %dl\n  90:\t84 d1                \ttest   %dl,%cl\n  92:\t74 ac                \tje     40 <vos_rust_keyboard_routed_drain+0x40>\n  94:\t0f b6 f0             \tmovzbl %al,%esi\n  97:\t4c 89 f7             \tmov    %r14,%rdi\n  9a:\te8 00 00 00 00       \tcall   9f <vos_rust_keyboard_routed_drain+0x9f>\n\t\t\t9b: R_X86_64_PLT32\tkeyboard_decode-0x4\n  9f:\t84 c0                \ttest   %al,%al\n  a1:\t74 ac                \tje     4f <vos_rust_keyboard_routed_drain+0x4f>\n  a3:\t8b 4b 30             \tmov    0x30(%rbx),%ecx\n  a6:\t8b 53 2c             \tmov    0x2c(%rbx),%edx\n  a9:\t01 ca                \tadd    %ecx,%edx\n  ab:\t83 e2 1f             \tand    $0x1f,%edx\n  ae:\t88 44 13 34          \tmov    %al,0x34(%rbx,%rdx,1)\n  b2:\tff c1                \tinc    %ecx\n  b4:\t89 4b 30             \tmov    %ecx,0x30(%rbx)\n  b7:\teb 96                \tjmp    4f <vos_rust_keyboard_routed_drain+0x4f>\n  b9:\t0f 1f 80 00 00 00 00 \tnopl   0x0(%rax)\n  c0:\t40 80 fd 40          \tcmp    $0x40,%bpl\n  c4:\t73 2a                \tjae    f0 <vos_rust_keyboard_routed_drain+0xf0>\n  c6:\t0f b6 f0             \tmovzbl %al,%esi\n  c9:\t48 89 df             \tmov    %rbx,%rdi\n  cc:\te8 00 00 00 00       \tcall   d1 <vos_rust_keyboard_routed_drain+0xd1>\n\t\t\tcd: R_X86_64_PLT32\t_RNvNtCskZxhfE7tfM_8ffi_root10ps2_routed12pointer_step-0x4\n  d1:\t85 c0                \ttest   %eax,%eax\n  d3:\t78 27                \tjs     fc <vos_rust_keyboard_routed_drain+0xfc>\n  d5:\t0f 84 74 ff ff ff    \tje     4f <vos_rust_keyboard_routed_drain+0x4f>\n  db:\tc7 43 18 01 00 00 00 \tmovl   $0x1,0x18(%rbx)\n  e2:\te9 68 ff ff ff       \tjmp    4f <vos_rust_keyboard_routed_drain+0x4f>\n  e7:\t66 0f 1f 84 00 00 00 \tnopw   0x0(%rax,%rax,1)\n  ee:\t00 00 \n  f0:\t41 c6 47 04 00       \tmovb   $0x0,0x4(%r15)\n  f5:\t41 c7 07 00 00 00 00 \tmovl   $0x0,(%r15)\n  fc:\t8b 43 28             \tmov    0x28(%rbx),%eax\n  ff:\t31 c9                \txor    %ecx,%ecx\n 101:\t83 f8 ff             \tcmp    $0xffffffff,%eax\n 104:\t0f 95 c1             \tsetne  %cl\n 107:\t01 c1                \tadd    %eax,%ecx\n 109:\t89 4b 28             \tmov    %ecx,0x28(%rbx)\n 10c:\te9 3e ff ff ff       \tjmp    4f <vos_rust_keyboard_routed_drain+0x4f>\n",
+  "production_routing_frames": {
+    "_RNvNtCs5YZeFliBs6N_10vos_kernel10ps2_routed12pointer_step": 0,
+    "vos_rust_keyboard_pointer_lost": 0,
+    "vos_rust_keyboard_pointer_poll": 24,
+    "vos_rust_keyboard_routed_drain": 40
+  },
+  "source_sha256": {
+    "kernel/rust/input/ps2_routed.rs": "6bf301b2a7b1eb7633cfe8fd5c4c3661265c4cc2ebade273369074e86aa96aa3",
+    "arch/x86_64/rust/ps2_routed.rs": "0d970e73418b32b86a1b27b1da4a17fc343f7ec21e6a4f410be1e68f8c1b5c7a",
+    "arch/x86_64/keyboard.c": "f8860bff2a561d271151ac11a5da7e890a080e1a7beb7e47db9570393b3f5511",
+    "arch/x86_64/keyboard.h": "c6104c37cd72472e32a16471a22c2149e15e68f4baff2c64072a054b088a68b7",
+    "tests/host/ps2-routed-differential.c": "760c6d11b6439330a0b492cded5e098f4516b52ff921c87d9debf89fec8cee97",
+    "tests/rust/ps2_routed.rs": "e777356a60c7d7543d80c57a10181ed788e44430f30ce7a1545403eb8f06edbe",
+    "tests/reference/ps2-pointer-poll.c": "38f14bd071fcb70fcb11264b250f3e4c86a3047bd0449c5abed9fb1afd7daffa"
+  }
+}

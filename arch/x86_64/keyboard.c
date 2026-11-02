@@ -179,15 +179,10 @@ void keyboard_pointer_stop(struct keyboard *k) {
     k->pointer_ready=k->pointer_pending=0;k->pointer=(struct pointer_decoder){0};
     k->pointer_lost=k->key_head=k->key_count=0;
 }
-int keyboard_pointer_poll(struct keyboard *k,struct pointer_packet *p) {
-    if(!k || !p || !k->pointer_ready || !k->ready)return 0;
-    routed_drain(k);
-    if(!k->pointer_pending) {
-        if(pointer_idle(&k->pointer))if(k->pointer_lost!=UINT32_MAX)k->pointer_lost++;
-        return 0;
-    }
-    *p=k->packet;k->pointer_pending=0;return 1;
+/* R2: bounded PS/2 pointer polling and loss accounting are Rust-owned; C ABI preserved. */
+int keyboard_pointer_poll(struct keyboard *k, struct pointer_packet *p) {
+    return vos_rust_keyboard_pointer_poll(k, p);
 }
 unsigned keyboard_pointer_lost(struct keyboard *k) {
-    unsigned n=k->pointer_lost;k->pointer_lost=0;return n;
+    return vos_rust_keyboard_pointer_lost(k);
 }

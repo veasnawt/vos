@@ -1,0 +1,42 @@
+{
+  "status": "PASS_LOCAL_RESOURCE_NATIVE_CORRECTNESS_PERFORMANCE_APPROVED",
+  "stack_frames": {
+    "vos_rust_keyboard_pointer_poll": {
+      "own_frame_bytes": 24,
+      "limit_bytes": 24,
+      "passed": true
+    },
+    "vos_rust_keyboard_pointer_lost": {
+      "own_frame_bytes": 0,
+      "limit_bytes": 24,
+      "passed": true
+    },
+    "vos_rust_keyboard_routed_drain": {
+      "own_frame_bytes": 40,
+      "limit_bytes": 40,
+      "passed": true
+    },
+    "_pointer_step": {
+      "own_frame_bytes": 0,
+      "limit_bytes": 0,
+      "passed": true
+    }
+  },
+  "loaded_growth": {
+    "baseline_loaded_bytes": 962560,
+    "production_loaded_bytes": 962560,
+    "growth_bytes": 0,
+    "limit_bytes": 4096,
+    "passed": true
+  },
+  "file_size": {
+    "baseline_file_bytes": 1227232,
+    "production_file_bytes": 1227056,
+    "delta_bytes": -176
+  },
+  "heap_allocations": 0,
+  "dma_allocations": 0,
+  "mutable_static_state_bytes": 0,
+  "performance_approved": true,
+  "performance_approval_receipt": "performance-owner-approval.json"
+}

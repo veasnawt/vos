@@ -1,0 +1,7 @@
+{
+  "baseline": "e01c51e5d8c405de51910c4c650a63e6881a1f6e",
+  "source": "arch/x86_64/keyboard.c",
+  "accepted_source_sha256": "a86fc196a8840298a0546b9a5770aa8f37e529d636fefaaca33987b413491a79",
+  "reference_sha256": "38f14bd071fcb70fcb11264b250f3e4c86a3047bd0449c5abed9fb1afd7daffa",
+  "transformation": "Exact accepted keyboard.c with test-only reference wrapper for routed_drain."
+}

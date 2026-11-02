@@ -46,3 +46,42 @@ pub fn drain<S:Route>(s:&mut S) {
   }
  }
 }
+
+#[repr(C, align(2))]
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub struct Packet {
+    pub dx: i16,
+    pub dy: i16,
+    pub buttons: u8,
+}
+
+pub trait PointerQueue: Route {
+    fn is_ready(&self) -> bool;
+    fn is_pointer_ready(&self) -> bool;
+    fn drain(&mut self);
+    fn poll_idle(&mut self) -> bool;
+    fn take_packet(&mut self) -> Option<Packet>;
+}
+
+#[inline(always)]
+pub fn pointer_poll<P: PointerQueue>(p: &mut P) -> Option<Packet> {
+    if !p.is_ready() || !p.is_pointer_ready() {
+        return None;
+    }
+    p.drain();
+    if let Some(pkt) = p.take_packet() {
+        return Some(pkt);
+    }
+    if p.poll_idle() {
+        let lost = p.lost();
+        *lost = lost.wrapping_add(u32::from(*lost != u32::MAX));
+    }
+    None
+}
+
+#[inline(always)]
+pub fn pointer_lost_and_clear(lost: &mut u32) -> u32 {
+    let n = *lost;
+    *lost = 0;
+    n
+}

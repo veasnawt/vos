@@ -1,12 +1,11 @@
 //! Private PS/2 driver bridge. C retains storage, controller and lease ownership.
 #[path="../../../kernel/rust/input/ps2_routed.rs"]
 pub mod routing;
-use routing::{Queue,Route};
+use routing::{Queue, Route, Packet, PointerQueue};
+use routing::{pointer_poll, pointer_lost_and_clear};
 use core::{mem::{align_of,offset_of,size_of},ptr};
 #[repr(C)]
 struct Io {input:unsafe extern "C" fn(u16)->u8,output:*const ()}
-#[repr(C,align(2))]
-struct Packet([u8;6]);
 #[repr(C)]
 struct Keyboard {
  io:*const Io,decoder:[u8;7],ready:i32,pointer_ready:i32,pending:i32,
@@ -25,6 +24,7 @@ const _:()={
 unsafe extern "C" {
  fn keyboard_decode(state:*mut u8,byte:u8)->core::ffi::c_char;
  fn pointer_decode(state:*mut u8,byte:u8,packet:*mut u8)->i32;
+ fn pointer_idle(state:*mut u8)->i32;
 }
 // Keep the accepted pure pointer decoder's register pressure out of the driver
 // loop. A raw address passed by value avoids spilling an addressable Raw wrapper.
@@ -72,4 +72,76 @@ impl Route for Raw {
 pub unsafe extern "C" fn vos_rust_keyboard_routed_drain(k:*mut core::ffi::c_void) {
  if k.is_null() || !(k as usize).is_multiple_of(8) || (k as usize).checked_add(88).is_none() {return;}
  routing::drain(&mut Raw(k.cast()));
+}
+
+
+impl PointerQueue for Raw {
+    #[inline(always)]
+    fn is_ready(&self) -> bool {
+        unsafe { ptr::addr_of!((*self.0).ready).read() != 0 }
+    }
+    #[inline(always)]
+    fn is_pointer_ready(&self) -> bool {
+        unsafe { ptr::addr_of!((*self.0).pointer_ready).read() != 0 }
+    }
+    #[inline(always)]
+    fn drain(&mut self) {
+        unsafe { vos_rust_keyboard_routed_drain(self.0.cast()) }
+    }
+    #[inline(always)]
+    fn poll_idle(&mut self) -> bool {
+        unsafe { pointer_idle(ptr::addr_of_mut!((*self.0).pointer).cast()) != 0 }
+    }
+    #[inline(always)]
+    fn take_packet(&mut self) -> Option<Packet> {
+        unsafe {
+            if ptr::addr_of!((*self.0).pending).read() != 0 {
+                let pkt = ptr::addr_of!((*self.0).packet).read();
+                ptr::addr_of_mut!((*self.0).pending).write(0);
+                Some(pkt)
+            } else {
+                None
+            }
+        }
+    }
+}
+
+/// # Safety
+/// k and p identify live, aligned C storage for this entire synchronous call.
+/// C thread/IF=0 ownership rules apply. Disjoint valid pointers required.
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn vos_rust_keyboard_pointer_poll(
+    k: *mut core::ffi::c_void,
+    p: *mut core::ffi::c_void,
+) -> core::ffi::c_int {
+    if k.is_null()
+        || p.is_null()
+        || !(k as usize).is_multiple_of(8)
+        || !(p as usize).is_multiple_of(2)
+        || (k as usize).checked_add(88).is_none()
+        || (p as usize).checked_add(6).is_none()
+    {
+        return 0;
+    }
+    let mut raw = Raw(k.cast());
+    match pointer_poll(&mut raw) {
+        Some(packet) => {
+            unsafe {
+                ptr::addr_of_mut!(*(p as *mut Packet)).write(packet);
+            }
+            1
+        }
+        None => 0,
+    }
+}
+
+/// # Safety
+/// k identifies live, aligned 88-byte C keyboard storage.
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn vos_rust_keyboard_pointer_lost(k: *mut core::ffi::c_void) -> core::ffi::c_uint {
+    if k.is_null() || !(k as usize).is_multiple_of(8) || (k as usize).checked_add(88).is_none() {
+        return 0;
+    }
+    let mut raw = Raw(k.cast());
+    pointer_lost_and_clear(raw.lost())
 }
