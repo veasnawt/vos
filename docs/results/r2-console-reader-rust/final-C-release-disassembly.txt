@@ -1,0 +1,85 @@
+
+/home/veasnawt/src/vos-r2-console-reader/build/reader-final/release-reference.o:     file format elf64-x86-64
+
+
+Disassembly of section .text.input_console_read_line_for_reference:
+
+0000000000000000 <input_console_read_line_for_reference>:
+   0:	48 85 ff             	test   %rdi,%rdi
+   3:	0f 84 e1 00 00 00    	je     ea <input_console_read_line_for_reference+0xea>
+   9:	44 8b 57 10          	mov    0x10(%rdi),%r10d
+   d:	45 85 d2             	test   %r10d,%r10d
+  10:	0f 84 d4 00 00 00    	je     ea <input_console_read_line_for_reference+0xea>
+  16:	48 85 f6             	test   %rsi,%rsi
+  19:	0f 84 c5 00 00 00    	je     e4 <input_console_read_line_for_reference+0xe4>
+  1f:	81 fa 80 00 00 00    	cmp    $0x80,%edx
+  25:	0f 86 b9 00 00 00    	jbe    e4 <input_console_read_line_for_reference+0xe4>
+  2b:	41 57                	push   %r15
+  2d:	31 c0                	xor    %eax,%eax
+  2f:	49 89 cf             	mov    %rcx,%r15
+  32:	b9 12 00 00 00       	mov    $0x12,%ecx
+  37:	41 56                	push   %r14
+  39:	41 89 d6             	mov    %edx,%r14d
+  3c:	41 55                	push   %r13
+  3e:	4d 89 cd             	mov    %r9,%r13
+  41:	41 54                	push   %r12
+  43:	49 89 fc             	mov    %rdi,%r12
+  46:	55                   	push   %rbp
+  47:	53                   	push   %rbx
+  48:	4c 89 c3             	mov    %r8,%rbx
+  4b:	48 81 ec a8 00 00 00 	sub    $0xa8,%rsp
+  52:	48 8d 6c 24 10       	lea    0x10(%rsp),%rbp
+  57:	48 89 74 24 08       	mov    %rsi,0x8(%rsp)
+  5c:	48 89 ef             	mov    %rbp,%rdi
+  5f:	f3 48 ab             	rep stos %rax,(%rdi)
+  62:	4c 89 ff             	mov    %r15,%rdi
+  65:	e8 00 00 00 00       	call   6a <input_console_read_line_for_reference+0x6a>
+			66: R_X86_64_PLT32	serial_puts-0x4
+  6a:	eb 53                	jmp    bf <input_console_read_line_for_reference+0xbf>
+  6c:	0f 1f 40 00          	nopl   0x0(%rax)
+  70:	4c 89 e7             	mov    %r12,%rdi
+  73:	e8 00 00 00 00       	call   78 <input_console_read_line_for_reference+0x78>
+			74: R_X86_64_PLT32	keyboard_poll-0x4
+  78:	48 89 ef             	mov    %rbp,%rdi
+  7b:	0f be f0             	movsbl %al,%esi
+  7e:	e8 00 00 00 00       	call   83 <input_console_read_line_for_reference+0x83>
+			7f: R_X86_64_PLT32	input_console_accept-0x4
+  83:	8b 84 24 98 00 00 00 	mov    0x98(%rsp),%eax
+  8a:	85 c0                	test   %eax,%eax
+  8c:	74 27                	je     b5 <input_console_read_line_for_reference+0xb5>
+  8e:	48 8b 74 24 08       	mov    0x8(%rsp),%rsi
+  93:	44 89 f2             	mov    %r14d,%edx
+  96:	48 89 ef             	mov    %rbp,%rdi
+  99:	e8 00 00 00 00       	call   9e <input_console_read_line_for_reference+0x9e>
+			9a: R_X86_64_PLT32	input_console_take_line-0x4
+  9e:	83 f8 fd             	cmp    $0xfffffffd,%eax
+  a1:	75 2f                	jne    d2 <input_console_read_line_for_reference+0xd2>
+  a3:	bf 00 00 00 00       	mov    $0x0,%edi
+			a4: R_X86_64_32	.rodata.input_console_read_line_for_reference.str1.8
+  a8:	e8 00 00 00 00       	call   ad <input_console_read_line_for_reference+0xad>
+			a9: R_X86_64_PLT32	serial_puts-0x4
+  ad:	4c 89 ff             	mov    %r15,%rdi
+  b0:	e8 00 00 00 00       	call   b5 <input_console_read_line_for_reference+0xb5>
+			b1: R_X86_64_PLT32	serial_puts-0x4
+  b5:	bf 01 00 00 00       	mov    $0x1,%edi
+  ba:	e8 00 00 00 00       	call   bf <input_console_read_line_for_reference+0xbf>
+			bb: R_X86_64_PLT32	thread_sleep-0x4
+  bf:	48 85 db             	test   %rbx,%rbx
+  c2:	74 ac                	je     70 <input_console_read_line_for_reference+0x70>
+  c4:	4c 89 ef             	mov    %r13,%rdi
+  c7:	ff d3                	call   *%rbx
+  c9:	85 c0                	test   %eax,%eax
+  cb:	74 a3                	je     70 <input_console_read_line_for_reference+0x70>
+  cd:	b8 fb ff ff ff       	mov    $0xfffffffb,%eax
+  d2:	48 81 c4 a8 00 00 00 	add    $0xa8,%rsp
+  d9:	5b                   	pop    %rbx
+  da:	5d                   	pop    %rbp
+  db:	41 5c                	pop    %r12
+  dd:	41 5d                	pop    %r13
+  df:	41 5e                	pop    %r14
+  e1:	41 5f                	pop    %r15
+  e3:	c3                   	ret
+  e4:	b8 fe ff ff ff       	mov    $0xfffffffe,%eax
+  e9:	c3                   	ret
+  ea:	b8 fc ff ff ff       	mov    $0xfffffffc,%eax
+  ef:	c3                   	ret

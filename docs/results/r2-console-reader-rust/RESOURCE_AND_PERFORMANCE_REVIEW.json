@@ -1,0 +1,160 @@
+{
+  "status": "PASS_LOCAL_CORRECTNESS_RESOURCE_NATIVE",
+  "baseline": "9134d1cbce7eb38ed4d87b53fc478620631f3077",
+  "kernel_sha256": "e33cc0605d6adc8bbaddb539c117b86b6bce41d6969809194f09c19a6be24bf8",
+  "archive_sha256": "b2387394ec2b4819894b22a7504b9ad1c4f4e59b312b219de313fd006ba5202d",
+  "reproducible": true,
+  "GUI_archive_matches": true,
+  "baseline_loads": [
+    {
+      "address": "0x100000",
+      "filesz": 4096,
+      "memsz": 4096
+    },
+    {
+      "address": "0x101000",
+      "filesz": 40,
+      "memsz": 24576
+    },
+    {
+      "address": "0xffffffff80107000",
+      "filesz": 274432,
+      "memsz": 274432
+    },
+    {
+      "address": "0xffffffff8014a000",
+      "filesz": 57344,
+      "memsz": 57344
+    },
+    {
+      "address": "0xffffffff80158000",
+      "filesz": 512,
+      "memsz": 598016
+    }
+  ],
+  "Rust_loads": [
+    {
+      "address": "0x100000",
+      "filesz": 4096,
+      "memsz": 4096
+    },
+    {
+      "address": "0x101000",
+      "filesz": 40,
+      "memsz": 24576
+    },
+    {
+      "address": "0xffffffff80107000",
+      "filesz": 274432,
+      "memsz": 274432
+    },
+    {
+      "address": "0xffffffff8014a000",
+      "filesz": 57344,
+      "memsz": 57344
+    },
+    {
+      "address": "0xffffffff80158000",
+      "filesz": 512,
+      "memsz": 598016
+    }
+  ],
+  "loaded_growth_bytes": 0,
+  "ELF_file_growth_bytes": -1144,
+  "production_reader_frame": 216,
+  "public_entry_frame": 0,
+  "standalone_target_frames": {
+    "_RNvNtCse2AcrdK3Od6_11target_root6bridge8admitted": 200,
+    "input_console_read_line_for": 0
+  },
+  "stack_limit": 216,
+  "stack_method": "Actual linked private reader prologue six8B pushes +168B subtract; leaf public entry tail-jumps with no frame. GCC baseline224B includes8B return, normalized216B. Existing editor/extractor callee frames compared consistently outside reader/core budget.",
+  "editor_bytes": 144,
+  "new_heap": 0,
+  "DMA": 0,
+  "new_persistent_state": 0,
+  "actual_Rust_symbol": [
+    "ffffffff80140120 0000000000000034 T input_console_read_line_for"
+  ],
+  "native_cases": 8,
+  "native_proof": "ELF-resolved inlined copy + actual15 command bytes and genuine shell output",
+  "source_sha256": {
+    "kernel/rust/input/console_reader.rs": "f8473373d0c0a88bcf51800104211bee27d8891146eaae2adf160241682cf006",
+    "arch/x86_64/rust/console_reader.rs": "f9a43d25526569fc7e2d502b6768df8504ca6b663e07a68f00454a8b7dc58b27"
+  },
+  "performance": {
+    "medians": {
+      "empty": {
+        "C_ns": 33.4844,
+        "Rust_ns": 32.025,
+        "ratio": 0.9564155248414187,
+        "investigation_required": false
+      },
+      "idle16": {
+        "C_ns": 131.3001,
+        "Rust_ns": 120.3727,
+        "ratio": 0.916775387071297,
+        "investigation_required": false
+      },
+      "initial-cancel": {
+        "C_ns": 17.1508,
+        "Rust_ns": 18.561,
+        "ratio": 1.0822235697460176,
+        "investigation_required": true
+      },
+      "maximum": {
+        "C_ns": 1011.5984,
+        "Rust_ns": 972.7015,
+        "ratio": 0.9615490692749218,
+        "investigation_required": false
+      },
+      "mid-cancel": {
+        "C_ns": 23.5953,
+        "Rust_ns": 23.6719,
+        "ratio": 1.0032464092425186,
+        "investigation_required": false
+      },
+      "nospace": {
+        "C_ns": 2.7945,
+        "Rust_ns": 3.0367,
+        "ratio": 1.0866702451243513,
+        "investigation_required": true
+      },
+      "overflow-retry": {
+        "C_ns": 1022.356,
+        "Rust_ns": 1016.8075,
+        "ratio": 0.9945728298166197,
+        "investigation_required": false
+      },
+      "short16": {
+        "C_ns": 155.4367,
+        "Rust_ns": 177.0984,
+        "ratio": 1.1393602669125116,
+        "investigation_required": true
+      },
+      "unavailable": {
+        "C_ns": 2.5992,
+        "Rust_ns": 2.7836,
+        "ratio": 1.0709449061249614,
+        "investigation_required": true
+      }
+    },
+    "method": "9 alternating-order samples, 2000 batches x64 calls; 10 warm-up batches; identical scripted counters reset inside each timed call; fresh private editor initialization included; monotonic clock aggregate, common timing overhead retained; CPU affinity; production Rust archive vs O2 integer-only freestanding C oracle",
+    "scope": "hosted function-call latency/throughput, not BIOS/UEFI runtime timing",
+    "raw": "performance.csv",
+    "C_release_flags": [
+      "-O2",
+      "-ffreestanding",
+      "-fno-builtin",
+      "-fno-stack-protector",
+      "-mgeneral-regs-only",
+      "-mno-red-zone",
+      "-fcf-protection=none",
+      "-fno-stack-clash-protection"
+    ],
+    "acceptance": "EXPLICIT_REVIEW_REQUIRED_FOR_REMAINING_REGRESSIONS"
+  },
+  "performance_approval": false,
+  "physical_hardware": false,
+  "guest_latency": "NOT TESTED"
+}

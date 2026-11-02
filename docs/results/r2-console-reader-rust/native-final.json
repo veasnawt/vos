@@ -1,0 +1,1170 @@
+{
+  "passed": true,
+  "physical_hardware": false,
+  "cases": [
+    {
+      "passed": true,
+      "firmware": "bios",
+      "mode": "normal",
+      "memory": "128M",
+      "native_Rust_calls": [
+        {
+          "symbol": "pointer_idle",
+          "RIP": "0xffffffff80140610",
+          "stop": "T05thread:01;"
+        },
+        {
+          "symbol": "pointer_decode",
+          "RIP": "0xffffffff80140530",
+          "stop": "T05thread:01;"
+        },
+        {
+          "symbol": "keyboard_decode",
+          "RIP": "0xffffffff80140260",
+          "stop": "T05thread:01;"
+        }
+      ],
+      "native_reader_call": {
+        "symbol": "input_console_read_line_for",
+        "RIP": "0xffffffff80140120",
+        "stop": "T05thread:01;",
+        "scope": "next synchronous reader entry after actual shell command; not guest timing"
+      },
+      "native_edit_call": {
+        "symbol": "input_console_accept",
+        "RIP": "0xffffffff80140070",
+        "stop": "T05thread:01;",
+        "scope": "actual poll-loop entry; byte may be NUL, not a latency measurement"
+      },
+      "native_line_call": {
+        "symbol": "inlined extraction in Rust console_reader::admitted",
+        "RIP": "0xffffffff8013bfc6",
+        "stop": "T05thread:01;",
+        "copy_bytes": "6563686f2072757374206c696e6500",
+        "copy_length": 15
+      },
+      "keyboard_text": {
+        "passed": true,
+        "expected": "Aa!",
+        "caps_shift_release": true
+      },
+      "screenshots": {
+        "initial": {
+          "path": "/home/veasnawt/src/vos-r2-console-reader/build/native-final/bios-normal-128M/initial.png",
+          "sha256": "f498dd815f89358990086ecc48f94680f1d1abd2e83517ceedb3c1521c37558b"
+        },
+        "movement": {
+          "path": "/home/veasnawt/src/vos-r2-console-reader/build/native-final/bios-normal-128M/movement.png",
+          "sha256": "0a7fae58fbe30b8c016eef0d63bc04efbdfbf48887ccbd556115109bdacc4e58"
+        },
+        "press": {
+          "path": "/home/veasnawt/src/vos-r2-console-reader/build/native-final/bios-normal-128M/press.png",
+          "sha256": "2ccf213f2b9084a3b7b6d3006310ba4d052d21786d5e809a37e0c888c0f6bbce"
+        },
+        "click": {
+          "path": "/home/veasnawt/src/vos-r2-console-reader/build/native-final/bios-normal-128M/click.png",
+          "sha256": "3814e66733e1139bf7cd48891ad88d18cfcdc30c7114c2f2739a6241d2566b09"
+        },
+        "top-left": {
+          "path": "/home/veasnawt/src/vos-r2-console-reader/build/native-final/bios-normal-128M/top-left.png",
+          "sha256": "6fa27543f1f507ab7f51909705a5434a9e6cbe425d8c00130689f555e1ea8797"
+        },
+        "top-right": {
+          "path": "/home/veasnawt/src/vos-r2-console-reader/build/native-final/bios-normal-128M/top-right.png",
+          "sha256": "4a6ea51c0841bcb0d5adc058f278624e9532793c8be9840778d084aef9f567d6"
+        },
+        "bottom-right": {
+          "path": "/home/veasnawt/src/vos-r2-console-reader/build/native-final/bios-normal-128M/bottom-right.png",
+          "sha256": "c678e1d76abfad6e980a5667dd0627b6162e37a805ec1c11e9a83ecc57d49edc"
+        },
+        "bottom-left": {
+          "path": "/home/veasnawt/src/vos-r2-console-reader/build/native-final/bios-normal-128M/bottom-left.png",
+          "sha256": "5845f32844733336ab5d29eaded357d670cefdd3dacd7462b9ebfd73849816d7"
+        },
+        "final": {
+          "path": "/home/veasnawt/src/vos-r2-console-reader/build/native-final/bios-normal-128M/final.png",
+          "sha256": "101d2db2871c052602f669c94cdfab0497c252b5508ff5a34e2033ca2a08ebcc"
+        },
+        "rust-reader": {
+          "path": "/home/veasnawt/src/vos-r2-console-reader/build/native-final/bios-normal-128M/rust-reader.png",
+          "sha256": "087c8d0b75ad597bb569a02c93629064127bc6de0f5f48edda9f0b55992f6831"
+        },
+        "rust-edit": {
+          "path": "/home/veasnawt/src/vos-r2-console-reader/build/native-final/bios-normal-128M/rust-edit.png",
+          "sha256": "f29bae726e8094b2e4b5cf8bcc911fe39db2b5f1041104a404cf6e1b43ef13ba"
+        },
+        "rust-line": {
+          "path": "/home/veasnawt/src/vos-r2-console-reader/build/native-final/bios-normal-128M/rust-line.png",
+          "sha256": "c97799a07aea59b9cd17543fabae809a2b95c93bf3c55e112308c3fba0e4fdcb"
+        },
+        "keyboard-text": {
+          "path": "/home/veasnawt/src/vos-r2-console-reader/build/native-final/bios-normal-128M/keyboard-text.png",
+          "sha256": "f135400e4054b1ccff7ad8745db7d3d4048899e145f4fdc2d4435f3f8f294d1d"
+        }
+      },
+      "pixels": {
+        "initial": {
+          "passed": true,
+          "cursor": [
+            512,
+            390
+          ],
+          "panel_rgb": "0x409ddd",
+          "width": 1024,
+          "height": 768
+        },
+        "movement": {
+          "passed": true,
+          "cursor": [
+            524,
+            382
+          ],
+          "panel_rgb": "0x409ddd",
+          "width": 1024,
+          "height": 768
+        },
+        "press": {
+          "passed": true,
+          "cursor": [
+            524,
+            382
+          ],
+          "panel_rgb": "0xe8b34e",
+          "width": 1024,
+          "height": 768
+        },
+        "click": {
+          "passed": true,
+          "cursor": [
+            524,
+            382
+          ],
+          "panel_rgb": "0x42c497",
+          "width": 1024,
+          "height": 768
+        }
+      },
+      "exact_corners": true,
+      "keyboard_mouse": true,
+      "held_exit_cleanup": true,
+      "shell_hello_rixie": true,
+      "native_cases": 0,
+      "elapsed_seconds": 19.32684911400429,
+      "serial_sha256": "61484c44a7a8a25a0b5ca0b1b74c047d1d44dcf0c4d4b33d44f1a5aa666d0c55"
+    },
+    {
+      "passed": true,
+      "firmware": "bios",
+      "mode": "normal",
+      "memory": "2G",
+      "native_Rust_calls": [
+        {
+          "symbol": "pointer_idle",
+          "RIP": "0xffffffff80140610",
+          "stop": "T05thread:01;"
+        },
+        {
+          "symbol": "pointer_decode",
+          "RIP": "0xffffffff80140530",
+          "stop": "T05thread:01;"
+        },
+        {
+          "symbol": "keyboard_decode",
+          "RIP": "0xffffffff80140260",
+          "stop": "T05thread:01;"
+        }
+      ],
+      "native_reader_call": {
+        "symbol": "input_console_read_line_for",
+        "RIP": "0xffffffff80140120",
+        "stop": "T05thread:01;",
+        "scope": "next synchronous reader entry after actual shell command; not guest timing"
+      },
+      "native_edit_call": {
+        "symbol": "input_console_accept",
+        "RIP": "0xffffffff80140070",
+        "stop": "T05thread:01;",
+        "scope": "actual poll-loop entry; byte may be NUL, not a latency measurement"
+      },
+      "native_line_call": {
+        "symbol": "inlined extraction in Rust console_reader::admitted",
+        "RIP": "0xffffffff8013bfc6",
+        "stop": "T05thread:01;",
+        "copy_bytes": "6563686f2072757374206c696e6500",
+        "copy_length": 15
+      },
+      "keyboard_text": {
+        "passed": true,
+        "expected": "Aa!",
+        "caps_shift_release": true
+      },
+      "screenshots": {
+        "initial": {
+          "path": "/home/veasnawt/src/vos-r2-console-reader/build/native-final/bios-normal-2G/initial.png",
+          "sha256": "f498dd815f89358990086ecc48f94680f1d1abd2e83517ceedb3c1521c37558b"
+        },
+        "movement": {
+          "path": "/home/veasnawt/src/vos-r2-console-reader/build/native-final/bios-normal-2G/movement.png",
+          "sha256": "0a7fae58fbe30b8c016eef0d63bc04efbdfbf48887ccbd556115109bdacc4e58"
+        },
+        "press": {
+          "path": "/home/veasnawt/src/vos-r2-console-reader/build/native-final/bios-normal-2G/press.png",
+          "sha256": "2ccf213f2b9084a3b7b6d3006310ba4d052d21786d5e809a37e0c888c0f6bbce"
+        },
+        "click": {
+          "path": "/home/veasnawt/src/vos-r2-console-reader/build/native-final/bios-normal-2G/click.png",
+          "sha256": "3814e66733e1139bf7cd48891ad88d18cfcdc30c7114c2f2739a6241d2566b09"
+        },
+        "top-left": {
+          "path": "/home/veasnawt/src/vos-r2-console-reader/build/native-final/bios-normal-2G/top-left.png",
+          "sha256": "6fa27543f1f507ab7f51909705a5434a9e6cbe425d8c00130689f555e1ea8797"
+        },
+        "top-right": {
+          "path": "/home/veasnawt/src/vos-r2-console-reader/build/native-final/bios-normal-2G/top-right.png",
+          "sha256": "4a6ea51c0841bcb0d5adc058f278624e9532793c8be9840778d084aef9f567d6"
+        },
+        "bottom-right": {
+          "path": "/home/veasnawt/src/vos-r2-console-reader/build/native-final/bios-normal-2G/bottom-right.png",
+          "sha256": "c678e1d76abfad6e980a5667dd0627b6162e37a805ec1c11e9a83ecc57d49edc"
+        },
+        "bottom-left": {
+          "path": "/home/veasnawt/src/vos-r2-console-reader/build/native-final/bios-normal-2G/bottom-left.png",
+          "sha256": "5845f32844733336ab5d29eaded357d670cefdd3dacd7462b9ebfd73849816d7"
+        },
+        "final": {
+          "path": "/home/veasnawt/src/vos-r2-console-reader/build/native-final/bios-normal-2G/final.png",
+          "sha256": "101d2db2871c052602f669c94cdfab0497c252b5508ff5a34e2033ca2a08ebcc"
+        },
+        "rust-reader": {
+          "path": "/home/veasnawt/src/vos-r2-console-reader/build/native-final/bios-normal-2G/rust-reader.png",
+          "sha256": "087c8d0b75ad597bb569a02c93629064127bc6de0f5f48edda9f0b55992f6831"
+        },
+        "rust-edit": {
+          "path": "/home/veasnawt/src/vos-r2-console-reader/build/native-final/bios-normal-2G/rust-edit.png",
+          "sha256": "f29bae726e8094b2e4b5cf8bcc911fe39db2b5f1041104a404cf6e1b43ef13ba"
+        },
+        "rust-line": {
+          "path": "/home/veasnawt/src/vos-r2-console-reader/build/native-final/bios-normal-2G/rust-line.png",
+          "sha256": "c97799a07aea59b9cd17543fabae809a2b95c93bf3c55e112308c3fba0e4fdcb"
+        },
+        "keyboard-text": {
+          "path": "/home/veasnawt/src/vos-r2-console-reader/build/native-final/bios-normal-2G/keyboard-text.png",
+          "sha256": "f135400e4054b1ccff7ad8745db7d3d4048899e145f4fdc2d4435f3f8f294d1d"
+        }
+      },
+      "pixels": {
+        "initial": {
+          "passed": true,
+          "cursor": [
+            512,
+            390
+          ],
+          "panel_rgb": "0x409ddd",
+          "width": 1024,
+          "height": 768
+        },
+        "movement": {
+          "passed": true,
+          "cursor": [
+            524,
+            382
+          ],
+          "panel_rgb": "0x409ddd",
+          "width": 1024,
+          "height": 768
+        },
+        "press": {
+          "passed": true,
+          "cursor": [
+            524,
+            382
+          ],
+          "panel_rgb": "0xe8b34e",
+          "width": 1024,
+          "height": 768
+        },
+        "click": {
+          "passed": true,
+          "cursor": [
+            524,
+            382
+          ],
+          "panel_rgb": "0x42c497",
+          "width": 1024,
+          "height": 768
+        }
+      },
+      "exact_corners": true,
+      "keyboard_mouse": true,
+      "held_exit_cleanup": true,
+      "shell_hello_rixie": true,
+      "native_cases": 0,
+      "elapsed_seconds": 17.86952177099738,
+      "serial_sha256": "5c1916ec8e8d5725feb5ca7bdf7427f4ce523d9ec6f6b883db27994cbf341a7b"
+    },
+    {
+      "passed": true,
+      "firmware": "uefi",
+      "mode": "normal",
+      "memory": "128M",
+      "native_Rust_calls": [
+        {
+          "symbol": "pointer_idle",
+          "RIP": "0xffffffff80140610",
+          "stop": "T05thread:01;"
+        },
+        {
+          "symbol": "pointer_decode",
+          "RIP": "0xffffffff80140530",
+          "stop": "T05thread:01;"
+        },
+        {
+          "symbol": "keyboard_decode",
+          "RIP": "0xffffffff80140260",
+          "stop": "T05thread:01;"
+        }
+      ],
+      "native_reader_call": {
+        "symbol": "input_console_read_line_for",
+        "RIP": "0xffffffff80140120",
+        "stop": "T05thread:01;",
+        "scope": "next synchronous reader entry after actual shell command; not guest timing"
+      },
+      "native_edit_call": {
+        "symbol": "input_console_accept",
+        "RIP": "0xffffffff80140070",
+        "stop": "T05thread:01;",
+        "scope": "actual poll-loop entry; byte may be NUL, not a latency measurement"
+      },
+      "native_line_call": {
+        "symbol": "inlined extraction in Rust console_reader::admitted",
+        "RIP": "0xffffffff8013bfc6",
+        "stop": "T05thread:01;",
+        "copy_bytes": "6563686f2072757374206c696e6500",
+        "copy_length": 15
+      },
+      "keyboard_text": {
+        "passed": true,
+        "expected": "Aa!",
+        "caps_shift_release": true
+      },
+      "screenshots": {
+        "initial": {
+          "path": "/home/veasnawt/src/vos-r2-console-reader/build/native-final/uefi-normal-128M/initial.png",
+          "sha256": "f498dd815f89358990086ecc48f94680f1d1abd2e83517ceedb3c1521c37558b"
+        },
+        "movement": {
+          "path": "/home/veasnawt/src/vos-r2-console-reader/build/native-final/uefi-normal-128M/movement.png",
+          "sha256": "0a7fae58fbe30b8c016eef0d63bc04efbdfbf48887ccbd556115109bdacc4e58"
+        },
+        "press": {
+          "path": "/home/veasnawt/src/vos-r2-console-reader/build/native-final/uefi-normal-128M/press.png",
+          "sha256": "2ccf213f2b9084a3b7b6d3006310ba4d052d21786d5e809a37e0c888c0f6bbce"
+        },
+        "click": {
+          "path": "/home/veasnawt/src/vos-r2-console-reader/build/native-final/uefi-normal-128M/click.png",
+          "sha256": "3814e66733e1139bf7cd48891ad88d18cfcdc30c7114c2f2739a6241d2566b09"
+        },
+        "top-left": {
+          "path": "/home/veasnawt/src/vos-r2-console-reader/build/native-final/uefi-normal-128M/top-left.png",
+          "sha256": "6fa27543f1f507ab7f51909705a5434a9e6cbe425d8c00130689f555e1ea8797"
+        },
+        "top-right": {
+          "path": "/home/veasnawt/src/vos-r2-console-reader/build/native-final/uefi-normal-128M/top-right.png",
+          "sha256": "4a6ea51c0841bcb0d5adc058f278624e9532793c8be9840778d084aef9f567d6"
+        },
+        "bottom-right": {
+          "path": "/home/veasnawt/src/vos-r2-console-reader/build/native-final/uefi-normal-128M/bottom-right.png",
+          "sha256": "c678e1d76abfad6e980a5667dd0627b6162e37a805ec1c11e9a83ecc57d49edc"
+        },
+        "bottom-left": {
+          "path": "/home/veasnawt/src/vos-r2-console-reader/build/native-final/uefi-normal-128M/bottom-left.png",
+          "sha256": "5845f32844733336ab5d29eaded357d670cefdd3dacd7462b9ebfd73849816d7"
+        },
+        "final": {
+          "path": "/home/veasnawt/src/vos-r2-console-reader/build/native-final/uefi-normal-128M/final.png",
+          "sha256": "101d2db2871c052602f669c94cdfab0497c252b5508ff5a34e2033ca2a08ebcc"
+        },
+        "rust-reader": {
+          "path": "/home/veasnawt/src/vos-r2-console-reader/build/native-final/uefi-normal-128M/rust-reader.png",
+          "sha256": "087c8d0b75ad597bb569a02c93629064127bc6de0f5f48edda9f0b55992f6831"
+        },
+        "rust-edit": {
+          "path": "/home/veasnawt/src/vos-r2-console-reader/build/native-final/uefi-normal-128M/rust-edit.png",
+          "sha256": "f29bae726e8094b2e4b5cf8bcc911fe39db2b5f1041104a404cf6e1b43ef13ba"
+        },
+        "rust-line": {
+          "path": "/home/veasnawt/src/vos-r2-console-reader/build/native-final/uefi-normal-128M/rust-line.png",
+          "sha256": "c97799a07aea59b9cd17543fabae809a2b95c93bf3c55e112308c3fba0e4fdcb"
+        },
+        "keyboard-text": {
+          "path": "/home/veasnawt/src/vos-r2-console-reader/build/native-final/uefi-normal-128M/keyboard-text.png",
+          "sha256": "f135400e4054b1ccff7ad8745db7d3d4048899e145f4fdc2d4435f3f8f294d1d"
+        }
+      },
+      "pixels": {
+        "initial": {
+          "passed": true,
+          "cursor": [
+            512,
+            390
+          ],
+          "panel_rgb": "0x409ddd",
+          "width": 1024,
+          "height": 768
+        },
+        "movement": {
+          "passed": true,
+          "cursor": [
+            524,
+            382
+          ],
+          "panel_rgb": "0x409ddd",
+          "width": 1024,
+          "height": 768
+        },
+        "press": {
+          "passed": true,
+          "cursor": [
+            524,
+            382
+          ],
+          "panel_rgb": "0xe8b34e",
+          "width": 1024,
+          "height": 768
+        },
+        "click": {
+          "passed": true,
+          "cursor": [
+            524,
+            382
+          ],
+          "panel_rgb": "0x42c497",
+          "width": 1024,
+          "height": 768
+        }
+      },
+      "exact_corners": true,
+      "keyboard_mouse": true,
+      "held_exit_cleanup": true,
+      "shell_hello_rixie": true,
+      "native_cases": 0,
+      "elapsed_seconds": 21.504437387004145,
+      "serial_sha256": "ee9739084c417df91822b237862cb417dfa8b29ddb645651379934be2ee294c6"
+    },
+    {
+      "passed": true,
+      "firmware": "uefi",
+      "mode": "normal",
+      "memory": "2G",
+      "native_Rust_calls": [
+        {
+          "symbol": "pointer_idle",
+          "RIP": "0xffffffff80140610",
+          "stop": "T05thread:01;"
+        },
+        {
+          "symbol": "pointer_decode",
+          "RIP": "0xffffffff80140530",
+          "stop": "T05thread:01;"
+        },
+        {
+          "symbol": "keyboard_decode",
+          "RIP": "0xffffffff80140260",
+          "stop": "T05thread:01;"
+        }
+      ],
+      "native_reader_call": {
+        "symbol": "input_console_read_line_for",
+        "RIP": "0xffffffff80140120",
+        "stop": "T05thread:01;",
+        "scope": "next synchronous reader entry after actual shell command; not guest timing"
+      },
+      "native_edit_call": {
+        "symbol": "input_console_accept",
+        "RIP": "0xffffffff80140070",
+        "stop": "T05thread:01;",
+        "scope": "actual poll-loop entry; byte may be NUL, not a latency measurement"
+      },
+      "native_line_call": {
+        "symbol": "inlined extraction in Rust console_reader::admitted",
+        "RIP": "0xffffffff8013bfc6",
+        "stop": "T05thread:01;",
+        "copy_bytes": "6563686f2072757374206c696e6500",
+        "copy_length": 15
+      },
+      "keyboard_text": {
+        "passed": true,
+        "expected": "Aa!",
+        "caps_shift_release": true
+      },
+      "screenshots": {
+        "initial": {
+          "path": "/home/veasnawt/src/vos-r2-console-reader/build/native-final/uefi-normal-2G/initial.png",
+          "sha256": "f498dd815f89358990086ecc48f94680f1d1abd2e83517ceedb3c1521c37558b"
+        },
+        "movement": {
+          "path": "/home/veasnawt/src/vos-r2-console-reader/build/native-final/uefi-normal-2G/movement.png",
+          "sha256": "0a7fae58fbe30b8c016eef0d63bc04efbdfbf48887ccbd556115109bdacc4e58"
+        },
+        "press": {
+          "path": "/home/veasnawt/src/vos-r2-console-reader/build/native-final/uefi-normal-2G/press.png",
+          "sha256": "2ccf213f2b9084a3b7b6d3006310ba4d052d21786d5e809a37e0c888c0f6bbce"
+        },
+        "click": {
+          "path": "/home/veasnawt/src/vos-r2-console-reader/build/native-final/uefi-normal-2G/click.png",
+          "sha256": "3814e66733e1139bf7cd48891ad88d18cfcdc30c7114c2f2739a6241d2566b09"
+        },
+        "top-left": {
+          "path": "/home/veasnawt/src/vos-r2-console-reader/build/native-final/uefi-normal-2G/top-left.png",
+          "sha256": "6fa27543f1f507ab7f51909705a5434a9e6cbe425d8c00130689f555e1ea8797"
+        },
+        "top-right": {
+          "path": "/home/veasnawt/src/vos-r2-console-reader/build/native-final/uefi-normal-2G/top-right.png",
+          "sha256": "4a6ea51c0841bcb0d5adc058f278624e9532793c8be9840778d084aef9f567d6"
+        },
+        "bottom-right": {
+          "path": "/home/veasnawt/src/vos-r2-console-reader/build/native-final/uefi-normal-2G/bottom-right.png",
+          "sha256": "c678e1d76abfad6e980a5667dd0627b6162e37a805ec1c11e9a83ecc57d49edc"
+        },
+        "bottom-left": {
+          "path": "/home/veasnawt/src/vos-r2-console-reader/build/native-final/uefi-normal-2G/bottom-left.png",
+          "sha256": "5845f32844733336ab5d29eaded357d670cefdd3dacd7462b9ebfd73849816d7"
+        },
+        "final": {
+          "path": "/home/veasnawt/src/vos-r2-console-reader/build/native-final/uefi-normal-2G/final.png",
+          "sha256": "101d2db2871c052602f669c94cdfab0497c252b5508ff5a34e2033ca2a08ebcc"
+        },
+        "rust-reader": {
+          "path": "/home/veasnawt/src/vos-r2-console-reader/build/native-final/uefi-normal-2G/rust-reader.png",
+          "sha256": "087c8d0b75ad597bb569a02c93629064127bc6de0f5f48edda9f0b55992f6831"
+        },
+        "rust-edit": {
+          "path": "/home/veasnawt/src/vos-r2-console-reader/build/native-final/uefi-normal-2G/rust-edit.png",
+          "sha256": "f29bae726e8094b2e4b5cf8bcc911fe39db2b5f1041104a404cf6e1b43ef13ba"
+        },
+        "rust-line": {
+          "path": "/home/veasnawt/src/vos-r2-console-reader/build/native-final/uefi-normal-2G/rust-line.png",
+          "sha256": "c97799a07aea59b9cd17543fabae809a2b95c93bf3c55e112308c3fba0e4fdcb"
+        },
+        "keyboard-text": {
+          "path": "/home/veasnawt/src/vos-r2-console-reader/build/native-final/uefi-normal-2G/keyboard-text.png",
+          "sha256": "f135400e4054b1ccff7ad8745db7d3d4048899e145f4fdc2d4435f3f8f294d1d"
+        }
+      },
+      "pixels": {
+        "initial": {
+          "passed": true,
+          "cursor": [
+            512,
+            390
+          ],
+          "panel_rgb": "0x409ddd",
+          "width": 1024,
+          "height": 768
+        },
+        "movement": {
+          "passed": true,
+          "cursor": [
+            524,
+            382
+          ],
+          "panel_rgb": "0x409ddd",
+          "width": 1024,
+          "height": 768
+        },
+        "press": {
+          "passed": true,
+          "cursor": [
+            524,
+            382
+          ],
+          "panel_rgb": "0xe8b34e",
+          "width": 1024,
+          "height": 768
+        },
+        "click": {
+          "passed": true,
+          "cursor": [
+            524,
+            382
+          ],
+          "panel_rgb": "0x42c497",
+          "width": 1024,
+          "height": 768
+        }
+      },
+      "exact_corners": true,
+      "keyboard_mouse": true,
+      "held_exit_cleanup": true,
+      "shell_hello_rixie": true,
+      "native_cases": 0,
+      "elapsed_seconds": 20.690783133999503,
+      "serial_sha256": "731d347c2f3597392146d25a4ccd7ea43031294be65a90285bffa974ee7d40c9"
+    },
+    {
+      "passed": true,
+      "firmware": "bios",
+      "mode": "verify",
+      "memory": "128M",
+      "native_reader_call": {
+        "symbol": "input_console_read_line_for",
+        "RIP": "0xffffffff80140980",
+        "stop": "T05thread:01;",
+        "scope": "next synchronous reader entry after actual shell command; not guest timing"
+      },
+      "native_edit_call": {
+        "symbol": "input_console_accept",
+        "RIP": "0xffffffff801408d0",
+        "stop": "T05thread:01;",
+        "scope": "actual poll-loop entry; byte may be NUL, not a latency measurement"
+      },
+      "native_line_call": {
+        "symbol": "inlined extraction in Rust console_reader::admitted",
+        "RIP": "0xffffffff8013c826",
+        "stop": "T05thread:01;",
+        "copy_bytes": "6563686f2072757374206c696e6500",
+        "copy_length": 15
+      },
+      "keyboard_text": {
+        "passed": true,
+        "expected": "Aa!",
+        "caps_shift_release": true
+      },
+      "screenshots": {
+        "checkerboard-initial": {
+          "path": "/home/veasnawt/src/vos-r2-console-reader/build/native-final/bios-verify-128M/checkerboard-regression-initial.png",
+          "sha256": "236ab33329494f770d3a05cc74bbfa4d3226f265c25798907d81733782f6af17"
+        },
+        "checkerboard-a": {
+          "path": "/home/veasnawt/src/vos-r2-console-reader/build/native-final/bios-verify-128M/checkerboard-regression-a.png",
+          "sha256": "f2d193fb15ad4348fe1c026ab89c9cedfb1a57ba0d33de886c7c148f6d9b575e"
+        },
+        "initial": {
+          "path": "/home/veasnawt/src/vos-r2-console-reader/build/native-final/bios-verify-128M/initial.png",
+          "sha256": "ab3b32706c100da094a11718b7b1c119c01d7cfbfbe045a9770bad91bc897af0"
+        },
+        "movement": {
+          "path": "/home/veasnawt/src/vos-r2-console-reader/build/native-final/bios-verify-128M/movement.png",
+          "sha256": "3addb95d8518f541cc51d635d17424468844821e79674f6b3e1b98ff3904f150"
+        },
+        "press": {
+          "path": "/home/veasnawt/src/vos-r2-console-reader/build/native-final/bios-verify-128M/press.png",
+          "sha256": "c5693b7d21df304a00a42260fa2efa5eab72d95caef9da1f15be844fc90fb929"
+        },
+        "click": {
+          "path": "/home/veasnawt/src/vos-r2-console-reader/build/native-final/bios-verify-128M/click.png",
+          "sha256": "2d74c8424da262ee4eb18aefb2237d84ffe1bf9113d5c4417bf853a48e64c12a"
+        },
+        "top-left": {
+          "path": "/home/veasnawt/src/vos-r2-console-reader/build/native-final/bios-verify-128M/top-left.png",
+          "sha256": "b9b42d93c19c7d462edda7c2aa8858aacfb17e299022404ba8c4890b0dc17959"
+        },
+        "top-right": {
+          "path": "/home/veasnawt/src/vos-r2-console-reader/build/native-final/bios-verify-128M/top-right.png",
+          "sha256": "7525261f59686c2b2b615f9e3385f313392cfec700447b3c72c3fa6a22add46e"
+        },
+        "bottom-right": {
+          "path": "/home/veasnawt/src/vos-r2-console-reader/build/native-final/bios-verify-128M/bottom-right.png",
+          "sha256": "75d708b8f3afb5cb386ea6d7b75a43a4adbd1744964e54f606b0c24c9a03d431"
+        },
+        "bottom-left": {
+          "path": "/home/veasnawt/src/vos-r2-console-reader/build/native-final/bios-verify-128M/bottom-left.png",
+          "sha256": "d85b3a11489333ba4c3ad306ef52c5f179cb73f19b10e8a914e2652c9501c955"
+        },
+        "final": {
+          "path": "/home/veasnawt/src/vos-r2-console-reader/build/native-final/bios-verify-128M/final.png",
+          "sha256": "b840dcc416b45f8d26efacf8b1559fa0f8c548b6fd673d93ada8e5662f4e641b"
+        },
+        "rust-reader": {
+          "path": "/home/veasnawt/src/vos-r2-console-reader/build/native-final/bios-verify-128M/rust-reader.png",
+          "sha256": "087c8d0b75ad597bb569a02c93629064127bc6de0f5f48edda9f0b55992f6831"
+        },
+        "rust-edit": {
+          "path": "/home/veasnawt/src/vos-r2-console-reader/build/native-final/bios-verify-128M/rust-edit.png",
+          "sha256": "f29bae726e8094b2e4b5cf8bcc911fe39db2b5f1041104a404cf6e1b43ef13ba"
+        },
+        "rust-line": {
+          "path": "/home/veasnawt/src/vos-r2-console-reader/build/native-final/bios-verify-128M/rust-line.png",
+          "sha256": "c97799a07aea59b9cd17543fabae809a2b95c93bf3c55e112308c3fba0e4fdcb"
+        },
+        "keyboard-text": {
+          "path": "/home/veasnawt/src/vos-r2-console-reader/build/native-final/bios-verify-128M/keyboard-text.png",
+          "sha256": "c6924444c927c9ccab0dbd1313b96c9d8b5c3257b9b2ebe5c225d98b41996175"
+        }
+      },
+      "pixels": {
+        "initial": {
+          "passed": true,
+          "cursor": [
+            512,
+            390
+          ],
+          "panel_rgb": "0x409ddd",
+          "width": 1024,
+          "height": 768
+        },
+        "movement": {
+          "passed": true,
+          "cursor": [
+            524,
+            382
+          ],
+          "panel_rgb": "0x409ddd",
+          "width": 1024,
+          "height": 768
+        },
+        "press": {
+          "passed": true,
+          "cursor": [
+            524,
+            382
+          ],
+          "panel_rgb": "0xe8b34e",
+          "width": 1024,
+          "height": 768
+        },
+        "click": {
+          "passed": true,
+          "cursor": [
+            524,
+            382
+          ],
+          "panel_rgb": "0x42c497",
+          "width": 1024,
+          "height": 768
+        }
+      },
+      "exact_corners": true,
+      "keyboard_mouse": true,
+      "held_exit_cleanup": true,
+      "shell_hello_rixie": true,
+      "native_cases": 16,
+      "elapsed_seconds": 25.879609483999957,
+      "serial_sha256": "5f72108e7a3f2e083953274e76cd66eab0b0b68daf7f3a3fd7f9e6f6a47c62c4"
+    },
+    {
+      "passed": true,
+      "firmware": "bios",
+      "mode": "verify",
+      "memory": "2G",
+      "native_reader_call": {
+        "symbol": "input_console_read_line_for",
+        "RIP": "0xffffffff80140980",
+        "stop": "T05thread:01;",
+        "scope": "next synchronous reader entry after actual shell command; not guest timing"
+      },
+      "native_edit_call": {
+        "symbol": "input_console_accept",
+        "RIP": "0xffffffff801408d0",
+        "stop": "T05thread:01;",
+        "scope": "actual poll-loop entry; byte may be NUL, not a latency measurement"
+      },
+      "native_line_call": {
+        "symbol": "inlined extraction in Rust console_reader::admitted",
+        "RIP": "0xffffffff8013c826",
+        "stop": "T05thread:01;",
+        "copy_bytes": "6563686f2072757374206c696e6500",
+        "copy_length": 15
+      },
+      "keyboard_text": {
+        "passed": true,
+        "expected": "Aa!",
+        "caps_shift_release": true
+      },
+      "screenshots": {
+        "checkerboard-initial": {
+          "path": "/home/veasnawt/src/vos-r2-console-reader/build/native-final/bios-verify-2G/checkerboard-regression-initial.png",
+          "sha256": "236ab33329494f770d3a05cc74bbfa4d3226f265c25798907d81733782f6af17"
+        },
+        "checkerboard-a": {
+          "path": "/home/veasnawt/src/vos-r2-console-reader/build/native-final/bios-verify-2G/checkerboard-regression-a.png",
+          "sha256": "f2d193fb15ad4348fe1c026ab89c9cedfb1a57ba0d33de886c7c148f6d9b575e"
+        },
+        "initial": {
+          "path": "/home/veasnawt/src/vos-r2-console-reader/build/native-final/bios-verify-2G/initial.png",
+          "sha256": "ab3b32706c100da094a11718b7b1c119c01d7cfbfbe045a9770bad91bc897af0"
+        },
+        "movement": {
+          "path": "/home/veasnawt/src/vos-r2-console-reader/build/native-final/bios-verify-2G/movement.png",
+          "sha256": "3addb95d8518f541cc51d635d17424468844821e79674f6b3e1b98ff3904f150"
+        },
+        "press": {
+          "path": "/home/veasnawt/src/vos-r2-console-reader/build/native-final/bios-verify-2G/press.png",
+          "sha256": "c5693b7d21df304a00a42260fa2efa5eab72d95caef9da1f15be844fc90fb929"
+        },
+        "click": {
+          "path": "/home/veasnawt/src/vos-r2-console-reader/build/native-final/bios-verify-2G/click.png",
+          "sha256": "2d74c8424da262ee4eb18aefb2237d84ffe1bf9113d5c4417bf853a48e64c12a"
+        },
+        "top-left": {
+          "path": "/home/veasnawt/src/vos-r2-console-reader/build/native-final/bios-verify-2G/top-left.png",
+          "sha256": "b9b42d93c19c7d462edda7c2aa8858aacfb17e299022404ba8c4890b0dc17959"
+        },
+        "top-right": {
+          "path": "/home/veasnawt/src/vos-r2-console-reader/build/native-final/bios-verify-2G/top-right.png",
+          "sha256": "7525261f59686c2b2b615f9e3385f313392cfec700447b3c72c3fa6a22add46e"
+        },
+        "bottom-right": {
+          "path": "/home/veasnawt/src/vos-r2-console-reader/build/native-final/bios-verify-2G/bottom-right.png",
+          "sha256": "75d708b8f3afb5cb386ea6d7b75a43a4adbd1744964e54f606b0c24c9a03d431"
+        },
+        "bottom-left": {
+          "path": "/home/veasnawt/src/vos-r2-console-reader/build/native-final/bios-verify-2G/bottom-left.png",
+          "sha256": "d85b3a11489333ba4c3ad306ef52c5f179cb73f19b10e8a914e2652c9501c955"
+        },
+        "final": {
+          "path": "/home/veasnawt/src/vos-r2-console-reader/build/native-final/bios-verify-2G/final.png",
+          "sha256": "009a27d95cad9c80da39190c1a16bf2571fdeb318dda70db5a53ccacfc7d455c"
+        },
+        "rust-reader": {
+          "path": "/home/veasnawt/src/vos-r2-console-reader/build/native-final/bios-verify-2G/rust-reader.png",
+          "sha256": "087c8d0b75ad597bb569a02c93629064127bc6de0f5f48edda9f0b55992f6831"
+        },
+        "rust-edit": {
+          "path": "/home/veasnawt/src/vos-r2-console-reader/build/native-final/bios-verify-2G/rust-edit.png",
+          "sha256": "f29bae726e8094b2e4b5cf8bcc911fe39db2b5f1041104a404cf6e1b43ef13ba"
+        },
+        "rust-line": {
+          "path": "/home/veasnawt/src/vos-r2-console-reader/build/native-final/bios-verify-2G/rust-line.png",
+          "sha256": "c97799a07aea59b9cd17543fabae809a2b95c93bf3c55e112308c3fba0e4fdcb"
+        },
+        "keyboard-text": {
+          "path": "/home/veasnawt/src/vos-r2-console-reader/build/native-final/bios-verify-2G/keyboard-text.png",
+          "sha256": "c6924444c927c9ccab0dbd1313b96c9d8b5c3257b9b2ebe5c225d98b41996175"
+        }
+      },
+      "pixels": {
+        "initial": {
+          "passed": true,
+          "cursor": [
+            512,
+            390
+          ],
+          "panel_rgb": "0x409ddd",
+          "width": 1024,
+          "height": 768
+        },
+        "movement": {
+          "passed": true,
+          "cursor": [
+            524,
+            382
+          ],
+          "panel_rgb": "0x409ddd",
+          "width": 1024,
+          "height": 768
+        },
+        "press": {
+          "passed": true,
+          "cursor": [
+            524,
+            382
+          ],
+          "panel_rgb": "0xe8b34e",
+          "width": 1024,
+          "height": 768
+        },
+        "click": {
+          "passed": true,
+          "cursor": [
+            524,
+            382
+          ],
+          "panel_rgb": "0x42c497",
+          "width": 1024,
+          "height": 768
+        }
+      },
+      "exact_corners": true,
+      "keyboard_mouse": true,
+      "held_exit_cleanup": true,
+      "shell_hello_rixie": true,
+      "native_cases": 16,
+      "elapsed_seconds": 24.880502450003405,
+      "serial_sha256": "0c82da81598c90df2bc97c4053e826e016502016d6a3d168b84277e5de795a8a"
+    },
+    {
+      "passed": true,
+      "firmware": "uefi",
+      "mode": "verify",
+      "memory": "128M",
+      "native_reader_call": {
+        "symbol": "input_console_read_line_for",
+        "RIP": "0xffffffff80140980",
+        "stop": "T05thread:01;",
+        "scope": "next synchronous reader entry after actual shell command; not guest timing"
+      },
+      "native_edit_call": {
+        "symbol": "input_console_accept",
+        "RIP": "0xffffffff801408d0",
+        "stop": "T05thread:01;",
+        "scope": "actual poll-loop entry; byte may be NUL, not a latency measurement"
+      },
+      "native_line_call": {
+        "symbol": "inlined extraction in Rust console_reader::admitted",
+        "RIP": "0xffffffff8013c826",
+        "stop": "T05thread:01;",
+        "copy_bytes": "6563686f2072757374206c696e6500",
+        "copy_length": 15
+      },
+      "keyboard_text": {
+        "passed": true,
+        "expected": "Aa!",
+        "caps_shift_release": true
+      },
+      "screenshots": {
+        "checkerboard-initial": {
+          "path": "/home/veasnawt/src/vos-r2-console-reader/build/native-final/uefi-verify-128M/checkerboard-regression-initial.png",
+          "sha256": "236ab33329494f770d3a05cc74bbfa4d3226f265c25798907d81733782f6af17"
+        },
+        "checkerboard-a": {
+          "path": "/home/veasnawt/src/vos-r2-console-reader/build/native-final/uefi-verify-128M/checkerboard-regression-a.png",
+          "sha256": "f2d193fb15ad4348fe1c026ab89c9cedfb1a57ba0d33de886c7c148f6d9b575e"
+        },
+        "initial": {
+          "path": "/home/veasnawt/src/vos-r2-console-reader/build/native-final/uefi-verify-128M/initial.png",
+          "sha256": "ab3b32706c100da094a11718b7b1c119c01d7cfbfbe045a9770bad91bc897af0"
+        },
+        "movement": {
+          "path": "/home/veasnawt/src/vos-r2-console-reader/build/native-final/uefi-verify-128M/movement.png",
+          "sha256": "3addb95d8518f541cc51d635d17424468844821e79674f6b3e1b98ff3904f150"
+        },
+        "press": {
+          "path": "/home/veasnawt/src/vos-r2-console-reader/build/native-final/uefi-verify-128M/press.png",
+          "sha256": "c5693b7d21df304a00a42260fa2efa5eab72d95caef9da1f15be844fc90fb929"
+        },
+        "click": {
+          "path": "/home/veasnawt/src/vos-r2-console-reader/build/native-final/uefi-verify-128M/click.png",
+          "sha256": "2d74c8424da262ee4eb18aefb2237d84ffe1bf9113d5c4417bf853a48e64c12a"
+        },
+        "top-left": {
+          "path": "/home/veasnawt/src/vos-r2-console-reader/build/native-final/uefi-verify-128M/top-left.png",
+          "sha256": "b9b42d93c19c7d462edda7c2aa8858aacfb17e299022404ba8c4890b0dc17959"
+        },
+        "top-right": {
+          "path": "/home/veasnawt/src/vos-r2-console-reader/build/native-final/uefi-verify-128M/top-right.png",
+          "sha256": "7525261f59686c2b2b615f9e3385f313392cfec700447b3c72c3fa6a22add46e"
+        },
+        "bottom-right": {
+          "path": "/home/veasnawt/src/vos-r2-console-reader/build/native-final/uefi-verify-128M/bottom-right.png",
+          "sha256": "75d708b8f3afb5cb386ea6d7b75a43a4adbd1744964e54f606b0c24c9a03d431"
+        },
+        "bottom-left": {
+          "path": "/home/veasnawt/src/vos-r2-console-reader/build/native-final/uefi-verify-128M/bottom-left.png",
+          "sha256": "d85b3a11489333ba4c3ad306ef52c5f179cb73f19b10e8a914e2652c9501c955"
+        },
+        "final": {
+          "path": "/home/veasnawt/src/vos-r2-console-reader/build/native-final/uefi-verify-128M/final.png",
+          "sha256": "b840dcc416b45f8d26efacf8b1559fa0f8c548b6fd673d93ada8e5662f4e641b"
+        },
+        "rust-reader": {
+          "path": "/home/veasnawt/src/vos-r2-console-reader/build/native-final/uefi-verify-128M/rust-reader.png",
+          "sha256": "087c8d0b75ad597bb569a02c93629064127bc6de0f5f48edda9f0b55992f6831"
+        },
+        "rust-edit": {
+          "path": "/home/veasnawt/src/vos-r2-console-reader/build/native-final/uefi-verify-128M/rust-edit.png",
+          "sha256": "f29bae726e8094b2e4b5cf8bcc911fe39db2b5f1041104a404cf6e1b43ef13ba"
+        },
+        "rust-line": {
+          "path": "/home/veasnawt/src/vos-r2-console-reader/build/native-final/uefi-verify-128M/rust-line.png",
+          "sha256": "c97799a07aea59b9cd17543fabae809a2b95c93bf3c55e112308c3fba0e4fdcb"
+        },
+        "keyboard-text": {
+          "path": "/home/veasnawt/src/vos-r2-console-reader/build/native-final/uefi-verify-128M/keyboard-text.png",
+          "sha256": "c6924444c927c9ccab0dbd1313b96c9d8b5c3257b9b2ebe5c225d98b41996175"
+        }
+      },
+      "pixels": {
+        "initial": {
+          "passed": true,
+          "cursor": [
+            512,
+            390
+          ],
+          "panel_rgb": "0x409ddd",
+          "width": 1024,
+          "height": 768
+        },
+        "movement": {
+          "passed": true,
+          "cursor": [
+            524,
+            382
+          ],
+          "panel_rgb": "0x409ddd",
+          "width": 1024,
+          "height": 768
+        },
+        "press": {
+          "passed": true,
+          "cursor": [
+            524,
+            382
+          ],
+          "panel_rgb": "0xe8b34e",
+          "width": 1024,
+          "height": 768
+        },
+        "click": {
+          "passed": true,
+          "cursor": [
+            524,
+            382
+          ],
+          "panel_rgb": "0x42c497",
+          "width": 1024,
+          "height": 768
+        }
+      },
+      "exact_corners": true,
+      "keyboard_mouse": true,
+      "held_exit_cleanup": true,
+      "shell_hello_rixie": true,
+      "native_cases": 16,
+      "elapsed_seconds": 28.737520004004182,
+      "serial_sha256": "3dddc101ea95a30f7240492de60efaada3bbc192edc2d940a11b89d36609e997"
+    },
+    {
+      "passed": true,
+      "firmware": "uefi",
+      "mode": "verify",
+      "memory": "2G",
+      "native_reader_call": {
+        "symbol": "input_console_read_line_for",
+        "RIP": "0xffffffff80140980",
+        "stop": "T05thread:01;",
+        "scope": "next synchronous reader entry after actual shell command; not guest timing"
+      },
+      "native_edit_call": {
+        "symbol": "input_console_accept",
+        "RIP": "0xffffffff801408d0",
+        "stop": "T05thread:01;",
+        "scope": "actual poll-loop entry; byte may be NUL, not a latency measurement"
+      },
+      "native_line_call": {
+        "symbol": "inlined extraction in Rust console_reader::admitted",
+        "RIP": "0xffffffff8013c826",
+        "stop": "T05thread:01;",
+        "copy_bytes": "6563686f2072757374206c696e6500",
+        "copy_length": 15
+      },
+      "keyboard_text": {
+        "passed": true,
+        "expected": "Aa!",
+        "caps_shift_release": true
+      },
+      "screenshots": {
+        "checkerboard-initial": {
+          "path": "/home/veasnawt/src/vos-r2-console-reader/build/native-final/uefi-verify-2G/checkerboard-regression-initial.png",
+          "sha256": "236ab33329494f770d3a05cc74bbfa4d3226f265c25798907d81733782f6af17"
+        },
+        "checkerboard-a": {
+          "path": "/home/veasnawt/src/vos-r2-console-reader/build/native-final/uefi-verify-2G/checkerboard-regression-a.png",
+          "sha256": "f2d193fb15ad4348fe1c026ab89c9cedfb1a57ba0d33de886c7c148f6d9b575e"
+        },
+        "initial": {
+          "path": "/home/veasnawt/src/vos-r2-console-reader/build/native-final/uefi-verify-2G/initial.png",
+          "sha256": "ab3b32706c100da094a11718b7b1c119c01d7cfbfbe045a9770bad91bc897af0"
+        },
+        "movement": {
+          "path": "/home/veasnawt/src/vos-r2-console-reader/build/native-final/uefi-verify-2G/movement.png",
+          "sha256": "3addb95d8518f541cc51d635d17424468844821e79674f6b3e1b98ff3904f150"
+        },
+        "press": {
+          "path": "/home/veasnawt/src/vos-r2-console-reader/build/native-final/uefi-verify-2G/press.png",
+          "sha256": "c5693b7d21df304a00a42260fa2efa5eab72d95caef9da1f15be844fc90fb929"
+        },
+        "click": {
+          "path": "/home/veasnawt/src/vos-r2-console-reader/build/native-final/uefi-verify-2G/click.png",
+          "sha256": "2d74c8424da262ee4eb18aefb2237d84ffe1bf9113d5c4417bf853a48e64c12a"
+        },
+        "top-left": {
+          "path": "/home/veasnawt/src/vos-r2-console-reader/build/native-final/uefi-verify-2G/top-left.png",
+          "sha256": "b9b42d93c19c7d462edda7c2aa8858aacfb17e299022404ba8c4890b0dc17959"
+        },
+        "top-right": {
+          "path": "/home/veasnawt/src/vos-r2-console-reader/build/native-final/uefi-verify-2G/top-right.png",
+          "sha256": "7525261f59686c2b2b615f9e3385f313392cfec700447b3c72c3fa6a22add46e"
+        },
+        "bottom-right": {
+          "path": "/home/veasnawt/src/vos-r2-console-reader/build/native-final/uefi-verify-2G/bottom-right.png",
+          "sha256": "75d708b8f3afb5cb386ea6d7b75a43a4adbd1744964e54f606b0c24c9a03d431"
+        },
+        "bottom-left": {
+          "path": "/home/veasnawt/src/vos-r2-console-reader/build/native-final/uefi-verify-2G/bottom-left.png",
+          "sha256": "d85b3a11489333ba4c3ad306ef52c5f179cb73f19b10e8a914e2652c9501c955"
+        },
+        "final": {
+          "path": "/home/veasnawt/src/vos-r2-console-reader/build/native-final/uefi-verify-2G/final.png",
+          "sha256": "b840dcc416b45f8d26efacf8b1559fa0f8c548b6fd673d93ada8e5662f4e641b"
+        },
+        "rust-reader": {
+          "path": "/home/veasnawt/src/vos-r2-console-reader/build/native-final/uefi-verify-2G/rust-reader.png",
+          "sha256": "087c8d0b75ad597bb569a02c93629064127bc6de0f5f48edda9f0b55992f6831"
+        },
+        "rust-edit": {
+          "path": "/home/veasnawt/src/vos-r2-console-reader/build/native-final/uefi-verify-2G/rust-edit.png",
+          "sha256": "f29bae726e8094b2e4b5cf8bcc911fe39db2b5f1041104a404cf6e1b43ef13ba"
+        },
+        "rust-line": {
+          "path": "/home/veasnawt/src/vos-r2-console-reader/build/native-final/uefi-verify-2G/rust-line.png",
+          "sha256": "c97799a07aea59b9cd17543fabae809a2b95c93bf3c55e112308c3fba0e4fdcb"
+        },
+        "keyboard-text": {
+          "path": "/home/veasnawt/src/vos-r2-console-reader/build/native-final/uefi-verify-2G/keyboard-text.png",
+          "sha256": "c6924444c927c9ccab0dbd1313b96c9d8b5c3257b9b2ebe5c225d98b41996175"
+        }
+      },
+      "pixels": {
+        "initial": {
+          "passed": true,
+          "cursor": [
+            512,
+            390
+          ],
+          "panel_rgb": "0x409ddd",
+          "width": 1024,
+          "height": 768
+        },
+        "movement": {
+          "passed": true,
+          "cursor": [
+            524,
+            382
+          ],
+          "panel_rgb": "0x409ddd",
+          "width": 1024,
+          "height": 768
+        },
+        "press": {
+          "passed": true,
+          "cursor": [
+            524,
+            382
+          ],
+          "panel_rgb": "0xe8b34e",
+          "width": 1024,
+          "height": 768
+        },
+        "click": {
+          "passed": true,
+          "cursor": [
+            524,
+            382
+          ],
+          "panel_rgb": "0x42c497",
+          "width": 1024,
+          "height": 768
+        }
+      },
+      "exact_corners": true,
+      "keyboard_mouse": true,
+      "held_exit_cleanup": true,
+      "shell_hello_rixie": true,
+      "native_cases": 16,
+      "elapsed_seconds": 28.132691881997744,
+      "serial_sha256": "039799034a40ac83d9b06e3143d9ff06dda0db40fc4c715a0d059f5059644519"
+    }
+  ]
+}

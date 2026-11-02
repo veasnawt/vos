@@ -24,6 +24,7 @@ mod ps2_pointer;
 mod ps2_keyboard;
 mod console_line;
 mod console_accept;
+mod console_reader;
 mod elf_validate;
 mod mb2_parse;
 mod fb_validate;

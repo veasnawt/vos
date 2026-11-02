@@ -1,0 +1,92 @@
+
+/home/veasnawt/src/vos-r2-console-reader/build/reader-final/target-ffi.o:     file format elf64-x86-64
+
+
+Disassembly of section .text._RNvNtCse2AcrdK3Od6_11target_root6bridge8admitted:
+
+0000000000000000 <_RNvNtCse2AcrdK3Od6_11target_root6bridge8admitted>:
+   0:	55                   	push   %rbp
+   1:	41 57                	push   %r15
+   3:	41 56                	push   %r14
+   5:	41 55                	push   %r13
+   7:	41 54                	push   %r12
+   9:	53                   	push   %rbx
+   a:	48 81 ec 98 00 00 00 	sub    $0x98,%rsp
+  11:	4c 89 0c 24          	mov    %r9,(%rsp)
+  15:	4d 89 c6             	mov    %r8,%r14
+  18:	49 89 cf             	mov    %rcx,%r15
+  1b:	89 d5                	mov    %edx,%ebp
+  1d:	49 89 f4             	mov    %rsi,%r12
+  20:	49 89 fd             	mov    %rdi,%r13
+  23:	48 8d 5c 24 08       	lea    0x8(%rsp),%rbx
+  28:	b9 12 00 00 00       	mov    $0x12,%ecx
+  2d:	31 c0                	xor    %eax,%eax
+  2f:	48 89 df             	mov    %rbx,%rdi
+  32:	f3 48 ab             	rep stos %rax,(%rdi)
+  35:	4c 89 ff             	mov    %r15,%rdi
+  38:	e8 00 00 00 00       	call   3d <_RNvNtCse2AcrdK3Od6_11target_root6bridge8admitted+0x3d>
+			39: R_X86_64_PLT32	serial_puts-0x4
+  3d:	eb 0b                	jmp    4a <_RNvNtCse2AcrdK3Od6_11target_root6bridge8admitted+0x4a>
+  3f:	90                   	nop
+  40:	bf 01 00 00 00       	mov    $0x1,%edi
+  45:	e8 00 00 00 00       	call   4a <_RNvNtCse2AcrdK3Od6_11target_root6bridge8admitted+0x4a>
+			46: R_X86_64_PLT32	thread_sleep-0x4
+  4a:	4d 85 f6             	test   %r14,%r14
+  4d:	74 0b                	je     5a <_RNvNtCse2AcrdK3Od6_11target_root6bridge8admitted+0x5a>
+  4f:	48 8b 3c 24          	mov    (%rsp),%rdi
+  53:	41 ff d6             	call   *%r14
+  56:	85 c0                	test   %eax,%eax
+  58:	75 45                	jne    9f <_RNvNtCse2AcrdK3Od6_11target_root6bridge8admitted+0x9f>
+  5a:	4c 89 ef             	mov    %r13,%rdi
+  5d:	e8 00 00 00 00       	call   62 <_RNvNtCse2AcrdK3Od6_11target_root6bridge8admitted+0x62>
+			5e: R_X86_64_PLT32	keyboard_poll-0x4
+  62:	0f be f0             	movsbl %al,%esi
+  65:	48 89 df             	mov    %rbx,%rdi
+  68:	e8 00 00 00 00       	call   6d <_RNvNtCse2AcrdK3Od6_11target_root6bridge8admitted+0x6d>
+			69: R_X86_64_PLT32	input_console_accept-0x4
+  6d:	83 bc 24 90 00 00 00 	cmpl   $0x0,0x90(%rsp)
+  74:	00 
+  75:	74 c9                	je     40 <_RNvNtCse2AcrdK3Od6_11target_root6bridge8admitted+0x40>
+  77:	48 89 df             	mov    %rbx,%rdi
+  7a:	4c 89 e6             	mov    %r12,%rsi
+  7d:	89 ea                	mov    %ebp,%edx
+  7f:	e8 00 00 00 00       	call   84 <_RNvNtCse2AcrdK3Od6_11target_root6bridge8admitted+0x84>
+			80: R_X86_64_PLT32	input_console_take_line-0x4
+  84:	83 f8 fd             	cmp    $0xfffffffd,%eax
+  87:	75 1b                	jne    a4 <_RNvNtCse2AcrdK3Od6_11target_root6bridge8admitted+0xa4>
+  89:	48 c7 c7 00 00 00 00 	mov    $0x0,%rdi
+			8c: R_X86_64_32S	.rodata.str1.1
+  90:	e8 00 00 00 00       	call   95 <_RNvNtCse2AcrdK3Od6_11target_root6bridge8admitted+0x95>
+			91: R_X86_64_PLT32	serial_puts-0x4
+  95:	4c 89 ff             	mov    %r15,%rdi
+  98:	e8 00 00 00 00       	call   9d <_RNvNtCse2AcrdK3Od6_11target_root6bridge8admitted+0x9d>
+			99: R_X86_64_PLT32	serial_puts-0x4
+  9d:	eb a1                	jmp    40 <_RNvNtCse2AcrdK3Od6_11target_root6bridge8admitted+0x40>
+  9f:	b8 fb ff ff ff       	mov    $0xfffffffb,%eax
+  a4:	48 81 c4 98 00 00 00 	add    $0x98,%rsp
+  ab:	5b                   	pop    %rbx
+  ac:	41 5c                	pop    %r12
+  ae:	41 5d                	pop    %r13
+  b0:	41 5e                	pop    %r14
+  b2:	41 5f                	pop    %r15
+  b4:	5d                   	pop    %rbp
+  b5:	c3                   	ret
+
+Disassembly of section .text.input_console_read_line_for:
+
+0000000000000000 <input_console_read_line_for>:
+   0:	4c 8d 57 14          	lea    0x14(%rdi),%r10
+   4:	b8 fc ff ff ff       	mov    $0xfffffffc,%eax
+   9:	49 83 fa 15          	cmp    $0x15,%r10
+   d:	72 24                	jb     33 <input_console_read_line_for+0x33>
+   f:	83 7f 10 00          	cmpl   $0x0,0x10(%rdi)
+  13:	74 1e                	je     33 <input_console_read_line_for+0x33>
+  15:	48 85 f6             	test   %rsi,%rsi
+  18:	0f 94 c0             	sete   %al
+  1b:	81 fa 81 00 00 00    	cmp    $0x81,%edx
+  21:	41 0f 92 c2          	setb   %r10b
+  25:	41 08 c2             	or     %al,%r10b
+  28:	b8 fe ff ff ff       	mov    $0xfffffffe,%eax
+  2d:	0f 84 00 00 00 00    	je     33 <input_console_read_line_for+0x33>
+			2f: R_X86_64_PLT32	.text._RNvNtCse2AcrdK3Od6_11target_root6bridge8admitted-0x4
+  33:	c3                   	ret

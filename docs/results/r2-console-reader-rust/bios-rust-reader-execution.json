@@ -1,0 +1,6 @@
+{
+  "symbol": "input_console_read_line_for",
+  "RIP": "0xffffffff80140120",
+  "stop": "T05thread:01;",
+  "scope": "next synchronous reader entry after actual shell command; not guest timing"
+}

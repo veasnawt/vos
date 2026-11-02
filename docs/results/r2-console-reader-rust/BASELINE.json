@@ -1,0 +1,38 @@
+{
+  "utc": "2026-11-02T02:14:05.413402+00:00",
+  "status": "PASS",
+  "baseline": "9134d1cbce7eb38ed4d87b53fc478620631f3077",
+  "command": [
+    "gcc",
+    "-std=gnu11",
+    "-O2",
+    "-Wall",
+    "-Wextra",
+    "-Werror",
+    "-ffunction-sections",
+    "-fdata-sections",
+    "-Wl,--gc-sections",
+    "-Iarch/x86_64",
+    "-fno-pie",
+    "-no-pie",
+    "tests/host/buffered-input.c",
+    "arch/x86_64/input_console.c",
+    "/home/veasnawt/src/vos-r2-console-accept/build/final/rust/libvos_kernel.a",
+    "-o",
+    "/home/veasnawt/src/vos-r2-console-reader/build/baseline/buffered-input"
+  ],
+  "accepted_archive_sha256": "330349d70235d0515cb2d481af80227a1ffaead855acc909e6001ecc7f929ae5",
+  "versions": {
+    "gcc": "gcc (Ubuntu 15.2.0-16ubuntu1) 15.2.0\nCopyright (C) 2025 Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\n",
+    "ld": "GNU ld (GNU Binutils for Ubuntu) 2.46\nCopyright (C) 2026 Free Software Foundation, Inc.\nThis program is free software; you may redistribute it under the terms of\nthe GNU General Public License version 3 or (at your option) a later version.\nThis program has absolutely no warranty.\n",
+    "rustc": "rustc 1.100.0-nightly (2e2b193f8 2026-09-02)\nbinary: rustc\ncommit-hash: 2e2b193f8ada105f27608b7be81c293e0d7292cb\ncommit-date: 2026-09-02\nhost: x86_64-unknown-linux-gnu\nrelease: 1.100.0-nightly\nLLVM version: 23.1.1\n",
+    "qemu": "QEMU emulator version 10.2.1 (Debian 1:10.2.1+ds-1ubuntu3.2)\nCopyright (c) 2003-2025 Fabrice Bellard and the QEMU Project developers\n"
+  },
+  "meminfo": "MemTotal:        8088144 kB\nMemFree:         7066484 kB\nMemAvailable:    7495600 kB\nBuffers:           43728 kB\nCached:           510960 kB\nSwapCached:            0 kB\nActive:           140164 kB\nInactive:         571036 kB\nActive(anon):       3300 kB\nInactive(anon):   157644 kB\nActive(file):     136864 kB\nInactive(file):   413392 kB\nUnevictable:           0 kB\nMlocked:               0 kB\nSwapTotal:       2097152 kB\nSwapFree:        2097152 kB\nDirty:              1688 kB\nWriteback:             0 kB\nAnonPages:        156576 kB\nMapped:           127552 kB\nShmem:              4436 kB\nKReclaimable:      37712 kB\nSlab:              77184 kB\nSReclaimable:      37712 kB\nSUnreclaim:        39472 kB\nKernelStack:        3024 kB\nPageTables:         4936 kB\nSecPageTables:         0 kB\nNFS_Unstable:          0 kB\nBounce:                0 kB\nWritebackTmp:          0 kB\nCommitLimit:     6141224 kB\nCommitted_AS:     783792 kB\nVmallocTotal:   34359738367 kB\nVmallocUsed:       28948 kB\nVmallocChunk:          0 kB\nPercpu:             1648 kB\nHardwareCorrupted:     0 kB\nAnonHugePages:         0 kB\nShmemHugePages:        0 kB\nShmemPmdMapped:        0 kB\nFileHugePages:         0 kB\nFilePmdMapped:         0 kB\nBalloon:               0 kB\nHugePages_Total:       0\nHugePages_Free:        0\nHugePages_Rsvd:        0\nHugePages_Surp:        0\nHugepagesize:       2048 kB\nHugetlb:               0 kB\nDirectMap4k:       41984 kB\nDirectMap2M:     5152768 kB\nDirectMap1G:    12582912 kB\n",
+  "distro": "Ubuntu-VOS-E-20261101T025327Z-d5832e96",
+  "uid": 1000,
+  "accepted_source_sha256": {
+    "arch/x86_64/input_console.c": "d3f65b4ec3fdb306d4a1cd4c890b3993355b7cfa7053f6385c0e7c212b2bec1d",
+    "arch/x86_64/input_console.h": "6c15e09bb182334f8bf0f5637b6857b44d2d148fd6ff20e896c7680bf6c4f119"
+  }
+}

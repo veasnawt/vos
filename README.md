@@ -207,4 +207,6 @@ The [R2 Rust console line extraction migration](docs/results/r2-console-line-rus
 
 [H1-B accepted-main reconciliation](docs/results/h1b-main-reconciliation.md) is accepted through merged PR #51 (`159528f`), with the Rust keyboard/console ABI from merged PRs #52/#53. Hosted/static and BIOS/UEFI CI passed on the reconciled head; HID semantics remained unchanged. This is hosted compatibility work, not native USB activation.
 
-The [R2 Rust console editor migration](docs/results/r2-console-accept-rust.md) has passed local differential, mutation, resource and eight BIOS/UEFI gates. The owner approved the documented source-bound hosted regressions; PR publication and final CI remain pending; existing C ABI and input ownership are preserved. This is not accepted main until separately reviewed and merged.
+The [R2 Rust console editor migration](docs/results/r2-console-accept-rust.md) is merged through [PR #54](https://github.com/veasnawt/vos/pull/54) at `9134d1cbce7eb38ed4d87b53fc478620631f3077`. Its source-bound performance decision, genuine evidence and passing CI remain preserved; native USB and guest performance are not implied.
+
+The [R2 Rust blocking console reader](docs/results/r2-console-reader-rust.md) passes local correctness/resource and eight BIOS/UEFI gates. The owner approved the documented source-bound hosted regressions; gated PR publication and final CI remain pending; it is not yet accepted main.

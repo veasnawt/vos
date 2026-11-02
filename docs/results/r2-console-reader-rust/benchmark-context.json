@@ -1,0 +1,28 @@
+{
+  "captured_utc": "2026-11-02T02:43:40.884784+00:00",
+  "CPU_context": [
+    "cpu family\t: 6",
+    "model\t\t: 60",
+    "model name\t: Intel(R) Core(TM) i5-4570 CPU @ 3.20GHz",
+    "stepping\t: 3"
+  ],
+  "kernel": "Linux 6.18.54.1-microsoft-standard-WSL2 #1 SMP PREEMPT_DYNAMIC Tue Oct  6 19:13:07 UTC 2026 x86_64",
+  "available_affinity": [
+    0,
+    1,
+    2,
+    3
+  ],
+  "actual_benchmark_command": [
+    [
+      "taskset",
+      "-c",
+      "0",
+      "/home/veasnawt/src/vos-r2-console-reader/build/reader-final/release-differential",
+      "--bench"
+    ]
+  ],
+  "frequency_governor": "NOT CONTROLLED; no system setting changed. Current hardware context recorded separately from timed samples.",
+  "baseline_tools": "baseline.json",
+  "model_callbacks": "No hardware/scheduler latency claims"
+}

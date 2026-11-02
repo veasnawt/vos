@@ -1,0 +1,7 @@
+{
+  "symbol": "inlined extraction in Rust console_reader::admitted",
+  "RIP": "0xffffffff8013bfc6",
+  "stop": "T05thread:01;",
+  "copy_bytes": "6563686f2072757374206c696e6500",
+  "copy_length": 15
+}

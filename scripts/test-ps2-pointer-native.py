@@ -4,6 +4,7 @@
 Packet tracking and firmware assertions retain the accepted N6.3 test semantics.
 Historical controller entry points are neither imported nor executed.
 """
+import struct
 import argparse,hashlib,importlib.util,json,os,re,runpy,shutil,socket,struct,subprocess,time,zlib
 from pathlib import Path
 REPO=Path(__file__).resolve().parents[1]
@@ -245,6 +246,26 @@ def boot(out,fw,mode,iso,symbols,disk,memory="128M",tag_memory=False):
             def command(s,expected):
                 before=data();n=prompts(before);text(s);q.tap('ret');b=wait(lambda b:prompts(b)>n)
                 need(expected.encode() in b[len(before):],'shell response '+s)
+            if 'input_console_read_line_for' in symbols:
+                before=data();n=prompts(before);q.execute('stop');g=GDB(folder/'gdb')
+                try:
+                    need(g.command('?').startswith(('T','S')),'stopped reader-proof target')
+                    addr=symbols['input_console_read_line_for']
+                    need(g.command('Z0,%x,1'%addr)=='OK','install reader breakpoint')
+                    g.send('c');text('echo rust reader');q.tap('ret');stop=g.receive()
+                    need(stop.startswith(('T05','S05')),'actual Rust reader entry trap')
+                    registers=q.execute('human-monitor-command',{'command-line':'info registers'})
+                    match=re.search(r'RIP=([0-9a-fA-F]+)',registers)
+                    need(match and int(match[1],16)==addr,'Rust reader RIP')
+                    need(g.command('z0,%x,1'%addr)=='OK','remove reader breakpoint')
+                    row={'symbol':'input_console_read_line_for','RIP':hex(addr),'stop':stop,
+                         'scope':'next synchronous reader entry after actual shell command; not guest timing'}
+                    (folder/'rust-reader-execution.json').write_text(json.dumps(row,indent=2)+'\n')
+                    result['native_reader_call']=row;g.send('c')
+                finally:g.s.close()
+                b=wait(lambda b:prompts(b)>n)
+                need(b'user[vsh]: rust reader\r\n' in b[len(before):],'native reader shell output')
+                shots['rust-reader']=capture(q,folder,'rust-reader')
             if 'input_console_accept' in symbols:
                 before=data();n=prompts(before);q.execute('stop');g=GDB(folder/'gdb')
                 try:
@@ -270,7 +291,7 @@ def boot(out,fw,mode,iso,symbols,disk,memory="128M",tag_memory=False):
                 before=data();n=prompts(before);q.execute('stop');g=GDB(folder/'gdb')
                 try:
                     need(g.command('?').startswith(('T','S')),'stopped line-proof target')
-                    addr=symbols['input_console_take_line']
+                    addr=symbols.get('inlined_extraction',symbols['input_console_take_line'])
                     need(g.command('Z0,%x,1'%addr)=='OK','install extraction breakpoint')
                     g.send('c');text('echo rust line');q.tap('ret')
                     stop=g.receive();need(stop.startswith(('T05','S05')),'actual extraction trap')
@@ -279,6 +300,15 @@ def boot(out,fw,mode,iso,symbols,disk,memory="128M",tag_memory=False):
                     need(match and int(match[1],16)==addr,'Rust extraction RIP')
                     need(g.command('z0,%x,1'%addr)=='OK','remove extraction breakpoint')
                     row={'symbol':'input_console_take_line','RIP':hex(addr),'stop':stop}
+                    if 'inlined_extraction' in symbols:
+                        source=re.search(r'RSI=([0-9a-fA-F]+)',registers)
+                        length=re.search(r'RDX=([0-9a-fA-F]+)',registers)
+                        expected=b'echo rust line\0'
+                        need(source and length and int(length[1],16)==len(expected),'inlined extraction exact copy length')
+                        actual=g.command('m%x,%x'%(int(source[1],16),len(expected)))
+                        need(actual==expected.hex(),'inlined extraction actual editor bytes')
+                        row.update(symbol='inlined extraction in Rust console_reader::admitted',
+                                   copy_bytes=expected.hex(),copy_length=len(expected))
                     (folder/'rust-line-execution.json').write_text(json.dumps(row,indent=2)+'\n')
                     result['native_line_call']=row;g.send('c')
                 finally:g.s.close()
@@ -335,6 +365,7 @@ def main():
     ap.add_argument('--out',type=Path,required=True)
     ap.add_argument('--mode',choices=['normal','verify','both'],default='both')
     ap.add_argument('--memory',action='append',choices=['128M','2G'],help='reuse checked images for selected RAM sizes; default is 128M')
+    ap.add_argument('--console-reader-proof',action='store_true',help='trap actual Rust blocking reader and verify shell output')
     ap.add_argument('--console-accept-proof',action='store_true',help='trap actual Rust edit entry and verify genuine edited shell output')
     ap.add_argument('--console-line-proof',action='store_true',help='trap Rust line extraction and require genuine shell output')
     ap.add_argument('--keyboard-proof',action='store_true',help='also trap the real Rust keyboard_decode entry')
@@ -355,7 +386,36 @@ def main():
         for mode in modes:
             kernel=(args.normal_kernel if mode=='normal' else args.verify_kernel).resolve()
             syms=subprocess.check_output(['nm','-S','--defined-only',str(kernel)],text=True)
-            symbols={n:int(next(l.split()[0] for l in syms.splitlines() if l.endswith(' '+n)),16) for n in ('pointer_decode','pointer_idle',*(['keyboard_decode'] if args.keyboard_proof else []),*(['input_console_take_line'] if args.console_line_proof else []),*(['input_console_accept'] if args.console_accept_proof else []))}
+            symbols={n:int(next(l.split()[0] for l in syms.splitlines() if l.endswith(' '+n)),16) for n in ('pointer_decode','pointer_idle',*(['keyboard_decode'] if args.keyboard_proof else []),*(['input_console_take_line'] if args.console_line_proof else []),*(['input_console_accept'] if args.console_accept_proof else []),*(['input_console_read_line_for'] if args.console_reader_proof else []))}
+            if args.console_reader_proof and args.console_line_proof:
+                # LLVM may inline the accepted extraction into the Rust reader.
+                # Identify its real memcpy call through the ELF-resolved GOT,
+                # not a fixed offset or the nearest objdump symbol annotation.
+                rows=[l.split() for l in syms.splitlines()]
+                reader=[r for r in rows if 'console_reader8admitted' in r[-1]]
+                need(len(reader)==1,'one private Rust admitted reader')
+                begin=int(reader[0][0],16);finish=begin+int(reader[0][1],16)
+                memcpy=int(next(r[0] for r in rows if r[-1]=='memcpy'),16)
+                elf=kernel.read_bytes();off=struct.unpack_from('<Q',elf,32)[0]
+                stride,num=struct.unpack_from('<HH',elf,54)
+                loads=[struct.unpack_from('<IIQQQQQQ',elf,off+i*stride) for i in range(num)]
+                def pointer(address):
+                    for ph in loads:
+                        if ph[0]==1 and ph[3]<=address and address+8<=ph[3]+ph[5]:
+                            return struct.unpack_from('<Q',elf,ph[2]+address-ph[3])[0]
+                    raise RuntimeError('copy GOT outside file-backed load segments')
+                asm=subprocess.check_output(['objdump','-d','--start-address='+str(begin),
+                      '--stop-address='+str(finish),str(kernel)],text=True)
+                copies=[]
+                for row in asm.splitlines():
+                    match=re.match(r'\s*([0-9a-f]+):\s+((?:[0-9a-f]{2}\s+)+)\s*call',row)
+                    if not match:continue
+                    code=bytes.fromhex(match[2]);address=int(match[1],16)
+                    if code[:2]==b'\xff\x15' and len(code)==6:
+                        got=address+6+struct.unpack('<i',code[2:])[0]
+                        if pointer(got)==memcpy:copies.append(address)
+                need(len(copies)==1,'one ELF-verified inlined Rust extraction copy')
+                symbols['inlined_extraction']=copies[0]
             # GUI verification cases exist only in a -DVOS_GUI_VERIFY kernel.
             verify_only=any(l.endswith(' gui_test_alloc_budget') for l in syms.splitlines())
             need(verify_only==(mode=='verify'),'kernel built with matching VOS_GUI_VERIFY for '+mode)

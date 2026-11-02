@@ -1,0 +1,265 @@
+
+/home/veasnawt/src/vos-r2-console-reader/build/reader-hosted/target-ffi.o:     file format elf64-x86-64
+
+
+Disassembly of section .text.input_console_accept:
+
+0000000000000000 <input_console_accept>:
+   0:	53                   	push   %rbx
+   1:	40 84 f6             	test   %sil,%sil
+   4:	0f 95 c0             	setne  %al
+   7:	48 8d 8f 90 00 00 00 	lea    0x90(%rdi),%rcx
+   e:	48 81 f9 91 00 00 00 	cmp    $0x91,%rcx
+  15:	0f 93 c1             	setae  %cl
+  18:	84 c8                	test   %cl,%al
+  1a:	74 09                	je     25 <input_console_accept+0x25>
+  1c:	83 bf 88 00 00 00 00 	cmpl   $0x0,0x88(%rdi)
+  23:	74 02                	je     27 <input_console_accept+0x27>
+  25:	5b                   	pop    %rbx
+  26:	c3                   	ret
+  27:	40 0f be c6          	movsbl %sil,%eax
+  2b:	83 f8 08             	cmp    $0x8,%eax
+  2e:	74 20                	je     50 <input_console_accept+0x50>
+  30:	83 f8 0a             	cmp    $0xa,%eax
+  33:	75 3f                	jne    74 <input_console_accept+0x74>
+  35:	48 89 fb             	mov    %rdi,%rbx
+  38:	48 c7 c7 00 00 00 00 	mov    $0x0,%rdi
+			3b: R_X86_64_32S	.rodata.str1.1
+  3f:	e8 00 00 00 00       	call   44 <input_console_accept+0x44>
+			40: R_X86_64_PLT32	serial_puts-0x4
+  44:	c7 83 88 00 00 00 01 	movl   $0x1,0x88(%rbx)
+  4b:	00 00 00 
+  4e:	5b                   	pop    %rbx
+  4f:	c3                   	ret
+  50:	83 3f 00             	cmpl   $0x0,(%rdi)
+  53:	74 d0                	je     25 <input_console_accept+0x25>
+  55:	48 89 fb             	mov    %rdi,%rbx
+  58:	e8 00 00 00 00       	call   5d <input_console_accept+0x5d>
+			59: R_X86_64_PLT32	console_erase_previous-0x4
+  5d:	8b 0b                	mov    (%rbx),%ecx
+  5f:	ff c9                	dec    %ecx
+  61:	81 f9 80 00 00 00    	cmp    $0x80,%ecx
+  67:	77 bc                	ja     25 <input_console_accept+0x25>
+  69:	89 0b                	mov    %ecx,(%rbx)
+  6b:	89 c9                	mov    %ecx,%ecx
+  6d:	c6 44 0b 04 00       	movb   $0x0,0x4(%rbx,%rcx,1)
+  72:	5b                   	pop    %rbx
+  73:	c3                   	ret
+  74:	8d 4e e0             	lea    -0x20(%rsi),%ecx
+  77:	80 f9 5f             	cmp    $0x5f,%cl
+  7a:	73 a9                	jae    25 <input_console_accept+0x25>
+  7c:	8b 0f                	mov    (%rdi),%ecx
+  7e:	48 81 f9 80 00 00 00 	cmp    $0x80,%rcx
+  85:	75 0c                	jne    93 <input_console_accept+0x93>
+  87:	c7 87 8c 00 00 00 01 	movl   $0x1,0x8c(%rdi)
+  8e:	00 00 00 
+  91:	5b                   	pop    %rbx
+  92:	c3                   	ret
+  93:	83 f9 7f             	cmp    $0x7f,%ecx
+  96:	77 8d                	ja     25 <input_console_accept+0x25>
+  98:	48 8d 51 01          	lea    0x1(%rcx),%rdx
+  9c:	89 17                	mov    %edx,(%rdi)
+  9e:	40 88 74 0f 04       	mov    %sil,0x4(%rdi,%rcx,1)
+  a3:	c6 44 0f 05 00       	movb   $0x0,0x5(%rdi,%rcx,1)
+  a8:	89 c7                	mov    %eax,%edi
+  aa:	5b                   	pop    %rbx
+  ab:	e9 00 00 00 00       	jmp    b0 <input_console_accept+0xb0>
+			ac: R_X86_64_PLT32	serial_putc-0x4
+
+Disassembly of section .text.input_console_read_line_for:
+
+0000000000000000 <input_console_read_line_for>:
+   0:	55                   	push   %rbp
+   1:	41 57                	push   %r15
+   3:	41 56                	push   %r14
+   5:	41 55                	push   %r13
+   7:	41 54                	push   %r12
+   9:	53                   	push   %rbx
+   a:	48 81 ec 98 00 00 00 	sub    $0x98,%rsp
+  11:	49 89 cc             	mov    %rcx,%r12
+  14:	48 8d 4f 14          	lea    0x14(%rdi),%rcx
+  18:	b8 fc ff ff ff       	mov    $0xfffffffc,%eax
+  1d:	48 83 f9 15          	cmp    $0x15,%rcx
+  21:	0f 82 29 01 00 00    	jb     150 <input_console_read_line_for+0x150>
+  27:	49 89 fd             	mov    %rdi,%r13
+  2a:	83 7f 10 00          	cmpl   $0x0,0x10(%rdi)
+  2e:	0f 84 1c 01 00 00    	je     150 <input_console_read_line_for+0x150>
+  34:	48 85 f6             	test   %rsi,%rsi
+  37:	0f 94 c0             	sete   %al
+  3a:	81 fa 81 00 00 00    	cmp    $0x81,%edx
+  40:	0f 92 c1             	setb   %cl
+  43:	08 c1                	or     %al,%cl
+  45:	b8 fe ff ff ff       	mov    $0xfffffffe,%eax
+  4a:	0f 85 00 01 00 00    	jne    150 <input_console_read_line_for+0x150>
+  50:	4d 89 ce             	mov    %r9,%r14
+  53:	4d 89 c7             	mov    %r8,%r15
+  56:	48 89 34 24          	mov    %rsi,(%rsp)
+  5a:	48 8d 5c 24 08       	lea    0x8(%rsp),%rbx
+  5f:	ba 90 00 00 00       	mov    $0x90,%edx
+  64:	48 89 df             	mov    %rbx,%rdi
+  67:	31 f6                	xor    %esi,%esi
+  69:	ff 15 00 00 00 00    	call   *0x0(%rip)        # 6f <input_console_read_line_for+0x6f>
+			6b: R_X86_64_GOTPCREL	memset-0x4
+  6f:	4c 89 e7             	mov    %r12,%rdi
+  72:	e8 00 00 00 00       	call   77 <input_console_read_line_for+0x77>
+			73: R_X86_64_PLT32	serial_puts-0x4
+  77:	48 8d ac 24 98 00 00 	lea    0x98(%rsp),%rbp
+  7e:	00 
+  7f:	eb 19                	jmp    9a <input_console_read_line_for+0x9a>
+  81:	66 66 66 66 66 66 2e 	data16 data16 data16 data16 data16 cs nopw 0x0(%rax,%rax,1)
+  88:	0f 1f 84 00 00 00 00 
+  8f:	00 
+  90:	bf 01 00 00 00       	mov    $0x1,%edi
+  95:	e8 00 00 00 00       	call   9a <input_console_read_line_for+0x9a>
+			96: R_X86_64_PLT32	thread_sleep-0x4
+  9a:	4d 85 ff             	test   %r15,%r15
+  9d:	74 0a                	je     a9 <input_console_read_line_for+0xa9>
+  9f:	4c 89 f7             	mov    %r14,%rdi
+  a2:	41 ff d7             	call   *%r15
+  a5:	85 c0                	test   %eax,%eax
+  a7:	75 53                	jne    fc <input_console_read_line_for+0xfc>
+  a9:	4c 89 ef             	mov    %r13,%rdi
+  ac:	e8 00 00 00 00       	call   b1 <input_console_read_line_for+0xb1>
+			ad: R_X86_64_PLT32	keyboard_poll-0x4
+  b1:	0f be f0             	movsbl %al,%esi
+  b4:	48 89 df             	mov    %rbx,%rdi
+  b7:	e8 00 00 00 00       	call   bc <input_console_read_line_for+0xbc>
+			b8: R_X86_64_PLT32	input_console_accept-0x4
+  bc:	83 bc 24 90 00 00 00 	cmpl   $0x0,0x90(%rsp)
+  c3:	00 
+  c4:	74 ca                	je     90 <input_console_read_line_for+0x90>
+  c6:	48 81 fd 91 00 00 00 	cmp    $0x91,%rbp
+  cd:	72 7c                	jb     14b <input_console_read_line_for+0x14b>
+  cf:	83 bc 24 94 00 00 00 	cmpl   $0x0,0x94(%rsp)
+  d6:	00 
+  d7:	74 2a                	je     103 <input_console_read_line_for+0x103>
+  d9:	b9 12 00 00 00       	mov    $0x12,%ecx
+  de:	31 c0                	xor    %eax,%eax
+  e0:	48 89 df             	mov    %rbx,%rdi
+  e3:	f3 48 ab             	rep stos %rax,(%rdi)
+  e6:	48 c7 c7 00 00 00 00 	mov    $0x0,%rdi
+			e9: R_X86_64_32S	.rodata.str1.1+0x3
+  ed:	e8 00 00 00 00       	call   f2 <input_console_read_line_for+0xf2>
+			ee: R_X86_64_PLT32	serial_puts-0x4
+  f2:	4c 89 e7             	mov    %r12,%rdi
+  f5:	e8 00 00 00 00       	call   fa <input_console_read_line_for+0xfa>
+			f6: R_X86_64_PLT32	serial_puts-0x4
+  fa:	eb 94                	jmp    90 <input_console_read_line_for+0x90>
+  fc:	b8 fb ff ff ff       	mov    $0xfffffffb,%eax
+ 101:	eb 4d                	jmp    150 <input_console_read_line_for+0x150>
+ 103:	44 8b 74 24 08       	mov    0x8(%rsp),%r14d
+ 108:	49 81 fe 80 00 00 00 	cmp    $0x80,%r14
+ 10f:	77 3a                	ja     14b <input_console_read_line_for+0x14b>
+ 111:	49 8d 56 01          	lea    0x1(%r14),%rdx
+ 115:	48 8b 3c 24          	mov    (%rsp),%rdi
+ 119:	48 89 f8             	mov    %rdi,%rax
+ 11c:	48 f7 d8             	neg    %rax
+ 11f:	48 39 d0             	cmp    %rdx,%rax
+ 122:	b8 fe ff ff ff       	mov    $0xfffffffe,%eax
+ 127:	76 27                	jbe    150 <input_console_read_line_for+0x150>
+ 129:	45 85 f6             	test   %r14d,%r14d
+ 12c:	74 34                	je     162 <input_console_read_line_for+0x162>
+ 12e:	48 8d 74 24 0c       	lea    0xc(%rsp),%rsi
+ 133:	ff 15 00 00 00 00    	call   *0x0(%rip)        # 139 <input_console_read_line_for+0x139>
+			135: R_X86_64_GOTPCREL	memcpy-0x4
+ 139:	b9 12 00 00 00       	mov    $0x12,%ecx
+ 13e:	31 c0                	xor    %eax,%eax
+ 140:	48 89 df             	mov    %rbx,%rdi
+ 143:	f3 48 ab             	rep stos %rax,(%rdi)
+ 146:	44 89 f0             	mov    %r14d,%eax
+ 149:	eb 05                	jmp    150 <input_console_read_line_for+0x150>
+ 14b:	b8 fe ff ff ff       	mov    $0xfffffffe,%eax
+ 150:	48 81 c4 98 00 00 00 	add    $0x98,%rsp
+ 157:	5b                   	pop    %rbx
+ 158:	41 5c                	pop    %r12
+ 15a:	41 5d                	pop    %r13
+ 15c:	41 5e                	pop    %r14
+ 15e:	41 5f                	pop    %r15
+ 160:	5d                   	pop    %rbp
+ 161:	c3                   	ret
+ 162:	0f b6 44 24 0c       	movzbl 0xc(%rsp),%eax
+ 167:	88 07                	mov    %al,(%rdi)
+ 169:	b9 12 00 00 00       	mov    $0x12,%ecx
+ 16e:	31 c0                	xor    %eax,%eax
+ 170:	48 89 df             	mov    %rbx,%rdi
+ 173:	f3 48 ab             	rep stos %rax,(%rdi)
+ 176:	31 c0                	xor    %eax,%eax
+ 178:	eb d6                	jmp    150 <input_console_read_line_for+0x150>
+
+Disassembly of section .text.input_console_take_line:
+
+0000000000000000 <input_console_take_line>:
+   0:	48 8d 8f 90 00 00 00 	lea    0x90(%rdi),%rcx
+   7:	b8 fe ff ff ff       	mov    $0xfffffffe,%eax
+   c:	48 81 f9 91 00 00 00 	cmp    $0x91,%rcx
+  13:	73 01                	jae    16 <input_console_take_line+0x16>
+  15:	c3                   	ret
+  16:	83 bf 88 00 00 00 00 	cmpl   $0x0,0x88(%rdi)
+  1d:	74 19                	je     38 <input_console_take_line+0x38>
+  1f:	83 bf 8c 00 00 00 00 	cmpl   $0x0,0x8c(%rdi)
+  26:	74 16                	je     3e <input_console_take_line+0x3e>
+  28:	b9 12 00 00 00       	mov    $0x12,%ecx
+  2d:	31 c0                	xor    %eax,%eax
+  2f:	f3 48 ab             	rep stos %rax,(%rdi)
+  32:	b8 fd ff ff ff       	mov    $0xfffffffd,%eax
+  37:	c3                   	ret
+  38:	b8 ff ff ff ff       	mov    $0xffffffff,%eax
+  3d:	c3                   	ret
+  3e:	44 8b 07             	mov    (%rdi),%r8d
+  41:	81 fa 81 00 00 00    	cmp    $0x81,%edx
+  47:	b9 81 00 00 00       	mov    $0x81,%ecx
+  4c:	0f 42 ca             	cmovb  %edx,%ecx
+  4f:	41 39 c8             	cmp    %ecx,%r8d
+  52:	73 c1                	jae    15 <input_console_take_line+0x15>
+  54:	49 8d 48 01          	lea    0x1(%r8),%rcx
+  58:	48 89 f2             	mov    %rsi,%rdx
+  5b:	48 f7 da             	neg    %rdx
+  5e:	48 39 ca             	cmp    %rcx,%rdx
+  61:	76 b2                	jbe    15 <input_console_take_line+0x15>
+  63:	45 85 c0             	test   %r8d,%r8d
+  66:	74 0f                	je     77 <input_console_take_line+0x77>
+  68:	89 c8                	mov    %ecx,%eax
+  6a:	83 e0 03             	and    $0x3,%eax
+  6d:	41 83 f8 03          	cmp    $0x3,%r8d
+  71:	73 17                	jae    8a <input_console_take_line+0x8a>
+  73:	31 d2                	xor    %edx,%edx
+  75:	eb 52                	jmp    c9 <input_console_take_line+0xc9>
+  77:	0f b6 47 04          	movzbl 0x4(%rdi),%eax
+  7b:	88 06                	mov    %al,(%rsi)
+  7d:	b9 12 00 00 00       	mov    $0x12,%ecx
+  82:	31 c0                	xor    %eax,%eax
+  84:	f3 48 ab             	rep stos %rax,(%rdi)
+  87:	31 c0                	xor    %eax,%eax
+  89:	c3                   	ret
+  8a:	83 e1 fc             	and    $0xfffffffc,%ecx
+  8d:	31 d2                	xor    %edx,%edx
+  8f:	90                   	nop
+  90:	44 0f b6 4c 17 04    	movzbl 0x4(%rdi,%rdx,1),%r9d
+  96:	44 88 0c 16          	mov    %r9b,(%rsi,%rdx,1)
+  9a:	44 0f b6 4c 17 05    	movzbl 0x5(%rdi,%rdx,1),%r9d
+  a0:	44 88 4c 16 01       	mov    %r9b,0x1(%rsi,%rdx,1)
+  a5:	44 0f b6 4c 17 06    	movzbl 0x6(%rdi,%rdx,1),%r9d
+  ab:	44 88 4c 16 02       	mov    %r9b,0x2(%rsi,%rdx,1)
+  b0:	44 0f b6 4c 17 07    	movzbl 0x7(%rdi,%rdx,1),%r9d
+  b6:	44 88 4c 16 03       	mov    %r9b,0x3(%rsi,%rdx,1)
+  bb:	48 83 c2 04          	add    $0x4,%rdx
+  bf:	48 39 d1             	cmp    %rdx,%rcx
+  c2:	75 cc                	jne    90 <input_console_take_line+0x90>
+  c4:	48 85 c0             	test   %rax,%rax
+  c7:	74 28                	je     f1 <input_console_take_line+0xf1>
+  c9:	48 01 d6             	add    %rdx,%rsi
+  cc:	48 8d 0c 3a          	lea    (%rdx,%rdi,1),%rcx
+  d0:	48 83 c1 04          	add    $0x4,%rcx
+  d4:	31 d2                	xor    %edx,%edx
+  d6:	66 2e 0f 1f 84 00 00 	cs nopw 0x0(%rax,%rax,1)
+  dd:	00 00 00 
+  e0:	44 0f b6 0c 11       	movzbl (%rcx,%rdx,1),%r9d
+  e5:	44 88 0c 16          	mov    %r9b,(%rsi,%rdx,1)
+  e9:	48 ff c2             	inc    %rdx
+  ec:	48 39 d0             	cmp    %rdx,%rax
+  ef:	75 ef                	jne    e0 <input_console_take_line+0xe0>
+  f1:	b9 12 00 00 00       	mov    $0x12,%ecx
+  f6:	31 c0                	xor    %eax,%eax
+  f8:	f3 48 ab             	rep stos %rax,(%rdi)
+  fb:	44 89 c0             	mov    %r8d,%eax
+  fe:	c3                   	ret

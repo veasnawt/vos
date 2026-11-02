@@ -32,6 +32,20 @@ def stack_sizes(p):
     if not result or executable!=set(result):raise RuntimeError('missing stack size coverage: '+str(executable-set(result)))
     names=subprocess.check_output(['c++filt','-s','rust',*[n.removeprefix('.text.') for n in result]],text=True).splitlines()
     return dict(zip(names,result.values()))
+def console_extraction_proof(symbols,owners,c_source):
+    import re
+    if len(owners.get('input_console_take_line',[]))!=1:raise RuntimeError('extractor archive owner missing/duplicate')
+    direct=[r for r in symbols.splitlines() if r.endswith(' T input_console_take_line')]
+    if len(direct)>1:raise RuntimeError('duplicate linked extractor')
+    if direct:return {'mode':'out-of-line Rust extractor','symbol':direct[0]}
+    reader=[r for r in symbols.splitlines() if r.endswith(' T input_console_read_line_for')]
+    private=[r for r in symbols.splitlines() if 'console_reader8admitted' in r]
+    if len(reader)!=1 or len(private)!=1 or re.search(r'\bint\s+input_console_take_line\s*\(',c_source):
+        raise RuntimeError('inlined extractor lacks unique Rust reader/private body or has C fallback')
+    return {'mode':'accepted Rust extractor inlined into Rust reader','reader':reader[0],
+            'private_body':private[0],'extractor_archive_owner':owners['input_console_take_line'][0],
+            'no_C_extractor_definition':True}
+
 def main():
     ap=argparse.ArgumentParser(description=__doc__);ap.add_argument('--out',type=Path,required=True);ap.add_argument('--rustc',default=os.environ.get('RUSTC','rustc'));ap.add_argument('--stage',choices=['all','core','adapters','mutations','resources'],default='all');a=ap.parse_args()
     out=a.out.resolve()
@@ -42,7 +56,7 @@ def main():
     units=['tests/host/boot-hid-console.c','tests/host/boot-hid-gui.c','tests/host/pointer.c','arch/x86_64/keyboard.c','arch/x86_64/gui.c','arch/x86_64/user_console.c','arch/x86_64/input_console.c']
     deps=subprocess.check_output(['gcc','-MM','-DVOS_GUI_HOST','-DVOS_CONSOLE_HOST','-Iarch/x86_64','-Itests/host',*units],cwd=ROOT,text=True).replace('\\\n',' ')
     names={x for line in deps.splitlines() for x in line.split(':',1)[-1].split()}
-    names.update(['arch/x86_64/syscall.c','arch/x86_64/rust/ps2_pointer.rs','kernel/rust/input/ps2_pointer.rs','arch/x86_64/rust/ps2_keyboard.rs','kernel/rust/input/ps2_keyboard.rs','arch/x86_64/rust/console_line.rs','kernel/rust/input/console_line.rs','arch/x86_64/rust/console_accept.rs','kernel/rust/input/console_accept.rs'])
+    names.update(['arch/x86_64/syscall.c','arch/x86_64/rust/ps2_pointer.rs','kernel/rust/input/ps2_pointer.rs','arch/x86_64/rust/ps2_keyboard.rs','kernel/rust/input/ps2_keyboard.rs','arch/x86_64/rust/console_line.rs','kernel/rust/input/console_line.rs','arch/x86_64/rust/console_accept.rs','kernel/rust/input/console_accept.rs','arch/x86_64/rust/console_reader.rs','kernel/rust/input/console_reader.rs'])
     report['existing_input_sha256']={str(Path(n)):sha(ROOT/n) for n in sorted(names)}
     def run(args,name,expected=0):
         args=list(map(str,args))
@@ -66,7 +80,7 @@ def main():
         if a.stage in ('all','adapters'):
             # Include the existing production PS/2 ABI glue unchanged in the test-only archive.
             bridge=out/'ffi.rs'
-            glue=[('ps2','arch/x86_64/rust/ps2_pointer.rs'),('ps2_keyboard','arch/x86_64/rust/ps2_keyboard.rs'),('console_line','arch/x86_64/rust/console_line.rs'),('console_accept','arch/x86_64/rust/console_accept.rs')]
+            glue=[('ps2','arch/x86_64/rust/ps2_pointer.rs'),('ps2_keyboard','arch/x86_64/rust/ps2_keyboard.rs'),('console_line','arch/x86_64/rust/console_line.rs'),('console_accept','arch/x86_64/rust/console_accept.rs'),('console_reader','arch/x86_64/rust/console_reader.rs')]
             bridge.write_text((ROOT/'tests/host/boot-hid-ffi.rs').read_text()+''.join('\n#[path='+json.dumps(str(ROOT/path))+'] mod '+name+';\n' for name,path in glue))
             report['input_abi_glue']={path:sha(ROOT/path) for _,path in glue}
             report['linkage_scope']='Actual accepted input Rust source compiled into the one hosted fixture; one panic handler, no C decoder/extraction substitutes. HID remains test-only, not production transport.'
@@ -74,7 +88,7 @@ def main():
             run(['strip','--strip-debug',out/'libfixture.a'],'ffi-strip-debug.txt')
             # Every migrated input ABI has one actual Rust owner in this fixture.
             symbols=subprocess.check_output(['nm','-A','--defined-only',str(out/'libfixture.a')],stderr=subprocess.DEVNULL,text=True)
-            report['input_symbol_owners']={name:[row for row in symbols.splitlines() if row.endswith(' T '+name)] for name in ('pointer_decode','pointer_idle','keyboard_decode','input_console_take_line','input_console_accept')}
+            report['input_symbol_owners']={name:[row for row in symbols.splitlines() if row.endswith(' T '+name)] for name in ('pointer_decode','pointer_idle','keyboard_decode','input_console_take_line','input_console_accept','input_console_read_line_for')}
             if any(len(rows)!=1 for rows in report['input_symbol_owners'].values()):raise RuntimeError('missing/duplicate input Rust ABI owner')
             cc=['gcc','-std=gnu11','-Wall','-Wextra','-Werror','-ffunction-sections','-fdata-sections','-Iarch/x86_64','-Itests/host','-fno-pie','-no-pie','-O1','-g','-fsanitize=address,undefined','-fno-sanitize-recover=all','-fno-omit-frame-pointer']
             ren=['-Dkeyboard_'+k+'=ps2_'+v for k,v in [('init','init'),('poll','poll'),('suspend','suspend'),('resume','resume'),('pointer_start','pointer_start'),('pointer_stop','pointer_stop'),('pointer_poll','pointer_poll'),('pointer_lost','pointer_lost')]]
@@ -91,8 +105,7 @@ def main():
             report['ps2_linked_input_symbols']=[name for name in report['input_symbol_owners'] if any(row.endswith(' T '+name) for row in linked.splitlines())]
             if not {'pointer_decode','pointer_idle','keyboard_decode'}.issubset(report['ps2_linked_input_symbols']):raise RuntimeError('PS/2 regression missing actual Rust decoders')
             console_symbols=subprocess.check_output(['nm','--defined-only',str(out/'hid-console')],text=True)
-            if not any(row.endswith(' T input_console_take_line') for row in console_symbols.splitlines()):raise RuntimeError('console adapter missing actual Rust extraction')
-            report['console_linked_extractor']=True
+            report['console_linked_extractor']=console_extraction_proof(console_symbols,report['input_symbol_owners'],(ROOT/'arch/x86_64/input_console.c').read_text())
         if a.stage in ('all','mutations'):
             mutations=[('protocol','input.rs','if !self.confirmed || self.disconnected','if self.disconnected','no_boot_data_before_transport_success'),('owner','input.rs','if self.focus!=Some(f)','if false && self.focus != Some(f)','keyboard_owner_epoch_and_disconnect'),('repeat','input.rs','usage!=0 && !other.contains(&usage)','usage!=0 && other.len()==6','keyboard_transitions_and_duplicates'),('direction','input.rs','let dy=i16::from(b[2] as i8)','let dy=-i16::from(b[2] as i8)','mouse_direction_buttons_and_relative_repetition'),('overflow','input.rs','self.clear();return Err(Error::Overflow)','return Err(Error::Overflow)','queue_saturation_is_atomic_and_reset_cannot_be_lost'),('length','descriptor.rs','usize::from(word(b,2))!=b.len()','false','malformed_descriptor_fields'),('count','descriptor.rs','interfaces!=b[4]','interfaces>MAX_INTERFACES','malformed_descriptor_fields'),('ambiguous','descriptor.rs','if slot.is_some()','if false','ambiguity_and_counts')]
             report['mutations']=[]

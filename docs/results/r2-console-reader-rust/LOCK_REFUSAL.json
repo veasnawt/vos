@@ -1,0 +1,7 @@
+{
+  "utc": "2026-11-02T02:31:20.239943+00:00",
+  "cause": "Native step requested before proof-fix monitor finished its post-sample; exclusive flock refused before any command or output creation",
+  "original_exception": "BlockingIOError errno11",
+  "guard_bypassed": false,
+  "resolution": "Waited for proof-fix monitor to exit before a newly named scheduled step"
+}
