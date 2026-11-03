@@ -85,3 +85,33 @@ pub fn pointer_lost_and_clear(lost: &mut u32) -> u32 {
     *lost = 0;
     n
 }
+
+/// Existing keyboard queue policy, with each borrow confined between callbacks.
+/// Invalid internal head encodings have no C oracle: refuse the dequeue rather
+/// than indexing outside the fixed queue. No new public recovery is implied.
+pub trait KeyboardQueue {
+    fn keyboard_ready(&self) -> bool;
+    fn fill_keyboard_queue(&mut self);
+    fn keyboard_queue(&mut self) -> &mut Queue;
+}
+#[inline(always)]
+pub fn keyboard_poll<K: KeyboardQueue>(s: &mut K) -> u8 {
+    if !s.keyboard_ready() { return 0; }
+    s.fill_keyboard_queue();
+    let q = s.keyboard_queue();
+    if q.count == 0 { return 0; }
+    let Some(slot) = q.keys.get_mut(q.head as usize) else { return 0; };
+    let byte = *slot;
+    *slot = 0;
+    q.head = q.head.wrapping_add(1) % LIMIT;
+    q.count = q.count.wrapping_sub(1);
+    byte
+}
+
+/// Numeric extent/alignment validation only; mapping and lifetime stay with C.
+/// For positive addresses subtraction is exact. Zero wraps above the bound;
+/// high addresses whose +88 would wrap are excluded by the same interval.
+#[inline(always)]
+pub fn keyboard_range_valid(address: usize) -> bool {
+    address.wrapping_sub(1) < usize::MAX - 88 && address & 7 == 0
+}

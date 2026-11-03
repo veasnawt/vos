@@ -1,0 +1,37 @@
+
+running 32 tests
+test baseline::aux_error_precedence ... ok
+test baseline::bound_and_enqueue ... ok
+test baseline::callback_change ... ok
+test baseline::count_wrap ... ok
+test baseline::empty ... ok
+test baseline::ff_resets ... ok
+test baseline::full_blocks ... ok
+test baseline::keyboard_error ... ok
+test baseline::pending_blocks ... ok
+test baseline::pointer_complete ... ok
+test baseline::pointer_lost_and_clear_test ... ok
+test baseline::pointer_partial ... ok
+test baseline::pointer_poll_idle_loss ... ok
+test baseline::pointer_poll_idle_saturated ... ok
+test baseline::pointer_poll_not_ready ... ok
+test baseline::pointer_poll_packet_delivery ... ok
+test baseline::pointer_poll_pointer_not_ready ... ok
+test baseline::pointer_reject ... ok
+test baseline::queue_all_bytes ... ok
+test baseline::queue_callback ... ok
+test baseline::queue_empty ... ok
+test baseline::queue_fifo ... ok
+test baseline::queue_full ... ok
+test baseline::queue_guard_equivalence ... ok
+test baseline::queue_invalid_head ... ok
+test baseline::queue_noncanonical_count ... ok
+test baseline::queue_nul ... ok
+test baseline::queue_unready ... ok
+test baseline::saturation ... ok
+test baseline::wrapping_queue ... ok
+test baseline::zero_character ... ok
+test baseline::zero_resets ... ok
+
+test result: ok. 32 passed; 0 failed; 0 ignored; 0 measured; 992 filtered out; finished in 0.00s
+

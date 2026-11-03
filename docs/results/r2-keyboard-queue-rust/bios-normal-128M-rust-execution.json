@@ -1,0 +1,33 @@
+[
+  {
+    "symbol": "vos_rust_keyboard_pointer_poll",
+    "RIP": "0xffffffff80140d70",
+    "stop": "T05thread:01;",
+    "ready": 1,
+    "pointer_ready": 1,
+    "key_head": 0,
+    "key_count": 0,
+    "scope": "actual production Rust pointer poll entry, not guest latency"
+  },
+  {
+    "symbol": "vos_rust_keyboard_routed_drain",
+    "RIP": "0xffffffff80140e30",
+    "stop": "T05thread:01;",
+    "ready": 1,
+    "pointer_ready": 1,
+    "key_head": 0,
+    "key_count": 0,
+    "scope": "actual production Rust entry, not guest latency"
+  },
+  {
+    "symbol": "routed_pointer_step",
+    "RIP": "0xffffffff801386c0",
+    "stop": "T05thread:01;",
+    "scope": "ELF-resolved Rust private helper contains inlined accepted pointer_decode body; actual emitted/consumed packets checked separately"
+  },
+  {
+    "symbol": "keyboard_decode",
+    "RIP": "0xffffffff80140190",
+    "stop": "T05thread:01;"
+  }
+]

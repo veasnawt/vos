@@ -1,0 +1,6 @@
+{
+  "baseline": "7151c51126c4303f066c998ba905cfd4b1181f2b",
+  "accepted_source_sha256": "f8860bff2a561d271151ac11a5da7e890a080e1a7beb7e47db9570393b3f5511",
+  "reference_sha256": "394f56956b8ddc38b309719e1c42dd0ee53b3f79713f6d311e83b96c802ab717",
+  "transformation": "Exact accepted C driver plus test-only routed_poll wrapper; public APIs renamed at compile time. Both variants use the same accepted Rust drain/decoders. Additional test-only wrapper exposes unchanged routed_drain."
+}

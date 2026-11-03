@@ -1,0 +1,502 @@
+[
+  {
+    "firmware": "bios",
+    "mode": "normal",
+    "memory": "128M",
+    "passed": true,
+    "native_cases": 0,
+    "queue": {
+      "passed": true,
+      "entry": "0xffffffff80140f50",
+      "post_drain": "0xffffffff80140f75",
+      "return_address": "0xffffffff80122a22",
+      "returned_byte": 122,
+      "keyboard_address": "0xffffffff801e9160",
+      "before_hex": "d05f1580ffffffff00000000000000000100000001000000000000000800000000000000000000000000000000000000010000007a0000000000000000000000000000000000000000000000000000000000000000000000",
+      "after_hex": "d05f1580ffffffff0000000000000000010000000100000000000000080000000000000000000000000000000100000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "before_head": 0,
+      "after_head": 1,
+      "scope": "actual PS/2 input and production Rust queue; not a guest latency measurement"
+    },
+    "kernel_proof": [
+      {
+        "symbol": "vos_rust_keyboard_pointer_poll",
+        "RIP": "0xffffffff80140d70",
+        "stop": "T05thread:01;",
+        "ready": 1,
+        "pointer_ready": 1,
+        "key_head": 0,
+        "key_count": 0,
+        "scope": "actual production Rust pointer poll entry, not guest latency"
+      },
+      {
+        "symbol": "vos_rust_keyboard_routed_drain",
+        "RIP": "0xffffffff80140e30",
+        "stop": "T05thread:01;",
+        "ready": 1,
+        "pointer_ready": 1,
+        "key_head": 0,
+        "key_count": 0,
+        "scope": "actual production Rust entry, not guest latency"
+      },
+      {
+        "symbol": "routed_pointer_step",
+        "RIP": "0xffffffff801386c0",
+        "stop": "T05thread:01;",
+        "scope": "ELF-resolved Rust private helper contains inlined accepted pointer_decode body; actual emitted/consumed packets checked separately"
+      },
+      {
+        "symbol": "keyboard_decode",
+        "RIP": "0xffffffff80140190",
+        "stop": "T05thread:01;"
+      }
+    ],
+    "keyboard_text": {
+      "passed": true,
+      "expected": "Aa!",
+      "caps_shift_release": true
+    },
+    "serial_sha256": "279d4bbafcc59083af51c870dfa19d7466b7a354fac6517ebab1f01eec6d6ce9"
+  },
+  {
+    "firmware": "bios",
+    "mode": "normal",
+    "memory": "2G",
+    "passed": true,
+    "native_cases": 0,
+    "queue": {
+      "passed": true,
+      "entry": "0xffffffff80140f50",
+      "post_drain": "0xffffffff80140f75",
+      "return_address": "0xffffffff80122a22",
+      "returned_byte": 122,
+      "keyboard_address": "0xffffffff801e9160",
+      "before_hex": "d05f1580ffffffff00000000000000000100000001000000000000000800000000000000000000000000000000000000010000007a0000000000000000000000000000000000000000000000000000000000000000000000",
+      "after_hex": "d05f1580ffffffff0000000000000000010000000100000000000000080000000000000000000000000000000100000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "before_head": 0,
+      "after_head": 1,
+      "scope": "actual PS/2 input and production Rust queue; not a guest latency measurement"
+    },
+    "kernel_proof": [
+      {
+        "symbol": "vos_rust_keyboard_pointer_poll",
+        "RIP": "0xffffffff80140d70",
+        "stop": "T05thread:01;",
+        "stimulus": "not-needed",
+        "ready": 1,
+        "pointer_ready": 1,
+        "key_head": 0,
+        "key_count": 0,
+        "scope": "actual production Rust pointer poll entry, not guest latency"
+      },
+      {
+        "symbol": "vos_rust_keyboard_routed_drain",
+        "RIP": "0xffffffff80140e30",
+        "stop": "T05thread:01;",
+        "stimulus": "not-needed",
+        "ready": 1,
+        "pointer_ready": 1,
+        "key_head": 0,
+        "key_count": 0,
+        "scope": "actual production Rust entry, not guest latency"
+      },
+      {
+        "symbol": "routed_pointer_step",
+        "RIP": "0xffffffff801386c0",
+        "stop": "T05thread:01;",
+        "stimulus": "injected",
+        "scope": "ELF-resolved Rust private helper contains inlined accepted pointer_decode body; actual emitted/consumed packets checked separately"
+      },
+      {
+        "symbol": "keyboard_decode",
+        "RIP": "0xffffffff80140190",
+        "stop": "T05thread:01;",
+        "stimulus": "not-needed"
+      }
+    ],
+    "keyboard_text": {
+      "passed": true,
+      "expected": "Aa!",
+      "caps_shift_release": true
+    },
+    "serial_sha256": "48f44723bab4ec35247d976cdfd2b3bb6bf61e831f8a7d4cf1a0350748c7dca3"
+  },
+  {
+    "firmware": "uefi",
+    "mode": "normal",
+    "memory": "128M",
+    "passed": true,
+    "native_cases": 0,
+    "queue": {
+      "passed": true,
+      "entry": "0xffffffff80140f50",
+      "post_drain": "0xffffffff80140f75",
+      "return_address": "0xffffffff80122a22",
+      "returned_byte": 122,
+      "keyboard_address": "0xffffffff801e9160",
+      "before_hex": "d05f1580ffffffff00000000000000000100000001000000000000000800000000000000000000000000000000000000010000007a0000000000000000000000000000000000000000000000000000000000000000000000",
+      "after_hex": "d05f1580ffffffff0000000000000000010000000100000000000000080000000000000000000000000000000100000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "before_head": 0,
+      "after_head": 1,
+      "scope": "actual PS/2 input and production Rust queue; not a guest latency measurement"
+    },
+    "kernel_proof": [
+      {
+        "symbol": "vos_rust_keyboard_pointer_poll",
+        "RIP": "0xffffffff80140d70",
+        "stop": "T05thread:01;",
+        "stimulus": "not-needed",
+        "ready": 1,
+        "pointer_ready": 1,
+        "key_head": 0,
+        "key_count": 0,
+        "scope": "actual production Rust pointer poll entry, not guest latency"
+      },
+      {
+        "symbol": "vos_rust_keyboard_routed_drain",
+        "RIP": "0xffffffff80140e30",
+        "stop": "T05thread:01;",
+        "stimulus": "not-needed",
+        "ready": 1,
+        "pointer_ready": 1,
+        "key_head": 0,
+        "key_count": 0,
+        "scope": "actual production Rust entry, not guest latency"
+      },
+      {
+        "symbol": "routed_pointer_step",
+        "RIP": "0xffffffff801386c0",
+        "stop": "T05thread:01;",
+        "stimulus": "injected",
+        "scope": "ELF-resolved Rust private helper contains inlined accepted pointer_decode body; actual emitted/consumed packets checked separately"
+      },
+      {
+        "symbol": "keyboard_decode",
+        "RIP": "0xffffffff80140190",
+        "stop": "T05thread:01;",
+        "stimulus": "not-needed"
+      }
+    ],
+    "keyboard_text": {
+      "passed": true,
+      "expected": "Aa!",
+      "caps_shift_release": true
+    },
+    "serial_sha256": "6c80d3025ea090cbf792a0427bcb9320e2139d9a64b750426508e4750325b3bd"
+  },
+  {
+    "firmware": "uefi",
+    "mode": "normal",
+    "memory": "2G",
+    "passed": true,
+    "native_cases": 0,
+    "queue": {
+      "passed": true,
+      "entry": "0xffffffff80140f50",
+      "post_drain": "0xffffffff80140f75",
+      "return_address": "0xffffffff80122a22",
+      "returned_byte": 122,
+      "keyboard_address": "0xffffffff801e9160",
+      "before_hex": "d05f1580ffffffff00000000000000000100000001000000000000000800000000000000000000000000000000000000010000007a0000000000000000000000000000000000000000000000000000000000000000000000",
+      "after_hex": "d05f1580ffffffff0000000000000000010000000100000000000000080000000000000000000000000000000100000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "before_head": 0,
+      "after_head": 1,
+      "scope": "actual PS/2 input and production Rust queue; not a guest latency measurement"
+    },
+    "kernel_proof": [
+      {
+        "symbol": "vos_rust_keyboard_pointer_poll",
+        "RIP": "0xffffffff80140d70",
+        "stop": "T05thread:01;",
+        "stimulus": "not-needed",
+        "ready": 1,
+        "pointer_ready": 1,
+        "key_head": 0,
+        "key_count": 0,
+        "scope": "actual production Rust pointer poll entry, not guest latency"
+      },
+      {
+        "symbol": "vos_rust_keyboard_routed_drain",
+        "RIP": "0xffffffff80140e30",
+        "stop": "T05thread:01;",
+        "stimulus": "not-needed",
+        "ready": 1,
+        "pointer_ready": 1,
+        "key_head": 0,
+        "key_count": 0,
+        "scope": "actual production Rust entry, not guest latency"
+      },
+      {
+        "symbol": "routed_pointer_step",
+        "RIP": "0xffffffff801386c0",
+        "stop": "T05thread:01;",
+        "stimulus": "injected",
+        "scope": "ELF-resolved Rust private helper contains inlined accepted pointer_decode body; actual emitted/consumed packets checked separately"
+      },
+      {
+        "symbol": "keyboard_decode",
+        "RIP": "0xffffffff80140190",
+        "stop": "T05thread:01;",
+        "stimulus": "not-needed"
+      }
+    ],
+    "keyboard_text": {
+      "passed": true,
+      "expected": "Aa!",
+      "caps_shift_release": true
+    },
+    "serial_sha256": "b4f6856d733544a4280364468afdaaec87d2650a4108459bc9ae1d92ce1ddf93"
+  },
+  {
+    "firmware": "bios",
+    "mode": "verify",
+    "memory": "128M",
+    "passed": true,
+    "native_cases": 16,
+    "queue": {
+      "passed": true,
+      "entry": "0xffffffff801417b0",
+      "post_drain": "0xffffffff801417d5",
+      "return_address": "0xffffffff80122a72",
+      "returned_byte": 122,
+      "keyboard_address": "0xffffffff801f40a0",
+      "before_hex": "d0611580ffffffff00000000000000000100000001000000000000000800000000000000000000000000000000000000010000007a0000000000000000000000000000000000000000000000000000000000000000000000",
+      "after_hex": "d0611580ffffffff0000000000000000010000000100000000000000080000000000000000000000000000000100000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "before_head": 0,
+      "after_head": 1,
+      "scope": "actual PS/2 input and production Rust queue; not a guest latency measurement"
+    },
+    "kernel_proof": [
+      {
+        "symbol": "vos_rust_keyboard_pointer_poll",
+        "RIP": "0xffffffff801415d0",
+        "stop": "T05thread:01;",
+        "stimulus": "not-needed",
+        "ready": 1,
+        "pointer_ready": 1,
+        "key_head": 0,
+        "key_count": 0,
+        "scope": "actual production Rust pointer poll entry, not guest latency"
+      },
+      {
+        "symbol": "vos_rust_keyboard_routed_drain",
+        "RIP": "0xffffffff80141690",
+        "stop": "T05thread:01;",
+        "stimulus": "not-needed",
+        "ready": 1,
+        "pointer_ready": 1,
+        "key_head": 0,
+        "key_count": 0,
+        "scope": "actual production Rust entry, not guest latency"
+      },
+      {
+        "symbol": "routed_pointer_step",
+        "RIP": "0xffffffff80138f20",
+        "stop": "T05thread:01;",
+        "stimulus": "injected",
+        "scope": "ELF-resolved Rust private helper contains inlined accepted pointer_decode body; actual emitted/consumed packets checked separately"
+      },
+      {
+        "symbol": "keyboard_decode",
+        "RIP": "0xffffffff801409f0",
+        "stop": "T05thread:01;",
+        "stimulus": "not-needed"
+      }
+    ],
+    "keyboard_text": {
+      "passed": true,
+      "expected": "Aa!",
+      "caps_shift_release": true
+    },
+    "serial_sha256": "4f8c304daf8e9e095dca107bb61ce4d81e8459235708bc66b9c9f2eec617630c"
+  },
+  {
+    "firmware": "bios",
+    "mode": "verify",
+    "memory": "2G",
+    "passed": true,
+    "native_cases": 16,
+    "queue": {
+      "passed": true,
+      "entry": "0xffffffff801417b0",
+      "post_drain": "0xffffffff801417d5",
+      "return_address": "0xffffffff80122a72",
+      "returned_byte": 122,
+      "keyboard_address": "0xffffffff801f40a0",
+      "before_hex": "d0611580ffffffff00000000000000000100000001000000000000000800000000000000000000000000000000000000010000007a0000000000000000000000000000000000000000000000000000000000000000000000",
+      "after_hex": "d0611580ffffffff0000000000000000010000000100000000000000080000000000000000000000000000000100000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "before_head": 0,
+      "after_head": 1,
+      "scope": "actual PS/2 input and production Rust queue; not a guest latency measurement"
+    },
+    "kernel_proof": [
+      {
+        "symbol": "vos_rust_keyboard_pointer_poll",
+        "RIP": "0xffffffff801415d0",
+        "stop": "T05thread:01;",
+        "stimulus": "not-needed",
+        "ready": 1,
+        "pointer_ready": 1,
+        "key_head": 0,
+        "key_count": 0,
+        "scope": "actual production Rust pointer poll entry, not guest latency"
+      },
+      {
+        "symbol": "vos_rust_keyboard_routed_drain",
+        "RIP": "0xffffffff80141690",
+        "stop": "T05thread:01;",
+        "stimulus": "not-needed",
+        "ready": 1,
+        "pointer_ready": 1,
+        "key_head": 0,
+        "key_count": 0,
+        "scope": "actual production Rust entry, not guest latency"
+      },
+      {
+        "symbol": "routed_pointer_step",
+        "RIP": "0xffffffff80138f20",
+        "stop": "T05thread:01;",
+        "stimulus": "injected",
+        "scope": "ELF-resolved Rust private helper contains inlined accepted pointer_decode body; actual emitted/consumed packets checked separately"
+      },
+      {
+        "symbol": "keyboard_decode",
+        "RIP": "0xffffffff801409f0",
+        "stop": "T05thread:01;",
+        "stimulus": "not-needed"
+      }
+    ],
+    "keyboard_text": {
+      "passed": true,
+      "expected": "Aa!",
+      "caps_shift_release": true
+    },
+    "serial_sha256": "52fbd3faa3eb539399e84c31f0265594552016a42f33e639737b2c6d14e211eb"
+  },
+  {
+    "firmware": "uefi",
+    "mode": "verify",
+    "memory": "128M",
+    "passed": true,
+    "native_cases": 16,
+    "queue": {
+      "passed": true,
+      "entry": "0xffffffff801417b0",
+      "post_drain": "0xffffffff801417d5",
+      "return_address": "0xffffffff80122a72",
+      "returned_byte": 122,
+      "keyboard_address": "0xffffffff801f40a0",
+      "before_hex": "d0611580ffffffff00000000000000000100000001000000000000000800000000000000000000000000000000000000010000007a0000000000000000000000000000000000000000000000000000000000000000000000",
+      "after_hex": "d0611580ffffffff0000000000000000010000000100000000000000080000000000000000000000000000000100000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "before_head": 0,
+      "after_head": 1,
+      "scope": "actual PS/2 input and production Rust queue; not a guest latency measurement"
+    },
+    "kernel_proof": [
+      {
+        "symbol": "vos_rust_keyboard_pointer_poll",
+        "RIP": "0xffffffff801415d0",
+        "stop": "T05thread:01;",
+        "stimulus": "not-needed",
+        "ready": 1,
+        "pointer_ready": 1,
+        "key_head": 0,
+        "key_count": 0,
+        "scope": "actual production Rust pointer poll entry, not guest latency"
+      },
+      {
+        "symbol": "vos_rust_keyboard_routed_drain",
+        "RIP": "0xffffffff80141690",
+        "stop": "T05thread:01;",
+        "stimulus": "not-needed",
+        "ready": 1,
+        "pointer_ready": 1,
+        "key_head": 0,
+        "key_count": 0,
+        "scope": "actual production Rust entry, not guest latency"
+      },
+      {
+        "symbol": "routed_pointer_step",
+        "RIP": "0xffffffff80138f20",
+        "stop": "T05thread:01;",
+        "stimulus": "injected",
+        "scope": "ELF-resolved Rust private helper contains inlined accepted pointer_decode body; actual emitted/consumed packets checked separately"
+      },
+      {
+        "symbol": "keyboard_decode",
+        "RIP": "0xffffffff801409f0",
+        "stop": "T05thread:01;",
+        "stimulus": "not-needed"
+      }
+    ],
+    "keyboard_text": {
+      "passed": true,
+      "expected": "Aa!",
+      "caps_shift_release": true
+    },
+    "serial_sha256": "0b36fc54e37bf482de22900ae6330801edea3f29cd2d00b3320ed060b82d3233"
+  },
+  {
+    "firmware": "uefi",
+    "mode": "verify",
+    "memory": "2G",
+    "passed": true,
+    "native_cases": 16,
+    "queue": {
+      "passed": true,
+      "entry": "0xffffffff801417b0",
+      "post_drain": "0xffffffff801417d5",
+      "return_address": "0xffffffff80122a72",
+      "returned_byte": 122,
+      "keyboard_address": "0xffffffff801f40a0",
+      "before_hex": "d0611580ffffffff00000000000000000100000001000000000000000800000000000000000000000000000000000000010000007a0000000000000000000000000000000000000000000000000000000000000000000000",
+      "after_hex": "d0611580ffffffff0000000000000000010000000100000000000000080000000000000000000000000000000100000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "before_head": 0,
+      "after_head": 1,
+      "scope": "actual PS/2 input and production Rust queue; not a guest latency measurement"
+    },
+    "kernel_proof": [
+      {
+        "symbol": "vos_rust_keyboard_pointer_poll",
+        "RIP": "0xffffffff801415d0",
+        "stop": "T05thread:01;",
+        "stimulus": "not-needed",
+        "ready": 1,
+        "pointer_ready": 1,
+        "key_head": 0,
+        "key_count": 0,
+        "scope": "actual production Rust pointer poll entry, not guest latency"
+      },
+      {
+        "symbol": "vos_rust_keyboard_routed_drain",
+        "RIP": "0xffffffff80141690",
+        "stop": "T05thread:01;",
+        "stimulus": "not-needed",
+        "ready": 1,
+        "pointer_ready": 1,
+        "key_head": 0,
+        "key_count": 0,
+        "scope": "actual production Rust entry, not guest latency"
+      },
+      {
+        "symbol": "routed_pointer_step",
+        "RIP": "0xffffffff80138f20",
+        "stop": "T05thread:01;",
+        "stimulus": "injected",
+        "scope": "ELF-resolved Rust private helper contains inlined accepted pointer_decode body; actual emitted/consumed packets checked separately"
+      },
+      {
+        "symbol": "keyboard_decode",
+        "RIP": "0xffffffff801409f0",
+        "stop": "T05thread:01;",
+        "stimulus": "not-needed"
+      }
+    ],
+    "keyboard_text": {
+      "passed": true,
+      "expected": "Aa!",
+      "caps_shift_release": true
+    },
+    "serial_sha256": "9952ecbb590cf686ec42f965ac6373aab3f733169b33a5b4bd23438a960a4ae3"
+  }
+]

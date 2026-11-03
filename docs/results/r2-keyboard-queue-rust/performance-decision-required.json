@@ -1,0 +1,198 @@
+{
+  "status": "AWAITING_SOURCE_SPECIFIC_OWNER_APPROVAL",
+  "source_sha256": {
+    "kernel/rust/input/ps2_routed.rs": "ec95b81a87aa8aec64eb21ac4bd7ca676df3d6041e150df5370e65012701174a",
+    "arch/x86_64/rust/ps2_routed.rs": "9a5e6ad16a10a2d01bf166c4dbf43f84a047f67806e5445e04708a2687fd86f2",
+    "arch/x86_64/keyboard.c": "0a45e7a59e27b1085122bb344d0e5954e1148e1cdf78070a4a99454834d47a10",
+    "arch/x86_64/rust_kernel.h": "62eaf5132799ece856ec8a0ab457cb0f0e58f60fd9743fb935c9e9c756808916"
+  },
+  "archive_sha256": "73eb6101ac15fb08a571ae41a2599498b8287111f9daec5dcf74d0cb26e8b696",
+  "kernel_sha256": "68f6a7ceac4d836f6c9d987d8b5c2bb946752f7a702e94fb56cefea2f1eaed72",
+  "benchmark_sha256": "ef78a45c2e24409debe1e9756aab087eedec50bde2fde4597061c5b8eaac5cd7",
+  "regressions": {
+    "refill": {
+      "C_ns": 27.15,
+      "Rust_ns": 27.54,
+      "delta_ns": 0.39000000000000057,
+      "percent": 1.436464088397793,
+      "samples": 81,
+      "blocks": [
+        {
+          "C": 32.485,
+          "Rust": 32.37
+        },
+        {
+          "C": 27.095,
+          "Rust": 27.42
+        },
+        {
+          "C": 26.83,
+          "Rust": 27.36
+        },
+        {
+          "C": 27.105,
+          "Rust": 27.125
+        },
+        {
+          "C": 26.535,
+          "Rust": 28.665
+        },
+        {
+          "C": 27.33,
+          "Rust": 27.42
+        },
+        {
+          "C": 27.005,
+          "Rust": 27.0099
+        },
+        {
+          "C": 26.83,
+          "Rust": 27.595
+        },
+        {
+          "C": 36.61,
+          "Rust": 37.94
+        }
+      ]
+    },
+    "mixed": {
+      "C_ns": 64.74,
+      "Rust_ns": 65.305,
+      "delta_ns": 0.5650000000000119,
+      "percent": 0.8727216558542139,
+      "samples": 81,
+      "blocks": [
+        {
+          "C": 584.075,
+          "Rust": 66.305
+        },
+        {
+          "C": 595.2049,
+          "Rust": 66.02
+        },
+        {
+          "C": 590.6999,
+          "Rust": 64.405
+        },
+        {
+          "C": 63.405,
+          "Rust": 65.1
+        },
+        {
+          "C": 63.93,
+          "Rust": 64.31
+        },
+        {
+          "C": 64.035,
+          "Rust": 65.35
+        },
+        {
+          "C": 63.485,
+          "Rust": 65.615
+        },
+        {
+          "C": 64.255,
+          "Rust": 65.01
+        },
+        {
+          "C": 85.725,
+          "Rust": 78.87
+        }
+      ]
+    },
+    "burst32": {
+      "C_ns": 1487.9248,
+      "Rust_ns": 1512.5698,
+      "delta_ns": 24.644999999999982,
+      "percent": 1.6563337071873407,
+      "samples": 81,
+      "blocks": [
+        {
+          "C": 1537.775,
+          "Rust": 1551.055
+        },
+        {
+          "C": 1527.3298,
+          "Rust": 1535.4398
+        },
+        {
+          "C": 1484.5198,
+          "Rust": 1515.1898
+        },
+        {
+          "C": 1459.2649,
+          "Rust": 1467.0999
+        },
+        {
+          "C": 1039.5449,
+          "Rust": 1510.8848
+        },
+        {
+          "C": 1534.5548,
+          "Rust": 1485.6448
+        },
+        {
+          "C": 1662.1098,
+          "Rust": 1700.6748
+        },
+        {
+          "C": 1435.9498,
+          "Rust": 1466.8248
+        },
+        {
+          "C": 1574.0899,
+          "Rust": 1536.5499
+        }
+      ]
+    },
+    "ordinary_control": {
+      "C_ns": 17.12,
+      "Rust_ns": 18.575,
+      "delta_ns": 1.4549999999999983,
+      "percent": 8.498831775700921,
+      "samples": 81,
+      "blocks": [
+        {
+          "C": 27.715,
+          "Rust": 28.065
+        },
+        {
+          "C": 17.1,
+          "Rust": 18.63
+        },
+        {
+          "C": 16.57,
+          "Rust": 17.985
+        },
+        {
+          "C": 17.115,
+          "Rust": 18.575
+        },
+        {
+          "C": 17.12,
+          "Rust": 17.99
+        },
+        {
+          "C": 17.1,
+          "Rust": 17.985
+        },
+        {
+          "C": 16.59,
+          "Rust": 17.985
+        },
+        {
+          "C": 20.525,
+          "Rust": 24.71
+        },
+        {
+          "C": 17.155,
+          "Rust": 17.985
+        }
+      ]
+    }
+  },
+  "standing_policy_sha256": "2576c2554b02a2830a6a7bbfabe479ff236d96a042d15fb8429da529eb3dcd8b",
+  "approval_from_autonomous_directive": false,
+  "prior_approvals_transfer": false,
+  "publication_allowed": false
+}

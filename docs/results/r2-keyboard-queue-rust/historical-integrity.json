@@ -1,0 +1,42 @@
+{
+  "status": "PASS",
+  "seals": {
+    "/home/veasnawt/src/vos-r2b/build/b1-storage/r-series-program/r2-keyboard": 156,
+    "/home/veasnawt/src/vos-r2b/build/b1-storage/r-series-program/r2-console-line": 207,
+    "/home/veasnawt/src/vos-r2b/build/b1-storage/r-series-program/r2-console-accept": 187,
+    "/home/veasnawt/src/vos-r2b/build/b1-storage/r-series-program/r2-console-reader": 234,
+    "/home/veasnawt/src/vos-r2b/build/b1-storage/r-series-program/h1b-main-reconcile-20261101T201434Z-2a096c6a": 104,
+    "/home/veasnawt/src/vos-r2b/build/b1-storage/r-series-program/r2-routed-drain": 216,
+    "/home/veasnawt/src/vos-r2b/build/b1-storage/r-series-program/r2-pointer-poll": 123,
+    "/home/veasnawt/src/vos-r2b/build/b1-storage/continuation-20261101T071241Z-00e998c2": 174,
+    "/home/veasnawt/src/vos-r2b/build/b1-storage/h1b-20261101T091435Z-7bb2e260": 162
+  },
+  "entries": 1563,
+  "prior_resumption_entries": 16,
+  "protected_refs": {
+    "refs/heads/ci-negative-boot-hang": "36b25744797ffb185aa4625abbb4bf655e03ca93",
+    "refs/heads/ci-negative-kernel-panic": "ccd982886b43242ade9fae6ffca08cb4d48e624d",
+    "refs/heads/ci-negative-lease-leaf-writable": "489778d49aed2f26d6b0bcdab6bc20a59cbc5aea",
+    "refs/heads/ci-negative-lease-ro-dropped": "d2ff8a7fbb9ee397d9bc0d26bd7092db935a54a2",
+    "refs/heads/ci-negative-wrong-runtime-assertion": "267b56f8d42c5b65398f0ed005a8b108af7f0e4c",
+    "refs/remotes/origin/ci-negative-boot-hang": "36b25744797ffb185aa4625abbb4bf655e03ca93",
+    "refs/remotes/origin/ci-negative-kernel-panic": "ccd982886b43242ade9fae6ffca08cb4d48e624d",
+    "refs/remotes/origin/ci-negative-lease-leaf-writable": "489778d49aed2f26d6b0bcdab6bc20a59cbc5aea",
+    "refs/remotes/origin/ci-negative-lease-ro-dropped": "d2ff8a7fbb9ee397d9bc0d26bd7092db935a54a2",
+    "refs/remotes/origin/ci-negative-wrong-runtime-assertion": "267b56f8d42c5b65398f0ed005a8b108af7f0e4c"
+  },
+  "old_worktrees": {
+    "vos-b1-boot": "unchanged clean",
+    "vos-r2-keyboard": "unchanged clean",
+    "vos-r2-console-line": "unchanged clean",
+    "vos-r2-console-accept": "unchanged clean",
+    "vos-r2-console-reader": "unchanged clean",
+    "vos-r2-routed-drain": "unchanged clean",
+    "vos-r2-pointer-poll": "unchanged clean"
+  },
+  "missing_historical_logs": 60,
+  "missing_logs_reconstructed": false,
+  "STOP98_and_unauthorized_deletion_and_ratification_preserved": true,
+  "performance_policy_unchanged": true,
+  "H2A_active": false
+}

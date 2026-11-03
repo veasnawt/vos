@@ -127,17 +127,9 @@ int keyboard_resume(struct keyboard *k)
 }
 
 /* One controller owner, two decoders. Never interpret auxiliary bytes as keys. */
-/* R2: bounded shared PS/2 routing is Rust-owned; I/O backend stays C. */
-static void routed_drain(struct keyboard *k) {
-    vos_rust_keyboard_routed_drain(k);
-}
+/* R2: FIFO extraction policy is Rust-owned; public dispatcher stays C. */
 static char routed_poll(struct keyboard *k) {
-    if(!k->ready)return 0;
-    routed_drain(k);
-    if(!k->key_count)return 0;
-    char c=k->keys[k->key_head];
-    k->keys[k->key_head]=0;k->key_head=(k->key_head+1)%KEYBOARD_DRAIN_LIMIT;k->key_count--;
-    return c;
+    return vos_rust_keyboard_routed_poll(k);
 }
 static int read_aux(struct keyboard *k,uint8_t *b) {
     for(unsigned i=0;i<KEYBOARD_WAIT_LIMIT;i++) {

@@ -1,0 +1,17 @@
+{
+  "reason": "Unmodified raw test output and objdump bytes; preserve evidence instead of stripping formatting",
+  "exact_excluded_paths": [
+    "docs/results/r2-keyboard-queue-rust/focused-baseline-tests.txt",
+    "docs/results/r2-keyboard-queue-rust/production-routing.asm",
+    "docs/results/r2-keyboard-queue-rust/regression-1.txt",
+    "docs/results/r2-keyboard-queue-rust/release-reference.o.asm"
+  ],
+  "sha256": {
+    "docs/results/r2-keyboard-queue-rust/focused-baseline-tests.txt": "a3f522b577b3d8d3d2640e05f7f89cdb6f74f9a5a0fce4c5b023f67bb25ea6c5",
+    "docs/results/r2-keyboard-queue-rust/production-routing.asm": "1bddbf56ca476f89acd2faff64ef9a8c2c2dd286117abd07e66375613ee3b74b",
+    "docs/results/r2-keyboard-queue-rust/regression-1.txt": "68b3f4730fa6e7fd5a4cd6f5aef88dd8a07fa820fe649419094a83bcb84a9080",
+    "docs/results/r2-keyboard-queue-rust/release-reference.o.asm": "55a4d187ca8e68b1e1adbc54ec478305cfc6c737b26964e1b695dc3c49e7057f"
+  },
+  "scope": "git whitespace review only; no security/test/ABI/storage check exempted",
+  "preserved_failed_check": "steps/commit-reviewed-increment/stdout.log"
+}

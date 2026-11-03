@@ -8,6 +8,8 @@ struct keyboard;
  * keyboard_poll; valid initialized keyboard and read callback required.
  * No Rust borrow spans the C io->in callback; no port writes or allocation. */
 void vos_rust_keyboard_routed_drain(struct keyboard *keyboard);
+/* Same live/IF=0 ownership; no reference spans the drain callback. */
+char vos_rust_keyboard_routed_poll(struct keyboard *keyboard);
 struct pointer_packet;
 /* R2: PS/2 pointer polling and packet dequeue Rust entry points. */
 int vos_rust_keyboard_pointer_poll(struct keyboard *k, struct pointer_packet *p);

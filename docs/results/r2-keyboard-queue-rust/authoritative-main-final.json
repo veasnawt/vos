@@ -1,0 +1,11 @@
+{
+  "utc": "2026-11-03T03:20:15.683Z",
+  "source": "GitHub API commits/main",
+  "sha": "7151c51126c4303f066c998ba905cfd4b1181f2b",
+  "tree": "3f2725575ebc14a1fb47365f9a6e20ad6df040fb",
+  "parents": [
+    "e01c51e5d8c405de51910c4c650a63e6881a1f6e",
+    "920b6679a528e2370102ad36b3182304bc007eda"
+  ],
+  "message": "Merge pull request #57 from veasnawt/codex/r2-ps2-pointer-poll\n\nfeat(input): move bounded PS/2 pointer polling and packet dequeue to Rust"
+}

@@ -87,3 +87,25 @@ impl PointerQueue for F {
     assert_eq!(pointer_lost_and_clear(&mut lost), 42);
     assert_eq!(lost, 0);
 }
+
+impl ps2_routed_core::KeyboardQueue for F {
+ fn keyboard_ready(&self)->bool{self.kreset!=999}
+ fn fill_keyboard_queue(&mut self){drain(self)}
+ fn keyboard_queue(&mut self)->&mut Queue{&mut self.q}
+}
+#[test] fn queue_unready(){let mut f=F::new();f.kreset=999;f.script[0]=(1,b'a');assert_eq!(ps2_routed_core::keyboard_poll(&mut f),0);assert_eq!(f.reads,0);}
+#[test] fn queue_empty(){let mut f=F::new();assert_eq!(ps2_routed_core::keyboard_poll(&mut f),0);assert_eq!((f.reads,f.q.count),(1,0));}
+#[test] fn queue_fifo(){let mut f=F::new();f.pending=1;f.q.head=31;f.q.count=2;f.q.keys[31]=b'a';f.q.keys[0]=b'b';assert_eq!(ps2_routed_core::keyboard_poll(&mut f),b'a');assert_eq!((f.q.head,f.q.count,f.q.keys[31],f.pending),(0,1,0,1));assert_eq!(ps2_routed_core::keyboard_poll(&mut f),b'b');assert_eq!((f.q.head,f.q.count),(1,0));}
+#[test] fn queue_nul(){let mut f=F::new();f.pending=1;f.q.head=2;f.q.count=1;assert_eq!(ps2_routed_core::keyboard_poll(&mut f),0);assert_eq!((f.q.head,f.q.count),(3,0));}
+#[test] fn queue_callback(){let mut f=F::new();f.q.count=1;f.q.keys[0]=b'a';f.q.keys[31]=b'b';f.mutate=true;assert_eq!(ps2_routed_core::keyboard_poll(&mut f),b'b');assert_eq!((f.q.head,f.q.count,f.q.keys[0]),(0,0,b'a'));}
+#[test] fn queue_full(){let mut f=F::new();f.q.count=32;f.q.head=5;f.q.keys[5]=b'x';f.script=[(1,b'a');64];assert_eq!(ps2_routed_core::keyboard_poll(&mut f),b'x');assert_eq!((f.reads,f.q.count,f.q.head),(0,31,6));}
+#[test] fn queue_all_bytes(){for b in 0..=255u8{let mut f=F::new();f.pending=1;f.q.count=1;f.q.keys[0]=b;assert_eq!(ps2_routed_core::keyboard_poll(&mut f),b);assert_eq!((f.q.keys[0],f.q.head,f.q.count),(0,1,0));}}
+#[test] fn queue_noncanonical_count(){let mut f=F::new();f.pending=1;f.q.count=u32::MAX;f.q.keys[0]=b'b';assert_eq!(ps2_routed_core::keyboard_poll(&mut f),b'b');assert_eq!(f.q.count,u32::MAX-1);}
+#[test] fn queue_invalid_head(){let mut f=F::new();f.pending=1;f.q.head=32;f.q.count=1;assert_eq!(ps2_routed_core::keyboard_poll(&mut f),0);assert_eq!((f.q.head,f.q.count),(32,1));}
+
+#[test] fn queue_guard_equivalence(){
+ let check=|p:usize|{let old=p!=0 && p%8==0 && p.checked_add(88).is_some();assert_eq!(ps2_routed_core::keyboard_range_valid(p),old,"{p:x}");};
+ for p in 0..256 {check(p);check(usize::MAX-p);}
+ let mut x=0x92837463usize;for _ in 0..100000 {x=x.wrapping_mul(6364136223846793005).wrapping_add(1);check(x);}
+ for p in [4096usize,0xffff800000000000,0xffffffff80000000] {check(p);}
+}
