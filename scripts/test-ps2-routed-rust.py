@@ -9,6 +9,27 @@ ROOT=Path(__file__).resolve().parents[1]
 def sha(p):return hashlib.sha256(Path(p).read_bytes()).hexdigest()
 def need(x,s):
  if not x:raise RuntimeError(s)
+def check_queue_bridge(c_symbols,symbols,relocations):
+ need(' U vos_rust_keyboard_routed_poll' in c_symbols,'C calls Rust queue bridge')
+ need(sum(l.endswith(' T vos_rust_keyboard_routed_poll') for l in symbols.splitlines())==1,'one production Rust queue owner')
+ bodies=re.findall(r'^[0-9a-f]+ <vos_rust_keyboard_routed_poll>:\n(.*?)(?=\n\n)',relocations,re.M|re.S)
+ need(len(bodies)==1,'one queue bridge disassembly body')
+ need(len(re.findall(r'R_X86_64_(?:PLT32|PC32)\s+vos_rust_keyboard_routed_drain(?:-|\s|$)',bodies[0]))==1,'actual Rust queue calls accepted Rust drain')
+ return bodies[0]
+
+def queue_bridge_negative_controls(c_symbols,symbols,relocations):
+ cases=[('missing-C-edge',c_symbols.replace(' U vos_rust_keyboard_routed_poll',''),symbols,relocations),
+        ('duplicate-owner',c_symbols,symbols+'\n0000 T vos_rust_keyboard_routed_poll\n',relocations),
+        ('missing-drain-edge',c_symbols,symbols,relocations.replace('vos_rust_keyboard_routed_drain','wrong_drain')),
+        ('wrong-function',c_symbols,symbols,relocations.replace('<vos_rust_keyboard_routed_poll>','<wrong_function>')),
+        ('duplicate-body',c_symbols,symbols,relocations+'\n0000 <vos_rust_keyboard_routed_poll>:\n'+check_queue_bridge(c_symbols,symbols,relocations)+'\n\n')]
+ rejected=[]
+ for name,c,n,r in cases:
+  try:check_queue_bridge(c,n,r)
+  except RuntimeError:rejected.append(name)
+  else:raise RuntimeError('broken queue topology accepted: '+name)
+ return rejected
+
 def main():
  ap=argparse.ArgumentParser(description=__doc__);ap.add_argument('--archive',type=Path,required=True);ap.add_argument('--rustc',required=True);ap.add_argument('--out',type=Path,required=True);a=ap.parse_args()
  out=a.out.resolve();archive=a.archive.resolve();need(out.is_relative_to(ROOT/'build') and not out.exists() and archive.is_file(),'fresh confined output and existing archive');out.mkdir(parents=True)
@@ -64,7 +85,12 @@ def main():
   need(sum(l.endswith(' T vos_rust_keyboard_pointer_poll') for l in symbols.splitlines())==1,'one production pointer_poll Rust owner')
   need(sum(l.endswith(' T vos_rust_keyboard_pointer_lost') for l in symbols.splitlines())==1,'one production pointer_lost Rust owner')
   c_symbols=run(['nm',out/'release-driver.o'],'driver-symbols.txt')
-  need(' U vos_rust_keyboard_routed_drain' in c_symbols,'C calls routed_drain')
+  # FIFO policy is now Rust-owned: verify the actual C -> queue -> drain
+  # dependency chain, not the superseded direct C -> drain edge.
+  rel=run(['objdump','-dr','--disassemble=vos_rust_keyboard_routed_poll',archive],'queue-bridge-relocations.txt')
+  report['queue_bridge_dependency']=check_queue_bridge(c_symbols,symbols,rel)
+  report['queue_bridge_negative_controls']=queue_bridge_negative_controls(c_symbols,symbols,rel)
+
   need(' U vos_rust_keyboard_pointer_poll' in c_symbols,'C calls pointer_poll')
   need(' U vos_rust_keyboard_pointer_lost' in c_symbols,'C calls pointer_lost')
   report['source_sha256']={n:sha(ROOT/n) for n in ['kernel/rust/input/ps2_routed.rs','arch/x86_64/rust/ps2_routed.rs','arch/x86_64/keyboard.c','arch/x86_64/keyboard.h','tests/host/ps2-routed-differential.c','tests/rust/ps2_routed.rs','tests/reference/ps2-pointer-poll.c']};report['status']='PASS'

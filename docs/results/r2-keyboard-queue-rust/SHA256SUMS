@@ -27,6 +27,8 @@ d1a06c64a36b0b6442b922caf240fa8d00a9f4623038c17dffb9da2a603090ef  docs/results/r
 204be8b4f9eb052834237b7b509e479b746f2e6c59858e5eb8ea5c77465789ca  docs/results/r2-keyboard-queue-rust/bios-verify-2G-rust-execution.json
 3d386ec63fc51a5fdbeb9b20e333f5a50c311081e1a105c026cc695fd0682e55  docs/results/r2-keyboard-queue-rust/bios-verify-2G-rust-queue-execution.json
 52fbd3faa3eb539399e84c31f0265594552016a42f33e639737b2c6d14e211eb  docs/results/r2-keyboard-queue-rust/bios-verify-2G-serial.log
+af9f0e1b0b90b4a28620f0223fbf34b16688512d6821f7027646628342c4a878  docs/results/r2-keyboard-queue-rust/ci-ownership-controls.json
+2c85b71baf4ec93a8ac7a95d6bff9ce79dc8379d768e7047229c83f147174eec  docs/results/r2-keyboard-queue-rust/ci-ownership-correction.json
 15ceff13cfb8ed08383c9eddad034e06ee431be9ca9a96427aa042865d304ba7  docs/results/r2-keyboard-queue-rust/console-accept-release.txt
 15ceff13cfb8ed08383c9eddad034e06ee431be9ca9a96427aa042865d304ba7  docs/results/r2-keyboard-queue-rust/console-accept-sanitizer.txt
 44d8c724c31e9e5bb1cf9693039fd09ffeb5cd5935e74e0d6200b60e329cfcc1  docs/results/r2-keyboard-queue-rust/console-archive-regression.json

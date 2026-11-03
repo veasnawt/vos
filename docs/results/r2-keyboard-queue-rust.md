@@ -31,6 +31,8 @@ Each QEMU case proves actual Rust entries, real PS/2 `z` scan 0x2c, ELF-resolved
 
 Failed compile/harness attempts remain in the maintained worktree with original receipts; [attempt notes](r2-keyboard-queue-rust/preserved-attempts.json) explain bounded corrections. No failed attempt is relabeled PASS. Exact raw-output whitespace exceptions are [hash-bound](r2-keyboard-queue-rust/raw-evidence-whitespace.json); source/prose whitespace checks stay strict. One already-passing BIOS case is reused with identical kernel/archive and all mandatory assertions.
 
+CI initially rejected the obsolete direct C-to-drain ownership assertion. The [correction](r2-keyboard-queue-rust/ci-ownership-correction.json) requires a unique C-to-Rust-queue-to-Rust-drain relocation chain, verified on the actual archive and five rejected broken topologies. Production code, all functional/resource/mutation checks and performance approval bindings are unchanged; full CI must rerun. The failed job log remains retained.
+
 ## Resources and reproducibility
 
 New Rust queue own frame **8 B** excluding return address, below the 24 B ceiling. The C routed branch tail-jumps before its ordinary-path frame; existing drain frame 40 B and pointer-poll frame 24 B remain unchanged. No heap, DMA or new persistent state. Loaded-image growth **0 B** against a 4,096 B ceiling; `.data` and `.bss` unchanged. ELF file 1,227,056 → 1,226,912 B. No unresolved ELF symbols or new panic/allocation/SIMD dependency in the selected path. Accepted routing machine code is identical except direct relocation displacements. See [resources](r2-keyboard-queue-rust/resources.json), [assembly](r2-keyboard-queue-rust/production-routing.asm) and [reproduction](r2-keyboard-queue-rust/reproduction.json).
