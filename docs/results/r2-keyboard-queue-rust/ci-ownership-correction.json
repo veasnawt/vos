@@ -1,0 +1,30 @@
+{
+  "status": "PASS",
+  "actual_archive_positive": true,
+  "negative_controls": {
+    "missing-C-queue": {
+      "rejected": true,
+      "reason": "C calls Rust queue bridge"
+    },
+    "duplicate-Rust-owner": {
+      "rejected": true,
+      "reason": "one production Rust queue owner"
+    },
+    "missing-drain-edge": {
+      "rejected": true,
+      "reason": "actual Rust queue calls accepted Rust drain"
+    },
+    "wrong-function-body": {
+      "rejected": true,
+      "reason": "one queue bridge disassembly body"
+    },
+    "duplicate-function-body": {
+      "rejected": true,
+      "reason": "one queue bridge disassembly body"
+    }
+  },
+  "production_source_unchanged": true,
+  "approved_archive_sha256": "73eb6101ac15fb08a571ae41a2599498b8287111f9daec5dcf74d0cb26e8b696",
+  "original_failure_retained": "build/ci-failure-41572763072-job125709260128.log",
+  "verification": "strict unique C-to-Rust-queue-to-accepted-Rust-drain relocation proof; prior frame/owner/functional/mutation checks unchanged"
+}

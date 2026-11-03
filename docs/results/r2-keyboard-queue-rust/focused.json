@@ -1,0 +1,897 @@
+{
+  "status": "PASS",
+  "archive_sha256": "73eb6101ac15fb08a571ae41a2599498b8287111f9daec5dcf74d0cb26e8b696",
+  "commands": [
+    {
+      "argv": [
+        "gcc",
+        "-std=gnu11",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-Itests/reference/keyboard-queue-headers",
+        "-Iarch/x86_64",
+        "-ffunction-sections",
+        "-fdata-sections",
+        "-Wl,--gc-sections",
+        "-fno-pie",
+        "-no-pie",
+        "-O1",
+        "-g",
+        "-fsanitize=address,undefined",
+        "-fno-sanitize-recover=all",
+        "-fno-omit-frame-pointer",
+        "-Dkeyboard_init=keyboard_init_reference",
+        "-Dkeyboard_poll=keyboard_poll_reference",
+        "-Dkeyboard_suspend=keyboard_suspend_reference",
+        "-Dkeyboard_resume=keyboard_resume_reference",
+        "-Dkeyboard_pointer_start=keyboard_pointer_start_reference",
+        "-Dkeyboard_pointer_stop=keyboard_pointer_stop_reference",
+        "-Dkeyboard_pointer_poll=keyboard_pointer_poll_reference",
+        "-Dkeyboard_pointer_lost=keyboard_pointer_lost_reference",
+        "-c",
+        "tests/reference/ps2-keyboard-queue.c",
+        "-o",
+        "build/queue-optimized/sanitizer-reference.o"
+      ],
+      "log": "sanitizer-reference-build.txt",
+      "exit": 0
+    },
+    {
+      "argv": [
+        "gcc",
+        "-std=gnu11",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-Iarch/x86_64",
+        "-ffunction-sections",
+        "-fdata-sections",
+        "-Wl,--gc-sections",
+        "-fno-pie",
+        "-no-pie",
+        "-O1",
+        "-g",
+        "-fsanitize=address,undefined",
+        "-fno-sanitize-recover=all",
+        "-fno-omit-frame-pointer",
+        "-c",
+        "arch/x86_64/keyboard.c",
+        "-o",
+        "build/queue-optimized/sanitizer-driver.o"
+      ],
+      "log": "sanitizer-driver-build.txt",
+      "exit": 0
+    },
+    {
+      "argv": [
+        "gcc",
+        "-std=gnu11",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-Iarch/x86_64",
+        "-ffunction-sections",
+        "-fdata-sections",
+        "-Wl,--gc-sections",
+        "-fno-pie",
+        "-no-pie",
+        "-O1",
+        "-g",
+        "-fsanitize=address,undefined",
+        "-fno-sanitize-recover=all",
+        "-fno-omit-frame-pointer",
+        "tests/host/keyboard-queue-differential.c",
+        "build/queue-optimized/sanitizer-reference.o",
+        "build/queue-optimized/sanitizer-driver.o",
+        "build/production/rust/libvos_kernel.a",
+        "-o",
+        "build/queue-optimized/sanitizer-differential"
+      ],
+      "log": "sanitizer-build.txt",
+      "exit": 0
+    },
+    {
+      "argv": [
+        "build/queue-optimized/sanitizer-differential"
+      ],
+      "log": "sanitizer.txt",
+      "exit": 0
+    },
+    {
+      "argv": [
+        "gcc",
+        "-std=gnu11",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-Itests/reference/keyboard-queue-headers",
+        "-Iarch/x86_64",
+        "-ffunction-sections",
+        "-fdata-sections",
+        "-Wl,--gc-sections",
+        "-fno-pie",
+        "-no-pie",
+        "-O2",
+        "-fno-lto",
+        "-ffreestanding",
+        "-fno-builtin",
+        "-fno-stack-protector",
+        "-fno-pic",
+        "-mno-red-zone",
+        "-mgeneral-regs-only",
+        "-mcmodel=kernel",
+        "-Dkeyboard_init=keyboard_init_reference",
+        "-Dkeyboard_poll=keyboard_poll_reference",
+        "-Dkeyboard_suspend=keyboard_suspend_reference",
+        "-Dkeyboard_resume=keyboard_resume_reference",
+        "-Dkeyboard_pointer_start=keyboard_pointer_start_reference",
+        "-Dkeyboard_pointer_stop=keyboard_pointer_stop_reference",
+        "-Dkeyboard_pointer_poll=keyboard_pointer_poll_reference",
+        "-Dkeyboard_pointer_lost=keyboard_pointer_lost_reference",
+        "-c",
+        "tests/reference/ps2-keyboard-queue.c",
+        "-o",
+        "build/queue-optimized/release-reference.o"
+      ],
+      "log": "release-reference-build.txt",
+      "exit": 0
+    },
+    {
+      "argv": [
+        "gcc",
+        "-std=gnu11",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-Iarch/x86_64",
+        "-ffunction-sections",
+        "-fdata-sections",
+        "-Wl,--gc-sections",
+        "-fno-pie",
+        "-no-pie",
+        "-O2",
+        "-fno-lto",
+        "-ffreestanding",
+        "-fno-builtin",
+        "-fno-stack-protector",
+        "-fno-pic",
+        "-mno-red-zone",
+        "-mgeneral-regs-only",
+        "-mcmodel=kernel",
+        "-c",
+        "arch/x86_64/keyboard.c",
+        "-o",
+        "build/queue-optimized/release-driver.o"
+      ],
+      "log": "release-driver-build.txt",
+      "exit": 0
+    },
+    {
+      "argv": [
+        "gcc",
+        "-std=gnu11",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-Iarch/x86_64",
+        "-ffunction-sections",
+        "-fdata-sections",
+        "-Wl,--gc-sections",
+        "-fno-pie",
+        "-no-pie",
+        "-O2",
+        "-fno-lto",
+        "tests/host/keyboard-queue-differential.c",
+        "build/queue-optimized/release-reference.o",
+        "build/queue-optimized/release-driver.o",
+        "build/production/rust/libvos_kernel.a",
+        "-o",
+        "build/queue-optimized/release-differential"
+      ],
+      "log": "release-build.txt",
+      "exit": 0
+    },
+    {
+      "argv": [
+        "build/queue-optimized/release-differential"
+      ],
+      "log": "release.txt",
+      "exit": 0
+    },
+    {
+      "argv": [
+        "taskset",
+        "-c",
+        "0",
+        "build/queue-optimized/release-differential",
+        "--bench"
+      ],
+      "log": "performance.csv",
+      "exit": 0
+    },
+    {
+      "argv": [
+        "$RUSTC",
+        "--edition=2024",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Coverflow-checks=yes",
+        "-Ccodegen-units=1",
+        "--test",
+        "-Cstrip=symbols",
+        "build/queue-optimized/shared-tests.rs",
+        "-o",
+        "build/queue-optimized/shared-tests"
+      ],
+      "log": "shared-build.txt",
+      "exit": 0
+    },
+    {
+      "argv": [
+        "build/queue-optimized/shared-tests",
+        "--test-threads=1",
+        "baseline::"
+      ],
+      "log": "baseline-tests.txt",
+      "exit": 0
+    },
+    {
+      "argv": [
+        "build/queue-optimized/shared-tests",
+        "--test-threads=1",
+        "--exact",
+        "limit::bound_and_enqueue"
+      ],
+      "log": "limit.txt",
+      "exit": 101
+    },
+    {
+      "argv": [
+        "build/queue-optimized/shared-tests",
+        "--test-threads=1",
+        "--exact",
+        "pending::pending_blocks"
+      ],
+      "log": "pending.txt",
+      "exit": 101
+    },
+    {
+      "argv": [
+        "build/queue-optimized/shared-tests",
+        "--test-threads=1",
+        "--exact",
+        "obf::bound_and_enqueue"
+      ],
+      "log": "obf.txt",
+      "exit": 101
+    },
+    {
+      "argv": [
+        "build/queue-optimized/shared-tests",
+        "--test-threads=1",
+        "--exact",
+        "aux::pointer_complete"
+      ],
+      "log": "aux.txt",
+      "exit": 101
+    },
+    {
+      "argv": [
+        "build/queue-optimized/shared-tests",
+        "--test-threads=1",
+        "--exact",
+        "aux_error::aux_error_precedence"
+      ],
+      "log": "aux_error.txt",
+      "exit": 101
+    },
+    {
+      "argv": [
+        "build/queue-optimized/shared-tests",
+        "--test-threads=1",
+        "--exact",
+        "pointer_negative::pointer_reject"
+      ],
+      "log": "pointer_negative.txt",
+      "exit": 101
+    },
+    {
+      "argv": [
+        "build/queue-optimized/shared-tests",
+        "--test-threads=1",
+        "--exact",
+        "pointer_pending::pointer_partial"
+      ],
+      "log": "pointer_pending.txt",
+      "exit": 101
+    },
+    {
+      "argv": [
+        "build/queue-optimized/shared-tests",
+        "--test-threads=1",
+        "--exact",
+        "keyboard_error::keyboard_error"
+      ],
+      "log": "keyboard_error.txt",
+      "exit": 101
+    },
+    {
+      "argv": [
+        "build/queue-optimized/shared-tests",
+        "--test-threads=1",
+        "--exact",
+        "zero::zero_resets"
+      ],
+      "log": "zero.txt",
+      "exit": 101
+    },
+    {
+      "argv": [
+        "build/queue-optimized/shared-tests",
+        "--test-threads=1",
+        "--exact",
+        "ff::ff_resets"
+      ],
+      "log": "ff.txt",
+      "exit": 101
+    },
+    {
+      "argv": [
+        "build/queue-optimized/shared-tests",
+        "--test-threads=1",
+        "--exact",
+        "saturation::saturation"
+      ],
+      "log": "saturation.txt",
+      "exit": 101
+    },
+    {
+      "argv": [
+        "build/queue-optimized/shared-tests",
+        "--test-threads=1",
+        "--exact",
+        "index::wrapping_queue"
+      ],
+      "log": "index.txt",
+      "exit": 101
+    },
+    {
+      "argv": [
+        "build/queue-optimized/shared-tests",
+        "--test-threads=1",
+        "--exact",
+        "count::bound_and_enqueue"
+      ],
+      "log": "count.txt",
+      "exit": 101
+    },
+    {
+      "argv": [
+        "build/queue-optimized/shared-tests",
+        "--test-threads=1",
+        "--exact",
+        "zero_character::zero_character"
+      ],
+      "log": "zero_character.txt",
+      "exit": 101
+    },
+    {
+      "argv": [
+        "build/queue-optimized/shared-tests",
+        "--test-threads=1",
+        "--exact",
+        "poll_ready::pointer_poll_not_ready"
+      ],
+      "log": "poll_ready.txt",
+      "exit": 101
+    },
+    {
+      "argv": [
+        "build/queue-optimized/shared-tests",
+        "--test-threads=1",
+        "--exact",
+        "poll_pointer_ready::pointer_poll_pointer_not_ready"
+      ],
+      "log": "poll_pointer_ready.txt",
+      "exit": 101
+    },
+    {
+      "argv": [
+        "build/queue-optimized/shared-tests",
+        "--test-threads=1",
+        "--exact",
+        "poll_take::pointer_poll_packet_delivery"
+      ],
+      "log": "poll_take.txt",
+      "exit": 101
+    },
+    {
+      "argv": [
+        "build/queue-optimized/shared-tests",
+        "--test-threads=1",
+        "--exact",
+        "poll_idle::pointer_poll_idle_loss"
+      ],
+      "log": "poll_idle.txt",
+      "exit": 101
+    },
+    {
+      "argv": [
+        "build/queue-optimized/shared-tests",
+        "--test-threads=1",
+        "--exact",
+        "lost_clear::pointer_lost_and_clear_test"
+      ],
+      "log": "lost_clear.txt",
+      "exit": 101
+    },
+    {
+      "argv": [
+        "build/queue-optimized/shared-tests",
+        "--test-threads=1",
+        "--exact",
+        "queue_ready::queue_unready"
+      ],
+      "log": "queue_ready.txt",
+      "exit": 101
+    },
+    {
+      "argv": [
+        "build/queue-optimized/shared-tests",
+        "--test-threads=1",
+        "--exact",
+        "queue_drain::queue_empty"
+      ],
+      "log": "queue_drain.txt",
+      "exit": 101
+    },
+    {
+      "argv": [
+        "build/queue-optimized/shared-tests",
+        "--test-threads=1",
+        "--exact",
+        "queue_empty::queue_fifo"
+      ],
+      "log": "queue_empty.txt",
+      "exit": 101
+    },
+    {
+      "argv": [
+        "build/queue-optimized/shared-tests",
+        "--test-threads=1",
+        "--exact",
+        "queue_slot::queue_fifo"
+      ],
+      "log": "queue_slot.txt",
+      "exit": 101
+    },
+    {
+      "argv": [
+        "build/queue-optimized/shared-tests",
+        "--test-threads=1",
+        "--exact",
+        "queue_clear::queue_fifo"
+      ],
+      "log": "queue_clear.txt",
+      "exit": 101
+    },
+    {
+      "argv": [
+        "build/queue-optimized/shared-tests",
+        "--test-threads=1",
+        "--exact",
+        "queue_head::queue_fifo"
+      ],
+      "log": "queue_head.txt",
+      "exit": 101
+    },
+    {
+      "argv": [
+        "build/queue-optimized/shared-tests",
+        "--test-threads=1",
+        "--exact",
+        "queue_count::queue_fifo"
+      ],
+      "log": "queue_count.txt",
+      "exit": 101
+    },
+    {
+      "argv": [
+        "build/queue-optimized/shared-tests",
+        "--test-threads=1",
+        "--exact",
+        "queue_nul::queue_nul"
+      ],
+      "log": "queue_nul.txt",
+      "exit": 101
+    },
+    {
+      "argv": [
+        "build/queue-optimized/shared-tests",
+        "--test-threads=1",
+        "--exact",
+        "queue_bound::queue_invalid_head"
+      ],
+      "log": "queue_bound.txt",
+      "exit": 101
+    },
+    {
+      "argv": [
+        "build/queue-optimized/shared-tests",
+        "--test-threads=1",
+        "--exact",
+        "queue_return::queue_all_bytes"
+      ],
+      "log": "queue_return.txt",
+      "exit": 101
+    },
+    {
+      "argv": [
+        "build/queue-optimized/shared-tests",
+        "--test-threads=1",
+        "--exact",
+        "guard_zero::queue_guard_equivalence"
+      ],
+      "log": "guard_zero.txt",
+      "exit": 101
+    },
+    {
+      "argv": [
+        "build/queue-optimized/shared-tests",
+        "--test-threads=1",
+        "--exact",
+        "guard_high::queue_guard_equivalence"
+      ],
+      "log": "guard_high.txt",
+      "exit": 101
+    },
+    {
+      "argv": [
+        "$RUSTC",
+        "--edition=2024",
+        "-Dwarnings",
+        "-Copt-level=2",
+        "-Cdebuginfo=0",
+        "-Coverflow-checks=yes",
+        "-Ccodegen-units=1",
+        "--crate-type=staticlib",
+        "-Cpanic=abort",
+        "build/queue-optimized/checked-root.rs",
+        "-o",
+        "build/queue-optimized/libchecked.a"
+      ],
+      "log": "checked-rust-build.txt",
+      "exit": 0
+    },
+    {
+      "argv": [
+        "gcc",
+        "-std=gnu11",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-Iarch/x86_64",
+        "-ffunction-sections",
+        "-fdata-sections",
+        "-Wl,--gc-sections",
+        "-fno-pie",
+        "-no-pie",
+        "-O1",
+        "-g",
+        "-fsanitize=address,undefined",
+        "-fno-sanitize-recover=all",
+        "tests/host/keyboard-queue-differential.c",
+        "build/queue-optimized/sanitizer-reference.o",
+        "build/queue-optimized/sanitizer-driver.o",
+        "build/queue-optimized/libchecked.a",
+        "-o",
+        "build/queue-optimized/checked-differential"
+      ],
+      "log": "checked-build.txt",
+      "exit": 0
+    },
+    {
+      "argv": [
+        "build/queue-optimized/checked-differential"
+      ],
+      "log": "checked.txt",
+      "exit": 0
+    },
+    {
+      "argv": [
+        "objdump",
+        "-d",
+        "build/production/rust/libvos_kernel.a"
+      ],
+      "log": "production-disassembly.txt",
+      "exit": 0
+    },
+    {
+      "argv": [
+        "nm",
+        "--defined-only",
+        "build/production/rust/libvos_kernel.a"
+      ],
+      "log": "archive-owners.txt",
+      "exit": 0
+    },
+    {
+      "argv": [
+        "nm",
+        "build/queue-optimized/release-driver.o"
+      ],
+      "log": "C-symbols.txt",
+      "exit": 0
+    }
+  ],
+  "Rust_sanitized": false,
+  "seed": "7232647261696e31",
+  "sanitizer": "PASS 782855 routed driver comparisons; seed=7232647261696e31; callback mutations, exact read trace, boundary object; no controller writes\n",
+  "release": "PASS 782855 routed driver comparisons; seed=7232647261696e31; callback mutations, exact read trace, boundary object; no controller writes\n",
+  "cpu": 0,
+  "performance": {
+    "unready": {
+      "C_ns": 4.72,
+      "Rust_ns": 4.13,
+      "percent": -12.5
+    },
+    "empty": {
+      "C_ns": 12.685,
+      "Rust_ns": 12.13,
+      "percent": -4.375246353961371
+    },
+    "queued": {
+      "C_ns": 8.57,
+      "Rust_ns": 7.82,
+      "percent": -8.751458576429405
+    },
+    "full": {
+      "C_ns": 8.655,
+      "Rust_ns": 8.175,
+      "percent": -5.54592720970536
+    },
+    "pointer_pending": {
+      "C_ns": 7.675,
+      "Rust_ns": 7.105,
+      "percent": -7.426710097719857
+    },
+    "refill": {
+      "C_ns": 27.66,
+      "Rust_ns": 27.51,
+      "percent": -0.5422993492407713
+    },
+    "mixed": {
+      "C_ns": 65.51,
+      "Rust_ns": 64.755,
+      "percent": -1.152495802167619
+    },
+    "burst32": {
+      "C_ns": 1639.6551,
+      "Rust_ns": 1535.9251,
+      "percent": -6.326330458155505
+    },
+    "ordinary_control": {
+      "C_ns": 17.14,
+      "Rust_ns": 18.61,
+      "percent": 8.576429404900821
+    }
+  },
+  "core_tests": "\nrunning 32 tests\ntest baseline::aux_error_precedence ... ok\ntest baseline::bound_and_enqueue ... ok\ntest baseline::callback_change ... ok\ntest baseline::count_wrap ... ok\ntest baseline::empty ... ok\ntest baseline::ff_resets ... ok\ntest baseline::full_blocks ... ok\ntest baseline::keyboard_error ... ok\ntest baseline::pending_blocks ... ok\ntest baseline::pointer_complete ... ok\ntest baseline::pointer_lost_and_clear_test ... ok\ntest baseline::pointer_partial ... ok\ntest baseline::pointer_poll_idle_loss ... ok\ntest baseline::pointer_poll_idle_saturated ... ok\ntest baseline::pointer_poll_not_ready ... ok\ntest baseline::pointer_poll_packet_delivery ... ok\ntest baseline::pointer_poll_pointer_not_ready ... ok\ntest baseline::pointer_reject ... ok\ntest baseline::queue_all_bytes ... ok\ntest baseline::queue_callback ... ok\ntest baseline::queue_empty ... ok\ntest baseline::queue_fifo ... ok\ntest baseline::queue_full ... ok\ntest baseline::queue_guard_equivalence ... ok\ntest baseline::queue_invalid_head ... ok\ntest baseline::queue_noncanonical_count ... ok\ntest baseline::queue_nul ... ok\ntest baseline::queue_unready ... ok\ntest baseline::saturation ... ok\ntest baseline::wrapping_queue ... ok\ntest baseline::zero_character ... ok\ntest baseline::zero_resets ... ok\n\ntest result: ok. 32 passed; 0 failed; 0 ignored; 0 measured; 992 filtered out; finished in 0.00s\n\n",
+  "mutations": {
+    "limit": {
+      "assertion": "limit::bound_and_enqueue",
+      "detected": true,
+      "policy_sha256": "744d226ff1506405d762a78b951c88935bf64f7cc2c9b6d8817dd2093a312896"
+    },
+    "pending": {
+      "assertion": "pending::pending_blocks",
+      "detected": true,
+      "policy_sha256": "1a3cf6f8f33199e9eb0d0eef4d469832ac15f329a80d4b11c5b5b52c99a2bb6c"
+    },
+    "obf": {
+      "assertion": "obf::bound_and_enqueue",
+      "detected": true,
+      "policy_sha256": "6350d446c8d9eb1ccb162d9049940fa0a38436cf7c72bb75b2ff9f2f2955db9e"
+    },
+    "aux": {
+      "assertion": "aux::pointer_complete",
+      "detected": true,
+      "policy_sha256": "213f1067c9eae29a63d6f87972ccd86bca65a8ec76ad14426ac644ee7424d1a9"
+    },
+    "aux_error": {
+      "assertion": "aux_error::aux_error_precedence",
+      "detected": true,
+      "policy_sha256": "21dd25839cbf4109e2424f6506507338908fe639b235da35f2de8360fb6a82d6"
+    },
+    "pointer_negative": {
+      "assertion": "pointer_negative::pointer_reject",
+      "detected": true,
+      "policy_sha256": "d6d67f6cbefae2991f64a344871139c47e386a09d23edb4d3a29ad51a6731658"
+    },
+    "pointer_pending": {
+      "assertion": "pointer_pending::pointer_partial",
+      "detected": true,
+      "policy_sha256": "15c8be29fbe5f53259e5e56810015bc927de5188a4ab2ed39f9cf834a594ce52"
+    },
+    "keyboard_error": {
+      "assertion": "keyboard_error::keyboard_error",
+      "detected": true,
+      "policy_sha256": "4219f87518d1ddaeb4a042119b27bd4a0519c5bd18044b58e5d8820bc07d1d77"
+    },
+    "zero": {
+      "assertion": "zero::zero_resets",
+      "detected": true,
+      "policy_sha256": "d057c44a093699c804ea2c9f79dbd311ba68dce0202ca7a53014a927ce33ac67"
+    },
+    "ff": {
+      "assertion": "ff::ff_resets",
+      "detected": true,
+      "policy_sha256": "68c54f11385c1c44d4aee0c6f3abba9b602fc841b9e4997bb49dbda4d23830bc"
+    },
+    "saturation": {
+      "assertion": "saturation::saturation",
+      "detected": true,
+      "policy_sha256": "365caf9e268477576df888de1a4e4c1f2f89a0f0ca251aacdbe790961fc4a434"
+    },
+    "index": {
+      "assertion": "index::wrapping_queue",
+      "detected": true,
+      "policy_sha256": "50814e27ea8aa760a10bfcac698738f8c813e6bd5f45257f2d6d7f0da4b81991"
+    },
+    "count": {
+      "assertion": "count::bound_and_enqueue",
+      "detected": true,
+      "policy_sha256": "df9d7603e89ef8af1a875d4b3f91243082ecc429ac9ffeb0271df94fb626e14b"
+    },
+    "zero_character": {
+      "assertion": "zero_character::zero_character",
+      "detected": true,
+      "policy_sha256": "0e465fab421d5c22a70dd19ef2f7bc3adc017623498a3b43e7af0b61891b8f28"
+    },
+    "poll_ready": {
+      "assertion": "poll_ready::pointer_poll_not_ready",
+      "detected": true,
+      "policy_sha256": "66f7bee7edd8610ec2b7406a3aded51b308f14c136d4a2c65b491dc97788cea7"
+    },
+    "poll_pointer_ready": {
+      "assertion": "poll_pointer_ready::pointer_poll_pointer_not_ready",
+      "detected": true,
+      "policy_sha256": "87ecde24b82484b29b543adc2113c98e704a4662b1af0379836f0d1d53cdc4cd"
+    },
+    "poll_take": {
+      "assertion": "poll_take::pointer_poll_packet_delivery",
+      "detected": true,
+      "policy_sha256": "cd2d939c1c8adc53c65943317ef58109b12233ae49beef537c690d743350edc4"
+    },
+    "poll_idle": {
+      "assertion": "poll_idle::pointer_poll_idle_loss",
+      "detected": true,
+      "policy_sha256": "81cd45f0dbca96bcd8370aaf4751aac45ccfbf87c7da4daee853254d1750455f"
+    },
+    "lost_clear": {
+      "assertion": "lost_clear::pointer_lost_and_clear_test",
+      "detected": true,
+      "policy_sha256": "38ed4804a1c3c81aa3f6499082eee7f29ecaf378bedecb29f35414c79c9a7381"
+    },
+    "queue_ready": {
+      "assertion": "queue_ready::queue_unready",
+      "detected": true,
+      "policy_sha256": "69b42fe816e44981cb216565442f555e3f5d996c4f6baee64a275e173bf0ee4b"
+    },
+    "queue_drain": {
+      "assertion": "queue_drain::queue_empty",
+      "detected": true,
+      "policy_sha256": "552965b2497a87dadf6099f7e015d93632dfc01e35848320ad5cbd771ea1ddc9"
+    },
+    "queue_empty": {
+      "assertion": "queue_empty::queue_fifo",
+      "detected": true,
+      "policy_sha256": "6719190ac64e9ab3485bb6bc84cf85ad1239220bb3f09b43a4eeb91430d9a1e9"
+    },
+    "queue_slot": {
+      "assertion": "queue_slot::queue_fifo",
+      "detected": true,
+      "policy_sha256": "4a064d537868f369b46bde1dead2fd22438f81c1d4be0d5ed8c8a37ab24702f8"
+    },
+    "queue_clear": {
+      "assertion": "queue_clear::queue_fifo",
+      "detected": true,
+      "policy_sha256": "f77810f9d2233b174a5694a3b5146ac14161742574f4554f733ee0d8f9b65bfe"
+    },
+    "queue_head": {
+      "assertion": "queue_head::queue_fifo",
+      "detected": true,
+      "policy_sha256": "6bfee178a02290abb007dfb9ecb81c9a019308371d72dc6a141316bfbb316106"
+    },
+    "queue_count": {
+      "assertion": "queue_count::queue_fifo",
+      "detected": true,
+      "policy_sha256": "a2dc058cdfe8ed97a97fbfbac46853fc257ad65f554f6474675d92225837ba40"
+    },
+    "queue_nul": {
+      "assertion": "queue_nul::queue_nul",
+      "detected": true,
+      "policy_sha256": "2075d73ee548f4da93767fa9a0481529bd5a0782e2041541592a6367c385cfab"
+    },
+    "queue_bound": {
+      "assertion": "queue_bound::queue_invalid_head",
+      "detected": true,
+      "policy_sha256": "da42d13ef44566d83761678f6401fadeee2c18242f03d9fe9e334970c52a7fe8"
+    },
+    "queue_return": {
+      "assertion": "queue_return::queue_all_bytes",
+      "detected": true,
+      "policy_sha256": "fc4c62d94b0d869b76d37ecdd606bab692142c457c8fe5317422b73d71f02a26"
+    },
+    "guard_zero": {
+      "assertion": "guard_zero::queue_guard_equivalence",
+      "detected": true,
+      "policy_sha256": "6e5f65755de1c022cd74ce4f6d43712f9c303dc371763c9c0a04bf56ae5185dd"
+    },
+    "guard_high": {
+      "assertion": "guard_high::queue_guard_equivalence",
+      "detected": true,
+      "policy_sha256": "262ab8aeeb5fcac2bda42b2385df80204fa644b8318b4c8914b483ccd5033ae6"
+    }
+  },
+  "shared_harness": {
+    "binary_bytes": 1687384,
+    "binary_sha256": "24618e0dd30753fc4816d98731761f5044810bdf6f1c18426d7db8ace4ced0ec",
+    "variants": 32,
+    "sources": [
+      "ec95b81a87aa8aec64eb21ac4bd7ca676df3d6041e150df5370e65012701174a",
+      "744d226ff1506405d762a78b951c88935bf64f7cc2c9b6d8817dd2093a312896",
+      "1a3cf6f8f33199e9eb0d0eef4d469832ac15f329a80d4b11c5b5b52c99a2bb6c",
+      "6350d446c8d9eb1ccb162d9049940fa0a38436cf7c72bb75b2ff9f2f2955db9e",
+      "213f1067c9eae29a63d6f87972ccd86bca65a8ec76ad14426ac644ee7424d1a9",
+      "21dd25839cbf4109e2424f6506507338908fe639b235da35f2de8360fb6a82d6",
+      "d6d67f6cbefae2991f64a344871139c47e386a09d23edb4d3a29ad51a6731658",
+      "15c8be29fbe5f53259e5e56810015bc927de5188a4ab2ed39f9cf834a594ce52",
+      "4219f87518d1ddaeb4a042119b27bd4a0519c5bd18044b58e5d8820bc07d1d77",
+      "d057c44a093699c804ea2c9f79dbd311ba68dce0202ca7a53014a927ce33ac67",
+      "68c54f11385c1c44d4aee0c6f3abba9b602fc841b9e4997bb49dbda4d23830bc",
+      "365caf9e268477576df888de1a4e4c1f2f89a0f0ca251aacdbe790961fc4a434",
+      "50814e27ea8aa760a10bfcac698738f8c813e6bd5f45257f2d6d7f0da4b81991",
+      "df9d7603e89ef8af1a875d4b3f91243082ecc429ac9ffeb0271df94fb626e14b",
+      "0e465fab421d5c22a70dd19ef2f7bc3adc017623498a3b43e7af0b61891b8f28",
+      "66f7bee7edd8610ec2b7406a3aded51b308f14c136d4a2c65b491dc97788cea7",
+      "87ecde24b82484b29b543adc2113c98e704a4662b1af0379836f0d1d53cdc4cd",
+      "cd2d939c1c8adc53c65943317ef58109b12233ae49beef537c690d743350edc4",
+      "81cd45f0dbca96bcd8370aaf4751aac45ccfbf87c7da4daee853254d1750455f",
+      "38ed4804a1c3c81aa3f6499082eee7f29ecaf378bedecb29f35414c79c9a7381",
+      "69b42fe816e44981cb216565442f555e3f5d996c4f6baee64a275e173bf0ee4b",
+      "552965b2497a87dadf6099f7e015d93632dfc01e35848320ad5cbd771ea1ddc9",
+      "6719190ac64e9ab3485bb6bc84cf85ad1239220bb3f09b43a4eeb91430d9a1e9",
+      "4a064d537868f369b46bde1dead2fd22438f81c1d4be0d5ed8c8a37ab24702f8",
+      "f77810f9d2233b174a5694a3b5146ac14161742574f4554f733ee0d8f9b65bfe",
+      "6bfee178a02290abb007dfb9ecb81c9a019308371d72dc6a141316bfbb316106",
+      "a2dc058cdfe8ed97a97fbfbac46853fc257ad65f554f6474675d92225837ba40",
+      "2075d73ee548f4da93767fa9a0481529bd5a0782e2041541592a6367c385cfab",
+      "da42d13ef44566d83761678f6401fadeee2c18242f03d9fe9e334970c52a7fe8",
+      "fc4c62d94b0d869b76d37ecdd606bab692142c457c8fe5317422b73d71f02a26",
+      "6e5f65755de1c022cd74ce4f6d43712f9c303dc371763c9c0a04bf56ae5185dd",
+      "262ab8aeeb5fcac2bda42b2385df80204fa644b8318b4c8914b483ccd5033ae6"
+    ],
+    "runtime_executables": 1,
+    "method": "Distinct namespace/type per variant, identical positive test fixture; intended assertions run individually, isolated process per mutant. No state shared between variants."
+  },
+  "checked_Rust": "PASS 782855 routed driver comparisons; seed=7232647261696e31; callback mutations, exact read trace, boundary object; no controller writes\n",
+  "frames": {
+    "_RNvNtCs5YZeFliBs6N_10vos_kernel10ps2_routed12pointer_step": 0,
+    "vos_rust_keyboard_pointer_lost": 0,
+    "vos_rust_keyboard_pointer_poll": 24,
+    "vos_rust_keyboard_routed_drain": 40,
+    "vos_rust_keyboard_routed_poll": 8
+  },
+  "source_sha256": {
+    "kernel/rust/input/ps2_routed.rs": "ec95b81a87aa8aec64eb21ac4bd7ca676df3d6041e150df5370e65012701174a",
+    "arch/x86_64/rust/ps2_routed.rs": "9a5e6ad16a10a2d01bf166c4dbf43f84a047f67806e5445e04708a2687fd86f2",
+    "arch/x86_64/keyboard.c": "0a45e7a59e27b1085122bb344d0e5954e1148e1cdf78070a4a99454834d47a10",
+    "arch/x86_64/keyboard.h": "c6104c37cd72472e32a16471a22c2149e15e68f4baff2c64072a054b088a68b7",
+    "tests/host/keyboard-queue-differential.c": "2dc2826b24025cc4cd2a15ace1a101814c917499894552e23578ba73ea46b316",
+    "tests/rust/ps2_routed.rs": "63a18a4471b2b1a579f6548e3a99ffbb2c351536624fb554af5aa0304d9a39f3",
+    "scripts/test-keyboard-queue-rust.py": "15022f7d0d522d8de54e1985bec668af10724b3ed3810d98e674ddec4522ce8e"
+  }
+}

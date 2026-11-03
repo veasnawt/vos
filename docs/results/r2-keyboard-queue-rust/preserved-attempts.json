@@ -1,0 +1,20 @@
+{
+  "failed_outputs_retained": [
+    "build/queue-focused",
+    "build/queue-verified",
+    "build/native-queue",
+    "build/native-queue-corrected",
+    "build/native-queue-postdrain/bios-normal-2G"
+  ],
+  "notes": [
+    "Unused C forwarder removed; warnings remain errors.",
+    "Shared mutant modules exported to match original rlib visibility; -Dwarnings remains enabled.",
+    "QMP refuses input while paused; inject while running.",
+    "Real key can be decoded inside current drain, so dequeue proof resolves actual post-drain instruction.",
+    "Optional stimulus can lose race to a genuine existing pointer breakpoint; exact stop/RIP and complete packet checks remain required."
+  ],
+  "all_failed_receipts_preserved": true,
+  "earlier_successful_BIOS_128M_case_reused": true,
+  "kernel_unchanged_during_native_harness_corrections": true,
+  "no_guard_stop_or_cleanup": true
+}

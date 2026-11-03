@@ -1,0 +1,93 @@
+{
+  "status": "PASS",
+  "accepted_kernel_sha256": "a537bd5cc5541be28722f42509d386938dd3342969ab7b793baaf9b33c748bff",
+  "accepted_archive_sha256": "950a4c946c834e5b8a0a99b7d7998c01f346b208bc39ce24c5627f5653de321f",
+  "candidate_kernel_sha256": "68f6a7ceac4d836f6c9d987d8b5c2bb946752f7a702e94fb56cefea2f1eaed72",
+  "candidate_archive_sha256": "73eb6101ac15fb08a571ae41a2599498b8287111f9daec5dcf74d0cb26e8b696",
+  "baseline": {
+    "bytes": 1227056,
+    "loaded_memsz": 962560,
+    "sections": {
+      "": 0,
+      ".boot.text": 4096,
+      ".boot.data": 40,
+      ".boot.bss": 20480,
+      ".text": 278528,
+      ".rodata": 57344,
+      ".data": 464,
+      ".got": 24,
+      ".got.plt": 24,
+      ".bss": 597504,
+      ".debug_line": 176864,
+      ".debug_line_str": 2245,
+      ".debug_info": 359802,
+      ".debug_abbrev": 50831,
+      ".debug_aranges": 3072,
+      ".debug_str": 20643,
+      ".debug_rnglists": 18449,
+      ".debug_loclists": 165724,
+      ".debug_frame": 33648,
+      ".symtab": 26520,
+      ".strtab": 18965,
+      ".shstrtab": 206
+    }
+  },
+  "candidate": {
+    "bytes": 1226912,
+    "loaded_memsz": 962560,
+    "sections": {
+      "": 0,
+      ".boot.text": 4096,
+      ".boot.data": 40,
+      ".boot.bss": 20480,
+      ".text": 278528,
+      ".rodata": 57344,
+      ".data": 464,
+      ".got": 24,
+      ".got.plt": 24,
+      ".bss": 597504,
+      ".debug_line": 176805,
+      ".debug_line_str": 2247,
+      ".debug_info": 359729,
+      ".debug_abbrev": 50790,
+      ".debug_aranges": 3072,
+      ".debug_str": 20632,
+      ".debug_rnglists": 18438,
+      ".debug_loclists": 165701,
+      ".debug_frame": 33648,
+      ".symtab": 26544,
+      ".strtab": 18995,
+      ".shstrtab": 206
+    }
+  },
+  "loaded_growth": 0,
+  "frames_excluding_return_addresses": {
+    "vos_rust_keyboard_routed_poll": 8,
+    "keyboard_poll": 40,
+    "vos_rust_keyboard_routed_drain": 40,
+    "vos_rust_keyboard_pointer_poll": 24,
+    "vos_rust_keyboard_pointer_lost": 0
+  },
+  "accepted_Rust_routing_machine_code_unchanged_except_direct_relocations": {
+    "vos_rust_keyboard_routed_drain": true,
+    "vos_rust_keyboard_pointer_poll": true,
+    "vos_rust_keyboard_pointer_lost": true
+  },
+  "accepted_core_FFI_prefixes_unchanged": true,
+  "public_headers_unchanged": [
+    "arch/x86_64/keyboard.h",
+    "arch/x86_64/pointer.h",
+    "arch/x86_64/input_console.h"
+  ],
+  "heap": 0,
+  "DMA": 0,
+  "new_persistent_state": 0,
+  "ABI_context_bytes": 88,
+  "queue_bytes": 32,
+  "source_sha256": {
+    "kernel/rust/input/ps2_routed.rs": "ec95b81a87aa8aec64eb21ac4bd7ca676df3d6041e150df5370e65012701174a",
+    "arch/x86_64/rust/ps2_routed.rs": "9a5e6ad16a10a2d01bf166c4dbf43f84a047f67806e5445e04708a2687fd86f2",
+    "arch/x86_64/keyboard.c": "0a45e7a59e27b1085122bb344d0e5954e1148e1cdf78070a4a99454834d47a10",
+    "arch/x86_64/rust_kernel.h": "62eaf5132799ece856ec8a0ab457cb0f0e58f60fd9743fb935c9e9c756808916"
+  }
+}

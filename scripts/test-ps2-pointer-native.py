@@ -157,8 +157,18 @@ def execution_proof(q,folder,symbols,trace):
             addr=symbols[name]
             need(g.command('Z0,%x,1'%addr)=='OK','install one-shot breakpoint')
             g.send('c')
-            if name in ('pointer_decode','routed_pointer_step','vos_rust_keyboard_pointer_poll'):
-                q.execute('input-send-event',{'events':[{'type':'rel','data':{'axis':'x','value':0}}]})
+            stimulus='not-needed'
+            if name in ('pointer_decode','routed_pointer_step'):
+                try:
+                    q.execute('input-send-event',{'events':[{'type':'rel','data':{'axis':'x','value':0}}]})
+                    stimulus='injected'
+                except RuntimeError as error:
+                    # The target can already have reached this exact one-shot
+                    # breakpoint before QMP handles the optional stimulus.
+                    # The trap and exact native RIP below remain mandatory.
+                    if 'VM not running' not in str(error):raise
+                    stimulus='rejected-after-target-stop; exact trap required'
+
             if name=='keyboard_decode':
                 q.tap('shift')  # Real Set-1 call, without changing the panel.
             stop=g.receive();need(stop.startswith('T05') or stop.startswith('S05'),'actual breakpoint trap')
@@ -166,7 +176,7 @@ def execution_proof(q,folder,symbols,trace):
             match=re.search(r'RIP=([0-9a-fA-F]+)',regs)
             need(match and int(match[1],16)==addr,'native RIP equals Rust symbol entry')
             need(g.command('z0,%x,1'%addr)=='OK','remove one-shot breakpoint')
-            row={'symbol':name,'RIP':hex(addr),'stop':stop}
+            row={'symbol':name,'RIP':hex(addr),'stop':stop,'stimulus':stimulus}
             if name in ('vos_rust_keyboard_routed_drain','vos_rust_keyboard_pointer_poll'):
                 reg=re.search(r'RDI=([0-9a-fA-F]+)',regs)
                 need(reg is not None,'routing C ABI keyboard pointer')
@@ -188,6 +198,58 @@ def execution_proof(q,folder,symbols,trace):
     finally:g.s.close()
     (folder/'rust-execution.json').write_text(json.dumps(rows,indent=2)+'\n')
     return rows
+
+def queue_execution_proof(q,folder,symbols):
+    # Let the earlier Shift make/break complete without editing guest state.
+    time.sleep(.25)
+    q.execute('stop');g=GDB(folder/'gdb');entry=symbols['vos_rust_keyboard_routed_poll'];decoder=symbols['keyboard_decode']
+    def regs():
+        text=q.execute('human-monitor-command',{'command-line':'info registers'})
+        return {k:int(v,16) for k,v in re.findall(r'([A-Z0-9]+)=([0-9a-fA-F]+)',text)}
+    def read(addr,size):
+        raw=g.command('m%x,%x'%(addr,size))
+        need(len(raw)==2*size,'complete bounded guest read')
+        return bytes.fromhex(raw)
+    try:
+        need(g.command('?').startswith(('T','S')),'queue target stopped')
+        need(g.command('Z0,%x,1'%entry)=='OK','install actual queue entry breakpoint')
+        g.send('c');need(g.receive().startswith(('T05','S05')),'actual queue entry trap')
+        r=regs();need(r['RIP']==entry,'actual Rust queue entry')
+        ptr=r['RDI'];entry_state=read(ptr,88)
+        need(g.command('z0,%x,1'%entry)=='OK','remove queue entry breakpoint')
+        # A real scan may be decoded inside the current queue call's drain.
+        # Observe the ELF-resolved post-drain instruction, rather than assuming
+        # the next function entry must still have that character queued.
+        need(g.command('Z0,%x,1'%decoder)=='OK','install real keyboard decoder breakpoint')
+        g.send('c');q.tap('z')
+        need(g.receive().startswith(('T05','S05')),'real z scan decoder trap')
+        r=regs();need(r['RIP']==decoder and r['RSI']&255==0x2c,'actual PS/2 z make byte')
+        need(r['RDI']==ptr+8,'same real keyboard decoder context')
+        need(g.command('z0,%x,1'%decoder)=='OK','remove keyboard decoder breakpoint')
+        after_drain=symbols['queue_after_drain']
+        need(g.command('Z0,%x,1'%after_drain)=='OK','install ELF-resolved post-drain breakpoint')
+        g.send('c');need(g.receive().startswith(('T05','S05')),'queue post-drain trap')
+        r=regs();need(r['RIP']==after_drain and r['RBX']==ptr,'actual Rust queue context after drain')
+        before=read(ptr,88);head,count=struct.unpack_from('<II',before,44)
+        (folder/'queue-observed-state.json').write_text(json.dumps(dict(entry_hex=entry_state.hex(),before_hex=before.hex(),head=head,count=count),indent=2)+'\n')
+        need(struct.unpack_from('<ii',before,16)==(1,1),'leased native keyboard/pointer')
+        need(head<32 and count==1 and before[8:12]==bytes(4) and before[52+head]==ord('z'),'real decoded z queued with released modifiers')
+        # Verified emitted frame is one saved RBX, not an assumed fixed frame.
+        ret=struct.unpack('<Q',read(r['RSP']+8,8))[0]
+        need(g.command('z0,%x,1'%after_drain)=='OK','remove post-drain breakpoint')
+        need(g.command('Z0,%x,1'%ret)=='OK','install actual queue return breakpoint')
+        g.send('c');need(g.receive().startswith(('T05','S05')),'queue return trap')
+        r=regs();after=read(ptr,88);ah,ac=struct.unpack_from('<II',after,44)
+        need(r['RIP']==ret and r['RAX']&255==ord('z'),'native Rust queue returned injected z')
+        need(ah==(head+1)%32 and ac==0 and after[52+head]==0,'real FIFO consumed and slot cleared')
+        need(g.command('z0,%x,1'%ret)=='OK','remove queue return breakpoint')
+        row=dict(passed=True,entry=hex(entry),post_drain=hex(after_drain),return_address=hex(ret),returned_byte=r['RAX']&255,
+                 keyboard_address=hex(ptr),before_hex=before.hex(),after_hex=after.hex(),
+                 before_head=head,after_head=ah,scope='actual PS/2 input and production Rust queue; not a guest latency measurement')
+        g.send('c')
+    finally:g.s.close()
+    (folder/'rust-queue-execution.json').write_text(json.dumps(row,indent=2)+'\n')
+    return row
 
 def boot(out,fw,mode,iso,symbols,disk,memory="128M",tag_memory=False):
     folder=out/(fw+'-'+mode+('-'+memory if tag_memory else ''));folder.mkdir();serial=folder/'serial.log';sock=folder/'qmp'
@@ -242,6 +304,9 @@ def boot(out,fw,mode,iso,symbols,disk,memory="128M",tag_memory=False):
                 result['native_Rust_calls']=execution_proof(q,folder,symbols,folder/'ps2.trace')
                 if 'vos_rust_keyboard_pointer_poll' in symbols:shots['rust-pointer-poll']=capture(q,folder,'rust-pointer-poll')
                 elif 'vos_rust_keyboard_routed_drain' in symbols:shots['rust-routing']=capture(q,folder,'rust-routing')
+            if 'vos_rust_keyboard_routed_poll' in symbols:
+                result['native_queue_call']=queue_execution_proof(q,folder,symbols)
+                shots['rust-queue']=capture(q,folder,'rust-queue')
             def shot(name,x,y,color=None):
                 s=capture(q,folder,name);shots[name]=s
                 w,h,pixel=rgb(Path(s['path']));need((w,h)==(1024,768),'exact native framebuffer')
@@ -396,6 +461,7 @@ def main():
     ap.add_argument('--mode',choices=['normal','verify','both'],default='both')
     ap.add_argument('--memory',action='append',choices=['128M','2G'],help='reuse checked images for selected RAM sizes; default is 128M')
     ap.add_argument('--routed-drain-proof',action='store_true',help='trap actual Rust routing entry/private accepted decoder body in all selected cases')
+    ap.add_argument('--keyboard-queue-proof',action='store_true',help='trap Rust queue entry and verify a real PS/2 byte at its return')
     ap.add_argument('--pointer-poll-proof',action='store_true',help='trap actual Rust pointer poll entry and verify live keyboard/packet context')
     ap.add_argument('--console-reader-proof',action='store_true',help='trap actual Rust blocking reader and verify shell output')
     ap.add_argument('--console-accept-proof',action='store_true',help='trap actual Rust edit entry and verify genuine edited shell output')
@@ -418,7 +484,15 @@ def main():
         for mode in modes:
             kernel=(args.normal_kernel if mode=='normal' else args.verify_kernel).resolve()
             syms=subprocess.check_output(['nm','-S','--defined-only',str(kernel)],text=True)
-            symbols={n:int(next(l.split()[0] for l in syms.splitlines() if l.endswith(' '+n)),16) for n in ('pointer_decode','pointer_idle',*(['keyboard_decode'] if args.keyboard_proof else []),*(['input_console_take_line'] if args.console_line_proof else []),*(['input_console_accept'] if args.console_accept_proof else []),*(['input_console_read_line_for'] if args.console_reader_proof else []),*(['vos_rust_keyboard_routed_drain'] if args.routed_drain_proof else []),*(['vos_rust_keyboard_pointer_poll'] if args.pointer_poll_proof else []))}
+            symbols={n:int(next(l.split()[0] for l in syms.splitlines() if l.endswith(' '+n)),16) for n in ('pointer_decode','pointer_idle',*(['keyboard_decode'] if args.keyboard_proof or args.keyboard_queue_proof else []),*(['input_console_take_line'] if args.console_line_proof else []),*(['input_console_accept'] if args.console_accept_proof else []),*(['input_console_read_line_for'] if args.console_reader_proof else []),*(['vos_rust_keyboard_routed_drain'] if args.routed_drain_proof else []),*(['vos_rust_keyboard_pointer_poll'] if args.pointer_poll_proof else []),*(['vos_rust_keyboard_routed_poll'] if args.keyboard_queue_proof else []))}
+            if args.keyboard_queue_proof:
+                queue=symbols['vos_rust_keyboard_routed_poll']
+                row=next(l.split() for l in syms.splitlines() if l.endswith(' vos_rust_keyboard_routed_poll'))
+                asm=subprocess.check_output(['objdump','-d','--start-address='+str(queue),'--stop-address='+str(queue+int(row[1],16)),str(kernel)],text=True)
+                calls=re.findall(r'^\s*([0-9a-f]+):\s+(e8(?: [0-9a-f]{2}){4})\s+call\s+[0-9a-f]+ <vos_rust_keyboard_routed_drain>',asm,re.M)
+                need(len(calls)==1,'one actual Rust queue-to-drain call')
+                need(len(re.findall(r'\tpush\s',asm))==1 and re.search(r'push\s+%rbx',asm) and not re.search(r'sub\s+\$0x[0-9a-f]+,%rsp',asm),'emitted queue frame: one saved RBX')
+                symbols['queue_after_drain']=int(calls[0][0],16)+5
             # The compiler may inline the accepted decoder into this Rust helper.
             # Default pointer proofs must follow the executed body too; opting in
             # to the additional driver-entry/context proof is independent.

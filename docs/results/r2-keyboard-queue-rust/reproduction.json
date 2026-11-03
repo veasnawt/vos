@@ -1,0 +1,16 @@
+{
+  "status": "PASS",
+  "artifacts": {
+    "vos.bin": {
+      "production": "68f6a7ceac4d836f6c9d987d8b5c2bb946752f7a702e94fb56cefea2f1eaed72",
+      "repro": "68f6a7ceac4d836f6c9d987d8b5c2bb946752f7a702e94fb56cefea2f1eaed72",
+      "identical": true
+    },
+    "rust/libvos_kernel.a": {
+      "production": "73eb6101ac15fb08a571ae41a2599498b8287111f9daec5dcf74d0cb26e8b696",
+      "repro": "73eb6101ac15fb08a571ae41a2599498b8287111f9daec5dcf74d0cb26e8b696",
+      "identical": true
+    }
+  },
+  "GUI_same_Rust_archive": true
+}

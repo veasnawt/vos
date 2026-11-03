@@ -145,3 +145,28 @@ pub unsafe extern "C" fn vos_rust_keyboard_pointer_lost(k: *mut core::ffi::c_voi
     let mut raw = Raw(k.cast());
     pointer_lost_and_clear(raw.lost())
 }
+
+impl routing::KeyboardQueue for Raw {
+    #[inline(always)] fn keyboard_ready(&self) -> bool {
+        // Existing initialized ready field; no foreign callback or escaping borrow.
+        <Self as PointerQueue>::is_ready(self)
+    }
+    #[inline(always)] fn fill_keyboard_queue(&mut self) {
+        // Existing synchronous drain. Raw contains only an address; no pointee
+        // reference spans the C input callback and all queue fields reload after it.
+        <Self as PointerQueue>::drain(self)
+    }
+    #[inline(always)] fn keyboard_queue(&mut self) -> &mut Queue {
+        <Self as Route>::queue(self)
+    }
+}
+/// # Safety
+/// k identifies live initialized, aligned caller-owned 88-byte keyboard storage
+/// for this synchronous call. Existing thread/IF=0, io callback and exclusive
+/// ownership contracts apply; callbacks cannot free/unmap storage. No reference
+/// is retained across drain, no new controller write or ownership transition.
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn vos_rust_keyboard_routed_poll(k:*mut core::ffi::c_void)->core::ffi::c_char {
+    if !routing::keyboard_range_valid(k as usize) {return 0;}
+    routing::keyboard_poll(&mut Raw(k.cast())) as core::ffi::c_char
+}

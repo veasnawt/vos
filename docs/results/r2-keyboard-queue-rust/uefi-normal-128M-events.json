@@ -1,0 +1,735 @@
+[
+  {
+    "elapsed": 17.90902368701063,
+    "kind": "requested",
+    "events": [
+      {
+        "type": "rel",
+        "data": {
+          "axis": "x",
+          "value": 12
+        }
+      },
+      {
+        "type": "rel",
+        "data": {
+          "axis": "y",
+          "value": -8
+        }
+      }
+    ],
+    "target_emitted_delta": [
+      12,
+      8
+    ]
+  },
+  {
+    "elapsed": 17.911562087014318,
+    "kind": "guest-read-complete",
+    "emitted_packets": 2,
+    "read_bytes": 6,
+    "emitted_delta": [
+      12,
+      8
+    ],
+    "flushes": 0
+  },
+  {
+    "elapsed": 24.648513594991527,
+    "kind": "requested",
+    "events": [
+      {
+        "type": "btn",
+        "data": {
+          "button": "left",
+          "down": true
+        }
+      }
+    ],
+    "target_emitted_delta": [
+      12,
+      8
+    ]
+  },
+  {
+    "elapsed": 24.650875894993078,
+    "kind": "guest-read-complete",
+    "emitted_packets": 3,
+    "read_bytes": 9,
+    "emitted_delta": [
+      12,
+      8
+    ],
+    "flushes": 0
+  },
+  {
+    "elapsed": 31.2912846810068,
+    "kind": "requested",
+    "events": [
+      {
+        "type": "btn",
+        "data": {
+          "button": "left",
+          "down": false
+        }
+      }
+    ],
+    "target_emitted_delta": [
+      12,
+      8
+    ]
+  },
+  {
+    "elapsed": 31.302816281997366,
+    "kind": "guest-read-complete",
+    "emitted_packets": 4,
+    "read_bytes": 12,
+    "emitted_delta": [
+      12,
+      8
+    ],
+    "flushes": 0
+  },
+  {
+    "elapsed": 38.062311454996234,
+    "kind": "requested",
+    "events": [
+      {
+        "type": "rel",
+        "data": {
+          "axis": "x",
+          "value": -3000
+        }
+      },
+      {
+        "type": "rel",
+        "data": {
+          "axis": "y",
+          "value": -3000
+        }
+      }
+    ],
+    "target_emitted_delta": [
+      -2988,
+      3008
+    ]
+  },
+  {
+    "elapsed": 38.07278535599471,
+    "kind": "zero-relative-sync",
+    "events": [
+      {
+        "type": "rel",
+        "data": {
+          "axis": "x",
+          "value": 0
+        }
+      }
+    ]
+  },
+  {
+    "elapsed": 38.083592556009535,
+    "kind": "zero-relative-sync",
+    "events": [
+      {
+        "type": "rel",
+        "data": {
+          "axis": "x",
+          "value": 0
+        }
+      }
+    ]
+  },
+  {
+    "elapsed": 38.094188256014604,
+    "kind": "zero-relative-sync",
+    "events": [
+      {
+        "type": "rel",
+        "data": {
+          "axis": "x",
+          "value": 0
+        }
+      }
+    ]
+  },
+  {
+    "elapsed": 38.10293515599915,
+    "kind": "zero-relative-sync",
+    "events": [
+      {
+        "type": "rel",
+        "data": {
+          "axis": "x",
+          "value": 0
+        }
+      }
+    ]
+  },
+  {
+    "elapsed": 38.113129656005185,
+    "kind": "guest-read-complete",
+    "emitted_packets": 28,
+    "read_bytes": 84,
+    "emitted_delta": [
+      -2988,
+      3008
+    ],
+    "flushes": 4
+  },
+  {
+    "elapsed": 41.39169668901013,
+    "kind": "requested",
+    "events": [
+      {
+        "type": "rel",
+        "data": {
+          "axis": "x",
+          "value": 3000
+        }
+      }
+    ],
+    "target_emitted_delta": [
+      12,
+      3008
+    ]
+  },
+  {
+    "elapsed": 41.40337008901406,
+    "kind": "zero-relative-sync",
+    "events": [
+      {
+        "type": "rel",
+        "data": {
+          "axis": "x",
+          "value": 0
+        }
+      }
+    ]
+  },
+  {
+    "elapsed": 41.41242458901252,
+    "kind": "zero-relative-sync",
+    "events": [
+      {
+        "type": "rel",
+        "data": {
+          "axis": "x",
+          "value": 0
+        }
+      }
+    ]
+  },
+  {
+    "elapsed": 41.424464889016235,
+    "kind": "zero-relative-sync",
+    "events": [
+      {
+        "type": "rel",
+        "data": {
+          "axis": "x",
+          "value": 0
+        }
+      }
+    ]
+  },
+  {
+    "elapsed": 41.43408169000759,
+    "kind": "zero-relative-sync",
+    "events": [
+      {
+        "type": "rel",
+        "data": {
+          "axis": "x",
+          "value": 0
+        }
+      }
+    ]
+  },
+  {
+    "elapsed": 41.44288019000669,
+    "kind": "guest-read-complete",
+    "emitted_packets": 52,
+    "read_bytes": 156,
+    "emitted_delta": [
+      12,
+      3008
+    ],
+    "flushes": 4
+  },
+  {
+    "elapsed": 44.74533563799923,
+    "kind": "requested",
+    "events": [
+      {
+        "type": "rel",
+        "data": {
+          "axis": "y",
+          "value": 3000
+        }
+      }
+    ],
+    "target_emitted_delta": [
+      12,
+      8
+    ]
+  },
+  {
+    "elapsed": 44.75562503800029,
+    "kind": "zero-relative-sync",
+    "events": [
+      {
+        "type": "rel",
+        "data": {
+          "axis": "x",
+          "value": 0
+        }
+      }
+    ]
+  },
+  {
+    "elapsed": 44.76303173901397,
+    "kind": "zero-relative-sync",
+    "events": [
+      {
+        "type": "rel",
+        "data": {
+          "axis": "x",
+          "value": 0
+        }
+      }
+    ]
+  },
+  {
+    "elapsed": 44.77372803899925,
+    "kind": "zero-relative-sync",
+    "events": [
+      {
+        "type": "rel",
+        "data": {
+          "axis": "x",
+          "value": 0
+        }
+      }
+    ]
+  },
+  {
+    "elapsed": 44.784401739016175,
+    "kind": "zero-relative-sync",
+    "events": [
+      {
+        "type": "rel",
+        "data": {
+          "axis": "x",
+          "value": 0
+        }
+      }
+    ]
+  },
+  {
+    "elapsed": 44.79435223899782,
+    "kind": "guest-read-complete",
+    "emitted_packets": 76,
+    "read_bytes": 228,
+    "emitted_delta": [
+      12,
+      8
+    ],
+    "flushes": 4
+  },
+  {
+    "elapsed": 48.105571288004285,
+    "kind": "requested",
+    "events": [
+      {
+        "type": "rel",
+        "data": {
+          "axis": "x",
+          "value": -3000
+        }
+      }
+    ],
+    "target_emitted_delta": [
+      -2988,
+      8
+    ]
+  },
+  {
+    "elapsed": 48.11379238899099,
+    "kind": "zero-relative-sync",
+    "events": [
+      {
+        "type": "rel",
+        "data": {
+          "axis": "x",
+          "value": 0
+        }
+      }
+    ]
+  },
+  {
+    "elapsed": 48.124602889001835,
+    "kind": "zero-relative-sync",
+    "events": [
+      {
+        "type": "rel",
+        "data": {
+          "axis": "x",
+          "value": 0
+        }
+      }
+    ]
+  },
+  {
+    "elapsed": 48.13315018900903,
+    "kind": "zero-relative-sync",
+    "events": [
+      {
+        "type": "rel",
+        "data": {
+          "axis": "x",
+          "value": 0
+        }
+      }
+    ]
+  },
+  {
+    "elapsed": 48.145139189000474,
+    "kind": "zero-relative-sync",
+    "events": [
+      {
+        "type": "rel",
+        "data": {
+          "axis": "x",
+          "value": 0
+        }
+      }
+    ]
+  },
+  {
+    "elapsed": 48.152983489009785,
+    "kind": "guest-read-complete",
+    "emitted_packets": 100,
+    "read_bytes": 300,
+    "emitted_delta": [
+      -2988,
+      8
+    ],
+    "flushes": 4
+  },
+  {
+    "elapsed": 51.33442433399614,
+    "kind": "requested",
+    "events": [
+      {
+        "type": "rel",
+        "data": {
+          "axis": "x",
+          "value": 512
+        }
+      },
+      {
+        "type": "rel",
+        "data": {
+          "axis": "y",
+          "value": -377
+        }
+      }
+    ],
+    "target_emitted_delta": [
+      -2476,
+      385
+    ]
+  },
+  {
+    "elapsed": 51.342583235003985,
+    "kind": "guest-read-complete",
+    "emitted_packets": 105,
+    "read_bytes": 315,
+    "emitted_delta": [
+      -2476,
+      385
+    ],
+    "flushes": 0
+  },
+  {
+    "elapsed": 51.349847934994614,
+    "kind": "requested",
+    "events": [
+      {
+        "type": "rel",
+        "data": {
+          "axis": "x",
+          "value": 1
+        }
+      }
+    ],
+    "target_emitted_delta": [
+      -2475,
+      385
+    ]
+  },
+  {
+    "elapsed": 51.35467573499773,
+    "kind": "guest-read-complete",
+    "emitted_packets": 106,
+    "read_bytes": 318,
+    "emitted_delta": [
+      -2475,
+      385
+    ],
+    "flushes": 0
+  },
+  {
+    "elapsed": 51.357003735000035,
+    "kind": "requested",
+    "events": [
+      {
+        "type": "btn",
+        "data": {
+          "button": "left",
+          "down": true
+        }
+      }
+    ],
+    "target_emitted_delta": [
+      -2475,
+      385
+    ]
+  },
+  {
+    "elapsed": 51.36837733499124,
+    "kind": "guest-read-complete",
+    "emitted_packets": 107,
+    "read_bytes": 321,
+    "emitted_delta": [
+      -2475,
+      385
+    ],
+    "flushes": 0
+  },
+  {
+    "elapsed": 51.37087023499771,
+    "kind": "requested",
+    "events": [
+      {
+        "type": "btn",
+        "data": {
+          "button": "left",
+          "down": false
+        }
+      }
+    ],
+    "target_emitted_delta": [
+      -2475,
+      385
+    ]
+  },
+  {
+    "elapsed": 51.3722927350027,
+    "kind": "guest-read-complete",
+    "emitted_packets": 108,
+    "read_bytes": 324,
+    "emitted_delta": [
+      -2475,
+      385
+    ],
+    "flushes": 0
+  },
+  {
+    "elapsed": 51.37446073500905,
+    "kind": "requested",
+    "events": [
+      {
+        "type": "btn",
+        "data": {
+          "button": "left",
+          "down": true
+        }
+      }
+    ],
+    "target_emitted_delta": [
+      -2475,
+      385
+    ]
+  },
+  {
+    "elapsed": 51.38783123501344,
+    "kind": "guest-read-complete",
+    "emitted_packets": 109,
+    "read_bytes": 327,
+    "emitted_delta": [
+      -2475,
+      385
+    ],
+    "flushes": 0
+  },
+  {
+    "elapsed": 51.390118734998396,
+    "kind": "requested",
+    "events": [
+      {
+        "type": "btn",
+        "data": {
+          "button": "left",
+          "down": false
+        }
+      }
+    ],
+    "target_emitted_delta": [
+      -2475,
+      385
+    ]
+  },
+  {
+    "elapsed": 51.416384336014744,
+    "kind": "guest-read-complete",
+    "emitted_packets": 110,
+    "read_bytes": 330,
+    "emitted_delta": [
+      -2475,
+      385
+    ],
+    "flushes": 0
+  },
+  {
+    "elapsed": 51.41873443601071,
+    "kind": "requested",
+    "events": [
+      {
+        "type": "btn",
+        "data": {
+          "button": "left",
+          "down": true
+        }
+      }
+    ],
+    "target_emitted_delta": [
+      -2475,
+      385
+    ]
+  },
+  {
+    "elapsed": 51.437096436013235,
+    "kind": "guest-read-complete",
+    "emitted_packets": 111,
+    "read_bytes": 333,
+    "emitted_delta": [
+      -2475,
+      385
+    ],
+    "flushes": 0
+  },
+  {
+    "elapsed": 51.43933923600707,
+    "kind": "requested",
+    "events": [
+      {
+        "type": "btn",
+        "data": {
+          "button": "left",
+          "down": false
+        }
+      }
+    ],
+    "target_emitted_delta": [
+      -2475,
+      385
+    ]
+  },
+  {
+    "elapsed": 51.45349403601722,
+    "kind": "guest-read-complete",
+    "emitted_packets": 112,
+    "read_bytes": 336,
+    "emitted_delta": [
+      -2475,
+      385
+    ],
+    "flushes": 0
+  },
+  {
+    "elapsed": 51.455877736007096,
+    "kind": "requested",
+    "events": [
+      {
+        "type": "btn",
+        "data": {
+          "button": "left",
+          "down": true
+        }
+      }
+    ],
+    "target_emitted_delta": [
+      -2475,
+      385
+    ]
+  },
+  {
+    "elapsed": 51.472246235993225,
+    "kind": "guest-read-complete",
+    "emitted_packets": 113,
+    "read_bytes": 339,
+    "emitted_delta": [
+      -2475,
+      385
+    ],
+    "flushes": 0
+  },
+  {
+    "elapsed": 51.474442936014384,
+    "kind": "requested",
+    "events": [
+      {
+        "type": "btn",
+        "data": {
+          "button": "left",
+          "down": false
+        }
+      }
+    ],
+    "target_emitted_delta": [
+      -2475,
+      385
+    ]
+  },
+  {
+    "elapsed": 51.48165483601042,
+    "kind": "guest-read-complete",
+    "emitted_packets": 114,
+    "read_bytes": 342,
+    "emitted_delta": [
+      -2475,
+      385
+    ],
+    "flushes": 0
+  },
+  {
+    "elapsed": 51.57888963801088,
+    "kind": "requested",
+    "events": [
+      {
+        "type": "btn",
+        "data": {
+          "button": "left",
+          "down": true
+        }
+      }
+    ],
+    "target_emitted_delta": [
+      -2475,
+      385
+    ]
+  },
+  {
+    "elapsed": 51.583851738017984,
+    "kind": "guest-read-complete",
+    "emitted_packets": 115,
+    "read_bytes": 345,
+    "emitted_delta": [
+      -2475,
+      385
+    ],
+    "flushes": 0
+  }
+]

@@ -1,0 +1,13 @@
+{
+  "status": "PASS",
+  "committed_helper_negative_tests": [
+    "missing-C-edge",
+    "duplicate-owner",
+    "missing-drain-edge",
+    "wrong-function",
+    "duplicate-body"
+  ],
+  "run_in_full_legacy_gate": true,
+  "actual_production_archive_used": true,
+  "production_unchanged": true
+}

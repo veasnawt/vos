@@ -1,0 +1,1 @@
+{"status": "PASS", "scope": "hosted fixtures, NOT native USB input"} 

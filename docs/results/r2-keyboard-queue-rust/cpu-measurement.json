@@ -1,0 +1,8 @@
+{
+  "wall_seconds": 0.7161640959966462,
+  "user_seconds": 0.708865,
+  "system_seconds": 0.0067509999999999515,
+  "cumulative_child_maxrss_kib_not_isolated_to_benchmark": 30116,
+  "scope": "whole hosted process: harness plus both C/Rust functions, not separately attributed kernel CPU",
+  "host_frequency_and_WSL_scheduling_not_controlled": true
+}
