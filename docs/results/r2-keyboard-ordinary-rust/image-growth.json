@@ -1,0 +1,10 @@
+{
+ "baseline": "63a318d9d75e4e22951f549650db85ea245bba51",
+ "baseline_kernel_sha256": "3513210eedce906d7f1d0a53a5c5bce631a6f10477f1c42e0f71c235b1907e2a",
+ "candidate_kernel_sha256": "6de30da1fdb375aa54ef58f6d7cb15c696607cf759a720d5c39fa00d69ea6e01",
+ "baseline_load_memsz": 962560,
+ "candidate_load_memsz": 962560,
+ "loaded_growth_bytes": 0,
+ "limit_bytes": 4096,
+ "file_size_delta": -336
+}

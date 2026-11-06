@@ -1,6 +1,8 @@
 //! Private PS/2 driver bridge. C retains storage, controller and lease ownership.
 #[path="../../../kernel/rust/input/ps2_routed.rs"]
 pub mod routing;
+#[path="../../../kernel/rust/input/ps2_ordinary.rs"]
+pub mod ordinary;
 use routing::{Queue, Route, Packet, PointerQueue};
 use routing::{pointer_poll, pointer_lost_and_clear};
 use core::{mem::{align_of,offset_of,size_of},ptr};
@@ -169,4 +171,28 @@ impl routing::KeyboardQueue for Raw {
 pub unsafe extern "C" fn vos_rust_keyboard_routed_poll(k:*mut core::ffi::c_void)->core::ffi::c_char {
     if !routing::keyboard_range_valid(k as usize) {return 0;}
     routing::keyboard_poll(&mut Raw(k.cast())) as core::ffi::c_char
+}
+
+// R2 ordinary keyboard_poll: reuses the Raw accessors above. ready is a plain
+// field read; read() reloads io/in for every port access; the decoder reset and
+// decode borrow only the seven decoder bytes and end before the next callback.
+impl ordinary::Ordinary for Raw {
+    #[inline(always)] fn ready(&self) -> bool {
+        // SAFETY: entry contract; initialized int field read, no reference kept.
+        unsafe { ptr::addr_of!((*self.0).ready).read() != 0 }
+    }
+    #[inline(always)] fn read(&mut self, port: u16) -> u8 { <Self as Route>::read(self, port) }
+    #[inline(always)] fn reset_decoder(&mut self) { <Self as Route>::reset_keyboard(self) }
+    #[inline(always)] fn decode(&mut self, byte: u8) -> u8 { <Self as Route>::decode_keyboard(self, byte) }
+}
+/// # Safety
+/// k identifies live initialized, aligned caller-owned 88-byte keyboard storage
+/// for this synchronous call, selected by the C dispatcher with pointer_ready==0.
+/// Existing thread/IF=0, io callback and exclusive ownership contracts apply;
+/// callbacks may mutate fields or substitute a valid io but cannot free/unmap
+/// storage. No controller write, queue access, ownership change or allocation.
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn vos_rust_keyboard_ordinary_poll(k:*mut core::ffi::c_void)->core::ffi::c_char {
+    if !routing::keyboard_range_valid(k as usize) {return 0;}
+    ordinary::poll(&mut Raw(k.cast())) as core::ffi::c_char
 }

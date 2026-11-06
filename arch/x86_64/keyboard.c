@@ -72,27 +72,12 @@ int keyboard_init(struct keyboard *k, const struct keyboard_io *io)
 
 static char routed_poll(struct keyboard *k);
 
+/* Public dispatcher stays C: pointer_ready is read once to select the mode.
+ * R2: the ordinary bounded polling loop is Rust-owned (same contract). */
 char keyboard_poll(struct keyboard *k)
 {
     if(k->pointer_ready)return routed_poll(k);
-    if (!k->ready)
-        return 0;
-    for (unsigned i = 0; i < KEYBOARD_DRAIN_LIMIT; i++) {
-        uint8_t status = k->io->in(STATUS);
-        if (!(status & OBF))
-            break;
-        uint8_t data = k->io->in(DATA);
-        if (status & AUX)
-            continue;
-        if (status & ERR || data == 0 || data == 0xFF) {
-            k->decoder = (struct keyboard_decoder){ 0 }; /* lost stream: release modifiers */
-            continue;
-        }
-        char c = keyboard_decode(&k->decoder, data);
-        if (c)
-            return c;
-    }
-    return 0;
+    return vos_rust_keyboard_ordinary_poll(k);
 }
 
 int keyboard_suspend(struct keyboard *k)
