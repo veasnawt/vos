@@ -1,0 +1,10 @@
+{
+ "test-boot-hid": "PASS",
+ "test-console-accept-rust": "PASS",
+ "test-console-line-rust": "PASS",
+ "test-console-reader-rust": "PASS",
+ "test-keyboard-queue-rust": "PASS",
+ "test-ps2-keyboard-rust": "PASS",
+ "test-ps2-pointer-rust": true,
+ "test-ps2-routed-rust": "PASS"
+}

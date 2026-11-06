@@ -1,0 +1,152 @@
+{
+ "status": "PASS",
+ "archive_sha256": "7629d20f983b73fad2220a1bc3c359f8de5865d01f3fb9da0c3ca414854a3d1c",
+ "Rust_sanitized": false,
+ "seed": "72326f7264696e31",
+ "sanitizer": "PASS 301778 ordinary keyboard_poll comparisons; seed=72326f7264696e31; exhaustive cells/decoder states/byte pairs, exact 32-iteration bound, callback mutations, exact read traces, boundary objects; no controller writes",
+ "release": "PASS 301778 ordinary keyboard_poll comparisons; seed=72326f7264696e31; exhaustive cells/decoder states/byte pairs, exact 32-iteration bound, callback mutations, exact read traces, boundary objects; no controller writes",
+ "cpu": 0,
+ "performance": {
+  "unready": {
+   "C_ns": 7.81,
+   "Rust_ns": 8.96,
+   "percent": 14.724711907810505
+  },
+  "empty": {
+   "C_ns": 11.325,
+   "Rust_ns": 12.0,
+   "percent": 5.96026490066226
+  },
+  "one_key": {
+   "C_ns": 20.05,
+   "Rust_ns": 19.37,
+   "percent": -3.3915211970074743
+  },
+  "aux_then_key": {
+   "C_ns": 27.565,
+   "Rust_ns": 26.08,
+   "percent": -5.387266461091977
+  },
+  "error_then_key": {
+   "C_ns": 28.415,
+   "Rust_ns": 27.465,
+   "percent": -3.3433045926447247
+  },
+  "bound32": {
+   "C_ns": 439.575,
+   "Rust_ns": 441.175,
+   "percent": 0.36398794289940195
+  },
+  "shifted": {
+   "C_ns": 31.285,
+   "Rust_ns": 31.905,
+   "percent": 1.9817804059453437
+  },
+  "routed_control": {
+   "C_ns": 13.37,
+   "Rust_ns": 13.09,
+   "percent": -2.094240837696326
+  }
+ },
+ "regressions_over_5_percent": [
+  "empty",
+  "unready"
+ ],
+ "core_tests": "test result: ok. 17 passed; 0 failed; 0 ignored; 0 measured; 238 filtered out; finished in 0.00s",
+ "mutations": {
+  "ready": {
+   "assertion": "ready::unready_no_reads",
+   "detected": true,
+   "policy_sha256": "d2964de39c1d347a6409b511bf86ea2d5d57e9d37e2a5545889f18de9f2a139d"
+  },
+  "bound": {
+   "assertion": "bound::exact_bound",
+   "detected": true,
+   "policy_sha256": "b5eae6a6d31c3d43360057e8fc155e8202d12112a1e96ad589b68f0bdc9bda0d"
+  },
+  "obf": {
+   "assertion": "obf::no_data_when_obf_clear",
+   "detected": true,
+   "policy_sha256": "1bf7309e3ca115f7afbc148a25c49f7d23341907d3a091b5537afb74e4a0f2e0"
+  },
+  "order": {
+   "assertion": "order::status_before_data",
+   "detected": true,
+   "policy_sha256": "15b730b67f699a52ea13e2a95794d6112e58828056c65e2efdab85e0c51da300"
+  },
+  "aux": {
+   "assertion": "aux::aux_consumed_undecoded",
+   "detected": true,
+   "policy_sha256": "35a4610e3e71178235cdc6b95cc5adb21721a7acb6ee1acf193abfa3bd41d894"
+  },
+  "aux_precedence": {
+   "assertion": "aux_precedence::aux_precedes_error",
+   "detected": true,
+   "policy_sha256": "490e558582afec9d4ad8e6699179cdbd5aa941a16d9c1b6ea87c72fc2a8a69e8"
+  },
+  "error": {
+   "assertion": "error::error_resets",
+   "detected": true,
+   "policy_sha256": "d81907d3f0da51e71d14ba7292d3cbba16184ba812f766028ffa4c0b719f7a68"
+  },
+  "zero": {
+   "assertion": "zero::zero_resets",
+   "detected": true,
+   "policy_sha256": "cc7dd21ea238ff9f86328005fa1cdd85222265d6176de414bda8f9d553072a54"
+  },
+  "ff": {
+   "assertion": "ff::ff_resets",
+   "detected": true,
+   "policy_sha256": "970747381fd6a174a9f79d8344277107a9f69b21b24550263f2567fdc5093656"
+  },
+  "reset": {
+   "assertion": "reset::zero_resets",
+   "detected": true,
+   "policy_sha256": "f3e9be0837b9758b3e792d7d3aed94f881f5a3450db3ba39626398235736a5cd"
+  },
+  "reset_continue": {
+   "assertion": "reset_continue::zero_resets",
+   "detected": true,
+   "policy_sha256": "b0b6f1aaf1433f0386e839a26bfe5353ec3fa97885f95cbf9f07cab4796abd1d"
+  },
+  "first": {
+   "assertion": "first::returns_first_character",
+   "detected": true,
+   "policy_sha256": "1eb13741bcb29202d4b5cadf2f33dfa050406389b9c8ba9b81481736829df69b"
+  },
+  "signed_high": {
+   "assertion": "signed_high::high_bytes_returned_unchanged",
+   "detected": true,
+   "policy_sha256": "183e38680a78f714eaa7ced6a51e326506c6ca808a55dd42e2fb1d39a089e719"
+  },
+  "final_zero": {
+   "assertion": "final_zero::empty_one_status_read",
+   "detected": true,
+   "policy_sha256": "758dcc0420ded6e054b15f3b040cc7115ac49b5e5212ef7cbce068ccafc39545"
+  }
+ },
+ "shared_harness": {
+  "binary_bytes": 1186472,
+  "binary_sha256": "d7c7bff2b7636ff018aa66c17b413596f1faae462ef240a081df78da1144ec5f",
+  "variants": 15,
+  "runtime_executables": 1,
+  "method": "Distinct namespace per variant, identical positive fixture; intended assertions run individually, isolated process per mutant."
+ },
+ "checked_Rust": "PASS 301778 ordinary keyboard_poll comparisons; seed=72326f7264696e31; exhaustive cells/decoder states/byte pairs, exact 32-iteration bound, callback mutations, exact read traces, boundary objects; no controller writes",
+ "frames": {
+  "vos_rust_keyboard_ordinary_poll": 40,
+  "C_reference_keyboard_poll": 40,
+  "vos_rust_keyboard_routed_poll": 8,
+  "vos_rust_keyboard_routed_drain": 40
+ },
+ "source_sha256": {
+  "kernel/rust/input/ps2_ordinary.rs": "3922c017b2391620b8cbac8c9201fbc586ed2375821539da47ff17bd07495cd5",
+  "arch/x86_64/rust/ps2_routed.rs": "de5786361d898b96b7227f7eca37a85a91a14d5ac827e5fb1bce84e280099be2",
+  "arch/x86_64/keyboard.c": "2cf4069cf96ef6188365b574d6905be3dcf66476dbd9ba9b92419023d9b33408",
+  "arch/x86_64/rust_kernel.h": "7d8af42dec00949c10a5480652eb3c82f98e56cff4b42c9c99c5b6f1f8248fe3",
+  "tests/host/keyboard-ordinary-differential.c": "1184187d0df79062681e6cc3087b03289f46141cbeeed0f31fc34717b29700e4",
+  "tests/rust/ps2_ordinary.rs": "e0e3d866d69f40ba70f499bb27a51e6ff52714dd13328ea15d984d2970932263",
+  "tests/reference/ps2-keyboard-ordinary.c": "0a45e7a59e27b1085122bb344d0e5954e1148e1cdf78070a4a99454834d47a10",
+  "scripts/test-keyboard-ordinary-rust.py": "f804d48fc3a737bd41b49db70209f36d1419cec90475a5b53436cf399b3bd832"
+ }
+}
