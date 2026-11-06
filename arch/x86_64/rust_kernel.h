@@ -10,6 +10,9 @@ struct keyboard;
 void vos_rust_keyboard_routed_drain(struct keyboard *keyboard);
 /* Same live/IF=0 ownership; no reference spans the drain callback. */
 char vos_rust_keyboard_routed_poll(struct keyboard *keyboard);
+/* R2: ordinary (pointer_ready == 0) bounded polling; same live/IF=0 ownership,
+ * at most 32 status+data pairs, no controller write, queue or allocation. */
+char vos_rust_keyboard_ordinary_poll(struct keyboard *keyboard);
 struct pointer_packet;
 /* R2: PS/2 pointer polling and packet dequeue Rust entry points. */
 int vos_rust_keyboard_pointer_poll(struct keyboard *k, struct pointer_packet *p);

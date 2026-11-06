@@ -1,0 +1,11 @@
+{
+  "baseline": "63a318d9d75e4e22951f549650db85ea245bba51",
+  "accepted_source_sha256": "0a45e7a59e27b1085122bb344d0e5954e1148e1cdf78070a4a99454834d47a10",
+  "reference_sha256": "0a45e7a59e27b1085122bb344d0e5954e1148e1cdf78070a4a99454834d47a10",
+  "headers_sha256": {
+    "keyboard.h": "c6104c37cd72472e32a16471a22c2149e15e68f4baff2c64072a054b088a68b7",
+    "pointer.h": "7ed1b6597f0155f9cd4720a2c0fe712e08d6b7cf51ad6acc010841e7f8f291b7",
+    "rust_kernel.h": "62eaf5132799ece856ec8a0ab457cb0f0e58f60fd9743fb935c9e9c756808916"
+  },
+  "transformation": "Byte-identical accepted C driver and headers at the merged baseline; public APIs renamed at compile time only. Reference and candidate use the same accepted Rust decoder and routed queue path from the production archive."
+}
