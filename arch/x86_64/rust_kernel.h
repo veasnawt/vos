@@ -35,6 +35,12 @@ int vos_rust_keyboard_suspend(struct keyboard *keyboard);
 int vos_rust_keyboard_resume(struct keyboard *keyboard);
 int vos_rust_keyboard_pointer_start(struct keyboard *keyboard);
 void vos_rust_keyboard_pointer_stop(struct keyboard *keyboard);
+/* R3-N1 private network bridge (Rust ARP/IPv4/UDP core). Same contracts as
+ * net_arp.h/net_ipv4.h/net_udp.h, which keep the public ABI. */
+#include <stddef.h>
+struct net_arp; struct net_ipv4; struct net_udp; struct net_udp_datagram; struct net_ipv4_payload;
+uint16_t vos_rust_net_checksum(const void *bytes, size_t length);
+uint16_t vos_rust_net_transport_checksum(const uint8_t source[4], const uint8_t dest[4], uint8_t protocol, const void *bytes, size_t length);
 struct pointer_packet;
 /* R2: PS/2 pointer polling and packet dequeue Rust entry points. */
 int vos_rust_keyboard_pointer_poll(struct keyboard *k, struct pointer_packet *p);

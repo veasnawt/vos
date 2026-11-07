@@ -1,6 +1,7 @@
 #include "net_ipv4.h"
 #include "virtio_net.h"
 #include "lib.h"
+#include "rust_kernel.h"
 
 static uint16_t get16(const uint8_t *p) {return (uint16_t)((unsigned)p[0]*256+p[1]);}
 static void put16(uint8_t *p,uint16_t n) {p[0]=(uint8_t)(n>>8);p[1]=(uint8_t)n;}
@@ -8,17 +9,11 @@ static int same(const void *a,const void *b,size_t n) {return !memcmp(a,b,n);}
 static int unicast(const uint8_t *ip) {return ip[0]!=0 && ip[0]!=127 && ip[0]<224;}
 uint16_t net_checksum(const void *bytes,size_t length)
 {
-    const uint8_t *p=bytes;uint32_t sum=0;
-    while (length>=2) {sum+=get16(p);p+=2;length-=2;}
-    if (length) sum+=(unsigned)*p<<8;
-    while (sum>>16) sum=(sum&0xffff)+(sum>>16);
-    return (uint16_t)~sum;
+    return vos_rust_net_checksum(bytes,length);
 }
 uint16_t net_ipv4_transport_checksum(const uint8_t source[4],const uint8_t dest[4],uint8_t protocol,const void *bytes,size_t n)
 {
-    uint32_t sum=(uint16_t)~net_checksum(source,4)+(uint32_t)(uint16_t)~net_checksum(dest,4)+protocol+(uint32_t)n+(uint16_t)~net_checksum(bytes,n);
-    while (sum>>16) sum=(sum&65535)+(sum>>16);
-    return (uint16_t)~sum;
+    return vos_rust_net_transport_checksum(source,dest,protocol,bytes,n);
 }
 static int output_ok(void *out,size_t capacity,size_t *length,size_t needed)
 {
