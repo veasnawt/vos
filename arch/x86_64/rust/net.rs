@@ -67,12 +67,12 @@ fn overlaps(a: usize, an: usize, b: usize, bn: usize) -> bool {
 // for the stated length; nothing is retained after the call.
 unsafe fn copy4(p: *const u8) -> [u8; 4] {
     let mut a = [0u8; 4];
-    unsafe { ptr::copy(p, a.as_mut_ptr(), 4) };
+    unsafe { ptr::copy_nonoverlapping(p, a.as_mut_ptr(), 4) };
     a
 }
 unsafe fn copy6(p: *const u8) -> [u8; 6] {
     let mut a = [0u8; 6];
-    unsafe { ptr::copy(p, a.as_mut_ptr(), 6) };
+    unsafe { ptr::copy_nonoverlapping(p, a.as_mut_ptr(), 6) };
     a
 }
 /// The admitted Ethernet frame view, or None for the C EINVAL cases (null frame,
@@ -147,7 +147,7 @@ pub mod arp;
 unsafe fn emit(local: &[u8], out: *mut u8, length: *mut usize) {
     // SAFETY: output_ok() admitted [out, out+len) and the separate length object.
     unsafe {
-        ptr::copy(local.as_ptr(), out, local.len());
+        ptr::copy_nonoverlapping(local.as_ptr(), out, local.len());
         length.write_unaligned(local.len());
     }
 }
@@ -171,7 +171,7 @@ pub unsafe extern "C" fn vos_rust_net_neighbor_get(a: *mut Arp, ip: *const u8, n
     let i = unsafe { copy4(ip) };
     match arp::neighbor_get(unsafe { &mut *a }, &i, now) {
         Some(m) => {
-            unsafe { ptr::copy(m.as_ptr(), mac, 6) };
+            unsafe { ptr::copy_nonoverlapping(m.as_ptr(), mac, 6) };
             1
         }
         None => 0,
@@ -326,11 +326,15 @@ pub unsafe extern "C" fn vos_rust_net_udp_receive(c: *mut Udp, out: *mut Datagra
     if !aligned(c) || out.is_null() {
         return EINVAL;
     }
+    // Rust-only refusal: the slot copy must not overlap the context it reads and clears.
+    if overlaps(out as usize, size_of::<Datagram>(), c as usize, size_of::<Udp>()) {
+        return EINVAL;
+    }
     match udp::udp_receive_slot(unsafe { &*c }) {
         Ok(slot) => {
             // SAFETY: out is a writable datagram object outside the context
             // (contract); the copy precedes the clear, as the accepted C.
-            unsafe { ptr::copy(ptr::addr_of!((*c).queue[slot]).cast::<u8>(), out.cast::<u8>(), size_of::<Datagram>()) };
+            unsafe { ptr::copy_nonoverlapping(ptr::addr_of!((*c).queue[slot]).cast::<u8>(), out.cast::<u8>(), size_of::<Datagram>()) };
             udp::udp_receive_finish(unsafe { &mut *c });
             0
         }

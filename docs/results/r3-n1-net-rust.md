@@ -1,6 +1,6 @@
 # R3-N1: Rust ARP/IPv4/UDP packet validation and protocol state
 
-**Correctness, staged equivalence, resources, reproducibility, and the BIOS/UEFI network regressions all PASS. No benchmark regresses. One stack-frame exception needs explicit owner approval of this exact source: `net_ipv4_transport_checksum` uses 16 bytes against the C leaf's 0. No merge without owner approval.** This is the first R3 increment. Baseline is accepted main `879c51179ecb6bcff3d1f7ef52051947b858c059`, where R2 is formally closed.
+**Correctness, staged equivalence, resources, reproducibility, and the BIOS/UEFI network regressions all PASS. No benchmark regresses. Two stack-frame exceptions need explicit owner approval of this exact source: `net_ipv4_transport_checksum` uses 16 bytes against the C leaf's 0, and `net_ipv4_input` uses 1,704 bytes against the 1,672 that the CI runner's gcc-13 gives the C. No merge without owner approval.** This is the first R3 increment. Baseline is accepted main `879c51179ecb6bcff3d1f7ef52051947b858c059`, where R2 is formally closed.
 
 ## Scope and ABI
 
@@ -14,10 +14,11 @@ All 17 public functions of `net_arp.c`, `net_ipv4.c` and `net_udp.c` keep their 
 - **Stays C:** `virtio_net.c` (DMA rings and device ownership), `net_tcp.c` and the network boot glue are unchanged. No new network authority, connectivity, protocol behavior or hardware access is added.
 - **Rust-only refusals, with no access or state change:** these cover cases the accepted contract leaves undefined:
   - a misaligned context
-  - a frame or data range overlapping the context a call mutates
+  - a frame, data range or received-datagram output overlapping the context a call mutates
   - a null checksum input, which returns `0xffff` so verification fails safe
 
   The C callers never produce any of them.
+- **Copies at the boundary:** every copy is between disjoint objects, so the adapter uses `copy_nonoverlapping`, which lowers to `memcpy`. The kernel's `lib.c` provides `memcpy`, `memset` and `memcmp` but no `memmove`.
 - **Two documented equivalences:**
   - `net_udp_receive` indexes `queue[head % 4]`. A valid context always has `head < 4`; the accepted C indexes `queue[head]` and would read out of bounds for a corrupted head.
   - Receive clears the copied slot after advancing the queue rather than before. With one owner, interrupts disabled and no callback in between, the resulting bytes are identical.
@@ -57,7 +58,8 @@ Intermediate commits carry a module-level `#![allow(dead_code)]` for items that 
 
 ## Resources
 
-- **Frames:** 16 of 17 Rust entries are at or below the accepted C frames. Examples: `ipv4_input` 1,704 = 1,704, `udp_send` 680 < 696, `arp_query` 72 < 152, `ipv4_init` 8 < 184, `udp_receive` 8 = 8. **Exception:** `net_ipv4_transport_checksum` is 16 B against the C leaf's 0 B. LLVM keeps the inlined three-part sum in two callee-saved registers. The only zero-frame formulation would sum words into a running total instead of C's per-part folds; that equals the C for every length up to about 131 KB, but not bit-for-bit for every input, so the exact C arithmetic was kept. **Source-bound owner approval is required.**
+- **Frames:** 16 of 17 Rust entries are at or below the accepted C frames. Examples: `ipv4_input` 1,704 = 1,704 (worker gcc-15), `udp_send` 680 < 696, `arp_query` 72 < 152, `ipv4_init` 8 < 184, `udp_receive` 8 = 8. **Exception:** `net_ipv4_transport_checksum` is 16 B against the C leaf's 0 B. LLVM keeps the inlined three-part sum in two callee-saved registers. The only zero-frame formulation would sum words into a running total instead of C's per-part folds; that equals the C for every length up to about 131 KB, but not bit-for-bit for every input, so the exact C arithmetic was kept. **Source-bound owner approval is required.**
+- **Compiler-dependent exception:** the CI runner's gcc-13 compiles the frozen C `net_ipv4_input` with a 1,672-byte frame, against 1,704 from the worker's gcc-15. Both frames are dominated by the same 1,514-byte reply buffer. The Rust entry is 1,704 B. A register-return prototype did not shrink it. `test-net-rust.py` records this beside the checksum exception (at most 1,704 B), so the frame gate no longer depends on the host gcc. **Source-bound owner approval is required.**
 - **Image:** loaded growth is **+0 bytes** (LOAD memsz 962,560 before and after). The ELF file is 28,208 B smaller.
 - No heap, DMA, I/O or new persistent state.
 
@@ -82,6 +84,16 @@ These are host micro-benchmarks against the hosted C build, which calls libc `me
   - `test-tcp-close`, `-data` and `-retry` compare against historical N5 baseline directories that are not present. Their host suites and BIOS/UEFI boots are run; the historical benchmark pairing is not.
 - **Changes to existing scripts:** the seven network scripts add the Rust core library (`scripts/net_rust_host.py`) to the host compile lines that now need it. No check is removed. Build smoke gains two steps: `test-net-rust.py` and `test-net-host.py`.
 - **Failed iterations, preserved:** preflight run r1 stopped on the stale `vsh` pin above. Runs r2 and r3 passed.
+
+## Exact-head CI history (PR #64)
+
+Both failed runs are preserved on GitHub.
+
+- **Run `42362596899` (`0bf2cfc`) failed the frame gate:** gcc-13 C `ipv4_input` is 1,672 B against Rust 1,704 B. Fixed by recording the compiler-dependent exception above (`f927186`).
+- **Run `42364371196` (`f927186`) failed the USB.2-C3a panic-free link guard:** the adapter's `ptr::copy` lowered to `memmove`, which the kernel does not provide, so `compiler_builtins` was linked. The worker run had not executed that non-network step.
+  - **Fix:** the copies became `copy_nonoverlapping`.
+  - `net_udp_receive` now refuses an output that overlaps its context. With that refusal, its copy is between disjoint objects too. The differential's refusal section checks it, and removing the refusal makes the differential fail.
+  - **Before pushing:** every hosted Build smoke step was run on the host. The two QEMU-booting checks, `test-usb2c3b2.py` and the QEMU runtime job, were left to CI.
 
 ## Evidence
 

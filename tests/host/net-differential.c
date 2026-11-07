@@ -337,6 +337,7 @@ static void refusals(void){
  /* frame or data overlapping the mutated context, and a misaligned context: refused, no change */
  if(net_udp_input(u,buf+8,60,1,buf+3000,1514,&len)!=NET_ARP_EINVAL || memcmp(buf,before,sizeof buf))die("frame overlapping context",0);
  if(net_udp_send(u,PI,5000,buf+16,8,1,buf+3000,1514,&len)!=NET_ARP_EINVAL || memcmp(buf,before,sizeof buf))die("data overlapping context",0);
+ if(net_udp_receive(u,(void*)(buf+64))!=NET_ARP_EINVAL || memcmp(buf,before,sizeof buf))die("datagram overlapping context",0);
  if(net_udp_init((void*)(buf+1),G,GI,4000)!=NET_ARP_EINVAL || memcmp(buf,before,sizeof buf))die("misaligned context",0);
  if(net_checksum(NULL,4)!=0xffff || net_ipv4_transport_checksum(NULL,GI,17,NULL,0)!=0xffff)die("null checksum input fails safe",0);
 }
