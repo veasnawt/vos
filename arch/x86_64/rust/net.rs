@@ -39,3 +39,103 @@ pub unsafe extern "C" fn vos_rust_net_transport_checksum(source: *const u8, dest
     let b: &[u8] = if n == 0 { &[] } else { unsafe { slice::from_raw_parts(bytes, n) } };
     checksum::transport_checksum(s, d, protocol, b)
 }
+
+// ---------------- stage 2: Ethernet-II / IPv4 validation and envelope ----------------
+#[path = "../../../kernel/rust/net/ipv4.rs"]
+pub mod ipv4;
+use context::*;
+use core::{mem::{align_of, size_of}, ptr};
+
+#[repr(C)]
+pub struct PayloadView {
+    source: *const u8,
+    bytes: *const u8,
+    length: usize,
+}
+
+fn aligned<T>(p: *const T) -> bool {
+    !p.is_null() && (p as usize) % align_of::<T>() == 0 && (p as usize).checked_add(size_of::<T>()).is_some()
+}
+/// True when [a, a+an) and [b, b+bn) intersect (or either range wraps).
+fn overlaps(a: usize, an: usize, b: usize, bn: usize) -> bool {
+    match (a.checked_add(an), b.checked_add(bn)) {
+        (Some(ae), Some(be)) => an != 0 && bn != 0 && a < be && b < ae,
+        _ => true,
+    }
+}
+// SAFETY (all helpers below): callers pass pointers the C contract makes valid
+// for the stated length; nothing is retained after the call.
+unsafe fn copy4(p: *const u8) -> [u8; 4] {
+    let mut a = [0u8; 4];
+    unsafe { ptr::copy(p, a.as_mut_ptr(), 4) };
+    a
+}
+unsafe fn copy6(p: *const u8) -> [u8; 6] {
+    let mut a = [0u8; 6];
+    unsafe { ptr::copy(p, a.as_mut_ptr(), 6) };
+    a
+}
+/// The admitted Ethernet frame view, or None for the C EINVAL cases (null frame,
+/// length outside 14..=1514).
+unsafe fn frame<'a>(p: *const u8, n: usize) -> Option<&'a [u8]> {
+    if p.is_null() || !ipv4::frame_length_ok(n) { None } else { Some(unsafe { slice::from_raw_parts(p, n) }) }
+}
+fn admit(out: *mut u8, capacity: usize, length: *mut usize, needed: usize) -> bool {
+    checksum::output_ok(out as usize, capacity, length as usize, needed)
+}
+
+/// # Safety
+/// `a` is a live `struct net_arp`; frame readable for `length`; type writable.
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn vos_rust_net_ethernet_type(a: *const Arp, f: *const u8, length: usize, kind: *mut u16) -> i32 {
+    if !aligned(a) || kind.is_null() {
+        return EINVAL;
+    }
+    let Some(p) = (unsafe { frame(f, length) }) else { return EINVAL };
+    match ipv4::ethernet_type(unsafe { &*a }, p) {
+        Ok(k) => {
+            unsafe { kind.write_unaligned(k) };
+            1
+        }
+        Err(e) => e,
+    }
+}
+/// # Safety
+/// `c` is a live `struct net_ipv4`; frame readable for `length`; view writable.
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn vos_rust_net_ipv4_payload(c: *const Ipv4, f: *const u8, length: usize, protocol: u8, view: *mut PayloadView) -> i32 {
+    if !aligned(c) || view.is_null() {
+        return EINVAL;
+    }
+    let Some(p) = (unsafe { frame(f, length) }) else { return EINVAL };
+    match ipv4::payload(unsafe { &*c }, p, protocol) {
+        Ok(v) => {
+            let base = p.as_ptr();
+            unsafe { view.write_unaligned(PayloadView { source: base.wrapping_add(v.source), bytes: base.wrapping_add(v.bytes), length: v.length }) };
+            1
+        }
+        Err(e) => e,
+    }
+}
+/// # Safety
+/// `c` is a live `struct net_ipv4`; mac/ip readable; buffer/length per net_arp.h.
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn vos_rust_net_ipv4_begin(c: *const Ipv4, mac: *const u8, ip: *const u8, protocol: u8, n: usize,
+                                                 buffer: *mut u8, capacity: usize, length: *mut usize) -> i32 {
+    if !aligned(c) || mac.is_null() || ip.is_null() || n > 1480 {
+        return EINVAL;
+    }
+    let wire = ipv4::wire_length(n);
+    if !admit(buffer, capacity, length, wire) {
+        return NOSPACE;
+    }
+    if overlaps(buffer as usize, wire, c as usize, size_of::<Ipv4>()) {
+        return EINVAL;
+    }
+    let (m, t) = unsafe { (copy6(mac), copy4(ip)) };
+    // SAFETY: admitted output, disjoint from the context; mac/ip already copied.
+    let out = unsafe { slice::from_raw_parts_mut(buffer, wire) };
+    let w = ipv4::begin(unsafe { &*c }, &m, &t, protocol, n, out);
+    unsafe { length.write_unaligned(w) };
+    0
+}

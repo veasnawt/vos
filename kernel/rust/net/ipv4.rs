@@ -2,6 +2,8 @@
 //! builder, exactly as the accepted C `net_ethernet_type`, `net_ipv4_payload`
 //! and `net_ipv4_begin`. No state is modified.
 #![forbid(unsafe_code)]
+// Intermediate R3-N1 stage: items used by the remaining stages are not yet referenced.
+#![allow(dead_code)]
 use super::checksum::{be16, checksum, ip_unicast, mac_unicast, put16};
 use super::context::{Arp, Ipv4, DROP, EINVAL, UNSUPPORTED, FRAME_MAX};
 

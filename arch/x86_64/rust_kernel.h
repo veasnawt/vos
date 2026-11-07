@@ -41,6 +41,9 @@ void vos_rust_keyboard_pointer_stop(struct keyboard *keyboard);
 struct net_arp; struct net_ipv4; struct net_udp; struct net_udp_datagram; struct net_ipv4_payload;
 uint16_t vos_rust_net_checksum(const void *bytes, size_t length);
 uint16_t vos_rust_net_transport_checksum(const uint8_t source[4], const uint8_t dest[4], uint8_t protocol, const void *bytes, size_t length);
+int vos_rust_net_ethernet_type(const struct net_arp *a, const void *frame, size_t length, uint16_t *type);
+int vos_rust_net_ipv4_payload(const struct net_ipv4 *c, const void *frame, size_t length, uint8_t protocol, struct net_ipv4_payload *view);
+int vos_rust_net_ipv4_begin(const struct net_ipv4 *c, const uint8_t mac[6], const uint8_t ip[4], uint8_t protocol, size_t payload_length, void *out, size_t capacity, size_t *length);
 struct pointer_packet;
 /* R2: PS/2 pointer polling and packet dequeue Rust entry points. */
 int vos_rust_keyboard_pointer_poll(struct keyboard *k, struct pointer_packet *p);

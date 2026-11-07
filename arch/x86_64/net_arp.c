@@ -1,6 +1,7 @@
 #include "net_arp.h"
 #include "virtio_net.h"
 #include "lib.h"
+#include "rust_kernel.h"
 
 static const uint8_t broadcast[6]={255,255,255,255,255,255};
 static const uint8_t zero[6]={0};
@@ -70,14 +71,7 @@ int net_arp_query(struct net_arp *a,const uint8_t ip[4],uint64_t now,void *out,s
 }
 int net_ethernet_type(const struct net_arp *a,const void *frame,size_t length,uint16_t *output_type)
 {
-    if (!a || !frame || !output_type || length<14 || length>VNET_FRAME_MAX) return NET_ARP_EINVAL;
-    const uint8_t *p=frame;
-    if (!same(p,a->mac,6) && !same(p,broadcast,6)) return NET_ARP_DROP;
-    if (!mac_ok(p+6) || same(p+6,a->mac,6)) return NET_ARP_EINVAL;
-    unsigned type=be16(p+12);
-    if (type<=1500) return NET_ARP_UNSUPPORTED; /* IEEE 802.3 length/LLC, not Ethernet-II. */
-    if (type<0x0600) return NET_ARP_EINVAL;
-    *output_type=(uint16_t)type;return 1;
+    return vos_rust_net_ethernet_type(a,frame,length,output_type);
 }
 int net_ethernet_input(struct net_arp *a,const void *frame,size_t length,uint64_t now,void *out,size_t capacity,size_t *output_length)
 {
