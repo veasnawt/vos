@@ -1,0 +1,317 @@
+{
+ "status": "PASS",
+ "archive_sha256": "c14b71033bce14dccfe98cb607c60ffd3455c5b6921a5291d2b1c00068e7f26b",
+ "Rust_sanitized": false,
+ "seed": "9e3779b9",
+ "cpu": 0,
+ "performance": {
+  "init": {
+   "C_ns": 575.1002,
+   "Rust_ns": 556.175,
+   "percent": -3.290765678746077
+  },
+  "suspend_resume": {
+   "C_ns": 80.525,
+   "Rust_ns": 82.325,
+   "percent": 2.2353306426575514
+  },
+  "pointer_start": {
+   "C_ns": 322.2002,
+   "Rust_ns": 322.075,
+   "percent": -0.038857828145355544
+  },
+  "pointer_stop": {
+   "C_ns": 91.975,
+   "Rust_ns": 94.875,
+   "percent": 3.153030714868188
+  },
+  "resume_refused": {
+   "C_ns": 21.0,
+   "Rust_ns": 18.5,
+   "percent": -11.904761904761907
+  },
+  "init_no_io": {
+   "C_ns": 23.675,
+   "Rust_ns": 20.275,
+   "percent": -14.361140443505816
+  }
+ },
+ "regressions_over_5_percent": [],
+ "mutations": {
+  "init_reset_late": {
+   "assertion": "init_reset_late::init_rejects_incomplete_io",
+   "detected": true,
+   "policy_sha256": "5d43d756a33f083d437a60a433e453a3a38c9977ea5ebb05fa3ac69bde537c61"
+  },
+  "disable_order": {
+   "assertion": "disable_order::init_success_sequence",
+   "detected": true,
+   "policy_sha256": "1d8450826cea6150c9896112a2fa14f52bcaee4a6e4982e4c458d6ac724a7958"
+  },
+  "drain_bound": {
+   "assertion": "drain_bound::init_drain_edges",
+   "detected": true,
+   "policy_sha256": "e65b98398dcf1f3915b4ad7a3ce0848c017424b915c5d673016c1f8ba362506e"
+  },
+  "drain_limit": {
+   "assertion": "drain_limit::drain_limit_value",
+   "detected": true,
+   "policy_sha256": "09772a0e86acec887824ad566cd3ce43c842d70dd9f666dcb18af5e816cd7bf6"
+  },
+  "drain_final": {
+   "assertion": "drain_final::init_drain_edges",
+   "detected": true,
+   "policy_sha256": "487e6993640bcf04845a383aeceac1f8e85a6085d03141c1370a2a4e92ab9634"
+  },
+  "drain_object_io": {
+   "assertion": "drain_object_io::init_success_sequence",
+   "detected": true,
+   "policy_sha256": "e17e4daae9501b465629fd52dcbdc28a2d1a3c3ebae1174d493b81c8453b8ade"
+  },
+  "mode_port": {
+   "assertion": "mode_port::init_success_sequence",
+   "detected": true,
+   "policy_sha256": "3170260a34637cd4ec422348692914514a08fbf6ce47f22e6eba7d487757f08f"
+  },
+  "mode_set": {
+   "assertion": "mode_set::init_mode_mask",
+   "detected": true,
+   "policy_sha256": "e622e0a185a9c93c2a9cf68a6101d9dd3ba12fe4229d749aa02c5d95d1d2a28e"
+  },
+  "mode_clear": {
+   "assertion": "mode_clear::init_mode_mask",
+   "detected": true,
+   "policy_sha256": "88528d35d1bfc3f9e5446898dc25143d9d1ed1e72d67c8bf1ba253c5d134882a"
+  },
+  "mode_order": {
+   "assertion": "mode_order::init_success_sequence",
+   "detected": true,
+   "policy_sha256": "b51b8dff81859733ce35588ac36219188ee191f0f6f9c4b9c4ff54e02c2b314f"
+  },
+  "command_order": {
+   "assertion": "command_order::init_success_sequence",
+   "detected": true,
+   "policy_sha256": "981ce40e4e2b0ce3c2c1f9aeb5043004c756a0cc3f8bafb81dfd288900faecb6"
+  },
+  "missing_command": {
+   "assertion": "missing_command::init_success_sequence",
+   "detected": true,
+   "policy_sha256": "607624d02fea65bfb028baca5da699780317ed14237c4066d3f517ec9dabf103"
+  },
+  "ready_early": {
+   "assertion": "ready_early::init_fails_at_every_step",
+   "detected": true,
+   "policy_sha256": "cf3f7b4708883c7304eaf5382557b7b339a149f75671eb4d83f655eb1c0ff464"
+  },
+  "suspend_noop": {
+   "assertion": "suspend_noop::suspend_not_ready_noop",
+   "detected": true,
+   "policy_sha256": "9b8ca07d6637c16942f37b50112b20b8d6fd406c0b8c9edd839f7ada1c8e3f79"
+  },
+  "suspend_ready_late": {
+   "assertion": "suspend_ready_late::suspend_write_failure",
+   "detected": true,
+   "policy_sha256": "e4d9470625f43dde87434547044185bf8687b2f7a184aeb0d930930a28cbd590"
+  },
+  "ack_value": {
+   "assertion": "ack_value::suspend_success",
+   "detected": true,
+   "policy_sha256": "221d1383fbdf95eb2d7573f189ac39910b85d56b5f64b0f2fb540ec4a021edcc"
+  },
+  "ack_search_bound": {
+   "assertion": "ack_search_bound::suspend_ack_search_limits",
+   "detected": true,
+   "policy_sha256": "2cf3093ea39c6757f38a1c4f4efd7a71c6f29511f418eb6955ace6b54daa48f9"
+  },
+  "ack_read_failure": {
+   "assertion": "ack_read_failure::suspend_read_failure_stops_search",
+   "detected": true,
+   "policy_sha256": "1c3f1eb797b851ae84928dfa2fc1b725e7bb07b84e4e615df44b38caff8506e6"
+  },
+  "suspend_drain_bound": {
+   "assertion": "suspend_drain_bound::suspend_drain_edges",
+   "detected": true,
+   "policy_sha256": "0f46f36629889ee0986355f873f85adf6c4772f37f083c08d215eb9efd1dd4d2"
+  },
+  "decoder_reset": {
+   "assertion": "decoder_reset::suspend_success",
+   "detected": true,
+   "policy_sha256": "c35df2a8a3a919030e5d07f70e02660bc60762a63817c0dd47f099eb5866cca2"
+  },
+  "resume_ready": {
+   "assertion": "resume_ready::resume_requires_io_and_not_ready",
+   "detected": true,
+   "policy_sha256": "ed9e6a9a4591f17ceff7961de48c381abdf5c69fd68b6cb3985dbcf6afad711f"
+  },
+  "resume_decoder_late": {
+   "assertion": "resume_decoder_late::resume_success",
+   "detected": true,
+   "policy_sha256": "18df9b892bcf9d78442612dbef3ad014a3a5993eea6e11260d86130f3331209f"
+  },
+  "resume_ready_missing": {
+   "assertion": "resume_ready_missing::resume_success",
+   "detected": true,
+   "policy_sha256": "6d36371148fdc6c76b1d6518b36d44e01e95f25c5421006f151acf21c77e9d72"
+  },
+  "start_guard": {
+   "assertion": "start_guard::start_requires_ready_not_pointer",
+   "detected": true,
+   "policy_sha256": "ff1ccefa584ef7b30553d9dfc7a76cde8829b065ce1cc1e5e2fbda5562f6c68d"
+  },
+  "start_suspend": {
+   "assertion": "start_suspend::start_suspend_failure_no_writes",
+   "detected": true,
+   "policy_sha256": "4b397da3399158052fd8a880c872892054b61dd761d23dfa51de584e9fe7b0ef"
+  },
+  "enable_a8": {
+   "assertion": "enable_a8::start_success_sequence",
+   "detected": true,
+   "policy_sha256": "125977c13cdb54f76365f2f1ebd7dd79bf253676bc0588aad7b3e994cc51d8f7"
+  },
+  "bat": {
+   "assertion": "bat::start_bat_values",
+   "detected": true,
+   "policy_sha256": "2ad3b220ff1822e726fd7404694d5e1c53db3412d1aac323b64ab4b1e3a27d23"
+  },
+  "id": {
+   "assertion": "id::start_id_values",
+   "detected": true,
+   "policy_sha256": "03ac3eed7525e42cb8308fcb7e7489b29aae383c8758c7bc78fc4154d8ef50af"
+  },
+  "aux_order": {
+   "assertion": "aux_order::start_success_sequence",
+   "detected": true,
+   "policy_sha256": "dca60c6828b88a908dd02628fff1337468ca580f01a0225e395249a5ae32a647"
+  },
+  "rollback_missing": {
+   "assertion": "rollback_missing::start_fails_at_every_step_with_rollback",
+   "detected": true,
+   "policy_sha256": "86749e01226f39ef7edc901805c5abe705afb452f88e25869d0099030dad7416"
+  },
+  "rollback_final": {
+   "assertion": "rollback_final::start_resume_failure_rollback",
+   "detected": true,
+   "policy_sha256": "4a2052c649d574c7fee353d5940baf6dcf0e06958b0189b456e3acd50f5324de"
+  },
+  "resume_skip": {
+   "assertion": "resume_skip::start_resume_failure_rollback",
+   "detected": true,
+   "policy_sha256": "e8599658c40a87c06dc6badc0fce3b4313eeeb2694efd75604b80ea52054a6f0"
+  },
+  "resume_always": {
+   "assertion": "resume_always::start_enable_failure_skips_resume",
+   "detected": true,
+   "policy_sha256": "61e5aa567e53a93a199cced3466cf577570a97882cba4883049240db5c1cef2c"
+  },
+  "start_reset_order": {
+   "assertion": "start_reset_order::start_state_reset_order",
+   "detected": true,
+   "policy_sha256": "a2e1afc946707791eb0b9e6c84a028290948a335e8f1478982c2c516d6ea311c"
+  },
+  "pointer_ready_early": {
+   "assertion": "pointer_ready_early::start_state_reset_order",
+   "detected": true,
+   "policy_sha256": "28bb25be846f06326afde3a388b992497f9b214e890998566c80b8eba9d0cb86"
+  },
+  "stop_guard": {
+   "assertion": "stop_guard::stop_noop_when_not_pointer",
+   "detected": true,
+   "policy_sha256": "081923e46152f21ccb716c69d206afd6ac65ba6c44c5252d5d5c0277c401a159"
+  },
+  "stop_best_effort": {
+   "assertion": "stop_best_effort::stop_best_effort_all_steps",
+   "detected": true,
+   "policy_sha256": "607e05b3c4d176f181d85f141a39297a6649d29c08c801974e6ec2c2b66b7338"
+  },
+  "stop_reset_missing": {
+   "assertion": "stop_reset_missing::stop_best_effort_all_steps",
+   "detected": true,
+   "policy_sha256": "78d3792a58e3fb5bdf3b4fb0f7c6d556eecae88369e84618626af9177cae05da"
+  }
+ },
+ "shared_harness": {
+  "binary_bytes": 3003304,
+  "binary_sha256": "eaa49b99bb0dac9667fa7a43d746e35bbcd71a6a4d0796074bce83a45ab37442",
+  "variants": 39,
+  "runtime_executables": 1,
+  "method": "Distinct namespace per variant, identical positive fixture; intended assertions run individually, isolated process per mutant."
+ },
+ "frames": {
+  "vos_rust_keyboard_init": 40,
+  "vos_rust_keyboard_suspend": 40,
+  "vos_rust_keyboard_resume": 8,
+  "vos_rust_keyboard_pointer_start": 24,
+  "vos_rust_keyboard_pointer_stop": 8,
+  "vos_rust_keyboard_read_keyboard": 40,
+  "vos_rust_keyboard_read_aux": 40,
+  "vos_rust_keyboard_write_port": 40,
+  "vos_rust_keyboard_command": 40,
+  "vos_rust_keyboard_aux_command": 40,
+  "vos_rust_keyboard_ordinary_poll": 40,
+  "vos_rust_keyboard_routed_poll": 8,
+  "callers": {
+   "keyboard_init": {
+    "C_reference": 40,
+    "candidate": 0
+   },
+   "keyboard_suspend": {
+    "C_reference": 40,
+    "candidate": 0
+   },
+   "keyboard_resume": {
+    "C_reference": 24,
+    "candidate": 0
+   },
+   "keyboard_pointer_start": {
+    "C_reference": 40,
+    "candidate": 0
+   },
+   "keyboard_pointer_stop": {
+    "C_reference": 8,
+    "candidate": 0
+   }
+  },
+  "lifecycle_vs_C": {
+   "vos_rust_keyboard_init": {
+    "C_reference": 40,
+    "Rust": 40
+   },
+   "vos_rust_keyboard_suspend": {
+    "C_reference": 40,
+    "Rust": 40
+   },
+   "vos_rust_keyboard_resume": {
+    "C_reference": 24,
+    "Rust": 8
+   },
+   "vos_rust_keyboard_pointer_start": {
+    "C_reference": 40,
+    "Rust": 24
+   },
+   "vos_rust_keyboard_pointer_stop": {
+    "C_reference": 8,
+    "Rust": 8
+   }
+  }
+ },
+ "source_sha256": {
+  "kernel/rust/input/ps2_lifecycle.rs": "6d1dff35ad99a1bb0739ed0a249ef09238876e8367aee25be3625d0d861b5472",
+  "kernel/rust/input/ps2_controller_write.rs": "e5bad7c5eaa7051e9050f3037275077bd08426ef13e3c04784efbefbf7c66602",
+  "kernel/rust/input/ps2_controller_read.rs": "603195eb20a154b81680c5a05304b517860ca2ddbadcdab0572aaf46fa18780b",
+  "arch/x86_64/rust/ps2_routed.rs": "fc13475db1f39c2c73f664d17c8f17df69632d4cc1670535241b5ba8de6eef73",
+  "arch/x86_64/keyboard.c": "71d77c3e1287f860c6a86d89e51abed08e8b3d830d4275c259bf9baf266bf5c9",
+  "arch/x86_64/rust_kernel.h": "02319fecc0b790121195be8812df0cc1053b0ae4f61be2427465497174f54db9",
+  "tests/host/keyboard-lifecycle-differential.c": "0abca24607dcd87912048e00edc3b981687957b5feb35caabd927671395f0790",
+  "tests/rust/ps2_lifecycle.rs": "e9d9117b6f798019c0d9c25256ac71b99cb82ee02a751492da8ce60112791ec8",
+  "tests/reference/ps2-lifecycle.c": "a50dc06ecb55e0641374355f3709296e78ecf7d5bf8f9f799927d096161a138f",
+  "tests/reference/ps2-lifecycle.json": "9f823d61367ccd884682559cc39807493a4e4f442d0ffd78752482a35f107362",
+  "scripts/test-ps2-lifecycle-rust.py": "bed57c079207f6158367543ceaf23fa995b35948ef5c94ccb97652b91c5eed0f",
+  "scripts/test-ps2-controller-read-rust.py": "5820f6fe9c0e388caac068f9c8224b0079b0b120ab9f07e423aa2429d48c475d",
+  "scripts/test-ps2-controller-write-rust.py": "c86eb39a5d291df84a4c8bcccf773587df04e788a3399638b640306c976f9189"
+ },
+ "core_tests": "test result: ok. 29 passed; 0 failed; 0 ignored; 0 measured; 1102 filtered out; finished in 0.01s",
+ "release": "PASS 25133 lifecycle comparisons and 3000 random fault scenarios; max 46 responses/87 writes per sequence; every response value/flip/ERR/drop, 99999/100000 write waits, drain edges 31/32/33, io substitution, edge states, read+write+object traces",
+ "sanitizer": "PASS 25133 lifecycle comparisons and 3000 random fault scenarios; max 46 responses/87 writes per sequence; every response value/flip/ERR/drop, 99999/100000 write waits, drain edges 31/32/33, io substitution, edge states, read+write+object traces",
+ "checked_Rust": "PASS 25133 lifecycle comparisons and 3000 random fault scenarios; max 46 responses/87 writes per sequence; every response value/flip/ERR/drop, 99999/100000 write waits, drain edges 31/32/33, io substitution, edge states, read+write+object traces",
+ "source_run": "accepted R2 development worker, R2-L campaign run r1, plan feb1eaea07c9f2ffeddbd5c73bd04679f9cd4de1311f2de56343eb0e48a578b5, seal 0adce5192668888076db9d3eecbb2f01fd073d7e7bc3ae8893eb9d48632afeed"
+}

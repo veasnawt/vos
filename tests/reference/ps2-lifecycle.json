@@ -1,0 +1,11 @@
+{
+  "baseline": "ed3b496e9160b9c88899d9572a9b86e235289a64",
+  "accepted_source_sha256": "a50dc06ecb55e0641374355f3709296e78ecf7d5bf8f9f799927d096161a138f",
+  "reference_sha256": "a50dc06ecb55e0641374355f3709296e78ecf7d5bf8f9f799927d096161a138f",
+  "headers_sha256": {
+    "keyboard.h": "c6104c37cd72472e32a16471a22c2149e15e68f4baff2c64072a054b088a68b7",
+    "pointer.h": "7ed1b6597f0155f9cd4720a2c0fe712e08d6b7cf51ad6acc010841e7f8f291b7",
+    "rust_kernel.h": "16f70ca4046cf2f9703624873919158277d03157f94019d7ad4817dcc5cde47b"
+  },
+  "transformation": "Byte-identical accepted C driver and headers at merged main ed3b496; compiled as its own TU with the public lifecycle and poll APIs renamed *_reference at compile time only. Reference and candidate share the accepted Rust bounded read/write helpers, decoder, ordinary and routed paths from the production archive."
+}

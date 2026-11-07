@@ -1,0 +1,98 @@
+{
+ "bios-128M": {
+  "passed": true,
+  "firmware": "bios",
+  "memory": "128M",
+  "guiCases": 10,
+  "rollback": true,
+  "keyChangedPixels": true,
+  "initial": {
+   "path": "/home/veasnawt/src/vos-r2-keyboard-ordinary/build/r1/gui/bios-128M/gui-initial.png",
+   "width": 1024,
+   "height": 768,
+   "sha256": "f320480692a6917aaaeb0a7e3a4f5813b82f9acb5088e1a518d63546a4432a8a",
+   "direct_QMP_PNG": true
+  },
+  "after_key": {
+   "path": "/home/veasnawt/src/vos-r2-keyboard-ordinary/build/r1/gui/bios-128M/gui.png",
+   "width": 1024,
+   "height": 768,
+   "sha256": "065a17cd4cffce4485d7cffaa3e9dd6fb1e9eaded659e57ddfdd278003f30e94",
+   "direct_QMP_PNG": true
+  },
+  "seconds": 6.3,
+  "stopped_before": "disk-dependent shell flow (no accepted disk image in the worker)"
+ },
+ "bios-2G": {
+  "passed": true,
+  "firmware": "bios",
+  "memory": "2G",
+  "guiCases": 10,
+  "rollback": true,
+  "keyChangedPixels": true,
+  "initial": {
+   "path": "/home/veasnawt/src/vos-r2-keyboard-ordinary/build/r1/gui/bios-2G/gui-initial.png",
+   "width": 1024,
+   "height": 768,
+   "sha256": "f320480692a6917aaaeb0a7e3a4f5813b82f9acb5088e1a518d63546a4432a8a",
+   "direct_QMP_PNG": true
+  },
+  "after_key": {
+   "path": "/home/veasnawt/src/vos-r2-keyboard-ordinary/build/r1/gui/bios-2G/gui.png",
+   "width": 1024,
+   "height": 768,
+   "sha256": "065a17cd4cffce4485d7cffaa3e9dd6fb1e9eaded659e57ddfdd278003f30e94",
+   "direct_QMP_PNG": true
+  },
+  "seconds": 6.3,
+  "stopped_before": "disk-dependent shell flow (no accepted disk image in the worker)"
+ },
+ "uefi-128M": {
+  "passed": true,
+  "firmware": "uefi",
+  "memory": "128M",
+  "guiCases": 10,
+  "rollback": true,
+  "keyChangedPixels": true,
+  "initial": {
+   "path": "/home/veasnawt/src/vos-r2-keyboard-ordinary/build/r1/gui/uefi-128M/gui-initial.png",
+   "width": 1024,
+   "height": 768,
+   "sha256": "f320480692a6917aaaeb0a7e3a4f5813b82f9acb5088e1a518d63546a4432a8a",
+   "direct_QMP_PNG": true
+  },
+  "after_key": {
+   "path": "/home/veasnawt/src/vos-r2-keyboard-ordinary/build/r1/gui/uefi-128M/gui.png",
+   "width": 1024,
+   "height": 768,
+   "sha256": "065a17cd4cffce4485d7cffaa3e9dd6fb1e9eaded659e57ddfdd278003f30e94",
+   "direct_QMP_PNG": true
+  },
+  "seconds": 9.1,
+  "stopped_before": "disk-dependent shell flow (no accepted disk image in the worker)"
+ },
+ "uefi-2G": {
+  "passed": true,
+  "firmware": "uefi",
+  "memory": "2G",
+  "guiCases": 10,
+  "rollback": true,
+  "keyChangedPixels": true,
+  "initial": {
+   "path": "/home/veasnawt/src/vos-r2-keyboard-ordinary/build/r1/gui/uefi-2G/gui-initial.png",
+   "width": 1024,
+   "height": 768,
+   "sha256": "f320480692a6917aaaeb0a7e3a4f5813b82f9acb5088e1a518d63546a4432a8a",
+   "direct_QMP_PNG": true
+  },
+  "after_key": {
+   "path": "/home/veasnawt/src/vos-r2-keyboard-ordinary/build/r1/gui/uefi-2G/gui.png",
+   "width": 1024,
+   "height": 768,
+   "sha256": "065a17cd4cffce4485d7cffaa3e9dd6fb1e9eaded659e57ddfdd278003f30e94",
+   "direct_QMP_PNG": true
+  },
+  "seconds": 9.0,
+  "stopped_before": "disk-dependent shell flow (no accepted disk image in the worker)"
+ }
+}

@@ -86,7 +86,7 @@ def main():
   need(frames['vos_rust_keyboard_ordinary_poll']<=40 and frames['vos_rust_keyboard_routed_poll']<=24,'retained ordinary/routed budgets')
   symbols=run(['nm','--defined-only',archive],'archive-owners.txt')
   for n in ('vos_rust_keyboard_read_keyboard','vos_rust_keyboard_read_aux'):need(sum(x.endswith(' T '+n) for x in symbols.splitlines())==1,'one Rust owner '+n)
-  c=run(['nm',out/'release-driver.o'],'C-symbols.txt');need(' U vos_rust_keyboard_read_keyboard' in c and ' U vos_rust_keyboard_read_aux' in c,'C only forwards')
+  c=run(['nm',out/'release-driver.o'],'C-symbols.txt');need(not any(x.endswith((' T vos_rust_keyboard_read_keyboard',' T vos_rust_keyboard_read_aux')) for x in c.splitlines()) and ' U vos_rust_keyboard_init' in c,'C defines no read helper; its lifecycle callers forward to Rust (R2-L)')
   report['source_sha256']={n:sha(ROOT/n) for n in ['kernel/rust/input/ps2_controller_read.rs','arch/x86_64/rust/ps2_routed.rs','arch/x86_64/keyboard.c','arch/x86_64/rust_kernel.h',
    'tests/host/keyboard-controller-read-differential.c','tests/rust/ps2_controller_read.rs','tests/reference/ps2-controller-read.c','tests/reference/ps2-controller-read-wrappers.c','scripts/test-ps2-controller-read-rust.py']};report['status']='PASS'
  except Exception as e:report.update(status='FAIL',error=str(e));raise
