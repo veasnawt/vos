@@ -20,21 +20,11 @@ static int write_port(struct keyboard *k, uint16_t port, uint8_t value)
     return 0;
 }
 
+/* R2: bounded controller reads are Rust-owned (same wait limit, status-before-data,
+ * ERR precedence, channel filtering and output-on-success contract). */
 static int read_keyboard(struct keyboard *k, uint8_t *value)
 {
-    for (unsigned i = 0; i < KEYBOARD_WAIT_LIMIT; i++) {
-        uint8_t status = k->io->in(STATUS);
-        if (!(status & OBF))
-            continue;
-        uint8_t data = k->io->in(DATA);
-        if (status & ERR)
-            return 0;
-        if (!(status & AUX)) {
-            *value = data;
-            return 1;
-        }
-    }
-    return 0;
+    return vos_rust_keyboard_read_keyboard(k, value);
 }
 
 static int command(struct keyboard *k, uint8_t value)
@@ -117,14 +107,7 @@ static char routed_poll(struct keyboard *k) {
     return vos_rust_keyboard_routed_poll(k);
 }
 static int read_aux(struct keyboard *k,uint8_t *b) {
-    for(unsigned i=0;i<KEYBOARD_WAIT_LIMIT;i++) {
-        uint8_t s=k->io->in(STATUS);
-        if(!(s&OBF))continue;
-        uint8_t data=k->io->in(DATA);
-        if(s&ERR)return 0;
-        if(s&AUX){*b=data;return 1;}
-    }
-    return 0;
+    return vos_rust_keyboard_read_aux(k,b);
 }
 static int aux_command(struct keyboard *k,uint8_t command_byte) {
     uint8_t b;

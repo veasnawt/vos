@@ -13,6 +13,11 @@ char vos_rust_keyboard_routed_poll(struct keyboard *keyboard);
 /* R2: ordinary (pointer_ready == 0) bounded polling; same live/IF=0 ownership,
  * at most 32 status+data pairs, no controller write, queue or allocation. */
 char vos_rust_keyboard_ordinary_poll(struct keyboard *keyboard);
+/* R2: bounded controller reads (keyboard / auxiliary channel). At most 100,000
+ * status reads; ERR fails; other-channel bytes are consumed; *value is written
+ * only when 1 is returned. Same live/IF=0 ownership; no controller write. */
+int vos_rust_keyboard_read_keyboard(struct keyboard *keyboard, uint8_t *value);
+int vos_rust_keyboard_read_aux(struct keyboard *keyboard, uint8_t *value);
 struct pointer_packet;
 /* R2: PS/2 pointer polling and packet dequeue Rust entry points. */
 int vos_rust_keyboard_pointer_poll(struct keyboard *k, struct pointer_packet *p);

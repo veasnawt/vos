@@ -1,0 +1,155 @@
+{
+ "status": "PASS",
+ "archive_sha256": "9ceea503a3a3f8a9c454938f7fc76416147c4a175196754de8287c549c61578e",
+ "Rust_sanitized": false,
+ "seed": "72326374726c7264",
+ "cpu": 0,
+ "performance": {
+  "keyboard_immediate": {
+   "C_ns": 48.1451,
+   "Rust_ns": 40.105,
+   "percent": -16.699726451913076
+  },
+  "aux_immediate": {
+   "C_ns": 46.1151,
+   "Rust_ns": 43.2801,
+   "percent": -6.147660961377078
+  },
+  "delay10": {
+   "C_ns": 106.1501,
+   "Rust_ns": 111.8002,
+   "percent": 5.322745809942719
+  },
+  "other_then_keyboard": {
+   "C_ns": 22.0001,
+   "Rust_ns": 20.795,
+   "percent": -5.477702374080106
+  },
+  "err": {
+   "C_ns": 12.2751,
+   "Rust_ns": 11.14,
+   "percent": -9.247175175762312
+  },
+  "timeout100k": {
+   "C_ns": 414015.8,
+   "Rust_ns": 432720.8,
+   "percent": 4.517943518097622
+  }
+ },
+ "regressions_over_5_percent": [
+  "delay10"
+ ],
+ "mutations": {
+  "bound": {
+   "assertion": "bound::last_iteration_succeeds",
+   "detected": true,
+   "policy_sha256": "5bdffe5f1c684b0a6d7c08d69054785c7fcc0155487dc46368d835ac910e2adc"
+  },
+  "limit": {
+   "assertion": "limit::one_past_limit_fails",
+   "detected": true,
+   "policy_sha256": "055011c11aaf0fcc3d0b0e72f021c56e5e21b84a4fc734b34d20fe28a9ad8063"
+  },
+  "obf": {
+   "assertion": "obf::err_without_obf_is_skipped",
+   "detected": true,
+   "policy_sha256": "38841f43c8d034b972bfcf74ecb5153599113648e7dcfbcc034386a8e46199dc"
+  },
+  "obf_continue": {
+   "assertion": "obf_continue::skips_obf_clear",
+   "detected": true,
+   "policy_sha256": "f13cd93a6797ba328e440e69a4e7d01d7e5bca489680ec395472f2149976904c"
+  },
+  "err": {
+   "assertion": "err::err_precedence_own_channel",
+   "detected": true,
+   "policy_sha256": "6ceb18507c631bc28f5f3106772e8c5977064bda7e38d1e5d5d58ea8d0208ba9"
+  },
+  "err_order": {
+   "assertion": "err_order::err_precedence_own_channel",
+   "detected": true,
+   "policy_sha256": "5dcc96301362800725aa5fd0969c5d2cfcbc89f9082de84db0c05f876e93aae4"
+  },
+  "channel": {
+   "assertion": "channel::immediate_keyboard",
+   "detected": true,
+   "policy_sha256": "bb86a18b07b8e29a96ac4c9f4fd75078022877d1b0ffe0b09fc5029eb67fc2ed"
+  },
+  "aux_bit": {
+   "assertion": "aux_bit::immediate_aux",
+   "detected": true,
+   "policy_sha256": "2fb7261032d947278e1cf547e2684e538327a7229f9860e3a9b3ff6e12852c0f"
+  },
+  "order": {
+   "assertion": "order::immediate_keyboard",
+   "detected": true,
+   "policy_sha256": "56f2a7501d5479d98af1b345f838d01910379ba0534446c333d657eeb2ed8444"
+  },
+  "data": {
+   "assertion": "data::all_bytes",
+   "detected": true,
+   "policy_sha256": "723722a9b586313dff17ce292f3dc6adfb57a76f3d3e81f2a5c15d41191ed8bb"
+  },
+  "other_consumed": {
+   "assertion": "other_consumed::consumes_keyboard_byte_waiting_for_aux",
+   "detected": true,
+   "policy_sha256": "10f85ed541fa99ca0b35474cbaf7ebcf4faf9c7c317418fb0400d65fdadcc99a"
+  },
+  "final_none": {
+   "assertion": "final_none::timeout_exact",
+   "detected": true,
+   "policy_sha256": "590af87a806a2034d08b98eb20ac61d6a97480ce9cf2faf1e831d0cd3be124ad"
+  }
+ },
+ "shared_harness": {
+  "binary_bytes": 1071896,
+  "binary_sha256": "c4a3500f7a0ce78a4281782b566cedf3c1b5fad69de481c4b1f7abbac4c00877",
+  "variants": 13,
+  "runtime_executables": 1,
+  "method": "Distinct namespace per variant, identical positive fixture; intended assertions run individually, isolated process per mutant."
+ },
+ "frames": {
+  "vos_rust_keyboard_read_keyboard": 40,
+  "vos_rust_keyboard_read_aux": 40,
+  "vos_rust_keyboard_ordinary_poll": 40,
+  "vos_rust_keyboard_routed_poll": 8,
+  "callers": {
+   "keyboard_init": {
+    "C_reference": 40,
+    "candidate": 40
+   },
+   "keyboard_suspend": {
+    "C_reference": 40,
+    "candidate": 40
+   },
+   "keyboard_resume": {
+    "C_reference": 40,
+    "candidate": 40
+   },
+   "keyboard_pointer_start": {
+    "C_reference": 56,
+    "candidate": 56
+   },
+   "keyboard_pointer_stop": {
+    "C_reference": 8,
+    "candidate": 8
+   }
+  }
+ },
+ "source_sha256": {
+  "kernel/rust/input/ps2_controller_read.rs": "603195eb20a154b81680c5a05304b517860ca2ddbadcdab0572aaf46fa18780b",
+  "arch/x86_64/rust/ps2_routed.rs": "d1eefc400a36b098bb0b95e89671cff436ed0636cf2a789a2581e51bd479c924",
+  "arch/x86_64/keyboard.c": "fe25c367ebf1071e2c2c1946c23bd615d6e02af168c77aa79e273ed688389fd8",
+  "arch/x86_64/rust_kernel.h": "3fd44f6b2fd4c13084d1452377d7d2ff90156d96e5e0fb1b01201cd314235cf9",
+  "tests/host/keyboard-controller-read-differential.c": "4e274316bb0f3c1b948e757555a87ab05779a6e05ddb4b959df9f8c56b4b054d",
+  "tests/rust/ps2_controller_read.rs": "05d22e31603d7ef36ca7835e03bba13af7b2b6cd57025e86fc09dab249dce1a1",
+  "tests/reference/ps2-controller-read.c": "2cf4069cf96ef6188365b574d6905be3dcf66476dbd9ba9b92419023d9b33408",
+  "tests/reference/ps2-controller-read-wrappers.c": "1d0ef4acee49adaed8376b2e1eb389166062919cbf872ea3b51fe2f7ff4ad1d4",
+  "scripts/test-ps2-controller-read-rust.py": "a1fe6f5d695ffe6455cbc738b3d5048bcec02d123a89c8adabcd0c70dbfe5bab"
+ },
+ "core_tests": "test result: ok. 14 passed; 0 failed; 0 ignored; 0 measured; 168 filtered out; finished in 0.01s",
+ "release": "PASS 211346 controller read comparisons and 3000 lifecycle scenarios; seed=72326374726c7264; exhaustive first cells, exact 100000 wait limit, other-channel flood, delayed success, io swap, boundary objects, read+write traces; no helper controller writes",
+ "sanitizer": "PASS 211346 controller read comparisons and 3000 lifecycle scenarios; seed=72326374726c7264; exhaustive first cells, exact 100000 wait limit, other-channel flood, delayed success, io swap, boundary objects, read+write traces; no helper controller writes",
+ "checked_Rust": "PASS 211346 controller read comparisons and 3000 lifecycle scenarios; seed=72326374726c7264; exhaustive first cells, exact 100000 wait limit, other-channel flood, delayed success, io swap, boundary objects, read+write traces; no helper controller writes",
+ "source_run": "accepted R2 development worker, read-helper campaign run r1, plan 1e32623606f577bf5d89dca60abf7b1c8d8b912248e1370b0d76a9ed7d4b6235, seal dfc63ba596fc695bbf9a87b1e4433efd8da17935de296d617ff81ec753325157"
+}

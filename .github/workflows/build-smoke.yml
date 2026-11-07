@@ -18,7 +18,10 @@ jobs:
   build-smoke:
     name: Freestanding builds and user ELF static tests
     runs-on: ubuntu-24.04
-    timeout-minutes: 25
+    # 45 (was 25): the runner's Ubuntu mirror has delivered packages at ~50 kB/s
+    # (run 42304789235: 43.1 MB in 14 min 30 s), cancelling an otherwise passing
+    # job. Verification steps are unchanged; apt is separately bounded below.
+    timeout-minutes: 45
     steps:
       - name: Checkout repository
         uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
@@ -26,11 +29,12 @@ jobs:
           persist-credentials: false
 
       - name: Install build prerequisites
+        timeout-minutes: 20
         shell: bash
         run: |
           set -euo pipefail
-          sudo apt-get update
-          sudo apt-get install -y --no-install-recommends \
+          sudo apt-get -o Acquire::Retries=3 update
+          sudo apt-get -o Acquire::Retries=3 install -y --no-install-recommends \
             gcc-multilib binutils make python3 \
             grub-pc-bin grub-efi-amd64-bin xorriso mtools \
             qemu-system-x86 ovmf e2fsprogs
@@ -146,6 +150,11 @@ jobs:
           python3 -I -B scripts/test-keyboard-ordinary-rust.py
           --archive build/x86_64/rust/libvos_kernel.a --rustc "$RUSTC"
           --out build/r2-keyboard-ordinary-ci
+      - name: Verify Rust bounded PS/2 controller reads and frozen C lifecycle equivalence
+        run: >-
+          python3 -I -B scripts/test-ps2-controller-read-rust.py
+          --archive build/x86_64/rust/libvos_kernel.a --rustc "$RUSTC"
+          --out build/r2-ps2-controller-read-ci
       - name: Verify USB.2-C1 read-only xHCI qualification and USB.2-B ownership
         run: |
           python3 -I -B scripts/test-usb2c1.py \
