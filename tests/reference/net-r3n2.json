@@ -1,0 +1,18 @@
+{
+  "baseline": "f8731c9688673bb1e9f0d738707f1ad2d32bcf4a",
+  "sources_sha256": {
+    "net-tcp.c": "e5a4183c0b39f767773a083733747b935573c697957978550d3c398edd106975"
+  },
+  "headers_sha256": {
+    "net_tcp.h": "0e319e69337be1b47f4756d4538130b3c19a6bdd2d338a37168068f23ed5ce56"
+  },
+  "git_blobs": {
+    "net-tcp.c": "499664e4e93bebc9643ca3894f384d491b3b5d73",
+    "net_tcp.h": "e1048e16a4f28d2767a8a6cbecfd0bdb032a5812"
+  },
+  "configurations": {
+    "A": "frozen net_tcp.c over the frozen R3-N1 C references (tests/reference/net-arp.c, net-ipv4.c at 879c511; manifest net-r3n1.json): every net_tcp_* renamed *_rA and every R3-N1 public function renamed *_reference at compile time only",
+    "B": "frozen net_tcp.c over the production R3-N1 Rust IPv4 (arch/x86_64/net_arp.c, net_ipv4.c forwarders + Rust core): every net_tcp_* renamed *_rB at compile time only"
+  },
+  "transformation": "Byte-identical accepted arch/x86_64/net_tcp.c and net_tcp.h at merged main f8731c9 (unchanged since N5 acceptance and through R3-N1; blobs 499664e4/e1048e16), compiled as separate translation units with compile-time renames only. lib.h and the R3-N1 headers come from tests/reference/net-headers or the production tree; net_arp.h/net_ipv4.h are byte-identical in both."
+}

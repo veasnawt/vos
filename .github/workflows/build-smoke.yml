@@ -172,6 +172,11 @@ jobs:
           --out build/r3-n1-net-ci
       - name: Run host ARP/IPv4/UDP/TCP protocol suites against the Rust network core
         run: python3 -I -B scripts/test-net-host.py --out build/r3-n1-net-host-ci
+      - name: Verify Rust TCP core against the frozen accepted C TCP (two oracle configurations, mutation controls, frames)
+        run: >-
+          python3 -I -B scripts/test-tcp-rust.py
+          --archive build/x86_64/rust/libvos_kernel.a --rustc "$RUSTC"
+          --out build/r3-n2-tcp-ci
       - name: Verify USB.2-C1 read-only xHCI qualification and USB.2-B ownership
         run: |
           python3 -I -B scripts/test-usb2c1.py \

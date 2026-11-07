@@ -1,6 +1,6 @@
-//! R3-N1 FFI boundary for the Rust ARP/IPv4/UDP core. C keeps the public ABI in
-//! net_arp.c/net_ipv4.c/net_udp.c and forwards here; virtio-net, DMA, TCP and
-//! boot glue stay C. Contract (net_arp.h): inputs may alias each other and the
+//! R3-N1/R3-N2 FFI boundary for the Rust ARP/IPv4/UDP/TCP core. C keeps the
+//! public ABI in net_arp.c/net_ipv4.c/net_udp.c/net_tcp.c and forwards here;
+//! virtio-net, DMA and boot glue stay C. Contract (net_arp.h): inputs may alias each other and the
 //! packet output, but not the context; the length output is separate from the
 //! packet output. Inputs that the C copies first are copied first; generated
 //! frames are built in locals sized like the C locals and copied out last.
@@ -348,4 +348,190 @@ pub unsafe extern "C" fn vos_rust_net_udp_close(c: *mut Udp) {
     if aligned(c) {
         udp::udp_close(unsafe { &mut *c });
     }
+}
+
+// ---------------- R3-N2: bounded passive TCP ----------------
+// Same contract as above (net_tcp.h: "same buffer/alias contract as ARP").
+// Init addresses are copied before the context is borrowed, so they may alias
+// it, as in the C. Segments are built in a local Sink and copied out last.
+// Rust-only refusals (no access, no state change) cover inputs outside the
+// contract: a misaligned context, and a frame, send data or receive output
+// overlapping the context.
+#[path = "../../../kernel/rust/net/tcp.rs"]
+pub mod tcp;
+use tcp::{Sink, Tcp, TcpIn};
+
+unsafe fn sink_out(s: &Sink, out: *mut u8, length: *mut usize) {
+    // SAFETY: a nonzero s.len is set only after output_ok() admitted
+    // [out, out+s.len) and the separate length object; the local frame is
+    // disjoint from the caller's output.
+    if let Some(frame) = s.frame.get(..s.len) {
+        if !frame.is_empty() {
+            unsafe { emit(frame, out, length) };
+        }
+    }
+}
+/// # Safety
+/// `c` is writable `struct net_tcp` storage; mac/ip readable (may alias `c`).
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn vos_rust_net_tcp_init(c: *mut Tcp, mac: *const u8, ip: *const u8, port: u16, initial_sequence: u32) -> i32 {
+    if !aligned(c) || port == 0 || mac.is_null() || ip.is_null() {
+        return EINVAL;
+    }
+    let (m, i) = unsafe { (copy6(mac), copy4(ip)) };
+    tcp::tcp_init(unsafe { &mut *c }, &m, &i, port, initial_sequence)
+}
+/// # Safety
+/// `c` is a live `struct net_tcp`; frame readable for `n`; out/length per net_arp.h.
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn vos_rust_net_tcp_input(c: *mut Tcp, f: *const u8, n: usize, now: u64, out: *mut u8, capacity: usize, length: *mut usize) -> i32 {
+    if !aligned(c) {
+        return EINVAL;
+    }
+    let Some(p) = (unsafe { frame(f, n) }) else { return EINVAL };
+    if overlaps(f as usize, n, c as usize, size_of::<Tcp>()) {
+        return EINVAL;
+    }
+    let mut s = Sink::new(out as usize, capacity, length as usize);
+    match tcp::tcp_input(unsafe { &mut *c }, p, now, &mut s) {
+        TcpIn::Code(e) => {
+            unsafe { sink_out(&s, out, length) };
+            e
+        }
+        // As the accepted C, non-TCP local frames go to the IPv4/ARP input.
+        TcpIn::Ipv4Input => unsafe { vos_rust_net_ipv4_input(ptr::addr_of_mut!((*c).ip), f, n, now, out, capacity, length) },
+    }
+}
+/// # Safety
+/// `c` is a live `struct net_tcp`.
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn vos_rust_net_tcp_expire(c: *mut Tcp, now: u64) -> i32 {
+    if !aligned(c) {
+        return EINVAL;
+    }
+    tcp::tcp_expire(unsafe { &mut *c }, now)
+}
+/// # Safety
+/// `c` is null or writable `struct net_tcp` storage.
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn vos_rust_net_tcp_close(c: *mut Tcp) {
+    if aligned(c) {
+        tcp::tcp_close(unsafe { &mut *c });
+    }
+}
+/// # Safety
+/// `c` is null or a live `struct net_tcp`.
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn vos_rust_net_tcp_abort(c: *mut Tcp) {
+    if aligned(c) {
+        tcp::tcp_abort(unsafe { &mut *c });
+    }
+}
+/// # Safety
+/// `c` is a live `struct net_tcp`.
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn vos_rust_net_tcp_enable_payload(c: *mut Tcp) -> i32 {
+    if !aligned(c) {
+        return EINVAL;
+    }
+    tcp::tcp_enable_payload(unsafe { &mut *c })
+}
+/// # Safety
+/// `c` is a live `struct net_tcp`.
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn vos_rust_net_tcp_enable_retransmission(c: *mut Tcp) -> i32 {
+    if !aligned(c) {
+        return EINVAL;
+    }
+    tcp::tcp_enable_retransmission(unsafe { &mut *c })
+}
+/// # Safety
+/// `c` is a live `struct net_tcp`.
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn vos_rust_net_tcp_enable_closure(c: *mut Tcp) -> i32 {
+    if !aligned(c) {
+        return EINVAL;
+    }
+    tcp::tcp_enable_closure(unsafe { &mut *c })
+}
+/// # Safety
+/// `c` is a live `struct net_tcp`; data readable for `n` outside the context
+/// (it may alias the output); out/length per net_arp.h.
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn vos_rust_net_tcp_send(c: *mut Tcp, data: *const u8, n: usize, now: u64, out: *mut u8, capacity: usize, length: *mut usize) -> i32 {
+    if !aligned(c) {
+        return EINVAL;
+    }
+    // Rust-only refusal: data inside the context it mutates (outside the contract).
+    if !data.is_null() && n <= tcp::TX_MAX && overlaps(data as usize, n, c as usize, size_of::<Tcp>()) {
+        return EINVAL;
+    }
+    // SAFETY: n <= 64 bytes readable at data (contract), outside the context;
+    // it may alias the output, which is written only after the core returns.
+    let d: Option<&[u8]> = if data.is_null() || n > tcp::TX_MAX { None } else if n == 0 { Some(&[]) } else { Some(unsafe { slice::from_raw_parts(data, n) }) };
+    let mut s = Sink::new(out as usize, capacity, length as usize);
+    let e = tcp::tcp_send(unsafe { &mut *c }, d, now, &mut s);
+    unsafe { sink_out(&s, out, length) };
+    e
+}
+
+/// # Safety
+/// `c` is a live `struct net_tcp`; out writable for capacity outside it; length per net_arp.h.
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn vos_rust_net_tcp_receive(c: *mut Tcp, out: *mut u8, capacity: usize, length: *mut usize, now: u64) -> i32 {
+    if !aligned(c) {
+        return EINVAL;
+    }
+    // Rust-only refusal: the copy must not overlap the context it reads and shifts.
+    let span = if capacity < tcp::RX_MAX { capacity } else { tcp::RX_MAX };
+    if !out.is_null() && overlaps(out as usize, span, c as usize, size_of::<Tcp>()) {
+        return EINVAL;
+    }
+    match tcp::tcp_receive_begin(unsafe { &*c }, out as usize, capacity, length as usize, now) {
+        Ok(n) => {
+            // SAFETY: output_ok() admitted [out, out+n) and the separate length
+            // object; out is outside the context (checked above); n <= rx_used <= 64.
+            unsafe { ptr::copy_nonoverlapping(ptr::addr_of!((*c).rx).cast::<u8>(), out, n) };
+            tcp::tcp_receive_finish(unsafe { &mut *c }, n, now);
+            unsafe { length.write_unaligned(n) };
+            0
+        }
+        Err(e) => e,
+    }
+}
+/// # Safety
+/// `c` is a live `struct net_tcp`; out/length per net_arp.h.
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn vos_rust_net_tcp_ack(c: *mut Tcp, now: u64, out: *mut u8, capacity: usize, length: *mut usize) -> i32 {
+    if !aligned(c) {
+        return EINVAL;
+    }
+    let mut s = Sink::new(out as usize, capacity, length as usize);
+    let e = tcp::tcp_ack(unsafe { &mut *c }, now, &mut s);
+    unsafe { sink_out(&s, out, length) };
+    e
+}
+/// # Safety
+/// `c` is a live `struct net_tcp`; out/length per net_arp.h.
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn vos_rust_net_tcp_retransmit(c: *mut Tcp, now: u64, out: *mut u8, capacity: usize, length: *mut usize) -> i32 {
+    if !aligned(c) {
+        return EINVAL;
+    }
+    let mut s = Sink::new(out as usize, capacity, length as usize);
+    let e = tcp::tcp_retransmit(unsafe { &mut *c }, now, &mut s);
+    unsafe { sink_out(&s, out, length) };
+    e
+}
+/// # Safety
+/// `c` is a live `struct net_tcp`; out/length per net_arp.h.
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn vos_rust_net_tcp_finish(c: *mut Tcp, now: u64, out: *mut u8, capacity: usize, length: *mut usize) -> i32 {
+    if !aligned(c) {
+        return EINVAL;
+    }
+    let mut s = Sink::new(out as usize, capacity, length as usize);
+    let e = tcp::tcp_finish(unsafe { &mut *c }, now, &mut s);
+    unsafe { sink_out(&s, out, length) };
+    e
 }
