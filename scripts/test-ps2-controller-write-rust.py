@@ -103,7 +103,7 @@ def main():
   need(frames['vos_rust_keyboard_ordinary_poll']<=40 and frames['vos_rust_keyboard_routed_poll']<=24,'retained ordinary/routed budgets')
   symbols=run(['nm','--defined-only',archive],'archive-owners.txt')
   for n in WRITE_ENTRIES:need(sum(x.endswith(' T '+n) for x in symbols.splitlines())==1,'one Rust owner '+n)
-  c=run(['nm',out/'release-driver.o'],'C-symbols.txt');need(all(' U '+n in c for n in WRITE_ENTRIES),'C only forwards')
+  c=run(['nm',out/'release-driver.o'],'C-symbols.txt');need(not any(x.endswith(' T '+n) for n in WRITE_ENTRIES for x in c.splitlines()) and ' U vos_rust_keyboard_init' in c,'C defines no write helper; its lifecycle callers forward to Rust (R2-L)')
   driver_src=(ROOT/'arch/x86_64/keyboard.c').read_text();need('->out(' not in driver_src and '#define IBF' not in driver_src,'no C controller write or IBF wait loop remains in the driver')
   report['source_sha256']={n:sha(ROOT/n) for n in ['kernel/rust/input/ps2_controller_write.rs','kernel/rust/input/ps2_controller_read.rs','arch/x86_64/rust/ps2_routed.rs','arch/x86_64/keyboard.c','arch/x86_64/rust_kernel.h',
    'tests/host/keyboard-controller-write-differential.c','tests/rust/ps2_controller_write.rs','tests/reference/ps2-controller-write.c','tests/reference/ps2-controller-write-wrappers.c','scripts/test-ps2-controller-write-rust.py']};report['status']='PASS'

@@ -26,6 +26,15 @@ int vos_rust_keyboard_read_aux(struct keyboard *keyboard, uint8_t *value);
 int vos_rust_keyboard_write_port(struct keyboard *keyboard, uint16_t port, uint8_t value);
 int vos_rust_keyboard_command(struct keyboard *keyboard, uint8_t value);
 int vos_rust_keyboard_aux_command(struct keyboard *keyboard, uint8_t value);
+struct keyboard_io;
+/* R2-L controller lifecycle (exact accepted sequences; see keyboard.c). init accepts
+ * writable storage whose contents are discarded; the others need a live object.
+ * Same IF=0 ownership; no output-port, A20, reset, PIC or new commands. */
+int vos_rust_keyboard_init(struct keyboard *keyboard, const struct keyboard_io *io);
+int vos_rust_keyboard_suspend(struct keyboard *keyboard);
+int vos_rust_keyboard_resume(struct keyboard *keyboard);
+int vos_rust_keyboard_pointer_start(struct keyboard *keyboard);
+void vos_rust_keyboard_pointer_stop(struct keyboard *keyboard);
 struct pointer_packet;
 /* R2: PS/2 pointer polling and packet dequeue Rust entry points. */
 int vos_rust_keyboard_pointer_poll(struct keyboard *k, struct pointer_packet *p);

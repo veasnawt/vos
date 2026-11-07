@@ -7,6 +7,8 @@ pub mod ordinary;
 pub mod controller_read;
 #[path="../../../kernel/rust/input/ps2_controller_write.rs"]
 pub mod controller_write;
+#[path="../../../kernel/rust/input/ps2_lifecycle.rs"]
+pub mod lifecycle;
 use routing::{Queue, Route, Packet, PointerQueue};
 use routing::{pointer_poll, pointer_lost_and_clear};
 use core::{mem::{align_of,offset_of,size_of},ptr};
@@ -224,12 +226,14 @@ unsafe fn controller_read_entry(k:*mut core::ffi::c_void, value:*mut u8, channel
 /// thread/IF=0, io callback and exclusive ownership contracts apply; callbacks may
 /// substitute a valid io but cannot free/unmap storage. No controller write.
 #[unsafe(no_mangle)]
+#[inline(never)]
 pub unsafe extern "C" fn vos_rust_keyboard_read_keyboard(k:*mut core::ffi::c_void, value:*mut u8)->core::ffi::c_int {
     unsafe { controller_read_entry(k, value, controller_read::Channel::Keyboard) }
 }
 /// # Safety
 /// Same contract as `vos_rust_keyboard_read_keyboard`, for the auxiliary channel.
 #[unsafe(no_mangle)]
+#[inline(never)]
 pub unsafe extern "C" fn vos_rust_keyboard_read_aux(k:*mut core::ffi::c_void, value:*mut u8)->core::ffi::c_int {
     unsafe { controller_read_entry(k, value, controller_read::Channel::Aux) }
 }
@@ -254,6 +258,7 @@ impl controller_write::ControllerWrite for Raw {
 /// Same object, io and exclusive-ownership contract as `vos_rust_keyboard_read_keyboard`.
 /// Writes at most one byte, only to 0x60 or 0x64; any other port is refused without access.
 #[unsafe(no_mangle)]
+#[inline(never)]
 pub unsafe extern "C" fn vos_rust_keyboard_write_port(k:*mut core::ffi::c_void, port:u16, value:u8)->core::ffi::c_int {
     if !routing::keyboard_range_valid(k as usize) {return 0;}
     match controller_write::Port::from_address(port) {
@@ -265,6 +270,7 @@ pub unsafe extern "C" fn vos_rust_keyboard_write_port(k:*mut core::ffi::c_void, 
 /// Same contract as `vos_rust_keyboard_write_port`; writes the byte to 0x60 and
 /// requires keyboard acknowledgement 0xFA.
 #[unsafe(no_mangle)]
+#[inline(never)]
 pub unsafe extern "C" fn vos_rust_keyboard_command(k:*mut core::ffi::c_void, value:u8)->core::ffi::c_int {
     if !routing::keyboard_range_valid(k as usize) {return 0;}
     controller_write::command(&mut Raw(k.cast()), value) as core::ffi::c_int
@@ -273,7 +279,106 @@ pub unsafe extern "C" fn vos_rust_keyboard_command(k:*mut core::ffi::c_void, val
 /// Same contract as `vos_rust_keyboard_write_port`; writes 0xD4 to 0x64, the byte to
 /// 0x60, and requires auxiliary acknowledgement 0xFA.
 #[unsafe(no_mangle)]
+#[inline(never)]
 pub unsafe extern "C" fn vos_rust_keyboard_aux_command(k:*mut core::ffi::c_void, value:u8)->core::ffi::c_int {
     if !routing::keyboard_range_valid(k as usize) {return 0;}
     controller_write::aux_command(&mut Raw(k.cast()), value) as core::ffi::c_int
+}
+
+// R2-L controller lifecycle. Life carries the live object and, for init only, the
+// caller's io table (the accepted C validates and drains through that table, while
+// its helpers use the object's io). Controller accesses use the accepted bounded
+// entries above, out of line; state fields are written in place at the accepted
+// points relative to the callbacks. Same entry contract as the helpers.
+struct Life {k:*mut Keyboard,io:*const Io}
+impl lifecycle::Lifecycle for Life {
+    #[inline(always)] fn write_port(&mut self, port: controller_write::Port, value: u8) -> bool {
+        unsafe { vos_rust_keyboard_write_port(self.k.cast(), port.address(), value) != 0 }
+    }
+    #[inline(always)] fn command(&mut self, value: u8) -> bool { unsafe { vos_rust_keyboard_command(self.k.cast(), value) != 0 } }
+    #[inline(always)] fn aux_command(&mut self, value: u8) -> bool { unsafe { vos_rust_keyboard_aux_command(self.k.cast(), value) != 0 } }
+    #[inline(always)] fn read_keyboard(&mut self) -> Option<u8> {
+        let mut byte = 0u8;
+        // SAFETY: byte is a live local disjoint from the keyboard object.
+        if unsafe { vos_rust_keyboard_read_keyboard(self.k.cast(), &mut byte) } != 0 { Some(byte) } else { None }
+    }
+    #[inline(always)] fn read_aux(&mut self) -> Option<u8> {
+        let mut byte = 0u8;
+        if unsafe { vos_rust_keyboard_read_aux(self.k.cast(), &mut byte) } != 0 { Some(byte) } else { None }
+    }
+    #[inline(always)] fn read(&mut self, port: u16) -> u8 { <Raw as Route>::read(&mut Raw(self.k), port) }
+    #[inline(always)] fn suspend(&mut self) -> bool { unsafe { vos_rust_keyboard_suspend(self.k.cast()) != 0 } }
+    #[inline(always)] fn resume(&mut self) -> bool { unsafe { vos_rust_keyboard_resume(self.k.cast()) != 0 } }
+    // SAFETY (field accessors): entry contract; plain in-place loads/stores, no
+    // reference retained across any callback.
+    #[inline(always)] fn io_present(&self) -> bool { unsafe { !ptr::addr_of!((*self.k).io).read().is_null() } }
+    #[inline(always)] fn ready(&self) -> bool { unsafe { ptr::addr_of!((*self.k).ready).read() != 0 } }
+    #[inline(always)] fn set_ready(&mut self, ready: bool) { unsafe { ptr::addr_of_mut!((*self.k).ready).write(ready as i32) } }
+    #[inline(always)] fn pointer_ready(&self) -> bool { unsafe { ptr::addr_of!((*self.k).pointer_ready).read() != 0 } }
+    #[inline(always)] fn set_pointer_ready(&mut self, ready: bool) { unsafe { ptr::addr_of_mut!((*self.k).pointer_ready).write(ready as i32) } }
+    #[inline(always)] fn clear_decoder(&mut self) { unsafe { ptr::addr_of_mut!((*self.k).decoder).write([0; 7]) } }
+    #[inline(always)] fn clear_pointer_decoder(&mut self) { <Raw as Route>::reset_pointer(&mut Raw(self.k)) }
+    #[inline(always)] fn clear_pointer_pending(&mut self) { unsafe { ptr::addr_of_mut!((*self.k).pending).write(0) } }
+    #[inline(always)] fn clear_pointer_lost(&mut self) { unsafe { ptr::addr_of_mut!((*self.k).lost).write(0) } }
+    #[inline(always)] fn clear_key_head(&mut self) { unsafe { ptr::addr_of_mut!((*self.k).queue.head).write(0) } }
+    #[inline(always)] fn clear_key_count(&mut self) { unsafe { ptr::addr_of_mut!((*self.k).queue.count).write(0) } }
+}
+impl lifecycle::Init for Life {
+    #[inline(always)] fn reset_object(&mut self) {
+        // SAFETY: k is valid, aligned, writable 88-byte storage (entry contract);
+        // every byte (padding included) is zeroed, then io stored, as the accepted C.
+        unsafe { ptr::write_bytes(self.k, 0, 1); ptr::addr_of_mut!((*self.k).io).write(self.io) }
+    }
+    #[inline(always)] fn io_complete(&self) -> bool {
+        // SAFETY: the table is read only when non-null; the input slot is read as raw
+        // bits so a null callback is detected without forming a null fn value.
+        !self.io.is_null() && unsafe {
+            ptr::addr_of!((*self.io).input).cast::<usize>().read() != 0 && ptr::addr_of!((*self.io).output).read().is_some()
+        }
+    }
+    #[inline(always)] fn read_original(&mut self, port: u16) -> u8 {
+        // SAFETY: io_complete() held before any read; the caller's table is not
+        // reloaded from the object, exactly as the accepted C drain.
+        unsafe { let f = ptr::addr_of!((*self.io).input).read(); f(port) }
+    }
+}
+/// # Safety
+/// k identifies writable, aligned, caller-owned 88-byte keyboard storage for this
+/// synchronous call (its prior contents are discarded); io is null or a callback
+/// table that stays valid. Thread/IF=0 ownership as keyboard_poll. Issues only the
+/// accepted initialization sequence; no output-port, A20, reset or PIC commands.
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn vos_rust_keyboard_init(k:*mut core::ffi::c_void, io:*const core::ffi::c_void)->core::ffi::c_int {
+    if !routing::keyboard_range_valid(k as usize) {return 0;}
+    lifecycle::init(&mut Life{k:k.cast(),io:io.cast()}) as core::ffi::c_int
+}
+/// # Safety
+/// Same live object, io and ownership contract as `vos_rust_keyboard_read_keyboard`.
+#[unsafe(no_mangle)]
+#[inline(never)]
+pub unsafe extern "C" fn vos_rust_keyboard_suspend(k:*mut core::ffi::c_void)->core::ffi::c_int {
+    if !routing::keyboard_range_valid(k as usize) {return 0;}
+    lifecycle::suspend(&mut Life{k:k.cast(),io:ptr::null()}) as core::ffi::c_int
+}
+/// # Safety
+/// Same contract as `vos_rust_keyboard_suspend`.
+#[unsafe(no_mangle)]
+#[inline(never)]
+pub unsafe extern "C" fn vos_rust_keyboard_resume(k:*mut core::ffi::c_void)->core::ffi::c_int {
+    if !routing::keyboard_range_valid(k as usize) {return 0;}
+    lifecycle::resume(&mut Life{k:k.cast(),io:ptr::null()}) as core::ffi::c_int
+}
+/// # Safety
+/// Same contract as `vos_rust_keyboard_suspend`.
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn vos_rust_keyboard_pointer_start(k:*mut core::ffi::c_void)->core::ffi::c_int {
+    if !routing::keyboard_range_valid(k as usize) {return 0;}
+    lifecycle::pointer_start(&mut Life{k:k.cast(),io:ptr::null()}) as core::ffi::c_int
+}
+/// # Safety
+/// Same contract as `vos_rust_keyboard_suspend`.
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn vos_rust_keyboard_pointer_stop(k:*mut core::ffi::c_void) {
+    if !routing::keyboard_range_valid(k as usize) {return;}
+    lifecycle::pointer_stop(&mut Life{k:k.cast(),io:ptr::null()})
 }
