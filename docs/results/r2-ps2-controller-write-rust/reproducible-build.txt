@@ -1,0 +1,3 @@
+KERNEL_AND_ARCHIVE_BYTE_IDENTICAL
+de8f1fa483620418ae9bb2200db76315cd5fc2e2fd9692693a954738cece98b5  build/x86_64/vos.bin
+33e886e4c6742c1acbf7334cf07d1a7cbfea06d9e36be176072c7108aaf6eb46  build/x86_64/rust/libvos_kernel.a

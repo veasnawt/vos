@@ -1,0 +1,224 @@
+{
+ "status": "PASS",
+ "archive_sha256": "33e886e4c6742c1acbf7334cf07d1a7cbfea06d9e36be176072c7108aaf6eb46",
+ "Rust_sanitized": false,
+ "seed": "7232772d77726974",
+ "cpu": 0,
+ "performance": {
+  "write_immediate": {
+   "C_ns": 9.44,
+   "Rust_ns": 9.18,
+   "percent": -2.754237288135586
+  },
+  "write_delay10": {
+   "C_ns": 47.675,
+   "Rust_ns": 49.565,
+   "percent": 3.96434189826953
+  },
+  "command_ack": {
+   "C_ns": 17.545,
+   "Rust_ns": 15.04,
+   "percent": -14.277571957822754
+  },
+  "aux_command_ack": {
+   "C_ns": 22.42,
+   "Rust_ns": 21.93,
+   "percent": -2.185548617305988
+  },
+  "command_nak": {
+   "C_ns": 17.54,
+   "Rust_ns": 15.04,
+   "percent": -14.25313568985177
+  },
+  "write_timeout100k": {
+   "C_ns": 283824.75,
+   "Rust_ns": 321809.7,
+   "percent": 13.383240890725713
+  }
+ },
+ "regressions_over_5_percent": [
+  "write_timeout100k"
+ ],
+ "mutations": {
+  "bound": {
+   "assertion": "bound::last_iteration_writes",
+   "detected": true,
+   "policy_sha256": "5f8e129c18f5f5ae56f58b1b8148f76db5a5eec709fe3436169a97e64d1ca386"
+  },
+  "limit": {
+   "assertion": "limit::one_past_limit_fails",
+   "detected": true,
+   "policy_sha256": "745abdefb9428eea8e4c96a8641a7f65782f38b67d258d243f48097af49f22ac"
+  },
+  "ibf": {
+   "assertion": "ibf::write_waits_while_busy",
+   "detected": true,
+   "policy_sha256": "b33b5bc952bde53c42d385d9a3ae083c3cf9d5801507e7c29d6becbfc537ecb8"
+  },
+  "status_port": {
+   "assertion": "status_port::write_immediate",
+   "detected": true,
+   "policy_sha256": "23845b1aac6056261d2d79023fb5ffe09e4b586c198bd3374a311607e5291876"
+  },
+  "write_order": {
+   "assertion": "write_order::write_immediate",
+   "detected": true,
+   "policy_sha256": "d9ff618b9b0987b6778100a0356931569d7bb92ce7b112e398ff47a42fa7c457"
+  },
+  "missing_write": {
+   "assertion": "missing_write::write_immediate",
+   "detected": true,
+   "policy_sha256": "e94a2cabfc00be1397efc18f9c1c4365283dfd451da1af98d76413804edbe6ac"
+  },
+  "extra_write": {
+   "assertion": "extra_write::write_immediate",
+   "detected": true,
+   "policy_sha256": "b125cf108cabbebd979110e2bc780a56b0c39577d9415800f3a56969f600a482"
+  },
+  "timeout_write": {
+   "assertion": "timeout_write::timeout_no_write",
+   "detected": true,
+   "policy_sha256": "357ecabaaa7ec9fa4325b7c626e0ba8e4195a9f6570139dab12715f48e02b89a"
+  },
+  "write_result": {
+   "assertion": "write_result::write_failure_reported",
+   "detected": true,
+   "policy_sha256": "1a4c0424bfe177779e5feec486fc47604ccf6e744bad5db52d879ed657bf5522"
+  },
+  "value": {
+   "assertion": "value::write_value_exact",
+   "detected": true,
+   "policy_sha256": "b022a31884fc52cb68ee294787236b191270ae7da15b6f6b46753c49cd674aa2"
+  },
+  "port_address": {
+   "assertion": "port_address::write_immediate",
+   "detected": true,
+   "policy_sha256": "da99fc4437bdf329682355cc7dfbbd576da36fb8a9ec711c1289fb8cc1a6d07d"
+  },
+  "port_map": {
+   "assertion": "port_map::port_mapping",
+   "detected": true,
+   "policy_sha256": "da512c10225ccbb9f475153e578897dc955ea1b2a6607b4bfb8d1ba9ee86c582"
+  },
+  "port_refusal": {
+   "assertion": "port_refusal::port_mapping",
+   "detected": true,
+   "policy_sha256": "f72dfc61d639fecf2ad2fa0ba709fc20bef3903b233088ff57c3ce3a2a719830"
+  },
+  "command_port": {
+   "assertion": "command_port::command_success",
+   "detected": true,
+   "policy_sha256": "cd904f157b43dd145be7176b32d2557102812a9f2aa2ac6c5a0971a53b394eb5"
+  },
+  "command_channel": {
+   "assertion": "command_channel::command_success",
+   "detected": true,
+   "policy_sha256": "6f50f1380934c4fd8415449bdbc4dab08846e4e51a19a01f2568cd5eb8237e7d"
+  },
+  "command_ack": {
+   "assertion": "command_ack::command_nak",
+   "detected": true,
+   "policy_sha256": "af0b689f8a160e3bc85dc9774c73d66aeb787273d41e248d02baabdc1dd6fce8"
+  },
+  "command_short_circuit": {
+   "assertion": "command_short_circuit::command_write_failure_skips_read",
+   "detected": true,
+   "policy_sha256": "091463bcc2dc2a8d8b6b081134532b7fde1a500bcede6b9cfa43170c5143eb5a"
+  },
+  "ack_value": {
+   "assertion": "ack_value::command_success",
+   "detected": true,
+   "policy_sha256": "591102970be9d13eb4f64a99190de2089f7cadca2c204e709d1f2304f2705eed"
+  },
+  "aux_prefix": {
+   "assertion": "aux_prefix::aux_success",
+   "detected": true,
+   "policy_sha256": "b74bf08e0fe8d8c8399c7a4837f46a0ef9e8d82fc9630831f735fb6a7fa7f597"
+  },
+  "aux_prefix_port": {
+   "assertion": "aux_prefix_port::aux_success",
+   "detected": true,
+   "policy_sha256": "1729611124a440cf69da59dd79dae93c9be9db32f22494b7ece7f056a5581df4"
+  },
+  "aux_missing_prefix": {
+   "assertion": "aux_missing_prefix::aux_success",
+   "detected": true,
+   "policy_sha256": "fe2c94505c329870c0a5a72f673d30e4bf2b1120983280eeadc606afa1635525"
+  },
+  "aux_order": {
+   "assertion": "aux_order::aux_success",
+   "detected": true,
+   "policy_sha256": "40cc9f76dcabc7b6d20eb45ec13f62c1590a992a70a5b974256019efc0df67f3"
+  },
+  "aux_short_circuit": {
+   "assertion": "aux_short_circuit::aux_prefix_failure_stops",
+   "detected": true,
+   "policy_sha256": "f18a75a1eb946801528dd92c4f87b7c870dc57f19b4c24730d70540ccb1e0cd8"
+  },
+  "aux_channel": {
+   "assertion": "aux_channel::aux_success",
+   "detected": true,
+   "policy_sha256": "9c4d37023edd59efaaed389092c26b4e8573618dab3ee3d8716e20171d1182bc"
+  },
+  "aux_ack": {
+   "assertion": "aux_ack::aux_nak",
+   "detected": true,
+   "policy_sha256": "a717743c12d6cac531716428aebafa73c087a9506a9710bfe3f3aaa6c1bbd9ad"
+  }
+ },
+ "shared_harness": {
+  "binary_bytes": 1710544,
+  "binary_sha256": "8ea14f5992e0c1ce02dc246e7411e9cea325b24195b6e0577629e3a515fbd9d2",
+  "variants": 26,
+  "runtime_executables": 1,
+  "method": "Distinct namespace per variant, identical positive fixture; intended assertions run individually, isolated process per mutant."
+ },
+ "frames": {
+  "vos_rust_keyboard_write_port": 40,
+  "vos_rust_keyboard_command": 40,
+  "vos_rust_keyboard_aux_command": 40,
+  "vos_rust_keyboard_read_keyboard": 40,
+  "vos_rust_keyboard_read_aux": 40,
+  "vos_rust_keyboard_ordinary_poll": 40,
+  "vos_rust_keyboard_routed_poll": 8,
+  "callers": {
+   "keyboard_init": {
+    "C_reference": 40,
+    "candidate": 40
+   },
+   "keyboard_suspend": {
+    "C_reference": 40,
+    "candidate": 40
+   },
+   "keyboard_resume": {
+    "C_reference": 40,
+    "candidate": 24
+   },
+   "keyboard_pointer_start": {
+    "C_reference": 56,
+    "candidate": 40
+   },
+   "keyboard_pointer_stop": {
+    "C_reference": 8,
+    "candidate": 8
+   }
+  }
+ },
+ "source_sha256": {
+  "kernel/rust/input/ps2_controller_write.rs": "e5bad7c5eaa7051e9050f3037275077bd08426ef13e3c04784efbefbf7c66602",
+  "kernel/rust/input/ps2_controller_read.rs": "603195eb20a154b81680c5a05304b517860ca2ddbadcdab0572aaf46fa18780b",
+  "arch/x86_64/rust/ps2_routed.rs": "e0253ed55789f3f1285a456aa75a9d2ab33064573502e7e89480c751e535ee36",
+  "arch/x86_64/keyboard.c": "a50dc06ecb55e0641374355f3709296e78ecf7d5bf8f9f799927d096161a138f",
+  "arch/x86_64/rust_kernel.h": "16f70ca4046cf2f9703624873919158277d03157f94019d7ad4817dcc5cde47b",
+  "tests/host/keyboard-controller-write-differential.c": "75a799c6d36cbe69724181f15c56e583477ac133a08ef52941861bccea92301c",
+  "tests/rust/ps2_controller_write.rs": "262a392699d0d069ce5dff483412dd68dde92e882821359781700fc5c122510e",
+  "tests/reference/ps2-controller-write.c": "fe25c367ebf1071e2c2c1946c23bd615d6e02af168c77aa79e273ed688389fd8",
+  "tests/reference/ps2-controller-write-wrappers.c": "6bf11747e6e32cdd876221db9af1e00a03e5437ed49253d850e4d8014c1a3a76",
+  "scripts/test-ps2-controller-write-rust.py": "a5e6a5c2eebd97da748fa5cb40fd10d33bec74f0ad2bf8706d145a18a40503c9"
+ },
+ "core_tests": "test result: ok. 24 passed; 0 failed; 0 ignored; 0 measured; 600 filtered out; finished in 0.01s",
+ "release": "PASS 553774 controller write comparisons and 3000 lifecycle scenarios; seed=7232772d77726974; exhaustive status x value/ACK, exact 100000 wait limit, failure at every step, io reload, refused ports/objects, read+write traces",
+ "sanitizer": "PASS 553774 controller write comparisons and 3000 lifecycle scenarios; seed=7232772d77726974; exhaustive status x value/ACK, exact 100000 wait limit, failure at every step, io reload, refused ports/objects, read+write traces",
+ "checked_Rust": "PASS 553774 controller write comparisons and 3000 lifecycle scenarios; seed=7232772d77726974; exhaustive status x value/ACK, exact 100000 wait limit, failure at every step, io reload, refused ports/objects, read+write traces",
+ "source_run": "accepted R2 development worker, R2-W campaign run r2, plan 70d2374273c2bc852d2d5887f1e4e10c9221fa574bce81b67f173fd980ace33d, seal 7ebd908dc41e28ee8e46744f64d80d8912440e612c006c051865ee752732ecd1"
+}

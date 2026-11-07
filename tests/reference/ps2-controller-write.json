@@ -1,0 +1,12 @@
+{
+  "baseline": "74abed0de259a7c0a271c087acd8ab7cbb6150a7",
+  "accepted_source_sha256": "fe25c367ebf1071e2c2c1946c23bd615d6e02af168c77aa79e273ed688389fd8",
+  "reference_sha256": "fe25c367ebf1071e2c2c1946c23bd615d6e02af168c77aa79e273ed688389fd8",
+  "wrappers_sha256": "6bf11747e6e32cdd876221db9af1e00a03e5437ed49253d850e4d8014c1a3a76",
+  "headers_sha256": {
+    "keyboard.h": "c6104c37cd72472e32a16471a22c2149e15e68f4baff2c64072a054b088a68b7",
+    "pointer.h": "7ed1b6597f0155f9cd4720a2c0fe712e08d6b7cf51ad6acc010841e7f8f291b7",
+    "rust_kernel.h": "3fd44f6b2fd4c13084d1452377d7d2ff90156d96e5e0fb1b01201cd314235cf9"
+  },
+  "transformation": "Byte-identical accepted C driver and headers at merged main 74abed0; a separate test-only TU includes it and exposes the static write_port/command/aux_command; public APIs renamed at compile time only. Reference and candidate share the accepted Rust read helpers, decoder, routed and ordinary paths from the production archive."
+}

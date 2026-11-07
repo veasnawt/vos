@@ -18,6 +18,14 @@ char vos_rust_keyboard_ordinary_poll(struct keyboard *keyboard);
  * only when 1 is returned. Same live/IF=0 ownership; no controller write. */
 int vos_rust_keyboard_read_keyboard(struct keyboard *keyboard, uint8_t *value);
 int vos_rust_keyboard_read_aux(struct keyboard *keyboard, uint8_t *value);
+/* R2-W bounded controller writes. write_port: at most 100,000 status (0x64) reads,
+ * one write after IBF clears, none after timeout; only ports 0x60/0x64 (others
+ * refused without access). command: 0x60 write then keyboard ACK 0xFA. aux_command:
+ * 0xD4 to 0x64, byte to 0x60, then aux ACK 0xFA. Each stops at the first failure.
+ * Same live/IF=0 ownership; io is reloaded for every access. */
+int vos_rust_keyboard_write_port(struct keyboard *keyboard, uint16_t port, uint8_t value);
+int vos_rust_keyboard_command(struct keyboard *keyboard, uint8_t value);
+int vos_rust_keyboard_aux_command(struct keyboard *keyboard, uint8_t value);
 struct pointer_packet;
 /* R2: PS/2 pointer polling and packet dequeue Rust entry points. */
 int vos_rust_keyboard_pointer_poll(struct keyboard *k, struct pointer_packet *p);
