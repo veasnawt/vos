@@ -1,0 +1,11 @@
+{
+ "baseline": "74abed0de259a7c0a271c087acd8ab7cbb6150a7",
+ "baseline_note": "Baseline kernel is the reproducible PR60 r1 build; its tree equals merge 74abed0 (tree 1fa6ebc3).",
+ "baseline_kernel_sha256": "7b27f1e6f87ed04495500ddfbdcc159c1f8cfb3a6b42fa6abee21eb2800b4ef3",
+ "candidate_kernel_sha256": "de8f1fa483620418ae9bb2200db76315cd5fc2e2fd9692693a954738cece98b5",
+ "baseline_load_memsz": 962560,
+ "candidate_load_memsz": 962560,
+ "loaded_growth_bytes": 0,
+ "limit_bytes": 4096,
+ "file_size_delta": -1344
+}

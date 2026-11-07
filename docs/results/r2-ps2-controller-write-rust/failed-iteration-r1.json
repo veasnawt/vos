@@ -1,0 +1,35 @@
+{
+ "run": "r1",
+ "status": "STOP",
+ "primary": "JOB_FAILED:writehelpers:rc=1",
+ "seal": "7c0ea4e5bfbeaf902ec8ac92dc1e8c2a89fb8f5d28642488c65cd83973061e4e",
+ "cause": "Test-harness defect: the new driver-ownership check rejected the substring IBF, which also appears in the forwarding comment. Corrected to check for no ->out( call and no #define IBF wait loop. Production sources unchanged between r1 and r2.",
+ "productionIdentityR1EqualsR2": {
+  "kernel_and_archive_sha256": [
+   "de8f1fa483620418ae9bb2200db76315cd5fc2e2fd9692693a954738cece98b5",
+   "33e886e4c6742c1acbf7334cf07d1a7cbfea06d9e36be176072c7108aaf6eb46"
+  ]
+ },
+ "gatesPassedBeforeStop": {
+  "release": "PASS",
+  "sanitizer": "PASS",
+  "checked_Rust": "PASS",
+  "coreTests": "24/24",
+  "mutants": "25/25",
+  "frames": "within budget"
+ },
+ "performance_percent": {
+  "write_immediate": 7.8,
+  "write_delay10": 13.5,
+  "command_ack": -14.3,
+  "aux_command_ack": -3.9,
+  "command_nak": -15.6,
+  "write_timeout100k": 6.4
+ },
+ "regressions_over_5_percent": [
+  "write_delay10",
+  "write_immediate",
+  "write_timeout100k"
+ ],
+ "retainedEvidence": "build/retained/r2-ps2-write-helpers/r1 (preserved, not relabelled)"
+}
