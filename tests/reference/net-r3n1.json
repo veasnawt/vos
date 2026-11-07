@@ -1,0 +1,14 @@
+{
+  "baseline": "879c51179ecb6bcff3d1f7ef52051947b858c059",
+  "sources_sha256": {
+    "net-arp.c": "eafe4d97061e9dc75d3d3aedb312c638e121da66c4409e1ae3ab3a6ef8ae63bf",
+    "net-ipv4.c": "4e74b36e89766c737d1e507dbda1daa4e47fe928e853dbb926891db9ceda39c1",
+    "net-udp.c": "7793f88968102e3e39bd1b1be1dc44728e0922fe9bca0c9dc8f04a5b9e2a5856"
+  },
+  "headers_sha256": {
+    "net_arp.h": "4f5ab6cd026fa24140a6ff4abb3b227b10fd5fc4342cf92f1ebf13bb5dbfeded",
+    "net_ipv4.h": "7ddb90fb24bc90479c9ffef023812dd4ce76725971f755efd2a63d1fd7828963",
+    "net_udp.h": "f4604c35c8ebf7a7d46ac6c2fae8b2fa91445b46c2c9017f3f655d86b8443a30"
+  },
+  "transformation": "Byte-identical accepted net_arp.c/net_ipv4.c/net_udp.c and their headers at merged main 879c511, compiled as separate TUs with all 17 public functions renamed *_reference at compile time only (the TUs call each other through the renamed names). virtio_net.h and lib.h come from the production tree; they are unchanged by R3-N1."
+}

@@ -84,7 +84,8 @@ def main():
     try:
         cc=['gcc','-std=gnu11','-O1','-g','-Wall','-Wextra','-Werror','-fsanitize=address,undefined','-fno-omit-frame-pointer',
             '-ffunction-sections','-fdata-sections','-Wl,--gc-sections','-Iarch/x86_64']
-        run(cc+['tests/host/net-arp.c','arch/x86_64/net_arp.c','arch/x86_64/net_boot.c','-o',str(out/'host-arp')],out/'host-build.log')
+        NETLIB=runpy.run_path(str(REPO/'scripts/net_rust_host.py'),run_name='net_rust_host')['build'](out)
+        run(cc+['tests/host/net-arp.c','arch/x86_64/net_arp.c','arch/x86_64/net_boot.c',NETLIB,'-o',str(out/'host-arp')],out/'host-build.log')
         run([str(out/'host-arp')],out/'host-test.log')
         empty=subprocess.run(['make','-n','arp-iso','ARP_BUILD='],cwd=REPO,capture_output=True,text=True)
         require(empty.returncode==2 and 'ARP_BUILD must be nonempty' in empty.stderr,'empty output guard');(out/'path-guard.txt').write_text(empty.stderr)

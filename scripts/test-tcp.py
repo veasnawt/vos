@@ -113,9 +113,10 @@ def main():
     resource.setrlimit(resource.RLIMIT_CORE,(0,0));resource.setrlimit(resource.RLIMIT_FSIZE,(64*1024**2,64*1024**2));result={'scope':'bounded passive TCP establishment','firmware':{}}
     try:
         cc=['gcc','-std=gnu11','-O1','-g','-Wall','-Wextra','-Werror','-fsanitize=address,undefined','-fno-omit-frame-pointer','-ffunction-sections','-fdata-sections','-Wl,--gc-sections','-Iarch/x86_64']
+        NETLIB=runpy.run_path(str(REPO/'scripts/net_rust_host.py'),run_name='net_rust_host')['build'](out)
         for name,extra in [('net-arp',[]),('net-ipv4',['arch/x86_64/net_ipv4.c']),('net-udp',['arch/x86_64/net_ipv4.c','arch/x86_64/net_udp.c']),('net-tcp',['arch/x86_64/net_ipv4.c','arch/x86_64/net_tcp.c'])]:
             binary=out/name
-            run(cc+['tests/host/'+name+'.c','arch/x86_64/net_arp.c','arch/x86_64/net_boot.c']+extra+['-o',str(binary)],out/(name+'-build.log'))
+            run(cc+['tests/host/'+name+'.c','arch/x86_64/net_arp.c','arch/x86_64/net_boot.c']+extra+[NETLIB,'-o',str(binary)],out/(name+'-build.log'))
             run([str(binary)],out/(name+'-test.log'))
         empty=subprocess.run(['make','-n','tcp-iso','TCP_BUILD='],cwd=REPO,capture_output=True,text=True)
         require(empty.returncode==2 and 'TCP_BUILD must be nonempty' in empty.stderr,'empty output guard');(out/'path-guard.txt').write_text(empty.stderr)

@@ -101,13 +101,14 @@ def main():
     resource.setrlimit(resource.RLIMIT_CORE,(0,0));resource.setrlimit(resource.RLIMIT_FSIZE,(64*1024**2,64*1024**2));result={'scope':'bounded TCP retransmission','firmware':{}}
     try:
         cc=['gcc','-std=gnu11','-O1','-g','-Wall','-Wextra','-Werror','-fsanitize=address,undefined','-fno-omit-frame-pointer','-ffunction-sections','-fdata-sections','-Wl,--gc-sections','-Iarch/x86_64']
+        NETLIB=runpy.run_path(str(REPO/'scripts/net_rust_host.py'),run_name='net_rust_host')['build'](out)
         for name,extra in [('net-arp',[]),('net-ipv4',['arch/x86_64/net_ipv4.c']),('net-udp',['arch/x86_64/net_ipv4.c','arch/x86_64/net_udp.c']),('net-tcp',['arch/x86_64/net_ipv4.c','arch/x86_64/net_tcp.c']),('net-tcp-data',['arch/x86_64/net_ipv4.c','arch/x86_64/net_tcp.c']),('net-tcp-retry',['arch/x86_64/net_ipv4.c','arch/x86_64/net_tcp.c'])]:
             binary=out/name
-            run(cc+['tests/host/'+name+'.c','arch/x86_64/net_arp.c','arch/x86_64/net_boot.c']+extra+['-o',str(binary)],out/(name+'-build.log'));run([str(binary)],out/(name+'-test.log'))
+            run(cc+['tests/host/'+name+'.c','arch/x86_64/net_arp.c','arch/x86_64/net_boot.c']+extra+[NETLIB,'-o',str(binary)],out/(name+'-build.log'));run([str(binary)],out/(name+'-test.log'))
         require(sha(BASELINE/'manifest.json')=='d764382c7ae872df9e825222a868e8b31102015321fad271ba4fb82dacbea688','accepted payload baseline manifest')
         rows=json.loads((BASELINE/'manifest.json').read_text());expected_hash=next(x['sha256'] for x in rows if x['path']=='release-model');require(sha(BASELINE/'release-model')==expected_hash,'accepted benchmark binary')
         release=['gcc','-std=gnu11','-O2','-Wall','-Wextra','-Werror','-ffunction-sections','-fdata-sections','-Wl,--gc-sections','-Iarch/x86_64','-Itests/host']
-        common=['arch/x86_64/net_tcp.c','arch/x86_64/net_ipv4.c','arch/x86_64/net_arp.c','arch/x86_64/net_boot.c']
+        common=['arch/x86_64/net_tcp.c','arch/x86_64/net_ipv4.c','arch/x86_64/net_arp.c','arch/x86_64/net_boot.c',NETLIB]
         run(release+['-DVOS_TCP_PAYLOAD_BENCH','tests/host/net-tcp-bench.c']+common+['-o',str(out/'release-model')],out/'release-model-build.log')
         run(release+['tests/host/net-tcp-retry-bench.c']+common+['-o',str(out/'retry-model')],out/'retry-model-build.log')
         run([str(BASELINE/'release-model')],out/'baseline-contemporaneous.json');run([str(out/'release-model')],out/'release-model.json');run([str(out/'retry-model')],out/'retry-model.json')

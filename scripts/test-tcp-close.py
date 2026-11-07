@@ -124,7 +124,8 @@ def main():
     resource.setrlimit(resource.RLIMIT_CORE,(0,0));resource.setrlimit(resource.RLIMIT_FSIZE,(64*1024**2,64*1024**2));result={'scope':'bounded TCP connection closure','firmware':{}}
     try:
         cc=['gcc','-std=gnu11','-O1','-g','-Wall','-Wextra','-Werror','-fsanitize=address,undefined','-fno-omit-frame-pointer','-ffunction-sections','-fdata-sections','-Wl,--gc-sections','-Iarch/x86_64']
-        common=['arch/x86_64/net_arp.c','arch/x86_64/net_ipv4.c','arch/x86_64/net_tcp.c','arch/x86_64/net_boot.c']
+        NETLIB=runpy.run_path(str(REPO/'scripts/net_rust_host.py'),run_name='net_rust_host')['build'](out)
+        common=['arch/x86_64/net_arp.c','arch/x86_64/net_ipv4.c','arch/x86_64/net_tcp.c','arch/x86_64/net_boot.c',NETLIB]
         for name in ['net-tcp-close','net-tcp-retry','net-tcp-data','net-tcp']:
             binary=out/name
             run(cc+['tests/host/'+name+'.c']+common+['-o',str(binary)],out/(name+'-build.log'));run([str(binary)],out/(name+'-test.log'))
