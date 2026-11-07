@@ -51,6 +51,11 @@ int vos_rust_net_ethernet_input(struct net_arp *a, const void *frame, size_t len
 int vos_rust_net_ipv4_init(struct net_ipv4 *c, const uint8_t mac[6], const uint8_t ip[4]);
 int vos_rust_net_ipv4_echo_request(struct net_ipv4 *c, const uint8_t peer[4], uint16_t id, uint16_t sequence, const void *data, size_t data_length, uint64_t now, void *out, size_t capacity, size_t *length);
 int vos_rust_net_ipv4_input(struct net_ipv4 *c, const void *frame, size_t length, uint64_t now, void *out, size_t capacity, size_t *output_length);
+int vos_rust_net_udp_init(struct net_udp *c, const uint8_t mac[6], const uint8_t ip[4], uint16_t port);
+int vos_rust_net_udp_send(struct net_udp *c, const uint8_t peer[4], uint16_t port, const void *data, size_t n, uint64_t now, void *out, size_t capacity, size_t *length);
+int vos_rust_net_udp_input(struct net_udp *c, const void *frame, size_t n, uint64_t now, void *out, size_t capacity, size_t *length);
+int vos_rust_net_udp_receive(struct net_udp *c, struct net_udp_datagram *out);
+void vos_rust_net_udp_close(struct net_udp *c);
 struct pointer_packet;
 /* R2: PS/2 pointer polling and packet dequeue Rust entry points. */
 int vos_rust_keyboard_pointer_poll(struct keyboard *k, struct pointer_packet *p);

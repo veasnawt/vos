@@ -3,8 +3,6 @@
 //! field, so a whole-context reset or copy defines the same bytes as the C
 //! `memset`/`memcpy` and field stores never touch padding.
 #![forbid(unsafe_code)]
-// Intermediate R3-N1 stage: items used by the remaining stages are not yet referenced.
-#![allow(dead_code)]
 use core::mem::{align_of, offset_of, size_of};
 
 pub const NEIGHBORS: usize = 4;

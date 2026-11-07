@@ -3,8 +3,6 @@
 //! (`net_arp.c`, `net_ipv4.c`). Invalid input never changes state; generated
 //! frames are returned to the adapter, which copies them out last.
 #![forbid(unsafe_code)]
-// Intermediate R3-N1 stage: items used by the remaining stages are not yet referenced.
-#![allow(dead_code)]
 use super::checksum::{be16, checksum, ip_unicast, mac_unicast, put16};
 use super::context::*;
 use super::ipv4::{begin, ethernet_type, payload, wire_length};

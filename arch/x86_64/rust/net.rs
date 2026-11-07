@@ -263,3 +263,85 @@ pub unsafe extern "C" fn vos_rust_net_ipv4_input(c: *mut Ipv4, f: *const u8, len
     }
     e
 }
+
+// ---------------- stage 4: UDP endpoint ----------------
+#[path = "../../../kernel/rust/net/udp.rs"]
+pub mod udp;
+
+/// # Safety
+/// `c` is writable `struct net_udp` storage; mac/ip readable.
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn vos_rust_net_udp_init(c: *mut Udp, mac: *const u8, ip: *const u8, port: u16) -> i32 {
+    if !aligned(c) || port == 0 || mac.is_null() || ip.is_null() {
+        return EINVAL;
+    }
+    let (m, i) = unsafe { (copy6(mac), copy4(ip)) };
+    udp::udp_init(unsafe { &mut *c }, &m, &i, port)
+}
+/// # Safety
+/// `c` is a live `struct net_udp`; peer readable; data readable for `n`; out/length per net_arp.h.
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn vos_rust_net_udp_send(c: *mut Udp, peer: *const u8, port: u16, data: *const u8, n: usize, now: u64,
+                                               out: *mut u8, capacity: usize, length: *mut usize) -> i32 {
+    if !aligned(c) || peer.is_null() || n > UDP_DATA_MAX || (data.is_null() && n != 0) {
+        return EINVAL;
+    }
+    if overlaps(data as usize, n, c as usize, size_of::<Udp>()) {
+        return EINVAL;
+    }
+    let p = unsafe { copy4(peer) };
+    let d: &[u8] = if n == 0 { &[] } else { unsafe { slice::from_raw_parts(data, n) } };
+    let wire = ipv4::wire_length(8 + n);
+    let mut local = [0u8; UDP_WIRE_MAX];
+    let mut produced = 0;
+    let e = udp::udp_send(unsafe { &mut *c }, &p, port, d, now, admit(out, capacity, length, wire), &mut local, &mut produced);
+    if e == UDP_SENT {
+        if let Some(frame) = local.get(..produced) {
+            unsafe { emit(frame, out, length) };
+        }
+    }
+    e
+}
+/// # Safety
+/// `c` is a live `struct net_udp`; frame readable for `n`; out/length per net_arp.h.
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn vos_rust_net_udp_input(c: *mut Udp, f: *const u8, n: usize, now: u64, out: *mut u8, capacity: usize, length: *mut usize) -> i32 {
+    if !aligned(c) {
+        return EINVAL;
+    }
+    let Some(p) = (unsafe { frame(f, n) }) else { return EINVAL };
+    if overlaps(f as usize, n, c as usize, size_of::<Udp>()) {
+        return EINVAL;
+    }
+    match udp::udp_input(unsafe { &mut *c }, p) {
+        udp::UdpIn::Code(e) => e,
+        // As the accepted C, non-UDP local frames go to the IPv4/ARP input.
+        udp::UdpIn::Ipv4Input => unsafe { vos_rust_net_ipv4_input(ptr::addr_of_mut!((*c).ip), f, n, now, out, capacity, length) },
+    }
+}
+/// # Safety
+/// `c` is a live `struct net_udp`; out is a writable `struct net_udp_datagram` outside it.
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn vos_rust_net_udp_receive(c: *mut Udp, out: *mut Datagram) -> i32 {
+    if !aligned(c) || out.is_null() {
+        return EINVAL;
+    }
+    match udp::udp_receive_slot(unsafe { &*c }) {
+        Ok(slot) => {
+            // SAFETY: out is a writable datagram object outside the context
+            // (contract); the copy precedes the clear, as the accepted C.
+            unsafe { ptr::copy(ptr::addr_of!((*c).queue[slot]).cast::<u8>(), out.cast::<u8>(), size_of::<Datagram>()) };
+            udp::udp_receive_finish(unsafe { &mut *c });
+            0
+        }
+        Err(e) => e,
+    }
+}
+/// # Safety
+/// `c` is null or writable `struct net_udp` storage.
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn vos_rust_net_udp_close(c: *mut Udp) {
+    if aligned(c) {
+        udp::udp_close(unsafe { &mut *c });
+    }
+}

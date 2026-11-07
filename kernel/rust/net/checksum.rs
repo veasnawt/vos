@@ -2,8 +2,6 @@
 //! as the accepted C (`net_ipv4.c`, `net_arp.c`). Unsigned arithmetic wraps as
 //! in C; the caller bounds lengths as documented in `net_ipv4.h`.
 #![forbid(unsafe_code)]
-// Intermediate R3-N1 stage: items used by the remaining stages are not yet referenced.
-#![allow(dead_code)]
 
 /// Folded RFC 1071 one's-complement sum of big-endian words, odd byte padded
 /// high (the C loop and fold, before the final inversion).
