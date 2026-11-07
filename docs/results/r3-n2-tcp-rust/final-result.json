@@ -1,0 +1,121 @@
+{
+  "candidate": "21b1e4af3444a3bdb52727e0658977920ae5e99a",
+  "baseline": "f8731c9688673bb1e9f0d738707f1ad2d32bcf4a",
+  "oracle": {
+    "baseline": "f8731c9688673bb1e9f0d738707f1ad2d32bcf4a",
+    "tcp_source_sha256": "e5a4183c0b39f767773a083733747b935573c697957978550d3c398edd106975",
+    "tcp_header_sha256": "0e319e69337be1b47f4756d4538130b3c19a6bdd2d338a37168068f23ed5ce56"
+  },
+  "gcc_worker": "gcc (Ubuntu 15.2.0-16ubuntu1) 15.2.0",
+  "differential": {
+    "release": "PASS 374029 TCP comparisons (3-way: frozen C/frozen C IPv4, frozen C/Rust IPv4, Rust) and 4000 random sequences; whole-arena state, output, immutability and aliasing",
+    "sanitizer": "PASS 374029 TCP comparisons (3-way: frozen C/frozen C IPv4, frozen C/Rust IPv4, Rust) and 4000 random sequences; whole-arena state, output, immutability and aliasing",
+    "checked": "PASS 374029 TCP comparisons (3-way: frozen C/frozen C IPv4, frozen C/Rust IPv4, Rust) and 4000 random sequences; whole-arena state, output, immutability and aliasing"
+  },
+  "core_tests": "test result: ok. 20 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+  "mutations": {
+    "count": 84,
+    "all_detected": true
+  },
+  "panic_free": {
+    "functions": 18,
+    "with_panic_paths": []
+  },
+  "network_external_symbols": [
+    "memcmp",
+    "memcpy",
+    "memset"
+  ],
+  "performance": {
+    "syn_synack": {
+      "C_ns": 257.58,
+      "Rust_ns": 140.895,
+      "percent": -45.30048916841369
+    },
+    "ack_establish": {
+      "C_ns": 81.175,
+      "Rust_ns": 61.17,
+      "percent": -24.644287034185396
+    },
+    "data_ack": {
+      "C_ns": 222.0,
+      "Rust_ns": 212.95,
+      "percent": -4.076576576576585
+    },
+    "send": {
+      "C_ns": 243.805,
+      "Rust_ns": 190.31,
+      "percent": -21.941715715428312
+    },
+    "receive_partial": {
+      "C_ns": 105.67,
+      "Rust_ns": 107.91,
+      "percent": 2.1198069461531244
+    },
+    "retransmit": {
+      "C_ns": 172.025,
+      "Rust_ns": 154.61,
+      "percent": -10.1235285568958
+    }
+  },
+  "regressions_over_5_percent": [],
+  "frame_exceptions_pending_owner_approval": {
+    "net_tcp_send": {
+      "C_reference": 232,
+      "Rust": 280
+    },
+    "net_tcp_retransmit": {
+      "C_reference": 232,
+      "Rust": 248
+    },
+    "net_tcp_finish": {
+      "C_reference": 24,
+      "Rust": 200
+    }
+  },
+  "source_sha256": {
+    "kernel/rust/net/tcp.rs": "3a2adeecb139429562456bd3cdba30d6b762f606c49532473153586e872f9f2e",
+    "arch/x86_64/rust/net.rs": "5510702aba9b148aea0d123c7351fe80ec3c55e118afb515596d37b0c1802a05",
+    "arch/x86_64/net_tcp.c": "817c07a74d42c87fd312f5b0a56dde5fbfcd011e581999ea5c43fb3ac7f84d98",
+    "arch/x86_64/rust_kernel.h": "0cd45a5bf8adfd5eacb8e1f8c32ffd1b939806888ebe35c78992e7f2a89b75aa",
+    "tests/host/tcp-differential.c": "4742029199660ac5c66c7c193a8bb60d832f05f350d2e5769d11d4da0e1e9aa0",
+    "tests/rust/tcp.rs": "6e5380c98aff2a3314ecfa7cba77d0b64c0c4c590af105f0e529e2c8ccc61a87",
+    "tests/reference/net-tcp.c": "e5a4183c0b39f767773a083733747b935573c697957978550d3c398edd106975",
+    "tests/reference/net-headers/net_tcp.h": "0e319e69337be1b47f4756d4538130b3c19a6bdd2d338a37168068f23ed5ce56",
+    "tests/reference/net-r3n2.json": "30dd8914a13796ff50631b28abed282eb9366be53d33ff8960aa22ad70ac7b15",
+    "scripts/test-tcp-rust.py": "15e941efd6c0b9938472a8c2640286230ea043bc65003907d2b37be155c0bc01"
+  },
+  "campaign": {
+    "id": "r3-n2-tcp-dev-v1",
+    "runs": {
+      "r1": {
+        "status": "PASS",
+        "seal": "2168a347eacdd7184130555776644299b91ce6fa1d2b4a572de848dbb19f643f"
+      },
+      "r2": {
+        "status": "STOP",
+        "seal": "6317b6f7e1c73ef41205b65a8bde50b06c4be32bb19de27848e10bc03250329f"
+      },
+      "r3": {
+        "status": "STOP",
+        "seal": "d305336fe3209181e25bd4da9b9090ab20945874021ccde020d05e505446692b"
+      }
+    }
+  },
+  "ci_equivalence": {
+    "r2": {
+      "status": "STOP",
+      "seal": "6317b6f7e1c73ef41205b65a8bde50b06c4be32bb19de27848e10bc03250329f"
+    },
+    "r3": {
+      "status": "STOP",
+      "seal": "d305336fe3209181e25bd4da9b9090ab20945874021ccde020d05e505446692b"
+    }
+  },
+  "host_ci_gcc13": "every hosted Build smoke step PASS on the exact C2 tree (tool-version step informational; QEMU checks left to CI)",
+  "limitations": [
+    "QEMU verification and static stack analysis only; no physical-hardware acceptance",
+    "host micro-benchmarks, not guest/NIC throughput",
+    "N5 historical paired baselines absent; owner-authorized contemporaneous substitute (bench-pair.json)"
+  ]
+}

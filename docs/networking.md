@@ -12,6 +12,10 @@ below, published at `4e799c2`. Opt-in bounded payload exchange is verified below
 payload exchange is published at `ff251a7`. Bounded data retransmission is now
 verified below; full TCP reliability and userspace authority remain future work.
 
+## Implementation ownership (R3)
+
+The protocol logic described below is unchanged in behavior. Since R3-N1, the ARP, IPv4/ICMP and UDP validation and state live in safe Rust (`kernel/rust/net/`). The R3-N2 candidate also moves the TCP state machine there (`kernel/rust/net/tcp.rs`). `net_arp.c`, `net_ipv4.c`, `net_udp.c` and `net_tcp.c` keep the public C ABI and forward through `arch/x86_64/rust/net.rs`. The virtio-net driver, its DMA rings and device ownership, `net_boot.c` and the boot-time protocol tests remain C. See [R3-N1](results/r3-n1-net-rust.md) and [R3-N2](results/r3-n2-tcp-rust.md).
+
 ## Existing infrastructure and choice
 
 | Infrastructure | Existing behavior reused |
