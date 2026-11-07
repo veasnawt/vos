@@ -1,0 +1,63 @@
+{
+ "bios-128M-keys": {
+  "passed": true,
+  "hello_abi_v0": true,
+  "edited_line": "input> VOS OK",
+  "second_line": "input> hello vos",
+  "screenshot": {
+   "width": 1280,
+   "height": 800,
+   "sha256": "f394ab164dd0cbff3c86cef0367a32e80a692ebfe333fa8484d5e3e993a67723"
+  },
+  "completed_line_delivery": true,
+  "no_partial_delivery": true,
+  "empty_line": true,
+  "exact_limit_edited": true,
+  "overflow_discarded": true,
+  "recovery": true,
+  "chronological_output_exercised": true,
+  "limits_screenshot": {
+   "width": 1280,
+   "height": 800,
+   "sha256": "94ba0a04af59e9dcf5fab31378f99ad46bd4722ba3230ddd4c348b0f1ddbd03b"
+  }
+ },
+ "uefi-128M-keys": {
+  "passed": true,
+  "hello_abi_v0": true,
+  "edited_line": "input> VOS OK",
+  "second_line": "input> hello vos",
+  "screenshot": {
+   "width": 1280,
+   "height": 800,
+   "sha256": "f394ab164dd0cbff3c86cef0367a32e80a692ebfe333fa8484d5e3e993a67723"
+  },
+  "completed_line_delivery": true,
+  "no_partial_delivery": true,
+  "empty_line": true,
+  "exact_limit_edited": true,
+  "overflow_discarded": true,
+  "recovery": true,
+  "chronological_output_exercised": true,
+  "limits_screenshot": {
+   "width": 1280,
+   "height": 800,
+   "sha256": "94ba0a04af59e9dcf5fab31378f99ad46bd4722ba3230ddd4c348b0f1ddbd03b"
+  }
+ },
+ "normal-128M": {
+  "passed": true,
+  "boot_halted": true,
+  "hello_abi_v0": true
+ },
+ "bios-2G": {
+  "passed": true,
+  "memory": "2G",
+  "seconds": 0.6
+ },
+ "uefi-2G": {
+  "passed": true,
+  "memory": "2G",
+  "seconds": 3.4
+ }
+}

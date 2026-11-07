@@ -1,0 +1,11 @@
+{
+ "baseline": "85f83e9437e4841fc3008965156b6fef14bd7da4",
+ "baseline_kernel_sha256": "6de30da1fdb375aa54ef58f6d7cb15c696607cf759a720d5c39fa00d69ea6e01",
+ "candidate_kernel_sha256": "7b27f1e6f87ed04495500ddfbdcc159c1f8cfb3a6b42fa6abee21eb2800b4ef3",
+ "baseline_load_memsz": 962560,
+ "candidate_load_memsz": 962560,
+ "loaded_growth_bytes": 0,
+ "limit_bytes": 4096,
+ "file_size_delta": -256,
+ "baseline_note": "Baseline kernel is the reproducible PR59 r5 build; tree 644ece1af69cfc627c5d5573ec597d2a86107a79 equals merge 85f83e94."
+}
