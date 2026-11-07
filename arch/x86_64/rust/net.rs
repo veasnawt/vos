@@ -139,3 +139,127 @@ pub unsafe extern "C" fn vos_rust_net_ipv4_begin(c: *const Ipv4, mac: *const u8,
     unsafe { length.write_unaligned(w) };
     0
 }
+
+// ---------------- stage 3: ARP, neighbor table, ICMP echo ----------------
+#[path = "../../../kernel/rust/net/arp.rs"]
+pub mod arp;
+
+unsafe fn emit(local: &[u8], out: *mut u8, length: *mut usize) {
+    // SAFETY: output_ok() admitted [out, out+len) and the separate length object.
+    unsafe {
+        ptr::copy(local.as_ptr(), out, local.len());
+        length.write_unaligned(local.len());
+    }
+}
+/// # Safety
+/// `a` is writable `struct net_arp` storage; mac/ip readable.
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn vos_rust_net_arp_init(a: *mut Arp, mac: *const u8, ip: *const u8) -> i32 {
+    if !aligned(a) || mac.is_null() || ip.is_null() {
+        return EINVAL;
+    }
+    let (m, i) = unsafe { (copy6(mac), copy4(ip)) };
+    arp::arp_init(unsafe { &mut *a }, &m, &i)
+}
+/// # Safety
+/// `a` is a live `struct net_arp`; ip readable; mac writable (6 bytes).
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn vos_rust_net_neighbor_get(a: *mut Arp, ip: *const u8, now: u64, mac: *mut u8) -> i32 {
+    if !aligned(a) || ip.is_null() || mac.is_null() {
+        return 0;
+    }
+    let i = unsafe { copy4(ip) };
+    match arp::neighbor_get(unsafe { &mut *a }, &i, now) {
+        Some(m) => {
+            unsafe { ptr::copy(m.as_ptr(), mac, 6) };
+            1
+        }
+        None => 0,
+    }
+}
+/// # Safety
+/// `a` is a live `struct net_arp`; ip readable; out/length per net_arp.h.
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn vos_rust_net_arp_query(a: *mut Arp, ip: *const u8, now: u64, out: *mut u8, capacity: usize, length: *mut usize) -> i32 {
+    if !aligned(a) || ip.is_null() {
+        return EINVAL;
+    }
+    let i = unsafe { copy4(ip) };
+    let mut local = [0u8; ARP_WIRE];
+    let e = arp::arp_query(unsafe { &mut *a }, &i, now, admit(out, capacity, length, ARP_WIRE), &mut local);
+    if e == REQUEST {
+        unsafe { emit(&local, out, length) };
+    }
+    e
+}
+/// # Safety
+/// `a` is a live `struct net_arp`; frame readable for `length`; out/length per net_arp.h.
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn vos_rust_net_ethernet_input(a: *mut Arp, f: *const u8, length: usize, now: u64, out: *mut u8, capacity: usize, out_length: *mut usize) -> i32 {
+    if !aligned(a) {
+        return EINVAL;
+    }
+    let Some(p) = (unsafe { frame(f, length) }) else { return EINVAL };
+    if overlaps(f as usize, length, a as usize, size_of::<Arp>()) {
+        return EINVAL;
+    }
+    let mut local = [0u8; ARP_WIRE];
+    let e = arp::ethernet_input(unsafe { &mut *a }, p, now, admit(out, capacity, out_length, ARP_WIRE), &mut local);
+    if e == REPLY {
+        unsafe { emit(&local, out, out_length) };
+    }
+    e
+}
+/// # Safety
+/// `c` is writable `struct net_ipv4` storage; mac/ip readable.
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn vos_rust_net_ipv4_init(c: *mut Ipv4, mac: *const u8, ip: *const u8) -> i32 {
+    if !aligned(c) || mac.is_null() || ip.is_null() {
+        return EINVAL;
+    }
+    let (m, i) = unsafe { (copy6(mac), copy4(ip)) };
+    arp::ipv4_init(unsafe { &mut *c }, &m, &i)
+}
+/// # Safety
+/// `c` is a live `struct net_ipv4`; peer readable; data readable for `n`; out/length per net_arp.h.
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn vos_rust_net_ipv4_echo_request(c: *mut Ipv4, peer: *const u8, id: u16, seq: u16, data: *const u8, n: usize, now: u64,
+                                                        out: *mut u8, capacity: usize, length: *mut usize) -> i32 {
+    if !aligned(c) || peer.is_null() || n > PING_DATA_MAX || (data.is_null() && n != 0) {
+        return EINVAL;
+    }
+    if overlaps(data as usize, n, c as usize, size_of::<Ipv4>()) {
+        return EINVAL;
+    }
+    let p = unsafe { copy4(peer) };
+    let d: &[u8] = if n == 0 { &[] } else { unsafe { slice::from_raw_parts(data, n) } };
+    let mut local = [0u8; ECHO_WIRE_MAX];
+    let e = arp::echo_request(unsafe { &mut *c }, &p, id, seq, d, now, admit(out, capacity, length, ipv4::wire_length(8 + n)), &mut local);
+    if e == ECHO_REQUEST {
+        unsafe { emit(&local[..ipv4::wire_length(8 + n)], out, length) };
+    }
+    e
+}
+/// # Safety
+/// `c` is a live `struct net_ipv4`; frame readable for `length`; out/length per net_arp.h.
+#[unsafe(no_mangle)]
+#[inline(never)]
+pub unsafe extern "C" fn vos_rust_net_ipv4_input(c: *mut Ipv4, f: *const u8, length: usize, now: u64, out: *mut u8, capacity: usize, out_length: *mut usize) -> i32 {
+    if !aligned(c) {
+        return EINVAL;
+    }
+    let Some(p) = (unsafe { frame(f, length) }) else { return EINVAL };
+    if overlaps(f as usize, length, c as usize, size_of::<Ipv4>()) {
+        return EINVAL;
+    }
+    let mut local = [0u8; FRAME_MAX];
+    let mut produced = 0;
+    let gate = |needed: usize| admit(out, capacity, out_length, needed);
+    let e = arp::ipv4_input(unsafe { &mut *c }, p, now, &gate, &mut local, &mut produced);
+    if e == REPLY {
+        if let Some(frame) = local.get(..produced) {
+            unsafe { emit(frame, out, out_length) };
+        }
+    }
+    e
+}

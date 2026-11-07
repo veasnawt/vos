@@ -44,6 +44,13 @@ uint16_t vos_rust_net_transport_checksum(const uint8_t source[4], const uint8_t 
 int vos_rust_net_ethernet_type(const struct net_arp *a, const void *frame, size_t length, uint16_t *type);
 int vos_rust_net_ipv4_payload(const struct net_ipv4 *c, const void *frame, size_t length, uint8_t protocol, struct net_ipv4_payload *view);
 int vos_rust_net_ipv4_begin(const struct net_ipv4 *c, const uint8_t mac[6], const uint8_t ip[4], uint8_t protocol, size_t payload_length, void *out, size_t capacity, size_t *length);
+int vos_rust_net_arp_init(struct net_arp *a, const uint8_t mac[6], const uint8_t ip[4]);
+int vos_rust_net_neighbor_get(struct net_arp *a, const uint8_t ip[4], uint64_t now, uint8_t mac[6]);
+int vos_rust_net_arp_query(struct net_arp *a, const uint8_t ip[4], uint64_t now, void *out, size_t capacity, size_t *length);
+int vos_rust_net_ethernet_input(struct net_arp *a, const void *frame, size_t length, uint64_t now, void *out, size_t capacity, size_t *output_length);
+int vos_rust_net_ipv4_init(struct net_ipv4 *c, const uint8_t mac[6], const uint8_t ip[4]);
+int vos_rust_net_ipv4_echo_request(struct net_ipv4 *c, const uint8_t peer[4], uint16_t id, uint16_t sequence, const void *data, size_t data_length, uint64_t now, void *out, size_t capacity, size_t *length);
+int vos_rust_net_ipv4_input(struct net_ipv4 *c, const void *frame, size_t length, uint64_t now, void *out, size_t capacity, size_t *output_length);
 struct pointer_packet;
 /* R2: PS/2 pointer polling and packet dequeue Rust entry points. */
 int vos_rust_keyboard_pointer_poll(struct keyboard *k, struct pointer_packet *p);
