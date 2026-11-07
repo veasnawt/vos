@@ -120,13 +120,14 @@ def main():
     resource.setrlimit(resource.RLIMIT_CORE,(0,0));resource.setrlimit(resource.RLIMIT_FSIZE,(64*1024**2,64*1024**2));result={'scope':'bounded TCP payload and relevant security/performance evidence','firmware':{}}
     try:
         cc=['gcc','-std=gnu11','-O1','-g','-Wall','-Wextra','-Werror','-fsanitize=address,undefined','-fno-omit-frame-pointer','-ffunction-sections','-fdata-sections','-Wl,--gc-sections','-Iarch/x86_64']
+        NETLIB=runpy.run_path(str(REPO/'scripts/net_rust_host.py'),run_name='net_rust_host')['build'](out)
         for name,extra in [('net-arp',[]),('net-ipv4',['arch/x86_64/net_ipv4.c']),('net-udp',['arch/x86_64/net_ipv4.c','arch/x86_64/net_udp.c']),('net-tcp',['arch/x86_64/net_ipv4.c','arch/x86_64/net_tcp.c']),('net-tcp-data',['arch/x86_64/net_ipv4.c','arch/x86_64/net_tcp.c'])]:
             binary=out/name
-            run(cc+['tests/host/'+name+'.c','arch/x86_64/net_arp.c','arch/x86_64/net_boot.c']+extra+['-o',str(binary)],out/(name+'-build.log'));run([str(binary)],out/(name+'-test.log'))
+            run(cc+['tests/host/'+name+'.c','arch/x86_64/net_arp.c','arch/x86_64/net_boot.c']+extra+[NETLIB,'-o',str(binary)],out/(name+'-build.log'));run([str(binary)],out/(name+'-test.log'))
         baseline=json.loads((BASELINE/'baseline-record.json').read_text())
         require(sha(BASELINE/'baseline')==baseline['binary_sha256'] and sha(REPO/'tests/host/net-tcp-bench.c')==baseline['benchmark_sha256'],'paired benchmark identity')
         release=['gcc','-std=gnu11','-O2','-Wall','-Wextra','-Werror','-ffunction-sections','-fdata-sections','-Wl,--gc-sections','-Iarch/x86_64','-Itests/host','-DVOS_TCP_PAYLOAD_BENCH']
-        run(release+['tests/host/net-tcp-bench.c','arch/x86_64/net_tcp.c','arch/x86_64/net_ipv4.c','arch/x86_64/net_arp.c','arch/x86_64/net_boot.c','-o',str(out/'release-model')],out/'release-model-build.log')
+        run(release+['tests/host/net-tcp-bench.c','arch/x86_64/net_tcp.c','arch/x86_64/net_ipv4.c','arch/x86_64/net_arp.c','arch/x86_64/net_boot.c',NETLIB,'-o',str(out/'release-model')],out/'release-model-build.log')
         run([str(BASELINE/'baseline')],out/'baseline-contemporaneous.json');run([str(out/'release-model')],out/'release-model.json')
         old=json.loads((out/'baseline-contemporaneous.json').read_text());new=json.loads((out/'release-model.json').read_text());delta=(statistics.median(new['legacy_ns_per_handshake'])/statistics.median(old['legacy_ns_per_handshake'])-1)*100
         (out/'performance-pair.json').write_text(json.dumps(dict(kind='paired optimized hosted protocol model, not QEMU throughput',baseline_record=str(BASELINE/'baseline-record.json'),baseline_binary_sha256=baseline['binary_sha256'],same_benchmark_sha256=baseline['benchmark_sha256'],
