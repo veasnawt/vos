@@ -1,0 +1,11 @@
+{
+ "baseline": "879c51179ecb6bcff3d1f7ef52051947b858c059",
+ "baseline_note": "Baseline kernel is the reproducible PR62 r1 build; main changed only documentation since (879c511).",
+ "baseline_kernel_sha256": "7c8dd5dece76ddfde861afefb8f43eb56131c55440ed2d95676fc0c19526b766",
+ "candidate_kernel_sha256": "fa93d41d61b362031c730ea3dbec8b2d88005b65333dc5427ff7c38782fd2359",
+ "baseline_load_memsz": 962560,
+ "candidate_load_memsz": 962560,
+ "loaded_growth_bytes": 0,
+ "limit_bytes": 4096,
+ "file_size_delta": -28208
+}
