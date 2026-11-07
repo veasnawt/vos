@@ -4,20 +4,16 @@
 #define DATA    0x60
 #define STATUS  0x64
 #define OBF     0x01
-#define IBF     0x02
 #define AUX     0x20
 #define ERR     0xC0
 
 /* Set-1 tables and keyboard_decode are Rust-owned; hardware stays here. */
 
+/* R2-W: bounded controller writes are Rust-owned (same 100,000-poll limit, status
+ * read every iteration, exactly one write after IBF clears, none after timeout). */
 static int write_port(struct keyboard *k, uint16_t port, uint8_t value)
 {
-    for (unsigned i = 0; i < KEYBOARD_WAIT_LIMIT; i++)
-        if (!(k->io->in(STATUS) & IBF)) {
-            k->io->out(port, value);
-            return 1;
-        }
-    return 0;
+    return vos_rust_keyboard_write_port(k, port, value);
 }
 
 /* R2: bounded controller reads are Rust-owned (same wait limit, status-before-data,
@@ -29,8 +25,7 @@ static int read_keyboard(struct keyboard *k, uint8_t *value)
 
 static int command(struct keyboard *k, uint8_t value)
 {
-    uint8_t ack;
-    return write_port(k, DATA, value) && read_keyboard(k, &ack) && ack == 0xFA;
+    return vos_rust_keyboard_command(k, value);
 }
 
 int keyboard_init(struct keyboard *k, const struct keyboard_io *io)
@@ -110,9 +105,7 @@ static int read_aux(struct keyboard *k,uint8_t *b) {
     return vos_rust_keyboard_read_aux(k,b);
 }
 static int aux_command(struct keyboard *k,uint8_t command_byte) {
-    uint8_t b;
-    return write_port(k,STATUS,0xd4) && write_port(k,DATA,command_byte) &&
-        read_aux(k,&b) && b==0xfa;
+    return vos_rust_keyboard_aux_command(k,command_byte);
 }
 int keyboard_pointer_start(struct keyboard *k) {
     if(!k || !k->ready || k->pointer_ready)return 0;

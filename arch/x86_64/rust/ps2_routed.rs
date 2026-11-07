@@ -5,11 +5,13 @@ pub mod routing;
 pub mod ordinary;
 #[path="../../../kernel/rust/input/ps2_controller_read.rs"]
 pub mod controller_read;
+#[path="../../../kernel/rust/input/ps2_controller_write.rs"]
+pub mod controller_write;
 use routing::{Queue, Route, Packet, PointerQueue};
 use routing::{pointer_poll, pointer_lost_and_clear};
 use core::{mem::{align_of,offset_of,size_of},ptr};
 #[repr(C)]
-struct Io {input:unsafe extern "C" fn(u16)->u8,output:*const ()}
+struct Io {input:unsafe extern "C" fn(u16)->u8,output:Option<unsafe extern "C" fn(u16,u8)>}
 #[repr(C)]
 struct Keyboard {
  io:*const Io,decoder:[u8;7],ready:i32,pointer_ready:i32,pending:i32,
@@ -230,4 +232,48 @@ pub unsafe extern "C" fn vos_rust_keyboard_read_keyboard(k:*mut core::ffi::c_voi
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn vos_rust_keyboard_read_aux(k:*mut core::ffi::c_void, value:*mut u8)->core::ffi::c_int {
     unsafe { controller_read_entry(k, value, controller_read::Channel::Aux) }
+}
+
+// R2-W bounded controller writes. The accepted C helpers' writes only: Port admits
+// 0x60/0x64. io is reloaded for every status read and for the write itself, so a
+// callback-substituted io is honoured exactly as the accepted C did.
+impl controller_write::ControllerWrite for Raw {
+    #[inline(always)] fn write(&mut self, port: u16, value: u8) -> bool {
+        // SAFETY: entry contract as read(): live io table; no field reference or
+        // cached io pointer spans the foreign call. A null out is refused, not called.
+        unsafe {
+            let io = ptr::addr_of!((*self.0).io).read();
+            match ptr::addr_of!((*io).output).read() {
+                Some(out) => { out(port, value); true }
+                None => false,
+            }
+        }
+    }
+}
+/// # Safety
+/// Same object, io and exclusive-ownership contract as `vos_rust_keyboard_read_keyboard`.
+/// Writes at most one byte, only to 0x60 or 0x64; any other port is refused without access.
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn vos_rust_keyboard_write_port(k:*mut core::ffi::c_void, port:u16, value:u8)->core::ffi::c_int {
+    if !routing::keyboard_range_valid(k as usize) {return 0;}
+    match controller_write::Port::from_address(port) {
+        Some(port) => controller_write::write_port(&mut Raw(k.cast()), port, value) as core::ffi::c_int,
+        None => 0,
+    }
+}
+/// # Safety
+/// Same contract as `vos_rust_keyboard_write_port`; writes the byte to 0x60 and
+/// requires keyboard acknowledgement 0xFA.
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn vos_rust_keyboard_command(k:*mut core::ffi::c_void, value:u8)->core::ffi::c_int {
+    if !routing::keyboard_range_valid(k as usize) {return 0;}
+    controller_write::command(&mut Raw(k.cast()), value) as core::ffi::c_int
+}
+/// # Safety
+/// Same contract as `vos_rust_keyboard_write_port`; writes 0xD4 to 0x64, the byte to
+/// 0x60, and requires auxiliary acknowledgement 0xFA.
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn vos_rust_keyboard_aux_command(k:*mut core::ffi::c_void, value:u8)->core::ffi::c_int {
+    if !routing::keyboard_range_valid(k as usize) {return 0;}
+    controller_write::aux_command(&mut Raw(k.cast()), value) as core::ffi::c_int
 }
