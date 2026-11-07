@@ -1,0 +1,103 @@
+{
+ "interfaces": [
+  "lo"
+ ],
+ "ipv4_routes": [],
+ "tcp": {
+  "public_ipv4": "refused:ENETUNREACH",
+  "public_dns": "refused:ENETUNREACH",
+  "qemu_user_gateway": "refused:ENETUNREACH",
+  "container_nat": "refused:ENETUNREACH",
+  "private_lan": "refused:ENETUNREACH",
+  "public_ipv6": "refused:ENETUNREACH"
+ },
+ "udp": {
+  "public_dns": "refused:ENETUNREACH",
+  "qemu_user_gateway": "refused:ENETUNREACH"
+ },
+ "fixture_audit": {
+  "test-arp": {
+   "netdev_kinds": [
+    "stream"
+   ],
+   "nic_none": true,
+   "socketpair": true,
+   "ip_sockets": false,
+   "user_net": false
+  },
+  "test-ipv4": {
+   "netdev_kinds": [
+    "stream"
+   ],
+   "nic_none": true,
+   "socketpair": true,
+   "ip_sockets": false,
+   "user_net": false
+  },
+  "test-udp": {
+   "netdev_kinds": [
+    "stream"
+   ],
+   "nic_none": true,
+   "socketpair": true,
+   "ip_sockets": false,
+   "user_net": false
+  },
+  "test-tcp": {
+   "netdev_kinds": [
+    "stream"
+   ],
+   "nic_none": true,
+   "socketpair": true,
+   "ip_sockets": false,
+   "user_net": false
+  },
+  "test-tcp-close": {
+   "netdev_kinds": [
+    "stream"
+   ],
+   "nic_none": true,
+   "socketpair": true,
+   "ip_sockets": false,
+   "user_net": false
+  },
+  "test-tcp-data": {
+   "netdev_kinds": [
+    "stream"
+   ],
+   "nic_none": true,
+   "socketpair": true,
+   "ip_sockets": false,
+   "user_net": false
+  },
+  "test-tcp-retry": {
+   "netdev_kinds": [
+    "stream"
+   ],
+   "nic_none": true,
+   "socketpair": true,
+   "ip_sockets": false,
+   "user_net": false
+  },
+  "test-virtio-net": {
+   "netdev_kinds": [
+    "stream"
+   ],
+   "nic_none": true,
+   "socketpair": true,
+   "ip_sockets": false,
+   "user_net": false
+  }
+ },
+ "verdict": {
+  "no_reachability": true,
+  "loopback_only": true,
+  "no_ipv4_routes": true,
+  "fixtures_contained": true,
+  "violations": {
+   "reach": [],
+   "fixtures": []
+  }
+ },
+ "passed": true
+}

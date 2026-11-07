@@ -165,6 +165,13 @@ jobs:
           python3 -I -B scripts/test-ps2-lifecycle-rust.py
           --archive build/x86_64/rust/libvos_kernel.a --rustc "$RUSTC"
           --out build/r2-ps2-lifecycle-ci
+      - name: Verify Rust ARP/IPv4/UDP core and frozen C network equivalence
+        run: >-
+          python3 -I -B scripts/test-net-rust.py
+          --archive build/x86_64/rust/libvos_kernel.a --rustc "$RUSTC"
+          --out build/r3-n1-net-ci
+      - name: Run host ARP/IPv4/UDP/TCP protocol suites against the Rust network core
+        run: python3 -I -B scripts/test-net-host.py --out build/r3-n1-net-host-ci
       - name: Verify USB.2-C1 read-only xHCI qualification and USB.2-B ownership
         run: |
           python3 -I -B scripts/test-usb2c1.py \

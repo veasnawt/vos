@@ -1,0 +1,230 @@
+{
+ "status": "PASS",
+ "archive_sha256": "918f0ac5848dffb69dbc741cbdc0fcfe026a4f3e1af82c190abde8a34a0e61d8",
+ "seed": "52334e3172757374",
+ "cpu": 0,
+ "performance": {
+  "checksum_payload": {
+   "C_ns": 39.5,
+   "Rust_ns": 32.6399,
+   "percent": -17.3673417721519
+  },
+  "udp_input_queue": {
+   "C_ns": 204.0599,
+   "Rust_ns": 146.2098,
+   "percent": -28.349567945490517
+  },
+  "icmp_echo_answer": {
+   "C_ns": 388.7647,
+   "Rust_ns": 218.1647,
+   "percent": -43.8825850186501
+  },
+  "arp_request_reply": {
+   "C_ns": 352.0697,
+   "Rust_ns": 39.575,
+   "percent": -88.75932805350759
+  },
+  "udp_send": {
+   "C_ns": 395.2946,
+   "Rust_ns": 199.7748,
+   "percent": -49.4617938115016
+  },
+  "udp_input_reject": {
+   "C_ns": 54.77,
+   "Rust_ns": 34.145,
+   "percent": -37.65747672083257
+  }
+ },
+ "regressions_over_5_percent": [],
+ "shared_harness": {
+  "binary_bytes": 6105752,
+  "binary_sha256": "464cb4dc175e30ed954ccf082810831a1efc9fd3da60d73ca455e2b706771349",
+  "variants": 79,
+  "method": "Distinct namespace per variant, identical positive fixture; intended assertions run individually, isolated process per mutant."
+ },
+ "frames": {
+  "net_checksum": {
+   "C_reference": 0,
+   "Rust": 0
+  },
+  "net_ipv4_transport_checksum": {
+   "C_reference": 0,
+   "Rust": 16
+  },
+  "net_ethernet_type": {
+   "C_reference": 40,
+   "Rust": 0
+  },
+  "net_ipv4_payload": {
+   "C_reference": 72,
+   "Rust": 56
+  },
+  "net_ipv4_begin": {
+   "C_reference": 72,
+   "Rust": 56
+  },
+  "net_arp_init": {
+   "C_reference": 40,
+   "Rust": 40
+  },
+  "net_neighbor_get": {
+   "C_reference": 40,
+   "Rust": 24
+  },
+  "net_arp_query": {
+   "C_reference": 152,
+   "Rust": 72
+  },
+  "net_ethernet_input": {
+   "C_reference": 168,
+   "Rust": 88
+  },
+  "net_ipv4_init": {
+   "C_reference": 184,
+   "Rust": 8
+  },
+  "net_ipv4_echo_request": {
+   "C_reference": 232,
+   "Rust": 216
+  },
+  "net_ipv4_input": {
+   "C_reference": 1704,
+   "Rust": 1704
+  },
+  "net_udp_init": {
+   "C_reference": 328,
+   "Rust": 56
+  },
+  "net_udp_send": {
+   "C_reference": 696,
+   "Rust": 680
+  },
+  "net_udp_input": {
+   "C_reference": 120,
+   "Rust": 104
+  },
+  "net_udp_receive": {
+   "C_reference": 8,
+   "Rust": 8
+  },
+  "net_udp_close": {
+   "C_reference": 0,
+   "Rust": 0
+  }
+ },
+ "frame_exceptions_pending_owner_approval": {
+  "net_ipv4_transport_checksum": {
+   "C_reference": 0,
+   "Rust": 16
+  }
+ },
+ "panic_free": {
+  "functions": 23,
+  "with_panic_paths": []
+ },
+ "source_sha256": {
+  "kernel/rust/net/checksum.rs": "5d970355420b1b144c115938803316ef678969b3a82cf881de367d41f739d23e",
+  "kernel/rust/net/context.rs": "b4a96899993876f2585820f626611572157a24823b00fc447d6ae0514daa6e7f",
+  "kernel/rust/net/ipv4.rs": "bc8754b557d215e2a17b52ac90b23390298785716c496f31511001524ed5d8aa",
+  "kernel/rust/net/arp.rs": "97c6b0e4aad7663632aa93871d54a52bc4a6fde2b369485cd76b14df4d4e37d2",
+  "kernel/rust/net/udp.rs": "c4803c9d70d4209ad8e4f0db193ec519da9ccf403de00f2ee1fa243e13be06e9",
+  "arch/x86_64/rust/net.rs": "9da669c7c80a5b781fa2e663a1ac6fb5204ecd1205af1e3654d4b43762fd8086",
+  "arch/x86_64/rust/kernel_probe.rs": "09c092276cfd6dad452c4cf784a8611ec9f96f28917dac610ba0310c226f18f5",
+  "arch/x86_64/net_arp.c": "4fa4009a92af0060162427be36fbc4117df1d75130f0154bc28c9cfedb8604cb",
+  "arch/x86_64/net_ipv4.c": "7586f317b5c95142daf29faad26c141b1c9d95909d7d65d0ebe2d729d16e5bb5",
+  "arch/x86_64/net_udp.c": "6f74326595bf73fe65bdc5bc8c94b88533c8c74c5e0f96bac9201f7ddf63e182",
+  "arch/x86_64/rust_kernel.h": "eb445016511293f3feb9984e2267f4866189338a5525d43b18d7ae48f8cd3b4e",
+  "tests/host/net-differential.c": "cad63fff91b424901fbb537917c5047569012d7a05a00efd76d99e2f1803c593",
+  "tests/rust/net.rs": "728e8a650f67ff4c7e44dd2480a1e21215ba5337c7944fd3233e4f649ad69c72",
+  "tests/reference/net-arp.c": "eafe4d97061e9dc75d3d3aedb312c638e121da66c4409e1ae3ab3a6ef8ae63bf",
+  "tests/reference/net-ipv4.c": "4e74b36e89766c737d1e507dbda1daa4e47fe928e853dbb926891db9ceda39c1",
+  "tests/reference/net-udp.c": "7793f88968102e3e39bd1b1be1dc44728e0922fe9bca0c9dc8f04a5b9e2a5856",
+  "tests/reference/net-r3n1.json": "1ef9a8c62cfb8f648fbda41c42661d3d802adecef2948a665e5bd437c021cc40",
+  "scripts/test-net-rust.py": "ce594981b2688d7f123e4ac6f7ca07a447a00d9fcc560caa5e72073e28c3d8e3"
+ },
+ "core_tests": "test result: ok. 51 passed; 0 failed; 0 ignored; 0 measured; 3978 filtered out; finished in 0.02s",
+ "release": "PASS 635285 network comparisons and 3000 random operation sequences; stages checksum/validation/arp-icmp/udp; whole-arena state, output, immutability and aliasing",
+ "sanitizer": "PASS 635285 network comparisons and 3000 random operation sequences; stages checksum/validation/arp-icmp/udp; whole-arena state, output, immutability and aliasing",
+ "checked_Rust": "PASS 635285 network comparisons and 3000 random operation sequences; stages checksum/validation/arp-icmp/udp; whole-arena state, output, immutability and aliasing",
+ "mutations": {
+  "ck_fold": "ck_fold::checksum_end_around_carry",
+  "ck_odd_high": "ck_odd_high::checksum_odd_byte_padded_high",
+  "ck_invert": "ck_invert::checksum_rfc1071_vector",
+  "ck_word_order": "ck_word_order::checksum_rfc1071_vector",
+  "tr_proto": "tr_proto::transport_pseudoheader",
+  "tr_length": "tr_length::transport_pseudoheader",
+  "tr_fold4": "tr_fold4::transport_address_carry",
+  "unicast_zero": "unicast_zero::ip_unicast_bounds",
+  "unicast_loopback": "unicast_loopback::ip_unicast_bounds",
+  "unicast_class_d": "unicast_class_d::ip_unicast_bounds",
+  "mac_multicast": "mac_multicast::mac_unicast_rules",
+  "mac_zero": "mac_zero::mac_unicast_rules",
+  "out_capacity": "out_capacity::output_admission",
+  "out_overlap": "out_overlap::output_admission",
+  "out_wrap": "out_wrap::output_admission",
+  "eth_dest": "eth_dest::ethernet_destinations",
+  "eth_src_self": "eth_src_self::ethernet_sources",
+  "eth_8023": "eth_8023::ethernet_type_classes",
+  "eth_gap": "eth_gap::ethernet_type_classes",
+  "pl_version": "pl_version::payload_version_and_ihl",
+  "pl_ihl_min": "pl_ihl_min::payload_version_and_ihl",
+  "pl_total_min": "pl_total_min::payload_total_length",
+  "pl_total_max": "pl_total_max::payload_total_length",
+  "pl_ttl": "pl_ttl::payload_ttl_zero",
+  "pl_checksum": "pl_checksum::payload_header_checksum",
+  "pl_reserved": "pl_reserved::payload_fragment_rules",
+  "pl_more_fragments": "pl_more_fragments::payload_fragment_rules",
+  "pl_options": "pl_options::payload_version_and_ihl",
+  "pl_protocol": "pl_protocol::payload_protocol_and_addresses",
+  "pl_destination": "pl_destination::payload_protocol_and_addresses",
+  "pl_source_self": "pl_source_self::payload_protocol_and_addresses",
+  "pl_broadcast": "pl_broadcast::payload_protocol_and_addresses",
+  "begin_ttl": "begin_ttl::begin_layout",
+  "begin_df": "begin_df::begin_layout",
+  "begin_padding": "begin_padding::begin_minimum_frame",
+  "begin_identification": "begin_identification::begin_layout",
+  "arp_ttl": "arp_ttl::neighbor_expiry_boundary",
+  "query_ttl": "query_ttl::query_cached_busy_request",
+  "learn_oldest": "learn_oldest::learn_slot_selection",
+  "learn_existing": "learn_existing::learn_slot_selection",
+  "learn_free_slot": "learn_free_slot::learn_slot_selection",
+  "learn_clears_pending": "learn_clears_pending::input_reply_rules",
+  "query_busy": "query_busy::query_cached_busy_request",
+  "query_cached": "query_cached::query_cached_busy_request",
+  "probe_learn": "probe_learn::input_probe_replies_without_learning",
+  "reply_solicited": "reply_solicited::input_reply_rules",
+  "reply_destination": "reply_destination::input_reply_rules",
+  "sender_hardware": "sender_hardware::input_field_validation",
+  "arp_operation": "arp_operation::input_field_validation",
+  "arp_hardware_type": "arp_hardware_type::input_field_validation",
+  "arp_short": "arp_short::input_field_validation",
+  "echo_busy": "echo_busy::echo_request_busy_and_neighbor",
+  "echo_capture": "echo_capture::echo_request_layout_and_state",
+  "echo_identification": "echo_identification::echo_request_layout_and_state",
+  "match_sequence": "match_sequence::echo_reply_match_rules",
+  "match_data": "match_data::echo_reply_match_rules",
+  "match_ttl": "match_ttl::echo_reply_match_rules",
+  "icmp_code": "icmp_code::icmp_validation",
+  "icmp_type": "icmp_type::icmp_validation",
+  "echo_reply_type": "echo_reply_type::echo_request_is_answered",
+  "udp_zero_checksum": "udp_zero_checksum::udp_send_zero_checksum_is_ffff",
+  "udp_source_port": "udp_source_port::udp_send_layout",
+  "udp_length": "udp_length::udp_send_layout",
+  "udp_identification": "udp_identification::udp_send_layout",
+  "udp_peer_self": "udp_peer_self::udp_send_rejections",
+  "udp_input_max": "udp_input_max::udp_input_validation",
+  "udp_queue_full": "udp_queue_full::udp_input_queues_fifo",
+  "udp_slot": "udp_slot::udp_head_wraps",
+  "udp_checksum_present": "udp_checksum_present::udp_input_validation",
+  "udp_size_mismatch": "udp_size_mismatch::udp_input_validation",
+  "udp_port_drop": "udp_port_drop::udp_input_validation",
+  "udp_zero_destination": "udp_zero_destination::udp_input_validation",
+  "udp_delegate": "udp_delegate::udp_input_delegates_other_protocols",
+  "receive_clear": "receive_clear::udp_input_queues_fifo",
+  "receive_advance": "receive_advance::udp_head_wraps",
+  "receive_empty": "receive_empty::udp_input_queues_fifo",
+  "close_zeroes": "close_zeroes::udp_closed_endpoint",
+  "udp_init_port": "udp_init_port::udp_init_rules"
+ },
+ "source_run": "accepted worker, campaign r3-n1-net-dev-v1 run r3, plan a02c35504f9c323d58476cbe2dcee24dbdffb8c8c8fd9ebbd6d32383ae0c134d, seal cc43547e0c7e93f6b1d9fa46d2bf2a68cedf62f49eeff3aff2a3bd434b44467e"
+}
