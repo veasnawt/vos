@@ -3,6 +3,8 @@
 pub mod routing;
 #[path="../../../kernel/rust/input/ps2_ordinary.rs"]
 pub mod ordinary;
+#[path="../../../kernel/rust/input/ps2_controller_read.rs"]
+pub mod controller_read;
 use routing::{Queue, Route, Packet, PointerQueue};
 use routing::{pointer_poll, pointer_lost_and_clear};
 use core::{mem::{align_of,offset_of,size_of},ptr};
@@ -195,4 +197,37 @@ impl ordinary::Ordinary for Raw {
 pub unsafe extern "C" fn vos_rust_keyboard_ordinary_poll(k:*mut core::ffi::c_void)->core::ffi::c_char {
     if !routing::keyboard_range_valid(k as usize) {return 0;}
     ordinary::poll(&mut Raw(k.cast())) as core::ffi::c_char
+}
+
+// R2 bounded controller reads: same Raw read accessor (io/in reloaded per call).
+impl controller_read::ControllerRead for Raw {
+    #[inline(always)] fn read(&mut self, port: u16) -> u8 { <Self as Route>::read(self, port) }
+}
+#[inline(always)]
+unsafe fn controller_read_entry(k:*mut core::ffi::c_void, value:*mut u8, channel:controller_read::Channel)->core::ffi::c_int {
+    if !routing::keyboard_range_valid(k as usize) || value.is_null() {return 0;}
+    match controller_read::read_channel(&mut Raw(k.cast()), channel) {
+        Some(byte) => {
+            // SAFETY: caller supplies a writable byte, disjoint from the keyboard
+            // object; written only on success after the last callback returned.
+            unsafe { value.write(byte) };
+            1
+        }
+        None => 0,
+    }
+}
+/// # Safety
+/// k identifies live initialized, aligned caller-owned 88-byte keyboard storage
+/// for this synchronous call and value a writable byte disjoint from it. Existing
+/// thread/IF=0, io callback and exclusive ownership contracts apply; callbacks may
+/// substitute a valid io but cannot free/unmap storage. No controller write.
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn vos_rust_keyboard_read_keyboard(k:*mut core::ffi::c_void, value:*mut u8)->core::ffi::c_int {
+    unsafe { controller_read_entry(k, value, controller_read::Channel::Keyboard) }
+}
+/// # Safety
+/// Same contract as `vos_rust_keyboard_read_keyboard`, for the auxiliary channel.
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn vos_rust_keyboard_read_aux(k:*mut core::ffi::c_void, value:*mut u8)->core::ffi::c_int {
+    unsafe { controller_read_entry(k, value, controller_read::Channel::Aux) }
 }

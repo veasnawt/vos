@@ -150,6 +150,11 @@ jobs:
           python3 -I -B scripts/test-keyboard-ordinary-rust.py
           --archive build/x86_64/rust/libvos_kernel.a --rustc "$RUSTC"
           --out build/r2-keyboard-ordinary-ci
+      - name: Verify Rust bounded PS/2 controller reads and frozen C lifecycle equivalence
+        run: >-
+          python3 -I -B scripts/test-ps2-controller-read-rust.py
+          --archive build/x86_64/rust/libvos_kernel.a --rustc "$RUSTC"
+          --out build/r2-ps2-controller-read-ci
       - name: Verify USB.2-C1 read-only xHCI qualification and USB.2-B ownership
         run: |
           python3 -I -B scripts/test-usb2c1.py \
