@@ -1,0 +1,194 @@
+{
+  "gate": "scripts/test-desktop-rust.py",
+  "worker_gcc15": {
+    "differential": {
+      "release": {
+        "requested": 563445,
+        "requested_true": 23483,
+        "compute": 890761,
+        "compute_accepted": 263604,
+        "mismatches": 0,
+        "digest": "14508fd8b1b957ae"
+      },
+      "sanitizer": {
+        "requested": 563445,
+        "requested_true": 23483,
+        "compute": 890761,
+        "compute_accepted": 263604,
+        "mismatches": 0,
+        "digest": "14508fd8b1b957ae"
+      }
+    },
+    "mutations": {
+      "width-lower-bound": {
+        "detected": true,
+        "mismatches": 15563
+      },
+      "height-lower-bound": {
+        "detected": true,
+        "mismatches": 15257
+      },
+      "width-upper-bound": {
+        "detected": true,
+        "mismatches": 7774
+      },
+      "height-upper-bound": {
+        "detected": true,
+        "mismatches": 7610
+      },
+      "max-dim-value": {
+        "detected": true,
+        "mismatches": 15380
+      },
+      "min-width-value": {
+        "detected": true,
+        "mismatches": 7798
+      },
+      "min-height-value": {
+        "detected": true,
+        "mismatches": 7642
+      },
+      "x": {
+        "detected": true,
+        "mismatches": 263604
+      },
+      "y": {
+        "detected": true,
+        "mismatches": 263604
+      },
+      "w": {
+        "detected": true,
+        "mismatches": 263604
+      },
+      "h": {
+        "detected": true,
+        "mismatches": 263604
+      },
+      "text-x": {
+        "detected": true,
+        "mismatches": 263604
+      },
+      "text-y": {
+        "detected": true,
+        "mismatches": 263604
+      },
+      "text-w": {
+        "detected": true,
+        "mismatches": 263604
+      },
+      "text-h": {
+        "detected": true,
+        "mismatches": 263604
+      },
+      "token": {
+        "detected": true,
+        "mismatches": 40759
+      },
+      "no-tab-separator": {
+        "detected": true,
+        "mismatches": 11707
+      },
+      "newline-separator": {
+        "detected": true,
+        "mismatches": 3955
+      },
+      "leading-tab-kept": {
+        "detected": true,
+        "mismatches": "hang (60 s)"
+      },
+      "prefix-match": {
+        "detected": true,
+        "mismatches": 96886
+      },
+      "end-of-line-field": {
+        "detected": true,
+        "mismatches": 5884
+      },
+      "short-token-compare": {
+        "detected": true,
+        "mismatches": 23483
+      },
+      "substring-restart": {
+        "detected": true,
+        "mismatches": 72230
+      },
+      "null-requested": {
+        "detected": true,
+        "mismatches": 1
+      },
+      "null-output": {
+        "detected": true,
+        "mismatches": 96
+      },
+      "write-on-refusal": {
+        "detected": true,
+        "mismatches": "abnormal exit"
+      },
+      "swap-text-fields": {
+        "detected": true,
+        "mismatches": 263583
+      }
+    },
+    "kernel": {
+      "desktop_requested": {
+        "address": "0xffffffff8013c9f0",
+        "calls": [],
+        "frame_bytes": 0,
+        "frozen_c_frame_bytes": 0
+      },
+      "desktop_compute": {
+        "address": "0xffffffff8013c990",
+        "calls": [],
+        "frame_bytes": 0,
+        "frozen_c_frame_bytes": 0
+      }
+    },
+    "desktop_host": "PASS 562324 assertions: actual refined renderer/console; single header/full captions/no PASS badge, stride/padding/guards, viewport and fallback",
+    "pointer_render": "PASS 562325 assertions: actual refined renderer/console; single header/full captions/no PASS badge, stride/padding/guards, viewport and fallback\npointer renderer PASS 2179862 assertions; clipping, stride, underlay restoration, surface redraw",
+    "source_sha256": {
+      "kernel/rust/gfx/desktop.rs": "72686be3d6471b12b45c078b49888e3b2793c9493521bf3d274f0577756d06d4",
+      "arch/x86_64/rust/desktop.rs": "02dc1cf45037a9cd91360f418ca8436b348d1212b8755eb664a348ba75ed6019",
+      "arch/x86_64/desktop.c": "d153b615e3d8d79282117a8567763fa5036d4162a2fddf4a0beeb09549f9a361",
+      "arch/x86_64/desktop.h": "0fda66e88d571928984b272d670ddf28581f11d1ce80e4c6c7a2c3b2ca1c1fc0",
+      "tests/host/desktop-differential.c": "2fc67f89e23e6cf917db78e0b85ef95658617b1dd862aa0197be21c349b1bb54",
+      "tests/reference/desktop-r3g1.c": "183816b5662fb774d9696188d431afd115ae252e8f4ff031b8eda7a081941187",
+      "tests/reference/desktop-r3g1.json": "8319caf4f78eee3b8dff37f6944fea856c3f2c38838c5da0ec9405716108ec08",
+      "scripts/test-desktop-rust.py": "3d9ce03d4fe57b877395d6172204e9bbba4ca1e98543ae264b53552d467dc8c1"
+    }
+  },
+  "host_gcc13": {
+    "differential": {
+      "release": {
+        "requested": 563445,
+        "requested_true": 23483,
+        "compute": 890761,
+        "compute_accepted": 263604,
+        "mismatches": 0,
+        "digest": "14508fd8b1b957ae"
+      },
+      "sanitizer": {
+        "requested": 563445,
+        "requested_true": 23483,
+        "compute": 890761,
+        "compute_accepted": 263604,
+        "mismatches": 0,
+        "digest": "14508fd8b1b957ae"
+      }
+    },
+    "mutations_detected": true,
+    "kernel": {
+      "desktop_requested": {
+        "address": "0xffffffff8013b370",
+        "calls": [],
+        "frame_bytes": 0,
+        "frozen_c_frame_bytes": 0
+      },
+      "desktop_compute": {
+        "address": "0xffffffff8013b310",
+        "calls": [],
+        "frame_bytes": 0,
+        "frozen_c_frame_bytes": 0
+      }
+    }
+  }
+}

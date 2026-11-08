@@ -1,0 +1,742 @@
+{
+  "worker_r1": {
+    "passed": true,
+    "kernels": {
+      "baseline": "937686f6332be94648798fccbb52984631788482f5040335786e0b9a3298c1c6",
+      "candidate": "e352a4c8dafb6580f51f6b73b8aba76d76520dad96d828051b615289956bb5f3"
+    },
+    "apps": {
+      "vsh": "e7af3ee56164f587f7ca1338f7ddfcb202b6f4310f10b4dcba6a2576743cb181",
+      "hello": "c6c6416195a0f18d680d7f8f19be52ce02ff02912ef3bac45324fbe88006cd06",
+      "rixie": "77104da3b33caf809daf5e6674ac4e2fa9edf6a9e2e5dd59828514df76490d32"
+    },
+    "cases": [
+      {
+        "case": "desktop-1024x768",
+        "firmware": "bios",
+        "cmdline": "vos.apps=1 vos.desktop=1",
+        "gfxpayload": "1024x768x32",
+        "expected": "scene",
+        "baseline": {
+          "ppm_sha256": "175bae72833d1fb41345ed4999204e766b50b33d2aa68e01008653a4be343a49",
+          "png": "/home/veasnawt/src/vos-r2-keyboard-ordinary/build/r1/desktopnative/desktop-1024x768-bios-baseline/screen.png",
+          "png_sha256": "6a6971364aa67912ba3f447abee4d706635255fc21bbed1dedc45abd2263b28a",
+          "ppm_bytes": 2359312,
+          "decision": "scene",
+          "marker_lines": [
+            "screen: framebuffer 1024x768 BGRX at 0xfd000000, pitch 4096, write-combining, MTRR type 0, 124x39 cells",
+            "desktop: scene ready; kernel-owned BGRX surface, bounded console viewport"
+          ]
+        },
+        "candidate": {
+          "ppm_sha256": "175bae72833d1fb41345ed4999204e766b50b33d2aa68e01008653a4be343a49",
+          "png": "/home/veasnawt/src/vos-r2-keyboard-ordinary/build/r1/desktopnative/desktop-1024x768-bios-candidate/screen.png",
+          "png_sha256": "6a6971364aa67912ba3f447abee4d706635255fc21bbed1dedc45abd2263b28a",
+          "ppm_bytes": 2359312,
+          "decision": "scene",
+          "marker_lines": [
+            "screen: framebuffer 1024x768 BGRX at 0xfd000000, pitch 4096, write-combining, MTRR type 0, 124x39 cells",
+            "desktop: scene ready; kernel-owned BGRX surface, bounded console viewport"
+          ]
+        },
+        "pixel_identical": true
+      },
+      {
+        "case": "desktop-1024x768",
+        "firmware": "uefi",
+        "cmdline": "vos.apps=1 vos.desktop=1",
+        "gfxpayload": "1024x768x32",
+        "expected": "scene",
+        "baseline": {
+          "ppm_sha256": "175bae72833d1fb41345ed4999204e766b50b33d2aa68e01008653a4be343a49",
+          "png": "/home/veasnawt/src/vos-r2-keyboard-ordinary/build/r1/desktopnative/desktop-1024x768-uefi-baseline/screen.png",
+          "png_sha256": "6a6971364aa67912ba3f447abee4d706635255fc21bbed1dedc45abd2263b28a",
+          "ppm_bytes": 2359312,
+          "decision": "scene",
+          "marker_lines": [
+            "screen: framebuffer 1024x768 BGRX at 0x80000000, pitch 4096, write-combining, MTRR type 0, 124x39 cells",
+            "desktop: scene ready; kernel-owned BGRX surface, bounded console viewport"
+          ]
+        },
+        "candidate": {
+          "ppm_sha256": "175bae72833d1fb41345ed4999204e766b50b33d2aa68e01008653a4be343a49",
+          "png": "/home/veasnawt/src/vos-r2-keyboard-ordinary/build/r1/desktopnative/desktop-1024x768-uefi-candidate/screen.png",
+          "png_sha256": "6a6971364aa67912ba3f447abee4d706635255fc21bbed1dedc45abd2263b28a",
+          "ppm_bytes": 2359312,
+          "decision": "scene",
+          "marker_lines": [
+            "screen: framebuffer 1024x768 BGRX at 0x80000000, pitch 4096, write-combining, MTRR type 0, 124x39 cells",
+            "desktop: scene ready; kernel-owned BGRX surface, bounded console viewport"
+          ]
+        },
+        "pixel_identical": true
+      },
+      {
+        "case": "desktop-800x600",
+        "firmware": "bios",
+        "cmdline": "vos.apps=1 vos.desktop=1",
+        "gfxpayload": "800x600x32",
+        "expected": "scene",
+        "baseline": {
+          "ppm_sha256": "8900de48d08f61592649f34a7416d23200761592b196e7d24087fd8302c7e2bb",
+          "png": "/home/veasnawt/src/vos-r2-keyboard-ordinary/build/r1/desktopnative/desktop-800x600-bios-baseline/screen.png",
+          "png_sha256": "9e330f21165a172a56cbd247ff2e7507d119b087c6a82ca2ce4d4e86623d0d27",
+          "ppm_bytes": 1440015,
+          "decision": "scene",
+          "marker_lines": [
+            "screen: framebuffer 800x600 BGRX at 0xfd000000, pitch 3200, write-combining, MTRR type 0, 96x30 cells",
+            "desktop: scene ready; kernel-owned BGRX surface, bounded console viewport"
+          ]
+        },
+        "candidate": {
+          "ppm_sha256": "8900de48d08f61592649f34a7416d23200761592b196e7d24087fd8302c7e2bb",
+          "png": "/home/veasnawt/src/vos-r2-keyboard-ordinary/build/r1/desktopnative/desktop-800x600-bios-candidate/screen.png",
+          "png_sha256": "9e330f21165a172a56cbd247ff2e7507d119b087c6a82ca2ce4d4e86623d0d27",
+          "ppm_bytes": 1440015,
+          "decision": "scene",
+          "marker_lines": [
+            "screen: framebuffer 800x600 BGRX at 0xfd000000, pitch 3200, write-combining, MTRR type 0, 96x30 cells",
+            "desktop: scene ready; kernel-owned BGRX surface, bounded console viewport"
+          ]
+        },
+        "pixel_identical": true
+      },
+      {
+        "case": "desktop-800x600",
+        "firmware": "uefi",
+        "cmdline": "vos.apps=1 vos.desktop=1",
+        "gfxpayload": "800x600x32",
+        "expected": "scene",
+        "baseline": {
+          "ppm_sha256": "8900de48d08f61592649f34a7416d23200761592b196e7d24087fd8302c7e2bb",
+          "png": "/home/veasnawt/src/vos-r2-keyboard-ordinary/build/r1/desktopnative/desktop-800x600-uefi-baseline/screen.png",
+          "png_sha256": "9e330f21165a172a56cbd247ff2e7507d119b087c6a82ca2ce4d4e86623d0d27",
+          "ppm_bytes": 1440015,
+          "decision": "scene",
+          "marker_lines": [
+            "screen: framebuffer 800x600 BGRX at 0x80000000, pitch 3200, write-combining, MTRR type 0, 96x30 cells",
+            "desktop: scene ready; kernel-owned BGRX surface, bounded console viewport"
+          ]
+        },
+        "candidate": {
+          "ppm_sha256": "8900de48d08f61592649f34a7416d23200761592b196e7d24087fd8302c7e2bb",
+          "png": "/home/veasnawt/src/vos-r2-keyboard-ordinary/build/r1/desktopnative/desktop-800x600-uefi-candidate/screen.png",
+          "png_sha256": "9e330f21165a172a56cbd247ff2e7507d119b087c6a82ca2ce4d4e86623d0d27",
+          "ppm_bytes": 1440015,
+          "decision": "scene",
+          "marker_lines": [
+            "screen: framebuffer 800x600 BGRX at 0x80000000, pitch 3200, write-combining, MTRR type 0, 96x30 cells",
+            "desktop: scene ready; kernel-owned BGRX surface, bounded console viewport"
+          ]
+        },
+        "pixel_identical": true
+      },
+      {
+        "case": "desktop-640x480",
+        "firmware": "bios",
+        "cmdline": "vos.apps=1 vos.desktop=1",
+        "gfxpayload": "640x480x32",
+        "expected": "scene",
+        "baseline": {
+          "ppm_sha256": "3cf1115ae6acb820e636618f6c34971a0e76922adedac66a8aac710ca7e471df",
+          "png": "/home/veasnawt/src/vos-r2-keyboard-ordinary/build/r1/desktopnative/desktop-640x480-bios-baseline/screen.png",
+          "png_sha256": "bc42e56a2430d2eab17e41e21c3df7eea96547abd43c02c309a9f097aa5858e8",
+          "ppm_bytes": 921615,
+          "decision": "scene",
+          "marker_lines": [
+            "screen: framebuffer 640x480 BGRX at 0xfd000000, pitch 2560, write-combining, MTRR type 0, 76x23 cells",
+            "desktop: scene ready; kernel-owned BGRX surface, bounded console viewport"
+          ]
+        },
+        "candidate": {
+          "ppm_sha256": "3cf1115ae6acb820e636618f6c34971a0e76922adedac66a8aac710ca7e471df",
+          "png": "/home/veasnawt/src/vos-r2-keyboard-ordinary/build/r1/desktopnative/desktop-640x480-bios-candidate/screen.png",
+          "png_sha256": "bc42e56a2430d2eab17e41e21c3df7eea96547abd43c02c309a9f097aa5858e8",
+          "ppm_bytes": 921615,
+          "decision": "scene",
+          "marker_lines": [
+            "screen: framebuffer 640x480 BGRX at 0xfd000000, pitch 2560, write-combining, MTRR type 0, 76x23 cells",
+            "desktop: scene ready; kernel-owned BGRX surface, bounded console viewport"
+          ]
+        },
+        "pixel_identical": true
+      },
+      {
+        "case": "desktop-640x480",
+        "firmware": "uefi",
+        "cmdline": "vos.apps=1 vos.desktop=1",
+        "gfxpayload": "640x480x32",
+        "expected": "scene",
+        "baseline": {
+          "ppm_sha256": "3cf1115ae6acb820e636618f6c34971a0e76922adedac66a8aac710ca7e471df",
+          "png": "/home/veasnawt/src/vos-r2-keyboard-ordinary/build/r1/desktopnative/desktop-640x480-uefi-baseline/screen.png",
+          "png_sha256": "bc42e56a2430d2eab17e41e21c3df7eea96547abd43c02c309a9f097aa5858e8",
+          "ppm_bytes": 921615,
+          "decision": "scene",
+          "marker_lines": [
+            "screen: framebuffer 640x480 BGRX at 0x80000000, pitch 2560, write-combining, MTRR type 0, 76x23 cells",
+            "desktop: scene ready; kernel-owned BGRX surface, bounded console viewport"
+          ]
+        },
+        "candidate": {
+          "ppm_sha256": "3cf1115ae6acb820e636618f6c34971a0e76922adedac66a8aac710ca7e471df",
+          "png": "/home/veasnawt/src/vos-r2-keyboard-ordinary/build/r1/desktopnative/desktop-640x480-uefi-candidate/screen.png",
+          "png_sha256": "bc42e56a2430d2eab17e41e21c3df7eea96547abd43c02c309a9f097aa5858e8",
+          "ppm_bytes": 921615,
+          "decision": "scene",
+          "marker_lines": [
+            "screen: framebuffer 640x480 BGRX at 0x80000000, pitch 2560, write-combining, MTRR type 0, 76x23 cells",
+            "desktop: scene ready; kernel-owned BGRX surface, bounded console viewport"
+          ]
+        },
+        "pixel_identical": true
+      },
+      {
+        "case": "desktop-tab-field",
+        "firmware": "bios",
+        "cmdline": "vos.apps=1\tvos.desktop=1",
+        "gfxpayload": "1024x768x32",
+        "expected": "scene",
+        "baseline": {
+          "ppm_sha256": "175bae72833d1fb41345ed4999204e766b50b33d2aa68e01008653a4be343a49",
+          "png": "/home/veasnawt/src/vos-r2-keyboard-ordinary/build/r1/desktopnative/desktop-tab-field-bios-baseline/screen.png",
+          "png_sha256": "6a6971364aa67912ba3f447abee4d706635255fc21bbed1dedc45abd2263b28a",
+          "ppm_bytes": 2359312,
+          "decision": "scene",
+          "marker_lines": [
+            "screen: framebuffer 1024x768 BGRX at 0xfd000000, pitch 4096, write-combining, MTRR type 0, 124x39 cells",
+            "desktop: scene ready; kernel-owned BGRX surface, bounded console viewport"
+          ]
+        },
+        "candidate": {
+          "ppm_sha256": "175bae72833d1fb41345ed4999204e766b50b33d2aa68e01008653a4be343a49",
+          "png": "/home/veasnawt/src/vos-r2-keyboard-ordinary/build/r1/desktopnative/desktop-tab-field-bios-candidate/screen.png",
+          "png_sha256": "6a6971364aa67912ba3f447abee4d706635255fc21bbed1dedc45abd2263b28a",
+          "ppm_bytes": 2359312,
+          "decision": "scene",
+          "marker_lines": [
+            "screen: framebuffer 1024x768 BGRX at 0xfd000000, pitch 4096, write-combining, MTRR type 0, 124x39 cells",
+            "desktop: scene ready; kernel-owned BGRX surface, bounded console viewport"
+          ]
+        },
+        "pixel_identical": true
+      },
+      {
+        "case": "not-requested",
+        "firmware": "bios",
+        "cmdline": "vos.apps=1",
+        "gfxpayload": "1024x768x32",
+        "expected": "none",
+        "baseline": {
+          "ppm_sha256": "34c2a085dc08355353c17fad71c1581b6eea8af311aab3de8640d1a330ac9b66",
+          "png": "/home/veasnawt/src/vos-r2-keyboard-ordinary/build/r1/desktopnative/not-requested-bios-baseline/screen.png",
+          "png_sha256": "d871e422fbc4569cbf8f54e70b09c8e10f984719c5a66b4374e8796a6f8db4a9",
+          "ppm_bytes": 2359312,
+          "decision": "none",
+          "marker_lines": [
+            "screen: framebuffer 1024x768 BGRX at 0xfd000000, pitch 4096, write-combining, MTRR type 0, 124x39 cells"
+          ]
+        },
+        "candidate": {
+          "ppm_sha256": "34c2a085dc08355353c17fad71c1581b6eea8af311aab3de8640d1a330ac9b66",
+          "png": "/home/veasnawt/src/vos-r2-keyboard-ordinary/build/r1/desktopnative/not-requested-bios-candidate/screen.png",
+          "png_sha256": "d871e422fbc4569cbf8f54e70b09c8e10f984719c5a66b4374e8796a6f8db4a9",
+          "ppm_bytes": 2359312,
+          "decision": "none",
+          "marker_lines": [
+            "screen: framebuffer 1024x768 BGRX at 0xfd000000, pitch 4096, write-combining, MTRR type 0, 124x39 cells"
+          ]
+        },
+        "pixel_identical": true
+      },
+      {
+        "case": "not-requested",
+        "firmware": "uefi",
+        "cmdline": "vos.apps=1",
+        "gfxpayload": "1024x768x32",
+        "expected": "none",
+        "baseline": {
+          "ppm_sha256": "34c2a085dc08355353c17fad71c1581b6eea8af311aab3de8640d1a330ac9b66",
+          "png": "/home/veasnawt/src/vos-r2-keyboard-ordinary/build/r1/desktopnative/not-requested-uefi-baseline/screen.png",
+          "png_sha256": "d871e422fbc4569cbf8f54e70b09c8e10f984719c5a66b4374e8796a6f8db4a9",
+          "ppm_bytes": 2359312,
+          "decision": "none",
+          "marker_lines": [
+            "screen: framebuffer 1024x768 BGRX at 0x80000000, pitch 4096, write-combining, MTRR type 0, 124x39 cells"
+          ]
+        },
+        "candidate": {
+          "ppm_sha256": "34c2a085dc08355353c17fad71c1581b6eea8af311aab3de8640d1a330ac9b66",
+          "png": "/home/veasnawt/src/vos-r2-keyboard-ordinary/build/r1/desktopnative/not-requested-uefi-candidate/screen.png",
+          "png_sha256": "d871e422fbc4569cbf8f54e70b09c8e10f984719c5a66b4374e8796a6f8db4a9",
+          "ppm_bytes": 2359312,
+          "decision": "none",
+          "marker_lines": [
+            "screen: framebuffer 1024x768 BGRX at 0x80000000, pitch 4096, write-combining, MTRR type 0, 124x39 cells"
+          ]
+        },
+        "pixel_identical": true
+      },
+      {
+        "case": "near-miss-token",
+        "firmware": "bios",
+        "cmdline": "vos.apps=1 vos.desktop=10 xvos.desktop=1",
+        "gfxpayload": "1024x768x32",
+        "expected": "none",
+        "baseline": {
+          "ppm_sha256": "34c2a085dc08355353c17fad71c1581b6eea8af311aab3de8640d1a330ac9b66",
+          "png": "/home/veasnawt/src/vos-r2-keyboard-ordinary/build/r1/desktopnative/near-miss-token-bios-baseline/screen.png",
+          "png_sha256": "d871e422fbc4569cbf8f54e70b09c8e10f984719c5a66b4374e8796a6f8db4a9",
+          "ppm_bytes": 2359312,
+          "decision": "none",
+          "marker_lines": [
+            "screen: framebuffer 1024x768 BGRX at 0xfd000000, pitch 4096, write-combining, MTRR type 0, 124x39 cells"
+          ]
+        },
+        "candidate": {
+          "ppm_sha256": "34c2a085dc08355353c17fad71c1581b6eea8af311aab3de8640d1a330ac9b66",
+          "png": "/home/veasnawt/src/vos-r2-keyboard-ordinary/build/r1/desktopnative/near-miss-token-bios-candidate/screen.png",
+          "png_sha256": "d871e422fbc4569cbf8f54e70b09c8e10f984719c5a66b4374e8796a6f8db4a9",
+          "ppm_bytes": 2359312,
+          "decision": "none",
+          "marker_lines": [
+            "screen: framebuffer 1024x768 BGRX at 0xfd000000, pitch 4096, write-combining, MTRR type 0, 124x39 cells"
+          ]
+        },
+        "pixel_identical": true
+      },
+      {
+        "case": "desktop-1280x800",
+        "firmware": "uefi",
+        "cmdline": "vos.apps=1 vos.desktop=1",
+        "gfxpayload": "1280x800x32",
+        "expected": "scene",
+        "baseline": {
+          "ppm_sha256": "9a7474e97aa8cf900cf614f073447ddcacb0d35ffbeee2930067586860beba6e",
+          "png": "/home/veasnawt/src/vos-r2-keyboard-ordinary/build/r1/desktopnative/desktop-1280x800-uefi-baseline/screen.png",
+          "png_sha256": "4443fc6d410eab610a149ecdaf144a4fbd22d5c0b54359358472b276ee637a1d",
+          "ppm_bytes": 3072016,
+          "decision": "scene",
+          "marker_lines": [
+            "screen: framebuffer 1280x800 BGRX at 0x80000000, pitch 5120, write-combining, MTRR type 0, 156x41 cells",
+            "desktop: scene ready; kernel-owned BGRX surface, bounded console viewport"
+          ]
+        },
+        "candidate": {
+          "ppm_sha256": "9a7474e97aa8cf900cf614f073447ddcacb0d35ffbeee2930067586860beba6e",
+          "png": "/home/veasnawt/src/vos-r2-keyboard-ordinary/build/r1/desktopnative/desktop-1280x800-uefi-candidate/screen.png",
+          "png_sha256": "4443fc6d410eab610a149ecdaf144a4fbd22d5c0b54359358472b276ee637a1d",
+          "ppm_bytes": 3072016,
+          "decision": "scene",
+          "marker_lines": [
+            "screen: framebuffer 1280x800 BGRX at 0x80000000, pitch 5120, write-combining, MTRR type 0, 156x41 cells",
+            "desktop: scene ready; kernel-owned BGRX surface, bounded console viewport"
+          ]
+        },
+        "pixel_identical": true
+      },
+      {
+        "case": "below-minimum-640x400",
+        "firmware": "bios",
+        "cmdline": "vos.apps=1 vos.desktop=1",
+        "gfxpayload": "640x400x32",
+        "expected": "fallback",
+        "baseline": {
+          "ppm_sha256": "4b9017810a3f63993627ca45674954fb88feb8535e80e1efc35521b21fff580d",
+          "png": "/home/veasnawt/src/vos-r2-keyboard-ordinary/build/r1/desktopnative/below-minimum-640x400-bios-baseline/screen.png",
+          "png_sha256": "b14dab3dcdf07dbfdf1bf57f8d18e8476318666571e00a0c9b00dcec8a0d3557",
+          "ppm_bytes": 768015,
+          "decision": "fallback",
+          "marker_lines": [
+            "screen: framebuffer 640x400 BGRX at 0xfd000000, pitch 2560, write-combining, MTRR type 0, 76x19 cells",
+            "desktop: unavailable; existing console fallback"
+          ]
+        },
+        "candidate": {
+          "ppm_sha256": "4b9017810a3f63993627ca45674954fb88feb8535e80e1efc35521b21fff580d",
+          "png": "/home/veasnawt/src/vos-r2-keyboard-ordinary/build/r1/desktopnative/below-minimum-640x400-bios-candidate/screen.png",
+          "png_sha256": "b14dab3dcdf07dbfdf1bf57f8d18e8476318666571e00a0c9b00dcec8a0d3557",
+          "ppm_bytes": 768015,
+          "decision": "fallback",
+          "marker_lines": [
+            "screen: framebuffer 640x400 BGRX at 0xfd000000, pitch 2560, write-combining, MTRR type 0, 76x19 cells",
+            "desktop: unavailable; existing console fallback"
+          ]
+        },
+        "pixel_identical": true
+      }
+    ]
+  },
+  "worker_baseline_sections": ".text f768cc170c802b44942d55b31c361cf393efa8353b0d90a71d76eef2ff56f48d\n.rodata bbf6ffc308588191192e0cb630d9d293241f2831a13fe3e38d27c8cc9f2ecb22\n.data c7424ee183ad87b4c0da4bd4a861bd99f1c5539000d94d0f3af2adf873a31772\n.bss e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\n",
+  "worker_kernels": "937686f6332be94648798fccbb52984631788482f5040335786e0b9a3298c1c6  build/g1-basesrc/build/x86_64/vos.bin\ne352a4c8dafb6580f51f6b73b8aba76d76520dad96d828051b615289956bb5f3  build/x86_64/vos.bin\n",
+  "worker_apps": "e7af3ee56164f587f7ca1338f7ddfcb202b6f4310f10b4dcba6a2576743cb181  build/g1-apps/vsh.elf\nc6c6416195a0f18d680d7f8f19be52ce02ff02912ef3bac45324fbe88006cd06  build/g1-apps/hello.elf\n77104da3b33caf809daf5e6674ac4e2fa9edf6a9e2e5dd59828514df76490d32  build/g1-apps/rixie.elf\n",
+  "host": {
+    "passed": true,
+    "kernels": {
+      "baseline": "ab464282f132f91636943c53bbad4c788475fb451e64f179b6dbe58feba74400",
+      "candidate": "5881bfe204acaac7c7c10bced927269e5f21db4e9be99e755a1a411dd33ed76b"
+    },
+    "apps": {
+      "vsh": "e7af3ee56164f587f7ca1338f7ddfcb202b6f4310f10b4dcba6a2576743cb181",
+      "hello": "c6c6416195a0f18d680d7f8f19be52ce02ff02912ef3bac45324fbe88006cd06",
+      "rixie": "77104da3b33caf809daf5e6674ac4e2fa9edf6a9e2e5dd59828514df76490d32"
+    },
+    "cases": [
+      {
+        "case": "desktop-1024x768",
+        "firmware": "bios",
+        "cmdline": "vos.apps=1 vos.desktop=1",
+        "gfxpayload": "1024x768x32",
+        "expected": "scene",
+        "baseline": {
+          "ppm_sha256": "175bae72833d1fb41345ed4999204e766b50b33d2aa68e01008653a4be343a49",
+          "png": "/tmp/claude-1000/-home-veasnawt-src-vos-r2b/60e2c367-ad7c-4df0-8bfe-92a041f73dce/scratchpad/g1native5/desktop-1024x768-bios-baseline/screen.png",
+          "png_sha256": "6a6971364aa67912ba3f447abee4d706635255fc21bbed1dedc45abd2263b28a",
+          "ppm_bytes": 2359312,
+          "decision": "scene",
+          "marker_lines": [
+            "screen: framebuffer 1024x768 BGRX at 0xfd000000, pitch 4096, write-combining, MTRR type 0, 124x39 cells",
+            "desktop: scene ready; kernel-owned BGRX surface, bounded console viewport"
+          ]
+        },
+        "candidate": {
+          "ppm_sha256": "175bae72833d1fb41345ed4999204e766b50b33d2aa68e01008653a4be343a49",
+          "png": "/tmp/claude-1000/-home-veasnawt-src-vos-r2b/60e2c367-ad7c-4df0-8bfe-92a041f73dce/scratchpad/g1native5/desktop-1024x768-bios-candidate/screen.png",
+          "png_sha256": "6a6971364aa67912ba3f447abee4d706635255fc21bbed1dedc45abd2263b28a",
+          "ppm_bytes": 2359312,
+          "decision": "scene",
+          "marker_lines": [
+            "screen: framebuffer 1024x768 BGRX at 0xfd000000, pitch 4096, write-combining, MTRR type 0, 124x39 cells",
+            "desktop: scene ready; kernel-owned BGRX surface, bounded console viewport"
+          ]
+        },
+        "pixel_identical": true
+      },
+      {
+        "case": "desktop-1024x768",
+        "firmware": "uefi",
+        "cmdline": "vos.apps=1 vos.desktop=1",
+        "gfxpayload": "1024x768x32",
+        "expected": "scene",
+        "baseline": {
+          "ppm_sha256": "175bae72833d1fb41345ed4999204e766b50b33d2aa68e01008653a4be343a49",
+          "png": "/tmp/claude-1000/-home-veasnawt-src-vos-r2b/60e2c367-ad7c-4df0-8bfe-92a041f73dce/scratchpad/g1native5/desktop-1024x768-uefi-baseline/screen.png",
+          "png_sha256": "6a6971364aa67912ba3f447abee4d706635255fc21bbed1dedc45abd2263b28a",
+          "ppm_bytes": 2359312,
+          "decision": "scene",
+          "marker_lines": [
+            "screen: framebuffer 1024x768 BGRX at 0x80000000, pitch 4096, write-combining, MTRR type 0, 124x39 cells",
+            "desktop: scene ready; kernel-owned BGRX surface, bounded console viewport"
+          ]
+        },
+        "candidate": {
+          "ppm_sha256": "175bae72833d1fb41345ed4999204e766b50b33d2aa68e01008653a4be343a49",
+          "png": "/tmp/claude-1000/-home-veasnawt-src-vos-r2b/60e2c367-ad7c-4df0-8bfe-92a041f73dce/scratchpad/g1native5/desktop-1024x768-uefi-candidate/screen.png",
+          "png_sha256": "6a6971364aa67912ba3f447abee4d706635255fc21bbed1dedc45abd2263b28a",
+          "ppm_bytes": 2359312,
+          "decision": "scene",
+          "marker_lines": [
+            "screen: framebuffer 1024x768 BGRX at 0x80000000, pitch 4096, write-combining, MTRR type 0, 124x39 cells",
+            "desktop: scene ready; kernel-owned BGRX surface, bounded console viewport"
+          ]
+        },
+        "pixel_identical": true
+      },
+      {
+        "case": "desktop-800x600",
+        "firmware": "bios",
+        "cmdline": "vos.apps=1 vos.desktop=1",
+        "gfxpayload": "800x600x32",
+        "expected": "scene",
+        "baseline": {
+          "ppm_sha256": "8900de48d08f61592649f34a7416d23200761592b196e7d24087fd8302c7e2bb",
+          "png": "/tmp/claude-1000/-home-veasnawt-src-vos-r2b/60e2c367-ad7c-4df0-8bfe-92a041f73dce/scratchpad/g1native5/desktop-800x600-bios-baseline/screen.png",
+          "png_sha256": "9e330f21165a172a56cbd247ff2e7507d119b087c6a82ca2ce4d4e86623d0d27",
+          "ppm_bytes": 1440015,
+          "decision": "scene",
+          "marker_lines": [
+            "screen: framebuffer 800x600 BGRX at 0xfd000000, pitch 3200, write-combining, MTRR type 0, 96x30 cells",
+            "desktop: scene ready; kernel-owned BGRX surface, bounded console viewport"
+          ]
+        },
+        "candidate": {
+          "ppm_sha256": "8900de48d08f61592649f34a7416d23200761592b196e7d24087fd8302c7e2bb",
+          "png": "/tmp/claude-1000/-home-veasnawt-src-vos-r2b/60e2c367-ad7c-4df0-8bfe-92a041f73dce/scratchpad/g1native5/desktop-800x600-bios-candidate/screen.png",
+          "png_sha256": "9e330f21165a172a56cbd247ff2e7507d119b087c6a82ca2ce4d4e86623d0d27",
+          "ppm_bytes": 1440015,
+          "decision": "scene",
+          "marker_lines": [
+            "screen: framebuffer 800x600 BGRX at 0xfd000000, pitch 3200, write-combining, MTRR type 0, 96x30 cells",
+            "desktop: scene ready; kernel-owned BGRX surface, bounded console viewport"
+          ]
+        },
+        "pixel_identical": true
+      },
+      {
+        "case": "desktop-800x600",
+        "firmware": "uefi",
+        "cmdline": "vos.apps=1 vos.desktop=1",
+        "gfxpayload": "800x600x32",
+        "expected": "scene",
+        "baseline": {
+          "ppm_sha256": "8900de48d08f61592649f34a7416d23200761592b196e7d24087fd8302c7e2bb",
+          "png": "/tmp/claude-1000/-home-veasnawt-src-vos-r2b/60e2c367-ad7c-4df0-8bfe-92a041f73dce/scratchpad/g1native5/desktop-800x600-uefi-baseline/screen.png",
+          "png_sha256": "9e330f21165a172a56cbd247ff2e7507d119b087c6a82ca2ce4d4e86623d0d27",
+          "ppm_bytes": 1440015,
+          "decision": "scene",
+          "marker_lines": [
+            "screen: framebuffer 800x600 BGRX at 0x80000000, pitch 3200, write-combining, MTRR type 0, 96x30 cells",
+            "desktop: scene ready; kernel-owned BGRX surface, bounded console viewport"
+          ]
+        },
+        "candidate": {
+          "ppm_sha256": "8900de48d08f61592649f34a7416d23200761592b196e7d24087fd8302c7e2bb",
+          "png": "/tmp/claude-1000/-home-veasnawt-src-vos-r2b/60e2c367-ad7c-4df0-8bfe-92a041f73dce/scratchpad/g1native5/desktop-800x600-uefi-candidate/screen.png",
+          "png_sha256": "9e330f21165a172a56cbd247ff2e7507d119b087c6a82ca2ce4d4e86623d0d27",
+          "ppm_bytes": 1440015,
+          "decision": "scene",
+          "marker_lines": [
+            "screen: framebuffer 800x600 BGRX at 0x80000000, pitch 3200, write-combining, MTRR type 0, 96x30 cells",
+            "desktop: scene ready; kernel-owned BGRX surface, bounded console viewport"
+          ]
+        },
+        "pixel_identical": true
+      },
+      {
+        "case": "desktop-640x480",
+        "firmware": "bios",
+        "cmdline": "vos.apps=1 vos.desktop=1",
+        "gfxpayload": "640x480x32",
+        "expected": "scene",
+        "baseline": {
+          "ppm_sha256": "3cf1115ae6acb820e636618f6c34971a0e76922adedac66a8aac710ca7e471df",
+          "png": "/tmp/claude-1000/-home-veasnawt-src-vos-r2b/60e2c367-ad7c-4df0-8bfe-92a041f73dce/scratchpad/g1native5/desktop-640x480-bios-baseline/screen.png",
+          "png_sha256": "bc42e56a2430d2eab17e41e21c3df7eea96547abd43c02c309a9f097aa5858e8",
+          "ppm_bytes": 921615,
+          "decision": "scene",
+          "marker_lines": [
+            "screen: framebuffer 640x480 BGRX at 0xfd000000, pitch 2560, write-combining, MTRR type 0, 76x23 cells",
+            "desktop: scene ready; kernel-owned BGRX surface, bounded console viewport"
+          ]
+        },
+        "candidate": {
+          "ppm_sha256": "3cf1115ae6acb820e636618f6c34971a0e76922adedac66a8aac710ca7e471df",
+          "png": "/tmp/claude-1000/-home-veasnawt-src-vos-r2b/60e2c367-ad7c-4df0-8bfe-92a041f73dce/scratchpad/g1native5/desktop-640x480-bios-candidate/screen.png",
+          "png_sha256": "bc42e56a2430d2eab17e41e21c3df7eea96547abd43c02c309a9f097aa5858e8",
+          "ppm_bytes": 921615,
+          "decision": "scene",
+          "marker_lines": [
+            "screen: framebuffer 640x480 BGRX at 0xfd000000, pitch 2560, write-combining, MTRR type 0, 76x23 cells",
+            "desktop: scene ready; kernel-owned BGRX surface, bounded console viewport"
+          ]
+        },
+        "pixel_identical": true
+      },
+      {
+        "case": "desktop-640x480",
+        "firmware": "uefi",
+        "cmdline": "vos.apps=1 vos.desktop=1",
+        "gfxpayload": "640x480x32",
+        "expected": "scene",
+        "baseline": {
+          "ppm_sha256": "3cf1115ae6acb820e636618f6c34971a0e76922adedac66a8aac710ca7e471df",
+          "png": "/tmp/claude-1000/-home-veasnawt-src-vos-r2b/60e2c367-ad7c-4df0-8bfe-92a041f73dce/scratchpad/g1native5/desktop-640x480-uefi-baseline/screen.png",
+          "png_sha256": "bc42e56a2430d2eab17e41e21c3df7eea96547abd43c02c309a9f097aa5858e8",
+          "ppm_bytes": 921615,
+          "decision": "scene",
+          "marker_lines": [
+            "screen: framebuffer 640x480 BGRX at 0x80000000, pitch 2560, write-combining, MTRR type 0, 76x23 cells",
+            "desktop: scene ready; kernel-owned BGRX surface, bounded console viewport"
+          ]
+        },
+        "candidate": {
+          "ppm_sha256": "3cf1115ae6acb820e636618f6c34971a0e76922adedac66a8aac710ca7e471df",
+          "png": "/tmp/claude-1000/-home-veasnawt-src-vos-r2b/60e2c367-ad7c-4df0-8bfe-92a041f73dce/scratchpad/g1native5/desktop-640x480-uefi-candidate/screen.png",
+          "png_sha256": "bc42e56a2430d2eab17e41e21c3df7eea96547abd43c02c309a9f097aa5858e8",
+          "ppm_bytes": 921615,
+          "decision": "scene",
+          "marker_lines": [
+            "screen: framebuffer 640x480 BGRX at 0x80000000, pitch 2560, write-combining, MTRR type 0, 76x23 cells",
+            "desktop: scene ready; kernel-owned BGRX surface, bounded console viewport"
+          ]
+        },
+        "pixel_identical": true
+      },
+      {
+        "case": "desktop-tab-field",
+        "firmware": "bios",
+        "cmdline": "vos.apps=1\tvos.desktop=1",
+        "gfxpayload": "1024x768x32",
+        "expected": "scene",
+        "baseline": {
+          "ppm_sha256": "175bae72833d1fb41345ed4999204e766b50b33d2aa68e01008653a4be343a49",
+          "png": "/tmp/claude-1000/-home-veasnawt-src-vos-r2b/60e2c367-ad7c-4df0-8bfe-92a041f73dce/scratchpad/g1native5/desktop-tab-field-bios-baseline/screen.png",
+          "png_sha256": "6a6971364aa67912ba3f447abee4d706635255fc21bbed1dedc45abd2263b28a",
+          "ppm_bytes": 2359312,
+          "decision": "scene",
+          "marker_lines": [
+            "screen: framebuffer 1024x768 BGRX at 0xfd000000, pitch 4096, write-combining, MTRR type 0, 124x39 cells",
+            "desktop: scene ready; kernel-owned BGRX surface, bounded console viewport"
+          ]
+        },
+        "candidate": {
+          "ppm_sha256": "175bae72833d1fb41345ed4999204e766b50b33d2aa68e01008653a4be343a49",
+          "png": "/tmp/claude-1000/-home-veasnawt-src-vos-r2b/60e2c367-ad7c-4df0-8bfe-92a041f73dce/scratchpad/g1native5/desktop-tab-field-bios-candidate/screen.png",
+          "png_sha256": "6a6971364aa67912ba3f447abee4d706635255fc21bbed1dedc45abd2263b28a",
+          "ppm_bytes": 2359312,
+          "decision": "scene",
+          "marker_lines": [
+            "screen: framebuffer 1024x768 BGRX at 0xfd000000, pitch 4096, write-combining, MTRR type 0, 124x39 cells",
+            "desktop: scene ready; kernel-owned BGRX surface, bounded console viewport"
+          ]
+        },
+        "pixel_identical": true
+      },
+      {
+        "case": "not-requested",
+        "firmware": "bios",
+        "cmdline": "vos.apps=1",
+        "gfxpayload": "1024x768x32",
+        "expected": "none",
+        "baseline": {
+          "ppm_sha256": "34c2a085dc08355353c17fad71c1581b6eea8af311aab3de8640d1a330ac9b66",
+          "png": "/tmp/claude-1000/-home-veasnawt-src-vos-r2b/60e2c367-ad7c-4df0-8bfe-92a041f73dce/scratchpad/g1native5/not-requested-bios-baseline/screen.png",
+          "png_sha256": "d871e422fbc4569cbf8f54e70b09c8e10f984719c5a66b4374e8796a6f8db4a9",
+          "ppm_bytes": 2359312,
+          "decision": "none",
+          "marker_lines": [
+            "screen: framebuffer 1024x768 BGRX at 0xfd000000, pitch 4096, write-combining, MTRR type 0, 124x39 cells"
+          ]
+        },
+        "candidate": {
+          "ppm_sha256": "34c2a085dc08355353c17fad71c1581b6eea8af311aab3de8640d1a330ac9b66",
+          "png": "/tmp/claude-1000/-home-veasnawt-src-vos-r2b/60e2c367-ad7c-4df0-8bfe-92a041f73dce/scratchpad/g1native5/not-requested-bios-candidate/screen.png",
+          "png_sha256": "d871e422fbc4569cbf8f54e70b09c8e10f984719c5a66b4374e8796a6f8db4a9",
+          "ppm_bytes": 2359312,
+          "decision": "none",
+          "marker_lines": [
+            "screen: framebuffer 1024x768 BGRX at 0xfd000000, pitch 4096, write-combining, MTRR type 0, 124x39 cells"
+          ]
+        },
+        "pixel_identical": true
+      },
+      {
+        "case": "not-requested",
+        "firmware": "uefi",
+        "cmdline": "vos.apps=1",
+        "gfxpayload": "1024x768x32",
+        "expected": "none",
+        "baseline": {
+          "ppm_sha256": "34c2a085dc08355353c17fad71c1581b6eea8af311aab3de8640d1a330ac9b66",
+          "png": "/tmp/claude-1000/-home-veasnawt-src-vos-r2b/60e2c367-ad7c-4df0-8bfe-92a041f73dce/scratchpad/g1native5/not-requested-uefi-baseline/screen.png",
+          "png_sha256": "d871e422fbc4569cbf8f54e70b09c8e10f984719c5a66b4374e8796a6f8db4a9",
+          "ppm_bytes": 2359312,
+          "decision": "none",
+          "marker_lines": [
+            "screen: framebuffer 1024x768 BGRX at 0x80000000, pitch 4096, write-combining, MTRR type 0, 124x39 cells"
+          ]
+        },
+        "candidate": {
+          "ppm_sha256": "34c2a085dc08355353c17fad71c1581b6eea8af311aab3de8640d1a330ac9b66",
+          "png": "/tmp/claude-1000/-home-veasnawt-src-vos-r2b/60e2c367-ad7c-4df0-8bfe-92a041f73dce/scratchpad/g1native5/not-requested-uefi-candidate/screen.png",
+          "png_sha256": "d871e422fbc4569cbf8f54e70b09c8e10f984719c5a66b4374e8796a6f8db4a9",
+          "ppm_bytes": 2359312,
+          "decision": "none",
+          "marker_lines": [
+            "screen: framebuffer 1024x768 BGRX at 0x80000000, pitch 4096, write-combining, MTRR type 0, 124x39 cells"
+          ]
+        },
+        "pixel_identical": true
+      },
+      {
+        "case": "near-miss-token",
+        "firmware": "bios",
+        "cmdline": "vos.apps=1 vos.desktop=10 xvos.desktop=1",
+        "gfxpayload": "1024x768x32",
+        "expected": "none",
+        "baseline": {
+          "ppm_sha256": "34c2a085dc08355353c17fad71c1581b6eea8af311aab3de8640d1a330ac9b66",
+          "png": "/tmp/claude-1000/-home-veasnawt-src-vos-r2b/60e2c367-ad7c-4df0-8bfe-92a041f73dce/scratchpad/g1native5/near-miss-token-bios-baseline/screen.png",
+          "png_sha256": "d871e422fbc4569cbf8f54e70b09c8e10f984719c5a66b4374e8796a6f8db4a9",
+          "ppm_bytes": 2359312,
+          "decision": "none",
+          "marker_lines": [
+            "screen: framebuffer 1024x768 BGRX at 0xfd000000, pitch 4096, write-combining, MTRR type 0, 124x39 cells"
+          ]
+        },
+        "candidate": {
+          "ppm_sha256": "34c2a085dc08355353c17fad71c1581b6eea8af311aab3de8640d1a330ac9b66",
+          "png": "/tmp/claude-1000/-home-veasnawt-src-vos-r2b/60e2c367-ad7c-4df0-8bfe-92a041f73dce/scratchpad/g1native5/near-miss-token-bios-candidate/screen.png",
+          "png_sha256": "d871e422fbc4569cbf8f54e70b09c8e10f984719c5a66b4374e8796a6f8db4a9",
+          "ppm_bytes": 2359312,
+          "decision": "none",
+          "marker_lines": [
+            "screen: framebuffer 1024x768 BGRX at 0xfd000000, pitch 4096, write-combining, MTRR type 0, 124x39 cells"
+          ]
+        },
+        "pixel_identical": true
+      },
+      {
+        "case": "desktop-1280x800",
+        "firmware": "uefi",
+        "cmdline": "vos.apps=1 vos.desktop=1",
+        "gfxpayload": "1280x800x32",
+        "expected": "scene",
+        "baseline": {
+          "ppm_sha256": "9a7474e97aa8cf900cf614f073447ddcacb0d35ffbeee2930067586860beba6e",
+          "png": "/tmp/claude-1000/-home-veasnawt-src-vos-r2b/60e2c367-ad7c-4df0-8bfe-92a041f73dce/scratchpad/g1native5/desktop-1280x800-uefi-baseline/screen.png",
+          "png_sha256": "4443fc6d410eab610a149ecdaf144a4fbd22d5c0b54359358472b276ee637a1d",
+          "ppm_bytes": 3072016,
+          "decision": "scene",
+          "marker_lines": [
+            "screen: framebuffer 1280x800 BGRX at 0x80000000, pitch 5120, write-combining, MTRR type 0, 156x41 cells",
+            "desktop: scene ready; kernel-owned BGRX surface, bounded console viewport"
+          ]
+        },
+        "candidate": {
+          "ppm_sha256": "9a7474e97aa8cf900cf614f073447ddcacb0d35ffbeee2930067586860beba6e",
+          "png": "/tmp/claude-1000/-home-veasnawt-src-vos-r2b/60e2c367-ad7c-4df0-8bfe-92a041f73dce/scratchpad/g1native5/desktop-1280x800-uefi-candidate/screen.png",
+          "png_sha256": "4443fc6d410eab610a149ecdaf144a4fbd22d5c0b54359358472b276ee637a1d",
+          "ppm_bytes": 3072016,
+          "decision": "scene",
+          "marker_lines": [
+            "screen: framebuffer 1280x800 BGRX at 0x80000000, pitch 5120, write-combining, MTRR type 0, 156x41 cells",
+            "desktop: scene ready; kernel-owned BGRX surface, bounded console viewport"
+          ]
+        },
+        "pixel_identical": true
+      },
+      {
+        "case": "below-minimum-640x400",
+        "firmware": "bios",
+        "cmdline": "vos.apps=1 vos.desktop=1",
+        "gfxpayload": "640x400x32",
+        "expected": "fallback",
+        "baseline": {
+          "ppm_sha256": "4b9017810a3f63993627ca45674954fb88feb8535e80e1efc35521b21fff580d",
+          "png": "/tmp/claude-1000/-home-veasnawt-src-vos-r2b/60e2c367-ad7c-4df0-8bfe-92a041f73dce/scratchpad/g1native5/below-minimum-640x400-bios-baseline/screen.png",
+          "png_sha256": "b14dab3dcdf07dbfdf1bf57f8d18e8476318666571e00a0c9b00dcec8a0d3557",
+          "ppm_bytes": 768015,
+          "decision": "fallback",
+          "marker_lines": [
+            "screen: framebuffer 640x400 BGRX at 0xfd000000, pitch 2560, write-combining, MTRR type 0, 76x19 cells",
+            "desktop: unavailable; existing console fallback"
+          ]
+        },
+        "candidate": {
+          "ppm_sha256": "4b9017810a3f63993627ca45674954fb88feb8535e80e1efc35521b21fff580d",
+          "png": "/tmp/claude-1000/-home-veasnawt-src-vos-r2b/60e2c367-ad7c-4df0-8bfe-92a041f73dce/scratchpad/g1native5/below-minimum-640x400-bios-candidate/screen.png",
+          "png_sha256": "b14dab3dcdf07dbfdf1bf57f8d18e8476318666571e00a0c9b00dcec8a0d3557",
+          "ppm_bytes": 768015,
+          "decision": "fallback",
+          "marker_lines": [
+            "screen: framebuffer 640x400 BGRX at 0xfd000000, pitch 2560, write-combining, MTRR type 0, 76x19 cells",
+            "desktop: unavailable; existing console fallback"
+          ]
+        },
+        "pixel_identical": true
+      }
+    ]
+  },
+  "baseline_reconstruction": "worker baseline = candidate tree with the frozen desktop.c restored and the Rust module removed; its .text/.rodata/.data/.bss equal the real main f3c6048 build (host check: f768cc17/bbf6ffc3/c7424ee1/e3b0c442)"
+}
