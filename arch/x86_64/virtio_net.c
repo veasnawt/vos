@@ -5,6 +5,7 @@
 #include "thread.h"
 #include "irq.h"
 #include "lib.h"
+#include "rust_kernel.h" /* R3-N3: validation decisions are Rust-owned. */
 
 #define DFSELECT 0
 #define DF 4
@@ -116,21 +117,20 @@ static int buffer_ok(const void *buffer,uint32_t length,int output)
     }
     return 1;
 }
-static int choose_features(uint64_t offered)
-{
-    return (offered&FEATURES)==FEATURES && !(offered&(1ULL<<33)); /* No ACCESS_PLATFORM/IOMMU. */
-}
-static int queue_size_ok(unsigned size) {return size>=VNET_QUEUE && size<=32768 && !(size&(size-1));}
+/* VERSION_1 and MAC required; no ACCESS_PLATFORM/IOMMU (Rust decision). */
+static int choose_features(uint64_t offered) {return vos_rust_vnet_features_ok(offered);}
+static int queue_size_ok(unsigned size) {return vos_rust_vnet_queue_size_ok(size);}
+/* The ring reads stay here, in the accepted order (count first, then id and
+ * len of each entry through the volatile pointer); Rust decides on each value. */
 static int used_ok(const struct net_queue *q,unsigned count,int tx)
 {
-    if (count>(tx?1:VNET_QUEUE)) return 0;
-    unsigned seen=0;
+    if (!vos_rust_vnet_used_count_ok(count,tx)) return 0;
+    uint32_t seen=0;
     for (unsigned n=0;n<count;n++) {
         unsigned at=(uint16_t)(q->consumed+n)%VNET_QUEUE;
         uint32_t id=q->entries[at].id,len=q->entries[at].len;
-        if (id>=(tx?1:VNET_QUEUE) || (seen&(1u<<id))) return 0;
-        if (tx ? len!=0 : (len<VNET_HEADER+14 || len>VNET_HEADER+VNET_FRAME_MAX)) return 0;
-        seen|=1u<<id;
+        seen=vos_rust_vnet_used_entry(seen,id,len,tx);
+        if (seen==VNET_USED_INVALID) return 0;
     }
     return 1;
 }
@@ -138,7 +138,7 @@ static int used_ok(const struct net_queue *q,unsigned count,int tx)
  * num_buffers cannot authorize additional buffers. QEMU 10.2.1's socket RX
  * path leaves that field zero although virtio 1.2 asks devices to set it to 1.
  * Ignore it in this mode; validate actual used IDs/lengths and offloads instead. */
-static int header_ok(const uint8_t *p) {return p[0]==0 && p[1]==0;}
+static int header_ok(const uint8_t *p) {return vos_rust_vnet_header_ok(p[0],p[1]);}
 static void publish(struct net_queue *q,unsigned id)
 {
     q->avail[2+q->published%VNET_QUEUE]=(uint16_t)id;
@@ -166,7 +166,7 @@ static int setup_queue(unsigned i)
         uint64_t a=pa+offsets[n];write_reg(&caps.common,regs[n],4,(uint32_t)a);write_reg(&caps.common,regs[n]+4,4,(uint32_t)(a>>32));
     }
     uint64_t offset=(uint64_t)read_reg(&caps.common,QNOTIFY,2)*caps.notify_mult;
-    if (offset>caps.notify.length || caps.notify.length-offset<2) return 0;
+    if (!vos_rust_vnet_notify_ok(offset,caps.notify.length)) return 0;
     q->notify=(uint32_t)offset;
     write_reg(&caps.common,QMSIX,2,0xffff);
     write_reg(&caps.common,QENABLE,2,1);
@@ -194,7 +194,7 @@ int vnet_init(void)
     }
     write_reg(&caps.common,STATUS,1,11);
     if (read_reg(&caps.common,STATUS,1)!=11 || access_error) return stop_as(VNET_FAILED,"FEATURES_OK refused",VNET_EUNSUPPORTED);
-    if (read_reg(&caps.common,NUMQ,2)<2) return stop_as(VNET_FAILED,"missing RX/TX queues",VNET_EUNSUPPORTED);
+    if (!vos_rust_vnet_queues_ok(read_reg(&caps.common,NUMQ,2))) return stop_as(VNET_FAILED,"missing RX/TX queues",VNET_EUNSUPPORTED);
     int stable=0;
     for (unsigned n=0;n<8;n++) {
         uint8_t generation=read_reg(&caps.common,GENERATION,1);
@@ -224,11 +224,11 @@ int vnet_send(const void *frame,uint32_t length)
 {
     int err=ready();if (err) return err;
     if (sending) return VNET_EBUSY;
-    if (length<14 || length>VNET_FRAME_MAX || !buffer_ok(frame,length,0)) return VNET_EINVAL;
+    if (!vos_rust_vnet_send_length_ok(length) || !buffer_ok(frame,length,0)) return VNET_EINVAL;
     struct net_queue *q=&queues[1];fence();
     if (q->used[1]!=q->consumed) return broken("unsolicited TX completion",VNET_EPROTO);
     sending=1;uint8_t *p=phys_to_virt(net.pool[TX_BUFFER]);memset(p,0,PAGE_SIZE);
-    memcpy(p+VNET_HEADER,frame,length);uint32_t wire=length<60?60:length;
+    memcpy(p+VNET_HEADER,frame,length);uint32_t wire=vos_rust_vnet_tx_wire(length);
     q->desc[0]=(struct net_desc){net.pool[TX_BUFFER],VNET_HEADER+wire,0,0};publish(q,0);notify(1);
     for (unsigned n=0;n<VNET_POLL_LIMIT;n++) {
         uint16_t count=(uint16_t)(q->used[1]-q->consumed);fence();
@@ -243,8 +243,8 @@ int vnet_receive(void *frame,uint32_t capacity,uint32_t *length)
 {
     int err=ready();if (err) return err;
     uint64_t a=(uint64_t)frame,b=(uint64_t)length;
-    if (!capacity || capacity>VNET_FRAME_MAX || !buffer_ok(frame,capacity,1) || !buffer_ok(length,sizeof(*length),1) ||
-        (a<b+sizeof(*length) && b<a+capacity)) return VNET_EINVAL;
+    if (!vos_rust_vnet_capacity_ok(capacity) || !buffer_ok(frame,capacity,1) || !buffer_ok(length,sizeof(*length),1) ||
+        vos_rust_vnet_rx_outputs_overlap(a,capacity,b)) return VNET_EINVAL;
     struct net_queue *q=&queues[0];uint16_t count=(uint16_t)(q->used[1]-q->consumed);fence();
     if (!used_ok(q,count,0)) return broken("invalid RX completion",VNET_EPROTO);
     if (!count) return VNET_EAGAIN;

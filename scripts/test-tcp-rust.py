@@ -199,7 +199,7 @@ def main():
             for name, old, new in MUTATIONS:
                 d = out / 'mutants' / name; (d / 'arch/x86_64/rust').mkdir(parents=True); (d / 'kernel/rust/net').mkdir(parents=True)
                 shutil.copy(ROOT / 'arch/x86_64/rust/net.rs', d / 'arch/x86_64/rust/net.rs')
-                for m in ('checksum', 'context', 'ipv4', 'arp', 'udp'): shutil.copy(ROOT / 'kernel/rust/net' / (m + '.rs'), d / 'kernel/rust/net' / (m + '.rs'))
+                for m in sorted(q.stem for q in (ROOT / 'kernel/rust/net').glob('*.rs') if q.stem != 'tcp'): shutil.copy(ROOT / 'kernel/rust/net' / (m + '.rs'), d / 'kernel/rust/net' / (m + '.rs'))  # every other module net.rs includes
                 (d / 'kernel/rust/net/tcp.rs').write_text(source.replace(old, new))
                 lib = d / 'libmutant.a'; hostlib(d / 'arch/x86_64/rust/net.rs', lib, 'mutant-%s-build.txt' % name)
                 run(cc + ['-O2', 'tests/host/tcp-differential.c', *objs['release'], lib, '-o', d / 'differential'], 'mutant-%s-link.txt' % name)

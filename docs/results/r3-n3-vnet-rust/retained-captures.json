@@ -1,0 +1,227 @@
+{
+  "store": "/home/veasnawt/src/vos-r2-keyboard-ordinary/build/retained/r3-n3-vnet",
+  "captures": [
+    {
+      "run": "r1",
+      "path": "net-tcp-focused/test-tcp-close/bios/screen.png",
+      "sha256": "5e9dca7eb087ea5fefaae10a9db3ac35e7cb69038508c6d32eccdf8680965d51",
+      "bytes": 13308
+    },
+    {
+      "run": "r1",
+      "path": "net-tcp-focused/test-tcp-close/bios/wire.pcap.gz",
+      "sha256": "f30b46cd64e3e91d87f6909f08702337a598953ad1f063f80eb1959da75a663b",
+      "bytes": 820
+    },
+    {
+      "run": "r1",
+      "path": "net-tcp-focused/test-tcp-close/uefi/screen.png",
+      "sha256": "5e9dca7eb087ea5fefaae10a9db3ac35e7cb69038508c6d32eccdf8680965d51",
+      "bytes": 13308
+    },
+    {
+      "run": "r1",
+      "path": "net-tcp-focused/test-tcp-close/uefi/wire.pcap.gz",
+      "sha256": "3ae8ec5bb3322c2a89e909b774d59f9199708090301ddfc13ba575453ddac4e4",
+      "bytes": 819
+    },
+    {
+      "run": "r1",
+      "path": "net-tcp-focused/test-tcp-data/bios/screen.png",
+      "sha256": "76f8f88ddcb7f7e166d5ab19b3518be13819a19a5df1b00f5a117d1f07244427",
+      "bytes": 12117
+    },
+    {
+      "run": "r1",
+      "path": "net-tcp-focused/test-tcp-data/bios/wire.pcap.gz",
+      "sha256": "89fb8091101a3d04eeafadc12146d30a389946ff7887680def42e98daca1c262",
+      "bytes": 964
+    },
+    {
+      "run": "r1",
+      "path": "net-tcp-focused/test-tcp-data/uefi/screen.png",
+      "sha256": "76f8f88ddcb7f7e166d5ab19b3518be13819a19a5df1b00f5a117d1f07244427",
+      "bytes": 12117
+    },
+    {
+      "run": "r1",
+      "path": "net-tcp-focused/test-tcp-data/uefi/wire.pcap.gz",
+      "sha256": "5b551b2e4b6d228a30ac51c5edc142f160e97cc6f4752036aed11c6e8e17ebdb",
+      "bytes": 964
+    },
+    {
+      "run": "r1",
+      "path": "net-tcp-focused/test-tcp-retry/bios/screen.png",
+      "sha256": "50dc25c0b4f0381af6633c1b797d774ff775cb1ddacb5f6296579352e9ed9b32",
+      "bytes": 11724
+    },
+    {
+      "run": "r1",
+      "path": "net-tcp-focused/test-tcp-retry/bios/wire.pcap.gz",
+      "sha256": "fba8868a3f8a0a7f9d5dbaa43355b4983028475965d0fffb765ffe6232013299",
+      "bytes": 501
+    },
+    {
+      "run": "r1",
+      "path": "net-tcp-focused/test-tcp-retry/uefi/screen.png",
+      "sha256": "50dc25c0b4f0381af6633c1b797d774ff775cb1ddacb5f6296579352e9ed9b32",
+      "bytes": 11724
+    },
+    {
+      "run": "r1",
+      "path": "net-tcp-focused/test-tcp-retry/uefi/wire.pcap.gz",
+      "sha256": "eb84b19f214907258297fddf2ebfc56d855c227800693827683368501e60f365",
+      "bytes": 488
+    },
+    {
+      "run": "r1",
+      "path": "test-arp/bios/screen.png",
+      "sha256": "ac71aacce1ad1061760653693c1d7e5b113e144f930a534c396a099ecc8583ce",
+      "bytes": 9712
+    },
+    {
+      "run": "r1",
+      "path": "test-arp/bios/wire.pcap.gz",
+      "sha256": "92284177bfe1a08dbcb8b88ba849433d8e0763808f4ff701e96f8e6353ff3e66",
+      "bytes": 254
+    },
+    {
+      "run": "r1",
+      "path": "test-arp/uefi/screen.png",
+      "sha256": "ac71aacce1ad1061760653693c1d7e5b113e144f930a534c396a099ecc8583ce",
+      "bytes": 9712
+    },
+    {
+      "run": "r1",
+      "path": "test-arp/uefi/wire.pcap.gz",
+      "sha256": "e5be89da6b625c4b7972689ff6688cb87fd6407831f0f02a00af24b32293516f",
+      "bytes": 248
+    },
+    {
+      "run": "r1",
+      "path": "test-ipv4/bios/screen.png",
+      "sha256": "dab039c5ce804508674a7e7d71e5cc1ac2759a46553e4ac2347565bb99841710",
+      "bytes": 10284
+    },
+    {
+      "run": "r1",
+      "path": "test-ipv4/bios/wire.pcap.gz",
+      "sha256": "1bb6c5d6c7680adf6800dfa1065d166e5584fed69e5b3457e87e87b00dbf176d",
+      "bytes": 466
+    },
+    {
+      "run": "r1",
+      "path": "test-ipv4/uefi/screen.png",
+      "sha256": "dab039c5ce804508674a7e7d71e5cc1ac2759a46553e4ac2347565bb99841710",
+      "bytes": 10284
+    },
+    {
+      "run": "r1",
+      "path": "test-ipv4/uefi/wire.pcap.gz",
+      "sha256": "f8c05950fe819df82ffc9f3256bdf5a2d41ca166ddedb5c3dbd3ba5a222fa9ea",
+      "bytes": 464
+    },
+    {
+      "run": "r1",
+      "path": "test-tcp/bios/screen.png",
+      "sha256": "69c6c83e98796aeadc30dac21f1be68b129ba43e0666d7cbaaae1fd6a8afe6d6",
+      "bytes": 11274
+    },
+    {
+      "run": "r1",
+      "path": "test-tcp/bios/wire.pcap.gz",
+      "sha256": "56623955cd97644909cd542d8d3a2e7726163163f37b9252b71d94f369d14571",
+      "bytes": 465
+    },
+    {
+      "run": "r1",
+      "path": "test-tcp/uefi/screen.png",
+      "sha256": "69c6c83e98796aeadc30dac21f1be68b129ba43e0666d7cbaaae1fd6a8afe6d6",
+      "bytes": 11274
+    },
+    {
+      "run": "r1",
+      "path": "test-tcp/uefi/wire.pcap.gz",
+      "sha256": "6165735e233a449ade19e379a6be2ad1044e013be3389487edb81b0dbabbece6",
+      "bytes": 465
+    },
+    {
+      "run": "r1",
+      "path": "test-udp/bios/screen.png",
+      "sha256": "a7d1861cb2b9d847992f2b05f8f9004ba6f3d44e154364824d5ca86d8b44a469",
+      "bytes": 10495
+    },
+    {
+      "run": "r1",
+      "path": "test-udp/bios/wire.pcap.gz",
+      "sha256": "33d92ab68ecc57f6fa63a115aa1a19bd46a2b9c03b33090bfdd012d330c6ff35",
+      "bytes": 855
+    },
+    {
+      "run": "r1",
+      "path": "test-udp/uefi/screen.png",
+      "sha256": "a7d1861cb2b9d847992f2b05f8f9004ba6f3d44e154364824d5ca86d8b44a469",
+      "bytes": 10495
+    },
+    {
+      "run": "r1",
+      "path": "test-udp/uefi/wire.pcap.gz",
+      "sha256": "3a276bf5adc181a2c95e07d8910d34882d9a6f1d0e1beaac0e71acb22d176c2a",
+      "bytes": 852
+    },
+    {
+      "run": "r1",
+      "path": "test-virtio-net/absent-bios/screen.png",
+      "sha256": "07e638e2e34b12a37b02fe5c4dbf05a0316bde716edb0d205a04602863f760ea",
+      "bytes": 6637
+    },
+    {
+      "run": "r1",
+      "path": "test-virtio-net/net-bios/screen.png",
+      "sha256": "2af9e81589828d58f02ad1e5e94f292d3d7573e3469b41fa0e133e77bdfcc54a",
+      "bytes": 10546
+    },
+    {
+      "run": "r1",
+      "path": "test-virtio-net/net-bios/wire.pcap.gz",
+      "sha256": "52e8b0b203f785ce31c196f83d06a45f3849352e0ed5de0d0f9db394dc38a749",
+      "bytes": 389
+    },
+    {
+      "run": "r1",
+      "path": "test-virtio-net/net-uefi/screen.png",
+      "sha256": "2af9e81589828d58f02ad1e5e94f292d3d7573e3469b41fa0e133e77bdfcc54a",
+      "bytes": 10546
+    },
+    {
+      "run": "r1",
+      "path": "test-virtio-net/net-uefi/wire.pcap.gz",
+      "sha256": "982ad84391747d647f8cd6bb58507ed6f814a6853b1e726ca9fdc55d380d867b",
+      "bytes": 388
+    },
+    {
+      "run": "r1",
+      "path": "test-virtio-net/rixie-uefi/screen.png",
+      "sha256": "0dfdf88ca71021e491c230452fac40645fe8d2c1738dfc803d04bcb9c24b1a20",
+      "bytes": 8760
+    },
+    {
+      "run": "r1",
+      "path": "test-virtio-net/rixie-uefi/wire.pcap.gz",
+      "sha256": "5b63b3e3d0abc420541186b47d3fb223797c7d2a5640c230ef045130a306c057",
+      "bytes": 34
+    },
+    {
+      "run": "r1",
+      "path": "test-virtio-net/vsh-bios/screen.png",
+      "sha256": "0a717c2ad12dd6945e399004c45a77094e85e06f6260a6322ab3c7c2fdd3bbf2",
+      "bytes": 7369
+    },
+    {
+      "run": "r1",
+      "path": "test-virtio-net/vsh-bios/wire.pcap.gz",
+      "sha256": "5b63b3e3d0abc420541186b47d3fb223797c7d2a5640c230ef045130a306c057",
+      "bytes": 34
+    }
+  ]
+}

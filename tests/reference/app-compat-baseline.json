@@ -1,0 +1,28 @@
+{
+  "purpose": "Application identities for the N4 compatibility boots in scripts/test-virtio-net.py. The historical N4 record is preserved and still verified; the boots use the latest accepted identities.",
+  "historical": {
+    "evidence": "docs/results/n4-rixie/evidence.json",
+    "field": "products",
+    "commit": "50cbc8b",
+    "apps": {
+      "vsh": "4a837277422f97c86f3c3a5ba0fef15de22c002addf9243a4b5d78bd73b5ad5f",
+      "rixie": "77104da3b33caf809daf5e6674ac4e2fa9edf6a9e2e5dd59828514df76490d32"
+    }
+  },
+  "current": {
+    "evidence": "docs/results/app-handoff/result.json",
+    "field": "application_sha256",
+    "apps": {
+      "vsh": "e7af3ee56164f587f7ca1338f7ddfcb202b6f4310f10b4dcba6a2576743cb181",
+      "rixie": "77104da3b33caf809daf5e6674ac4e2fa9edf6a9e2e5dd59828514df76490d32"
+    }
+  },
+  "supersession": {
+    "vsh": {
+      "changed_by": "4d3fc3cce1b661908ca0d26baacc8544cf31e7e4",
+      "date": "2026-10-25",
+      "change": "feat(apps): native application launching with exclusive console handoff (user/vsh/main.rs apps/hello/rixie commands, user/user.mk)",
+      "reproduction": "Rebuilt with rustc 1.100.0-nightly 2026-09-02 from read-only exports: 50cbc8b and 4d3fc3c^ give 4a837277...; 4d3fc3c and every later main through afe33b8 give e7af3ee5...; rixie is 77104da3... throughout."
+    }
+  }
+}

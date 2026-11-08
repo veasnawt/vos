@@ -95,7 +95,7 @@ def main():
     result={'scope':'first N5 modern virtio-net adapter increment','boots':[]}
     try:
         cc=['gcc','-std=gnu11','-O2','-Wall','-Wextra','-Werror','-ffunction-sections','-fdata-sections','-Wl,--gc-sections','-Iarch/x86_64']
-        run(cc+['tests/host/virtio-net.c','arch/x86_64/virtio_blk.c','-o',str(out/'host-net')],out/'host-build.log')
+        run(cc+['tests/host/virtio-net.c','arch/x86_64/virtio_blk.c',runpy.run_path(str(REPO/'scripts/net_rust_host.py'),run_name='net_rust_host')['build'](out),'-o',str(out/'host-net')],out/'host-build.log')  # R3-N3: Rust decisions
         run([str(out/'host-net')],out/'host-test.log')
         empty=subprocess.run(['make','-n','net-iso','NET_BUILD='],cwd=REPO,capture_output=True,text=True)
         require(empty.returncode==2 and 'NET_BUILD must be nonempty' in empty.stderr,'empty build path guard');(out/'path-guard.txt').write_text(empty.stderr)
@@ -108,10 +108,20 @@ def main():
         rust=os.environ.get('RUSTC','rustc')
         result['rustc']=subprocess.check_output([rust,'--version'],text=True).strip()
         run(['make','--no-print-directory','USER_BUILD='+str(out/'net/user'),'RUSTC='+rust,'RUST_APP=rixie','user-rust','user-vsh'],out/'application-build.log')
-        expected=json.loads((REPO/'docs/results/n4-rixie/evidence.json').read_text())['products']
+        # Application identities: the historical N4 record (preserved, still verified) and the latest accepted record, which
+        # vsh superseded at 4d3fc3c (tests/reference/app-compat-baseline.json). Every recorded hash must equal its cited
+        # accepted evidence, so the expected identity cannot be regenerated from a build.
+        base=json.loads((REPO/'tests/reference/app-compat-baseline.json').read_text())
+        n4=json.loads((REPO/base['historical']['evidence']).read_text())[base['historical']['field']]
+        current=json.loads((REPO/base['current']['evidence']).read_text())[base['current']['field']]
+        for mode in ('vsh','rixie'):
+            require(n4[mode+'/user/'+mode+'.elf']==base['historical']['apps'][mode],'historical N4 identity record unchanged: '+mode)
+            require(current[mode]==base['current']['apps'][mode],'current accepted identity matches its evidence: '+mode)
+        require(set(m for m in ('vsh','rixie') if base['historical']['apps'][m]!=base['current']['apps'][m])==set(base['supersession']),'every superseded identity is attributed')
+        result['application_identity']=dict(historical=base['historical'],current=base['current'],supersession=base['supersession'])
         for mode,fw in [('vsh','bios'),('rixie','uefi')]:
             cfg=out/(mode+'.cfg')
-            app=out/'net/user'/(mode+'.elf');require(sha(app)==expected[mode+'/user/'+mode+'.elf'],'accepted application identity')
+            app=out/'net/user'/(mode+'.elf');require(sha(app)==base['current']['apps'][mode],'accepted application identity')
             cfg.write_text('set timeout=0\nmenuentry "N5 compatibility" {\nmultiboot2 /boot/vos.bin vos.'+mode+'=1\nmodule2 /boot/hello.elf hello\nmodule2 /boot/'+mode+'.elf '+mode+'\nboot\n}\n')
             build=kernel/mode
             run(['make','--no-print-directory','BUILD='+str(build),'USER_BUILD='+str(out/'net/user'),'GRUB_CFG='+str(cfg),'ISO_FILES='+str(app)+':boot/'+mode+'.elf','uefi-iso' if fw=='uefi' else 'iso'],out/(mode+'-build.log'))
