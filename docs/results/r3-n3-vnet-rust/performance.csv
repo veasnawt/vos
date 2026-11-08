@@ -1,0 +1,3 @@
+workload,C_ns,Rust_ns,percent
+receive_validate_copy_republish,184.705,186.955,1.22
+send_and_completion,233.163,238.955,2.48

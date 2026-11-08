@@ -14,7 +14,7 @@ verified below; full TCP reliability and userspace authority remain future work.
 
 ## Implementation ownership (R3)
 
-The protocol logic described below is unchanged in behavior. Since R3-N1, the ARP, IPv4/ICMP and UDP validation and state live in safe Rust (`kernel/rust/net/`). The R3-N2 candidate also moves the TCP state machine there (`kernel/rust/net/tcp.rs`). `net_arp.c`, `net_ipv4.c`, `net_udp.c` and `net_tcp.c` keep the public C ABI and forward through `arch/x86_64/rust/net.rs`. The virtio-net driver, its DMA rings and device ownership, `net_boot.c` and the boot-time protocol tests remain C. See [R3-N1](results/r3-n1-net-rust.md) and [R3-N2](results/r3-n2-tcp-rust.md).
+The protocol logic described below is unchanged in behavior. Since R3-N1, the ARP, IPv4/ICMP and UDP validation and state live in safe Rust (`kernel/rust/net/`). Since R3-N2, the TCP state machine is there too (`kernel/rust/net/tcp.rs`). `net_arp.c`, `net_ipv4.c`, `net_udp.c` and `net_tcp.c` keep the public C ABI and forward through `arch/x86_64/rust/net.rs`. The R3-N3 candidate moves the virtio-net driver's pure decisions on device-reported values (`kernel/rust/net/vnet.rs`) to Rust. `virtio_net.c` keeps PCI and register access, the virtqueues, DMA memory and every ring read, fences, reset, notification and device ownership, and passes Rust only scalars it has read. `net_boot.c` and the boot-time protocol tests remain C. See [R3-N1](results/r3-n1-net-rust.md), [R3-N2](results/r3-n2-tcp-rust.md) and [R3-N3](results/r3-n3-vnet-rust.md).
 
 ## Existing infrastructure and choice
 

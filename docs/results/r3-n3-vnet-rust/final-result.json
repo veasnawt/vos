@@ -1,0 +1,75 @@
+{
+  "candidate_commits": [
+    "deed860",
+    "7251cf6"
+  ],
+  "baseline": "afe33b8671c4648cc946001013a4753a16fc52e2",
+  "oracle": {
+    "baseline": "afe33b8671c4648cc946001013a4753a16fc52e2",
+    "driver_sha256": "f23fa484fa199e032950390ac50dd82ca428836c6e625147f7ade12b92786b83"
+  },
+  "gcc_worker": "gcc (Ubuntu 15.2.0-16ubuntu1) 15.2.0",
+  "transcript": {
+    "records": 216823,
+    "bytes": 1641467,
+    "sha256": "6603e58bb2e3f8a459b255cb06e5664c8eb9afc21c28d04fccffa65345f4d547",
+    "identical": [
+      "release (production archive)",
+      "ASan/UBSan (overflow-checked Rust)"
+    ]
+  },
+  "host_suite": "virtio-net host: 251 checks PASS (real driver, PCI/DMA model, reset quarantine)",
+  "mutations": {
+    "count": 26,
+    "all_detected": true
+  },
+  "panic_free": {
+    "functions": 11,
+    "with_panic_paths": []
+  },
+  "rust_external_symbols": [],
+  "frame_growth": {},
+  "performance": {
+    "receive_validate_copy_republish": {
+      "C_ns": 184.70510000000002,
+      "Rust_ns": 186.95510000000002,
+      "percent": 1.2181580259559732
+    },
+    "send_and_completion": {
+      "C_ns": 233.1626,
+      "Rust_ns": 238.95505,
+      "percent": 2.484296366569949
+    }
+  },
+  "regressions_over_5_percent": [],
+  "source_sha256": {
+    "kernel/rust/net/vnet.rs": "9e5a08df35105c659993ed89423a5efbf98e2af23e87bde8bf1e48d3938d2591",
+    "arch/x86_64/rust/net.rs": "2131c5cf13c5d7f57c0f8350037b3bc4d71f9321003f0c457d3594be638359fd",
+    "arch/x86_64/virtio_net.c": "f1c6b16137f1d5b1aa54bceb5a48cf12001262fe9e0c470e75f95f8f1481bb8d",
+    "arch/x86_64/rust_kernel.h": "9ba1e7275ff73543a9720a1c1f042495c8cce39c3c0d59dff3d531ecd3fc3714",
+    "tests/host/vnet-differential.c": "3423c7ed5b5b58895730b0f9b3c24535c3835e3688697fb7a1981eb12e5fc803",
+    "tests/reference/virtio-net.c": "f23fa484fa199e032950390ac50dd82ca428836c6e625147f7ade12b92786b83",
+    "tests/reference/net-headers/virtio_net.h": "7ee0bf7a34f31edfcdbb8dc6dc77f282664727775fc55ede4aa18cc0bc7f7222",
+    "tests/reference/net-r3n3.json": "c0165d555e11b2ee37539b9be68b513f61ed569faf8af31fd180958979346286",
+    "scripts/test-vnet-rust.py": "b7371dd82a1cffb8e5df91848c86a2154a101e7050c9af12b1cc3269cc934aaa"
+  },
+  "campaign": {
+    "id": "r3-n3-vnet-dev-v1",
+    "runs": {
+      "r1": {
+        "status": "PASS",
+        "seal": "c1515afd4bd1195ade2a6ddd0e2386b1d0955adca975c4e7c6bb06307136ad6f"
+      },
+      "r2": {
+        "status": "PASS",
+        "seal": "c30446943f2db30013549b13421adcb942204d158eca319fe6319f2aa5487425"
+      }
+    }
+  },
+  "host_ci_gcc13": "every hosted Build smoke step PASS on the exact committed tree",
+  "finding": "pre-existing vnet_receive re-read of used id/len after validation (TOCTOU) preserved unchanged; separate authorization needed",
+  "limitations": [
+    "QEMU verification and static analysis only; no physical-hardware acceptance",
+    "host micro-benchmarks against a device model, not NIC throughput"
+  ]
+}

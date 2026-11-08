@@ -1,0 +1,15 @@
+{
+  "baseline_main_afe33b8": {
+    "file_bytes": 1170472,
+    "load_memsz": 970752,
+    "kernel_phys_end": "0x1ED000"
+  },
+  "candidate": {
+    "file_bytes": 1171704,
+    "load_memsz": 970752,
+    "kernel_phys_end": "0x1ED000"
+  },
+  "loaded_growth_bytes": 0,
+  "file_change_bytes": 1232,
+  "toolchain": "gcc 15.2.0 / rustc 1.100.0-nightly 2026-09-02"
+}

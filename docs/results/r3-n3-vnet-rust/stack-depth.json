@@ -1,0 +1,115 @@
+{
+  "method": "static whole-path depth over linked kernels (GOT-indirect calls resolved); C = main afe33b8, Rust = deed860; same rustc",
+  "worker_frames": {
+    "rust": {
+      "vos_rust_vnet_features_ok": 0,
+      "vos_rust_vnet_queue_size_ok": 0,
+      "vos_rust_vnet_queues_ok": 0,
+      "vos_rust_vnet_used_count_ok": 0,
+      "vos_rust_vnet_used_entry": 0,
+      "vos_rust_vnet_header_ok": 0,
+      "vos_rust_vnet_notify_ok": 0,
+      "vos_rust_vnet_send_length_ok": 0,
+      "vos_rust_vnet_tx_wire": 0,
+      "vos_rust_vnet_capacity_ok": 0,
+      "vos_rust_vnet_rx_outputs_overlap": 0
+    },
+    "c_driver": {
+      "vnet_init": {
+        "C_frozen": 56,
+        "C_production": 56
+      },
+      "vnet_send": {
+        "C_frozen": 24,
+        "C_production": 24
+      },
+      "vnet_receive": {
+        "C_frozen": 72,
+        "C_production": 72
+      },
+      "vnet_stop": {
+        "C_frozen": 8,
+        "C_production": 8
+      },
+      "vnet_info": {
+        "C_frozen": 0,
+        "C_production": 0
+      }
+    }
+  },
+  "host_gcc13_frames": {
+    "rust": {
+      "vos_rust_vnet_features_ok": 0,
+      "vos_rust_vnet_queue_size_ok": 0,
+      "vos_rust_vnet_queues_ok": 0,
+      "vos_rust_vnet_used_count_ok": 0,
+      "vos_rust_vnet_used_entry": 0,
+      "vos_rust_vnet_header_ok": 0,
+      "vos_rust_vnet_notify_ok": 0,
+      "vos_rust_vnet_send_length_ok": 0,
+      "vos_rust_vnet_tx_wire": 0,
+      "vos_rust_vnet_capacity_ok": 0,
+      "vos_rust_vnet_rx_outputs_overlap": 0
+    },
+    "c_driver": {
+      "vnet_init": {
+        "C_frozen": 40,
+        "C_production": 40
+      },
+      "vnet_send": {
+        "C_frozen": 40,
+        "C_production": 24
+      },
+      "vnet_receive": {
+        "C_frozen": 72,
+        "C_production": 72
+      },
+      "vnet_stop": {
+        "C_frozen": 8,
+        "C_production": 8
+      },
+      "vnet_info": {
+        "C_frozen": 0,
+        "C_production": 0
+      }
+    }
+  },
+  "paths": {
+    "vnet_init": {
+      "C_gcc15": 312,
+      "Rust_gcc15": 312,
+      "C_gcc13": 304,
+      "Rust_gcc13": 304
+    },
+    "vnet_send": {
+      "C_gcc15": 328,
+      "Rust_gcc15": 328,
+      "C_gcc13": 352,
+      "Rust_gcc13": 336
+    },
+    "vnet_receive": {
+      "C_gcc15": 344,
+      "Rust_gcc15": 344,
+      "C_gcc13": 352,
+      "Rust_gcc13": 352
+    },
+    "vnet_stop": {
+      "C_gcc15": 264,
+      "Rust_gcc15": 264,
+      "C_gcc13": 272,
+      "Rust_gcc13": 272
+    },
+    "net_boot_run": {
+      "C_gcc15": 7944,
+      "Rust_gcc15": 7944,
+      "C_gcc13": 7960,
+      "Rust_gcc13": 7960
+    },
+    "kernel_main": {
+      "C_gcc15": 11944,
+      "Rust_gcc15": 11944,
+      "C_gcc13": 11920,
+      "Rust_gcc13": 11920
+    }
+  }
+}
