@@ -1,0 +1,149 @@
+{
+  "store": "/home/veasnawt/src/vos-r2-keyboard-ordinary/build/retained/r3-g1-desktop",
+  "captures": [
+    {
+      "run": "r1",
+      "path": "desktopnative/below-minimum-640x400-bios-baseline/screen.png",
+      "sha256": "b14dab3dcdf07dbfdf1bf57f8d18e8476318666571e00a0c9b00dcec8a0d3557",
+      "bytes": 3146
+    },
+    {
+      "run": "r1",
+      "path": "desktopnative/below-minimum-640x400-bios-candidate/screen.png",
+      "sha256": "b14dab3dcdf07dbfdf1bf57f8d18e8476318666571e00a0c9b00dcec8a0d3557",
+      "bytes": 3146
+    },
+    {
+      "run": "r1",
+      "path": "desktopnative/desktop-1024x768-bios-baseline/screen.png",
+      "sha256": "6a6971364aa67912ba3f447abee4d706635255fc21bbed1dedc45abd2263b28a",
+      "bytes": 6611
+    },
+    {
+      "run": "r1",
+      "path": "desktopnative/desktop-1024x768-bios-candidate/screen.png",
+      "sha256": "6a6971364aa67912ba3f447abee4d706635255fc21bbed1dedc45abd2263b28a",
+      "bytes": 6611
+    },
+    {
+      "run": "r1",
+      "path": "desktopnative/desktop-1024x768-uefi-baseline/screen.png",
+      "sha256": "6a6971364aa67912ba3f447abee4d706635255fc21bbed1dedc45abd2263b28a",
+      "bytes": 6611
+    },
+    {
+      "run": "r1",
+      "path": "desktopnative/desktop-1024x768-uefi-candidate/screen.png",
+      "sha256": "6a6971364aa67912ba3f447abee4d706635255fc21bbed1dedc45abd2263b28a",
+      "bytes": 6611
+    },
+    {
+      "run": "r1",
+      "path": "desktopnative/desktop-1280x800-uefi-baseline/screen.png",
+      "sha256": "4443fc6d410eab610a149ecdaf144a4fbd22d5c0b54359358472b276ee637a1d",
+      "bytes": 7342
+    },
+    {
+      "run": "r1",
+      "path": "desktopnative/desktop-1280x800-uefi-candidate/screen.png",
+      "sha256": "4443fc6d410eab610a149ecdaf144a4fbd22d5c0b54359358472b276ee637a1d",
+      "bytes": 7342
+    },
+    {
+      "run": "r1",
+      "path": "desktopnative/desktop-640x480-bios-baseline/screen.png",
+      "sha256": "bc42e56a2430d2eab17e41e21c3df7eea96547abd43c02c309a9f097aa5858e8",
+      "bytes": 4467
+    },
+    {
+      "run": "r1",
+      "path": "desktopnative/desktop-640x480-bios-candidate/screen.png",
+      "sha256": "bc42e56a2430d2eab17e41e21c3df7eea96547abd43c02c309a9f097aa5858e8",
+      "bytes": 4467
+    },
+    {
+      "run": "r1",
+      "path": "desktopnative/desktop-640x480-uefi-baseline/screen.png",
+      "sha256": "bc42e56a2430d2eab17e41e21c3df7eea96547abd43c02c309a9f097aa5858e8",
+      "bytes": 4467
+    },
+    {
+      "run": "r1",
+      "path": "desktopnative/desktop-640x480-uefi-candidate/screen.png",
+      "sha256": "bc42e56a2430d2eab17e41e21c3df7eea96547abd43c02c309a9f097aa5858e8",
+      "bytes": 4467
+    },
+    {
+      "run": "r1",
+      "path": "desktopnative/desktop-800x600-bios-baseline/screen.png",
+      "sha256": "9e330f21165a172a56cbd247ff2e7507d119b087c6a82ca2ce4d4e86623d0d27",
+      "bytes": 5303
+    },
+    {
+      "run": "r1",
+      "path": "desktopnative/desktop-800x600-bios-candidate/screen.png",
+      "sha256": "9e330f21165a172a56cbd247ff2e7507d119b087c6a82ca2ce4d4e86623d0d27",
+      "bytes": 5303
+    },
+    {
+      "run": "r1",
+      "path": "desktopnative/desktop-800x600-uefi-baseline/screen.png",
+      "sha256": "9e330f21165a172a56cbd247ff2e7507d119b087c6a82ca2ce4d4e86623d0d27",
+      "bytes": 5303
+    },
+    {
+      "run": "r1",
+      "path": "desktopnative/desktop-800x600-uefi-candidate/screen.png",
+      "sha256": "9e330f21165a172a56cbd247ff2e7507d119b087c6a82ca2ce4d4e86623d0d27",
+      "bytes": 5303
+    },
+    {
+      "run": "r1",
+      "path": "desktopnative/desktop-tab-field-bios-baseline/screen.png",
+      "sha256": "6a6971364aa67912ba3f447abee4d706635255fc21bbed1dedc45abd2263b28a",
+      "bytes": 6611
+    },
+    {
+      "run": "r1",
+      "path": "desktopnative/desktop-tab-field-bios-candidate/screen.png",
+      "sha256": "6a6971364aa67912ba3f447abee4d706635255fc21bbed1dedc45abd2263b28a",
+      "bytes": 6611
+    },
+    {
+      "run": "r1",
+      "path": "desktopnative/near-miss-token-bios-baseline/screen.png",
+      "sha256": "d871e422fbc4569cbf8f54e70b09c8e10f984719c5a66b4374e8796a6f8db4a9",
+      "bytes": 5600
+    },
+    {
+      "run": "r1",
+      "path": "desktopnative/near-miss-token-bios-candidate/screen.png",
+      "sha256": "d871e422fbc4569cbf8f54e70b09c8e10f984719c5a66b4374e8796a6f8db4a9",
+      "bytes": 5600
+    },
+    {
+      "run": "r1",
+      "path": "desktopnative/not-requested-bios-baseline/screen.png",
+      "sha256": "d871e422fbc4569cbf8f54e70b09c8e10f984719c5a66b4374e8796a6f8db4a9",
+      "bytes": 5600
+    },
+    {
+      "run": "r1",
+      "path": "desktopnative/not-requested-bios-candidate/screen.png",
+      "sha256": "d871e422fbc4569cbf8f54e70b09c8e10f984719c5a66b4374e8796a6f8db4a9",
+      "bytes": 5600
+    },
+    {
+      "run": "r1",
+      "path": "desktopnative/not-requested-uefi-baseline/screen.png",
+      "sha256": "d871e422fbc4569cbf8f54e70b09c8e10f984719c5a66b4374e8796a6f8db4a9",
+      "bytes": 5600
+    },
+    {
+      "run": "r1",
+      "path": "desktopnative/not-requested-uefi-candidate/screen.png",
+      "sha256": "d871e422fbc4569cbf8f54e70b09c8e10f984719c5a66b4374e8796a6f8db4a9",
+      "bytes": 5600
+    }
+  ]
+}

@@ -1,0 +1,89 @@
+{
+  "candidate_commits": [
+    "4315e0e source",
+    "c7c30d3 tests",
+    "2a07c6d gate footprint fix"
+  ],
+  "baseline": "2c0890a3155953c85369f281c036f3c46560ef39",
+  "branch_base": "f3c6048 (tree f3ec9622 = main)",
+  "differential": {
+    "release": {
+      "requested": 563445,
+      "requested_true": 23483,
+      "compute": 890761,
+      "compute_accepted": 263604,
+      "mismatches": 0,
+      "digest": "14508fd8b1b957ae"
+    },
+    "sanitizer": {
+      "requested": 563445,
+      "requested_true": 23483,
+      "compute": 890761,
+      "compute_accepted": 263604,
+      "mismatches": 0,
+      "digest": "14508fd8b1b957ae"
+    }
+  },
+  "mutations": {
+    "count": 27,
+    "all_detected": true
+  },
+  "native": {
+    "cases": 12,
+    "pixel_identical": true
+  },
+  "kernel": {
+    "desktop_requested": {
+      "address": "0xffffffff8013c9f0",
+      "calls": [],
+      "frame_bytes": 0,
+      "frozen_c_frame_bytes": 0
+    },
+    "desktop_compute": {
+      "address": "0xffffffff8013c990",
+      "calls": [],
+      "frame_bytes": 0,
+      "frozen_c_frame_bytes": 0
+    }
+  },
+  "exceptions_requested": [
+    "GCC 15 only: desktop_paint entry frame 72 -> 88 B (+16), paths screen_desktop_begin 232 -> 248 and desktop_paint 216 -> 232; kernel_main unchanged",
+    "desktop_compute +0.2% hosted median (within noise); desktop_requested -9.8%"
+  ],
+  "campaign": {
+    "id": "r3-g1-desktop-v1",
+    "runs": {
+      "r1": {
+        "status": "PASS",
+        "seal": "bf96af1852a1ae416cc12013d5b49e1ad50f1b64d83f27b7220cef7e2bb583f4"
+      },
+      "r2": {
+        "status": "STOP",
+        "seal": "1858ffe25ac99c179dc6001fa334d9e27e775e56908e36d55705c3f999c0088e"
+      }
+    },
+    "r2_stop": {
+      "primary": "JOB_FAILED:ci-boot:rc=1",
+      "cause": "256 MiB build tmpfs exhausted by per-mutant host staticlibs in the R3-G1 gate (No space left on device)",
+      "fix": "test(gfx): bound the R3-G1 gate mutant build footprint",
+      "repair_run": "not authorized; worker CI groups after ci-build NOT TESTED in the worker"
+    }
+  },
+  "host_ci_gcc13": {
+    "steps": 38,
+    "failed": [],
+    "notes": [
+      "informational; non-gating on host (host lacks some CI packages)",
+      "test-usb2c3b2.py (QEMU) NOT RUN on host"
+    ]
+  },
+  "not_tested": [
+    "scripts/test-ps2-pointer-native.py: pre-existing failure on baseline main and candidate (gdb execution proof at pointer_idle times out)",
+    "BIOS/UEFI latency of a once-per-boot call",
+    "physical hardware"
+  ],
+  "limitations": [
+    "QEMU verification, host differential testing and static analysis only; no physical-hardware acceptance",
+    "OVMF offers no mode below 640x480 here; native refusal is SeaBIOS-only"
+  ]
+}

@@ -1,0 +1,36 @@
+base-gcc15 kernel_main 12336
+base-gcc15 screen_desktop_begin 232
+base-gcc15 desktop_paint 216
+base-gcc15 screen_init 488
+base-gcc15 desktop_requested 0
+base-gcc15 desktop_compute 0
+base-gcc15 image file=1172320 load=970752 end=00000000001ed000 text=286720 rodata=57344
+base-gcc15 desktop_paint frame 72
+base-gcc15 screen_desktop_begin frame 8
+cand-gcc15 kernel_main 12336
+cand-gcc15 screen_desktop_begin 248
+cand-gcc15 desktop_paint 232
+cand-gcc15 screen_init 488
+cand-gcc15 desktop_requested 0
+cand-gcc15 desktop_compute 0
+cand-gcc15 image file=1171056 load=970752 end=00000000001ed000 text=286720 rodata=57344
+cand-gcc15 desktop_paint frame 88
+cand-gcc15 screen_desktop_begin frame 8
+base-gcc13 kernel_main 12336
+base-gcc13 screen_desktop_begin 240
+base-gcc13 desktop_paint 208
+base-gcc13 screen_init 512
+base-gcc13 desktop_requested 0
+base-gcc13 desktop_compute 0
+base-gcc13 image file=1167960 load=966656 end=00000000001ec000 text=282624 rodata=57344
+base-gcc13 desktop_paint frame 72
+base-gcc13 screen_desktop_begin frame 8
+cand-gcc13 kernel_main 12336
+cand-gcc13 screen_desktop_begin 240
+cand-gcc13 desktop_paint 208
+cand-gcc13 screen_init 512
+cand-gcc13 desktop_requested 0
+cand-gcc13 desktop_compute 0
+cand-gcc13 image file=1166752 load=966656 end=00000000001ec000 text=282624 rodata=57344
+cand-gcc13 desktop_paint frame 72
+cand-gcc13 screen_desktop_begin frame 8

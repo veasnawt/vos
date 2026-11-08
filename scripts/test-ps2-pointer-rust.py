@@ -74,8 +74,9 @@ def main():
             'arch/x86_64/gui.c','arch/x86_64/user_console.c','arch/x86_64/keyboard.c',
             'arch/x86_64/input_console.c',debug,archive,'-o',out/'pointer-service'],out/'pointer-service-build.log')
         results['pointer_service']=run([out/'pointer-service'],out/'pointer-service.log')
+        # R3-G1: desktop_compute() is Rust; the renderer links it from the production archive.
         run(common+flags+['-DPOINTER_RENDER','tests/host/pointer.c','arch/x86_64/desktop.c',
-             'arch/x86_64/font8x16.c','-o',out/'pointer-render'],out/'pointer-render-build.log')
+             'arch/x86_64/font8x16.c',archive,'-o',out/'pointer-render'],out/'pointer-render-build.log')
         results['renderer']=run([out/'pointer-render'],out/'pointer-render.log')
         results['passed']=True
     finally:

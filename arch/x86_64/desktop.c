@@ -7,24 +7,9 @@
 #define TITLE 0x203B4Bu
 #define INK 0xD9E5ECu
 #define MUTED 0x9FBAC8u
-int desktop_requested(const char *p)
-{
-    const char *token="vos.desktop=1";
-    if(!p)return 0;
-    while(*p) {
-        while(*p==' ' || *p=='\t')p++;
-        unsigned n=0;while(token[n] && p[n]==token[n])n++;
-        if(!token[n] && (!p[n] || p[n]==' ' || p[n]=='\t'))return 1;
-        while(*p && *p!=' ' && *p!='\t')p++;
-    }
-    return 0;
-}
-int desktop_compute(uint32_t width,uint32_t height,struct desktop_layout *out)
-{
-    if(!out || width<640 || height<480 || width>BOOT_FB_MAX_DIM || height>BOOT_FB_MAX_DIM)return 0;
-    *out=(struct desktop_layout){24,44,width-48,height-104,36,84,width-72,height-156};
-    return 1;
-}
+/* R3-G1: desktop_requested() and desktop_compute() (desktop.h, unchanged ABI) are
+ * safe Rust (kernel/rust/gfx/desktop.rs via arch/x86_64/rust/desktop.rs). The
+ * accepted C is frozen as tests/reference/desktop-r3g1.c. Rendering stays here. */
 /* All horizontal capacities come from the destination element, not labels. */
 static void text(const struct screen_surface *s,uint32_t x,uint32_t y,const char *p,uint32_t right,
                  uint32_t fg,uint32_t bg)

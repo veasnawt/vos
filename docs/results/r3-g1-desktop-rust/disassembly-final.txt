@@ -1,0 +1,183 @@
+0000000000401380 <ref_desktop_requested>:
+  401380:	endbr64
+  401384:	test   %rdi,%rdi
+  401387:	je     401414 <ref_desktop_requested+0x94>
+  40138d:	movabs $0x100000201,%r8
+  401397:	movzbl (%rdi),%eax
+  40139a:	test   %al,%al
+  40139c:	je     401414 <ref_desktop_requested+0x94>
+  40139e:	xchg   %ax,%ax
+  4013a0:	cmp    $0x20,%al
+  4013a2:	jne    4013bc <ref_desktop_requested+0x3c>
+  4013a4:	nop
+  4013a5:	data16 cs nopw 0x0(%rax,%rax,1)
+  4013b0:	movzbl 0x1(%rdi),%eax
+  4013b4:	add    $0x1,%rdi
+  4013b8:	cmp    $0x20,%al
+  4013ba:	je     4013b0 <ref_desktop_requested+0x30>
+  4013bc:	cmp    $0x9,%al
+  4013be:	je     4013b0 <ref_desktop_requested+0x30>
+  4013c0:	mov    %eax,%esi
+  4013c2:	xor    %ecx,%ecx
+  4013c4:	mov    $0x76,%edx
+  4013c9:	jmp    4013f5 <ref_desktop_requested+0x75>
+  4013cb:	cs nopw 0x0(%rax,%rax,1)
+  4013d5:	data16 cs nopw 0x0(%rax,%rax,1)
+  4013e0:	lea    0x1(%rcx),%esi
+  4013e3:	movzbl 0x4020a1(%rsi),%edx
+  4013ea:	mov    %rsi,%rcx
+  4013ed:	test   %dl,%dl
+  4013ef:	je     401420 <ref_desktop_requested+0xa0>
+  4013f1:	movzbl (%rdi,%rsi,1),%esi
+  4013f5:	cmp    %sil,%dl
+  4013f8:	je     4013e0 <ref_desktop_requested+0x60>
+  4013fa:	test   $0xdf,%al
+  4013fc:	jne    401404 <ref_desktop_requested+0x84>
+  4013fe:	jmp    401414 <ref_desktop_requested+0x94>
+  401400:	cmp    $0x9,%al
+  401402:	je     401410 <ref_desktop_requested+0x90>
+  401404:	movzbl 0x1(%rdi),%eax
+  401408:	add    $0x1,%rdi
+  40140c:	test   $0xdf,%al
+  40140e:	jne    401400 <ref_desktop_requested+0x80>
+  401410:	test   %al,%al
+  401412:	jne    4013a0 <ref_desktop_requested+0x20>
+  401414:	xor    %eax,%eax
+  401416:	ret
+  401417:	nopw   0x0(%rax,%rax,1)
+  401420:	movzbl (%rdi,%rsi,1),%edx
+  401424:	cmp    $0x20,%dl
+  401427:	ja     4013fa <ref_desktop_requested+0x7a>
+  401429:	bt     %rdx,%r8
+  40142d:	jae    4013fa <ref_desktop_requested+0x7a>
+  40142f:	mov    $0x1,%eax
+  401434:	ret
+  401435:	data16 cs nopw 0x0(%rax,%rax,1)
+----
+0000000000401440 <ref_desktop_compute>:
+  401440:	endbr64
+  401444:	lea    -0x280(%rdi),%eax
+  40144a:	cmp    $0x1d80,%eax
+  40144f:	ja     4014b0 <ref_desktop_compute+0x70>
+  401451:	test   %rdx,%rdx
+  401454:	je     4014b0 <ref_desktop_compute+0x70>
+  401456:	lea    -0x1e0(%rsi),%ecx
+  40145c:	xor    %eax,%eax
+  40145e:	cmp    $0x1e20,%ecx
+  401464:	jbe    401470 <ref_desktop_compute+0x30>
+  401466:	ret
+  401467:	nopw   0x0(%rax,%rax,1)
+  401470:	mov    0xca9(%rip),%rax        # 402120 <lines.0+0x20>
+  401477:	mov    %rax,(%rdx)
+  40147a:	lea    -0x30(%rdi),%eax
+  40147d:	sub    $0x48,%edi
+  401480:	mov    %eax,0x8(%rdx)
+  401483:	lea    -0x68(%rsi),%eax
+  401486:	sub    $0x9c,%esi
+  40148c:	mov    %eax,0xc(%rdx)
+  40148f:	mov    0xc92(%rip),%rax        # 402128 <lines.0+0x28>
+  401496:	mov    %edi,0x18(%rdx)
+  401499:	mov    %rax,0x10(%rdx)
+  40149d:	mov    $0x1,%eax
+  4014a2:	mov    %esi,0x1c(%rdx)
+  4014a5:	ret
+  4014a6:	cs nopw 0x0(%rax,%rax,1)
+  4014b0:	xor    %eax,%eax
+  4014b2:	ret
+  4014b3:	xchg   %ax,%ax
+  4014b5:	data16 cs nopw 0x0(%rax,%rax,1)
+----
+0000000000401860 <desktop_compute>:
+  401860:	xor    %eax,%eax
+  401862:	test   %rdx,%rdx
+  401865:	je     4018be <desktop_compute+0x5e>
+  401867:	lea    -0x2001(%rdi),%ecx
+  40186d:	cmp    $0xffffe27f,%ecx
+  401873:	jb     4018be <desktop_compute+0x5e>
+  401875:	lea    -0x2001(%rsi),%ecx
+  40187b:	cmp    $0xffffe1df,%ecx
+  401881:	jb     4018be <desktop_compute+0x5e>
+  401883:	lea    -0x9c(%rsi),%eax
+  401889:	lea    -0x48(%rdi),%ecx
+  40188c:	add    $0xffffff98,%esi
+  40188f:	add    $0xffffffd0,%edi
+  401892:	movabs $0x2c00000018,%r8
+  40189c:	mov    %r8,(%rdx)
+  40189f:	mov    %edi,0x8(%rdx)
+  4018a2:	mov    %esi,0xc(%rdx)
+  4018a5:	movabs $0x5400000024,%rsi
+  4018af:	mov    %rsi,0x10(%rdx)
+  4018b3:	mov    %ecx,0x18(%rdx)
+  4018b6:	mov    %eax,0x1c(%rdx)
+  4018b9:	mov    $0x1,%eax
+  4018be:	ret
+  4018bf:	nop
+----
+00000000004018c0 <desktop_requested>:
+  4018c0:	xor    %eax,%eax
+  4018c2:	test   %rdi,%rdi
+  4018c5:	je     4019ad <desktop_requested+0xed>
+  4018cb:	movzbl (%rdi),%ecx
+  4018ce:	test   %cl,%cl
+  4018d0:	je     4019ad <desktop_requested+0xed>
+  4018d6:	xor    %eax,%eax
+  4018d8:	movabs $0x100000201,%rdx
+  4018e2:	jmp    4018f8 <desktop_requested+0x38>
+  4018e4:	data16 data16 cs nopw 0x0(%rax,%rax,1)
+  4018f0:	movzbl 0x1(%rdi,%rax,1),%ecx
+  4018f5:	inc    %rax
+  4018f8:	cmp    $0x9,%cl
+  4018fb:	je     4018f0 <desktop_requested+0x30>
+  4018fd:	movzbl %cl,%ecx
+  401900:	cmp    $0x20,%ecx
+  401903:	je     4018f0 <desktop_requested+0x30>
+  401905:	movzbl (%rdi,%rax,1),%ecx
+  401909:	cmp    $0x76,%cl
+  40190c:	jne    401980 <desktop_requested+0xc0>
+  40190e:	cmpb   $0x6f,0x1(%rdi,%rax,1)
+  401913:	jne    401980 <desktop_requested+0xc0>
+  401915:	cmpb   $0x73,0x2(%rdi,%rax,1)
+  40191a:	jne    401980 <desktop_requested+0xc0>
+  40191c:	cmpb   $0x2e,0x3(%rdi,%rax,1)
+  401921:	jne    401980 <desktop_requested+0xc0>
+  401923:	cmpb   $0x64,0x4(%rdi,%rax,1)
+  401928:	jne    401980 <desktop_requested+0xc0>
+  40192a:	cmpb   $0x65,0x5(%rdi,%rax,1)
+  40192f:	jne    401980 <desktop_requested+0xc0>
+  401931:	cmpb   $0x73,0x6(%rdi,%rax,1)
+  401936:	jne    401980 <desktop_requested+0xc0>
+  401938:	cmpb   $0x6b,0x7(%rdi,%rax,1)
+  40193d:	jne    401980 <desktop_requested+0xc0>
+  40193f:	cmpb   $0x74,0x8(%rdi,%rax,1)
+  401944:	jne    401980 <desktop_requested+0xc0>
+  401946:	cmpb   $0x6f,0x9(%rdi,%rax,1)
+  40194b:	jne    401980 <desktop_requested+0xc0>
+  40194d:	cmpb   $0x70,0xa(%rdi,%rax,1)
+  401952:	jne    401980 <desktop_requested+0xc0>
+  401954:	cmpb   $0x3d,0xb(%rdi,%rax,1)
+  401959:	jne    401980 <desktop_requested+0xc0>
+  40195b:	cmpb   $0x31,0xc(%rdi,%rax,1)
+  401960:	jne    401980 <desktop_requested+0xc0>
+  401962:	movzbl 0xd(%rdi,%rax,1),%esi
+  401967:	cmp    $0x20,%rsi
+  40196b:	ja     401980 <desktop_requested+0xc0>
+  40196d:	bt     %rsi,%rdx
+  401971:	jb     4019a8 <desktop_requested+0xe8>
+  401973:	data16 data16 data16 cs nopw 0x0(%rax,%rax,1)
+  401980:	test   %cl,%cl
+  401982:	je     4019a5 <desktop_requested+0xe5>
+  401984:	movzbl %cl,%esi
+  401987:	cmp    $0x9,%esi
+  40198a:	je     4018f8 <desktop_requested+0x38>
+  401990:	cmp    $0x20,%esi
+  401993:	je     4018f8 <desktop_requested+0x38>
+  401999:	movzbl 0x1(%rdi,%rax,1),%ecx
+  40199e:	inc    %rax
+  4019a1:	test   %cl,%cl
+  4019a3:	jne    401984 <desktop_requested+0xc4>
+  4019a5:	xor    %eax,%eax
+  4019a7:	ret
+  4019a8:	mov    $0x1,%eax
+  4019ad:	ret
+  4019ae:	xchg   %ax,%ax
+----
