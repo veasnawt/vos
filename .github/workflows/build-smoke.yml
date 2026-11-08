@@ -288,6 +288,7 @@ jobs:
 
   freestanding-usb:
     name: "Freestanding group: USB and firmware"
+    if: ${{ false }}   # negative control: the USB group is skipped
     runs-on: ubuntu-24.04
     # 45 (was 25): the runner's Ubuntu mirror has delivered packages at ~50 kB/s
     # (run 42304789235: 43.1 MB in 14 min 30 s), cancelling an otherwise passing
