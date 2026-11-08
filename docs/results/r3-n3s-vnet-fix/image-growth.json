@@ -1,0 +1,31 @@
+{
+  "gcc15": {
+    "base_f3683869": {
+      "file_bytes": 1171712,
+      "load_memsz": 970752,
+      "kernel_phys_end": "0x1ED000"
+    },
+    "fixed": {
+      "file_bytes": 1172320,
+      "load_memsz": 970752,
+      "kernel_phys_end": "0x1ED000"
+    }
+  },
+  "gcc13": {
+    "base_f3683869": {
+      "file_bytes": 1167384,
+      "load_memsz": 966656,
+      "kernel_phys_end": "0x1EC000"
+    },
+    "fixed": {
+      "file_bytes": 1167960,
+      "load_memsz": 966656,
+      "kernel_phys_end": "0x1EC000"
+    }
+  },
+  "loaded_growth_bytes": 0,
+  "file_change_bytes": {
+    "gcc15": 608,
+    "gcc13": 576
+  }
+}

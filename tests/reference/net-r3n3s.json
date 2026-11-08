@@ -1,0 +1,10 @@
+{
+  "baseline": "f3683869901c22226f5472bbe737fcb58c798e5d",
+  "sources_sha256": {
+    "virtio-net-r3n3.c": "f1c6b16137f1d5b1aa54bceb5a48cf12001262fe9e0c470e75f95f8f1481bb8d"
+  },
+  "git_blobs": {
+    "virtio-net-r3n3.c": "6d9b2da142465f7a7872336a8c19886d95bff937"
+  },
+  "purpose": "Byte-identical accepted arch/x86_64/virtio_net.c at merged main f3683869 (R3-N3): the regression reference for R3-N3-S. It contains the vnet_receive used-entry re-read and is the negative control of tests/host/vnet-hostile.c; virtio_net.h is unchanged (tests/reference/net-r3n3.json)."
+}

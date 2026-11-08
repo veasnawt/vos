@@ -1,0 +1,601 @@
+case c0-id0-honest rc=0 n=60 out=56cb4193 first=40 id_reads=2 len_reads=2 fired=1 state=1 consumed=1 published=9
+case c0-id0-to-id8 rc=8 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=3 consumed=0 published=0
+tests/host/../reference/virtio-net-r3n3.c:252:37: runtime error: index 11 out of bounds for type 'uint64_t [11]'
+case c0-id0-to-id9 VIOLATION exit 1
+tests/host/../reference/virtio-net-r3n3.c:252:37: runtime error: index 12 out of bounds for type 'uint64_t [11]'
+case c0-id0-to-id10 VIOLATION exit 1
+tests/host/../reference/virtio-net-r3n3.c:252:37: runtime error: index 65538 out of bounds for type 'uint64_t [11]'
+case c0-id0-to-id65536 VIOLATION exit 1
+tests/host/../reference/virtio-net-r3n3.c:252:37: runtime error: index 2147483649 out of bounds for type 'uint64_t [11]'
+case c0-id0-to-id2147483647 VIOLATION exit 1
+HOSTILE: WILD MEMORY ACCESS
+case c0-id0-to-id4294967295 VIOLATION exit 42
+case c0-id0-to-other rc=0 n=60 out=187ba44f first=43 id_reads=2 len_reads=2 fired=1 state=1 consumed=1 published=9
+case c0-id0-len-to-0 rc=5 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=1 consumed=0 published=8
+case c0-id0-len-to-11 rc=5 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=1 consumed=0 published=8
+case c0-id0-len-to-25 rc=0 n=13 out=f2675732 first=40 id_reads=2 len_reads=2 fired=1 state=1 consumed=1 published=9
+case c0-id0-len-to-1527 rc=5 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=1 consumed=0 published=8
+case c0-id0-len-to-5000 rc=5 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=1 consumed=0 published=8
+case c0-id0-len-to-2147483647 rc=5 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=1 consumed=0 published=8
+case c0-id0-len-to-4294967295 rc=5 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=1 consumed=0 published=8
+case c0-id0-len-to-40 rc=0 n=28 out=01c2d273 first=40 id_reads=2 len_reads=2 fired=1 state=1 consumed=1 published=9
+HOSTILE: WILD MEMORY ACCESS
+case c0-id0-both VIOLATION exit 42
+case c0-id1-honest rc=0 n=60 out=084a392f first=41 id_reads=2 len_reads=2 fired=1 state=1 consumed=1 published=9
+case c0-id1-to-id8 rc=8 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=3 consumed=0 published=0
+tests/host/../reference/virtio-net-r3n3.c:252:37: runtime error: index 11 out of bounds for type 'uint64_t [11]'
+case c0-id1-to-id9 VIOLATION exit 1
+tests/host/../reference/virtio-net-r3n3.c:252:37: runtime error: index 12 out of bounds for type 'uint64_t [11]'
+case c0-id1-to-id10 VIOLATION exit 1
+tests/host/../reference/virtio-net-r3n3.c:252:37: runtime error: index 65538 out of bounds for type 'uint64_t [11]'
+case c0-id1-to-id65536 VIOLATION exit 1
+tests/host/../reference/virtio-net-r3n3.c:252:37: runtime error: index 2147483649 out of bounds for type 'uint64_t [11]'
+case c0-id1-to-id2147483647 VIOLATION exit 1
+HOSTILE: WILD MEMORY ACCESS
+case c0-id1-to-id4294967295 VIOLATION exit 42
+case c0-id1-to-other rc=0 n=60 out=9185eec3 first=44 id_reads=2 len_reads=2 fired=1 state=1 consumed=1 published=9
+case c0-id1-len-to-0 rc=5 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=1 consumed=0 published=8
+case c0-id1-len-to-11 rc=5 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=1 consumed=0 published=8
+case c0-id1-len-to-25 rc=0 n=13 out=a460b1d3 first=41 id_reads=2 len_reads=2 fired=1 state=1 consumed=1 published=9
+case c0-id1-len-to-1527 rc=5 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=1 consumed=0 published=8
+case c0-id1-len-to-5000 rc=5 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=1 consumed=0 published=8
+case c0-id1-len-to-2147483647 rc=5 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=1 consumed=0 published=8
+case c0-id1-len-to-4294967295 rc=5 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=1 consumed=0 published=8
+case c0-id1-len-to-40 rc=0 n=28 out=d2cfd66f first=41 id_reads=2 len_reads=2 fired=1 state=1 consumed=1 published=9
+HOSTILE: WILD MEMORY ACCESS
+case c0-id1-both VIOLATION exit 42
+case c0-id2-honest rc=0 n=60 out=14f5cca3 first=42 id_reads=2 len_reads=2 fired=1 state=1 consumed=1 published=9
+case c0-id2-to-id8 rc=8 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=3 consumed=0 published=0
+tests/host/../reference/virtio-net-r3n3.c:252:37: runtime error: index 11 out of bounds for type 'uint64_t [11]'
+case c0-id2-to-id9 VIOLATION exit 1
+tests/host/../reference/virtio-net-r3n3.c:252:37: runtime error: index 12 out of bounds for type 'uint64_t [11]'
+case c0-id2-to-id10 VIOLATION exit 1
+tests/host/../reference/virtio-net-r3n3.c:252:37: runtime error: index 65538 out of bounds for type 'uint64_t [11]'
+case c0-id2-to-id65536 VIOLATION exit 1
+tests/host/../reference/virtio-net-r3n3.c:252:37: runtime error: index 2147483649 out of bounds for type 'uint64_t [11]'
+case c0-id2-to-id2147483647 VIOLATION exit 1
+HOSTILE: WILD MEMORY ACCESS
+case c0-id2-to-id4294967295 VIOLATION exit 42
+case c0-id2-to-other rc=0 n=60 out=8fee1a67 first=45 id_reads=2 len_reads=2 fired=1 state=1 consumed=1 published=9
+case c0-id2-len-to-0 rc=5 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=1 consumed=0 published=8
+case c0-id2-len-to-11 rc=5 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=1 consumed=0 published=8
+case c0-id2-len-to-25 rc=0 n=13 out=0ff85624 first=42 id_reads=2 len_reads=2 fired=1 state=1 consumed=1 published=9
+case c0-id2-len-to-1527 rc=5 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=1 consumed=0 published=8
+case c0-id2-len-to-5000 rc=5 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=1 consumed=0 published=8
+case c0-id2-len-to-2147483647 rc=5 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=1 consumed=0 published=8
+case c0-id2-len-to-4294967295 rc=5 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=1 consumed=0 published=8
+case c0-id2-len-to-40 rc=0 n=28 out=0dc85783 first=42 id_reads=2 len_reads=2 fired=1 state=1 consumed=1 published=9
+HOSTILE: WILD MEMORY ACCESS
+case c0-id2-both VIOLATION exit 42
+case c0-id3-honest rc=0 n=60 out=187ba44f first=43 id_reads=2 len_reads=2 fired=1 state=1 consumed=1 published=9
+case c0-id3-to-id8 rc=8 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=3 consumed=0 published=0
+tests/host/../reference/virtio-net-r3n3.c:252:37: runtime error: index 11 out of bounds for type 'uint64_t [11]'
+case c0-id3-to-id9 VIOLATION exit 1
+tests/host/../reference/virtio-net-r3n3.c:252:37: runtime error: index 12 out of bounds for type 'uint64_t [11]'
+case c0-id3-to-id10 VIOLATION exit 1
+tests/host/../reference/virtio-net-r3n3.c:252:37: runtime error: index 65538 out of bounds for type 'uint64_t [11]'
+case c0-id3-to-id65536 VIOLATION exit 1
+tests/host/../reference/virtio-net-r3n3.c:252:37: runtime error: index 2147483649 out of bounds for type 'uint64_t [11]'
+case c0-id3-to-id2147483647 VIOLATION exit 1
+HOSTILE: WILD MEMORY ACCESS
+case c0-id3-to-id4294967295 VIOLATION exit 42
+case c0-id3-to-other rc=0 n=60 out=93266653 first=46 id_reads=2 len_reads=2 fired=1 state=1 consumed=1 published=9
+case c0-id3-len-to-0 rc=5 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=1 consumed=0 published=8
+case c0-id3-len-to-11 rc=5 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=1 consumed=0 published=8
+case c0-id3-len-to-25 rc=0 n=13 out=9b419c2d first=43 id_reads=2 len_reads=2 fired=1 state=1 consumed=1 published=9
+case c0-id3-len-to-1527 rc=5 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=1 consumed=0 published=8
+case c0-id3-len-to-5000 rc=5 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=1 consumed=0 published=8
+case c0-id3-len-to-2147483647 rc=5 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=1 consumed=0 published=8
+case c0-id3-len-to-4294967295 rc=5 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=1 consumed=0 published=8
+case c0-id3-len-to-40 rc=0 n=28 out=db10be0f first=43 id_reads=2 len_reads=2 fired=1 state=1 consumed=1 published=9
+HOSTILE: WILD MEMORY ACCESS
+case c0-id3-both VIOLATION exit 42
+case c0-id4-honest rc=0 n=60 out=9185eec3 first=44 id_reads=2 len_reads=2 fired=1 state=1 consumed=1 published=9
+case c0-id4-to-id8 rc=8 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=3 consumed=0 published=0
+tests/host/../reference/virtio-net-r3n3.c:252:37: runtime error: index 11 out of bounds for type 'uint64_t [11]'
+case c0-id4-to-id9 VIOLATION exit 1
+tests/host/../reference/virtio-net-r3n3.c:252:37: runtime error: index 12 out of bounds for type 'uint64_t [11]'
+case c0-id4-to-id10 VIOLATION exit 1
+tests/host/../reference/virtio-net-r3n3.c:252:37: runtime error: index 65538 out of bounds for type 'uint64_t [11]'
+case c0-id4-to-id65536 VIOLATION exit 1
+tests/host/../reference/virtio-net-r3n3.c:252:37: runtime error: index 2147483649 out of bounds for type 'uint64_t [11]'
+case c0-id4-to-id2147483647 VIOLATION exit 1
+HOSTILE: WILD MEMORY ACCESS
+case c0-id4-to-id4294967295 VIOLATION exit 42
+case c0-id4-to-other rc=0 n=60 out=6b68e077 first=47 id_reads=2 len_reads=2 fired=1 state=1 consumed=1 published=9
+case c0-id4-len-to-0 rc=5 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=1 consumed=0 published=8
+case c0-id4-len-to-11 rc=5 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=1 consumed=0 published=8
+case c0-id4-len-to-25 rc=0 n=13 out=c8192276 first=44 id_reads=2 len_reads=2 fired=1 state=1 consumed=1 published=9
+case c0-id4-len-to-1527 rc=5 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=1 consumed=0 published=8
+case c0-id4-len-to-5000 rc=5 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=1 consumed=0 published=8
+case c0-id4-len-to-2147483647 rc=5 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=1 consumed=0 published=8
+case c0-id4-len-to-4294967295 rc=5 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=1 consumed=0 published=8
+case c0-id4-len-to-40 rc=0 n=28 out=5426d123 first=44 id_reads=2 len_reads=2 fired=1 state=1 consumed=1 published=9
+HOSTILE: WILD MEMORY ACCESS
+case c0-id4-both VIOLATION exit 42
+case c0-id5-honest rc=0 n=60 out=8fee1a67 first=45 id_reads=2 len_reads=2 fired=1 state=1 consumed=1 published=9
+case c0-id5-to-id8 rc=8 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=3 consumed=0 published=0
+tests/host/../reference/virtio-net-r3n3.c:252:37: runtime error: index 11 out of bounds for type 'uint64_t [11]'
+case c0-id5-to-id9 VIOLATION exit 1
+tests/host/../reference/virtio-net-r3n3.c:252:37: runtime error: index 12 out of bounds for type 'uint64_t [11]'
+case c0-id5-to-id10 VIOLATION exit 1
+tests/host/../reference/virtio-net-r3n3.c:252:37: runtime error: index 65538 out of bounds for type 'uint64_t [11]'
+case c0-id5-to-id65536 VIOLATION exit 1
+tests/host/../reference/virtio-net-r3n3.c:252:37: runtime error: index 2147483649 out of bounds for type 'uint64_t [11]'
+case c0-id5-to-id2147483647 VIOLATION exit 1
+HOSTILE: WILD MEMORY ACCESS
+case c0-id5-to-id4294967295 VIOLATION exit 42
+case c0-id5-to-other rc=0 n=60 out=56cb4193 first=40 id_reads=2 len_reads=2 fired=1 state=1 consumed=1 published=9
+case c0-id5-len-to-0 rc=5 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=1 consumed=0 published=8
+case c0-id5-len-to-11 rc=5 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=1 consumed=0 published=8
+case c0-id5-len-to-25 rc=0 n=13 out=29267747 first=45 id_reads=2 len_reads=2 fired=1 state=1 consumed=1 published=9
+case c0-id5-len-to-1527 rc=5 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=1 consumed=0 published=8
+case c0-id5-len-to-5000 rc=5 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=1 consumed=0 published=8
+case c0-id5-len-to-2147483647 rc=5 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=1 consumed=0 published=8
+case c0-id5-len-to-4294967295 rc=5 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=1 consumed=0 published=8
+case c0-id5-len-to-40 rc=0 n=28 out=fa6ed0a7 first=45 id_reads=2 len_reads=2 fired=1 state=1 consumed=1 published=9
+HOSTILE: WILD MEMORY ACCESS
+case c0-id5-both VIOLATION exit 42
+case c0-id6-honest rc=0 n=60 out=93266653 first=46 id_reads=2 len_reads=2 fired=1 state=1 consumed=1 published=9
+case c0-id6-to-id8 rc=8 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=3 consumed=0 published=0
+tests/host/../reference/virtio-net-r3n3.c:252:37: runtime error: index 11 out of bounds for type 'uint64_t [11]'
+case c0-id6-to-id9 VIOLATION exit 1
+tests/host/../reference/virtio-net-r3n3.c:252:37: runtime error: index 12 out of bounds for type 'uint64_t [11]'
+case c0-id6-to-id10 VIOLATION exit 1
+tests/host/../reference/virtio-net-r3n3.c:252:37: runtime error: index 65538 out of bounds for type 'uint64_t [11]'
+case c0-id6-to-id65536 VIOLATION exit 1
+tests/host/../reference/virtio-net-r3n3.c:252:37: runtime error: index 2147483649 out of bounds for type 'uint64_t [11]'
+case c0-id6-to-id2147483647 VIOLATION exit 1
+HOSTILE: WILD MEMORY ACCESS
+case c0-id6-to-id4294967295 VIOLATION exit 42
+case c0-id6-to-other rc=0 n=60 out=084a392f first=41 id_reads=2 len_reads=2 fired=1 state=1 consumed=1 published=9
+case c0-id6-len-to-0 rc=5 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=1 consumed=0 published=8
+case c0-id6-len-to-11 rc=5 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=1 consumed=0 published=8
+case c0-id6-len-to-25 rc=0 n=13 out=ed0a7f08 first=46 id_reads=2 len_reads=2 fired=1 state=1 consumed=1 published=9
+case c0-id6-len-to-1527 rc=5 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=1 consumed=0 published=8
+case c0-id6-len-to-5000 rc=5 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=1 consumed=0 published=8
+case c0-id6-len-to-2147483647 rc=5 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=1 consumed=0 published=8
+case c0-id6-len-to-4294967295 rc=5 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=1 consumed=0 published=8
+case c0-id6-len-to-40 rc=0 n=28 out=bc3bdf33 first=46 id_reads=2 len_reads=2 fired=1 state=1 consumed=1 published=9
+HOSTILE: WILD MEMORY ACCESS
+case c0-id6-both VIOLATION exit 42
+case c0-id7-honest rc=0 n=60 out=6b68e077 first=47 id_reads=2 len_reads=2 fired=1 state=1 consumed=1 published=9
+case c0-id7-to-id8 rc=8 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=3 consumed=0 published=0
+tests/host/../reference/virtio-net-r3n3.c:252:37: runtime error: index 11 out of bounds for type 'uint64_t [11]'
+case c0-id7-to-id9 VIOLATION exit 1
+tests/host/../reference/virtio-net-r3n3.c:252:37: runtime error: index 12 out of bounds for type 'uint64_t [11]'
+case c0-id7-to-id10 VIOLATION exit 1
+tests/host/../reference/virtio-net-r3n3.c:252:37: runtime error: index 65538 out of bounds for type 'uint64_t [11]'
+case c0-id7-to-id65536 VIOLATION exit 1
+tests/host/../reference/virtio-net-r3n3.c:252:37: runtime error: index 2147483649 out of bounds for type 'uint64_t [11]'
+case c0-id7-to-id2147483647 VIOLATION exit 1
+HOSTILE: WILD MEMORY ACCESS
+case c0-id7-to-id4294967295 VIOLATION exit 42
+case c0-id7-to-other rc=0 n=60 out=14f5cca3 first=42 id_reads=2 len_reads=2 fired=1 state=1 consumed=1 published=9
+case c0-id7-len-to-0 rc=5 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=1 consumed=0 published=8
+case c0-id7-len-to-11 rc=5 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=1 consumed=0 published=8
+case c0-id7-len-to-25 rc=0 n=13 out=19b92881 first=47 id_reads=2 len_reads=2 fired=1 state=1 consumed=1 published=9
+case c0-id7-len-to-1527 rc=5 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=1 consumed=0 published=8
+case c0-id7-len-to-5000 rc=5 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=1 consumed=0 published=8
+case c0-id7-len-to-2147483647 rc=5 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=1 consumed=0 published=8
+case c0-id7-len-to-4294967295 rc=5 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=1 consumed=0 published=8
+case c0-id7-len-to-40 rc=0 n=28 out=689020b7 first=47 id_reads=2 len_reads=2 fired=1 state=1 consumed=1 published=9
+HOSTILE: WILD MEMORY ACCESS
+case c0-id7-both VIOLATION exit 42
+case c5-id0-honest rc=0 n=60 out=56cb4193 first=40 id_reads=2 len_reads=2 fired=1 state=1 consumed=6 published=14
+case c5-id0-to-id8 rc=8 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=3 consumed=0 published=0
+tests/host/../reference/virtio-net-r3n3.c:252:37: runtime error: index 11 out of bounds for type 'uint64_t [11]'
+case c5-id0-to-id9 VIOLATION exit 1
+tests/host/../reference/virtio-net-r3n3.c:252:37: runtime error: index 12 out of bounds for type 'uint64_t [11]'
+case c5-id0-to-id10 VIOLATION exit 1
+tests/host/../reference/virtio-net-r3n3.c:252:37: runtime error: index 65538 out of bounds for type 'uint64_t [11]'
+case c5-id0-to-id65536 VIOLATION exit 1
+tests/host/../reference/virtio-net-r3n3.c:252:37: runtime error: index 2147483649 out of bounds for type 'uint64_t [11]'
+case c5-id0-to-id2147483647 VIOLATION exit 1
+HOSTILE: WILD MEMORY ACCESS
+case c5-id0-to-id4294967295 VIOLATION exit 42
+case c5-id0-to-other rc=0 n=60 out=187ba44f first=43 id_reads=2 len_reads=2 fired=1 state=1 consumed=6 published=14
+case c5-id0-len-to-0 rc=5 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=1 consumed=5 published=13
+case c5-id0-len-to-11 rc=5 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=1 consumed=5 published=13
+case c5-id0-len-to-25 rc=0 n=13 out=f2675732 first=40 id_reads=2 len_reads=2 fired=1 state=1 consumed=6 published=14
+case c5-id0-len-to-1527 rc=5 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=1 consumed=5 published=13
+case c5-id0-len-to-5000 rc=5 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=1 consumed=5 published=13
+case c5-id0-len-to-2147483647 rc=5 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=1 consumed=5 published=13
+case c5-id0-len-to-4294967295 rc=5 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=1 consumed=5 published=13
+case c5-id0-len-to-40 rc=0 n=28 out=01c2d273 first=40 id_reads=2 len_reads=2 fired=1 state=1 consumed=6 published=14
+HOSTILE: WILD MEMORY ACCESS
+case c5-id0-both VIOLATION exit 42
+case c5-id1-honest rc=0 n=60 out=084a392f first=41 id_reads=2 len_reads=2 fired=1 state=1 consumed=6 published=14
+case c5-id1-to-id8 rc=8 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=3 consumed=0 published=0
+tests/host/../reference/virtio-net-r3n3.c:252:37: runtime error: index 11 out of bounds for type 'uint64_t [11]'
+case c5-id1-to-id9 VIOLATION exit 1
+tests/host/../reference/virtio-net-r3n3.c:252:37: runtime error: index 12 out of bounds for type 'uint64_t [11]'
+case c5-id1-to-id10 VIOLATION exit 1
+tests/host/../reference/virtio-net-r3n3.c:252:37: runtime error: index 65538 out of bounds for type 'uint64_t [11]'
+case c5-id1-to-id65536 VIOLATION exit 1
+tests/host/../reference/virtio-net-r3n3.c:252:37: runtime error: index 2147483649 out of bounds for type 'uint64_t [11]'
+case c5-id1-to-id2147483647 VIOLATION exit 1
+HOSTILE: WILD MEMORY ACCESS
+case c5-id1-to-id4294967295 VIOLATION exit 42
+case c5-id1-to-other rc=0 n=60 out=9185eec3 first=44 id_reads=2 len_reads=2 fired=1 state=1 consumed=6 published=14
+case c5-id1-len-to-0 rc=5 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=1 consumed=5 published=13
+case c5-id1-len-to-11 rc=5 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=1 consumed=5 published=13
+case c5-id1-len-to-25 rc=0 n=13 out=a460b1d3 first=41 id_reads=2 len_reads=2 fired=1 state=1 consumed=6 published=14
+case c5-id1-len-to-1527 rc=5 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=1 consumed=5 published=13
+case c5-id1-len-to-5000 rc=5 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=1 consumed=5 published=13
+case c5-id1-len-to-2147483647 rc=5 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=1 consumed=5 published=13
+case c5-id1-len-to-4294967295 rc=5 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=1 consumed=5 published=13
+case c5-id1-len-to-40 rc=0 n=28 out=d2cfd66f first=41 id_reads=2 len_reads=2 fired=1 state=1 consumed=6 published=14
+HOSTILE: WILD MEMORY ACCESS
+case c5-id1-both VIOLATION exit 42
+case c5-id2-honest rc=0 n=60 out=14f5cca3 first=42 id_reads=2 len_reads=2 fired=1 state=1 consumed=6 published=14
+case c5-id2-to-id8 rc=8 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=3 consumed=0 published=0
+tests/host/../reference/virtio-net-r3n3.c:252:37: runtime error: index 11 out of bounds for type 'uint64_t [11]'
+case c5-id2-to-id9 VIOLATION exit 1
+tests/host/../reference/virtio-net-r3n3.c:252:37: runtime error: index 12 out of bounds for type 'uint64_t [11]'
+case c5-id2-to-id10 VIOLATION exit 1
+tests/host/../reference/virtio-net-r3n3.c:252:37: runtime error: index 65538 out of bounds for type 'uint64_t [11]'
+case c5-id2-to-id65536 VIOLATION exit 1
+tests/host/../reference/virtio-net-r3n3.c:252:37: runtime error: index 2147483649 out of bounds for type 'uint64_t [11]'
+case c5-id2-to-id2147483647 VIOLATION exit 1
+HOSTILE: WILD MEMORY ACCESS
+case c5-id2-to-id4294967295 VIOLATION exit 42
+case c5-id2-to-other rc=0 n=60 out=8fee1a67 first=45 id_reads=2 len_reads=2 fired=1 state=1 consumed=6 published=14
+case c5-id2-len-to-0 rc=5 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=1 consumed=5 published=13
+case c5-id2-len-to-11 rc=5 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=1 consumed=5 published=13
+case c5-id2-len-to-25 rc=0 n=13 out=0ff85624 first=42 id_reads=2 len_reads=2 fired=1 state=1 consumed=6 published=14
+case c5-id2-len-to-1527 rc=5 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=1 consumed=5 published=13
+case c5-id2-len-to-5000 rc=5 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=1 consumed=5 published=13
+case c5-id2-len-to-2147483647 rc=5 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=1 consumed=5 published=13
+case c5-id2-len-to-4294967295 rc=5 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=1 consumed=5 published=13
+case c5-id2-len-to-40 rc=0 n=28 out=0dc85783 first=42 id_reads=2 len_reads=2 fired=1 state=1 consumed=6 published=14
+HOSTILE: WILD MEMORY ACCESS
+case c5-id2-both VIOLATION exit 42
+case c5-id3-honest rc=0 n=60 out=187ba44f first=43 id_reads=2 len_reads=2 fired=1 state=1 consumed=6 published=14
+case c5-id3-to-id8 rc=8 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=3 consumed=0 published=0
+tests/host/../reference/virtio-net-r3n3.c:252:37: runtime error: index 11 out of bounds for type 'uint64_t [11]'
+case c5-id3-to-id9 VIOLATION exit 1
+tests/host/../reference/virtio-net-r3n3.c:252:37: runtime error: index 12 out of bounds for type 'uint64_t [11]'
+case c5-id3-to-id10 VIOLATION exit 1
+tests/host/../reference/virtio-net-r3n3.c:252:37: runtime error: index 65538 out of bounds for type 'uint64_t [11]'
+case c5-id3-to-id65536 VIOLATION exit 1
+tests/host/../reference/virtio-net-r3n3.c:252:37: runtime error: index 2147483649 out of bounds for type 'uint64_t [11]'
+case c5-id3-to-id2147483647 VIOLATION exit 1
+HOSTILE: WILD MEMORY ACCESS
+case c5-id3-to-id4294967295 VIOLATION exit 42
+case c5-id3-to-other rc=0 n=60 out=93266653 first=46 id_reads=2 len_reads=2 fired=1 state=1 consumed=6 published=14
+case c5-id3-len-to-0 rc=5 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=1 consumed=5 published=13
+case c5-id3-len-to-11 rc=5 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=1 consumed=5 published=13
+case c5-id3-len-to-25 rc=0 n=13 out=9b419c2d first=43 id_reads=2 len_reads=2 fired=1 state=1 consumed=6 published=14
+case c5-id3-len-to-1527 rc=5 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=1 consumed=5 published=13
+case c5-id3-len-to-5000 rc=5 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=1 consumed=5 published=13
+case c5-id3-len-to-2147483647 rc=5 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=1 consumed=5 published=13
+case c5-id3-len-to-4294967295 rc=5 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=1 consumed=5 published=13
+case c5-id3-len-to-40 rc=0 n=28 out=db10be0f first=43 id_reads=2 len_reads=2 fired=1 state=1 consumed=6 published=14
+HOSTILE: WILD MEMORY ACCESS
+case c5-id3-both VIOLATION exit 42
+case c5-id4-honest rc=0 n=60 out=9185eec3 first=44 id_reads=2 len_reads=2 fired=1 state=1 consumed=6 published=14
+case c5-id4-to-id8 rc=8 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=3 consumed=0 published=0
+tests/host/../reference/virtio-net-r3n3.c:252:37: runtime error: index 11 out of bounds for type 'uint64_t [11]'
+case c5-id4-to-id9 VIOLATION exit 1
+tests/host/../reference/virtio-net-r3n3.c:252:37: runtime error: index 12 out of bounds for type 'uint64_t [11]'
+case c5-id4-to-id10 VIOLATION exit 1
+tests/host/../reference/virtio-net-r3n3.c:252:37: runtime error: index 65538 out of bounds for type 'uint64_t [11]'
+case c5-id4-to-id65536 VIOLATION exit 1
+tests/host/../reference/virtio-net-r3n3.c:252:37: runtime error: index 2147483649 out of bounds for type 'uint64_t [11]'
+case c5-id4-to-id2147483647 VIOLATION exit 1
+HOSTILE: WILD MEMORY ACCESS
+case c5-id4-to-id4294967295 VIOLATION exit 42
+case c5-id4-to-other rc=0 n=60 out=6b68e077 first=47 id_reads=2 len_reads=2 fired=1 state=1 consumed=6 published=14
+case c5-id4-len-to-0 rc=5 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=1 consumed=5 published=13
+case c5-id4-len-to-11 rc=5 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=1 consumed=5 published=13
+case c5-id4-len-to-25 rc=0 n=13 out=c8192276 first=44 id_reads=2 len_reads=2 fired=1 state=1 consumed=6 published=14
+case c5-id4-len-to-1527 rc=5 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=1 consumed=5 published=13
+case c5-id4-len-to-5000 rc=5 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=1 consumed=5 published=13
+case c5-id4-len-to-2147483647 rc=5 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=1 consumed=5 published=13
+case c5-id4-len-to-4294967295 rc=5 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=1 consumed=5 published=13
+case c5-id4-len-to-40 rc=0 n=28 out=5426d123 first=44 id_reads=2 len_reads=2 fired=1 state=1 consumed=6 published=14
+HOSTILE: WILD MEMORY ACCESS
+case c5-id4-both VIOLATION exit 42
+case c5-id5-honest rc=0 n=60 out=8fee1a67 first=45 id_reads=2 len_reads=2 fired=1 state=1 consumed=6 published=14
+case c5-id5-to-id8 rc=8 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=3 consumed=0 published=0
+tests/host/../reference/virtio-net-r3n3.c:252:37: runtime error: index 11 out of bounds for type 'uint64_t [11]'
+case c5-id5-to-id9 VIOLATION exit 1
+tests/host/../reference/virtio-net-r3n3.c:252:37: runtime error: index 12 out of bounds for type 'uint64_t [11]'
+case c5-id5-to-id10 VIOLATION exit 1
+tests/host/../reference/virtio-net-r3n3.c:252:37: runtime error: index 65538 out of bounds for type 'uint64_t [11]'
+case c5-id5-to-id65536 VIOLATION exit 1
+tests/host/../reference/virtio-net-r3n3.c:252:37: runtime error: index 2147483649 out of bounds for type 'uint64_t [11]'
+case c5-id5-to-id2147483647 VIOLATION exit 1
+HOSTILE: WILD MEMORY ACCESS
+case c5-id5-to-id4294967295 VIOLATION exit 42
+case c5-id5-to-other rc=0 n=60 out=56cb4193 first=40 id_reads=2 len_reads=2 fired=1 state=1 consumed=6 published=14
+case c5-id5-len-to-0 rc=5 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=1 consumed=5 published=13
+case c5-id5-len-to-11 rc=5 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=1 consumed=5 published=13
+case c5-id5-len-to-25 rc=0 n=13 out=29267747 first=45 id_reads=2 len_reads=2 fired=1 state=1 consumed=6 published=14
+case c5-id5-len-to-1527 rc=5 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=1 consumed=5 published=13
+case c5-id5-len-to-5000 rc=5 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=1 consumed=5 published=13
+case c5-id5-len-to-2147483647 rc=5 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=1 consumed=5 published=13
+case c5-id5-len-to-4294967295 rc=5 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=1 consumed=5 published=13
+case c5-id5-len-to-40 rc=0 n=28 out=fa6ed0a7 first=45 id_reads=2 len_reads=2 fired=1 state=1 consumed=6 published=14
+HOSTILE: WILD MEMORY ACCESS
+case c5-id5-both VIOLATION exit 42
+case c5-id6-honest rc=0 n=60 out=93266653 first=46 id_reads=2 len_reads=2 fired=1 state=1 consumed=6 published=14
+case c5-id6-to-id8 rc=8 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=3 consumed=0 published=0
+tests/host/../reference/virtio-net-r3n3.c:252:37: runtime error: index 11 out of bounds for type 'uint64_t [11]'
+case c5-id6-to-id9 VIOLATION exit 1
+tests/host/../reference/virtio-net-r3n3.c:252:37: runtime error: index 12 out of bounds for type 'uint64_t [11]'
+case c5-id6-to-id10 VIOLATION exit 1
+tests/host/../reference/virtio-net-r3n3.c:252:37: runtime error: index 65538 out of bounds for type 'uint64_t [11]'
+case c5-id6-to-id65536 VIOLATION exit 1
+tests/host/../reference/virtio-net-r3n3.c:252:37: runtime error: index 2147483649 out of bounds for type 'uint64_t [11]'
+case c5-id6-to-id2147483647 VIOLATION exit 1
+HOSTILE: WILD MEMORY ACCESS
+case c5-id6-to-id4294967295 VIOLATION exit 42
+case c5-id6-to-other rc=0 n=60 out=084a392f first=41 id_reads=2 len_reads=2 fired=1 state=1 consumed=6 published=14
+case c5-id6-len-to-0 rc=5 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=1 consumed=5 published=13
+case c5-id6-len-to-11 rc=5 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=1 consumed=5 published=13
+case c5-id6-len-to-25 rc=0 n=13 out=ed0a7f08 first=46 id_reads=2 len_reads=2 fired=1 state=1 consumed=6 published=14
+case c5-id6-len-to-1527 rc=5 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=1 consumed=5 published=13
+case c5-id6-len-to-5000 rc=5 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=1 consumed=5 published=13
+case c5-id6-len-to-2147483647 rc=5 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=1 consumed=5 published=13
+case c5-id6-len-to-4294967295 rc=5 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=1 consumed=5 published=13
+case c5-id6-len-to-40 rc=0 n=28 out=bc3bdf33 first=46 id_reads=2 len_reads=2 fired=1 state=1 consumed=6 published=14
+HOSTILE: WILD MEMORY ACCESS
+case c5-id6-both VIOLATION exit 42
+case c5-id7-honest rc=0 n=60 out=6b68e077 first=47 id_reads=2 len_reads=2 fired=1 state=1 consumed=6 published=14
+case c5-id7-to-id8 rc=8 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=3 consumed=0 published=0
+tests/host/../reference/virtio-net-r3n3.c:252:37: runtime error: index 11 out of bounds for type 'uint64_t [11]'
+case c5-id7-to-id9 VIOLATION exit 1
+tests/host/../reference/virtio-net-r3n3.c:252:37: runtime error: index 12 out of bounds for type 'uint64_t [11]'
+case c5-id7-to-id10 VIOLATION exit 1
+tests/host/../reference/virtio-net-r3n3.c:252:37: runtime error: index 65538 out of bounds for type 'uint64_t [11]'
+case c5-id7-to-id65536 VIOLATION exit 1
+tests/host/../reference/virtio-net-r3n3.c:252:37: runtime error: index 2147483649 out of bounds for type 'uint64_t [11]'
+case c5-id7-to-id2147483647 VIOLATION exit 1
+HOSTILE: WILD MEMORY ACCESS
+case c5-id7-to-id4294967295 VIOLATION exit 42
+case c5-id7-to-other rc=0 n=60 out=14f5cca3 first=42 id_reads=2 len_reads=2 fired=1 state=1 consumed=6 published=14
+case c5-id7-len-to-0 rc=5 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=1 consumed=5 published=13
+case c5-id7-len-to-11 rc=5 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=1 consumed=5 published=13
+case c5-id7-len-to-25 rc=0 n=13 out=19b92881 first=47 id_reads=2 len_reads=2 fired=1 state=1 consumed=6 published=14
+case c5-id7-len-to-1527 rc=5 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=1 consumed=5 published=13
+case c5-id7-len-to-5000 rc=5 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=1 consumed=5 published=13
+case c5-id7-len-to-2147483647 rc=5 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=1 consumed=5 published=13
+case c5-id7-len-to-4294967295 rc=5 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=1 consumed=5 published=13
+case c5-id7-len-to-40 rc=0 n=28 out=689020b7 first=47 id_reads=2 len_reads=2 fired=1 state=1 consumed=6 published=14
+HOSTILE: WILD MEMORY ACCESS
+case c5-id7-both VIOLATION exit 42
+case c65535-id0-honest rc=0 n=60 out=56cb4193 first=40 id_reads=2 len_reads=2 fired=1 state=1 consumed=0 published=8
+case c65535-id0-to-id8 rc=8 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=3 consumed=0 published=0
+tests/host/../reference/virtio-net-r3n3.c:252:37: runtime error: index 11 out of bounds for type 'uint64_t [11]'
+case c65535-id0-to-id9 VIOLATION exit 1
+tests/host/../reference/virtio-net-r3n3.c:252:37: runtime error: index 12 out of bounds for type 'uint64_t [11]'
+case c65535-id0-to-id10 VIOLATION exit 1
+tests/host/../reference/virtio-net-r3n3.c:252:37: runtime error: index 65538 out of bounds for type 'uint64_t [11]'
+case c65535-id0-to-id65536 VIOLATION exit 1
+tests/host/../reference/virtio-net-r3n3.c:252:37: runtime error: index 2147483649 out of bounds for type 'uint64_t [11]'
+case c65535-id0-to-id2147483647 VIOLATION exit 1
+HOSTILE: WILD MEMORY ACCESS
+case c65535-id0-to-id4294967295 VIOLATION exit 42
+case c65535-id0-to-other rc=0 n=60 out=187ba44f first=43 id_reads=2 len_reads=2 fired=1 state=1 consumed=0 published=8
+case c65535-id0-len-to-0 rc=5 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=1 consumed=65535 published=7
+case c65535-id0-len-to-11 rc=5 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=1 consumed=65535 published=7
+case c65535-id0-len-to-25 rc=0 n=13 out=f2675732 first=40 id_reads=2 len_reads=2 fired=1 state=1 consumed=0 published=8
+case c65535-id0-len-to-1527 rc=5 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=1 consumed=65535 published=7
+case c65535-id0-len-to-5000 rc=5 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=1 consumed=65535 published=7
+case c65535-id0-len-to-2147483647 rc=5 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=1 consumed=65535 published=7
+case c65535-id0-len-to-4294967295 rc=5 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=1 consumed=65535 published=7
+case c65535-id0-len-to-40 rc=0 n=28 out=01c2d273 first=40 id_reads=2 len_reads=2 fired=1 state=1 consumed=0 published=8
+HOSTILE: WILD MEMORY ACCESS
+case c65535-id0-both VIOLATION exit 42
+case c65535-id1-honest rc=0 n=60 out=084a392f first=41 id_reads=2 len_reads=2 fired=1 state=1 consumed=0 published=8
+case c65535-id1-to-id8 rc=8 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=3 consumed=0 published=0
+tests/host/../reference/virtio-net-r3n3.c:252:37: runtime error: index 11 out of bounds for type 'uint64_t [11]'
+case c65535-id1-to-id9 VIOLATION exit 1
+tests/host/../reference/virtio-net-r3n3.c:252:37: runtime error: index 12 out of bounds for type 'uint64_t [11]'
+case c65535-id1-to-id10 VIOLATION exit 1
+tests/host/../reference/virtio-net-r3n3.c:252:37: runtime error: index 65538 out of bounds for type 'uint64_t [11]'
+case c65535-id1-to-id65536 VIOLATION exit 1
+tests/host/../reference/virtio-net-r3n3.c:252:37: runtime error: index 2147483649 out of bounds for type 'uint64_t [11]'
+case c65535-id1-to-id2147483647 VIOLATION exit 1
+HOSTILE: WILD MEMORY ACCESS
+case c65535-id1-to-id4294967295 VIOLATION exit 42
+case c65535-id1-to-other rc=0 n=60 out=9185eec3 first=44 id_reads=2 len_reads=2 fired=1 state=1 consumed=0 published=8
+case c65535-id1-len-to-0 rc=5 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=1 consumed=65535 published=7
+case c65535-id1-len-to-11 rc=5 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=1 consumed=65535 published=7
+case c65535-id1-len-to-25 rc=0 n=13 out=a460b1d3 first=41 id_reads=2 len_reads=2 fired=1 state=1 consumed=0 published=8
+case c65535-id1-len-to-1527 rc=5 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=1 consumed=65535 published=7
+case c65535-id1-len-to-5000 rc=5 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=1 consumed=65535 published=7
+case c65535-id1-len-to-2147483647 rc=5 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=1 consumed=65535 published=7
+case c65535-id1-len-to-4294967295 rc=5 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=1 consumed=65535 published=7
+case c65535-id1-len-to-40 rc=0 n=28 out=d2cfd66f first=41 id_reads=2 len_reads=2 fired=1 state=1 consumed=0 published=8
+HOSTILE: WILD MEMORY ACCESS
+case c65535-id1-both VIOLATION exit 42
+case c65535-id2-honest rc=0 n=60 out=14f5cca3 first=42 id_reads=2 len_reads=2 fired=1 state=1 consumed=0 published=8
+case c65535-id2-to-id8 rc=8 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=3 consumed=0 published=0
+tests/host/../reference/virtio-net-r3n3.c:252:37: runtime error: index 11 out of bounds for type 'uint64_t [11]'
+case c65535-id2-to-id9 VIOLATION exit 1
+tests/host/../reference/virtio-net-r3n3.c:252:37: runtime error: index 12 out of bounds for type 'uint64_t [11]'
+case c65535-id2-to-id10 VIOLATION exit 1
+tests/host/../reference/virtio-net-r3n3.c:252:37: runtime error: index 65538 out of bounds for type 'uint64_t [11]'
+case c65535-id2-to-id65536 VIOLATION exit 1
+tests/host/../reference/virtio-net-r3n3.c:252:37: runtime error: index 2147483649 out of bounds for type 'uint64_t [11]'
+case c65535-id2-to-id2147483647 VIOLATION exit 1
+HOSTILE: WILD MEMORY ACCESS
+case c65535-id2-to-id4294967295 VIOLATION exit 42
+case c65535-id2-to-other rc=0 n=60 out=8fee1a67 first=45 id_reads=2 len_reads=2 fired=1 state=1 consumed=0 published=8
+case c65535-id2-len-to-0 rc=5 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=1 consumed=65535 published=7
+case c65535-id2-len-to-11 rc=5 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=1 consumed=65535 published=7
+case c65535-id2-len-to-25 rc=0 n=13 out=0ff85624 first=42 id_reads=2 len_reads=2 fired=1 state=1 consumed=0 published=8
+case c65535-id2-len-to-1527 rc=5 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=1 consumed=65535 published=7
+case c65535-id2-len-to-5000 rc=5 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=1 consumed=65535 published=7
+case c65535-id2-len-to-2147483647 rc=5 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=1 consumed=65535 published=7
+case c65535-id2-len-to-4294967295 rc=5 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=1 consumed=65535 published=7
+case c65535-id2-len-to-40 rc=0 n=28 out=0dc85783 first=42 id_reads=2 len_reads=2 fired=1 state=1 consumed=0 published=8
+HOSTILE: WILD MEMORY ACCESS
+case c65535-id2-both VIOLATION exit 42
+case c65535-id3-honest rc=0 n=60 out=187ba44f first=43 id_reads=2 len_reads=2 fired=1 state=1 consumed=0 published=8
+case c65535-id3-to-id8 rc=8 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=3 consumed=0 published=0
+tests/host/../reference/virtio-net-r3n3.c:252:37: runtime error: index 11 out of bounds for type 'uint64_t [11]'
+case c65535-id3-to-id9 VIOLATION exit 1
+tests/host/../reference/virtio-net-r3n3.c:252:37: runtime error: index 12 out of bounds for type 'uint64_t [11]'
+case c65535-id3-to-id10 VIOLATION exit 1
+tests/host/../reference/virtio-net-r3n3.c:252:37: runtime error: index 65538 out of bounds for type 'uint64_t [11]'
+case c65535-id3-to-id65536 VIOLATION exit 1
+tests/host/../reference/virtio-net-r3n3.c:252:37: runtime error: index 2147483649 out of bounds for type 'uint64_t [11]'
+case c65535-id3-to-id2147483647 VIOLATION exit 1
+HOSTILE: WILD MEMORY ACCESS
+case c65535-id3-to-id4294967295 VIOLATION exit 42
+case c65535-id3-to-other rc=0 n=60 out=93266653 first=46 id_reads=2 len_reads=2 fired=1 state=1 consumed=0 published=8
+case c65535-id3-len-to-0 rc=5 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=1 consumed=65535 published=7
+case c65535-id3-len-to-11 rc=5 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=1 consumed=65535 published=7
+case c65535-id3-len-to-25 rc=0 n=13 out=9b419c2d first=43 id_reads=2 len_reads=2 fired=1 state=1 consumed=0 published=8
+case c65535-id3-len-to-1527 rc=5 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=1 consumed=65535 published=7
+case c65535-id3-len-to-5000 rc=5 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=1 consumed=65535 published=7
+case c65535-id3-len-to-2147483647 rc=5 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=1 consumed=65535 published=7
+case c65535-id3-len-to-4294967295 rc=5 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=1 consumed=65535 published=7
+case c65535-id3-len-to-40 rc=0 n=28 out=db10be0f first=43 id_reads=2 len_reads=2 fired=1 state=1 consumed=0 published=8
+HOSTILE: WILD MEMORY ACCESS
+case c65535-id3-both VIOLATION exit 42
+case c65535-id4-honest rc=0 n=60 out=9185eec3 first=44 id_reads=2 len_reads=2 fired=1 state=1 consumed=0 published=8
+case c65535-id4-to-id8 rc=8 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=3 consumed=0 published=0
+tests/host/../reference/virtio-net-r3n3.c:252:37: runtime error: index 11 out of bounds for type 'uint64_t [11]'
+case c65535-id4-to-id9 VIOLATION exit 1
+tests/host/../reference/virtio-net-r3n3.c:252:37: runtime error: index 12 out of bounds for type 'uint64_t [11]'
+case c65535-id4-to-id10 VIOLATION exit 1
+tests/host/../reference/virtio-net-r3n3.c:252:37: runtime error: index 65538 out of bounds for type 'uint64_t [11]'
+case c65535-id4-to-id65536 VIOLATION exit 1
+tests/host/../reference/virtio-net-r3n3.c:252:37: runtime error: index 2147483649 out of bounds for type 'uint64_t [11]'
+case c65535-id4-to-id2147483647 VIOLATION exit 1
+HOSTILE: WILD MEMORY ACCESS
+case c65535-id4-to-id4294967295 VIOLATION exit 42
+case c65535-id4-to-other rc=0 n=60 out=6b68e077 first=47 id_reads=2 len_reads=2 fired=1 state=1 consumed=0 published=8
+case c65535-id4-len-to-0 rc=5 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=1 consumed=65535 published=7
+case c65535-id4-len-to-11 rc=5 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=1 consumed=65535 published=7
+case c65535-id4-len-to-25 rc=0 n=13 out=c8192276 first=44 id_reads=2 len_reads=2 fired=1 state=1 consumed=0 published=8
+case c65535-id4-len-to-1527 rc=5 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=1 consumed=65535 published=7
+case c65535-id4-len-to-5000 rc=5 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=1 consumed=65535 published=7
+case c65535-id4-len-to-2147483647 rc=5 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=1 consumed=65535 published=7
+case c65535-id4-len-to-4294967295 rc=5 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=1 consumed=65535 published=7
+case c65535-id4-len-to-40 rc=0 n=28 out=5426d123 first=44 id_reads=2 len_reads=2 fired=1 state=1 consumed=0 published=8
+HOSTILE: WILD MEMORY ACCESS
+case c65535-id4-both VIOLATION exit 42
+case c65535-id5-honest rc=0 n=60 out=8fee1a67 first=45 id_reads=2 len_reads=2 fired=1 state=1 consumed=0 published=8
+case c65535-id5-to-id8 rc=8 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=3 consumed=0 published=0
+tests/host/../reference/virtio-net-r3n3.c:252:37: runtime error: index 11 out of bounds for type 'uint64_t [11]'
+case c65535-id5-to-id9 VIOLATION exit 1
+tests/host/../reference/virtio-net-r3n3.c:252:37: runtime error: index 12 out of bounds for type 'uint64_t [11]'
+case c65535-id5-to-id10 VIOLATION exit 1
+tests/host/../reference/virtio-net-r3n3.c:252:37: runtime error: index 65538 out of bounds for type 'uint64_t [11]'
+case c65535-id5-to-id65536 VIOLATION exit 1
+tests/host/../reference/virtio-net-r3n3.c:252:37: runtime error: index 2147483649 out of bounds for type 'uint64_t [11]'
+case c65535-id5-to-id2147483647 VIOLATION exit 1
+HOSTILE: WILD MEMORY ACCESS
+case c65535-id5-to-id4294967295 VIOLATION exit 42
+case c65535-id5-to-other rc=0 n=60 out=56cb4193 first=40 id_reads=2 len_reads=2 fired=1 state=1 consumed=0 published=8
+case c65535-id5-len-to-0 rc=5 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=1 consumed=65535 published=7
+case c65535-id5-len-to-11 rc=5 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=1 consumed=65535 published=7
+case c65535-id5-len-to-25 rc=0 n=13 out=29267747 first=45 id_reads=2 len_reads=2 fired=1 state=1 consumed=0 published=8
+case c65535-id5-len-to-1527 rc=5 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=1 consumed=65535 published=7
+case c65535-id5-len-to-5000 rc=5 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=1 consumed=65535 published=7
+case c65535-id5-len-to-2147483647 rc=5 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=1 consumed=65535 published=7
+case c65535-id5-len-to-4294967295 rc=5 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=1 consumed=65535 published=7
+case c65535-id5-len-to-40 rc=0 n=28 out=fa6ed0a7 first=45 id_reads=2 len_reads=2 fired=1 state=1 consumed=0 published=8
+HOSTILE: WILD MEMORY ACCESS
+case c65535-id5-both VIOLATION exit 42
+case c65535-id6-honest rc=0 n=60 out=93266653 first=46 id_reads=2 len_reads=2 fired=1 state=1 consumed=0 published=8
+case c65535-id6-to-id8 rc=8 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=3 consumed=0 published=0
+tests/host/../reference/virtio-net-r3n3.c:252:37: runtime error: index 11 out of bounds for type 'uint64_t [11]'
+case c65535-id6-to-id9 VIOLATION exit 1
+tests/host/../reference/virtio-net-r3n3.c:252:37: runtime error: index 12 out of bounds for type 'uint64_t [11]'
+case c65535-id6-to-id10 VIOLATION exit 1
+tests/host/../reference/virtio-net-r3n3.c:252:37: runtime error: index 65538 out of bounds for type 'uint64_t [11]'
+case c65535-id6-to-id65536 VIOLATION exit 1
+tests/host/../reference/virtio-net-r3n3.c:252:37: runtime error: index 2147483649 out of bounds for type 'uint64_t [11]'
+case c65535-id6-to-id2147483647 VIOLATION exit 1
+HOSTILE: WILD MEMORY ACCESS
+case c65535-id6-to-id4294967295 VIOLATION exit 42
+case c65535-id6-to-other rc=0 n=60 out=084a392f first=41 id_reads=2 len_reads=2 fired=1 state=1 consumed=0 published=8
+case c65535-id6-len-to-0 rc=5 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=1 consumed=65535 published=7
+case c65535-id6-len-to-11 rc=5 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=1 consumed=65535 published=7
+case c65535-id6-len-to-25 rc=0 n=13 out=ed0a7f08 first=46 id_reads=2 len_reads=2 fired=1 state=1 consumed=0 published=8
+case c65535-id6-len-to-1527 rc=5 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=1 consumed=65535 published=7
+case c65535-id6-len-to-5000 rc=5 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=1 consumed=65535 published=7
+case c65535-id6-len-to-2147483647 rc=5 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=1 consumed=65535 published=7
+case c65535-id6-len-to-4294967295 rc=5 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=1 consumed=65535 published=7
+case c65535-id6-len-to-40 rc=0 n=28 out=bc3bdf33 first=46 id_reads=2 len_reads=2 fired=1 state=1 consumed=0 published=8
+HOSTILE: WILD MEMORY ACCESS
+case c65535-id6-both VIOLATION exit 42
+case c65535-id7-honest rc=0 n=60 out=6b68e077 first=47 id_reads=2 len_reads=2 fired=1 state=1 consumed=0 published=8
+case c65535-id7-to-id8 rc=8 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=3 consumed=0 published=0
+tests/host/../reference/virtio-net-r3n3.c:252:37: runtime error: index 11 out of bounds for type 'uint64_t [11]'
+case c65535-id7-to-id9 VIOLATION exit 1
+tests/host/../reference/virtio-net-r3n3.c:252:37: runtime error: index 12 out of bounds for type 'uint64_t [11]'
+case c65535-id7-to-id10 VIOLATION exit 1
+tests/host/../reference/virtio-net-r3n3.c:252:37: runtime error: index 65538 out of bounds for type 'uint64_t [11]'
+case c65535-id7-to-id65536 VIOLATION exit 1
+tests/host/../reference/virtio-net-r3n3.c:252:37: runtime error: index 2147483649 out of bounds for type 'uint64_t [11]'
+case c65535-id7-to-id2147483647 VIOLATION exit 1
+HOSTILE: WILD MEMORY ACCESS
+case c65535-id7-to-id4294967295 VIOLATION exit 42
+case c65535-id7-to-other rc=0 n=60 out=14f5cca3 first=42 id_reads=2 len_reads=2 fired=1 state=1 consumed=0 published=8
+case c65535-id7-len-to-0 rc=5 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=1 consumed=65535 published=7
+case c65535-id7-len-to-11 rc=5 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=1 consumed=65535 published=7
+case c65535-id7-len-to-25 rc=0 n=13 out=19b92881 first=47 id_reads=2 len_reads=2 fired=1 state=1 consumed=0 published=8
+case c65535-id7-len-to-1527 rc=5 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=1 consumed=65535 published=7
+case c65535-id7-len-to-5000 rc=5 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=1 consumed=65535 published=7
+case c65535-id7-len-to-2147483647 rc=5 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=1 consumed=65535 published=7
+case c65535-id7-len-to-4294967295 rc=5 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=1 consumed=65535 published=7
+case c65535-id7-len-to-40 rc=0 n=28 out=689020b7 first=47 id_reads=2 len_reads=2 fired=1 state=1 consumed=0 published=8
+HOSTILE: WILD MEMORY ACCESS
+case c65535-id7-both VIOLATION exit 42
+tests/host/../reference/virtio-net-r3n3.c:252:37: runtime error: index 11 out of bounds for type 'uint64_t [11]'
+case multi3-id0-to-id9 VIOLATION exit 1
+tests/host/../reference/virtio-net-r3n3.c:252:37: runtime error: index 11 out of bounds for type 'uint64_t [11]'
+case cap8-id0-to-id9 VIOLATION exit 1
+case cap60-id0-len-to-1000 rc=5 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=1 consumed=0 published=8
+tests/host/../reference/virtio-net-r3n3.c:252:37: runtime error: index 11 out of bounds for type 'uint64_t [11]'
+case multi3-id1-to-id9 VIOLATION exit 1
+tests/host/../reference/virtio-net-r3n3.c:252:37: runtime error: index 11 out of bounds for type 'uint64_t [11]'
+case cap8-id1-to-id9 VIOLATION exit 1
+case cap60-id1-len-to-1000 rc=5 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=1 consumed=0 published=8
+tests/host/../reference/virtio-net-r3n3.c:252:37: runtime error: index 11 out of bounds for type 'uint64_t [11]'
+case multi3-id2-to-id9 VIOLATION exit 1
+tests/host/../reference/virtio-net-r3n3.c:252:37: runtime error: index 11 out of bounds for type 'uint64_t [11]'
+case cap8-id2-to-id9 VIOLATION exit 1
+case cap60-id2-len-to-1000 rc=5 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=1 consumed=0 published=8
+tests/host/../reference/virtio-net-r3n3.c:252:37: runtime error: index 11 out of bounds for type 'uint64_t [11]'
+case multi3-id3-to-id9 VIOLATION exit 1
+tests/host/../reference/virtio-net-r3n3.c:252:37: runtime error: index 11 out of bounds for type 'uint64_t [11]'
+case cap8-id3-to-id9 VIOLATION exit 1
+case cap60-id3-len-to-1000 rc=5 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=1 consumed=0 published=8
+tests/host/../reference/virtio-net-r3n3.c:252:37: runtime error: index 11 out of bounds for type 'uint64_t [11]'
+case multi3-id4-to-id9 VIOLATION exit 1
+tests/host/../reference/virtio-net-r3n3.c:252:37: runtime error: index 11 out of bounds for type 'uint64_t [11]'
+case cap8-id4-to-id9 VIOLATION exit 1
+case cap60-id4-len-to-1000 rc=5 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=1 consumed=0 published=8
+tests/host/../reference/virtio-net-r3n3.c:252:37: runtime error: index 11 out of bounds for type 'uint64_t [11]'
+case multi3-id5-to-id9 VIOLATION exit 1
+tests/host/../reference/virtio-net-r3n3.c:252:37: runtime error: index 11 out of bounds for type 'uint64_t [11]'
+case cap8-id5-to-id9 VIOLATION exit 1
+case cap60-id5-len-to-1000 rc=5 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=1 consumed=0 published=8
+tests/host/../reference/virtio-net-r3n3.c:252:37: runtime error: index 11 out of bounds for type 'uint64_t [11]'
+case multi3-id6-to-id9 VIOLATION exit 1
+tests/host/../reference/virtio-net-r3n3.c:252:37: runtime error: index 11 out of bounds for type 'uint64_t [11]'
+case cap8-id6-to-id9 VIOLATION exit 1
+case cap60-id6-len-to-1000 rc=5 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=1 consumed=0 published=8
+tests/host/../reference/virtio-net-r3n3.c:252:37: runtime error: index 11 out of bounds for type 'uint64_t [11]'
+case multi3-id7-to-id9 VIOLATION exit 1
+tests/host/../reference/virtio-net-r3n3.c:252:37: runtime error: index 11 out of bounds for type 'uint64_t [11]'
+case cap8-id7-to-id9 VIOLATION exit 1
+case cap60-id7-len-to-1000 rc=5 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=1 consumed=0 published=8
+case invalid-initial-id9 rc=8 n=11259375 out=3f88e967 first=a5 id_reads=1 len_reads=1 fired=1 state=3 consumed=0 published=0
+case invalid-initial-len rc=8 n=11259375 out=3f88e967 first=a5 id_reads=1 len_reads=1 fired=1 state=3 consumed=0 published=0
+case duplicate-ids rc=8 n=11259375 out=3f88e967 first=a5 id_reads=1 len_reads=1 fired=1 state=3 consumed=0 published=0
+case bad-header rc=8 n=11259375 out=3f88e967 first=a5 id_reads=2 len_reads=2 fired=1 state=3 consumed=0 published=0
+case zero-count rc=4 n=11259375 out=3f88e967 first=a5 id_reads=0 len_reads=0 fired=0 state=1 consumed=0 published=8
+case tx-rewrite-id9 rc=0 rc2=0 state=1 txc=2
+case tx-rewrite-len rc=0 rc2=0 state=1 txc=2
+case tx-honest rc=0 rc2=0 state=1 txc=2
+HOSTILE DONE

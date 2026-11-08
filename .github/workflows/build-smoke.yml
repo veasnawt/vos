@@ -182,6 +182,11 @@ jobs:
           python3 -I -B scripts/test-vnet-rust.py
           --archive build/x86_64/rust/libvos_kernel.a --rustc "$RUSTC"
           --out build/r3-n3-vnet-ci
+      - name: Verify the virtio-net RX used-ring re-read fix against a hostile device (negative control, mutations, honest-device equivalence)
+        run: >-
+          python3 -I -B scripts/test-vnet-hostile.py
+          --archive build/x86_64/rust/libvos_kernel.a --rustc "$RUSTC"
+          --out build/r3-n3s-vnet-ci
       - name: Verify USB.2-C1 read-only xHCI qualification and USB.2-B ownership
         run: |
           python3 -I -B scripts/test-usb2c1.py \
