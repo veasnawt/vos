@@ -1,0 +1,253 @@
+{
+ "commit": "a221407cbf8b2cc1a58d278270a0127c0c8f85a5",
+ "tree": "5cf4d8c0b4d42931eddf56c6f30fbd927bdd8b9f",
+ "compiler": "gcc (Ubuntu 13.4.0-10ubuntu1) 13.4.0",
+ "rustc": "nightly-2026-09-03",
+ "source": "git archive of the commit; steps 36-40 re-run after giving the export git metadata (read-only alternates to the real object store), since C4.1 runs git ls-files",
+ "record_tool_versions": "informational; non-gating on the host (host lacks some CI packages)",
+ "first_attempt_step36": "FAIL: git ls-files exit 128 in the metadata-less export (harness setup, not the candidate); recorded, not hidden",
+ "qemu_portion_not_run": "test-usb2c3b2.py (QEMU executor) not run on the host; it ran in worker r2 ci-contain",
+ "steps": [
+  {
+   "n": 1,
+   "name": "Verify legacy i386 Multiboot kernel",
+   "rc": 0,
+   "seconds": 0.1
+  },
+  {
+   "n": 2,
+   "name": "Record tool versions",
+   "rc": 1,
+   "seconds": 0.0
+  },
+  {
+   "n": 3,
+   "name": "Build x86_64 BIOS and UEFI ISOs",
+   "rc": 0,
+   "seconds": 12.8
+  },
+  {
+   "n": 4,
+   "name": "Validate separately built user ELF profiles",
+   "rc": 0,
+   "seconds": 41.2
+  },
+  {
+   "n": 5,
+   "name": "Verify migrated ELF bounds and hosted compatibility",
+   "rc": 0,
+   "seconds": 22.3
+  },
+  {
+   "n": 6,
+   "name": "Verify the Rust Multiboot2 parser (frozen C differential, production ownership, stack, panic-free link)",
+   "rc": 0,
+   "seconds": 67.4
+  },
+  {
+   "n": 7,
+   "name": "Verify Rust boot reservations and EFI boundary (B1)",
+   "rc": 0,
+   "seconds": 54.0
+  },
+  {
+   "n": 8,
+   "name": "Verify Rust PMM checks against the frozen accepted pmm.c (guard-paged differential, mutation controls, ownership)",
+   "rc": 0,
+   "seconds": 24.1
+  },
+  {
+   "n": 9,
+   "name": "Verify bounded Rust boot-HID core and existing input contracts (H1-B)",
+   "rc": 0,
+   "seconds": 13.3
+  },
+  {
+   "n": 10,
+   "name": "Verify production Rust PS/2 decoder and input compatibility",
+   "rc": 0,
+   "seconds": 9.8
+  },
+  {
+   "n": 11,
+   "name": "Verify Rust PS/2 keyboard decoder and frozen C equivalence",
+   "rc": 0,
+   "seconds": 5.6
+  },
+  {
+   "n": 12,
+   "name": "Verify Rust console line extraction and frozen C equivalence",
+   "rc": 0,
+   "seconds": 7.7
+  },
+  {
+   "n": 13,
+   "name": "Verify Rust console editing and frozen C equivalence",
+   "rc": 0,
+   "seconds": 7.3
+  },
+  {
+   "n": 14,
+   "name": "Verify Rust blocking console reader and frozen C equivalence",
+   "rc": 0,
+   "seconds": 14.9
+  },
+  {
+   "n": 15,
+   "name": "Verify Rust shared PS/2 routing, pointer polling and frozen driver equivalence",
+   "rc": 0,
+   "seconds": 17.2
+  },
+  {
+   "n": 16,
+   "name": "Verify Rust keyboard queue extraction and frozen C equivalence",
+   "rc": 0,
+   "seconds": 15.3
+  },
+  {
+   "n": 17,
+   "name": "Verify Rust ordinary keyboard polling and frozen C equivalence",
+   "rc": 0,
+   "seconds": 7.8
+  },
+  {
+   "n": 18,
+   "name": "Verify Rust bounded PS/2 controller reads and frozen C lifecycle equivalence",
+   "rc": 0,
+   "seconds": 7.1
+  },
+  {
+   "n": 19,
+   "name": "Verify Rust bounded PS/2 controller writes and frozen C lifecycle equivalence",
+   "rc": 0,
+   "seconds": 45.9
+  },
+  {
+   "n": 20,
+   "name": "Verify Rust PS/2 controller lifecycle and frozen C equivalence",
+   "rc": 0,
+   "seconds": 106.7
+  },
+  {
+   "n": 21,
+   "name": "Verify Rust ARP/IPv4/UDP core and frozen C network equivalence",
+   "rc": 0,
+   "seconds": 77.4
+  },
+  {
+   "n": 22,
+   "name": "Run host ARP/IPv4/UDP/TCP protocol suites against the Rust network core",
+   "rc": 0,
+   "seconds": 5.6
+  },
+  {
+   "n": 23,
+   "name": "Verify Rust TCP core against the frozen accepted C TCP (two oracle configurations, mutation controls, frames)",
+   "rc": 0,
+   "seconds": 152.1
+  },
+  {
+   "n": 24,
+   "name": "Verify Rust virtio-net validation against the frozen accepted driver (transcript differential, mutation controls)",
+   "rc": 0,
+   "seconds": 45.1
+  },
+  {
+   "n": 25,
+   "name": "Verify the virtio-net RX used-ring re-read fix against a hostile device (negative control, mutations, honest-device equivalence)",
+   "rc": 0,
+   "seconds": 26.2
+  },
+  {
+   "n": 26,
+   "name": "Verify the Rust framebuffer validation (frozen C differential, production ownership, stack, panic-free link)",
+   "rc": 0,
+   "seconds": 12.7
+  },
+  {
+   "n": 27,
+   "name": "Verify Rust desktop request and layout decisions against the frozen accepted C (differential, mutation controls, ownership)",
+   "rc": 0,
+   "seconds": 78.3
+  },
+  {
+   "n": 28,
+   "name": "Verify Rust screen geometry and bounds decisions against the frozen accepted screen.c (whole-module differential, mutation controls, ownership)",
+   "rc": 0,
+   "seconds": 576.8
+  },
+  {
+   "n": 29,
+   "name": "Verify read-only USB.1 probing and input diagnostics",
+   "rc": 0,
+   "seconds": 2.2
+  },
+  {
+   "n": 30,
+   "name": "Verify USB.2-C1 read-only xHCI qualification and USB.2-B ownership",
+   "rc": 0,
+   "seconds": 10.5
+  },
+  {
+   "n": 31,
+   "name": "Verify USB.2-C2 DMA ownership model and adapter",
+   "rc": 0,
+   "seconds": 6.5
+  },
+  {
+   "n": 32,
+   "name": "Verify USB.2-C3a firmware residue guard, dry-run lifecycle and panic-free link",
+   "rc": 0,
+   "seconds": 11.8
+  },
+  {
+   "n": 33,
+   "name": "Verify USB.2-C3a.2 early UEFI firmware memory exclusion",
+   "rc": 0,
+   "seconds": 9.3
+  },
+  {
+   "n": 34,
+   "name": "Verify USB.2-C3b.1 read-only containment dry-run (no write path)",
+   "rc": 0,
+   "seconds": 20.4
+  },
+  {
+   "n": 35,
+   "name": "Verify USB.2-C3b.2 QEMU-only containment executor and production isolation",
+   "rc": 0,
+   "seconds": 10.8
+  },
+  {
+   "n": 36,
+   "name": "Verify USB.2-C4.1 hosted initialization protocol model (no kernel code, no device access)",
+   "rc": 0,
+   "seconds": 136.0
+  },
+  {
+   "n": 37,
+   "name": "Verify USB.2-C4.2a hosted backend contract (no kernel code, no device access)",
+   "rc": 0,
+   "seconds": 325.6
+  },
+  {
+   "n": 38,
+   "name": "Verify USB.3-A hosted EHCI qualification and handoff model (no kernel code, no device access)",
+   "rc": 0,
+   "seconds": 18.9
+  },
+  {
+   "n": 39,
+   "name": "Verify the read-only USB survey (hosted tests, mutation controls, production panic-free link)",
+   "rc": 0,
+   "seconds": 227.3
+  },
+  {
+   "n": 40,
+   "name": "Verify the read-only firmware-table lease (hosted, real devmap.c, sanitizers, mutation controls)",
+   "rc": 0,
+   "seconds": 14.7
+  }
+ ],
+ "hosted_gating_steps_pass": "39/39"
+}

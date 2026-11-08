@@ -33,6 +33,7 @@ mod fb_validate;
 mod boot_resv;
 mod desktop;
 mod screen;
+mod pmm;
 
 // SAFETY: this private kernel symbol is defined exactly once, with the scalar
 // System V C ABI declared in rust_kernel.h. It does not accept pointers.

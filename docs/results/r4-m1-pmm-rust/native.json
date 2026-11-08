@@ -1,0 +1,228 @@
+{
+ "worker_run": "r1",
+ "observer": {
+  "qemu_only": true,
+  "physical_hardware": "NOT TESTED",
+  "cases": [
+   {
+    "case": "bios-128M",
+    "memory": "128M",
+    "firmware": "SeaBIOS",
+    "addresses": {
+     "pmm_check_in": "0xffffffff8016cc50",
+     "pmm_frame_state_in": "0xffffffff8016cd80",
+     "pmm_free_check_in": "0xffffffff8016ce00"
+    },
+    "passed": true,
+    "calls": {
+     "F": 300,
+     "S": 300,
+     "C": 24
+    },
+    "results": {
+     "S": {
+      "2": 186,
+      "0": 114
+     },
+     "F": {
+      "0": 264,
+      "1": 1,
+      "3": 4,
+      "4": 4,
+      "5": 25,
+      "6": 2
+     },
+     "C": {
+      "0": 24
+     }
+    },
+    "distinct_instances": 4,
+    "full_bitmaps_replayed": 24,
+    "exit_status": 33,
+    "markers": [
+     "selftest: pmm-synthetic ",
+     "selftest: pmm-kernel ",
+     "selftest: vmm ",
+     "selftest: kmap ",
+     "VOS-TEST: PASS"
+    ],
+    "replay_identical": true
+   },
+   {
+    "case": "bios-2G",
+    "memory": "2G",
+    "firmware": "SeaBIOS",
+    "addresses": {
+     "pmm_check_in": "0xffffffff8016cc50",
+     "pmm_frame_state_in": "0xffffffff8016cd80",
+     "pmm_free_check_in": "0xffffffff8016ce00"
+    },
+    "passed": true,
+    "calls": {
+     "F": 300,
+     "S": 300,
+     "C": 24
+    },
+    "results": {
+     "S": {
+      "2": 186,
+      "0": 114
+     },
+     "F": {
+      "0": 264,
+      "1": 1,
+      "3": 4,
+      "4": 4,
+      "5": 25,
+      "6": 2
+     },
+     "C": {
+      "0": 24
+     }
+    },
+    "distinct_instances": 4,
+    "full_bitmaps_replayed": 24,
+    "exit_status": 33,
+    "markers": [
+     "selftest: pmm-synthetic ",
+     "selftest: pmm-kernel ",
+     "selftest: vmm ",
+     "selftest: kmap ",
+     "VOS-TEST: PASS"
+    ],
+    "replay_identical": true
+   },
+   {
+    "case": "uefi-128M",
+    "memory": "128M",
+    "firmware": "OVMF",
+    "addresses": {
+     "pmm_check_in": "0xffffffff8016cc50",
+     "pmm_frame_state_in": "0xffffffff8016cd80",
+     "pmm_free_check_in": "0xffffffff8016ce00"
+    },
+    "passed": true,
+    "calls": {
+     "F": 300,
+     "S": 300,
+     "C": 24
+    },
+    "results": {
+     "S": {
+      "2": 186,
+      "0": 114
+     },
+     "F": {
+      "0": 264,
+      "1": 1,
+      "3": 4,
+      "4": 4,
+      "5": 25,
+      "6": 2
+     },
+     "C": {
+      "0": 24
+     }
+    },
+    "distinct_instances": 4,
+    "full_bitmaps_replayed": 24,
+    "exit_status": 33,
+    "markers": [
+     "selftest: pmm-synthetic ",
+     "selftest: pmm-kernel ",
+     "selftest: vmm ",
+     "selftest: kmap ",
+     "VOS-TEST: PASS"
+    ],
+    "replay_identical": true
+   },
+   {
+    "case": "uefi-2G",
+    "memory": "2G",
+    "firmware": "OVMF",
+    "addresses": {
+     "pmm_check_in": "0xffffffff8016cc50",
+     "pmm_frame_state_in": "0xffffffff8016cd80",
+     "pmm_free_check_in": "0xffffffff8016ce00"
+    },
+    "passed": true,
+    "calls": {
+     "F": 300,
+     "S": 300,
+     "C": 24
+    },
+    "results": {
+     "S": {
+      "2": 186,
+      "0": 114
+     },
+     "F": {
+      "0": 264,
+      "1": 1,
+      "3": 4,
+      "4": 4,
+      "5": 25,
+      "6": 2
+     },
+     "C": {
+      "0": 24
+     }
+    },
+    "distinct_instances": 4,
+    "full_bitmaps_replayed": 24,
+    "exit_status": 33,
+    "markers": [
+     "selftest: pmm-synthetic ",
+     "selftest: pmm-kernel ",
+     "selftest: vmm ",
+     "selftest: kmap ",
+     "VOS-TEST: PASS"
+    ],
+    "replay_identical": true
+   }
+  ],
+  "screenshots": [
+   {
+    "case": "screen-bios",
+    "firmware": "SeaBIOS",
+    "passed": true,
+    "png": "screen.png",
+    "png_sha256": "a3ec54b782e8ebc44c5b9138531788fafb9cf9a9baed6300ad1a6ad7e7c63ae1",
+    "pmm_lines": [
+     "pmm: 262144 frames tracked below 1 GiB, 32239 usable (128956 KiB), 0 bytes of RAM above 1 GiB ignored"
+    ]
+   },
+   {
+    "case": "screen-uefi",
+    "firmware": "OVMF",
+    "passed": true,
+    "png": "screen.png",
+    "png_sha256": "a42cd600ac898ff8a8808275da80a897d78a2ad2df11cc3ef743cc3207c8b599",
+    "pmm_lines": [
+     "pmm: 262144 frames tracked below 1 GiB, 21058 usable (84232 KiB), 0 bytes of RAM above 1 GiB ignored"
+    ]
+   }
+  ],
+  "test_kernel_sha256": "7814495d433c16c86515d76b2b2bea23b0ea54b1ab8cd40af0f7d158a45eaa8b",
+  "rust_addresses": {
+   "pmm_check_in": "0xffffffff8016cc50",
+   "pmm_frame_state_in": "0xffffffff8016cd80",
+   "pmm_free_check_in": "0xffffffff8016ce00"
+  },
+  "sources_sha256": {
+   "scripts/test-pmm-native.py": "45ad9bf25e30b03e96d7b8d407b4315a808e1a55d0650b8693d778215ded28f6",
+   "tests/host/pmm-replay.c": "0d2dd5b2f744b7f73a7ec54604bcecb75ee02135cfc616111d711c6983bfb3dd",
+   "tests/reference/pmm-r4m1.c": "fb02c276cc23ae010c86c1c5deb274b0411d31153db7e03c5aa3e6a85353137b"
+  },
+  "passed": true
+ },
+ "selftest_images": [
+  "PASS pmm-exhaust",
+  "PASS mp",
+  "PASS mp-2G",
+  "PASS mp-max",
+  "PASS stress",
+  "PASS stress-2G",
+  "PASS stress-max"
+ ]
+}

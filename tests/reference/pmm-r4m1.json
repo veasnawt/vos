@@ -1,0 +1,10 @@
+{
+  "baseline": "f5d470dffbb2cfdc8467d20912589f64bbdc7a69",
+  "sources_sha256": {
+    "pmm-r4m1.c": "fb02c276cc23ae010c86c1c5deb274b0411d31153db7e03c5aa3e6a85353137b"
+  },
+  "git_blobs": {
+    "pmm-r4m1.c": "00778036d1595eeff96e800b98278d114bffe8c5"
+  },
+  "purpose": "Byte-identical accepted arch/x86_64/pmm.c at main f5d470df (tree 4397c0ea, same blob at 16b2fc2): the frozen R4-M1 differential reference for pmm_free_check_in, pmm_frame_state_in and pmm_check_in, and the frozen init/alloc/free/reserve that build the differential's instances. pmm.h is unchanged. Not linked into the kernel."
+}

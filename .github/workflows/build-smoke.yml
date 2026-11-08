@@ -93,6 +93,12 @@ jobs:
         run: |
           python3 -I -B scripts/test-boot-resv.py --archive build/x86_64/rust/libvos_kernel.a --kernel-dir build/x86_64 --rustc "$RUSTC" --out build/b1-boot-ci
 
+      - name: Verify Rust PMM checks against the frozen accepted pmm.c (guard-paged differential, mutation controls, ownership)
+        run: |
+          python3 -I -B scripts/test-pmm-rust.py \
+            --archive build/x86_64/rust/libvos_kernel.a \
+            --kernel-dir build/x86_64 --rustc "$RUSTC" --out build/r4-m1-pmm-ci
+
       - name: Verify bounded Rust boot-HID core and existing input contracts (H1-B)
         run: python3 -I -B scripts/test-boot-hid.py --rustc "$RUSTC" --out build/h1b-hid-ci
 
@@ -406,7 +412,7 @@ jobs:
           fi
 
       - name: Verify the read-only firmware-table lease (hosted, real devmap.c, sanitizers, mutation controls)
-        run: python3 -I -B scripts/test-usb-firmware-lease.py --out build/usb-firmware-lease-ci
+        run: python3 -I -B scripts/test-usb-firmware-lease.py --rustc "$RUSTC" --out build/usb-firmware-lease-ci
 
       # Failure only, text only (result.json and logs of the gates, never binaries, images or mutant workers), kept 7 days.
 

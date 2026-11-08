@@ -1,0 +1,144 @@
+{
+ "campaign": "r4-m1-pmm-v1",
+ "plan_sha256": "9dae0dbadf72313f59a4a6147687de5b6abcc687de11a48aa201f472588be5c8",
+ "boot_sha256": "14438e12f4a3f5d27fdd8935ea5b22dae87c51e9d1150112dbd6551e0747cf2a",
+ "payload_sha256": "c6e088cdd32dcfc7bad958d2c8c91f7169a4e7bd720f69089748c38ffe9f9d90",
+ "root_approval": "owner, for r1 and r2 (r3 only as a separately approved repair)",
+ "runs": {
+  "r1": {
+   "status": "PASS",
+   "seal": "132cb26e757017ac6e1bd4654d0df8b06b702a39629c1c0bd28c6305e868a807",
+   "elapsed_s": 466.0,
+   "retained_bytes": 1809054,
+   "jobs": [
+    {
+     "name": "containment",
+     "rc": 0,
+     "seconds": 0.06,
+     "memory_peak_mb": 13
+    },
+    {
+     "name": "build",
+     "rc": 0,
+     "seconds": 12.45,
+     "memory_peak_mb": 152
+    },
+    {
+     "name": "repro",
+     "rc": 0,
+     "seconds": 12.42,
+     "memory_peak_mb": 152
+    },
+    {
+     "name": "pmmrust",
+     "rc": 0,
+     "seconds": 23.48,
+     "memory_peak_mb": 387
+    },
+    {
+     "name": "pmmnative",
+     "rc": 0,
+     "seconds": 62.47,
+     "memory_peak_mb": 199
+    },
+    {
+     "name": "selftests",
+     "rc": 0,
+     "seconds": 117.23,
+     "memory_peak_mb": 210
+    },
+    {
+     "name": "net-a",
+     "rc": 0,
+     "seconds": 55.95,
+     "memory_peak_mb": 212
+    },
+    {
+     "name": "vnet-full",
+     "rc": 0,
+     "seconds": 48.94,
+     "memory_peak_mb": 307
+    },
+    {
+     "name": "net-b",
+     "rc": 0,
+     "seconds": 94.33,
+     "memory_peak_mb": 226
+    }
+   ],
+   "candidate_sha256": [
+    "b8ced121dee888dbd14471942fb5268965e674f78f10064f0cc289724799f9b6  build/x86_64/vos.bin",
+    "679402a8738763cd6f3dfa0d951763d48078d24b321437f20f13aebcc2e6aa1f  build/x86_64/rust/libvos_kernel.a",
+    "5596ffa5122f8852ef305e054c9c05b2e3037c5f8e4728f91bcc238b243d1106  build/x86_64/vos.iso",
+    "5049b1f8246c1dfe3a00bc03aa723a96180594bfdf3e2f41dd3ca3ae78f6ce1a  build/x86_64/vos-uefi.iso"
+   ],
+   "reproducible": "KERNEL_AND_ARCHIVE_BYTE_IDENTICAL",
+   "toolchain": [
+    "gcc (Ubuntu 15.2.0-16ubuntu1) 15.2.0",
+    "rustc 1.100.0-nightly (2e2b193f8 2026-09-02)"
+   ]
+  },
+  "r2": {
+   "status": "PASS",
+   "seal": "36e3e80ecd7969ee8c05e9ba217f650e41cf3cf006a6577606b72ee93b2a17fe",
+   "elapsed_s": 2243.5,
+   "retained_bytes": 1659442,
+   "jobs": [
+    {
+     "name": "ci-build",
+     "rc": 0,
+     "seconds": 54.06,
+     "memory_peak_mb": 150
+    },
+    {
+     "name": "ci-boot",
+     "rc": 0,
+     "seconds": 176.02,
+     "memory_peak_mb": 388
+    },
+    {
+     "name": "ci-r2",
+     "rc": 0,
+     "seconds": 235.58,
+     "memory_peak_mb": 408
+    },
+    {
+     "name": "ci-net",
+     "rc": 0,
+     "seconds": 330.31,
+     "memory_peak_mb": 1642
+    },
+    {
+     "name": "ci-gfx",
+     "rc": 0,
+     "seconds": 641.62,
+     "memory_peak_mb": 129
+    },
+    {
+     "name": "ci-usb2",
+     "rc": 0,
+     "seconds": 59.14,
+     "memory_peak_mb": 264
+    },
+    {
+     "name": "ci-contain",
+     "rc": 0,
+     "seconds": 131.44,
+     "memory_peak_mb": 231
+    },
+    {
+     "name": "ci-survey",
+     "rc": 0,
+     "seconds": 242.02,
+     "memory_peak_mb": 201
+    },
+    {
+     "name": "ci-qemu",
+     "rc": 0,
+     "seconds": 224.64,
+     "memory_peak_mb": 260
+    }
+   ]
+  }
+ }
+}

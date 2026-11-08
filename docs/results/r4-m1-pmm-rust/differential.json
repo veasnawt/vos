@@ -1,0 +1,273 @@
+{
+ "status": "PASS",
+ "differential": {
+  "release": {
+   "instances": 20009,
+   "probes": 9256573,
+   "checks": 27777895,
+   "mismatches": 0,
+   "digest": "a4f7a96ad9362c6b"
+  },
+  "sanitizer": {
+   "instances": 20009,
+   "probes": 9256573,
+   "checks": 27777895,
+   "mismatches": 0,
+   "digest": "a4f7a96ad9362c6b"
+  }
+ },
+ "coverage": "PMM COVERAGE free=333689,142498,0,2669087,92827,2149217,477255,0,0,11275,0 state=2484143,499022,360441 check=5444,0,0,0,0,0,0,0,0,18643,0 early=33804 outside=13061 outside_c_defined=1161 lowmem=59 wordedge=1455 hint=48 counter=79 alloc_outside_avail=8 exhaustive=6999",
+ "documented_divergence": "PMM DOCUMENTED DIVERGENCE outside-contract instances with real buffers: 677 of 1161 results differ from the C",
+ "unsafe": {
+  "core": 0,
+  "adapter_blocks": 4,
+  "adapter_entry_points": 3
+ },
+ "rust": {
+  "pmm_free_check_in": {
+   "frame": 0,
+   "instructions": 55
+  },
+  "pmm_frame_state_in": {
+   "frame": 0,
+   "instructions": 37
+  },
+  "pmm_check_in": {
+   "frame": 32,
+   "instructions": 88
+  }
+ },
+ "frozen_c_check_frames": {
+  "pmm_free_check_in": 0,
+  "pmm_frame_state_in": 0,
+  "pmm_check_in": 16
+ },
+ "c_frames": {
+  "pmm_init_in": {
+   "frozen": 88,
+   "production": 88
+  },
+  "pmm_alloc_in": {
+   "frozen": 0,
+   "production": 0
+  },
+  "pmm_free_in": {
+   "frozen": 0,
+   "production": 24
+  },
+  "pmm_reserve_in": {
+   "frozen": 0,
+   "production": 0
+  },
+  "pmm_init": {
+   "frozen": 0,
+   "production": 0
+  },
+  "pmm_alloc_frame": {
+   "frozen": 24,
+   "production": 24
+  },
+  "pmm_free_frame": {
+   "frozen": 8,
+   "production": 8
+  },
+  "pmm_reserve_frame": {
+   "frozen": 8,
+   "production": 8
+  }
+ },
+ "c_frame_growth": {
+  "pmm_free_in": {
+   "frozen": 0,
+   "production": 24
+  }
+ },
+ "mutations": {
+  "free-ready": {
+   "detected": true,
+   "how": "SIGSEGV (guard/PROT_NONE page)"
+  },
+  "free-align": {
+   "detected": true,
+   "how": 457183
+  },
+  "free-range": {
+   "detected": true,
+   "how": 10766
+  },
+  "free-range-saturating": {
+   "detected": true,
+   "how": 1620
+  },
+  "free-early-bitmap-access": {
+   "detected": true,
+   "how": "SIGSEGV (guard/PROT_NONE page)"
+  },
+  "free-protected-code": {
+   "detected": true,
+   "how": 407371
+  },
+  "free-notalloc-code": {
+   "detected": true,
+   "how": 88188
+  },
+  "free-allocated-first": {
+   "detected": true,
+   "how": 93504
+  },
+  "free-counters": {
+   "detected": true,
+   "how": 923
+  },
+  "free-counters-dropped": {
+   "detected": true,
+   "how": 1942
+  },
+  "bit-index": {
+   "detected": true,
+   "how": 84040
+  },
+  "bit-word": {
+   "detected": true,
+   "how": 483604
+  },
+  "state-ready": {
+   "detected": true,
+   "how": "SIGSEGV (guard/PROT_NONE page)"
+  },
+  "state-early-bitmap-access": {
+   "detected": true,
+   "how": "SIGSEGV (guard/PROT_NONE page)"
+  },
+  "state-swap": {
+   "detected": true,
+   "how": 159473
+  },
+  "state-ignores-avail": {
+   "detected": true,
+   "how": 419381
+  },
+  "state-wrong-bitmap": {
+   "detected": true,
+   "how": 92525
+  },
+  "check-ready": {
+   "detected": true,
+   "how": "SIGSEGV (guard/PROT_NONE page)"
+  },
+  "check-alloc-outside-avail": {
+   "detected": true,
+   "how": 1732
+  },
+  "check-low-limit-short": {
+   "detected": true,
+   "how": 30
+  },
+  "check-low-limit-long": {
+   "detected": true,
+   "how": 408
+  },
+  "check-hint-inclusive": {
+   "detected": true,
+   "how": 89
+  },
+  "check-hint-dropped": {
+   "detected": true,
+   "how": 50
+  },
+  "check-usable-dropped": {
+   "detected": true,
+   "how": 47
+  },
+  "check-free-dropped": {
+   "detected": true,
+   "how": 93
+  },
+  "check-count-bits": {
+   "detected": true,
+   "how": 10
+  },
+  "check-free-mask": {
+   "detected": true,
+   "how": 414
+  },
+  "check-empty-shortcut": {
+   "detected": true,
+   "how": 164
+  },
+  "bounds-multiple": {
+   "detected": true,
+   "how": "SIGSEGV (guard/PROT_NONE page)"
+  },
+  "bounds-max": {
+   "detected": true,
+   "how": "SIGSEGV (guard/PROT_NONE page)"
+  },
+  "bounds-null-avail": {
+   "detected": true,
+   "how": "SIGABRT (checked-build UB check)"
+  },
+  "bounds-null-alloc": {
+   "detected": true,
+   "how": "SIGABRT (checked-build UB check)"
+  },
+  "bounds-aligned": {
+   "detected": true,
+   "how": "SIGABRT (checked-build UB check)"
+  },
+  "bounds-aligned-avail-only": {
+   "detected": true,
+   "how": "SIGABRT (checked-build UB check)"
+  },
+  "glue-bounds-arguments": {
+   "detected": true,
+   "how": "SIGABRT (checked-build UB check)"
+  },
+  "glue-words-long": {
+   "detected": true,
+   "how": 1104
+  },
+  "glue-words-short": {
+   "detected": true,
+   "how": 414632
+  },
+  "glue-usable-field": {
+   "detected": true,
+   "how": 62500
+  },
+  "glue-hint-field": {
+   "detected": true,
+   "how": 50
+  },
+  "glue-state-field": {
+   "detected": true,
+   "how": "SIGSEGV (guard/PROT_NONE page)"
+  },
+  "glue-frames-field": {
+   "detected": true,
+   "how": 1060
+  },
+  "glue-bitmaps-swapped": {
+   "detected": true,
+   "how": 191913
+  }
+ },
+ "worker_r1_gate": {
+  "status": "PASS",
+  "release_digest": "a4f7a96ad9362c6b",
+  "sanitizer_digest": "a4f7a96ad9362c6b",
+  "mutations": 42
+ },
+ "source_sha256": {
+  "kernel/rust/mm/pmm.rs": "15f5d4ed7e0b85419b7b00ad6091e4c32e1a92113bfa68077134b764a4fede24",
+  "arch/x86_64/rust/pmm.rs": "83ec9aaa51a9a7258672e3c1a41797aca5ab8fd5ca9853ff81f6313c764c96d9",
+  "arch/x86_64/pmm.c": "bb177a03b3f5fa45062a76a63aa25fc481800ff22464629733fca21c25af4cb5",
+  "arch/x86_64/pmm.h": "5e52f6c667854b06d2cafdd2e6ebc32e019981e6814789e15252cf772185ff00",
+  "arch/x86_64/rust/kernel_probe.rs": "28590fcb0f6f363dd5a8c341e44ae4bd36b65e35ccb2c813af592cddec7a8b1d",
+  "tests/host/pmm-differential.c": "0a6fa267f457ff86a3cd994858dcd6068d7f510d6d321cba52c459c33a10e338",
+  "tests/reference/pmm-r4m1.c": "fb02c276cc23ae010c86c1c5deb274b0411d31153db7e03c5aa3e6a85353137b",
+  "tests/reference/pmm-r4m1.json": "1d690ae00e06e1acee55496811492b155488d333be902daf2d95c26c0e4f4464",
+  "scripts/test-pmm-rust.py": "e293fbeb0295e46f1edff3d44e76877ee1f67a833affd986130a038906d33914"
+ },
+ "host": "GCC 13.4, rustc nightly-2026-09-03 (1.100.0-nightly 2e2b193f8)"
+}

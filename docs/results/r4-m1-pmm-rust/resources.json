@@ -1,0 +1,185 @@
+{
+ "whole_path_depth": {
+  "gcc13": {
+   "roots": {
+    "kernel_main": [
+     11936,
+     11936
+    ],
+    "exception_handler": [
+     4560,
+     4560
+    ],
+    "pmm_free_frame": [
+     256,
+     256
+    ],
+    "pmm_free_in": [
+     0,
+     32
+    ],
+    "pmm_check_in": [
+     16,
+     32
+    ],
+    "pmm_frame_state_in": [
+     0,
+     0
+    ],
+    "pmm_free_check_in": [
+     0,
+     0
+    ],
+    "pmm_alloc_frame": [
+     272,
+     272
+    ],
+    "pmm_reserve_frame": [
+     256,
+     256
+    ]
+   },
+   "increased": {
+    "pmm_free_in": [
+     0,
+     32
+    ],
+    "pmm_check_in": [
+     16,
+     32
+    ]
+   },
+   "recursion": []
+  },
+  "gcc15": {
+   "roots": {
+    "kernel_main": [
+     11984,
+     11984
+    ],
+    "exception_handler": [
+     4592,
+     4592
+    ],
+    "pmm_free_frame": [
+     272,
+     272
+    ],
+    "pmm_free_in": [
+     0,
+     32
+    ],
+    "pmm_check_in": [
+     16,
+     32
+    ],
+    "pmm_frame_state_in": [
+     0,
+     0
+    ],
+    "pmm_free_check_in": [
+     0,
+     0
+    ],
+    "pmm_alloc_frame": [
+     288,
+     288
+    ],
+    "pmm_reserve_frame": [
+     272,
+     272
+    ]
+   },
+   "increased": {
+    "pmm_free_in": [
+     0,
+     32
+    ],
+    "pmm_check_in": [
+     16,
+     32
+    ]
+   },
+   "recursion": []
+  }
+ },
+ "image": {
+  "gcc13": {
+   "vos_bin_bytes": [
+    1169392,
+    1166272
+   ],
+   "defined_text_bytes": [
+    273731,
+    273695
+   ],
+   "layout_end": [
+    "0x1ec000",
+    "0x1ec000"
+   ]
+  },
+  "gcc15": {
+   "vos_bin_bytes": [
+    1173984,
+    1170904
+   ],
+   "defined_text_bytes": [
+    279007,
+    278968
+   ],
+   "layout_end": [
+    "0x1ed000",
+    "0x1ed000"
+   ]
+  }
+ },
+ "performance": {
+  "method": "10 alternating runs x 9 samples, taskset -c 0, -O2 -fno-builtin -U_FORTIFY_SOURCE; frozen C vs production pmm.c + kernel archive; median of run medians",
+  "results": {
+   "gcc13": {
+    "check_in_ns": {
+     "frozen_c": 332987.4,
+     "rust": 340048.7,
+     "change_pct": 2.1
+    },
+    "free_check_ns": {
+     "frozen_c": 4.216,
+     "rust": 4.797,
+     "change_pct": 13.8
+    },
+    "frame_state_ns": {
+     "frozen_c": 3.295,
+     "rust": 3.915,
+     "change_pct": 18.8
+    },
+    "free_in+alloc_in_ns": {
+     "frozen_c": 12.271,
+     "rust": 14.979,
+     "change_pct": 22.1
+    }
+   },
+   "gcc15": {
+    "check_in_ns": {
+     "frozen_c": 363478.7,
+     "rust": 344994.95,
+     "change_pct": -5.1
+    },
+    "free_check_ns": {
+     "frozen_c": 3.588,
+     "rust": 4.81,
+     "change_pct": 34.0
+    },
+    "frame_state_ns": {
+     "frozen_c": 3.034,
+     "rust": 3.94,
+     "change_pct": 29.8
+    },
+    "free_in+alloc_in_ns": {
+     "frozen_c": 12.26,
+     "rust": 14.896,
+     "change_pct": 21.5
+    }
+   }
+  }
+ }
+}
