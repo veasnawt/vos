@@ -1,0 +1,412 @@
+{
+  "gate": "scripts/test-screen-rust.py",
+  "worker_gcc15": {
+    "differential": {
+      "release": {
+        "scenarios": 420,
+        "ops": 453264,
+        "checks": 110150,
+        "mismatches": 0,
+        "digest": "78df3e2ab9c548bb"
+      },
+      "sanitizer": {
+        "scenarios": 420,
+        "ops": 453264,
+        "checks": 110150,
+        "mismatches": 0,
+        "digest": "78df3e2ab9c548bb"
+      }
+    },
+    "coverage": "SCREEN COVERAGE desktop=452 gui=146 inside=241 outside=1424 drawn=5254 input=61119 vga=19144 scroll=151 ring_wrap=1143 erase_back=616 init_fb=172 init_refused=68",
+    "mutations": {
+      "visible-last-column": {
+        "detected": true,
+        "mismatches": 1287
+      },
+      "visible-last-row": {
+        "detected": true,
+        "mismatches": 839
+      },
+      "span-overrun": {
+        "detected": true,
+        "mismatches": "abnormal exit (fault)"
+      },
+      "glyph-right-edge": {
+        "detected": true,
+        "mismatches": 2513
+      },
+      "glyph-bottom-edge": {
+        "detected": true,
+        "mismatches": 1801
+      },
+      "glyph-replacement": {
+        "detected": true,
+        "mismatches": 28430
+      },
+      "glyph-range": {
+        "detected": true,
+        "mismatches": 115
+      },
+      "overlap-x": {
+        "detected": true,
+        "mismatches": 63
+      },
+      "overlap-w": {
+        "detected": true,
+        "mismatches": 429
+      },
+      "overlap-h": {
+        "detected": true,
+        "mismatches": 367
+      },
+      "cursor-size": {
+        "detected": true,
+        "mismatches": 3704
+      },
+      "cursor-extent-unclipped": {
+        "detected": true,
+        "mismatches": "abnormal exit (fault)"
+      },
+      "cell-x": {
+        "detected": true,
+        "mismatches": 9567
+      },
+      "cell-y-offset": {
+        "detected": true,
+        "mismatches": 9544
+      },
+      "row-height": {
+        "detected": true,
+        "mismatches": 7048
+      },
+      "put-printable": {
+        "detected": true,
+        "mismatches": 3563
+      },
+      "put-wrap": {
+        "detected": true,
+        "mismatches": "abnormal exit (fault)"
+      },
+      "put-newline": {
+        "detected": true,
+        "mismatches": 20963
+      },
+      "input-next-row": {
+        "detected": true,
+        "mismatches": "abnormal exit (fault)"
+      },
+      "ring-next": {
+        "detected": true,
+        "mismatches": "abnormal exit (fault)"
+      },
+      "ring-gap": {
+        "detected": true,
+        "mismatches": 2340
+      },
+      "erase-start-guard": {
+        "detected": true,
+        "mismatches": 483
+      },
+      "erase-step-back": {
+        "detected": true,
+        "mismatches": 9245
+      },
+      "fb-cols": {
+        "detected": true,
+        "mismatches": 19007
+      },
+      "fb-rows": {
+        "detected": true,
+        "mismatches": 13506
+      },
+      "text-cols": {
+        "detected": true,
+        "mismatches": 2763
+      },
+      "text-rows": {
+        "detected": true,
+        "mismatches": 6561
+      },
+      "cells-ok": {
+        "detected": true,
+        "mismatches": 784
+      },
+      "input-cols": {
+        "detected": true,
+        "mismatches": 7759
+      },
+      "input-rows": {
+        "detected": true,
+        "mismatches": 7603
+      },
+      "gui-room-width": {
+        "detected": true,
+        "mismatches": 7569
+      },
+      "gui-room-height": {
+        "detected": true,
+        "mismatches": 6897
+      },
+      "gui-size": {
+        "detected": true,
+        "mismatches": 2439
+      },
+      "gui-x": {
+        "detected": true,
+        "mismatches": 8413
+      },
+      "gui-y": {
+        "detected": true,
+        "mismatches": 8314
+      },
+      "pointer-home": {
+        "detected": true,
+        "mismatches": 4878
+      },
+      "pointer-axis-low": {
+        "detected": true,
+        "mismatches": 1906
+      },
+      "pointer-axis-high": {
+        "detected": true,
+        "mismatches": 151
+      },
+      "pointer-inside": {
+        "detected": true,
+        "mismatches": 39
+      },
+      "pointer-local-clamp": {
+        "detected": true,
+        "mismatches": 304
+      },
+      "pointer-pack": {
+        "detected": true,
+        "mismatches": 401
+      },
+      "pointer-inside-and": {
+        "detected": true,
+        "mismatches": 237
+      },
+      "pointer-inside-flag": {
+        "detected": true,
+        "mismatches": 133
+      },
+      "choose-any-tag": {
+        "detected": true,
+        "mismatches": 71680
+      },
+      "choose-bda-mode": {
+        "detected": true,
+        "mismatches": 10
+      },
+      "choose-bda-cols": {
+        "detected": true,
+        "mismatches": 60
+      },
+      "choose-error-blocks": {
+        "detected": true,
+        "mismatches": 28672
+      },
+      "reason-text": {
+        "detected": true,
+        "mismatches": 86016
+      },
+      "refused-passthrough": {
+        "detected": true,
+        "mismatches": 129024
+      },
+      "erase-sentinel": {
+        "detected": true,
+        "mismatches": 60
+      },
+      "input-scroll-sentinel": {
+        "detected": true,
+        "mismatches": 1269
+      }
+    },
+    "rust_frames": {
+      "screen_choose": 0,
+      "vos_rust_screen_visible": 0,
+      "vos_rust_screen_span": 0,
+      "vos_rust_screen_glyph_index": 0,
+      "vos_rust_screen_overlaps": 0,
+      "vos_rust_screen_cursor_extent": 0,
+      "vos_rust_screen_cell_x": 0,
+      "vos_rust_screen_row_y": 0,
+      "vos_rust_screen_cell_y": 0,
+      "vos_rust_screen_put_action": 0,
+      "vos_rust_screen_input_next_row": 0,
+      "vos_rust_screen_ring_next": 0,
+      "vos_rust_screen_ring_gap": 0,
+      "vos_rust_screen_erase": 0,
+      "vos_rust_screen_fb_cols": 0,
+      "vos_rust_screen_fb_rows": 0,
+      "vos_rust_screen_text_cols": 0,
+      "vos_rust_screen_text_rows": 0,
+      "vos_rust_screen_cells_ok": 0,
+      "vos_rust_screen_input_cols": 0,
+      "vos_rust_screen_input_rows": 0,
+      "vos_rust_screen_gui_room": 0,
+      "vos_rust_screen_gui_size_ok": 0,
+      "vos_rust_screen_gui_x": 0,
+      "vos_rust_screen_gui_y": 0,
+      "vos_rust_screen_pointer_home": 0,
+      "vos_rust_screen_pointer_axis": 0,
+      "vos_rust_screen_pointer_state": 0
+    },
+    "c_frames": {
+      "screen_fill": {
+        "frozen": 64,
+        "production": 72
+      },
+      "screen_glyph": {
+        "frozen": 56,
+        "production": 56
+      },
+      "screen_putc": {
+        "frozen": 8,
+        "production": 24
+      },
+      "screen_erase_previous": {
+        "frozen": 0,
+        "production": 8
+      },
+      "screen_begin_input": {
+        "frozen": 24,
+        "production": 8
+      },
+      "screen_init": {
+        "frozen": 80,
+        "production": 80
+      },
+      "screen_desktop_begin": {
+        "frozen": 8,
+        "production": 8
+      },
+      "screen_gui_available": {
+        "frozen": 0,
+        "production": 8
+      },
+      "screen_gui_begin": {
+        "frozen": 0,
+        "production": 24
+      },
+      "screen_pointer_move": {
+        "frozen": 8,
+        "production": 24
+      },
+      "screen_pointer_begin": {
+        "frozen": 0,
+        "production": 8
+      },
+      "screen_pointer_end": {
+        "frozen": 0,
+        "production": 8
+      },
+      "screen_gui_row": {
+        "frozen": 40,
+        "production": 40
+      }
+    },
+    "c_frame_growth": {
+      "screen_fill": {
+        "frozen": 64,
+        "production": 72
+      },
+      "screen_putc": {
+        "frozen": 8,
+        "production": 24
+      },
+      "screen_erase_previous": {
+        "frozen": 0,
+        "production": 8
+      },
+      "screen_gui_available": {
+        "frozen": 0,
+        "production": 8
+      },
+      "screen_gui_begin": {
+        "frozen": 0,
+        "production": 24
+      },
+      "screen_pointer_move": {
+        "frozen": 8,
+        "production": 24
+      },
+      "screen_pointer_begin": {
+        "frozen": 0,
+        "production": 8
+      },
+      "screen_pointer_end": {
+        "frozen": 0,
+        "production": 8
+      }
+    },
+    "screen_input": "PASS: framebuffer exact erase, wrap/ring boundary, panic/none guards and VGA cell bounds\nPASS: opt-in clear, chronological scroll, framebuffer/shadow agreement, VGA scroll and wrap erasure",
+    "desktop_host": "PASS 562324 assertions: actual refined renderer/console; single header/full captions/no PASS badge, stride/padding/guards, viewport and fallback",
+    "pointer_render": "PASS 562325 assertions: actual refined renderer/console; single header/full captions/no PASS badge, stride/padding/guards, viewport and fallback\npointer renderer PASS 2179862 assertions; clipping, stride, underlay restoration, surface redraw",
+    "source_sha256": {
+      "kernel/rust/gfx/screen.rs": "e2242bcf35b10c8690f06eb118fb6e76a88ca17e3e229c0f495e8f07114a316d",
+      "arch/x86_64/rust/screen.rs": "590827f3d7a56b61394130e2d2592b4e5206edd167ee4a48d87fa0e4339f6993",
+      "arch/x86_64/screen.c": "210660b60b063a76f869d5469234e6dccb672ccdaaddb0b93112eafe69ff440a",
+      "arch/x86_64/screen.h": "bbc701a44ce7ceb8de84a81e3286099cc570ba9ce40f6f06512ff5922396bf8c",
+      "arch/x86_64/rust_kernel.h": "2298b4e97cd0ae2e6290d663fcd79739439b3c894018e63eb1dd6670cbb11a76",
+      "tests/host/screen-differential.c": "106850abc72b48d4315eba2c2c1a76723abd6259bbf6cf3c8db4533aaeb1e27a",
+      "tests/host/screen-diff-unit.c": "98e78dd54a722ccaf916babc4e1fedfa8311444d7933dcbd1f8eef131740d6ac",
+      "tests/host/screen-diff.h": "e94046ee8e89eb6d8ff3cd78e32a5477081451947635ee66edacd71514490350",
+      "tests/reference/screen-r3g2.c": "2d6c34ed1075073d154e7bedb57396cab51a65537dc80819611c2483e9be9901",
+      "tests/reference/screen-r3g2.json": "49c33532fbc548857b603445a468d4fa7c8795f6edac2dab3769fde2eb073653",
+      "scripts/test-screen-rust.py": "6d5a7cd6c0eb4fe3426a9d1a7c794a1e1649af130bda27cf449b4bc1c0efd17e"
+    }
+  },
+  "host_gcc13": {
+    "differential": {
+      "release": {
+        "scenarios": 420,
+        "ops": 453264,
+        "checks": 110150,
+        "mismatches": 0,
+        "digest": "78df3e2ab9c548bb"
+      },
+      "sanitizer": {
+        "scenarios": 420,
+        "ops": 453264,
+        "checks": 110150,
+        "mismatches": 0,
+        "digest": "78df3e2ab9c548bb"
+      }
+    },
+    "mutations_detected": true,
+    "c_frame_growth": {
+      "screen_fill": {
+        "frozen": 48,
+        "production": 56
+      },
+      "screen_erase_previous": {
+        "frozen": 0,
+        "production": 8
+      },
+      "screen_gui_available": {
+        "frozen": 0,
+        "production": 8
+      },
+      "screen_gui_begin": {
+        "frozen": 0,
+        "production": 24
+      },
+      "screen_pointer_move": {
+        "frozen": 16,
+        "production": 24
+      },
+      "screen_pointer_begin": {
+        "frozen": 0,
+        "production": 8
+      },
+      "screen_pointer_end": {
+        "frozen": 0,
+        "production": 8
+      }
+    }
+  },
+  "gate_peak_output_bytes": 41597659
+}

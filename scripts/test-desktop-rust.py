@@ -63,9 +63,9 @@ def main():
         warn = ['-std=gnu11', '-Wall', '-Wextra', '-Werror', '-ffunction-sections', '-fdata-sections', '-Iarch/x86_64']
         link = ['-Wl,--gc-sections', '-fno-pie', '-no-pie']; san = ['-O1', '-g', '-fsanitize=address,undefined', '-fno-sanitize-recover=all', '-fno-omit-frame-pointer']
         rename = ['-D%s=ref_%s' % (f, f) for f in FUNCS + ('desktop_paint', 'desktop_bar')]
-        def host_rust(tag, glue):
+        def host_rust(tag, glue, extra=''):
             root = out / ('root-%s.rs' % tag); lib = out / ('librust-%s.a' % tag)
-            root.write_text('#![no_std]\n#[path=' + json.dumps(str(glue)) + '] mod desktop;\nunsafe extern "C" {fn abort()->!;}\n'
+            root.write_text('#![no_std]\n#[path=' + json.dumps(str(glue)) + '] mod desktop;\n' + extra + 'unsafe extern "C" {fn abort()->!;}\n'
                             '#[panic_handler] fn p(_: &core::panic::PanicInfo)->! {unsafe{abort()}}\n'
                             '// host test only: precompiled core references the personality even with panic=abort\n'
                             '#[unsafe(no_mangle)] pub extern "C" fn rust_eh_personality() {}\n')
@@ -81,7 +81,8 @@ def main():
             except subprocess.TimeoutExpired: return 'TIMEOUT', None
             m = re.search(r'DESKTOP DIFFERENTIAL requested=(\d+) \(true (\d+)\) compute=(\d+) \(accepted (\d+)\) mismatches=(\d+) digest=([0-9a-f]{16})', text)
             return text, (dict(requested=int(m[1]), requested_true=int(m[2]), compute=int(m[3]), compute_accepted=int(m[4]), mismatches=int(m[5]), digest=m[6]) if m else None)
-        checked = host_rust('checked', ROOT / GLUE)
+        # R3-G2: screen.c's decisions are Rust too, so the host renderer tests also link the screen glue.
+        checked = host_rust('checked', ROOT / GLUE, '#[path=' + json.dumps(str(ROOT / 'arch/x86_64/rust/screen.rs')) + '] mod screen;\n')
         report['differential'] = {}
         for tag, flags, rust in (('release', ['-O2'], archive), ('sanitizer', san, checked)):
             text, r = differential(tag, flags, rust)

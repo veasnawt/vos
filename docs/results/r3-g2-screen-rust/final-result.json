@@ -1,0 +1,112 @@
+{
+  "candidate_commits": [
+    "2a4ec3c source",
+    "8640319 tests",
+    "08fde51 pointer-motion test fix"
+  ],
+  "baseline": "0dbf404f08e40723537cc0b4c825ce8d339ee7e3",
+  "branch_base": "39a7dfa (tree a173132b = main)",
+  "differential": {
+    "release": {
+      "scenarios": 420,
+      "ops": 453264,
+      "checks": 110150,
+      "mismatches": 0,
+      "digest": "78df3e2ab9c548bb"
+    },
+    "sanitizer": {
+      "scenarios": 420,
+      "ops": 453264,
+      "checks": 110150,
+      "mismatches": 0,
+      "digest": "78df3e2ab9c548bb"
+    }
+  },
+  "coverage": "SCREEN COVERAGE desktop=452 gui=146 inside=241 outside=1424 drawn=5254 input=61119 vga=19144 scroll=151 ring_wrap=1143 erase_back=616 init_fb=172 init_refused=68",
+  "mutations": {
+    "count": 51,
+    "all_detected": true
+  },
+  "native": {
+    "worker_cases": 6,
+    "host_cases": 8,
+    "pixel_identical": true
+  },
+  "rust_frames": [
+    0
+  ],
+  "exceptions_requested": {
+    "c_entry_frames": {
+      "screen_fill": {
+        "frozen": 64,
+        "production": 72
+      },
+      "screen_putc": {
+        "frozen": 8,
+        "production": 24
+      },
+      "screen_erase_previous": {
+        "frozen": 0,
+        "production": 8
+      },
+      "screen_gui_available": {
+        "frozen": 0,
+        "production": 8
+      },
+      "screen_gui_begin": {
+        "frozen": 0,
+        "production": 24
+      },
+      "screen_pointer_move": {
+        "frozen": 8,
+        "production": 24
+      },
+      "screen_pointer_begin": {
+        "frozen": 0,
+        "production": 8
+      },
+      "screen_pointer_end": {
+        "frozen": 0,
+        "production": 8
+      }
+    },
+    "whole_paths": "see stack-depth.txt (max +40 B; kernel_main and gui_syscall unchanged)"
+  },
+  "performance": {
+    "putc_scroll": -0.0,
+    "putc_erase": -2.41,
+    "glyph": -2.77,
+    "fill_24x8": -1.35,
+    "pointer_move": -22.27
+  },
+  "campaign": {
+    "id": "r3-g2-screen-v1",
+    "runs": {
+      "r1": {
+        "status": "PASS",
+        "seal": "4a157cf1b63b87c2819a15029690f9ade2176d363b1c9243577eea1da1cf463a"
+      },
+      "r2": {
+        "status": "PASS",
+        "seal": "56eb9c74b1399ec5cdcd17e3916262741ca1ace5f47419f2e881c9c23bf58582"
+      }
+    }
+  },
+  "host_ci_gcc13": {
+    "steps": 39,
+    "failed": [],
+    "notes": [
+      "informational; non-gating on host (host lacks some CI packages)",
+      "test-usb2c3b2.py (QEMU) NOT RUN on host"
+    ]
+  },
+  "not_tested": [
+    "scripts/test-ps2-pointer-native.py: pre-existing failure on main (pointer_idle gdb proof); not a pass",
+    "GUI/pointer pixel identity in the worker (accepted GUI ELFs outside binds; host only)",
+    "BIOS/UEFI rendering latency",
+    "physical hardware"
+  ],
+  "limitations": [
+    "QEMU verification, host differential testing and static analysis only; no physical-hardware acceptance"
+  ]
+}

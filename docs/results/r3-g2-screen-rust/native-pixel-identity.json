@@ -1,0 +1,1723 @@
+{
+  "worker_r1_console_desktop": {
+    "passed": true,
+    "kernels": {
+      "baseline": "f123e8313273d38d1fcd154cb79bc16bfa11dbe9375673e722513d7a5016eb32",
+      "candidate": "958a3baaf37ae47158cb3200b5fb58ca140cd9b215d369c9ea1d3b21576f1ae0"
+    },
+    "cases": [
+      {
+        "case": "console-1024x768",
+        "firmware": "bios",
+        "cmdline": "vos.apps=1",
+        "gfxpayload": "1024x768x32",
+        "baseline": {
+          "shots": [
+            {
+              "step": "prompt",
+              "ppm_sha256": "34c2a085dc08355353c17fad71c1581b6eea8af311aab3de8640d1a330ac9b66",
+              "png": "00-prompt.png",
+              "png_sha256": "d871e422fbc4569cbf8f54e70b09c8e10f984719c5a66b4374e8796a6f8db4a9"
+            },
+            {
+              "step": "after-8-commands",
+              "ppm_sha256": "8a117c38ab26bd06f012825f6a1c960b407af903664fdfb7c2d68da501d438cd",
+              "png": "01-after-8-commands.png",
+              "png_sha256": "e7bc6697f838c293ac0fc7eae0508ee48c282ef8f8fa120701248c8da71b0f91"
+            },
+            {
+              "step": "after-16-commands",
+              "ppm_sha256": "98da932193fe75179775e028b6139858dd2c1fcc86ac0dcd03c41297182557ed",
+              "png": "02-after-16-commands.png",
+              "png_sha256": "e4fb24c1960162328db44617bf5189fc4a45173d8a49920f0e5ff25997a425f9"
+            },
+            {
+              "step": "typed",
+              "ppm_sha256": "2128d37adebaed8aa4a77ec3d26b630fec118a9071c9494f746800615114a6c2",
+              "png": "03-typed.png",
+              "png_sha256": "eabd26f01f249dabf3ce88a5648da2907a82921e06a0086355ec0a5421c8a499"
+            },
+            {
+              "step": "erased",
+              "ppm_sha256": "43a9f32619811b4d25cd1092c49f64d4676189dfac04c81c4d2d6e58ae599d89",
+              "png": "04-erased.png",
+              "png_sha256": "647d35c9748d74ef8a6a94e95ed732ae78e19914d4443295e70dd165d20b1af7"
+            },
+            {
+              "step": "echoed",
+              "ppm_sha256": "9b7852d6bbfdafa32dc080eb0b79320e8fe29a3ac37514721fbf73f336e5527f",
+              "png": "05-echoed.png",
+              "png_sha256": "0bfd9c842daa78d248d9475716bb7280ca0e13e450eac122cb7521053ccd3b8b"
+            }
+          ],
+          "markers": [
+            "screen: framebuffer 1024x768 BGRX at 0xfd000000, pitch 4096, write-combining, MTRR type 0, 124x39 cells"
+          ],
+          "pointer_events": []
+        },
+        "candidate": {
+          "shots": [
+            {
+              "step": "prompt",
+              "ppm_sha256": "34c2a085dc08355353c17fad71c1581b6eea8af311aab3de8640d1a330ac9b66",
+              "png": "00-prompt.png",
+              "png_sha256": "d871e422fbc4569cbf8f54e70b09c8e10f984719c5a66b4374e8796a6f8db4a9"
+            },
+            {
+              "step": "after-8-commands",
+              "ppm_sha256": "8a117c38ab26bd06f012825f6a1c960b407af903664fdfb7c2d68da501d438cd",
+              "png": "01-after-8-commands.png",
+              "png_sha256": "e7bc6697f838c293ac0fc7eae0508ee48c282ef8f8fa120701248c8da71b0f91"
+            },
+            {
+              "step": "after-16-commands",
+              "ppm_sha256": "98da932193fe75179775e028b6139858dd2c1fcc86ac0dcd03c41297182557ed",
+              "png": "02-after-16-commands.png",
+              "png_sha256": "e4fb24c1960162328db44617bf5189fc4a45173d8a49920f0e5ff25997a425f9"
+            },
+            {
+              "step": "typed",
+              "ppm_sha256": "2128d37adebaed8aa4a77ec3d26b630fec118a9071c9494f746800615114a6c2",
+              "png": "03-typed.png",
+              "png_sha256": "eabd26f01f249dabf3ce88a5648da2907a82921e06a0086355ec0a5421c8a499"
+            },
+            {
+              "step": "erased",
+              "ppm_sha256": "43a9f32619811b4d25cd1092c49f64d4676189dfac04c81c4d2d6e58ae599d89",
+              "png": "04-erased.png",
+              "png_sha256": "647d35c9748d74ef8a6a94e95ed732ae78e19914d4443295e70dd165d20b1af7"
+            },
+            {
+              "step": "echoed",
+              "ppm_sha256": "9b7852d6bbfdafa32dc080eb0b79320e8fe29a3ac37514721fbf73f336e5527f",
+              "png": "05-echoed.png",
+              "png_sha256": "0bfd9c842daa78d248d9475716bb7280ca0e13e450eac122cb7521053ccd3b8b"
+            }
+          ],
+          "markers": [
+            "screen: framebuffer 1024x768 BGRX at 0xfd000000, pitch 4096, write-combining, MTRR type 0, 124x39 cells"
+          ],
+          "pointer_events": []
+        },
+        "pixel_identical_steps": 6
+      },
+      {
+        "case": "console-1024x768",
+        "firmware": "uefi",
+        "cmdline": "vos.apps=1",
+        "gfxpayload": "1024x768x32",
+        "baseline": {
+          "shots": [
+            {
+              "step": "prompt",
+              "ppm_sha256": "34c2a085dc08355353c17fad71c1581b6eea8af311aab3de8640d1a330ac9b66",
+              "png": "00-prompt.png",
+              "png_sha256": "d871e422fbc4569cbf8f54e70b09c8e10f984719c5a66b4374e8796a6f8db4a9"
+            },
+            {
+              "step": "after-8-commands",
+              "ppm_sha256": "8a117c38ab26bd06f012825f6a1c960b407af903664fdfb7c2d68da501d438cd",
+              "png": "01-after-8-commands.png",
+              "png_sha256": "e7bc6697f838c293ac0fc7eae0508ee48c282ef8f8fa120701248c8da71b0f91"
+            },
+            {
+              "step": "after-16-commands",
+              "ppm_sha256": "98da932193fe75179775e028b6139858dd2c1fcc86ac0dcd03c41297182557ed",
+              "png": "02-after-16-commands.png",
+              "png_sha256": "e4fb24c1960162328db44617bf5189fc4a45173d8a49920f0e5ff25997a425f9"
+            },
+            {
+              "step": "typed",
+              "ppm_sha256": "2128d37adebaed8aa4a77ec3d26b630fec118a9071c9494f746800615114a6c2",
+              "png": "03-typed.png",
+              "png_sha256": "eabd26f01f249dabf3ce88a5648da2907a82921e06a0086355ec0a5421c8a499"
+            },
+            {
+              "step": "erased",
+              "ppm_sha256": "43a9f32619811b4d25cd1092c49f64d4676189dfac04c81c4d2d6e58ae599d89",
+              "png": "04-erased.png",
+              "png_sha256": "647d35c9748d74ef8a6a94e95ed732ae78e19914d4443295e70dd165d20b1af7"
+            },
+            {
+              "step": "echoed",
+              "ppm_sha256": "9b7852d6bbfdafa32dc080eb0b79320e8fe29a3ac37514721fbf73f336e5527f",
+              "png": "05-echoed.png",
+              "png_sha256": "0bfd9c842daa78d248d9475716bb7280ca0e13e450eac122cb7521053ccd3b8b"
+            }
+          ],
+          "markers": [
+            "screen: framebuffer 1024x768 BGRX at 0x80000000, pitch 4096, write-combining, MTRR type 0, 124x39 cells"
+          ],
+          "pointer_events": []
+        },
+        "candidate": {
+          "shots": [
+            {
+              "step": "prompt",
+              "ppm_sha256": "34c2a085dc08355353c17fad71c1581b6eea8af311aab3de8640d1a330ac9b66",
+              "png": "00-prompt.png",
+              "png_sha256": "d871e422fbc4569cbf8f54e70b09c8e10f984719c5a66b4374e8796a6f8db4a9"
+            },
+            {
+              "step": "after-8-commands",
+              "ppm_sha256": "8a117c38ab26bd06f012825f6a1c960b407af903664fdfb7c2d68da501d438cd",
+              "png": "01-after-8-commands.png",
+              "png_sha256": "e7bc6697f838c293ac0fc7eae0508ee48c282ef8f8fa120701248c8da71b0f91"
+            },
+            {
+              "step": "after-16-commands",
+              "ppm_sha256": "98da932193fe75179775e028b6139858dd2c1fcc86ac0dcd03c41297182557ed",
+              "png": "02-after-16-commands.png",
+              "png_sha256": "e4fb24c1960162328db44617bf5189fc4a45173d8a49920f0e5ff25997a425f9"
+            },
+            {
+              "step": "typed",
+              "ppm_sha256": "2128d37adebaed8aa4a77ec3d26b630fec118a9071c9494f746800615114a6c2",
+              "png": "03-typed.png",
+              "png_sha256": "eabd26f01f249dabf3ce88a5648da2907a82921e06a0086355ec0a5421c8a499"
+            },
+            {
+              "step": "erased",
+              "ppm_sha256": "43a9f32619811b4d25cd1092c49f64d4676189dfac04c81c4d2d6e58ae599d89",
+              "png": "04-erased.png",
+              "png_sha256": "647d35c9748d74ef8a6a94e95ed732ae78e19914d4443295e70dd165d20b1af7"
+            },
+            {
+              "step": "echoed",
+              "ppm_sha256": "9b7852d6bbfdafa32dc080eb0b79320e8fe29a3ac37514721fbf73f336e5527f",
+              "png": "05-echoed.png",
+              "png_sha256": "0bfd9c842daa78d248d9475716bb7280ca0e13e450eac122cb7521053ccd3b8b"
+            }
+          ],
+          "markers": [
+            "screen: framebuffer 1024x768 BGRX at 0x80000000, pitch 4096, write-combining, MTRR type 0, 124x39 cells"
+          ],
+          "pointer_events": []
+        },
+        "pixel_identical_steps": 6
+      },
+      {
+        "case": "desktop-1024x768",
+        "firmware": "bios",
+        "cmdline": "vos.apps=1 vos.desktop=1",
+        "gfxpayload": "1024x768x32",
+        "baseline": {
+          "shots": [
+            {
+              "step": "prompt",
+              "ppm_sha256": "175bae72833d1fb41345ed4999204e766b50b33d2aa68e01008653a4be343a49",
+              "png": "00-prompt.png",
+              "png_sha256": "6a6971364aa67912ba3f447abee4d706635255fc21bbed1dedc45abd2263b28a"
+            },
+            {
+              "step": "after-8-commands",
+              "ppm_sha256": "9374dac06c785797dc388d493c417134b7f81bff67afe7ca24de1bcf1f868407",
+              "png": "01-after-8-commands.png",
+              "png_sha256": "1dbb36f6f76e8040c20df48ae1849e8dc5bcfb1728e1548826bd117b09b96a97"
+            },
+            {
+              "step": "after-16-commands",
+              "ppm_sha256": "b2881264abffec1a0e9d57bd047f556df064b57ffa4f3f25a46b9f563b8a3084",
+              "png": "02-after-16-commands.png",
+              "png_sha256": "ac7a97fdb18e55d794cdb89a849096480d0e47675ced46737410c4dc0c6a31a0"
+            },
+            {
+              "step": "typed",
+              "ppm_sha256": "9bfb888af7a7704fed82a7f20d34d85e28743e7830d25440d7fa2a759be5faa1",
+              "png": "03-typed.png",
+              "png_sha256": "6ba607d01f82ad90b728b69649cec937e549e3cbefdc1eadfd9e1175820c9a9e"
+            },
+            {
+              "step": "erased",
+              "ppm_sha256": "67036a219cd46985c2894b90172f549a11089693614548dfd243dbfebf6e6ef8",
+              "png": "04-erased.png",
+              "png_sha256": "d1a026925bce91ada4e49dab339e977f68314c0ae837faf531a0749b4ad69039"
+            },
+            {
+              "step": "echoed",
+              "ppm_sha256": "0885fe23b4f0fd49575d38ca91c49dc034a82231bcbcbf60de89ce60f1cf1c98",
+              "png": "05-echoed.png",
+              "png_sha256": "c3e2a85c501b1df84147138ab6db22d631d5389138930ad67f65a2f82ce3d1c9"
+            }
+          ],
+          "markers": [
+            "screen: framebuffer 1024x768 BGRX at 0xfd000000, pitch 4096, write-combining, MTRR type 0, 124x39 cells",
+            "desktop: scene ready; kernel-owned BGRX surface, bounded console viewport"
+          ],
+          "pointer_events": []
+        },
+        "candidate": {
+          "shots": [
+            {
+              "step": "prompt",
+              "ppm_sha256": "175bae72833d1fb41345ed4999204e766b50b33d2aa68e01008653a4be343a49",
+              "png": "00-prompt.png",
+              "png_sha256": "6a6971364aa67912ba3f447abee4d706635255fc21bbed1dedc45abd2263b28a"
+            },
+            {
+              "step": "after-8-commands",
+              "ppm_sha256": "9374dac06c785797dc388d493c417134b7f81bff67afe7ca24de1bcf1f868407",
+              "png": "01-after-8-commands.png",
+              "png_sha256": "1dbb36f6f76e8040c20df48ae1849e8dc5bcfb1728e1548826bd117b09b96a97"
+            },
+            {
+              "step": "after-16-commands",
+              "ppm_sha256": "b2881264abffec1a0e9d57bd047f556df064b57ffa4f3f25a46b9f563b8a3084",
+              "png": "02-after-16-commands.png",
+              "png_sha256": "ac7a97fdb18e55d794cdb89a849096480d0e47675ced46737410c4dc0c6a31a0"
+            },
+            {
+              "step": "typed",
+              "ppm_sha256": "9bfb888af7a7704fed82a7f20d34d85e28743e7830d25440d7fa2a759be5faa1",
+              "png": "03-typed.png",
+              "png_sha256": "6ba607d01f82ad90b728b69649cec937e549e3cbefdc1eadfd9e1175820c9a9e"
+            },
+            {
+              "step": "erased",
+              "ppm_sha256": "67036a219cd46985c2894b90172f549a11089693614548dfd243dbfebf6e6ef8",
+              "png": "04-erased.png",
+              "png_sha256": "d1a026925bce91ada4e49dab339e977f68314c0ae837faf531a0749b4ad69039"
+            },
+            {
+              "step": "echoed",
+              "ppm_sha256": "0885fe23b4f0fd49575d38ca91c49dc034a82231bcbcbf60de89ce60f1cf1c98",
+              "png": "05-echoed.png",
+              "png_sha256": "c3e2a85c501b1df84147138ab6db22d631d5389138930ad67f65a2f82ce3d1c9"
+            }
+          ],
+          "markers": [
+            "screen: framebuffer 1024x768 BGRX at 0xfd000000, pitch 4096, write-combining, MTRR type 0, 124x39 cells",
+            "desktop: scene ready; kernel-owned BGRX surface, bounded console viewport"
+          ],
+          "pointer_events": []
+        },
+        "pixel_identical_steps": 6
+      },
+      {
+        "case": "desktop-1024x768",
+        "firmware": "uefi",
+        "cmdline": "vos.apps=1 vos.desktop=1",
+        "gfxpayload": "1024x768x32",
+        "baseline": {
+          "shots": [
+            {
+              "step": "prompt",
+              "ppm_sha256": "175bae72833d1fb41345ed4999204e766b50b33d2aa68e01008653a4be343a49",
+              "png": "00-prompt.png",
+              "png_sha256": "6a6971364aa67912ba3f447abee4d706635255fc21bbed1dedc45abd2263b28a"
+            },
+            {
+              "step": "after-8-commands",
+              "ppm_sha256": "9374dac06c785797dc388d493c417134b7f81bff67afe7ca24de1bcf1f868407",
+              "png": "01-after-8-commands.png",
+              "png_sha256": "1dbb36f6f76e8040c20df48ae1849e8dc5bcfb1728e1548826bd117b09b96a97"
+            },
+            {
+              "step": "after-16-commands",
+              "ppm_sha256": "b2881264abffec1a0e9d57bd047f556df064b57ffa4f3f25a46b9f563b8a3084",
+              "png": "02-after-16-commands.png",
+              "png_sha256": "ac7a97fdb18e55d794cdb89a849096480d0e47675ced46737410c4dc0c6a31a0"
+            },
+            {
+              "step": "typed",
+              "ppm_sha256": "9bfb888af7a7704fed82a7f20d34d85e28743e7830d25440d7fa2a759be5faa1",
+              "png": "03-typed.png",
+              "png_sha256": "6ba607d01f82ad90b728b69649cec937e549e3cbefdc1eadfd9e1175820c9a9e"
+            },
+            {
+              "step": "erased",
+              "ppm_sha256": "67036a219cd46985c2894b90172f549a11089693614548dfd243dbfebf6e6ef8",
+              "png": "04-erased.png",
+              "png_sha256": "d1a026925bce91ada4e49dab339e977f68314c0ae837faf531a0749b4ad69039"
+            },
+            {
+              "step": "echoed",
+              "ppm_sha256": "0885fe23b4f0fd49575d38ca91c49dc034a82231bcbcbf60de89ce60f1cf1c98",
+              "png": "05-echoed.png",
+              "png_sha256": "c3e2a85c501b1df84147138ab6db22d631d5389138930ad67f65a2f82ce3d1c9"
+            }
+          ],
+          "markers": [
+            "screen: framebuffer 1024x768 BGRX at 0x80000000, pitch 4096, write-combining, MTRR type 0, 124x39 cells",
+            "desktop: scene ready; kernel-owned BGRX surface, bounded console viewport"
+          ],
+          "pointer_events": []
+        },
+        "candidate": {
+          "shots": [
+            {
+              "step": "prompt",
+              "ppm_sha256": "175bae72833d1fb41345ed4999204e766b50b33d2aa68e01008653a4be343a49",
+              "png": "00-prompt.png",
+              "png_sha256": "6a6971364aa67912ba3f447abee4d706635255fc21bbed1dedc45abd2263b28a"
+            },
+            {
+              "step": "after-8-commands",
+              "ppm_sha256": "9374dac06c785797dc388d493c417134b7f81bff67afe7ca24de1bcf1f868407",
+              "png": "01-after-8-commands.png",
+              "png_sha256": "1dbb36f6f76e8040c20df48ae1849e8dc5bcfb1728e1548826bd117b09b96a97"
+            },
+            {
+              "step": "after-16-commands",
+              "ppm_sha256": "b2881264abffec1a0e9d57bd047f556df064b57ffa4f3f25a46b9f563b8a3084",
+              "png": "02-after-16-commands.png",
+              "png_sha256": "ac7a97fdb18e55d794cdb89a849096480d0e47675ced46737410c4dc0c6a31a0"
+            },
+            {
+              "step": "typed",
+              "ppm_sha256": "9bfb888af7a7704fed82a7f20d34d85e28743e7830d25440d7fa2a759be5faa1",
+              "png": "03-typed.png",
+              "png_sha256": "6ba607d01f82ad90b728b69649cec937e549e3cbefdc1eadfd9e1175820c9a9e"
+            },
+            {
+              "step": "erased",
+              "ppm_sha256": "67036a219cd46985c2894b90172f549a11089693614548dfd243dbfebf6e6ef8",
+              "png": "04-erased.png",
+              "png_sha256": "d1a026925bce91ada4e49dab339e977f68314c0ae837faf531a0749b4ad69039"
+            },
+            {
+              "step": "echoed",
+              "ppm_sha256": "0885fe23b4f0fd49575d38ca91c49dc034a82231bcbcbf60de89ce60f1cf1c98",
+              "png": "05-echoed.png",
+              "png_sha256": "c3e2a85c501b1df84147138ab6db22d631d5389138930ad67f65a2f82ce3d1c9"
+            }
+          ],
+          "markers": [
+            "screen: framebuffer 1024x768 BGRX at 0x80000000, pitch 4096, write-combining, MTRR type 0, 124x39 cells",
+            "desktop: scene ready; kernel-owned BGRX surface, bounded console viewport"
+          ],
+          "pointer_events": []
+        },
+        "pixel_identical_steps": 6
+      },
+      {
+        "case": "desktop-640x480",
+        "firmware": "bios",
+        "cmdline": "vos.apps=1 vos.desktop=1",
+        "gfxpayload": "640x480x32",
+        "baseline": {
+          "shots": [
+            {
+              "step": "prompt",
+              "ppm_sha256": "3cf1115ae6acb820e636618f6c34971a0e76922adedac66a8aac710ca7e471df",
+              "png": "00-prompt.png",
+              "png_sha256": "bc42e56a2430d2eab17e41e21c3df7eea96547abd43c02c309a9f097aa5858e8"
+            },
+            {
+              "step": "after-8-commands",
+              "ppm_sha256": "85eded40e8a7f6ff65e3b2a51ecd7322a90b94530429d7a27989f608b4539004",
+              "png": "01-after-8-commands.png",
+              "png_sha256": "7081625e5528f882aef606b309f7d3827a0ca2f2060baf142d1e436dbca4064f"
+            },
+            {
+              "step": "after-16-commands",
+              "ppm_sha256": "85eded40e8a7f6ff65e3b2a51ecd7322a90b94530429d7a27989f608b4539004",
+              "png": "02-after-16-commands.png",
+              "png_sha256": "7081625e5528f882aef606b309f7d3827a0ca2f2060baf142d1e436dbca4064f"
+            },
+            {
+              "step": "typed",
+              "ppm_sha256": "a04f87ae962ce48e14aa7bf64b3f29c9b48394be6814f89e99d1148461c9f2a6",
+              "png": "03-typed.png",
+              "png_sha256": "a85f9be837483491985073f3e18a2eee515dc8c9ddcb0fe95167df6939f5fe55"
+            },
+            {
+              "step": "erased",
+              "ppm_sha256": "c69a3e3236682ff23206c78f9619b4c6cfc91206f1355ace065e6619c01e88b2",
+              "png": "04-erased.png",
+              "png_sha256": "3552225a473f5fba3f88d033dc1e548b89692ba3bbf3242443a67b1d97b8971c"
+            },
+            {
+              "step": "echoed",
+              "ppm_sha256": "b897e7bb21d538d962321721da7b7449b43d37936fd3512d3ec999cb7775b45a",
+              "png": "05-echoed.png",
+              "png_sha256": "c250fb0e2bb13e199984f574d3d052a57ab7eaa49a42b4cdabe3e761e29d2661"
+            }
+          ],
+          "markers": [
+            "screen: framebuffer 640x480 BGRX at 0xfd000000, pitch 2560, write-combining, MTRR type 0, 76x23 cells",
+            "desktop: scene ready; kernel-owned BGRX surface, bounded console viewport"
+          ],
+          "pointer_events": []
+        },
+        "candidate": {
+          "shots": [
+            {
+              "step": "prompt",
+              "ppm_sha256": "3cf1115ae6acb820e636618f6c34971a0e76922adedac66a8aac710ca7e471df",
+              "png": "00-prompt.png",
+              "png_sha256": "bc42e56a2430d2eab17e41e21c3df7eea96547abd43c02c309a9f097aa5858e8"
+            },
+            {
+              "step": "after-8-commands",
+              "ppm_sha256": "85eded40e8a7f6ff65e3b2a51ecd7322a90b94530429d7a27989f608b4539004",
+              "png": "01-after-8-commands.png",
+              "png_sha256": "7081625e5528f882aef606b309f7d3827a0ca2f2060baf142d1e436dbca4064f"
+            },
+            {
+              "step": "after-16-commands",
+              "ppm_sha256": "85eded40e8a7f6ff65e3b2a51ecd7322a90b94530429d7a27989f608b4539004",
+              "png": "02-after-16-commands.png",
+              "png_sha256": "7081625e5528f882aef606b309f7d3827a0ca2f2060baf142d1e436dbca4064f"
+            },
+            {
+              "step": "typed",
+              "ppm_sha256": "a04f87ae962ce48e14aa7bf64b3f29c9b48394be6814f89e99d1148461c9f2a6",
+              "png": "03-typed.png",
+              "png_sha256": "a85f9be837483491985073f3e18a2eee515dc8c9ddcb0fe95167df6939f5fe55"
+            },
+            {
+              "step": "erased",
+              "ppm_sha256": "c69a3e3236682ff23206c78f9619b4c6cfc91206f1355ace065e6619c01e88b2",
+              "png": "04-erased.png",
+              "png_sha256": "3552225a473f5fba3f88d033dc1e548b89692ba3bbf3242443a67b1d97b8971c"
+            },
+            {
+              "step": "echoed",
+              "ppm_sha256": "b897e7bb21d538d962321721da7b7449b43d37936fd3512d3ec999cb7775b45a",
+              "png": "05-echoed.png",
+              "png_sha256": "c250fb0e2bb13e199984f574d3d052a57ab7eaa49a42b4cdabe3e761e29d2661"
+            }
+          ],
+          "markers": [
+            "screen: framebuffer 640x480 BGRX at 0xfd000000, pitch 2560, write-combining, MTRR type 0, 76x23 cells",
+            "desktop: scene ready; kernel-owned BGRX surface, bounded console viewport"
+          ],
+          "pointer_events": []
+        },
+        "pixel_identical_steps": 6
+      },
+      {
+        "case": "console-640x400",
+        "firmware": "bios",
+        "cmdline": "vos.apps=1 vos.desktop=1",
+        "gfxpayload": "640x400x32",
+        "baseline": {
+          "shots": [
+            {
+              "step": "prompt",
+              "ppm_sha256": "4b9017810a3f63993627ca45674954fb88feb8535e80e1efc35521b21fff580d",
+              "png": "00-prompt.png",
+              "png_sha256": "b14dab3dcdf07dbfdf1bf57f8d18e8476318666571e00a0c9b00dcec8a0d3557"
+            },
+            {
+              "step": "after-8-commands",
+              "ppm_sha256": "a57c9db97f0e9af5793a14c9cdaeaee8530cf8b1ba1d3792c4bdb66a05bd460c",
+              "png": "01-after-8-commands.png",
+              "png_sha256": "b1c85f4f0b76e2aec8796a23b82d7f17120d7e9681387fdc38b0d62384ab00d5"
+            },
+            {
+              "step": "after-16-commands",
+              "ppm_sha256": "ba693b59f77885cb86223d851ab49068a25182e19dd599a72c1fbc62593a6a3b",
+              "png": "02-after-16-commands.png",
+              "png_sha256": "d6f5e42c0094c39f9e8ac169dd64fb5a4e1b1d09f985654e561a35698c119609"
+            },
+            {
+              "step": "typed",
+              "ppm_sha256": "987b9410999ee6d255d997ededfe1ab94e51cb81b0c3d74594d2ea3a88e70ec1",
+              "png": "03-typed.png",
+              "png_sha256": "4e4d9ed8a87122ced6a20817e2a967b5a36ad3d262330d85af9693e3578b4e00"
+            },
+            {
+              "step": "erased",
+              "ppm_sha256": "b901bb05214344af6c730fc58dd5f2a37a7ba5dc2c34838d21b9dd13383784d5",
+              "png": "04-erased.png",
+              "png_sha256": "5f705bc8b50b90082531a1d5c60113dc41304f1001d8acced82761f3b79d9f1c"
+            },
+            {
+              "step": "echoed",
+              "ppm_sha256": "03c78d6bd663ddab2f034cb30d429997c2a6eca7f3bd250d78200ee33927e226",
+              "png": "05-echoed.png",
+              "png_sha256": "f8b8e446ea967d9f2939881a38e825fb172f2b80efac9bf7f553d8c6fcda489b"
+            }
+          ],
+          "markers": [
+            "screen: framebuffer 640x400 BGRX at 0xfd000000, pitch 2560, write-combining, MTRR type 0, 76x19 cells",
+            "desktop: unavailable; existing console fallback"
+          ],
+          "pointer_events": []
+        },
+        "candidate": {
+          "shots": [
+            {
+              "step": "prompt",
+              "ppm_sha256": "4b9017810a3f63993627ca45674954fb88feb8535e80e1efc35521b21fff580d",
+              "png": "00-prompt.png",
+              "png_sha256": "b14dab3dcdf07dbfdf1bf57f8d18e8476318666571e00a0c9b00dcec8a0d3557"
+            },
+            {
+              "step": "after-8-commands",
+              "ppm_sha256": "a57c9db97f0e9af5793a14c9cdaeaee8530cf8b1ba1d3792c4bdb66a05bd460c",
+              "png": "01-after-8-commands.png",
+              "png_sha256": "b1c85f4f0b76e2aec8796a23b82d7f17120d7e9681387fdc38b0d62384ab00d5"
+            },
+            {
+              "step": "after-16-commands",
+              "ppm_sha256": "ba693b59f77885cb86223d851ab49068a25182e19dd599a72c1fbc62593a6a3b",
+              "png": "02-after-16-commands.png",
+              "png_sha256": "d6f5e42c0094c39f9e8ac169dd64fb5a4e1b1d09f985654e561a35698c119609"
+            },
+            {
+              "step": "typed",
+              "ppm_sha256": "987b9410999ee6d255d997ededfe1ab94e51cb81b0c3d74594d2ea3a88e70ec1",
+              "png": "03-typed.png",
+              "png_sha256": "4e4d9ed8a87122ced6a20817e2a967b5a36ad3d262330d85af9693e3578b4e00"
+            },
+            {
+              "step": "erased",
+              "ppm_sha256": "b901bb05214344af6c730fc58dd5f2a37a7ba5dc2c34838d21b9dd13383784d5",
+              "png": "04-erased.png",
+              "png_sha256": "5f705bc8b50b90082531a1d5c60113dc41304f1001d8acced82761f3b79d9f1c"
+            },
+            {
+              "step": "echoed",
+              "ppm_sha256": "03c78d6bd663ddab2f034cb30d429997c2a6eca7f3bd250d78200ee33927e226",
+              "png": "05-echoed.png",
+              "png_sha256": "f8b8e446ea967d9f2939881a38e825fb172f2b80efac9bf7f553d8c6fcda489b"
+            }
+          ],
+          "markers": [
+            "screen: framebuffer 640x400 BGRX at 0xfd000000, pitch 2560, write-combining, MTRR type 0, 76x19 cells",
+            "desktop: unavailable; existing console fallback"
+          ],
+          "pointer_events": []
+        },
+        "pixel_identical_steps": 6
+      }
+    ],
+    "apps": {
+      "vsh": "e7af3ee56164f587f7ca1338f7ddfcb202b6f4310f10b4dcba6a2576743cb181",
+      "hello": "c6c6416195a0f18d680d7f8f19be52ce02ff02912ef3bac45324fbe88006cd06",
+      "rixie": "77104da3b33caf809daf5e6674ac4e2fa9edf6a9e2e5dd59828514df76490d32"
+    }
+  },
+  "worker_baseline_sections": ".text eaba2a0da3017c579963d99793ad993d6b7b2bddae4ea846a837cd906bf9efaf\n.rodata 66335e2a41d62ecd718eddf2f441c85c905bb134921d59f1ae90ef5036b840f1\n.data c7424ee183ad87b4c0da4bd4a861bd99f1c5539000d94d0f3af2adf873a31772\n.bss e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\n",
+  "worker_kernels": "f123e8313273d38d1fcd154cb79bc16bfa11dbe9375673e722513d7a5016eb32  build/g2-basesrc/build/x86_64/vos.bin\n958a3baaf37ae47158cb3200b5fb58ca140cd9b215d369c9ea1d3b21576f1ae0  build/x86_64/vos.bin\n",
+  "worker_apps": "e7af3ee56164f587f7ca1338f7ddfcb202b6f4310f10b4dcba6a2576743cb181  build/g2-apps/vsh.elf\nc6c6416195a0f18d680d7f8f19be52ce02ff02912ef3bac45324fbe88006cd06  build/g2-apps/hello.elf\n77104da3b33caf809daf5e6674ac4e2fa9edf6a9e2e5dd59828514df76490d32  build/g2-apps/rixie.elf\n",
+  "host_with_gui_pointer": {
+    "passed": true,
+    "kernels": {
+      "baseline": "885530443280862f679b20018ed9b4216837eef9d67851b8787eebff99544b3b",
+      "candidate": "fa9b0dad8f5e73dd38a97bc6d623b0dff46a00e4fdd937671adbde149938fad5"
+    },
+    "cases": [
+      {
+        "case": "console-1024x768",
+        "firmware": "bios",
+        "cmdline": "vos.apps=1",
+        "gfxpayload": "1024x768x32",
+        "baseline": {
+          "shots": [
+            {
+              "step": "prompt",
+              "ppm_sha256": "34c2a085dc08355353c17fad71c1581b6eea8af311aab3de8640d1a330ac9b66",
+              "png": "00-prompt.png",
+              "png_sha256": "d871e422fbc4569cbf8f54e70b09c8e10f984719c5a66b4374e8796a6f8db4a9",
+              "cursor_tip": null
+            },
+            {
+              "step": "after-8-commands",
+              "ppm_sha256": "8a117c38ab26bd06f012825f6a1c960b407af903664fdfb7c2d68da501d438cd",
+              "png": "01-after-8-commands.png",
+              "png_sha256": "e7bc6697f838c293ac0fc7eae0508ee48c282ef8f8fa120701248c8da71b0f91",
+              "cursor_tip": null
+            },
+            {
+              "step": "after-16-commands",
+              "ppm_sha256": "98da932193fe75179775e028b6139858dd2c1fcc86ac0dcd03c41297182557ed",
+              "png": "02-after-16-commands.png",
+              "png_sha256": "e4fb24c1960162328db44617bf5189fc4a45173d8a49920f0e5ff25997a425f9",
+              "cursor_tip": null
+            },
+            {
+              "step": "typed",
+              "ppm_sha256": "2128d37adebaed8aa4a77ec3d26b630fec118a9071c9494f746800615114a6c2",
+              "png": "03-typed.png",
+              "png_sha256": "eabd26f01f249dabf3ce88a5648da2907a82921e06a0086355ec0a5421c8a499",
+              "cursor_tip": null
+            },
+            {
+              "step": "erased",
+              "ppm_sha256": "43a9f32619811b4d25cd1092c49f64d4676189dfac04c81c4d2d6e58ae599d89",
+              "png": "04-erased.png",
+              "png_sha256": "647d35c9748d74ef8a6a94e95ed732ae78e19914d4443295e70dd165d20b1af7",
+              "cursor_tip": null
+            },
+            {
+              "step": "echoed",
+              "ppm_sha256": "9b7852d6bbfdafa32dc080eb0b79320e8fe29a3ac37514721fbf73f336e5527f",
+              "png": "05-echoed.png",
+              "png_sha256": "0bfd9c842daa78d248d9475716bb7280ca0e13e450eac122cb7521053ccd3b8b",
+              "cursor_tip": null
+            }
+          ],
+          "markers": [
+            "screen: framebuffer 1024x768 BGRX at 0xfd000000, pitch 4096, write-combining, MTRR type 0, 124x39 cells"
+          ],
+          "pointer_events": []
+        },
+        "candidate": {
+          "shots": [
+            {
+              "step": "prompt",
+              "ppm_sha256": "34c2a085dc08355353c17fad71c1581b6eea8af311aab3de8640d1a330ac9b66",
+              "png": "00-prompt.png",
+              "png_sha256": "d871e422fbc4569cbf8f54e70b09c8e10f984719c5a66b4374e8796a6f8db4a9",
+              "cursor_tip": null
+            },
+            {
+              "step": "after-8-commands",
+              "ppm_sha256": "8a117c38ab26bd06f012825f6a1c960b407af903664fdfb7c2d68da501d438cd",
+              "png": "01-after-8-commands.png",
+              "png_sha256": "e7bc6697f838c293ac0fc7eae0508ee48c282ef8f8fa120701248c8da71b0f91",
+              "cursor_tip": null
+            },
+            {
+              "step": "after-16-commands",
+              "ppm_sha256": "98da932193fe75179775e028b6139858dd2c1fcc86ac0dcd03c41297182557ed",
+              "png": "02-after-16-commands.png",
+              "png_sha256": "e4fb24c1960162328db44617bf5189fc4a45173d8a49920f0e5ff25997a425f9",
+              "cursor_tip": null
+            },
+            {
+              "step": "typed",
+              "ppm_sha256": "2128d37adebaed8aa4a77ec3d26b630fec118a9071c9494f746800615114a6c2",
+              "png": "03-typed.png",
+              "png_sha256": "eabd26f01f249dabf3ce88a5648da2907a82921e06a0086355ec0a5421c8a499",
+              "cursor_tip": null
+            },
+            {
+              "step": "erased",
+              "ppm_sha256": "43a9f32619811b4d25cd1092c49f64d4676189dfac04c81c4d2d6e58ae599d89",
+              "png": "04-erased.png",
+              "png_sha256": "647d35c9748d74ef8a6a94e95ed732ae78e19914d4443295e70dd165d20b1af7",
+              "cursor_tip": null
+            },
+            {
+              "step": "echoed",
+              "ppm_sha256": "9b7852d6bbfdafa32dc080eb0b79320e8fe29a3ac37514721fbf73f336e5527f",
+              "png": "05-echoed.png",
+              "png_sha256": "0bfd9c842daa78d248d9475716bb7280ca0e13e450eac122cb7521053ccd3b8b",
+              "cursor_tip": null
+            }
+          ],
+          "markers": [
+            "screen: framebuffer 1024x768 BGRX at 0xfd000000, pitch 4096, write-combining, MTRR type 0, 124x39 cells"
+          ],
+          "pointer_events": []
+        },
+        "pixel_identical_steps": 6
+      },
+      {
+        "case": "console-1024x768",
+        "firmware": "uefi",
+        "cmdline": "vos.apps=1",
+        "gfxpayload": "1024x768x32",
+        "baseline": {
+          "shots": [
+            {
+              "step": "prompt",
+              "ppm_sha256": "34c2a085dc08355353c17fad71c1581b6eea8af311aab3de8640d1a330ac9b66",
+              "png": "00-prompt.png",
+              "png_sha256": "d871e422fbc4569cbf8f54e70b09c8e10f984719c5a66b4374e8796a6f8db4a9",
+              "cursor_tip": null
+            },
+            {
+              "step": "after-8-commands",
+              "ppm_sha256": "8a117c38ab26bd06f012825f6a1c960b407af903664fdfb7c2d68da501d438cd",
+              "png": "01-after-8-commands.png",
+              "png_sha256": "e7bc6697f838c293ac0fc7eae0508ee48c282ef8f8fa120701248c8da71b0f91",
+              "cursor_tip": null
+            },
+            {
+              "step": "after-16-commands",
+              "ppm_sha256": "98da932193fe75179775e028b6139858dd2c1fcc86ac0dcd03c41297182557ed",
+              "png": "02-after-16-commands.png",
+              "png_sha256": "e4fb24c1960162328db44617bf5189fc4a45173d8a49920f0e5ff25997a425f9",
+              "cursor_tip": null
+            },
+            {
+              "step": "typed",
+              "ppm_sha256": "2128d37adebaed8aa4a77ec3d26b630fec118a9071c9494f746800615114a6c2",
+              "png": "03-typed.png",
+              "png_sha256": "eabd26f01f249dabf3ce88a5648da2907a82921e06a0086355ec0a5421c8a499",
+              "cursor_tip": null
+            },
+            {
+              "step": "erased",
+              "ppm_sha256": "43a9f32619811b4d25cd1092c49f64d4676189dfac04c81c4d2d6e58ae599d89",
+              "png": "04-erased.png",
+              "png_sha256": "647d35c9748d74ef8a6a94e95ed732ae78e19914d4443295e70dd165d20b1af7",
+              "cursor_tip": null
+            },
+            {
+              "step": "echoed",
+              "ppm_sha256": "9b7852d6bbfdafa32dc080eb0b79320e8fe29a3ac37514721fbf73f336e5527f",
+              "png": "05-echoed.png",
+              "png_sha256": "0bfd9c842daa78d248d9475716bb7280ca0e13e450eac122cb7521053ccd3b8b",
+              "cursor_tip": null
+            }
+          ],
+          "markers": [
+            "screen: framebuffer 1024x768 BGRX at 0x80000000, pitch 4096, write-combining, MTRR type 0, 124x39 cells"
+          ],
+          "pointer_events": []
+        },
+        "candidate": {
+          "shots": [
+            {
+              "step": "prompt",
+              "ppm_sha256": "34c2a085dc08355353c17fad71c1581b6eea8af311aab3de8640d1a330ac9b66",
+              "png": "00-prompt.png",
+              "png_sha256": "d871e422fbc4569cbf8f54e70b09c8e10f984719c5a66b4374e8796a6f8db4a9",
+              "cursor_tip": null
+            },
+            {
+              "step": "after-8-commands",
+              "ppm_sha256": "8a117c38ab26bd06f012825f6a1c960b407af903664fdfb7c2d68da501d438cd",
+              "png": "01-after-8-commands.png",
+              "png_sha256": "e7bc6697f838c293ac0fc7eae0508ee48c282ef8f8fa120701248c8da71b0f91",
+              "cursor_tip": null
+            },
+            {
+              "step": "after-16-commands",
+              "ppm_sha256": "98da932193fe75179775e028b6139858dd2c1fcc86ac0dcd03c41297182557ed",
+              "png": "02-after-16-commands.png",
+              "png_sha256": "e4fb24c1960162328db44617bf5189fc4a45173d8a49920f0e5ff25997a425f9",
+              "cursor_tip": null
+            },
+            {
+              "step": "typed",
+              "ppm_sha256": "2128d37adebaed8aa4a77ec3d26b630fec118a9071c9494f746800615114a6c2",
+              "png": "03-typed.png",
+              "png_sha256": "eabd26f01f249dabf3ce88a5648da2907a82921e06a0086355ec0a5421c8a499",
+              "cursor_tip": null
+            },
+            {
+              "step": "erased",
+              "ppm_sha256": "43a9f32619811b4d25cd1092c49f64d4676189dfac04c81c4d2d6e58ae599d89",
+              "png": "04-erased.png",
+              "png_sha256": "647d35c9748d74ef8a6a94e95ed732ae78e19914d4443295e70dd165d20b1af7",
+              "cursor_tip": null
+            },
+            {
+              "step": "echoed",
+              "ppm_sha256": "9b7852d6bbfdafa32dc080eb0b79320e8fe29a3ac37514721fbf73f336e5527f",
+              "png": "05-echoed.png",
+              "png_sha256": "0bfd9c842daa78d248d9475716bb7280ca0e13e450eac122cb7521053ccd3b8b",
+              "cursor_tip": null
+            }
+          ],
+          "markers": [
+            "screen: framebuffer 1024x768 BGRX at 0x80000000, pitch 4096, write-combining, MTRR type 0, 124x39 cells"
+          ],
+          "pointer_events": []
+        },
+        "pixel_identical_steps": 6
+      },
+      {
+        "case": "desktop-1024x768",
+        "firmware": "bios",
+        "cmdline": "vos.apps=1 vos.desktop=1",
+        "gfxpayload": "1024x768x32",
+        "baseline": {
+          "shots": [
+            {
+              "step": "prompt",
+              "ppm_sha256": "175bae72833d1fb41345ed4999204e766b50b33d2aa68e01008653a4be343a49",
+              "png": "00-prompt.png",
+              "png_sha256": "6a6971364aa67912ba3f447abee4d706635255fc21bbed1dedc45abd2263b28a",
+              "cursor_tip": null
+            },
+            {
+              "step": "after-8-commands",
+              "ppm_sha256": "9374dac06c785797dc388d493c417134b7f81bff67afe7ca24de1bcf1f868407",
+              "png": "01-after-8-commands.png",
+              "png_sha256": "1dbb36f6f76e8040c20df48ae1849e8dc5bcfb1728e1548826bd117b09b96a97",
+              "cursor_tip": null
+            },
+            {
+              "step": "after-16-commands",
+              "ppm_sha256": "b2881264abffec1a0e9d57bd047f556df064b57ffa4f3f25a46b9f563b8a3084",
+              "png": "02-after-16-commands.png",
+              "png_sha256": "ac7a97fdb18e55d794cdb89a849096480d0e47675ced46737410c4dc0c6a31a0",
+              "cursor_tip": null
+            },
+            {
+              "step": "typed",
+              "ppm_sha256": "9bfb888af7a7704fed82a7f20d34d85e28743e7830d25440d7fa2a759be5faa1",
+              "png": "03-typed.png",
+              "png_sha256": "6ba607d01f82ad90b728b69649cec937e549e3cbefdc1eadfd9e1175820c9a9e",
+              "cursor_tip": null
+            },
+            {
+              "step": "erased",
+              "ppm_sha256": "67036a219cd46985c2894b90172f549a11089693614548dfd243dbfebf6e6ef8",
+              "png": "04-erased.png",
+              "png_sha256": "d1a026925bce91ada4e49dab339e977f68314c0ae837faf531a0749b4ad69039",
+              "cursor_tip": null
+            },
+            {
+              "step": "echoed",
+              "ppm_sha256": "0885fe23b4f0fd49575d38ca91c49dc034a82231bcbcbf60de89ce60f1cf1c98",
+              "png": "05-echoed.png",
+              "png_sha256": "c3e2a85c501b1df84147138ab6db22d631d5389138930ad67f65a2f82ce3d1c9",
+              "cursor_tip": null
+            }
+          ],
+          "markers": [
+            "screen: framebuffer 1024x768 BGRX at 0xfd000000, pitch 4096, write-combining, MTRR type 0, 124x39 cells",
+            "desktop: scene ready; kernel-owned BGRX surface, bounded console viewport"
+          ],
+          "pointer_events": []
+        },
+        "candidate": {
+          "shots": [
+            {
+              "step": "prompt",
+              "ppm_sha256": "175bae72833d1fb41345ed4999204e766b50b33d2aa68e01008653a4be343a49",
+              "png": "00-prompt.png",
+              "png_sha256": "6a6971364aa67912ba3f447abee4d706635255fc21bbed1dedc45abd2263b28a",
+              "cursor_tip": null
+            },
+            {
+              "step": "after-8-commands",
+              "ppm_sha256": "9374dac06c785797dc388d493c417134b7f81bff67afe7ca24de1bcf1f868407",
+              "png": "01-after-8-commands.png",
+              "png_sha256": "1dbb36f6f76e8040c20df48ae1849e8dc5bcfb1728e1548826bd117b09b96a97",
+              "cursor_tip": null
+            },
+            {
+              "step": "after-16-commands",
+              "ppm_sha256": "b2881264abffec1a0e9d57bd047f556df064b57ffa4f3f25a46b9f563b8a3084",
+              "png": "02-after-16-commands.png",
+              "png_sha256": "ac7a97fdb18e55d794cdb89a849096480d0e47675ced46737410c4dc0c6a31a0",
+              "cursor_tip": null
+            },
+            {
+              "step": "typed",
+              "ppm_sha256": "9bfb888af7a7704fed82a7f20d34d85e28743e7830d25440d7fa2a759be5faa1",
+              "png": "03-typed.png",
+              "png_sha256": "6ba607d01f82ad90b728b69649cec937e549e3cbefdc1eadfd9e1175820c9a9e",
+              "cursor_tip": null
+            },
+            {
+              "step": "erased",
+              "ppm_sha256": "67036a219cd46985c2894b90172f549a11089693614548dfd243dbfebf6e6ef8",
+              "png": "04-erased.png",
+              "png_sha256": "d1a026925bce91ada4e49dab339e977f68314c0ae837faf531a0749b4ad69039",
+              "cursor_tip": null
+            },
+            {
+              "step": "echoed",
+              "ppm_sha256": "0885fe23b4f0fd49575d38ca91c49dc034a82231bcbcbf60de89ce60f1cf1c98",
+              "png": "05-echoed.png",
+              "png_sha256": "c3e2a85c501b1df84147138ab6db22d631d5389138930ad67f65a2f82ce3d1c9",
+              "cursor_tip": null
+            }
+          ],
+          "markers": [
+            "screen: framebuffer 1024x768 BGRX at 0xfd000000, pitch 4096, write-combining, MTRR type 0, 124x39 cells",
+            "desktop: scene ready; kernel-owned BGRX surface, bounded console viewport"
+          ],
+          "pointer_events": []
+        },
+        "pixel_identical_steps": 6
+      },
+      {
+        "case": "desktop-1024x768",
+        "firmware": "uefi",
+        "cmdline": "vos.apps=1 vos.desktop=1",
+        "gfxpayload": "1024x768x32",
+        "baseline": {
+          "shots": [
+            {
+              "step": "prompt",
+              "ppm_sha256": "175bae72833d1fb41345ed4999204e766b50b33d2aa68e01008653a4be343a49",
+              "png": "00-prompt.png",
+              "png_sha256": "6a6971364aa67912ba3f447abee4d706635255fc21bbed1dedc45abd2263b28a",
+              "cursor_tip": null
+            },
+            {
+              "step": "after-8-commands",
+              "ppm_sha256": "9374dac06c785797dc388d493c417134b7f81bff67afe7ca24de1bcf1f868407",
+              "png": "01-after-8-commands.png",
+              "png_sha256": "1dbb36f6f76e8040c20df48ae1849e8dc5bcfb1728e1548826bd117b09b96a97",
+              "cursor_tip": null
+            },
+            {
+              "step": "after-16-commands",
+              "ppm_sha256": "b2881264abffec1a0e9d57bd047f556df064b57ffa4f3f25a46b9f563b8a3084",
+              "png": "02-after-16-commands.png",
+              "png_sha256": "ac7a97fdb18e55d794cdb89a849096480d0e47675ced46737410c4dc0c6a31a0",
+              "cursor_tip": null
+            },
+            {
+              "step": "typed",
+              "ppm_sha256": "9bfb888af7a7704fed82a7f20d34d85e28743e7830d25440d7fa2a759be5faa1",
+              "png": "03-typed.png",
+              "png_sha256": "6ba607d01f82ad90b728b69649cec937e549e3cbefdc1eadfd9e1175820c9a9e",
+              "cursor_tip": null
+            },
+            {
+              "step": "erased",
+              "ppm_sha256": "67036a219cd46985c2894b90172f549a11089693614548dfd243dbfebf6e6ef8",
+              "png": "04-erased.png",
+              "png_sha256": "d1a026925bce91ada4e49dab339e977f68314c0ae837faf531a0749b4ad69039",
+              "cursor_tip": null
+            },
+            {
+              "step": "echoed",
+              "ppm_sha256": "0885fe23b4f0fd49575d38ca91c49dc034a82231bcbcbf60de89ce60f1cf1c98",
+              "png": "05-echoed.png",
+              "png_sha256": "c3e2a85c501b1df84147138ab6db22d631d5389138930ad67f65a2f82ce3d1c9",
+              "cursor_tip": null
+            }
+          ],
+          "markers": [
+            "screen: framebuffer 1024x768 BGRX at 0x80000000, pitch 4096, write-combining, MTRR type 0, 124x39 cells",
+            "desktop: scene ready; kernel-owned BGRX surface, bounded console viewport"
+          ],
+          "pointer_events": []
+        },
+        "candidate": {
+          "shots": [
+            {
+              "step": "prompt",
+              "ppm_sha256": "175bae72833d1fb41345ed4999204e766b50b33d2aa68e01008653a4be343a49",
+              "png": "00-prompt.png",
+              "png_sha256": "6a6971364aa67912ba3f447abee4d706635255fc21bbed1dedc45abd2263b28a",
+              "cursor_tip": null
+            },
+            {
+              "step": "after-8-commands",
+              "ppm_sha256": "9374dac06c785797dc388d493c417134b7f81bff67afe7ca24de1bcf1f868407",
+              "png": "01-after-8-commands.png",
+              "png_sha256": "1dbb36f6f76e8040c20df48ae1849e8dc5bcfb1728e1548826bd117b09b96a97",
+              "cursor_tip": null
+            },
+            {
+              "step": "after-16-commands",
+              "ppm_sha256": "b2881264abffec1a0e9d57bd047f556df064b57ffa4f3f25a46b9f563b8a3084",
+              "png": "02-after-16-commands.png",
+              "png_sha256": "ac7a97fdb18e55d794cdb89a849096480d0e47675ced46737410c4dc0c6a31a0",
+              "cursor_tip": null
+            },
+            {
+              "step": "typed",
+              "ppm_sha256": "9bfb888af7a7704fed82a7f20d34d85e28743e7830d25440d7fa2a759be5faa1",
+              "png": "03-typed.png",
+              "png_sha256": "6ba607d01f82ad90b728b69649cec937e549e3cbefdc1eadfd9e1175820c9a9e",
+              "cursor_tip": null
+            },
+            {
+              "step": "erased",
+              "ppm_sha256": "67036a219cd46985c2894b90172f549a11089693614548dfd243dbfebf6e6ef8",
+              "png": "04-erased.png",
+              "png_sha256": "d1a026925bce91ada4e49dab339e977f68314c0ae837faf531a0749b4ad69039",
+              "cursor_tip": null
+            },
+            {
+              "step": "echoed",
+              "ppm_sha256": "0885fe23b4f0fd49575d38ca91c49dc034a82231bcbcbf60de89ce60f1cf1c98",
+              "png": "05-echoed.png",
+              "png_sha256": "c3e2a85c501b1df84147138ab6db22d631d5389138930ad67f65a2f82ce3d1c9",
+              "cursor_tip": null
+            }
+          ],
+          "markers": [
+            "screen: framebuffer 1024x768 BGRX at 0x80000000, pitch 4096, write-combining, MTRR type 0, 124x39 cells",
+            "desktop: scene ready; kernel-owned BGRX surface, bounded console viewport"
+          ],
+          "pointer_events": []
+        },
+        "pixel_identical_steps": 6
+      },
+      {
+        "case": "desktop-640x480",
+        "firmware": "bios",
+        "cmdline": "vos.apps=1 vos.desktop=1",
+        "gfxpayload": "640x480x32",
+        "baseline": {
+          "shots": [
+            {
+              "step": "prompt",
+              "ppm_sha256": "3cf1115ae6acb820e636618f6c34971a0e76922adedac66a8aac710ca7e471df",
+              "png": "00-prompt.png",
+              "png_sha256": "bc42e56a2430d2eab17e41e21c3df7eea96547abd43c02c309a9f097aa5858e8",
+              "cursor_tip": null
+            },
+            {
+              "step": "after-8-commands",
+              "ppm_sha256": "85eded40e8a7f6ff65e3b2a51ecd7322a90b94530429d7a27989f608b4539004",
+              "png": "01-after-8-commands.png",
+              "png_sha256": "7081625e5528f882aef606b309f7d3827a0ca2f2060baf142d1e436dbca4064f",
+              "cursor_tip": null
+            },
+            {
+              "step": "after-16-commands",
+              "ppm_sha256": "85eded40e8a7f6ff65e3b2a51ecd7322a90b94530429d7a27989f608b4539004",
+              "png": "02-after-16-commands.png",
+              "png_sha256": "7081625e5528f882aef606b309f7d3827a0ca2f2060baf142d1e436dbca4064f",
+              "cursor_tip": null
+            },
+            {
+              "step": "typed",
+              "ppm_sha256": "a04f87ae962ce48e14aa7bf64b3f29c9b48394be6814f89e99d1148461c9f2a6",
+              "png": "03-typed.png",
+              "png_sha256": "a85f9be837483491985073f3e18a2eee515dc8c9ddcb0fe95167df6939f5fe55",
+              "cursor_tip": null
+            },
+            {
+              "step": "erased",
+              "ppm_sha256": "c69a3e3236682ff23206c78f9619b4c6cfc91206f1355ace065e6619c01e88b2",
+              "png": "04-erased.png",
+              "png_sha256": "3552225a473f5fba3f88d033dc1e548b89692ba3bbf3242443a67b1d97b8971c",
+              "cursor_tip": null
+            },
+            {
+              "step": "echoed",
+              "ppm_sha256": "b897e7bb21d538d962321721da7b7449b43d37936fd3512d3ec999cb7775b45a",
+              "png": "05-echoed.png",
+              "png_sha256": "c250fb0e2bb13e199984f574d3d052a57ab7eaa49a42b4cdabe3e761e29d2661",
+              "cursor_tip": null
+            }
+          ],
+          "markers": [
+            "screen: framebuffer 640x480 BGRX at 0xfd000000, pitch 2560, write-combining, MTRR type 0, 76x23 cells",
+            "desktop: scene ready; kernel-owned BGRX surface, bounded console viewport"
+          ],
+          "pointer_events": []
+        },
+        "candidate": {
+          "shots": [
+            {
+              "step": "prompt",
+              "ppm_sha256": "3cf1115ae6acb820e636618f6c34971a0e76922adedac66a8aac710ca7e471df",
+              "png": "00-prompt.png",
+              "png_sha256": "bc42e56a2430d2eab17e41e21c3df7eea96547abd43c02c309a9f097aa5858e8",
+              "cursor_tip": null
+            },
+            {
+              "step": "after-8-commands",
+              "ppm_sha256": "85eded40e8a7f6ff65e3b2a51ecd7322a90b94530429d7a27989f608b4539004",
+              "png": "01-after-8-commands.png",
+              "png_sha256": "7081625e5528f882aef606b309f7d3827a0ca2f2060baf142d1e436dbca4064f",
+              "cursor_tip": null
+            },
+            {
+              "step": "after-16-commands",
+              "ppm_sha256": "85eded40e8a7f6ff65e3b2a51ecd7322a90b94530429d7a27989f608b4539004",
+              "png": "02-after-16-commands.png",
+              "png_sha256": "7081625e5528f882aef606b309f7d3827a0ca2f2060baf142d1e436dbca4064f",
+              "cursor_tip": null
+            },
+            {
+              "step": "typed",
+              "ppm_sha256": "a04f87ae962ce48e14aa7bf64b3f29c9b48394be6814f89e99d1148461c9f2a6",
+              "png": "03-typed.png",
+              "png_sha256": "a85f9be837483491985073f3e18a2eee515dc8c9ddcb0fe95167df6939f5fe55",
+              "cursor_tip": null
+            },
+            {
+              "step": "erased",
+              "ppm_sha256": "c69a3e3236682ff23206c78f9619b4c6cfc91206f1355ace065e6619c01e88b2",
+              "png": "04-erased.png",
+              "png_sha256": "3552225a473f5fba3f88d033dc1e548b89692ba3bbf3242443a67b1d97b8971c",
+              "cursor_tip": null
+            },
+            {
+              "step": "echoed",
+              "ppm_sha256": "b897e7bb21d538d962321721da7b7449b43d37936fd3512d3ec999cb7775b45a",
+              "png": "05-echoed.png",
+              "png_sha256": "c250fb0e2bb13e199984f574d3d052a57ab7eaa49a42b4cdabe3e761e29d2661",
+              "cursor_tip": null
+            }
+          ],
+          "markers": [
+            "screen: framebuffer 640x480 BGRX at 0xfd000000, pitch 2560, write-combining, MTRR type 0, 76x23 cells",
+            "desktop: scene ready; kernel-owned BGRX surface, bounded console viewport"
+          ],
+          "pointer_events": []
+        },
+        "pixel_identical_steps": 6
+      },
+      {
+        "case": "console-640x400",
+        "firmware": "bios",
+        "cmdline": "vos.apps=1 vos.desktop=1",
+        "gfxpayload": "640x400x32",
+        "baseline": {
+          "shots": [
+            {
+              "step": "prompt",
+              "ppm_sha256": "4b9017810a3f63993627ca45674954fb88feb8535e80e1efc35521b21fff580d",
+              "png": "00-prompt.png",
+              "png_sha256": "b14dab3dcdf07dbfdf1bf57f8d18e8476318666571e00a0c9b00dcec8a0d3557",
+              "cursor_tip": null
+            },
+            {
+              "step": "after-8-commands",
+              "ppm_sha256": "a57c9db97f0e9af5793a14c9cdaeaee8530cf8b1ba1d3792c4bdb66a05bd460c",
+              "png": "01-after-8-commands.png",
+              "png_sha256": "b1c85f4f0b76e2aec8796a23b82d7f17120d7e9681387fdc38b0d62384ab00d5",
+              "cursor_tip": null
+            },
+            {
+              "step": "after-16-commands",
+              "ppm_sha256": "ba693b59f77885cb86223d851ab49068a25182e19dd599a72c1fbc62593a6a3b",
+              "png": "02-after-16-commands.png",
+              "png_sha256": "d6f5e42c0094c39f9e8ac169dd64fb5a4e1b1d09f985654e561a35698c119609",
+              "cursor_tip": null
+            },
+            {
+              "step": "typed",
+              "ppm_sha256": "987b9410999ee6d255d997ededfe1ab94e51cb81b0c3d74594d2ea3a88e70ec1",
+              "png": "03-typed.png",
+              "png_sha256": "4e4d9ed8a87122ced6a20817e2a967b5a36ad3d262330d85af9693e3578b4e00",
+              "cursor_tip": null
+            },
+            {
+              "step": "erased",
+              "ppm_sha256": "b901bb05214344af6c730fc58dd5f2a37a7ba5dc2c34838d21b9dd13383784d5",
+              "png": "04-erased.png",
+              "png_sha256": "5f705bc8b50b90082531a1d5c60113dc41304f1001d8acced82761f3b79d9f1c",
+              "cursor_tip": null
+            },
+            {
+              "step": "echoed",
+              "ppm_sha256": "03c78d6bd663ddab2f034cb30d429997c2a6eca7f3bd250d78200ee33927e226",
+              "png": "05-echoed.png",
+              "png_sha256": "f8b8e446ea967d9f2939881a38e825fb172f2b80efac9bf7f553d8c6fcda489b",
+              "cursor_tip": null
+            }
+          ],
+          "markers": [
+            "screen: framebuffer 640x400 BGRX at 0xfd000000, pitch 2560, write-combining, MTRR type 0, 76x19 cells",
+            "desktop: unavailable; existing console fallback"
+          ],
+          "pointer_events": []
+        },
+        "candidate": {
+          "shots": [
+            {
+              "step": "prompt",
+              "ppm_sha256": "4b9017810a3f63993627ca45674954fb88feb8535e80e1efc35521b21fff580d",
+              "png": "00-prompt.png",
+              "png_sha256": "b14dab3dcdf07dbfdf1bf57f8d18e8476318666571e00a0c9b00dcec8a0d3557",
+              "cursor_tip": null
+            },
+            {
+              "step": "after-8-commands",
+              "ppm_sha256": "a57c9db97f0e9af5793a14c9cdaeaee8530cf8b1ba1d3792c4bdb66a05bd460c",
+              "png": "01-after-8-commands.png",
+              "png_sha256": "b1c85f4f0b76e2aec8796a23b82d7f17120d7e9681387fdc38b0d62384ab00d5",
+              "cursor_tip": null
+            },
+            {
+              "step": "after-16-commands",
+              "ppm_sha256": "ba693b59f77885cb86223d851ab49068a25182e19dd599a72c1fbc62593a6a3b",
+              "png": "02-after-16-commands.png",
+              "png_sha256": "d6f5e42c0094c39f9e8ac169dd64fb5a4e1b1d09f985654e561a35698c119609",
+              "cursor_tip": null
+            },
+            {
+              "step": "typed",
+              "ppm_sha256": "987b9410999ee6d255d997ededfe1ab94e51cb81b0c3d74594d2ea3a88e70ec1",
+              "png": "03-typed.png",
+              "png_sha256": "4e4d9ed8a87122ced6a20817e2a967b5a36ad3d262330d85af9693e3578b4e00",
+              "cursor_tip": null
+            },
+            {
+              "step": "erased",
+              "ppm_sha256": "b901bb05214344af6c730fc58dd5f2a37a7ba5dc2c34838d21b9dd13383784d5",
+              "png": "04-erased.png",
+              "png_sha256": "5f705bc8b50b90082531a1d5c60113dc41304f1001d8acced82761f3b79d9f1c",
+              "cursor_tip": null
+            },
+            {
+              "step": "echoed",
+              "ppm_sha256": "03c78d6bd663ddab2f034cb30d429997c2a6eca7f3bd250d78200ee33927e226",
+              "png": "05-echoed.png",
+              "png_sha256": "f8b8e446ea967d9f2939881a38e825fb172f2b80efac9bf7f553d8c6fcda489b",
+              "cursor_tip": null
+            }
+          ],
+          "markers": [
+            "screen: framebuffer 640x400 BGRX at 0xfd000000, pitch 2560, write-combining, MTRR type 0, 76x19 cells",
+            "desktop: unavailable; existing console fallback"
+          ],
+          "pointer_events": []
+        },
+        "pixel_identical_steps": 6
+      },
+      {
+        "case": "gui-pointer-1024x768",
+        "firmware": "bios",
+        "cmdline": "vos.apps=1 vos.desktop=1 vos.gui=1 vos.pointer=1",
+        "gfxpayload": "1024x768x32",
+        "baseline": {
+          "shots": [
+            {
+              "step": "ready",
+              "ppm_sha256": "ff9fc63114ed2faf1b2202912a75134f50ab2ce0651b95c52df9e3f1d0be2868",
+              "png": "00-ready.png",
+              "png_sha256": "f498dd815f89358990086ecc48f94680f1d1abd2e83517ceedb3c1521c37558b",
+              "cursor_tip": [
+                512,
+                390
+              ]
+            },
+            {
+              "step": "moved",
+              "ppm_sha256": "3884386b1574d0144c667f06346be7e2e42b6d4e4cab24e6190fc15714f76a5e",
+              "png": "01-moved.png",
+              "png_sha256": "0a7fae58fbe30b8c016eef0d63bc04efbdfbf48887ccbd556115109bdacc4e58",
+              "cursor_tip": [
+                524,
+                382
+              ]
+            },
+            {
+              "step": "clicked",
+              "ppm_sha256": "d7a34cd79bc00526151700b43244561ad1855578584a7f3a6273d1f80593529c",
+              "png": "02-clicked.png",
+              "png_sha256": "3814e66733e1139bf7cd48891ad88d18cfcdc30c7114c2f2739a6241d2566b09",
+              "cursor_tip": [
+                524,
+                382
+              ]
+            },
+            {
+              "step": "top-left",
+              "ppm_sha256": "38897db7b967720450610a995125478a91acaf03473384edb4584587bceb5d30",
+              "png": "03-top-left.png",
+              "png_sha256": "6fa27543f1f507ab7f51909705a5434a9e6cbe425d8c00130689f555e1ea8797",
+              "cursor_tip": [
+                0,
+                0
+              ]
+            },
+            {
+              "step": "top-right",
+              "ppm_sha256": "d95ebf2037859eb064005482a1b4ada2c5968f5236875dfa1bca032779cc8095",
+              "png": "04-top-right.png",
+              "png_sha256": "4a6ea51c0841bcb0d5adc058f278624e9532793c8be9840778d084aef9f567d6",
+              "cursor_tip": [
+                1023,
+                0
+              ]
+            },
+            {
+              "step": "bottom-right",
+              "ppm_sha256": "7e4450c29e7306dd015c7911f89b3955058f7571572fbe0d54bc97b53a3a170d",
+              "png": "05-bottom-right.png",
+              "png_sha256": "c678e1d76abfad6e980a5667dd0627b6162e37a805ec1c11e9a83ecc57d49edc",
+              "cursor_tip": [
+                1023,
+                767
+              ]
+            },
+            {
+              "step": "bottom-left",
+              "ppm_sha256": "4f206671619a6f37f2989e274f4674e9a02e8ec45696b9685b684895a11496dc",
+              "png": "06-bottom-left.png",
+              "png_sha256": "5845f32844733336ab5d29eaded357d670cefdd3dacd7462b9ebfd73849816d7",
+              "cursor_tip": [
+                0,
+                767
+              ]
+            },
+            {
+              "step": "surface-left-edge",
+              "ppm_sha256": "7d8cf204c4068eaa2208a07748c7e7b6e8ce097173952f2ca52ab62989f60b46",
+              "png": "07-surface-left-edge.png",
+              "png_sha256": "8e9c735ab92b97f5a11c5ff049e3b7502165d5bf92b0927af171e9de61b678c8",
+              "cursor_tip": [
+                384,
+                383
+              ]
+            },
+            {
+              "step": "surface-right-edge",
+              "ppm_sha256": "ced85843ce539444c6856a33851f2f444ccf6555e415ab445d396d18dc9afc62",
+              "png": "08-surface-right-edge.png",
+              "png_sha256": "d72dea8c14a4754e897f70c6c5d54dcb984f04ab8871bd68a9c5db1f8699f717",
+              "cursor_tip": [
+                639,
+                383
+              ]
+            }
+          ],
+          "markers": [
+            "screen: framebuffer 1024x768 BGRX at 0xfd000000, pitch 4096, write-combining, MTRR type 0, 124x39 cells",
+            "desktop: scene ready; kernel-owned BGRX surface, bounded console viewport",
+            "gui: native ABI5 demo; one surface <=163840 bytes; upload <=4096 bytes; event queue=16"
+          ],
+          "pointer_events": [
+            "user[pointer-demo]: pointer-demo: x=140 y=72 down=0 inside=1",
+            "user[pointer-demo]: pointer-demo: x=140 y=72 down=1 inside=1",
+            "user[pointer-demo]: pointer-demo: x=140 y=72 down=0 inside=1",
+            "user[pointer-demo]: pointer-demo: x=80 y=12 down=0 inside=1",
+            "user[pointer-demo]: pointer-demo: x=0 y=73 down=0 inside=1",
+            "user[pointer-demo]: pointer-demo: x=60 y=73 down=0 inside=1",
+            "user[pointer-demo]: pointer-demo: x=120 y=73 down=0 inside=1",
+            "user[pointer-demo]: pointer-demo: x=180 y=73 down=0 inside=1",
+            "user[pointer-demo]: pointer-demo: x=240 y=73 down=0 inside=1",
+            "user[pointer-demo]: pointer-demo: x=255 y=73 down=0 inside=1"
+          ]
+        },
+        "candidate": {
+          "shots": [
+            {
+              "step": "ready",
+              "ppm_sha256": "ff9fc63114ed2faf1b2202912a75134f50ab2ce0651b95c52df9e3f1d0be2868",
+              "png": "00-ready.png",
+              "png_sha256": "f498dd815f89358990086ecc48f94680f1d1abd2e83517ceedb3c1521c37558b",
+              "cursor_tip": [
+                512,
+                390
+              ]
+            },
+            {
+              "step": "moved",
+              "ppm_sha256": "3884386b1574d0144c667f06346be7e2e42b6d4e4cab24e6190fc15714f76a5e",
+              "png": "01-moved.png",
+              "png_sha256": "0a7fae58fbe30b8c016eef0d63bc04efbdfbf48887ccbd556115109bdacc4e58",
+              "cursor_tip": [
+                524,
+                382
+              ]
+            },
+            {
+              "step": "clicked",
+              "ppm_sha256": "d7a34cd79bc00526151700b43244561ad1855578584a7f3a6273d1f80593529c",
+              "png": "02-clicked.png",
+              "png_sha256": "3814e66733e1139bf7cd48891ad88d18cfcdc30c7114c2f2739a6241d2566b09",
+              "cursor_tip": [
+                524,
+                382
+              ]
+            },
+            {
+              "step": "top-left",
+              "ppm_sha256": "38897db7b967720450610a995125478a91acaf03473384edb4584587bceb5d30",
+              "png": "03-top-left.png",
+              "png_sha256": "6fa27543f1f507ab7f51909705a5434a9e6cbe425d8c00130689f555e1ea8797",
+              "cursor_tip": [
+                0,
+                0
+              ]
+            },
+            {
+              "step": "top-right",
+              "ppm_sha256": "d95ebf2037859eb064005482a1b4ada2c5968f5236875dfa1bca032779cc8095",
+              "png": "04-top-right.png",
+              "png_sha256": "4a6ea51c0841bcb0d5adc058f278624e9532793c8be9840778d084aef9f567d6",
+              "cursor_tip": [
+                1023,
+                0
+              ]
+            },
+            {
+              "step": "bottom-right",
+              "ppm_sha256": "7e4450c29e7306dd015c7911f89b3955058f7571572fbe0d54bc97b53a3a170d",
+              "png": "05-bottom-right.png",
+              "png_sha256": "c678e1d76abfad6e980a5667dd0627b6162e37a805ec1c11e9a83ecc57d49edc",
+              "cursor_tip": [
+                1023,
+                767
+              ]
+            },
+            {
+              "step": "bottom-left",
+              "ppm_sha256": "4f206671619a6f37f2989e274f4674e9a02e8ec45696b9685b684895a11496dc",
+              "png": "06-bottom-left.png",
+              "png_sha256": "5845f32844733336ab5d29eaded357d670cefdd3dacd7462b9ebfd73849816d7",
+              "cursor_tip": [
+                0,
+                767
+              ]
+            },
+            {
+              "step": "surface-left-edge",
+              "ppm_sha256": "7d8cf204c4068eaa2208a07748c7e7b6e8ce097173952f2ca52ab62989f60b46",
+              "png": "07-surface-left-edge.png",
+              "png_sha256": "8e9c735ab92b97f5a11c5ff049e3b7502165d5bf92b0927af171e9de61b678c8",
+              "cursor_tip": [
+                384,
+                383
+              ]
+            },
+            {
+              "step": "surface-right-edge",
+              "ppm_sha256": "ced85843ce539444c6856a33851f2f444ccf6555e415ab445d396d18dc9afc62",
+              "png": "08-surface-right-edge.png",
+              "png_sha256": "d72dea8c14a4754e897f70c6c5d54dcb984f04ab8871bd68a9c5db1f8699f717",
+              "cursor_tip": [
+                639,
+                383
+              ]
+            }
+          ],
+          "markers": [
+            "screen: framebuffer 1024x768 BGRX at 0xfd000000, pitch 4096, write-combining, MTRR type 0, 124x39 cells",
+            "desktop: scene ready; kernel-owned BGRX surface, bounded console viewport",
+            "gui: native ABI5 demo; one surface <=163840 bytes; upload <=4096 bytes; event queue=16"
+          ],
+          "pointer_events": [
+            "user[pointer-demo]: pointer-demo: x=140 y=72 down=0 inside=1",
+            "user[pointer-demo]: pointer-demo: x=140 y=72 down=1 inside=1",
+            "user[pointer-demo]: pointer-demo: x=140 y=72 down=0 inside=1",
+            "user[pointer-demo]: pointer-demo: x=80 y=12 down=0 inside=1",
+            "user[pointer-demo]: pointer-demo: x=0 y=73 down=0 inside=1",
+            "user[pointer-demo]: pointer-demo: x=60 y=73 down=0 inside=1",
+            "user[pointer-demo]: pointer-demo: x=120 y=73 down=0 inside=1",
+            "user[pointer-demo]: pointer-demo: x=180 y=73 down=0 inside=1",
+            "user[pointer-demo]: pointer-demo: x=240 y=73 down=0 inside=1",
+            "user[pointer-demo]: pointer-demo: x=255 y=73 down=0 inside=1"
+          ]
+        },
+        "pixel_identical_steps": 9
+      },
+      {
+        "case": "gui-pointer-1024x768",
+        "firmware": "uefi",
+        "cmdline": "vos.apps=1 vos.desktop=1 vos.gui=1 vos.pointer=1",
+        "gfxpayload": "1024x768x32",
+        "baseline": {
+          "shots": [
+            {
+              "step": "ready",
+              "ppm_sha256": "ff9fc63114ed2faf1b2202912a75134f50ab2ce0651b95c52df9e3f1d0be2868",
+              "png": "00-ready.png",
+              "png_sha256": "f498dd815f89358990086ecc48f94680f1d1abd2e83517ceedb3c1521c37558b",
+              "cursor_tip": [
+                512,
+                390
+              ]
+            },
+            {
+              "step": "moved",
+              "ppm_sha256": "3884386b1574d0144c667f06346be7e2e42b6d4e4cab24e6190fc15714f76a5e",
+              "png": "01-moved.png",
+              "png_sha256": "0a7fae58fbe30b8c016eef0d63bc04efbdfbf48887ccbd556115109bdacc4e58",
+              "cursor_tip": [
+                524,
+                382
+              ]
+            },
+            {
+              "step": "clicked",
+              "ppm_sha256": "d7a34cd79bc00526151700b43244561ad1855578584a7f3a6273d1f80593529c",
+              "png": "02-clicked.png",
+              "png_sha256": "3814e66733e1139bf7cd48891ad88d18cfcdc30c7114c2f2739a6241d2566b09",
+              "cursor_tip": [
+                524,
+                382
+              ]
+            },
+            {
+              "step": "top-left",
+              "ppm_sha256": "38897db7b967720450610a995125478a91acaf03473384edb4584587bceb5d30",
+              "png": "03-top-left.png",
+              "png_sha256": "6fa27543f1f507ab7f51909705a5434a9e6cbe425d8c00130689f555e1ea8797",
+              "cursor_tip": [
+                0,
+                0
+              ]
+            },
+            {
+              "step": "top-right",
+              "ppm_sha256": "d95ebf2037859eb064005482a1b4ada2c5968f5236875dfa1bca032779cc8095",
+              "png": "04-top-right.png",
+              "png_sha256": "4a6ea51c0841bcb0d5adc058f278624e9532793c8be9840778d084aef9f567d6",
+              "cursor_tip": [
+                1023,
+                0
+              ]
+            },
+            {
+              "step": "bottom-right",
+              "ppm_sha256": "7e4450c29e7306dd015c7911f89b3955058f7571572fbe0d54bc97b53a3a170d",
+              "png": "05-bottom-right.png",
+              "png_sha256": "c678e1d76abfad6e980a5667dd0627b6162e37a805ec1c11e9a83ecc57d49edc",
+              "cursor_tip": [
+                1023,
+                767
+              ]
+            },
+            {
+              "step": "bottom-left",
+              "ppm_sha256": "4f206671619a6f37f2989e274f4674e9a02e8ec45696b9685b684895a11496dc",
+              "png": "06-bottom-left.png",
+              "png_sha256": "5845f32844733336ab5d29eaded357d670cefdd3dacd7462b9ebfd73849816d7",
+              "cursor_tip": [
+                0,
+                767
+              ]
+            },
+            {
+              "step": "surface-left-edge",
+              "ppm_sha256": "7d8cf204c4068eaa2208a07748c7e7b6e8ce097173952f2ca52ab62989f60b46",
+              "png": "07-surface-left-edge.png",
+              "png_sha256": "8e9c735ab92b97f5a11c5ff049e3b7502165d5bf92b0927af171e9de61b678c8",
+              "cursor_tip": [
+                384,
+                383
+              ]
+            },
+            {
+              "step": "surface-right-edge",
+              "ppm_sha256": "ced85843ce539444c6856a33851f2f444ccf6555e415ab445d396d18dc9afc62",
+              "png": "08-surface-right-edge.png",
+              "png_sha256": "d72dea8c14a4754e897f70c6c5d54dcb984f04ab8871bd68a9c5db1f8699f717",
+              "cursor_tip": [
+                639,
+                383
+              ]
+            }
+          ],
+          "markers": [
+            "screen: framebuffer 1024x768 BGRX at 0x80000000, pitch 4096, write-combining, MTRR type 0, 124x39 cells",
+            "desktop: scene ready; kernel-owned BGRX surface, bounded console viewport",
+            "gui: native ABI5 demo; one surface <=163840 bytes; upload <=4096 bytes; event queue=16"
+          ],
+          "pointer_events": [
+            "user[pointer-demo]: pointer-demo: x=140 y=72 down=0 inside=1",
+            "user[pointer-demo]: pointer-demo: x=140 y=72 down=1 inside=1",
+            "user[pointer-demo]: pointer-demo: x=140 y=72 down=0 inside=1",
+            "user[pointer-demo]: pointer-demo: x=80 y=12 down=0 inside=1",
+            "user[pointer-demo]: pointer-demo: x=0 y=73 down=0 inside=1",
+            "user[pointer-demo]: pointer-demo: x=60 y=73 down=0 inside=1",
+            "user[pointer-demo]: pointer-demo: x=120 y=73 down=0 inside=1",
+            "user[pointer-demo]: pointer-demo: x=180 y=73 down=0 inside=1",
+            "user[pointer-demo]: pointer-demo: x=240 y=73 down=0 inside=1",
+            "user[pointer-demo]: pointer-demo: x=255 y=73 down=0 inside=1"
+          ]
+        },
+        "candidate": {
+          "shots": [
+            {
+              "step": "ready",
+              "ppm_sha256": "ff9fc63114ed2faf1b2202912a75134f50ab2ce0651b95c52df9e3f1d0be2868",
+              "png": "00-ready.png",
+              "png_sha256": "f498dd815f89358990086ecc48f94680f1d1abd2e83517ceedb3c1521c37558b",
+              "cursor_tip": [
+                512,
+                390
+              ]
+            },
+            {
+              "step": "moved",
+              "ppm_sha256": "3884386b1574d0144c667f06346be7e2e42b6d4e4cab24e6190fc15714f76a5e",
+              "png": "01-moved.png",
+              "png_sha256": "0a7fae58fbe30b8c016eef0d63bc04efbdfbf48887ccbd556115109bdacc4e58",
+              "cursor_tip": [
+                524,
+                382
+              ]
+            },
+            {
+              "step": "clicked",
+              "ppm_sha256": "d7a34cd79bc00526151700b43244561ad1855578584a7f3a6273d1f80593529c",
+              "png": "02-clicked.png",
+              "png_sha256": "3814e66733e1139bf7cd48891ad88d18cfcdc30c7114c2f2739a6241d2566b09",
+              "cursor_tip": [
+                524,
+                382
+              ]
+            },
+            {
+              "step": "top-left",
+              "ppm_sha256": "38897db7b967720450610a995125478a91acaf03473384edb4584587bceb5d30",
+              "png": "03-top-left.png",
+              "png_sha256": "6fa27543f1f507ab7f51909705a5434a9e6cbe425d8c00130689f555e1ea8797",
+              "cursor_tip": [
+                0,
+                0
+              ]
+            },
+            {
+              "step": "top-right",
+              "ppm_sha256": "d95ebf2037859eb064005482a1b4ada2c5968f5236875dfa1bca032779cc8095",
+              "png": "04-top-right.png",
+              "png_sha256": "4a6ea51c0841bcb0d5adc058f278624e9532793c8be9840778d084aef9f567d6",
+              "cursor_tip": [
+                1023,
+                0
+              ]
+            },
+            {
+              "step": "bottom-right",
+              "ppm_sha256": "7e4450c29e7306dd015c7911f89b3955058f7571572fbe0d54bc97b53a3a170d",
+              "png": "05-bottom-right.png",
+              "png_sha256": "c678e1d76abfad6e980a5667dd0627b6162e37a805ec1c11e9a83ecc57d49edc",
+              "cursor_tip": [
+                1023,
+                767
+              ]
+            },
+            {
+              "step": "bottom-left",
+              "ppm_sha256": "4f206671619a6f37f2989e274f4674e9a02e8ec45696b9685b684895a11496dc",
+              "png": "06-bottom-left.png",
+              "png_sha256": "5845f32844733336ab5d29eaded357d670cefdd3dacd7462b9ebfd73849816d7",
+              "cursor_tip": [
+                0,
+                767
+              ]
+            },
+            {
+              "step": "surface-left-edge",
+              "ppm_sha256": "7d8cf204c4068eaa2208a07748c7e7b6e8ce097173952f2ca52ab62989f60b46",
+              "png": "07-surface-left-edge.png",
+              "png_sha256": "8e9c735ab92b97f5a11c5ff049e3b7502165d5bf92b0927af171e9de61b678c8",
+              "cursor_tip": [
+                384,
+                383
+              ]
+            },
+            {
+              "step": "surface-right-edge",
+              "ppm_sha256": "ced85843ce539444c6856a33851f2f444ccf6555e415ab445d396d18dc9afc62",
+              "png": "08-surface-right-edge.png",
+              "png_sha256": "d72dea8c14a4754e897f70c6c5d54dcb984f04ab8871bd68a9c5db1f8699f717",
+              "cursor_tip": [
+                639,
+                383
+              ]
+            }
+          ],
+          "markers": [
+            "screen: framebuffer 1024x768 BGRX at 0x80000000, pitch 4096, write-combining, MTRR type 0, 124x39 cells",
+            "desktop: scene ready; kernel-owned BGRX surface, bounded console viewport",
+            "gui: native ABI5 demo; one surface <=163840 bytes; upload <=4096 bytes; event queue=16"
+          ],
+          "pointer_events": [
+            "user[pointer-demo]: pointer-demo: x=140 y=72 down=0 inside=1",
+            "user[pointer-demo]: pointer-demo: x=140 y=72 down=1 inside=1",
+            "user[pointer-demo]: pointer-demo: x=140 y=72 down=0 inside=1",
+            "user[pointer-demo]: pointer-demo: x=80 y=12 down=0 inside=1",
+            "user[pointer-demo]: pointer-demo: x=0 y=73 down=0 inside=1",
+            "user[pointer-demo]: pointer-demo: x=60 y=73 down=0 inside=1",
+            "user[pointer-demo]: pointer-demo: x=120 y=73 down=0 inside=1",
+            "user[pointer-demo]: pointer-demo: x=180 y=73 down=0 inside=1",
+            "user[pointer-demo]: pointer-demo: x=240 y=73 down=0 inside=1",
+            "user[pointer-demo]: pointer-demo: x=255 y=73 down=0 inside=1"
+          ]
+        },
+        "pixel_identical_steps": 9
+      }
+    ],
+    "apps": {
+      "vsh": "e7af3ee56164f587f7ca1338f7ddfcb202b6f4310f10b4dcba6a2576743cb181",
+      "hello": "c6c6416195a0f18d680d7f8f19be52ce02ff02912ef3bac45324fbe88006cd06",
+      "rixie": "77104da3b33caf809daf5e6674ac4e2fa9edf6a9e2e5dd59828514df76490d32",
+      "gui-demo": "f114dbe666ff479229ce851658847a4b11b5f0e5b61f45b73d8a0ee39fc57faa",
+      "pointer-demo": "2389d0690177e1de08a6211919e1dc1247d81faaeb5e5c90c196b05fbb7022e2"
+    },
+    "out": "/tmp/claude-1000/-home-veasnawt-src-vos-r2b/60e2c367-ad7c-4df0-8bfe-92a041f73dce/scratchpad/g2native-gui"
+  },
+  "baseline_reconstruction": "worker baseline = candidate tree with the frozen screen.c restored and the Rust screen module removed; its .text/.rodata/.data/.bss equal the real main 39a7dfa build"
+}

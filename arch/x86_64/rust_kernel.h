@@ -85,6 +85,39 @@ int vos_rust_vnet_send_length_ok(uint32_t length);
 uint32_t vos_rust_vnet_tx_wire(uint32_t length);
 int vos_rust_vnet_capacity_ok(uint32_t capacity);
 int vos_rust_vnet_rx_outputs_overlap(uint64_t frame, uint32_t capacity, uint64_t length);
+/* R3-G2 screen.c geometry and bounds decisions over scalars (no framebuffer,
+ * VGA or device memory crosses this bridge). screen_choose stays in screen.h. */
+#define VOS_SCREEN_PUT_IGNORE 0u
+#define VOS_SCREEN_PUT_NEWLINE 1u
+#define VOS_SCREEN_PUT_DRAW 2u
+#define VOS_SCREEN_PUT_WRAP_DRAW 3u
+int vos_rust_screen_visible(uint32_t width, uint32_t height, uint32_t x, uint32_t y);
+uint32_t vos_rust_screen_span(uint32_t len, uint32_t limit, uint32_t start);
+int vos_rust_screen_glyph_index(uint32_t width, uint32_t height, uint32_t x, uint32_t y, uint8_t c);
+int vos_rust_screen_overlaps(uint32_t x, uint32_t y, uint32_t w, uint32_t h, uint32_t cx, uint32_t cy);
+uint32_t vos_rust_screen_cursor_extent(uint32_t limit, uint32_t pos);
+uint32_t vos_rust_screen_cell_x(uint32_t text_x, uint32_t cx);
+uint32_t vos_rust_screen_row_y(uint32_t log_y, uint32_t r);
+uint32_t vos_rust_screen_cell_y(uint32_t log_y, uint32_t cy);
+uint32_t vos_rust_screen_put_action(uint8_t c, uint32_t cx, uint32_t cols);
+int64_t vos_rust_screen_input_next_row(uint32_t cy, uint32_t rows);
+uint32_t vos_rust_screen_ring_next(uint32_t cy, uint32_t rows);
+uint32_t vos_rust_screen_ring_gap(uint32_t cy, uint32_t rows);
+uint64_t vos_rust_screen_erase(int input, uint32_t cx, uint32_t cy, uint32_t cols, uint32_t rows);
+uint32_t vos_rust_screen_fb_cols(uint32_t width);
+uint32_t vos_rust_screen_fb_rows(uint32_t height, uint32_t log_y);
+uint32_t vos_rust_screen_text_cols(uint32_t text_w);
+uint32_t vos_rust_screen_text_rows(uint32_t text_h);
+int vos_rust_screen_cells_ok(uint32_t cols, uint32_t rows);
+uint32_t vos_rust_screen_input_cols(uint32_t cols);
+uint32_t vos_rust_screen_input_rows(uint32_t rows);
+int vos_rust_screen_gui_room(uint32_t clear_w, uint32_t clear_bottom, uint32_t log_y);
+int vos_rust_screen_gui_size_ok(uint32_t w, uint32_t h);
+uint32_t vos_rust_screen_gui_x(uint32_t clear_x, uint32_t clear_w, uint32_t w);
+uint32_t vos_rust_screen_gui_y(uint32_t log_y, uint32_t clear_bottom, uint32_t h);
+uint32_t vos_rust_screen_pointer_home(uint32_t origin, uint32_t extent);
+uint32_t vos_rust_screen_pointer_axis(uint32_t pos, int32_t delta, uint32_t limit);
+uint32_t vos_rust_screen_pointer_state(uint32_t cx, uint32_t cy, uint32_t gx, uint32_t gy, uint32_t gw, uint32_t gh);
 struct pointer_packet;
 /* R2: PS/2 pointer polling and packet dequeue Rust entry points. */
 int vos_rust_keyboard_pointer_poll(struct keyboard *k, struct pointer_packet *p);

@@ -99,6 +99,11 @@ jobs:
           python3 -I -B scripts/test-desktop-rust.py \
             --archive build/x86_64/rust/libvos_kernel.a \
             --kernel-dir build/x86_64 --rustc "$RUSTC" --out build/r3-g1-desktop-ci
+      - name: Verify Rust screen geometry and bounds decisions against the frozen accepted screen.c (whole-module differential, mutation controls, ownership)
+        run: |
+          python3 -I -B scripts/test-screen-rust.py \
+            --archive build/x86_64/rust/libvos_kernel.a \
+            --kernel-dir build/x86_64 --rustc "$RUSTC" --out build/r3-g2-screen-ci
 
       - name: Verify Rust boot reservations and EFI boundary (B1)
         run: |
