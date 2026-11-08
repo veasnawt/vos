@@ -535,3 +535,55 @@ pub unsafe extern "C" fn vos_rust_net_tcp_finish(c: *mut Tcp, now: u64, out: *mu
     unsafe { sink_out(&s, out, length) };
     e
 }
+
+// ---------------- R3-N3: virtio-net validation decisions ----------------
+// Scalars only: the C driver keeps PCI, register
+// windows, virtqueue/DMA memory, volatile ring reads, fences, reset,
+// notification and ownership, and passes values it has already read.
+#[path = "../../../kernel/rust/net/vnet.rs"]
+pub mod vnet;
+
+#[unsafe(no_mangle)]
+pub extern "C" fn vos_rust_vnet_features_ok(offered: u64) -> i32 {
+    vnet::features_ok(offered) as i32
+}
+#[unsafe(no_mangle)]
+pub extern "C" fn vos_rust_vnet_queue_size_ok(size: u32) -> i32 {
+    vnet::queue_size_ok(size) as i32
+}
+#[unsafe(no_mangle)]
+pub extern "C" fn vos_rust_vnet_queues_ok(count: u32) -> i32 {
+    vnet::queues_ok(count) as i32
+}
+#[unsafe(no_mangle)]
+pub extern "C" fn vos_rust_vnet_used_count_ok(count: u32, tx: i32) -> i32 {
+    vnet::used_count_ok(count, tx != 0) as i32
+}
+#[unsafe(no_mangle)]
+pub extern "C" fn vos_rust_vnet_used_entry(seen: u32, id: u32, len: u32, tx: i32) -> u32 {
+    vnet::used_entry(seen, id, len, tx != 0)
+}
+#[unsafe(no_mangle)]
+pub extern "C" fn vos_rust_vnet_header_ok(flags: u8, gso: u8) -> i32 {
+    vnet::header_ok(flags, gso) as i32
+}
+#[unsafe(no_mangle)]
+pub extern "C" fn vos_rust_vnet_notify_ok(offset: u64, length: u32) -> i32 {
+    vnet::notify_ok(offset, length) as i32
+}
+#[unsafe(no_mangle)]
+pub extern "C" fn vos_rust_vnet_send_length_ok(length: u32) -> i32 {
+    vnet::send_length_ok(length) as i32
+}
+#[unsafe(no_mangle)]
+pub extern "C" fn vos_rust_vnet_tx_wire(length: u32) -> u32 {
+    vnet::tx_wire(length)
+}
+#[unsafe(no_mangle)]
+pub extern "C" fn vos_rust_vnet_capacity_ok(capacity: u32) -> i32 {
+    vnet::capacity_ok(capacity) as i32
+}
+#[unsafe(no_mangle)]
+pub extern "C" fn vos_rust_vnet_rx_outputs_overlap(frame: u64, capacity: u32, length: u64) -> i32 {
+    vnet::rx_outputs_overlap(frame, capacity, length) as i32
+}

@@ -1,0 +1,14 @@
+{
+  "baseline": "afe33b8671c4648cc946001013a4753a16fc52e2",
+  "sources_sha256": {
+    "virtio-net.c": "f23fa484fa199e032950390ac50dd82ca428836c6e625147f7ade12b92786b83"
+  },
+  "headers_sha256": {
+    "virtio_net.h": "7ee0bf7a34f31edfcdbb8dc6dc77f282664727775fc55ede4aa18cc0bc7f7222"
+  },
+  "git_blobs": {
+    "virtio-net.c": "854857057209dec370f92fc95c4012e8d3d78531",
+    "virtio_net.h": "772beeee2c1367a1776a7c824673f1738b26e60c"
+  },
+  "transformation": "Byte-identical accepted arch/x86_64/virtio_net.c and virtio_net.h at merged main afe33b8. tests/host/vnet-differential.c includes either this frozen driver or the production driver (which calls the Rust decisions) against one bounded PCI/DMA device model; only the physical alias and the poll limits are replaced for host execution, exactly as in the accepted tests/host/virtio-net.c. The production virtio_net.h is byte-identical."
+}

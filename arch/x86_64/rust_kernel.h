@@ -71,6 +71,20 @@ int vos_rust_net_tcp_receive(struct net_tcp *c, void *out, size_t capacity, size
 int vos_rust_net_tcp_ack(struct net_tcp *c, uint64_t now, void *out, size_t capacity, size_t *length);
 int vos_rust_net_tcp_retransmit(struct net_tcp *c, uint64_t now, void *out, size_t capacity, size_t *length);
 int vos_rust_net_tcp_finish(struct net_tcp *c, uint64_t now, void *out, size_t capacity, size_t *length);
+/* R3-N3 virtio-net validation decisions over values the C driver has read
+ * (no device or DMA memory crosses this bridge). */
+#define VNET_USED_INVALID 0xffffffffu
+int vos_rust_vnet_features_ok(uint64_t offered);
+int vos_rust_vnet_queue_size_ok(uint32_t size);
+int vos_rust_vnet_queues_ok(uint32_t count);
+int vos_rust_vnet_used_count_ok(uint32_t count, int tx);
+uint32_t vos_rust_vnet_used_entry(uint32_t seen, uint32_t id, uint32_t len, int tx);
+int vos_rust_vnet_header_ok(uint8_t flags, uint8_t gso);
+int vos_rust_vnet_notify_ok(uint64_t offset, uint32_t length);
+int vos_rust_vnet_send_length_ok(uint32_t length);
+uint32_t vos_rust_vnet_tx_wire(uint32_t length);
+int vos_rust_vnet_capacity_ok(uint32_t capacity);
+int vos_rust_vnet_rx_outputs_overlap(uint64_t frame, uint32_t capacity, uint64_t length);
 struct pointer_packet;
 /* R2: PS/2 pointer polling and packet dequeue Rust entry points. */
 int vos_rust_keyboard_pointer_poll(struct keyboard *k, struct pointer_packet *p);
