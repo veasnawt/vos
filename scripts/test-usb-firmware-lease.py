@@ -2,6 +2,8 @@
 """USB input bring-up, Increment 2: hosted gate for the read-only firmware-table lease (tests/host/usb-firmware-lease.c).
 
 Builds the test against the real arch/x86_64/devmap.c, pmm.c and xhci_survey.c with AddressSanitizer and UndefinedBehaviorSanitizer
+(R4-M1: plus the production Rust PMM checks, arch/x86_64/rust/pmm.rs and kernel/rust/mm/pmm.rs, built for the host with overflow
+checks and debug assertions, since this test defines its own boot_mmap_entry and so does not link the kernel archive)
 (no recovery: any report aborts), runs it, then runs mutation controls: each mutant changes one decision in devmap.c (a private
 copy under a temporary directory; the source tree is never modified) and the test must fail. A mutant that still passes, or does not
 compile, fails the gate. Nothing here touches PCI, MMIO or physical memory; the lease is modelled and never dereferenced."""
@@ -39,9 +41,29 @@ def sha(p):
     return hashlib.sha256(Path(p).read_bytes()).hexdigest()
 
 
+PMM_GLUE, PMM_CORE = 'arch/x86_64/rust/pmm.rs', 'kernel/rust/mm/pmm.rs'
+
+
+def build_pmm(rustc, out, report):
+    """The production Rust pmm_free_check_in/pmm_frame_state_in/pmm_check_in as a host staticlib (nothing else)."""
+    root, lib = out / 'pmm-root.rs', out / 'libpmm-host.a'
+    root.write_text('#![no_std]\n#[path=' + json.dumps(str(ROOT / PMM_GLUE)) + '] mod pmm;\n'
+                    'unsafe extern "C" {fn abort()->!;}\n#[panic_handler] fn p(_: &core::panic::PanicInfo)->! {unsafe{abort()}}\n'
+                    '// host test only: precompiled core references the personality even with panic=abort\n'
+                    '#[unsafe(no_mangle)] pub extern "C" fn rust_eh_personality() {}\n')
+    cmd = [rustc, '--edition=2024', '-Dwarnings', '-Copt-level=2', '-Coverflow-checks=yes', '-Cdebug-assertions=yes',
+           '--crate-type=staticlib', '-Cpanic=abort', str(root), '-o', str(lib)]
+    report['commands'].append(cmd)
+    with (out / 'pmm-rust-build.txt').open('x') as f:
+        if subprocess.run(cmd, cwd=ROOT, stdout=f, stderr=subprocess.STDOUT).returncode:
+            raise RuntimeError('the Rust PMM checks do not build; see pmm-rust-build.txt')
+    return lib
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument('--out', type=Path, required=True)
+    ap.add_argument('--rustc', required=True)
     args = ap.parse_args()
     out = args.out.resolve()
     if out.exists() or not out.is_relative_to(ROOT / 'build'):
@@ -54,12 +76,13 @@ def main():
     for name, _why, old, new in M:
         if src.count(old) != 1 or old == new:
             raise SystemExit(f'mutant {name}: anchor occurs {src.count(old)} times (or no change)')
-    report = {'hosted_only': True, 'device_access': False, 'sources_sha256': {str(p.relative_to(ROOT)): sha(p) for p in (DEVMAP, ROOT / TEST, Path(__file__), ROOT / 'arch/x86_64/xhci_survey.c', ROOT / 'arch/x86_64/pmm.c')},
+    report = {'hosted_only': True, 'device_access': False, 'sources_sha256': {str(p.relative_to(ROOT)): sha(p) for p in (DEVMAP, ROOT / TEST, Path(__file__), ROOT / 'arch/x86_64/xhci_survey.c', ROOT / 'arch/x86_64/pmm.c', ROOT / PMM_GLUE, ROOT / PMM_CORE)},
               'commands': [], 'required_mutants': REQUIRED}
     base = ['gcc', '-std=gnu11', '-Wall', '-Wextra', '-ffunction-sections', '-fdata-sections', '-Wl,--gc-sections', '-fno-pie', '-no-pie', '-Iarch/x86_64']
     san = ['-O1', '-g', '-fsanitize=address,undefined', '-fno-sanitize-recover=all', '-fno-omit-frame-pointer']
     try:
-        cmd = base + ['-Werror'] + san + [TEST, '-o', str(out / 'sanitizer')]
+        pmm = build_pmm(args.rustc, out, report)
+        cmd = base + ['-Werror'] + san + [TEST, str(pmm), '-o', str(out / 'sanitizer')]
         report['commands'].append(cmd)
         with (out / 'sanitizer-build.txt').open('x') as f:
             b = subprocess.run(cmd, cwd=ROOT, stdout=f, stderr=subprocess.STDOUT)
@@ -77,7 +100,7 @@ def main():
                 path = Path(tmp) / f'{name}.c'
                 path.write_text(src.replace(old, new))
                 exe = Path(tmp) / name
-                c = subprocess.run(base + san + [f'-DDEVMAP_C="{path}"', TEST, '-o', str(exe)], cwd=ROOT, capture_output=True, text=True)
+                c = subprocess.run(base + san + [f'-DDEVMAP_C="{path}"', TEST, str(pmm), '-o', str(exe)], cwd=ROOT, capture_output=True, text=True)
                 res = {'name': name, 'breaks': why}
                 if c.returncode:
                     res.update(killed_by=['INVALID: mutant does not compile'], detail=c.stderr[-400:])

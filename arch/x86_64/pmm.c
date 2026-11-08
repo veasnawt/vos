@@ -137,22 +137,10 @@ int pmm_alloc_in(struct pmm *p, uint64_t *phys)
     return PMM_ENOMEM;
 }
 
-int pmm_free_check_in(const struct pmm *p, uint64_t phys)
-{
-    if (p->state != PMM_READY)
-        return PMM_ENOTREADY;
-    if (phys % PAGE_SIZE != 0)
-        return PMM_EALIGN;
-    if (phys >= p->frames * PAGE_SIZE)
-        return PMM_ERANGE;
-    if (!test_bit(p->avail, phys / PAGE_SIZE))
-        return PMM_EPROTECTED;
-    if (!test_bit(p->alloc, phys / PAGE_SIZE))
-        return PMM_ENOTALLOC;
-    if (p->free >= p->usable)
-        return PMM_ECORRUPT;
-    return PMM_OK;
-}
+/*
+ * R4-M1: pmm_free_check_in, pmm_frame_state_in and pmm_check_in (the read-only checks, pmm.h ABI unchanged) are
+ * Rust: kernel/rust/mm/pmm.rs behind arch/x86_64/rust/pmm.rs. The accepted C is tests/reference/pmm-r4m1.c.
+ */
 
 int pmm_free_in(struct pmm *p, uint64_t phys)
 {
@@ -186,38 +174,6 @@ int pmm_reserve_in(struct pmm *p, uint64_t phys)
         return PMM_ECORRUPT;
     p->alloc[frame / 64] |= 1ULL << (frame % 64);
     p->free--;
-    return PMM_OK;
-}
-
-int pmm_frame_state_in(const struct pmm *p, uint64_t phys)
-{
-    uint64_t frame = phys / PAGE_SIZE;
-
-    if (p->state != PMM_READY || frame >= p->frames || !test_bit(p->avail, frame))
-        return PMM_FRAME_UNAVAILABLE;
-    return test_bit(p->alloc, frame) ? PMM_FRAME_ALLOCATED : PMM_FRAME_FREE;
-}
-
-int pmm_check_in(const struct pmm *p)
-{
-    uint64_t usable = 0, free = 0;
-
-    if (p->state != PMM_READY)
-        return PMM_ECORRUPT;
-    for (uint64_t w = 0; w < PMM_WORDS(p->frames); w++) {
-        uint64_t m = p->avail[w] & ~p->alloc[w];
-
-        if (p->alloc[w] & ~p->avail[w])
-            return PMM_ECORRUPT;        /* allocated frame that was never allocatable */
-        if (w < PMM_LOW_LIMIT / PAGE_SIZE / 64 && p->avail[w])
-            return PMM_ECORRUPT;        /* allocatable frame below 1 MiB */
-        if (w < p->hint && m)
-            return PMM_ECORRUPT;        /* free frame below the hint */
-        usable += count_bits(p->avail[w]);
-        free += count_bits(m);
-    }
-    if (usable != p->usable || free != p->free || free > usable)
-        return PMM_ECORRUPT;
     return PMM_OK;
 }
 
