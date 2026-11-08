@@ -5,6 +5,7 @@
 #include "font8x16.h"
 #include "lib.h"
 #include "memlayout.h"
+#include "rust_kernel.h" /* R3-G2: geometry and bounds decisions are Rust-owned. */
 
 /* A restrained palette (0xRRGGBB, stored as BGRX: blue in the low byte). */
 #define COLOR_BG        0x0E1116u
@@ -57,33 +58,8 @@ const char *screen_describe(void)
     return why;
 }
 
-int screen_choose(uint32_t fb_tags, const char *fb_err, int fb_kind, int efi, uint8_t bda_mode, uint16_t bda_cols,
-                  const char **out)
-{
-    if (!fb_err && fb_kind == BOOT_FB_BGRX32) {
-        *out = "framebuffer";
-        return SCREEN_FB;
-    }
-    if (!fb_err && fb_kind == BOOT_FB_EGA_TEXT) {
-        *out = "VGA text (the loader reports 80x25 EGA text)";
-        return SCREEN_VGA_TEXT;
-    }
-    if (fb_tags) {                      /* refused: a graphics mode may be active, so no guessing */
-        *out = fb_err ? fb_err : "unusable framebuffer information";
-        return SCREEN_NONE;
-    }
-    if (efi) {
-        *out = "UEFI boot without framebuffer information";
-        return SCREEN_NONE;
-    }
-    if ((bda_mode == 3 || bda_mode == 7) && bda_cols == VGA_COLS) {
-        *out = "VGA text (BIOS data area: 80-column text mode)";
-        return SCREEN_VGA_TEXT;
-    }
-    *out = "no framebuffer information and the BIOS reports no text mode";
-    return SCREEN_NONE;
-}
-
+/* R3-G2: screen_choose() (screen.h, unchanged ABI) is Rust; the accepted C is frozen
+ * as tests/reference/screen-r3g2.c. */
 
 /* Fixed 32x32 kernel-owned cursor canvas; visible arrow is 21x28.
  * Hotspot (0,0) is the exact tip. No framebuffer/underlay pointer reaches
@@ -112,15 +88,17 @@ static const uint32_t cursor_fill[CURSOR_H]={
 static struct {int active,drawn;uint32_t x,y,saved[CURSOR_W*CURSOR_H];} cursor;
 static void cursor_hide(void) {
     if(!cursor.drawn)return;
-    for(unsigned y=0;y<CURSOR_H && y<fb.height-cursor.y;y++)
-        for(unsigned x=0;x<CURSOR_W && x<fb.width-cursor.x;x++)
+    uint32_t ys=vos_rust_screen_cursor_extent(fb.height,cursor.y),xs=vos_rust_screen_cursor_extent(fb.width,cursor.x);
+    for(unsigned y=0;y<ys;y++)
+        for(unsigned x=0;x<xs;x++)
             fb.base[(uint64_t)(cursor.y+y)*fb.pitch_px+cursor.x+x]=cursor.saved[y*CURSOR_W+x];
     cursor.drawn=0;
 }
 static void cursor_show(void) {
     if(!cursor.active || cursor.drawn || panicked)return;
-    for(unsigned y=0;y<CURSOR_H && y<fb.height-cursor.y;y++)
-        for(unsigned x=0;x<CURSOR_W && x<fb.width-cursor.x;x++) {
+    uint32_t ys=vos_rust_screen_cursor_extent(fb.height,cursor.y),xs=vos_rust_screen_cursor_extent(fb.width,cursor.x);
+    for(unsigned y=0;y<ys;y++)
+        for(unsigned x=0;x<xs;x++) {
             volatile uint32_t *p=fb.base+(uint64_t)(cursor.y+y)*fb.pitch_px+cursor.x+x;
             cursor.saved[y*CURSOR_W+x]=*p;
             uint32_t bit=1u<<x; /* x<32, including clipped right-edge tiles. */
@@ -129,8 +107,7 @@ static void cursor_show(void) {
     cursor.drawn=1;
 }
 static int cursor_damage(const struct screen_surface *s,uint32_t x,uint32_t y,uint32_t w,uint32_t h) {
-    int hit=cursor.drawn && s==&fb && (uint64_t)x<(uint64_t)cursor.x+CURSOR_W && (uint64_t)x+w>cursor.x &&
-        (uint64_t)y<(uint64_t)cursor.y+CURSOR_H && (uint64_t)y+h>cursor.y;
+    int hit=cursor.drawn && s==&fb && vos_rust_screen_overlaps(x,y,w,h,cursor.x,cursor.y);
     if(hit)cursor_hide();
     return hit;
 }
@@ -138,12 +115,10 @@ static int cursor_damage(const struct screen_surface *s,uint32_t x,uint32_t y,ui
 
 void screen_fill(const struct screen_surface *s, uint32_t x, uint32_t y, uint32_t w, uint32_t h, uint32_t color)
 {
-    if (x >= s->width || y >= s->height)
+    if (!vos_rust_screen_visible(s->width, s->height, x, y))
         return;
-    if (w > s->width - x)
-        w = s->width - x;
-    if (h > s->height - y)
-        h = s->height - y;
+    w = vos_rust_screen_span(w, s->width, x);
+    h = vos_rust_screen_span(h, s->height, y);
     int damaged=cursor_damage(s,x,y,w,h);
     for (uint32_t r = 0; r < h; r++) {
         volatile uint32_t *p = s->base + (uint64_t)(y + r) * s->pitch_px + x;
@@ -156,10 +131,9 @@ void screen_fill(const struct screen_surface *s, uint32_t x, uint32_t y, uint32_
 
 void screen_glyph(const struct screen_surface *s, uint32_t x, uint32_t y, char c, uint32_t fg, uint32_t bg)
 {
-    unsigned i = (unsigned char)c >= FONT8X16_FIRST && (unsigned char)c < FONT8X16_FIRST + FONT8X16_GLYPHS ?
-                 (unsigned char)c - FONT8X16_FIRST : '?' - FONT8X16_FIRST;
+    int i = vos_rust_screen_glyph_index(s->width, s->height, x, y, (uint8_t)c);
 
-    if (x > s->width || s->width - x < 8 || y > s->height || s->height - y < 16)
+    if (i < 0)
         return;
     int damaged=cursor_damage(s,x,y,8,16);
     for (uint32_t r = 0; r < 16; r++) {
@@ -228,7 +202,7 @@ static void clear_line(uint32_t r)
         for (unsigned i = 0; i < cols; i++)
             input_cells[r * INPUT_COLS + i] = ' ';
     if (kind == SCREEN_FB)
-        screen_fill(&fb, desktop_mode ? clear_x : 0, log_y + r * SCREEN_LINE_H,
+        screen_fill(&fb, desktop_mode ? clear_x : 0, vos_rust_screen_row_y(log_y, r),
                     desktop_mode ? clear_w : fb.width, SCREEN_LINE_H, COLOR_BG);
     else
         for (unsigned i = 0; i < VGA_COLS; i++)
@@ -239,8 +213,10 @@ static void newline(void)
 {
     cx = 0;
     if (input_mode) {
-        if (cy + 1 < rows) {
-            clear_line(++cy);
+        int64_t next = vos_rust_screen_input_next_row(cy, rows);
+        if (next >= 0) {
+            cy = (uint32_t)next;
+            clear_line(cy);
             return;
         }
         /* Shift the character shadow, then redraw. Never read device memory. */
@@ -252,33 +228,34 @@ static void newline(void)
             for (unsigned c = 0; c < cols; c++) {
                 char ch = input_cells[r * INPUT_COLS + c];
                 if (kind == SCREEN_FB)
-                    screen_glyph(&fb, text_x + c * 8, log_y + r * SCREEN_LINE_H + 1,
+                    screen_glyph(&fb, vos_rust_screen_cell_x(text_x, c), vos_rust_screen_cell_y(log_y, r),
                                  ch, COLOR_FG, COLOR_BG);
                 else
                     vga[(1 + r) * VGA_COLS + c] = (uint16_t)(VGA_LOG << 8 | (uint8_t)ch);
             }
         return;
     }
-    if (++cy >= rows)
-        cy = 0;
+    cy = vos_rust_screen_ring_next(cy, rows);
     clear_line(cy);
-    clear_line((cy + 1) % rows);        /* the gap after the newest line */
+    clear_line(vos_rust_screen_ring_gap(cy, rows));   /* the gap after the newest line */
 }
 
 static void put(char c)
 {
-    if (c == '\n') {
+    uint32_t action = vos_rust_screen_put_action((uint8_t)c, cx, cols);
+
+    if (action == VOS_SCREEN_PUT_NEWLINE) {
         newline();
         return;
     }
-    if ((unsigned char)c < 0x20 || (unsigned char)c > 0x7E)
+    if (action == VOS_SCREEN_PUT_IGNORE)
         return;
-    if (cx >= cols)
+    if (action == VOS_SCREEN_PUT_WRAP_DRAW)
         newline();
     if (input_mode)
         input_cells[cy * INPUT_COLS + cx] = c;
     if (kind == SCREEN_FB)
-        screen_glyph(&fb, text_x + cx * 8, log_y + cy * SCREEN_LINE_H + 1, c, COLOR_FG, COLOR_BG);
+        screen_glyph(&fb, vos_rust_screen_cell_x(text_x, cx), vos_rust_screen_cell_y(log_y, cy), c, COLOR_FG, COLOR_BG);
     else
         vga[(1 + cy) * VGA_COLS + cx] = (uint16_t)(VGA_LOG << 8 | (uint8_t)c);
     cx++;
@@ -304,19 +281,17 @@ void screen_erase_previous(void)
     if (!inited || kind == SCREEN_NONE || busy || panicked)
         return;
     busy = 1;
-    if (!cx) {
-        if (input_mode && !cy) {
-            busy = 0;
-            return;
-        }
-        cy = (cy + rows - 1) % rows;
-        cx = cols;
+    uint64_t next = vos_rust_screen_erase(input_mode, cx, cy, cols, rows);
+    if (next == UINT64_MAX) {
+        busy = 0;
+        return;
     }
-    cx--;
+    cx = (uint32_t)(next >> 32);
+    cy = (uint32_t)next;
     if (input_mode)
         input_cells[cy * INPUT_COLS + cx] = ' ';
     if (kind == SCREEN_FB)
-        screen_glyph(&fb, text_x + cx * 8, log_y + cy * SCREEN_LINE_H + 1,
+        screen_glyph(&fb, vos_rust_screen_cell_x(text_x, cx), vos_rust_screen_cell_y(log_y, cy),
                      ' ', COLOR_FG, COLOR_BG);
     else
         vga[(1 + cy) * VGA_COLS + cx] = (uint16_t)(VGA_LOG << 8 | ' ');
@@ -329,10 +304,8 @@ void screen_begin_input(void)
         return;
     busy = 1;
     input_mode = 1;
-    if (cols > INPUT_COLS)
-        cols = INPUT_COLS;
-    if (rows > INPUT_ROWS)
-        rows = INPUT_ROWS;
+    cols = vos_rust_screen_input_cols(cols);
+    rows = vos_rust_screen_input_rows(rows);
     cx = cy = 0;
     if (kind == SCREEN_FB)
         screen_fill(&fb, desktop_mode ? clear_x : 0, log_y, desktop_mode ? clear_w : fb.width,
@@ -433,8 +406,8 @@ void screen_init(const struct boot_info *bi)
             fb.height = f.height;
             clear_w=fb.width;clear_bottom=fb.height;
             log_y = SCREEN_BAR_H + 8;
-            cols = (fb.width - 2 * SCREEN_MARGIN) / 8;
-            rows = (fb.height - log_y - SCREEN_MARGIN) / SCREEN_LINE_H;
+            cols = vos_rust_screen_fb_cols(fb.width);
+            rows = vos_rust_screen_fb_rows(fb.height, log_y);
             screen_fill(&fb, 0, 0, fb.width, fb.height, COLOR_BG);
             serial_puts("screen: framebuffer ");
             serial_dec(f.width);
@@ -471,7 +444,7 @@ void screen_init(const struct boot_info *bi)
     inited = 1;
     if (kind == SCREEN_NONE)
         return;
-    if (rows < 2 || cols < 8) {
+    if (!vos_rust_screen_cells_ok(cols, rows)) {
         kind = SCREEN_NONE;
         why = "screen too small for the console";
         return;
@@ -490,7 +463,7 @@ int screen_desktop_begin(void)
     if(!desktop_paint(&fb,&desktop)){busy=0;return 0;}
     desktop_mode=1;text_x=desktop.text_x;clear_x=desktop.text_x;
     log_y=desktop.text_y;clear_w=desktop.text_w;clear_bottom=log_y+desktop.text_h;
-    cols=desktop.text_w/8;rows=desktop.text_h/SCREEN_LINE_H;
+    cols=vos_rust_screen_text_cols(desktop.text_w);rows=vos_rust_screen_text_rows(desktop.text_h);
     busy=0;screen_begin_input();
     return 1;
 }
@@ -499,13 +472,13 @@ int screen_desktop_begin(void)
 int screen_gui_available(void)
 {
     return inited && kind==SCREEN_FB && desktop_mode && !panicked &&
-           !busy && !gui_active && clear_w>=256 && clear_bottom>=log_y+160;
+           !busy && !gui_active && vos_rust_screen_gui_room(clear_w,clear_bottom,log_y);
 }
 int screen_gui_begin(uint32_t w,uint32_t h)
 {
-    if(!screen_gui_available() || !w || !h || w>256 || h>160)return 0;
-    gui_w=w;gui_h=h;gui_x=clear_x+(clear_w-w)/2;
-    gui_y=log_y+(clear_bottom-log_y-h)/2;gui_active=1;
+    if(!screen_gui_available() || !vos_rust_screen_gui_size_ok(w,h))return 0;
+    gui_w=w;gui_h=h;gui_x=vos_rust_screen_gui_x(clear_x,clear_w,w);
+    gui_y=vos_rust_screen_gui_y(log_y,clear_bottom,h);gui_active=1;
     screen_fill(&fb,gui_x,gui_y,w,h,0);
     return 1;
 }
@@ -527,19 +500,14 @@ void screen_gui_end(void)
 uint32_t screen_pointer_move(int32_t dx,int32_t dy) {
     if(!cursor.active || !gui_active)return 0;
     cursor_hide();
-    int64_t x=(int64_t)cursor.x+dx,y=(int64_t)cursor.y+dy;
-    cursor.x=x<0?0:x>=fb.width?fb.width-1:(uint32_t)x;
-    cursor.y=y<0?0:y>=fb.height?fb.height-1:(uint32_t)y;
+    cursor.x=vos_rust_screen_pointer_axis(cursor.x,dx,fb.width);
+    cursor.y=vos_rust_screen_pointer_axis(cursor.y,dy,fb.height);
     cursor_show();
-    int inside=cursor.x>=gui_x && cursor.x-gui_x<gui_w &&
-               cursor.y>=gui_y && cursor.y-gui_y<gui_h;
-    uint32_t lx=cursor.x<gui_x?0:cursor.x-gui_x>=gui_w?gui_w-1:cursor.x-gui_x;
-    uint32_t ly=cursor.y<gui_y?0:cursor.y-gui_y>=gui_h?gui_h-1:cursor.y-gui_y;
-    return lx|(ly<<8)|(inside?0x20000u:0);
+    return vos_rust_screen_pointer_state(cursor.x,cursor.y,gui_x,gui_y,gui_w,gui_h);
 }
 uint32_t screen_pointer_begin(void) {
     if(!gui_active || cursor.active)return 0;
-    cursor.x=gui_x+gui_w/2;cursor.y=gui_y+gui_h/2;cursor.active=1;
+    cursor.x=vos_rust_screen_pointer_home(gui_x,gui_w);cursor.y=vos_rust_screen_pointer_home(gui_y,gui_h);cursor.active=1;
     return screen_pointer_move(0,0);
 }
 void screen_pointer_end(void) {cursor_hide();cursor.active=0;}
