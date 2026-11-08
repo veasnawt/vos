@@ -96,8 +96,9 @@ int pmm_init_in(struct pmm *p, uint64_t *avail, uint64_t *alloc, uint64_t frames
     for (size_t i = 0; t && i < t->count; i++)
         protect(p, t->r[i].start & ~(PAGE_SIZE - 1), t->r[i].end, limit);
 
-    /* 5. Defensive: nothing below 1 MiB, whatever the inputs said. */
-    clear_frames(avail, 0, PMM_LOW_LIMIT / PAGE_SIZE);
+    /* 5. Defensive: nothing below 1 MiB, whatever the inputs said. Only the tracked frames: an instance smaller than
+     *    1 MiB has PMM_WORDS(frames) words. min(limit, 1 MiB) / PAGE_SIZE = min(frames, PMM_LOW_LIMIT / PAGE_SIZE). (R4-M1H) */
+    clear_frames(avail, 0, (limit < PMM_LOW_LIMIT ? limit : PMM_LOW_LIMIT) / PAGE_SIZE);
 
     for (uint64_t w = 0; w < PMM_WORDS(frames); w++)
         p->usable += count_bits(avail[w]);

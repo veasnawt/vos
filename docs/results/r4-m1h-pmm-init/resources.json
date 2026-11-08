@@ -1,0 +1,67 @@
+{
+ "kernels": {
+  "gcc13": {
+   "base": {
+    "vos_bin": 1166280,
+    "pmm_init_in_bytes": 1033,
+    "text": 273695,
+    "paths": {
+     "pmm_init_in": 96,
+     "pmm_init": 96,
+     "kernel_main": 11936,
+     "exception_handler": 4560
+    }
+   },
+   "candidate": {
+    "vos_bin": 1166248,
+    "pmm_init_in_bytes": 1048,
+    "text": 273710,
+    "paths": {
+     "pmm_init_in": 96,
+     "pmm_init": 96,
+     "kernel_main": 11936,
+     "exception_handler": 4560
+    }
+   },
+   "layout_end": "0x1ec000 both"
+  },
+  "gcc15": {
+   "base": {
+    "vos_bin": 1170904,
+    "pmm_init_in_bytes": 1121,
+    "text": 278968,
+    "paths": {
+     "pmm_init_in": 80,
+     "pmm_init": 80,
+     "kernel_main": 11984,
+     "exception_handler": 4592
+    }
+   },
+   "candidate": {
+    "vos_bin": 1170944,
+    "pmm_init_in_bytes": 1185,
+    "text": 279032,
+    "paths": {
+     "pmm_init_in": 80,
+     "pmm_init": 80,
+     "kernel_main": 11984,
+     "exception_handler": 4592
+    }
+   },
+   "layout_end": "0x1ed000 both"
+  }
+ },
+ "pmm_init_in_entry_frames_kernel_flags": {
+  "gcc13": {
+   "base": 88,
+   "literal_min": 88,
+   "adopted_byte_min": 88
+  },
+  "gcc15": {
+   "base": 72,
+   "literal_min": 88,
+   "adopted_byte_min": 72
+  }
+ },
+ "note": "base = main 36368bc8 tree (branch base 7533851); candidate = 08405154; whole paths by static analysis of the linked kernels (stackdepth2 metric)"
+}

@@ -1,0 +1,11 @@
+{
+  "baseline": "36368bc84512a056568c9577d51239318c5edfd2",
+  "accepted_pmm_c": {
+    "path": "arch/x86_64/pmm.c",
+    "sha256": "bb177a03b3f5fa45062a76a63aa25fc481800ff22464629733fca21c25af4cb5",
+    "git_blob": "e3b22f3c0862a249ec888d92be7e6e179739e56b"
+  },
+  "frozen_reference": "pmm-r4m1.c",
+  "frozen_init_prefix_bytes": 3825,
+  "purpose": "R4-M1H scope and oracle identity. The accepted pmm.c at main 36368bc8 (tree 4f6b46db) is identified by its hash; the R4-M1H change must be exactly one bounded low-memory clear in pmm_init_in (scripts/test-pmm-init.py reconstructs the accepted file from the production one and checks this hash). The vulnerable frozen oracle is the existing tests/reference/pmm-r4m1.c, whose helpers and pmm_init_in (the first 3,825 bytes, up to pmm_alloc_in) are byte-identical to the accepted main's. Not linked into the kernel."
+}

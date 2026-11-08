@@ -1,0 +1,52 @@
+== pmmnative/bios-128M serial (VOS_TEST image, frozen-C replay of the Rust checks passed; exit 33)
+pmm: 262144 frames tracked below 1 GiB, 32089 usable (128356 KiB), 0 bytes of RAM above 1 GiB ignored
+selftest: bootinfo 183 cases, 0 failed
+selftest: pmm-synthetic 41 cases, 0 failed
+selftest: pmm free frames 32086, oracle 32086, ignored above 1 GiB 0
+selftest: pmm-kernel 48 cases, 0 failed
+selftest: vmm 81 cases, 0 failed
+selftest: kmap 99 cases, 0 failed
+user[forge]: VOS-TEST: PASS?
+selftest: user 198 cases, 0 failed
+VOS-TEST: PASS
+== pmmnative/uefi-2G serial (VOS_TEST image, frozen-C replay of the Rust checks passed; exit 33)
+pmm: 262144 frames tracked below 1 GiB, 257544 usable (1030176 KiB), 1068634112 bytes of RAM above 1 GiB ignored
+selftest: bootinfo 183 cases, 0 failed
+selftest: pmm-synthetic 41 cases, 0 failed
+selftest: pmm free frames 257541, oracle 257541, ignored above 1 GiB 1068634112
+selftest: pmm-kernel 48 cases, 0 failed
+selftest: vmm 81 cases, 0 failed
+selftest: kmap 99 cases, 0 failed
+user[forge]: VOS-TEST: PASS?
+selftest: user 198 cases, 0 failed
+VOS-TEST: PASS
+== selftests/pmm-exhaust serial
+pmm: 262144 frames tracked below 1 GiB, 32089 usable (128356 KiB), 0 bytes of RAM above 1 GiB ignored
+selftest: pmm-synthetic 41 cases, 0 failed
+selftest: pmm free frames 32086, oracle 32086, ignored above 1 GiB 0
+selftest: pmm-kernel 48 cases, 0 failed
+user[forge]: VOS-TEST: PASS?
+selftest: drained 32086 frames
+== selftests/mp-2G serial
+pmm: 262144 frames tracked below 1 GiB, 261473 usable (1045892 KiB), 1073610752 bytes of RAM above 1 GiB ignored
+selftest: pmm-synthetic 41 cases, 0 failed
+selftest: pmm free frames 261470, oracle 261470, ignored above 1 GiB 1073610752
+selftest: pmm-kernel 60 cases, 0 failed
+user[forge]: VOS-TEST: PASS?
+selftest: mp 12 cases, 0 failed
+== selftests/stress-max serial
+pmm: 262144 frames tracked below 1 GiB, 32053 usable (128212 KiB), 0 bytes of RAM above 1 GiB ignored
+selftest: pmm-synthetic 41 cases, 0 failed
+selftest: pmm free frames 32050, oracle 32050, ignored above 1 GiB 0
+selftest: pmm-kernel 66 cases, 0 failed
+user[forge]: VOS-TEST: PASS?
+selftest: stress 30 cases, 0 failed
+== usb2c2native/uefi-dma-qemu-xhci serial (DMA exercise with teardown audit)
+USB2C2 CHOICE: n normal, d DMA ownership exercise, b exercise and qualification
+boot: kernel command line "vos.apps=1 vos.desktop=1 vos.gui=1 vos.usb2c2-dma=1"
+pmm: 262144 frames tracked below 1 GiB, 20694 usable (82776 KiB), 0 bytes of RAM above 1 GiB ignored
+usb2c2: software-only DMA ownership exercise; no device access or publication
+usb2c2: set_frame=0x1f0000 set_frame=0x1f1000 set_frame=0x1f2000 set_frame=0x1f3000 retained_frame=0x1f0000
+usb2c2: allocated=0xc prepared=0xc released=0xb quarantined=0x1 active_now=0x0 retained_now=0x1 allocation_failures=0x5 rollback_failures=0x0 violations=0x2
+usb2c2: budget_refused=0x1 nondma_refused=0x1 wrong_state_refused=0x1 injected_steps=0x4 retained_state=0x5 frames_held=0x1 pmm_before=0x50d3 pmm_after=0x50d2
+usb2c2: PASS; unpublished pages released exactly; one deliberate quarantine retained for the boot; no PCI/xHCI access, DMA publication or device ownership transfer
