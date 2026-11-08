@@ -1,0 +1,16 @@
+{
+  "baseline_main_f8731c9": {
+    "file_bytes": 1188936,
+    "load_memsz": 962560,
+    "text": 278528
+  },
+  "candidate_21b1e4a": {
+    "file_bytes": 1170352,
+    "load_memsz": 970752,
+    "text": 286720
+  },
+  "loaded_growth_bytes": 8192,
+  "file_change_bytes": -18584,
+  "cause": "~5.9 KB net code growth crossing two 4 KiB .text page boundaries; .rodata/.data/.bss unchanged",
+  "toolchain": "gcc 15.2.0 / rustc 1.100.0-nightly 2026-09-02"
+}

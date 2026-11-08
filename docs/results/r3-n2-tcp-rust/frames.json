@@ -1,0 +1,117 @@
+{
+  "metric": "push*8 + rsp allocations (add $-N counted, sub $-N ignored)",
+  "worker_gcc": "gcc (Ubuntu 15.2.0-16ubuntu1) 15.2.0",
+  "worker": {
+    "net_tcp_init": {
+      "C_reference": 328,
+      "Rust": 56
+    },
+    "net_tcp_input": {
+      "C_reference": 440,
+      "Rust": 328
+    },
+    "net_tcp_expire": {
+      "C_reference": 8,
+      "Rust": 8
+    },
+    "net_tcp_close": {
+      "C_reference": 0,
+      "Rust": 0
+    },
+    "net_tcp_enable_payload": {
+      "C_reference": 0,
+      "Rust": 0
+    },
+    "net_tcp_send": {
+      "C_reference": 232,
+      "Rust": 280
+    },
+    "net_tcp_receive": {
+      "C_reference": 56,
+      "Rust": 40
+    },
+    "net_tcp_ack": {
+      "C_reference": 200,
+      "Rust": 184
+    },
+    "net_tcp_abort": {
+      "C_reference": 8,
+      "Rust": 0
+    },
+    "net_tcp_enable_retransmission": {
+      "C_reference": 0,
+      "Rust": 0
+    },
+    "net_tcp_retransmit": {
+      "C_reference": 232,
+      "Rust": 248
+    },
+    "net_tcp_enable_closure": {
+      "C_reference": 0,
+      "Rust": 0
+    },
+    "net_tcp_finish": {
+      "C_reference": 24,
+      "Rust": 200
+    }
+  },
+  "host_gcc13": {
+    "net_tcp_init": {
+      "C_reference": 328,
+      "Rust": 56
+    },
+    "net_tcp_input": {
+      "C_reference": 424,
+      "Rust": 328
+    },
+    "net_tcp_expire": {
+      "C_reference": 8,
+      "Rust": 8
+    },
+    "net_tcp_close": {
+      "C_reference": 0,
+      "Rust": 0
+    },
+    "net_tcp_enable_payload": {
+      "C_reference": 0,
+      "Rust": 0
+    },
+    "net_tcp_send": {
+      "C_reference": 232,
+      "Rust": 280
+    },
+    "net_tcp_receive": {
+      "C_reference": 56,
+      "Rust": 40
+    },
+    "net_tcp_ack": {
+      "C_reference": 216,
+      "Rust": 184
+    },
+    "net_tcp_abort": {
+      "C_reference": 8,
+      "Rust": 0
+    },
+    "net_tcp_enable_retransmission": {
+      "C_reference": 0,
+      "Rust": 0
+    },
+    "net_tcp_retransmit": {
+      "C_reference": 216,
+      "Rust": 248
+    },
+    "net_tcp_enable_closure": {
+      "C_reference": 0,
+      "Rust": 0
+    },
+    "net_tcp_finish": {
+      "C_reference": 24,
+      "Rust": 200
+    }
+  },
+  "exceptions_pending_owner_approval": {
+    "net_tcp_send": 280,
+    "net_tcp_retransmit": 248,
+    "net_tcp_finish": 200
+  }
+}

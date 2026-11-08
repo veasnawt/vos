@@ -1,0 +1,121 @@
+{
+  "method": "static whole-path depth over linked kernels (GOT-indirect and register-indirect GOT calls resolved); C = main f8731c9, Rust = 21b1e4a; same rustc",
+  "boot_stack": 16384,
+  "paths": {
+    "net_tcp_init": {
+      "C_gcc15": 352,
+      "Rust_gcc15": 64,
+      "C_gcc13": 352,
+      "Rust_gcc13": 64
+    },
+    "net_tcp_input": {
+      "C_gcc15": 2248,
+      "Rust_gcc15": 2136,
+      "C_gcc13": 2232,
+      "Rust_gcc13": 2136
+    },
+    "net_tcp_expire": {
+      "C_gcc15": 32,
+      "Rust_gcc15": 16,
+      "C_gcc13": 32,
+      "Rust_gcc13": 16
+    },
+    "net_tcp_close": {
+      "C_gcc15": 0,
+      "Rust_gcc15": 0,
+      "C_gcc13": 0,
+      "Rust_gcc13": 0
+    },
+    "net_tcp_enable_payload": {
+      "C_gcc15": 0,
+      "Rust_gcc15": 0,
+      "C_gcc13": 0,
+      "Rust_gcc13": 0
+    },
+    "net_tcp_send": {
+      "C_gcc15": 480,
+      "Rust_gcc15": 464,
+      "C_gcc13": 480,
+      "Rust_gcc13": 464
+    },
+    "net_tcp_receive": {
+      "C_gcc15": 64,
+      "Rust_gcc15": 48,
+      "C_gcc13": 64,
+      "Rust_gcc13": 48
+    },
+    "net_tcp_ack": {
+      "C_gcc15": 448,
+      "Rust_gcc15": 448,
+      "C_gcc13": 464,
+      "Rust_gcc13": 448
+    },
+    "net_tcp_abort": {
+      "C_gcc15": 16,
+      "Rust_gcc15": 0,
+      "C_gcc13": 16,
+      "Rust_gcc13": 0
+    },
+    "net_tcp_enable_retransmission": {
+      "C_gcc15": 0,
+      "Rust_gcc15": 0,
+      "C_gcc13": 0,
+      "Rust_gcc13": 0
+    },
+    "net_tcp_retransmit": {
+      "C_gcc15": 720,
+      "Rust_gcc15": 512,
+      "C_gcc13": 688,
+      "Rust_gcc13": 512
+    },
+    "net_tcp_enable_closure": {
+      "C_gcc15": 0,
+      "Rust_gcc15": 0,
+      "C_gcc13": 0,
+      "Rust_gcc13": 0
+    },
+    "net_tcp_finish": {
+      "C_gcc15": 512,
+      "Rust_gcc15": 464,
+      "C_gcc13": 496,
+      "Rust_gcc13": 464
+    },
+    "net_tcp_boot_run": {
+      "C_gcc15": 6072,
+      "Rust_gcc15": 5960,
+      "C_gcc13": 6056,
+      "Rust_gcc13": 5960
+    },
+    "net_tcp_data_boot_run": {
+      "C_gcc15": 6248,
+      "Rust_gcc15": 6136,
+      "C_gcc13": 6168,
+      "Rust_gcc13": 6072
+    },
+    "net_tcp_retry_boot_run": {
+      "C_gcc15": 5960,
+      "Rust_gcc15": 5848,
+      "C_gcc13": 5928,
+      "Rust_gcc13": 5832
+    },
+    "net_tcp_close_boot_run": {
+      "C_gcc15": 5960,
+      "Rust_gcc15": 5848,
+      "C_gcc13": 5928,
+      "Rust_gcc13": 5832
+    },
+    "net_boot_run": {
+      "C_gcc15": 7944,
+      "Rust_gcc15": 7944,
+      "C_gcc13": 7960,
+      "Rust_gcc13": 7960
+    },
+    "kernel_main": {
+      "C_gcc15": 11944,
+      "Rust_gcc15": 11944,
+      "C_gcc13": 11920,
+      "Rust_gcc13": 11920
+    }
+  },
+  "note": "kernel_main worst path (11,944/11,920) is the pre-existing opt-in xHCI survey path, unchanged by R3-N2"
+}

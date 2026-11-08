@@ -1,0 +1,365 @@
+{
+  "test-arp": {
+    "bios": {
+      "passed": true,
+      "firmware": "bios",
+      "TX": 4,
+      "RX": 11,
+      "rejected": 8,
+      "neighbor_resolution": true,
+      "request_reply": true,
+      "probe_reply_without_cache": true,
+      "no_automatic_application_grants": true,
+      "DMA_frames_released": 11,
+      "ABI_v0_hello": true
+    },
+    "uefi": {
+      "passed": true,
+      "firmware": "uefi",
+      "TX": 4,
+      "RX": 11,
+      "rejected": 8,
+      "neighbor_resolution": true,
+      "request_reply": true,
+      "probe_reply_without_cache": true,
+      "no_automatic_application_grants": true,
+      "DMA_frames_released": 11,
+      "ABI_v0_hello": true
+    },
+    "passed": true
+  },
+  "test-ipv4": {
+    "bios": {
+      "passed": true,
+      "firmware": "bios",
+      "pings_sent": 2,
+      "pings_matched": 2,
+      "loss": 0,
+      "echo_requests_answered": 1,
+      "malformed_unsupported_unmatched_rejected": 11,
+      "TX": 4,
+      "RX": 15,
+      "ARP_resolution": true,
+      "DMA_frames_released": 11,
+      "ABI_v0_hello": true,
+      "no_application_grants": true
+    },
+    "uefi": {
+      "passed": true,
+      "firmware": "uefi",
+      "pings_sent": 2,
+      "pings_matched": 2,
+      "loss": 0,
+      "echo_requests_answered": 1,
+      "malformed_unsupported_unmatched_rejected": 11,
+      "TX": 4,
+      "RX": 15,
+      "ARP_resolution": true,
+      "DMA_frames_released": 11,
+      "ABI_v0_hello": true,
+      "no_application_grants": true
+    },
+    "passed": true
+  },
+  "test-udp": {
+    "bios": {
+      "passed": true,
+      "firmware": "bios",
+      "UDP_sent": 4,
+      "UDP_received": 7,
+      "invalid_unsupported_or_unbound": 12,
+      "queue_full_rejected": 1,
+      "queue_slots": 4,
+      "payload_bound": 512,
+      "TX": 5,
+      "RX": 21,
+      "ARP_resolution": true,
+      "IPv4_zero_checksum_accepted": true,
+      "computed_zero_transmitted_as_ffff": true,
+      "adapter_reset_confirmed": true,
+      "DMA_frames_released": 11,
+      "endpoint_erased": true,
+      "ABI_v0_hello": true,
+      "no_application_grants": true
+    },
+    "uefi": {
+      "passed": true,
+      "firmware": "uefi",
+      "UDP_sent": 4,
+      "UDP_received": 7,
+      "invalid_unsupported_or_unbound": 12,
+      "queue_full_rejected": 1,
+      "queue_slots": 4,
+      "payload_bound": 512,
+      "TX": 5,
+      "RX": 21,
+      "ARP_resolution": true,
+      "IPv4_zero_checksum_accepted": true,
+      "computed_zero_transmitted_as_ffff": true,
+      "adapter_reset_confirmed": true,
+      "DMA_frames_released": 11,
+      "endpoint_erased": true,
+      "ABI_v0_hello": true,
+      "no_application_grants": true
+    },
+    "passed": true
+  },
+  "test-tcp": {
+    "bios": {
+      "passed": true,
+      "firmware": "bios",
+      "handshakes": 1,
+      "half_open_timeouts": 1,
+      "SYNACK_sent": 2,
+      "rejected": 20,
+      "connection_limit": 1,
+      "context_bound_bytes": 512,
+      "TX": 3,
+      "RX": 24,
+      "ARP_resolution": true,
+      "adapter_reset_confirmed": true,
+      "DMA_frames_released": 11,
+      "endpoint_erased": true,
+      "ABI_v0_hello": true,
+      "deterministic_test_ISNs": true,
+      "no_streaming_or_retransmission": true,
+      "no_FIN_RST_exchange": true,
+      "no_application_grants": true
+    },
+    "uefi": {
+      "passed": true,
+      "firmware": "uefi",
+      "handshakes": 1,
+      "half_open_timeouts": 1,
+      "SYNACK_sent": 2,
+      "rejected": 20,
+      "connection_limit": 1,
+      "context_bound_bytes": 512,
+      "TX": 3,
+      "RX": 24,
+      "ARP_resolution": true,
+      "adapter_reset_confirmed": true,
+      "DMA_frames_released": 11,
+      "endpoint_erased": true,
+      "ABI_v0_hello": true,
+      "deterministic_test_ISNs": true,
+      "no_streaming_or_retransmission": true,
+      "no_FIN_RST_exchange": true,
+      "no_application_grants": true
+    },
+    "passed": true
+  },
+  "tcp close/data/retry (focused)": {
+    "scope": "functional parts of test-tcp-close/data/retry (host suites under ASan/UBSan, BIOS/UEFI native boots via each script boot()); their historical N5 paired benchmarks need baseline directories absent from this worktree and were NOT run",
+    "host": {
+      "net-tcp-close": "PASS",
+      "net-tcp-retry": "PASS",
+      "net-tcp-data": "PASS"
+    },
+    "native": {
+      "test-tcp-close": {
+        "bios": {
+          "passed": true,
+          "firmware": "bios",
+          "passive_close_completed": true,
+          "active_and_simultaneous_TIME_WAIT_verified": true,
+          "TIME_WAIT_live_explicit_abort": true,
+          "full_TIME_WAIT_expiry_host_tested": true,
+          "retained_tail_after_peer_FIN": true,
+          "lost_FIN_ACK_recovered": true,
+          "invalid_controls_rejected": true,
+          "exact_sequence_reset_erased_RX_TX": true,
+          "exhaustion_retries": 3,
+          "TX": 23,
+          "RX": 26,
+          "context_bytes": 504,
+          "adapter_reset_confirmed": true,
+          "DMA_frames_released": 11,
+          "no_retry_after_destruction": true,
+          "endpoint_erased": true,
+          "ABI_v0_hello": true,
+          "no_application_grants": true,
+          "screenshot": {
+            "width": 1280,
+            "height": 800,
+            "sha256": "5e9dca7eb087ea5fefaae10a9db3ac35e7cb69038508c6d32eccdf8680965d51"
+          }
+        },
+        "uefi": {
+          "passed": true,
+          "firmware": "uefi",
+          "passive_close_completed": true,
+          "active_and_simultaneous_TIME_WAIT_verified": true,
+          "TIME_WAIT_live_explicit_abort": true,
+          "full_TIME_WAIT_expiry_host_tested": true,
+          "retained_tail_after_peer_FIN": true,
+          "lost_FIN_ACK_recovered": true,
+          "invalid_controls_rejected": true,
+          "exact_sequence_reset_erased_RX_TX": true,
+          "exhaustion_retries": 3,
+          "TX": 23,
+          "RX": 26,
+          "context_bytes": 504,
+          "adapter_reset_confirmed": true,
+          "DMA_frames_released": 11,
+          "no_retry_after_destruction": true,
+          "endpoint_erased": true,
+          "ABI_v0_hello": true,
+          "no_application_grants": true,
+          "screenshot": {
+            "width": 1280,
+            "height": 800,
+            "sha256": "5e9dca7eb087ea5fefaae10a9db3ac35e7cb69038508c6d32eccdf8680965d51"
+          }
+        }
+      },
+      "test-tcp-data": {
+        "bios": {
+          "passed": true,
+          "firmware": "bios",
+          "handshakes": 1,
+          "accepted_RX_bytes": 144,
+          "read_RX_bytes": 80,
+          "sent_TX_bytes": 68,
+          "acknowledged_TX_bytes": 4,
+          "timeout_aborted_RX_bytes": 64,
+          "timeout_aborted_TX_bytes": 64,
+          "corrective_ACKs": 5,
+          "invalid_packets_or_ACKs": 3,
+          "TX": 16,
+          "RX": 20,
+          "RX_TX_buffer_bytes": 64,
+          "context_bytes": 504,
+          "timeout_abort": true,
+          "adapter_reset_confirmed": true,
+          "DMA_frames_released": 11,
+          "endpoint_erased": true,
+          "ABI_v0_hello": true,
+          "no_application_grants": true,
+          "screenshot": {
+            "width": 1280,
+            "height": 800,
+            "sha256": "76f8f88ddcb7f7e166d5ab19b3518be13819a19a5df1b00f5a117d1f07244427"
+          }
+        },
+        "uefi": {
+          "passed": true,
+          "firmware": "uefi",
+          "handshakes": 1,
+          "accepted_RX_bytes": 144,
+          "read_RX_bytes": 80,
+          "sent_TX_bytes": 68,
+          "acknowledged_TX_bytes": 4,
+          "timeout_aborted_RX_bytes": 64,
+          "timeout_aborted_TX_bytes": 64,
+          "corrective_ACKs": 5,
+          "invalid_packets_or_ACKs": 3,
+          "TX": 16,
+          "RX": 20,
+          "RX_TX_buffer_bytes": 64,
+          "context_bytes": 504,
+          "timeout_abort": true,
+          "adapter_reset_confirmed": true,
+          "DMA_frames_released": 11,
+          "endpoint_erased": true,
+          "ABI_v0_hello": true,
+          "no_application_grants": true,
+          "screenshot": {
+            "width": 1280,
+            "height": 800,
+            "sha256": "76f8f88ddcb7f7e166d5ab19b3518be13819a19a5df1b00f5a117d1f07244427"
+          }
+        }
+      },
+      "test-tcp-retry": {
+        "bios": {
+          "passed": true,
+          "firmware": "bios",
+          "data_loss_recovered": true,
+          "ACK_loss_recovered_without_redelivery": true,
+          "partial_tail_recovered": true,
+          "retransmissions": 6,
+          "exhaustion_retries": 3,
+          "unique_delivered_bytes": 28,
+          "wire_TCP_payload_bytes": 116,
+          "terminal_aborted_TX_bytes": 16,
+          "TX": 12,
+          "RX": 9,
+          "context_bytes": 504,
+          "adapter_reset_confirmed": true,
+          "DMA_frames_released": 11,
+          "no_retry_after_destruction": true,
+          "endpoint_erased": true,
+          "ABI_v0_hello": true,
+          "no_application_grants": true,
+          "screenshot": {
+            "width": 1280,
+            "height": 800,
+            "sha256": "50dc25c0b4f0381af6633c1b797d774ff775cb1ddacb5f6296579352e9ed9b32"
+          }
+        },
+        "uefi": {
+          "passed": true,
+          "firmware": "uefi",
+          "data_loss_recovered": true,
+          "ACK_loss_recovered_without_redelivery": true,
+          "partial_tail_recovered": true,
+          "retransmissions": 6,
+          "exhaustion_retries": 3,
+          "unique_delivered_bytes": 28,
+          "wire_TCP_payload_bytes": 116,
+          "terminal_aborted_TX_bytes": 16,
+          "TX": 12,
+          "RX": 9,
+          "context_bytes": 504,
+          "adapter_reset_confirmed": true,
+          "DMA_frames_released": 11,
+          "no_retry_after_destruction": true,
+          "endpoint_erased": true,
+          "ABI_v0_hello": true,
+          "no_application_grants": true,
+          "screenshot": {
+            "width": 1280,
+            "height": 800,
+            "sha256": "50dc25c0b4f0381af6633c1b797d774ff775cb1ddacb5f6296579352e9ed9b32"
+          }
+        }
+      }
+    },
+    "passed": true
+  },
+  "test-virtio-net (focused)": {
+    "passed": true,
+    "host": "PASS",
+    "boots": [
+      [
+        "bios",
+        "net",
+        true
+      ],
+      [
+        "uefi",
+        "net",
+        true
+      ],
+      [
+        "bios",
+        "absent",
+        true
+      ]
+    ],
+    "scope": "virtio-net host test and native net (BIOS/UEFI) and NIC-absent boots via the script boot(); its N4 application-identity compatibility section is stale on main since 4d3fc3c (vsh changed after the N4 evidence pin) and was NOT run"
+  },
+  "host suites": {
+    "status": "PASS",
+    "suites": {
+      "net-arp": "Ethernet/ARP host: 4598 checks PASS; malformed input, bounded cache, expiry and output guards",
+      "net-ipv4": "IPv4/ICMP host: 1806 checks PASS; bounds, checksums, correlation and maximum echo response",
+      "net-udp": "UDP host: 136730 checks PASS; pseudoheader/zero checksums, lengths, ports, FIFO bounds and erasure",
+      "net-tcp": "TCP host: 3808 checks PASS; strict headers/checksums, one connection, sequence wrap, ACK validation, expiry and erasure",
+      "net-tcp-data": "TCP payload host: 5397 checks PASS; context=504, RX/TX=64, windows, ACK ownership, overlap, wrap and explicit abort",
+      "net-tcp-retry": "TCP retry host: 1711 checks PASS; context=504, partial/cumulative ACKs, finite timers, wrap, windows and destruction",
+      "net-tcp-close": "TCP closure host: 8505 checks PASS; context=504, active/passive/simultaneous FIN, reset validation, retained data, timers, wrap and cleanup"
+    }
+  }
+}

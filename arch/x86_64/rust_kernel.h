@@ -56,6 +56,21 @@ int vos_rust_net_udp_send(struct net_udp *c, const uint8_t peer[4], uint16_t por
 int vos_rust_net_udp_input(struct net_udp *c, const void *frame, size_t n, uint64_t now, void *out, size_t capacity, size_t *length);
 int vos_rust_net_udp_receive(struct net_udp *c, struct net_udp_datagram *out);
 void vos_rust_net_udp_close(struct net_udp *c);
+/* R3-N2 private TCP bridge: same contract as net_tcp.h, which keeps the public ABI. */
+struct net_tcp;
+int vos_rust_net_tcp_init(struct net_tcp *c, const uint8_t mac[6], const uint8_t ip[4], uint16_t port, uint32_t initial_sequence);
+int vos_rust_net_tcp_input(struct net_tcp *c, const void *frame, size_t n, uint64_t now, void *out, size_t capacity, size_t *length);
+int vos_rust_net_tcp_expire(struct net_tcp *c, uint64_t now);
+void vos_rust_net_tcp_close(struct net_tcp *c);
+void vos_rust_net_tcp_abort(struct net_tcp *c);
+int vos_rust_net_tcp_enable_payload(struct net_tcp *c);
+int vos_rust_net_tcp_enable_retransmission(struct net_tcp *c);
+int vos_rust_net_tcp_enable_closure(struct net_tcp *c);
+int vos_rust_net_tcp_send(struct net_tcp *c, const void *data, size_t n, uint64_t now, void *out, size_t capacity, size_t *length);
+int vos_rust_net_tcp_receive(struct net_tcp *c, void *out, size_t capacity, size_t *length, uint64_t now);
+int vos_rust_net_tcp_ack(struct net_tcp *c, uint64_t now, void *out, size_t capacity, size_t *length);
+int vos_rust_net_tcp_retransmit(struct net_tcp *c, uint64_t now, void *out, size_t capacity, size_t *length);
+int vos_rust_net_tcp_finish(struct net_tcp *c, uint64_t now, void *out, size_t capacity, size_t *length);
 struct pointer_packet;
 /* R2: PS/2 pointer polling and packet dequeue Rust entry points. */
 int vos_rust_keyboard_pointer_poll(struct keyboard *k, struct pointer_packet *p);
