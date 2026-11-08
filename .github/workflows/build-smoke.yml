@@ -15,8 +15,8 @@ concurrency:
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
-  build-smoke:
-    name: Freestanding builds and user ELF static tests
+  freestanding-core:
+    name: "Freestanding group: core, boot, ELF, input and networking"
     runs-on: ubuntu-24.04
     # 45 (was 25): the runner's Ubuntu mirror has delivered packages at ~50 kB/s
     # (run 42304789235: 43.1 MB in 14 min 30 s), cancelling an otherwise passing
@@ -89,31 +89,12 @@ jobs:
             --archive build/x86_64/rust/libvos_kernel.a \
             --kernel-dir build/x86_64 --rustc "$RUSTC" --out build/a2-mb2-ci
 
-      - name: Verify the Rust framebuffer validation (frozen C differential, production ownership, stack, panic-free link)
-        run: |
-          python3 -I -B scripts/test-fb-validate.py \
-            --archive build/x86_64/rust/libvos_kernel.a \
-            --kernel-dir build/x86_64 --rustc "$RUSTC" --out build/a3-fb-ci
-      - name: Verify Rust desktop request and layout decisions against the frozen accepted C (differential, mutation controls, ownership)
-        run: |
-          python3 -I -B scripts/test-desktop-rust.py \
-            --archive build/x86_64/rust/libvos_kernel.a \
-            --kernel-dir build/x86_64 --rustc "$RUSTC" --out build/r3-g1-desktop-ci
-      - name: Verify Rust screen geometry and bounds decisions against the frozen accepted screen.c (whole-module differential, mutation controls, ownership)
-        run: |
-          python3 -I -B scripts/test-screen-rust.py \
-            --archive build/x86_64/rust/libvos_kernel.a \
-            --kernel-dir build/x86_64 --rustc "$RUSTC" --out build/r3-g2-screen-ci
-
       - name: Verify Rust boot reservations and EFI boundary (B1)
         run: |
           python3 -I -B scripts/test-boot-resv.py --archive build/x86_64/rust/libvos_kernel.a --kernel-dir build/x86_64 --rustc "$RUSTC" --out build/b1-boot-ci
 
       - name: Verify bounded Rust boot-HID core and existing input contracts (H1-B)
         run: python3 -I -B scripts/test-boot-hid.py --rustc "$RUSTC" --out build/h1b-hid-ci
-
-      - name: Verify read-only USB.1 probing and input diagnostics
-        run: python3 -I -B scripts/test-usb-probe.py --host-only --archive build/x86_64/rust/libvos_kernel.a --output build/usb1-host-ci
 
       - name: Verify production Rust PS/2 decoder and input compatibility
         run: |
@@ -126,6 +107,7 @@ jobs:
           python3 -I -B scripts/test-ps2-keyboard-rust.py \
             --archive build/x86_64/rust/libvos_kernel.a \
             --rustc "$RUSTC" --out build/r2-keyboard-ci
+
       - name: Verify Rust console line extraction and frozen C equivalence
         run: |
           python3 -I -B scripts/test-console-line-rust.py \
@@ -155,48 +137,213 @@ jobs:
           python3 -I -B scripts/test-keyboard-queue-rust.py
           --archive build/x86_64/rust/libvos_kernel.a --rustc "$RUSTC"
           --out build/r2-keyboard-queue-ci
+
       - name: Verify Rust ordinary keyboard polling and frozen C equivalence
         run: >-
           python3 -I -B scripts/test-keyboard-ordinary-rust.py
           --archive build/x86_64/rust/libvos_kernel.a --rustc "$RUSTC"
           --out build/r2-keyboard-ordinary-ci
+
       - name: Verify Rust bounded PS/2 controller reads and frozen C lifecycle equivalence
         run: >-
           python3 -I -B scripts/test-ps2-controller-read-rust.py
           --archive build/x86_64/rust/libvos_kernel.a --rustc "$RUSTC"
           --out build/r2-ps2-controller-read-ci
+
       - name: Verify Rust bounded PS/2 controller writes and frozen C lifecycle equivalence
         run: >-
           python3 -I -B scripts/test-ps2-controller-write-rust.py
           --archive build/x86_64/rust/libvos_kernel.a --rustc "$RUSTC"
           --out build/r2-ps2-controller-write-ci
+
       - name: Verify Rust PS/2 controller lifecycle and frozen C equivalence
         run: >-
           python3 -I -B scripts/test-ps2-lifecycle-rust.py
           --archive build/x86_64/rust/libvos_kernel.a --rustc "$RUSTC"
           --out build/r2-ps2-lifecycle-ci
+
       - name: Verify Rust ARP/IPv4/UDP core and frozen C network equivalence
         run: >-
           python3 -I -B scripts/test-net-rust.py
           --archive build/x86_64/rust/libvos_kernel.a --rustc "$RUSTC"
           --out build/r3-n1-net-ci
+
       - name: Run host ARP/IPv4/UDP/TCP protocol suites against the Rust network core
         run: python3 -I -B scripts/test-net-host.py --out build/r3-n1-net-host-ci
+
       - name: Verify Rust TCP core against the frozen accepted C TCP (two oracle configurations, mutation controls, frames)
         run: >-
           python3 -I -B scripts/test-tcp-rust.py
           --archive build/x86_64/rust/libvos_kernel.a --rustc "$RUSTC"
           --out build/r3-n2-tcp-ci
+
       - name: Verify Rust virtio-net validation against the frozen accepted driver (transcript differential, mutation controls)
         run: >-
           python3 -I -B scripts/test-vnet-rust.py
           --archive build/x86_64/rust/libvos_kernel.a --rustc "$RUSTC"
           --out build/r3-n3-vnet-ci
+
       - name: Verify the virtio-net RX used-ring re-read fix against a hostile device (negative control, mutations, honest-device equivalence)
         run: >-
           python3 -I -B scripts/test-vnet-hostile.py
           --archive build/x86_64/rust/libvos_kernel.a --rustc "$RUSTC"
           --out build/r3-n3s-vnet-ci
+
+      - name: Keep the text logs of a failed run
+        if: failure()
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
+        with:
+          name: build-smoke-logs-core
+          path: |
+            build/*-ci/result.json
+            build/*-ci/results.json
+            build/*-ci/*.txt
+          retention-days: 7
+          if-no-files-found: ignore
+
+  freestanding-graphics:
+    name: "Freestanding group: graphics"
+    runs-on: ubuntu-24.04
+    # 45 (was 25): the runner's Ubuntu mirror has delivered packages at ~50 kB/s
+    # (run 42304789235: 43.1 MB in 14 min 30 s), cancelling an otherwise passing
+    # job. Verification steps are unchanged; apt is separately bounded below.
+    timeout-minutes: 45
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+        with:
+          persist-credentials: false
+
+      - name: Install build prerequisites
+        timeout-minutes: 20
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo apt-get -o Acquire::Retries=3 update
+          sudo apt-get -o Acquire::Retries=3 install -y --no-install-recommends \
+            gcc-multilib binutils make python3 \
+            grub-pc-bin grub-efi-amd64-bin xorriso mtools \
+            qemu-system-x86 ovmf e2fsprogs
+
+      - name: Prepare the existing bare-metal Rust toolchain
+        shell: bash
+        run: |
+          rustup toolchain install nightly-2026-09-03 --profile minimal --target x86_64-unknown-none
+          echo "RUSTC=$(rustup which --toolchain nightly-2026-09-03 rustc)" >> "$GITHUB_ENV"
+
+      - name: Record tool versions
+        shell: bash
+        run: |
+          set -euo pipefail
+          {
+            grep -E '^(NAME|VERSION)=' /etc/os-release
+            echo "runner image: ${ImageOS:-unknown} ${ImageVersion:-unknown}"
+            gcc --version | sed -n 1p
+            ld --version | sed -n 1p
+            make --version | sed -n 1p
+            python3 --version
+            "$RUSTC" --version
+            qemu-system-x86_64 --version | sed -n 1p
+            grub-mkrescue --version
+            xorriso --version 2>&1 | sed -n 1p
+            dpkg-query -W -f='${Package} ${Version}\n' ovmf qemu-system-x86 grub-pc-bin grub-efi-amd64-bin xorriso mtools gcc-multilib binutils e2fsprogs
+          } | tee -a "$GITHUB_STEP_SUMMARY"
+
+      - name: Build x86_64 BIOS and UEFI ISOs
+        run: |
+          make ARCH=x86_64 iso
+          make ARCH=x86_64 uefi-iso
+          make ARCH=x86_64 usb-survey-iso
+          make ARCH=x86_64 usb-survey-uefi-iso
+
+      - name: Verify the Rust framebuffer validation (frozen C differential, production ownership, stack, panic-free link)
+        run: |
+          python3 -I -B scripts/test-fb-validate.py \
+            --archive build/x86_64/rust/libvos_kernel.a \
+            --kernel-dir build/x86_64 --rustc "$RUSTC" --out build/a3-fb-ci
+
+      - name: Verify Rust desktop request and layout decisions against the frozen accepted C (differential, mutation controls, ownership)
+        run: |
+          python3 -I -B scripts/test-desktop-rust.py \
+            --archive build/x86_64/rust/libvos_kernel.a \
+            --kernel-dir build/x86_64 --rustc "$RUSTC" --out build/r3-g1-desktop-ci
+
+      - name: Verify Rust screen geometry and bounds decisions against the frozen accepted screen.c (whole-module differential, mutation controls, ownership)
+        run: |
+          python3 -I -B scripts/test-screen-rust.py \
+            --archive build/x86_64/rust/libvos_kernel.a \
+            --kernel-dir build/x86_64 --rustc "$RUSTC" --out build/r3-g2-screen-ci
+
+      - name: Keep the text logs of a failed run
+        if: failure()
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
+        with:
+          name: build-smoke-logs-graphics
+          path: |
+            build/*-ci/result.json
+            build/*-ci/results.json
+            build/*-ci/*.txt
+          retention-days: 7
+          if-no-files-found: ignore
+
+  freestanding-usb:
+    name: "Freestanding group: USB and firmware"
+    runs-on: ubuntu-24.04
+    # 45 (was 25): the runner's Ubuntu mirror has delivered packages at ~50 kB/s
+    # (run 42304789235: 43.1 MB in 14 min 30 s), cancelling an otherwise passing
+    # job. Verification steps are unchanged; apt is separately bounded below.
+    timeout-minutes: 45
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+        with:
+          persist-credentials: false
+
+      - name: Install build prerequisites
+        timeout-minutes: 20
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo apt-get -o Acquire::Retries=3 update
+          sudo apt-get -o Acquire::Retries=3 install -y --no-install-recommends \
+            gcc-multilib binutils make python3 \
+            grub-pc-bin grub-efi-amd64-bin xorriso mtools \
+            qemu-system-x86 ovmf e2fsprogs
+
+      - name: Prepare the existing bare-metal Rust toolchain
+        shell: bash
+        run: |
+          rustup toolchain install nightly-2026-09-03 --profile minimal --target x86_64-unknown-none
+          echo "RUSTC=$(rustup which --toolchain nightly-2026-09-03 rustc)" >> "$GITHUB_ENV"
+
+      - name: Record tool versions
+        shell: bash
+        run: |
+          set -euo pipefail
+          {
+            grep -E '^(NAME|VERSION)=' /etc/os-release
+            echo "runner image: ${ImageOS:-unknown} ${ImageVersion:-unknown}"
+            gcc --version | sed -n 1p
+            ld --version | sed -n 1p
+            make --version | sed -n 1p
+            python3 --version
+            "$RUSTC" --version
+            qemu-system-x86_64 --version | sed -n 1p
+            grub-mkrescue --version
+            xorriso --version 2>&1 | sed -n 1p
+            dpkg-query -W -f='${Package} ${Version}\n' ovmf qemu-system-x86 grub-pc-bin grub-efi-amd64-bin xorriso mtools gcc-multilib binutils e2fsprogs
+          } | tee -a "$GITHUB_STEP_SUMMARY"
+
+      - name: Build x86_64 BIOS and UEFI ISOs
+        run: |
+          make ARCH=x86_64 iso
+          make ARCH=x86_64 uefi-iso
+          make ARCH=x86_64 usb-survey-iso
+          make ARCH=x86_64 usb-survey-uefi-iso
+
+      - name: Verify read-only USB.1 probing and input diagnostics
+        run: python3 -I -B scripts/test-usb-probe.py --host-only --archive build/x86_64/rust/libvos_kernel.a --output build/usb1-host-ci
+
       - name: Verify USB.2-C1 read-only xHCI qualification and USB.2-B ownership
         run: |
           python3 -I -B scripts/test-usb2c1.py \
@@ -262,17 +409,44 @@ jobs:
         run: python3 -I -B scripts/test-usb-firmware-lease.py --out build/usb-firmware-lease-ci
 
       # Failure only, text only (result.json and logs of the gates, never binaries, images or mutant workers), kept 7 days.
+
       - name: Keep the text logs of a failed run
         if: failure()
         uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
         with:
-          name: build-smoke-logs
+          name: build-smoke-logs-usb
           path: |
             build/*-ci/result.json
             build/*-ci/results.json
             build/*-ci/*.txt
           retention-days: 7
           if-no-files-found: ignore
+
+  # The repository-required check. It always runs and succeeds only when every Freestanding group above completed
+  # successfully: a failed, skipped, cancelled, timed-out or absent group makes it fail. It checks nothing else itself.
+  build-smoke:
+    name: Freestanding builds and user ELF static tests
+    needs: [freestanding-core, freestanding-graphics, freestanding-usb]
+    if: ${{ always() }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Require every Freestanding group to have completed successfully
+        env:
+          NEEDS: ${{ toJSON(needs) }}
+        run: |
+          python3 -I -B - <<'PY'
+          import json, os, sys
+          needs = json.loads(os.environ['NEEDS'])
+          groups = ('freestanding-core', 'freestanding-graphics', 'freestanding-usb')
+          ok = set(needs) == set(groups)
+          for g in groups:
+              result = (needs.get(g) or {}).get('result')
+              print('%s: %s' % (g, result))
+              ok = ok and result == 'success'
+          if set(needs) != set(groups): print('dependencies differ from the required groups:', sorted(needs))
+          sys.exit(0 if ok else 1)
+          PY
 
   # Boots the generated images in QEMU (TCG, no KVM, no devices of the host): a representative subset of the native USB
   # survey matrix under SeaBIOS and OVMF, and the BIOS regression boots. It is deliberately NOT a required check yet; it
