@@ -1,0 +1,10 @@
+{
+  "baseline": "0dbf404f08e40723537cc0b4c825ce8d339ee7e3",
+  "sources_sha256": {
+    "screen-r3g2.c": "2d6c34ed1075073d154e7bedb57396cab51a65537dc80819611c2483e9be9901"
+  },
+  "git_blobs": {
+    "screen-r3g2.c": "22a642e157a7a17b0681a87c367f1643e3f40a04"
+  },
+  "purpose": "Byte-identical accepted arch/x86_64/screen.c at main 0dbf404f (tree a173132b, same blob at 39a7dfa): the frozen R3-G2 whole-module differential reference for screen_choose and the screen geometry/bounds decisions. screen.h is unchanged. Not linked into the kernel."
+}
