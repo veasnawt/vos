@@ -1,0 +1,59 @@
+{
+ "identity (round-trip)": {
+  "exit": 0,
+  "last": "PARTITION PASS: 43 original steps, 37 verification steps in {'freestanding-core': 22, 'freestanding-graphics':"
+ },
+ "drop a USB step": {
+  "exit": 1,
+  "last": "PARTITION FAIL: every original verification step is in a group: missing ['Verify USB.2-C1 read-only xHCI quali"
+ },
+ "duplicate a graphics step into core": {
+  "exit": 1,
+  "last": "PARTITION FAIL: freestanding-core keeps the original order"
+ },
+ "weaken a step command": {
+  "exit": 0,
+  "last": "PARTITION PASS: 43 original steps, 37 verification steps in {'freestanding-core': 22, 'freestanding-graphics':",
+  "note": "no-op mutation (index 7 is the screen gate, which has no test-desktop-rust.py); superseded by the two cases below"
+ },
+ "same artifact name": {
+  "exit": 1,
+  "last": "PARTITION FAIL: freestanding-usb artifact identical except its distinct name"
+ },
+ "aggregator without always()": {
+  "exit": 1,
+  "last": "PARTITION FAIL: aggregator needs exactly the groups and always runs"
+ },
+ "aggregator missing a group": {
+  "exit": 1,
+  "last": "PARTITION FAIL: aggregator needs exactly the groups and always runs"
+ },
+ "second job with required name": {
+  "exit": 1,
+  "last": "PARTITION FAIL: exactly one job carries the required name"
+ },
+ "group continue-on-error": {
+  "exit": 1,
+  "last": "PARTITION FAIL: freestanding-core adds no permissions/continue-on-error/dependencies/conditions"
+ },
+ "group timeout raised": {
+  "exit": 1,
+  "last": "PARTITION FAIL: freestanding-usb keeps timeout-minutes"
+ },
+ "aggregator accepts skipped": {
+  "exit": 1,
+  "last": "PARTITION FAIL: aggregator decision for freestanding-core-skipped"
+ },
+ "qemu job changed": {
+  "exit": 1,
+  "last": "PARTITION FAIL: other jobs unchanged"
+ },
+ "weaken a step command (desktop gate)": {
+  "exit": 1,
+  "last": "PARTITION FAIL: freestanding-graphics step 'Verify Rust desktop request and layout decisions against the froze"
+ },
+ "weaken a step command (screen gate)": {
+  "exit": 1,
+  "last": "PARTITION FAIL: freestanding-graphics step 'Verify Rust screen geometry and bounds decisions against the froze"
+ }
+}

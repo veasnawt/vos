@@ -1,0 +1,112 @@
+{
+  "original_steps": 43,
+  "verification_steps": 37,
+  "groups": {
+    "freestanding-core": [
+      "Verify legacy i386 Multiboot kernel",
+      "Validate separately built user ELF profiles",
+      "Verify migrated ELF bounds and hosted compatibility",
+      "Verify the Rust Multiboot2 parser (frozen C differential, production ownership, stack, panic-free link)",
+      "Verify Rust boot reservations and EFI boundary (B1)",
+      "Verify bounded Rust boot-HID core and existing input contracts (H1-B)",
+      "Verify production Rust PS/2 decoder and input compatibility",
+      "Verify Rust PS/2 keyboard decoder and frozen C equivalence",
+      "Verify Rust console line extraction and frozen C equivalence",
+      "Verify Rust console editing and frozen C equivalence",
+      "Verify Rust blocking console reader and frozen C equivalence",
+      "Verify Rust shared PS/2 routing, pointer polling and frozen driver equivalence",
+      "Verify Rust keyboard queue extraction and frozen C equivalence",
+      "Verify Rust ordinary keyboard polling and frozen C equivalence",
+      "Verify Rust bounded PS/2 controller reads and frozen C lifecycle equivalence",
+      "Verify Rust bounded PS/2 controller writes and frozen C lifecycle equivalence",
+      "Verify Rust PS/2 controller lifecycle and frozen C equivalence",
+      "Verify Rust ARP/IPv4/UDP core and frozen C network equivalence",
+      "Run host ARP/IPv4/UDP/TCP protocol suites against the Rust network core",
+      "Verify Rust TCP core against the frozen accepted C TCP (two oracle configurations, mutation controls, frames)",
+      "Verify Rust virtio-net validation against the frozen accepted driver (transcript differential, mutation controls)",
+      "Verify the virtio-net RX used-ring re-read fix against a hostile device (negative control, mutations, honest-device equivalence)"
+    ],
+    "freestanding-graphics": [
+      "Verify the Rust framebuffer validation (frozen C differential, production ownership, stack, panic-free link)",
+      "Verify Rust desktop request and layout decisions against the frozen accepted C (differential, mutation controls, ownership)",
+      "Verify Rust screen geometry and bounds decisions against the frozen accepted screen.c (whole-module differential, mutation controls, ownership)"
+    ],
+    "freestanding-usb": [
+      "Verify read-only USB.1 probing and input diagnostics",
+      "Verify USB.2-C1 read-only xHCI qualification and USB.2-B ownership",
+      "Verify USB.2-C2 DMA ownership model and adapter",
+      "Verify USB.2-C3a firmware residue guard, dry-run lifecycle and panic-free link",
+      "Verify USB.2-C3a.2 early UEFI firmware memory exclusion",
+      "Verify USB.2-C3b.1 read-only containment dry-run (no write path)",
+      "Verify USB.2-C3b.2 QEMU-only containment executor and production isolation",
+      "Verify USB.2-C4.1 hosted initialization protocol model (no kernel code, no device access)",
+      "Verify USB.2-C4.2a hosted backend contract (no kernel code, no device access)",
+      "Verify USB.3-A hosted EHCI qualification and handoff model (no kernel code, no device access)",
+      "Verify the read-only USB survey (hosted tests, mutation controls, production panic-free link)",
+      "Verify the read-only firmware-table lease (hosted, real devmap.c, sanitizers, mutation controls)"
+    ]
+  },
+  "aggregator_cases": {
+    "all-success": {
+      "expected_success": true,
+      "exit": 0
+    },
+    "freestanding-core-failure": {
+      "expected_success": false,
+      "exit": 1
+    },
+    "freestanding-core-skipped": {
+      "expected_success": false,
+      "exit": 1
+    },
+    "freestanding-core-cancelled": {
+      "expected_success": false,
+      "exit": 1
+    },
+    "freestanding-core-missing": {
+      "expected_success": false,
+      "exit": 1
+    },
+    "freestanding-graphics-failure": {
+      "expected_success": false,
+      "exit": 1
+    },
+    "freestanding-graphics-skipped": {
+      "expected_success": false,
+      "exit": 1
+    },
+    "freestanding-graphics-cancelled": {
+      "expected_success": false,
+      "exit": 1
+    },
+    "freestanding-graphics-missing": {
+      "expected_success": false,
+      "exit": 1
+    },
+    "freestanding-usb-failure": {
+      "expected_success": false,
+      "exit": 1
+    },
+    "freestanding-usb-skipped": {
+      "expected_success": false,
+      "exit": 1
+    },
+    "freestanding-usb-cancelled": {
+      "expected_success": false,
+      "exit": 1
+    },
+    "freestanding-usb-missing": {
+      "expected_success": false,
+      "exit": 1
+    },
+    "extra-group": {
+      "expected_success": false,
+      "exit": 1
+    },
+    "empty": {
+      "expected_success": false,
+      "exit": 1
+    }
+  },
+  "status": "PASS"
+}

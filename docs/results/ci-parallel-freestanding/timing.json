@@ -1,0 +1,25 @@
+{
+ "before_pr69_head": {
+  "run": 42484313548,
+  "jobs_seconds": {
+   "Freestanding builds and user ELF static tests": 2257.0,
+   "QEMU runtime smoke (BIOS and UEFI)": 235.0
+  },
+  "wall_clock_seconds": 2257.0,
+  "runner_seconds": 2492.0,
+  "billed_minutes_rounded_up": 42
+ },
+ "after_pr70_head": {
+  "run": 42496233386,
+  "jobs_seconds": {
+   "Freestanding group: core, boot, ELF, input and networking": 508.0,
+   "Freestanding group: USB and firmware": 702.0,
+   "QEMU runtime smoke (BIOS and UEFI)": 247.0,
+   "Freestanding group: graphics": 887.0,
+   "Freestanding builds and user ELF static tests": 3.0
+  },
+  "wall_clock_seconds": 892.0,
+  "runner_seconds": 2347.0,
+  "billed_minutes_rounded_up": 42
+ }
+}

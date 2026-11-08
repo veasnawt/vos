@@ -1,0 +1,9 @@
+Freestanding builds and user ELF static tests	Require every Freestanding group to have completed successfully	2026-11-08T15:45:04.8016980Z ^[[36;1mgroups = ('freestanding-core', 'freestanding-graphics
+Freestanding builds and user ELF static tests	Require every Freestanding group to have completed successfully	2026-11-08T15:45:04.8023490Z ^[[36;1msys.exit(0 if ok else 1)^[[0m
+Freestanding builds and user ELF static tests	Require every Freestanding group to have completed successfully	  "freestanding-core": {
+Freestanding builds and user ELF static tests	Require every Freestanding group to have completed successfully	  "freestanding-graphics": {
+Freestanding builds and user ELF static tests	Require every Freestanding group to have completed successfully	  "freestanding-usb": {
+Freestanding builds and user ELF static tests	Require every Freestanding group to have completed successfully	2026-11-08T15:45:04.9815601Z freestanding-core: cancelled
+Freestanding builds and user ELF static tests	Require every Freestanding group to have completed successfully	2026-11-08T15:45:04.9816965Z freestanding-graphics: cancelled
+Freestanding builds and user ELF static tests	Require every Freestanding group to have completed successfully	2026-11-08T15:45:04.9817692Z freestanding-usb: cancelled
+Freestanding builds and user ELF static tests	Require every Freestanding group to have completed successfully	2026-11-08T15:45:04.9858481Z ##[error]Process completed with exit code 1.
