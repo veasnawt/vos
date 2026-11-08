@@ -14,7 +14,12 @@ import argparse, concurrent.futures, hashlib, json, os, re, shutil, subprocess
 from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 PMM = 'arch/x86_64/pmm.c'; FROZEN = 'tests/reference/pmm-r4m1.c'; MANIFEST = 'tests/reference/pmm-r4m1h.json'; HARNESS = 'tests/host/pmm-init-regression.c'
-GLUE = 'arch/x86_64/rust/pmm.rs'
+GLUE = 'arch/x86_64/rust/pmm.rs'; TGLUE = 'arch/x86_64/rust/pmm_transition.rs'; HARDENED = 'tests/reference/pmm-r4m2.c'
+INIT_FUNCTIONS = ('count_bits', 'set_frames', 'clear_frames', 'protect', 'pmm_init_in')
+def function(text, name):
+    """The definition of `name` in C source: from its signature line to its closing brace at column 0."""
+    i = text.index(name + '('); i = text.rindex('\n', 0, i) + 1
+    return text[i:text.index('\n}\n', i) + 3]
 PUBLIC = ('pmm_init_in pmm_alloc_in pmm_free_check_in pmm_free_in pmm_reserve_in pmm_frame_state_in pmm_check_in pmm_init pmm_alloc_frame '
           'pmm_free_frame pmm_reserve_frame pmm_free_count pmm_kernel pmm_strerror boot_mmap_entry').split()
 OLD = '    /* 5. Defensive: nothing below 1 MiB, whatever the inputs said. */\n    clear_frames(avail, 0, PMM_LOW_LIMIT / PAGE_SIZE);\n'
@@ -68,20 +73,28 @@ def main():
         if check: need(p.returncode == 0, 'unexpected exit ' + name)
         return (out / name).read_text()
     try:
-        # scope: exactly one bounded clear, against the accepted main pmm.c and the frozen oracle
-        man = json.loads((ROOT / MANIFEST).read_text()); prod = (ROOT / PMM).read_text()
-        need(prod.count(NEW) == 1 and prod.count(LINE) == 1, 'the bounded clear is present once')
-        need(hashlib.sha256(prod.replace(NEW, OLD).encode()).hexdigest() == man['accepted_pmm_c']['sha256'], 'production pmm.c = accepted main pmm.c + exactly the bounded clear')
+        # scope: the R4-M1H change is exactly one bounded clear. The frozen hardened main (tests/reference/pmm-r4m2.c, R4-M2's
+        # reference) is the accepted R4-M1 main pmm.c plus exactly that statement; production pmm_init_in and its helpers are
+        # still byte-identical to it (R4-M2 moved other functions out of pmm.c, not these); the vulnerable oracle's are the
+        # accepted ones.
+        man = json.loads((ROOT / MANIFEST).read_text()); prod = (ROOT / PMM).read_text(); hard = (ROOT / HARDENED).read_text()
+        hman = json.loads((ROOT / 'tests/reference/pmm-r4m2.json').read_text())
+        need(sha(ROOT / HARDENED) == hman['sources_sha256']['pmm-r4m2.c'], 'frozen hardened source')
+        need(hard.count(NEW) == 1 and prod.count(NEW) == 1 and prod.count(LINE) == 1, 'the bounded clear is present once')
+        need(hashlib.sha256(hard.replace(NEW, OLD).encode()).hexdigest() == man['accepted_pmm_c']['sha256'], 'hardened pmm.c = accepted R4-M1 main pmm.c + exactly the bounded clear')
+        need(all(function(prod, f) == function(hard, f) for f in INIT_FUNCTIONS), 'production pmm_init_in and its helpers equal the hardened reference')
         frozen = (ROOT / FROZEN).read_text(); ref = json.loads((ROOT / 'tests/reference/pmm-r4m1.json').read_text())
         need(sha(ROOT / FROZEN) == ref['sources_sha256']['pmm-r4m1.c'], 'frozen accepted source')
-        k = 'int pmm_alloc_in(struct pmm *p, uint64_t *phys)\n'; acc = prod.replace(NEW, OLD)
-        need(frozen[:frozen.index(k)] == acc[:acc.index(k)] and len(acc[:acc.index(k)]) == man['frozen_init_prefix_bytes'], 'frozen helpers and pmm_init_in equal the accepted main')
-        report['scope'] = {'accepted_pmm_c_sha256': man['accepted_pmm_c']['sha256'], 'production_pmm_c_sha256': sha(ROOT / PMM), 'changed_statements': 1}
+        acc = hard.replace(NEW, OLD)
+        need(all(function(frozen, f) == function(acc, f) for f in INIT_FUNCTIONS), 'frozen helpers and pmm_init_in equal the accepted main')
+        report['scope'] = {'accepted_pmm_c_sha256': man['accepted_pmm_c']['sha256'], 'hardened_pmm_c_sha256': sha(ROOT / HARDENED), 'production_pmm_c_sha256': sha(ROOT / PMM),
+                           'changed_statements': 1, 'init_functions_identical': list(INIT_FUNCTIONS)}
         warn = ['-std=gnu11', '-Wall', '-Wextra', '-Werror', '-ffunction-sections', '-fdata-sections', '-Iarch/x86_64']
         link = ['-Wl,--gc-sections', '-fno-pie', '-no-pie']; san = ['-O1', '-g', '-fsanitize=address,undefined', '-fno-sanitize-recover=all', '-fno-omit-frame-pointer']
         renames = ['-D%s=ref_%s' % (s, s) for s in PUBLIC]
         root = out / 'root.rs'; rust = out / 'libpmm-host.a'
-        root.write_text('#![no_std]\n#[path=' + json.dumps(str(ROOT / GLUE)) + '] mod pmm;\n'
+        # the production Rust PMM code that production pmm.c calls (R4-M1 checks, R4-M2 transitions)
+        root.write_text('#![no_std]\n#[path=' + json.dumps(str(ROOT / GLUE)) + '] mod pmm;\n#[path=' + json.dumps(str(ROOT / TGLUE)) + '] mod pmm_transition;\n'
                         'unsafe extern "C" {fn abort()->!;}\n#[panic_handler] fn p(_: &core::panic::PanicInfo)->! {unsafe{abort()}}\n'
                         '// host test only: precompiled core references the personality even with panic=abort\n'
                         '#[unsafe(no_mangle)] pub extern "C" fn rust_eh_personality() {}\n')
@@ -132,7 +145,7 @@ def main():
         for name, r, text, ex in results:
             report['mutations'][name] = {'detected': True, 'mismatches': r['mismatches'] if r else ('hang' if text == 'TIMEOUT' else 'abnormal exit (fault)'), 'exit': ex}
             (out / ('ref-mutant-%s.o' % name)).unlink(missing_ok=True)
-        report['source_sha256'] = {n: sha(ROOT / n) for n in [PMM, FROZEN, MANIFEST, HARNESS, GLUE, 'scripts/test-pmm-init.py']}
+        report['source_sha256'] = {n: sha(ROOT / n) for n in [PMM, FROZEN, HARDENED, MANIFEST, HARNESS, GLUE, TGLUE, 'scripts/test-pmm-init.py']}
         report['status'] = 'PASS'
     except Exception as e: report.update(status='FAIL', error=str(e)); raise
     finally:

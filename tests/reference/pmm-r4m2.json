@@ -1,0 +1,14 @@
+{
+  "baseline": "74c2341bd46112705f7e4be99a410883748cb17c",
+  "sources_sha256": {
+    "pmm-r4m2.c": "b26e4db632848df8a0d61ecc871e61776974a21ab2c10a02553bcacdf05fba6e"
+  },
+  "git_blobs": {
+    "pmm-r4m2.c": "6684f3b33e470a7db6381ed62147751d9b510fb3"
+  },
+  "purpose": "Byte-identical hardened arch/x86_64/pmm.c at main 74c2341b (R4-M1H merged; tree 7ff0dbb7, same blob at 8f883a99): the frozen R4-M2 reference for pmm_alloc_in, pmm_free_in and pmm_reserve_in (whose pmm_free_in calls the accepted R4-M1 Rust pmm_free_check_in), and R4-M1H's scope anchor. Not linked into the kernel. unchanged_sha256 pins the accepted R4-M1 Rust checks, which R4-M2 must not modify.",
+  "unchanged_sha256": {
+    "kernel/rust/mm/pmm.rs": "15f5d4ed7e0b85419b7b00ad6091e4c32e1a92113bfa68077134b764a4fede24",
+    "arch/x86_64/rust/pmm.rs": "83ec9aaa51a9a7258672e3c1a41797aca5ab8fd5ca9853ff81f6313c764c96d9"
+  }
+}
