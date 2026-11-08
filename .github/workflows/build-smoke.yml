@@ -214,6 +214,9 @@ jobs:
         with:
           persist-credentials: false
 
+      - name: Negative control - deliberate graphics group failure
+        run: exit 1
+
       - name: Install build prerequisites
         timeout-minutes: 20
         shell: bash
