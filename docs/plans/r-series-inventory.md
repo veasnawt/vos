@@ -1,6 +1,6 @@
 # R-series ownership inventory, R4 readiness and R5 exit matrix
 
-**Planning record, not an implementation authorization.** It is source-bound to main `2c0890a3` (tree `f3ec9622`) plus the R3-G1 candidate, and implements the [Master Plan section 6](MASTER-PLAN.md#6-r-series-rust-first-kernel-migration). No R4 work is authorized until its entry gates and resources are approved by the owner.
+**Planning record, not an implementation authorization.** It is source-bound to main `0dbf404f` (tree `a173132b`, R3-G1 accepted) plus the R3-G2 candidate, and implements the [Master Plan section 6](MASTER-PLAN.md#6-r-series-rust-first-kernel-migration). No R4 work is authorized until its entry gates and resources are approved by the owner.
 
  Its sources are 104 production/test C files, 7 assembly files, 20 `arch/x86_64/rust` glue modules and 51 `kernel/rust` modules.
 
@@ -12,7 +12,7 @@
 | ELF (R1) | `elf_validate` | `elf.c` (204) loader glue, `loader.c`, `exec.c` (338) | Validation pure; mapping and process creation are R4 | R1 gate, exec_verify | Touches VMM and process | R4 dependency |
 | PS/2 input, console (R2) | Decoder, routing, keyboard queue, ordinary poll, controller read/write/lifecycle, console line/accept/reader | `keyboard.c` (57), `pointer.c` (20), `input_console.c` (66) adapters; `user_console.c` (249) leases | Leases are ownership policy (R4-adjacent) | R2 gates (frozen C) | IRQ-free polling; single i8042 owner | R2 closed; `pointer_idle` is defined in both C and Rust, so the native proof is stale (pre-existing) |
 | Networking (R3-N) | ARP/IPv4/UDP/TCP, virtio-net validation | `virtio_net.c` (279: PCI, DMA, rings), `net_*.c` thin ABI, `net_*_boot.c` test glue | Device/DMA ownership stays C by design | R3-N1/N2/N3/N3-S gates | No IOMMU; DMA ownership | None active |
-| Graphics (R3-G) | `boot_framebuffer` (A3); **R3-G1 candidate:** `desktop_requested`, `desktop_compute` | `screen.c` (545: console renderer, cursor, GUI sink), `desktop.c` (`desktop_paint`/`desktop_bar`), `font8x16.c` data, `gui.c` (272: GUI service and ABI v5), `gui_verify.c` | `screen.c` text layout and clipping arithmetic is largely pure; framebuffer writes are device memory; `gui.c` is ABI and lifecycle | Host render tests (`tests/host/desktop.c`, `pointer.c`, `gui.c`), native screenshots | MMIO framebuffer (WC); pitch-aware writes; cursor underlay reads VRAM | N6.4 deferred (owner); GUI ABI frozen; historical N6 scripts pin `desktop.c` |
+| Graphics (R3-G) | `boot_framebuffer` (A3); **R3-G1 accepted** (PR #68, `0dbf404f`): `desktop_requested`, `desktop_compute`; **R3-G2 candidate:** `screen_choose` and 26 `screen.c` geometry/bounds decisions | `screen.c` rendering, framebuffer/VGA writes, cursor lifecycle and underlay, character shadow, status bar/panic layout; `desktop.c` (`desktop_paint`/`desktop_bar`); `font8x16.c` data; `gui.c` (272: GUI service and ABI v5); `gui_verify.c` | `screen.c` text layout and clipping arithmetic is largely pure; framebuffer writes are device memory; `gui.c` is ABI and lifecycle | Host render tests (`tests/host/desktop.c`, `pointer.c`, `gui.c`), native screenshots | MMIO framebuffer (WC); pitch-aware writes; cursor underlay reads VRAM | N6.4 deferred (owner); GUI ABI frozen; historical N6 scripts pin `desktop.c` |
 | Storage (R3-S) | none | `blockdev.c` (632), `virtio_blk.c` (1,508), `ext2.c` (991), `file.c` (836), storage stress | Parsing (ext2 structures) pure; virtio-blk is DMA | Host + VOS_TEST suites | DMA, cache ownership, fault injection | **BLOCKED:** SEC-02 seals cover uncommitted edits to `blockdev.c`/`ext2.c`/`virtio_blk.c` in the protected `vos-sec02-storage-range` worktree; `file.c` depends on them |
 | USB (H-series, with Rust) | xHCI discovery/qualify/DMA model/containment/survey, EHCI and HID models | `xhci*.c`, `usb_dma.c`, `usb_resources.c` adapters | Hardware authority stays C | USB gates | Physical tests unauthorized | Separate H track |
 | PCI, devices (R4/R5) | none | `pci.c` (109), `devmap.c` (551) | Config-space access is hardware; devmap is page-table/MMIO policy | Selftests | Page tables, PAT | R4 (VMM) |
@@ -24,13 +24,25 @@
 
 ## 2. Recommended next R3 boundaries (storage is blocked)
 
-1. **R3-G2, `screen.c` pure layout arithmetic.** Candidates are the text-cell, wrap and scroll position math, clipping rectangles, and the cursor clip and underlay extent. The VRAM writes and the cursor's VRAM reads stay C. Oracles are host `screen-input.c`/`desktop.c` plus pixel identity.
-2. **R3-G3, `gui.c` validation decisions.** Candidates are the create-descriptor checks, the upload bounds arithmetic and the token/rights checks. The ABI, queues and wait/wake stay C. This is the same pattern as R3-N3; it needs the GUI ABI unchanged.
+1. **R3-G2, `screen.c` geometry and bounds.** Candidate in its own PR; see `docs/results/r3-g2-screen-rust.md`.
+2. **R3-G3, `gui.c` validation and capability decisions.** Source is unchanged since N6.3. These decisions read only scalars that C already copied from the user or holds in `gui`:
+   - **Create:** the descriptor checks (version, size, 1..256 x 1..160, `stride == width*4`, format) and the frame count `(w*h*4 + 4095) / 4096`.
+   - **Upload:** rectangle bounds against the surface, stride limits (`>= width*4`, `<= 4096`, 4-aligned), and the exact `(h-1)*stride + w*4 == length <= 4096` size.
+   - **Syscall dispatch:** argument shape (`rsi`/`rdx`) and rights-bit checks (`GUI_CREATE/UPLOAD/PRESENT/EVENTS/POINTER`), plus the token match.
+   - **Grant:** rights validation (`rights & ~GUI_VALID_RIGHTS`, ABI 5).
+   - **Event queue:** the full/lost/sequence decisions.
+   - **Pointer:** the press-capture state machine (armed/capture/down/inside).
+
+   **Stays C:** user copies, PMM frames, wait queues, process lookup and liveness, grant/revoke lifecycle, the input worker thread, and the screen sink.
+
+   **Oracle:** a frozen `gui.c` as a whole-module differential over the existing `VOS_GUI_HOST` harness (`tests/host/gui.c`, real `user_console.c`/`keyboard.c`), with hostile descriptors and uploads, rights and token permutations, queue overflow, and pointer sequences.
+
+   **Invariants:** GUI ABI v5 and pointer v1 byte-identical; no new rights; the same refusal order and error codes.
 3. Storage parsing (ext2 directory/inode validation) only after SEC-02 is resolved by the owner.
 
 ## 3. R4 readiness: smallest meaningful increment
 
-**R4-M1, PMM read-only frame decisions.** Move `pmm_frame_state_in`, `pmm_free_check_in` and `pmm_check_in` (with `count_bits`) to safe Rust over the bitmap words and instance scalars, which C passes as slices and values.
+**R4-M1, PMM read-only frame decisions** (revalidated against main `0dbf404f`: `pmm.c` last changed at USB.2-C3a `c7bd104`; 25 production call sites of the three functions; `selftest_pmm` has 51 expectations; the kernel is non-preemptive with IF=0 except idle, per `thread.h`). Move `pmm_frame_state_in`, `pmm_free_check_in` and `pmm_check_in` (with `count_bits`) to safe Rust over the bitmap words and instance scalars, which C passes as slices and values.
 
 - **Stays C:** `struct pmm`, the `.bss` bitmaps, `pmm_init_in`, `pmm_alloc_in`, `pmm_free_in`'s mutation, `pmm_reserve_in`, the kernel wrappers and zeroing/poisoning.
 - **Why first:**
@@ -67,11 +79,11 @@
 | Criterion | Required evidence | Status at 2c0890a3 + R3-G1 |
 | --- | --- | --- |
 | Inventory of every C/asm module with owner and disposition | This table, maintained per increment | **Started** (this document) |
-| Verified Rust ownership of the approved migration targets | Frozen-C differential, mutants, panic-free link, symbol ownership per target | Boot, ELF, input, network protocols, virtio-net validation, framebuffer, (desktop decisions candidate) |
+| Verified Rust ownership of the approved migration targets | Frozen-C differential, mutants, panic-free link, symbol ownership per target | Boot, ELF, input, network protocols, virtio-net validation, framebuffer, desktop decisions (accepted); screen geometry (candidate) |
 | Justification for each retained C/asm boundary | Per-file rationale: CPU entry, context switch, MMIO/DMA drivers, test harness | Assembly and device adapters justified informally; **not yet written per file** |
 | Memory, scheduler, process, security core (R4) migrated or justified | R4 increments | **Not started** |
 | Storage (R3-S) | Migration after the SEC-02 resolution | **Blocked** (SEC-02) |
-| Graphics (R3-G) | `screen.c`/`gui.c` decisions | **In progress** (G1 candidate) |
+| Graphics (R3-G) | Desktop, screen and GUI decisions | **In progress**: G1 accepted, G2 candidate, G3 planned; rendering and framebuffer ownership intentionally C |
 | Public userspace ABI v0–v5 + pointer v1 preserved | ABI tests, app compatibility boots | Preserved so far |
 | BIOS/UEFI and security regressions | Native suites, hostile-device and isolation matrices | Per increment |
 | Resource and memory-safety acceptance | Stack, image, performance policy, sanitizer evidence | Per increment; exceptions owner-approved |

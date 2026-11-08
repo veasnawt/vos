@@ -1,0 +1,1086 @@
+{
+  "store": "/home/veasnawt/src/vos-r2-keyboard-ordinary/build/retained/r3-g2-screen",
+  "host_store": "scratch (host GUI/pointer route; not retained in the worktree)",
+  "captures": [
+    {
+      "run": "r1",
+      "path": "screennative/console-1024x768-bios-baseline/00-prompt.png",
+      "sha256": "d871e422fbc4569cbf8f54e70b09c8e10f984719c5a66b4374e8796a6f8db4a9",
+      "bytes": 5600
+    },
+    {
+      "run": "r1",
+      "path": "screennative/console-1024x768-bios-baseline/01-after-8-commands.png",
+      "sha256": "e7bc6697f838c293ac0fc7eae0508ee48c282ef8f8fa120701248c8da71b0f91",
+      "bytes": 12599
+    },
+    {
+      "run": "r1",
+      "path": "screennative/console-1024x768-bios-baseline/02-after-16-commands.png",
+      "sha256": "e4fb24c1960162328db44617bf5189fc4a45173d8a49920f0e5ff25997a425f9",
+      "bytes": 15284
+    },
+    {
+      "run": "r1",
+      "path": "screennative/console-1024x768-bios-baseline/03-typed.png",
+      "sha256": "eabd26f01f249dabf3ce88a5648da2907a82921e06a0086355ec0a5421c8a499",
+      "bytes": 15509
+    },
+    {
+      "run": "r1",
+      "path": "screennative/console-1024x768-bios-baseline/04-erased.png",
+      "sha256": "647d35c9748d74ef8a6a94e95ed732ae78e19914d4443295e70dd165d20b1af7",
+      "bytes": 15443
+    },
+    {
+      "run": "r1",
+      "path": "screennative/console-1024x768-bios-baseline/05-echoed.png",
+      "sha256": "0bfd9c842daa78d248d9475716bb7280ca0e13e450eac122cb7521053ccd3b8b",
+      "bytes": 14872
+    },
+    {
+      "run": "r1",
+      "path": "screennative/console-1024x768-bios-candidate/00-prompt.png",
+      "sha256": "d871e422fbc4569cbf8f54e70b09c8e10f984719c5a66b4374e8796a6f8db4a9",
+      "bytes": 5600
+    },
+    {
+      "run": "r1",
+      "path": "screennative/console-1024x768-bios-candidate/01-after-8-commands.png",
+      "sha256": "e7bc6697f838c293ac0fc7eae0508ee48c282ef8f8fa120701248c8da71b0f91",
+      "bytes": 12599
+    },
+    {
+      "run": "r1",
+      "path": "screennative/console-1024x768-bios-candidate/02-after-16-commands.png",
+      "sha256": "e4fb24c1960162328db44617bf5189fc4a45173d8a49920f0e5ff25997a425f9",
+      "bytes": 15284
+    },
+    {
+      "run": "r1",
+      "path": "screennative/console-1024x768-bios-candidate/03-typed.png",
+      "sha256": "eabd26f01f249dabf3ce88a5648da2907a82921e06a0086355ec0a5421c8a499",
+      "bytes": 15509
+    },
+    {
+      "run": "r1",
+      "path": "screennative/console-1024x768-bios-candidate/04-erased.png",
+      "sha256": "647d35c9748d74ef8a6a94e95ed732ae78e19914d4443295e70dd165d20b1af7",
+      "bytes": 15443
+    },
+    {
+      "run": "r1",
+      "path": "screennative/console-1024x768-bios-candidate/05-echoed.png",
+      "sha256": "0bfd9c842daa78d248d9475716bb7280ca0e13e450eac122cb7521053ccd3b8b",
+      "bytes": 14872
+    },
+    {
+      "run": "r1",
+      "path": "screennative/console-1024x768-uefi-baseline/00-prompt.png",
+      "sha256": "d871e422fbc4569cbf8f54e70b09c8e10f984719c5a66b4374e8796a6f8db4a9",
+      "bytes": 5600
+    },
+    {
+      "run": "r1",
+      "path": "screennative/console-1024x768-uefi-baseline/01-after-8-commands.png",
+      "sha256": "e7bc6697f838c293ac0fc7eae0508ee48c282ef8f8fa120701248c8da71b0f91",
+      "bytes": 12599
+    },
+    {
+      "run": "r1",
+      "path": "screennative/console-1024x768-uefi-baseline/02-after-16-commands.png",
+      "sha256": "e4fb24c1960162328db44617bf5189fc4a45173d8a49920f0e5ff25997a425f9",
+      "bytes": 15284
+    },
+    {
+      "run": "r1",
+      "path": "screennative/console-1024x768-uefi-baseline/03-typed.png",
+      "sha256": "eabd26f01f249dabf3ce88a5648da2907a82921e06a0086355ec0a5421c8a499",
+      "bytes": 15509
+    },
+    {
+      "run": "r1",
+      "path": "screennative/console-1024x768-uefi-baseline/04-erased.png",
+      "sha256": "647d35c9748d74ef8a6a94e95ed732ae78e19914d4443295e70dd165d20b1af7",
+      "bytes": 15443
+    },
+    {
+      "run": "r1",
+      "path": "screennative/console-1024x768-uefi-baseline/05-echoed.png",
+      "sha256": "0bfd9c842daa78d248d9475716bb7280ca0e13e450eac122cb7521053ccd3b8b",
+      "bytes": 14872
+    },
+    {
+      "run": "r1",
+      "path": "screennative/console-1024x768-uefi-candidate/00-prompt.png",
+      "sha256": "d871e422fbc4569cbf8f54e70b09c8e10f984719c5a66b4374e8796a6f8db4a9",
+      "bytes": 5600
+    },
+    {
+      "run": "r1",
+      "path": "screennative/console-1024x768-uefi-candidate/01-after-8-commands.png",
+      "sha256": "e7bc6697f838c293ac0fc7eae0508ee48c282ef8f8fa120701248c8da71b0f91",
+      "bytes": 12599
+    },
+    {
+      "run": "r1",
+      "path": "screennative/console-1024x768-uefi-candidate/02-after-16-commands.png",
+      "sha256": "e4fb24c1960162328db44617bf5189fc4a45173d8a49920f0e5ff25997a425f9",
+      "bytes": 15284
+    },
+    {
+      "run": "r1",
+      "path": "screennative/console-1024x768-uefi-candidate/03-typed.png",
+      "sha256": "eabd26f01f249dabf3ce88a5648da2907a82921e06a0086355ec0a5421c8a499",
+      "bytes": 15509
+    },
+    {
+      "run": "r1",
+      "path": "screennative/console-1024x768-uefi-candidate/04-erased.png",
+      "sha256": "647d35c9748d74ef8a6a94e95ed732ae78e19914d4443295e70dd165d20b1af7",
+      "bytes": 15443
+    },
+    {
+      "run": "r1",
+      "path": "screennative/console-1024x768-uefi-candidate/05-echoed.png",
+      "sha256": "0bfd9c842daa78d248d9475716bb7280ca0e13e450eac122cb7521053ccd3b8b",
+      "bytes": 14872
+    },
+    {
+      "run": "r1",
+      "path": "screennative/console-640x400-bios-baseline/00-prompt.png",
+      "sha256": "b14dab3dcdf07dbfdf1bf57f8d18e8476318666571e00a0c9b00dcec8a0d3557",
+      "bytes": 3146
+    },
+    {
+      "run": "r1",
+      "path": "screennative/console-640x400-bios-baseline/01-after-8-commands.png",
+      "sha256": "b1c85f4f0b76e2aec8796a23b82d7f17120d7e9681387fdc38b0d62384ab00d5",
+      "bytes": 9303
+    },
+    {
+      "run": "r1",
+      "path": "screennative/console-640x400-bios-baseline/02-after-16-commands.png",
+      "sha256": "d6f5e42c0094c39f9e8ac169dd64fb5a4e1b1d09f985654e561a35698c119609",
+      "bytes": 9796
+    },
+    {
+      "run": "r1",
+      "path": "screennative/console-640x400-bios-baseline/03-typed.png",
+      "sha256": "4e4d9ed8a87122ced6a20817e2a967b5a36ad3d262330d85af9693e3578b4e00",
+      "bytes": 10009
+    },
+    {
+      "run": "r1",
+      "path": "screennative/console-640x400-bios-baseline/04-erased.png",
+      "sha256": "5f705bc8b50b90082531a1d5c60113dc41304f1001d8acced82761f3b79d9f1c",
+      "bytes": 9944
+    },
+    {
+      "run": "r1",
+      "path": "screennative/console-640x400-bios-baseline/05-echoed.png",
+      "sha256": "f8b8e446ea967d9f2939881a38e825fb172f2b80efac9bf7f553d8c6fcda489b",
+      "bytes": 9416
+    },
+    {
+      "run": "r1",
+      "path": "screennative/console-640x400-bios-candidate/00-prompt.png",
+      "sha256": "b14dab3dcdf07dbfdf1bf57f8d18e8476318666571e00a0c9b00dcec8a0d3557",
+      "bytes": 3146
+    },
+    {
+      "run": "r1",
+      "path": "screennative/console-640x400-bios-candidate/01-after-8-commands.png",
+      "sha256": "b1c85f4f0b76e2aec8796a23b82d7f17120d7e9681387fdc38b0d62384ab00d5",
+      "bytes": 9303
+    },
+    {
+      "run": "r1",
+      "path": "screennative/console-640x400-bios-candidate/02-after-16-commands.png",
+      "sha256": "d6f5e42c0094c39f9e8ac169dd64fb5a4e1b1d09f985654e561a35698c119609",
+      "bytes": 9796
+    },
+    {
+      "run": "r1",
+      "path": "screennative/console-640x400-bios-candidate/03-typed.png",
+      "sha256": "4e4d9ed8a87122ced6a20817e2a967b5a36ad3d262330d85af9693e3578b4e00",
+      "bytes": 10009
+    },
+    {
+      "run": "r1",
+      "path": "screennative/console-640x400-bios-candidate/04-erased.png",
+      "sha256": "5f705bc8b50b90082531a1d5c60113dc41304f1001d8acced82761f3b79d9f1c",
+      "bytes": 9944
+    },
+    {
+      "run": "r1",
+      "path": "screennative/console-640x400-bios-candidate/05-echoed.png",
+      "sha256": "f8b8e446ea967d9f2939881a38e825fb172f2b80efac9bf7f553d8c6fcda489b",
+      "bytes": 9416
+    },
+    {
+      "run": "r1",
+      "path": "screennative/desktop-1024x768-bios-baseline/00-prompt.png",
+      "sha256": "6a6971364aa67912ba3f447abee4d706635255fc21bbed1dedc45abd2263b28a",
+      "bytes": 6611
+    },
+    {
+      "run": "r1",
+      "path": "screennative/desktop-1024x768-bios-baseline/01-after-8-commands.png",
+      "sha256": "1dbb36f6f76e8040c20df48ae1849e8dc5bcfb1728e1548826bd117b09b96a97",
+      "bytes": 14481
+    },
+    {
+      "run": "r1",
+      "path": "screennative/desktop-1024x768-bios-baseline/02-after-16-commands.png",
+      "sha256": "ac7a97fdb18e55d794cdb89a849096480d0e47675ced46737410c4dc0c6a31a0",
+      "bytes": 17591
+    },
+    {
+      "run": "r1",
+      "path": "screennative/desktop-1024x768-bios-baseline/03-typed.png",
+      "sha256": "6ba607d01f82ad90b728b69649cec937e549e3cbefdc1eadfd9e1175820c9a9e",
+      "bytes": 17825
+    },
+    {
+      "run": "r1",
+      "path": "screennative/desktop-1024x768-bios-baseline/04-erased.png",
+      "sha256": "d1a026925bce91ada4e49dab339e977f68314c0ae837faf531a0749b4ad69039",
+      "bytes": 17760
+    },
+    {
+      "run": "r1",
+      "path": "screennative/desktop-1024x768-bios-baseline/05-echoed.png",
+      "sha256": "c3e2a85c501b1df84147138ab6db22d631d5389138930ad67f65a2f82ce3d1c9",
+      "bytes": 17117
+    },
+    {
+      "run": "r1",
+      "path": "screennative/desktop-1024x768-bios-candidate/00-prompt.png",
+      "sha256": "6a6971364aa67912ba3f447abee4d706635255fc21bbed1dedc45abd2263b28a",
+      "bytes": 6611
+    },
+    {
+      "run": "r1",
+      "path": "screennative/desktop-1024x768-bios-candidate/01-after-8-commands.png",
+      "sha256": "1dbb36f6f76e8040c20df48ae1849e8dc5bcfb1728e1548826bd117b09b96a97",
+      "bytes": 14481
+    },
+    {
+      "run": "r1",
+      "path": "screennative/desktop-1024x768-bios-candidate/02-after-16-commands.png",
+      "sha256": "ac7a97fdb18e55d794cdb89a849096480d0e47675ced46737410c4dc0c6a31a0",
+      "bytes": 17591
+    },
+    {
+      "run": "r1",
+      "path": "screennative/desktop-1024x768-bios-candidate/03-typed.png",
+      "sha256": "6ba607d01f82ad90b728b69649cec937e549e3cbefdc1eadfd9e1175820c9a9e",
+      "bytes": 17825
+    },
+    {
+      "run": "r1",
+      "path": "screennative/desktop-1024x768-bios-candidate/04-erased.png",
+      "sha256": "d1a026925bce91ada4e49dab339e977f68314c0ae837faf531a0749b4ad69039",
+      "bytes": 17760
+    },
+    {
+      "run": "r1",
+      "path": "screennative/desktop-1024x768-bios-candidate/05-echoed.png",
+      "sha256": "c3e2a85c501b1df84147138ab6db22d631d5389138930ad67f65a2f82ce3d1c9",
+      "bytes": 17117
+    },
+    {
+      "run": "r1",
+      "path": "screennative/desktop-1024x768-uefi-baseline/00-prompt.png",
+      "sha256": "6a6971364aa67912ba3f447abee4d706635255fc21bbed1dedc45abd2263b28a",
+      "bytes": 6611
+    },
+    {
+      "run": "r1",
+      "path": "screennative/desktop-1024x768-uefi-baseline/01-after-8-commands.png",
+      "sha256": "1dbb36f6f76e8040c20df48ae1849e8dc5bcfb1728e1548826bd117b09b96a97",
+      "bytes": 14481
+    },
+    {
+      "run": "r1",
+      "path": "screennative/desktop-1024x768-uefi-baseline/02-after-16-commands.png",
+      "sha256": "ac7a97fdb18e55d794cdb89a849096480d0e47675ced46737410c4dc0c6a31a0",
+      "bytes": 17591
+    },
+    {
+      "run": "r1",
+      "path": "screennative/desktop-1024x768-uefi-baseline/03-typed.png",
+      "sha256": "6ba607d01f82ad90b728b69649cec937e549e3cbefdc1eadfd9e1175820c9a9e",
+      "bytes": 17825
+    },
+    {
+      "run": "r1",
+      "path": "screennative/desktop-1024x768-uefi-baseline/04-erased.png",
+      "sha256": "d1a026925bce91ada4e49dab339e977f68314c0ae837faf531a0749b4ad69039",
+      "bytes": 17760
+    },
+    {
+      "run": "r1",
+      "path": "screennative/desktop-1024x768-uefi-baseline/05-echoed.png",
+      "sha256": "c3e2a85c501b1df84147138ab6db22d631d5389138930ad67f65a2f82ce3d1c9",
+      "bytes": 17117
+    },
+    {
+      "run": "r1",
+      "path": "screennative/desktop-1024x768-uefi-candidate/00-prompt.png",
+      "sha256": "6a6971364aa67912ba3f447abee4d706635255fc21bbed1dedc45abd2263b28a",
+      "bytes": 6611
+    },
+    {
+      "run": "r1",
+      "path": "screennative/desktop-1024x768-uefi-candidate/01-after-8-commands.png",
+      "sha256": "1dbb36f6f76e8040c20df48ae1849e8dc5bcfb1728e1548826bd117b09b96a97",
+      "bytes": 14481
+    },
+    {
+      "run": "r1",
+      "path": "screennative/desktop-1024x768-uefi-candidate/02-after-16-commands.png",
+      "sha256": "ac7a97fdb18e55d794cdb89a849096480d0e47675ced46737410c4dc0c6a31a0",
+      "bytes": 17591
+    },
+    {
+      "run": "r1",
+      "path": "screennative/desktop-1024x768-uefi-candidate/03-typed.png",
+      "sha256": "6ba607d01f82ad90b728b69649cec937e549e3cbefdc1eadfd9e1175820c9a9e",
+      "bytes": 17825
+    },
+    {
+      "run": "r1",
+      "path": "screennative/desktop-1024x768-uefi-candidate/04-erased.png",
+      "sha256": "d1a026925bce91ada4e49dab339e977f68314c0ae837faf531a0749b4ad69039",
+      "bytes": 17760
+    },
+    {
+      "run": "r1",
+      "path": "screennative/desktop-1024x768-uefi-candidate/05-echoed.png",
+      "sha256": "c3e2a85c501b1df84147138ab6db22d631d5389138930ad67f65a2f82ce3d1c9",
+      "bytes": 17117
+    },
+    {
+      "run": "r1",
+      "path": "screennative/desktop-640x480-bios-baseline/00-prompt.png",
+      "sha256": "bc42e56a2430d2eab17e41e21c3df7eea96547abd43c02c309a9f097aa5858e8",
+      "bytes": 4467
+    },
+    {
+      "run": "r1",
+      "path": "screennative/desktop-640x480-bios-baseline/01-after-8-commands.png",
+      "sha256": "7081625e5528f882aef606b309f7d3827a0ca2f2060baf142d1e436dbca4064f",
+      "bytes": 9464
+    },
+    {
+      "run": "r1",
+      "path": "screennative/desktop-640x480-bios-baseline/02-after-16-commands.png",
+      "sha256": "7081625e5528f882aef606b309f7d3827a0ca2f2060baf142d1e436dbca4064f",
+      "bytes": 9464
+    },
+    {
+      "run": "r1",
+      "path": "screennative/desktop-640x480-bios-baseline/03-typed.png",
+      "sha256": "a85f9be837483491985073f3e18a2eee515dc8c9ddcb0fe95167df6939f5fe55",
+      "bytes": 9698
+    },
+    {
+      "run": "r1",
+      "path": "screennative/desktop-640x480-bios-baseline/04-erased.png",
+      "sha256": "3552225a473f5fba3f88d033dc1e548b89692ba3bbf3242443a67b1d97b8971c",
+      "bytes": 9630
+    },
+    {
+      "run": "r1",
+      "path": "screennative/desktop-640x480-bios-baseline/05-echoed.png",
+      "sha256": "c250fb0e2bb13e199984f574d3d052a57ab7eaa49a42b4cdabe3e761e29d2661",
+      "bytes": 9127
+    },
+    {
+      "run": "r1",
+      "path": "screennative/desktop-640x480-bios-candidate/00-prompt.png",
+      "sha256": "bc42e56a2430d2eab17e41e21c3df7eea96547abd43c02c309a9f097aa5858e8",
+      "bytes": 4467
+    },
+    {
+      "run": "r1",
+      "path": "screennative/desktop-640x480-bios-candidate/01-after-8-commands.png",
+      "sha256": "7081625e5528f882aef606b309f7d3827a0ca2f2060baf142d1e436dbca4064f",
+      "bytes": 9464
+    },
+    {
+      "run": "r1",
+      "path": "screennative/desktop-640x480-bios-candidate/02-after-16-commands.png",
+      "sha256": "7081625e5528f882aef606b309f7d3827a0ca2f2060baf142d1e436dbca4064f",
+      "bytes": 9464
+    },
+    {
+      "run": "r1",
+      "path": "screennative/desktop-640x480-bios-candidate/03-typed.png",
+      "sha256": "a85f9be837483491985073f3e18a2eee515dc8c9ddcb0fe95167df6939f5fe55",
+      "bytes": 9698
+    },
+    {
+      "run": "r1",
+      "path": "screennative/desktop-640x480-bios-candidate/04-erased.png",
+      "sha256": "3552225a473f5fba3f88d033dc1e548b89692ba3bbf3242443a67b1d97b8971c",
+      "bytes": 9630
+    },
+    {
+      "run": "r1",
+      "path": "screennative/desktop-640x480-bios-candidate/05-echoed.png",
+      "sha256": "c250fb0e2bb13e199984f574d3d052a57ab7eaa49a42b4cdabe3e761e29d2661",
+      "bytes": 9127
+    },
+    {
+      "run": "host",
+      "path": "console-1024x768-bios-baseline/00-prompt.png",
+      "sha256": "d871e422fbc4569cbf8f54e70b09c8e10f984719c5a66b4374e8796a6f8db4a9",
+      "bytes": 5600
+    },
+    {
+      "run": "host",
+      "path": "console-1024x768-bios-baseline/01-after-8-commands.png",
+      "sha256": "e7bc6697f838c293ac0fc7eae0508ee48c282ef8f8fa120701248c8da71b0f91",
+      "bytes": 12599
+    },
+    {
+      "run": "host",
+      "path": "console-1024x768-bios-baseline/02-after-16-commands.png",
+      "sha256": "e4fb24c1960162328db44617bf5189fc4a45173d8a49920f0e5ff25997a425f9",
+      "bytes": 15284
+    },
+    {
+      "run": "host",
+      "path": "console-1024x768-bios-baseline/03-typed.png",
+      "sha256": "eabd26f01f249dabf3ce88a5648da2907a82921e06a0086355ec0a5421c8a499",
+      "bytes": 15509
+    },
+    {
+      "run": "host",
+      "path": "console-1024x768-bios-baseline/04-erased.png",
+      "sha256": "647d35c9748d74ef8a6a94e95ed732ae78e19914d4443295e70dd165d20b1af7",
+      "bytes": 15443
+    },
+    {
+      "run": "host",
+      "path": "console-1024x768-bios-baseline/05-echoed.png",
+      "sha256": "0bfd9c842daa78d248d9475716bb7280ca0e13e450eac122cb7521053ccd3b8b",
+      "bytes": 14872
+    },
+    {
+      "run": "host",
+      "path": "console-1024x768-bios-candidate/00-prompt.png",
+      "sha256": "d871e422fbc4569cbf8f54e70b09c8e10f984719c5a66b4374e8796a6f8db4a9",
+      "bytes": 5600
+    },
+    {
+      "run": "host",
+      "path": "console-1024x768-bios-candidate/01-after-8-commands.png",
+      "sha256": "e7bc6697f838c293ac0fc7eae0508ee48c282ef8f8fa120701248c8da71b0f91",
+      "bytes": 12599
+    },
+    {
+      "run": "host",
+      "path": "console-1024x768-bios-candidate/02-after-16-commands.png",
+      "sha256": "e4fb24c1960162328db44617bf5189fc4a45173d8a49920f0e5ff25997a425f9",
+      "bytes": 15284
+    },
+    {
+      "run": "host",
+      "path": "console-1024x768-bios-candidate/03-typed.png",
+      "sha256": "eabd26f01f249dabf3ce88a5648da2907a82921e06a0086355ec0a5421c8a499",
+      "bytes": 15509
+    },
+    {
+      "run": "host",
+      "path": "console-1024x768-bios-candidate/04-erased.png",
+      "sha256": "647d35c9748d74ef8a6a94e95ed732ae78e19914d4443295e70dd165d20b1af7",
+      "bytes": 15443
+    },
+    {
+      "run": "host",
+      "path": "console-1024x768-bios-candidate/05-echoed.png",
+      "sha256": "0bfd9c842daa78d248d9475716bb7280ca0e13e450eac122cb7521053ccd3b8b",
+      "bytes": 14872
+    },
+    {
+      "run": "host",
+      "path": "console-1024x768-uefi-baseline/00-prompt.png",
+      "sha256": "d871e422fbc4569cbf8f54e70b09c8e10f984719c5a66b4374e8796a6f8db4a9",
+      "bytes": 5600
+    },
+    {
+      "run": "host",
+      "path": "console-1024x768-uefi-baseline/01-after-8-commands.png",
+      "sha256": "e7bc6697f838c293ac0fc7eae0508ee48c282ef8f8fa120701248c8da71b0f91",
+      "bytes": 12599
+    },
+    {
+      "run": "host",
+      "path": "console-1024x768-uefi-baseline/02-after-16-commands.png",
+      "sha256": "e4fb24c1960162328db44617bf5189fc4a45173d8a49920f0e5ff25997a425f9",
+      "bytes": 15284
+    },
+    {
+      "run": "host",
+      "path": "console-1024x768-uefi-baseline/03-typed.png",
+      "sha256": "eabd26f01f249dabf3ce88a5648da2907a82921e06a0086355ec0a5421c8a499",
+      "bytes": 15509
+    },
+    {
+      "run": "host",
+      "path": "console-1024x768-uefi-baseline/04-erased.png",
+      "sha256": "647d35c9748d74ef8a6a94e95ed732ae78e19914d4443295e70dd165d20b1af7",
+      "bytes": 15443
+    },
+    {
+      "run": "host",
+      "path": "console-1024x768-uefi-baseline/05-echoed.png",
+      "sha256": "0bfd9c842daa78d248d9475716bb7280ca0e13e450eac122cb7521053ccd3b8b",
+      "bytes": 14872
+    },
+    {
+      "run": "host",
+      "path": "console-1024x768-uefi-candidate/00-prompt.png",
+      "sha256": "d871e422fbc4569cbf8f54e70b09c8e10f984719c5a66b4374e8796a6f8db4a9",
+      "bytes": 5600
+    },
+    {
+      "run": "host",
+      "path": "console-1024x768-uefi-candidate/01-after-8-commands.png",
+      "sha256": "e7bc6697f838c293ac0fc7eae0508ee48c282ef8f8fa120701248c8da71b0f91",
+      "bytes": 12599
+    },
+    {
+      "run": "host",
+      "path": "console-1024x768-uefi-candidate/02-after-16-commands.png",
+      "sha256": "e4fb24c1960162328db44617bf5189fc4a45173d8a49920f0e5ff25997a425f9",
+      "bytes": 15284
+    },
+    {
+      "run": "host",
+      "path": "console-1024x768-uefi-candidate/03-typed.png",
+      "sha256": "eabd26f01f249dabf3ce88a5648da2907a82921e06a0086355ec0a5421c8a499",
+      "bytes": 15509
+    },
+    {
+      "run": "host",
+      "path": "console-1024x768-uefi-candidate/04-erased.png",
+      "sha256": "647d35c9748d74ef8a6a94e95ed732ae78e19914d4443295e70dd165d20b1af7",
+      "bytes": 15443
+    },
+    {
+      "run": "host",
+      "path": "console-1024x768-uefi-candidate/05-echoed.png",
+      "sha256": "0bfd9c842daa78d248d9475716bb7280ca0e13e450eac122cb7521053ccd3b8b",
+      "bytes": 14872
+    },
+    {
+      "run": "host",
+      "path": "console-640x400-bios-baseline/00-prompt.png",
+      "sha256": "b14dab3dcdf07dbfdf1bf57f8d18e8476318666571e00a0c9b00dcec8a0d3557",
+      "bytes": 3146
+    },
+    {
+      "run": "host",
+      "path": "console-640x400-bios-baseline/01-after-8-commands.png",
+      "sha256": "b1c85f4f0b76e2aec8796a23b82d7f17120d7e9681387fdc38b0d62384ab00d5",
+      "bytes": 9303
+    },
+    {
+      "run": "host",
+      "path": "console-640x400-bios-baseline/02-after-16-commands.png",
+      "sha256": "d6f5e42c0094c39f9e8ac169dd64fb5a4e1b1d09f985654e561a35698c119609",
+      "bytes": 9796
+    },
+    {
+      "run": "host",
+      "path": "console-640x400-bios-baseline/03-typed.png",
+      "sha256": "4e4d9ed8a87122ced6a20817e2a967b5a36ad3d262330d85af9693e3578b4e00",
+      "bytes": 10009
+    },
+    {
+      "run": "host",
+      "path": "console-640x400-bios-baseline/04-erased.png",
+      "sha256": "5f705bc8b50b90082531a1d5c60113dc41304f1001d8acced82761f3b79d9f1c",
+      "bytes": 9944
+    },
+    {
+      "run": "host",
+      "path": "console-640x400-bios-baseline/05-echoed.png",
+      "sha256": "f8b8e446ea967d9f2939881a38e825fb172f2b80efac9bf7f553d8c6fcda489b",
+      "bytes": 9416
+    },
+    {
+      "run": "host",
+      "path": "console-640x400-bios-candidate/00-prompt.png",
+      "sha256": "b14dab3dcdf07dbfdf1bf57f8d18e8476318666571e00a0c9b00dcec8a0d3557",
+      "bytes": 3146
+    },
+    {
+      "run": "host",
+      "path": "console-640x400-bios-candidate/01-after-8-commands.png",
+      "sha256": "b1c85f4f0b76e2aec8796a23b82d7f17120d7e9681387fdc38b0d62384ab00d5",
+      "bytes": 9303
+    },
+    {
+      "run": "host",
+      "path": "console-640x400-bios-candidate/02-after-16-commands.png",
+      "sha256": "d6f5e42c0094c39f9e8ac169dd64fb5a4e1b1d09f985654e561a35698c119609",
+      "bytes": 9796
+    },
+    {
+      "run": "host",
+      "path": "console-640x400-bios-candidate/03-typed.png",
+      "sha256": "4e4d9ed8a87122ced6a20817e2a967b5a36ad3d262330d85af9693e3578b4e00",
+      "bytes": 10009
+    },
+    {
+      "run": "host",
+      "path": "console-640x400-bios-candidate/04-erased.png",
+      "sha256": "5f705bc8b50b90082531a1d5c60113dc41304f1001d8acced82761f3b79d9f1c",
+      "bytes": 9944
+    },
+    {
+      "run": "host",
+      "path": "console-640x400-bios-candidate/05-echoed.png",
+      "sha256": "f8b8e446ea967d9f2939881a38e825fb172f2b80efac9bf7f553d8c6fcda489b",
+      "bytes": 9416
+    },
+    {
+      "run": "host",
+      "path": "desktop-1024x768-bios-baseline/00-prompt.png",
+      "sha256": "6a6971364aa67912ba3f447abee4d706635255fc21bbed1dedc45abd2263b28a",
+      "bytes": 6611
+    },
+    {
+      "run": "host",
+      "path": "desktop-1024x768-bios-baseline/01-after-8-commands.png",
+      "sha256": "1dbb36f6f76e8040c20df48ae1849e8dc5bcfb1728e1548826bd117b09b96a97",
+      "bytes": 14481
+    },
+    {
+      "run": "host",
+      "path": "desktop-1024x768-bios-baseline/02-after-16-commands.png",
+      "sha256": "ac7a97fdb18e55d794cdb89a849096480d0e47675ced46737410c4dc0c6a31a0",
+      "bytes": 17591
+    },
+    {
+      "run": "host",
+      "path": "desktop-1024x768-bios-baseline/03-typed.png",
+      "sha256": "6ba607d01f82ad90b728b69649cec937e549e3cbefdc1eadfd9e1175820c9a9e",
+      "bytes": 17825
+    },
+    {
+      "run": "host",
+      "path": "desktop-1024x768-bios-baseline/04-erased.png",
+      "sha256": "d1a026925bce91ada4e49dab339e977f68314c0ae837faf531a0749b4ad69039",
+      "bytes": 17760
+    },
+    {
+      "run": "host",
+      "path": "desktop-1024x768-bios-baseline/05-echoed.png",
+      "sha256": "c3e2a85c501b1df84147138ab6db22d631d5389138930ad67f65a2f82ce3d1c9",
+      "bytes": 17117
+    },
+    {
+      "run": "host",
+      "path": "desktop-1024x768-bios-candidate/00-prompt.png",
+      "sha256": "6a6971364aa67912ba3f447abee4d706635255fc21bbed1dedc45abd2263b28a",
+      "bytes": 6611
+    },
+    {
+      "run": "host",
+      "path": "desktop-1024x768-bios-candidate/01-after-8-commands.png",
+      "sha256": "1dbb36f6f76e8040c20df48ae1849e8dc5bcfb1728e1548826bd117b09b96a97",
+      "bytes": 14481
+    },
+    {
+      "run": "host",
+      "path": "desktop-1024x768-bios-candidate/02-after-16-commands.png",
+      "sha256": "ac7a97fdb18e55d794cdb89a849096480d0e47675ced46737410c4dc0c6a31a0",
+      "bytes": 17591
+    },
+    {
+      "run": "host",
+      "path": "desktop-1024x768-bios-candidate/03-typed.png",
+      "sha256": "6ba607d01f82ad90b728b69649cec937e549e3cbefdc1eadfd9e1175820c9a9e",
+      "bytes": 17825
+    },
+    {
+      "run": "host",
+      "path": "desktop-1024x768-bios-candidate/04-erased.png",
+      "sha256": "d1a026925bce91ada4e49dab339e977f68314c0ae837faf531a0749b4ad69039",
+      "bytes": 17760
+    },
+    {
+      "run": "host",
+      "path": "desktop-1024x768-bios-candidate/05-echoed.png",
+      "sha256": "c3e2a85c501b1df84147138ab6db22d631d5389138930ad67f65a2f82ce3d1c9",
+      "bytes": 17117
+    },
+    {
+      "run": "host",
+      "path": "desktop-1024x768-uefi-baseline/00-prompt.png",
+      "sha256": "6a6971364aa67912ba3f447abee4d706635255fc21bbed1dedc45abd2263b28a",
+      "bytes": 6611
+    },
+    {
+      "run": "host",
+      "path": "desktop-1024x768-uefi-baseline/01-after-8-commands.png",
+      "sha256": "1dbb36f6f76e8040c20df48ae1849e8dc5bcfb1728e1548826bd117b09b96a97",
+      "bytes": 14481
+    },
+    {
+      "run": "host",
+      "path": "desktop-1024x768-uefi-baseline/02-after-16-commands.png",
+      "sha256": "ac7a97fdb18e55d794cdb89a849096480d0e47675ced46737410c4dc0c6a31a0",
+      "bytes": 17591
+    },
+    {
+      "run": "host",
+      "path": "desktop-1024x768-uefi-baseline/03-typed.png",
+      "sha256": "6ba607d01f82ad90b728b69649cec937e549e3cbefdc1eadfd9e1175820c9a9e",
+      "bytes": 17825
+    },
+    {
+      "run": "host",
+      "path": "desktop-1024x768-uefi-baseline/04-erased.png",
+      "sha256": "d1a026925bce91ada4e49dab339e977f68314c0ae837faf531a0749b4ad69039",
+      "bytes": 17760
+    },
+    {
+      "run": "host",
+      "path": "desktop-1024x768-uefi-baseline/05-echoed.png",
+      "sha256": "c3e2a85c501b1df84147138ab6db22d631d5389138930ad67f65a2f82ce3d1c9",
+      "bytes": 17117
+    },
+    {
+      "run": "host",
+      "path": "desktop-1024x768-uefi-candidate/00-prompt.png",
+      "sha256": "6a6971364aa67912ba3f447abee4d706635255fc21bbed1dedc45abd2263b28a",
+      "bytes": 6611
+    },
+    {
+      "run": "host",
+      "path": "desktop-1024x768-uefi-candidate/01-after-8-commands.png",
+      "sha256": "1dbb36f6f76e8040c20df48ae1849e8dc5bcfb1728e1548826bd117b09b96a97",
+      "bytes": 14481
+    },
+    {
+      "run": "host",
+      "path": "desktop-1024x768-uefi-candidate/02-after-16-commands.png",
+      "sha256": "ac7a97fdb18e55d794cdb89a849096480d0e47675ced46737410c4dc0c6a31a0",
+      "bytes": 17591
+    },
+    {
+      "run": "host",
+      "path": "desktop-1024x768-uefi-candidate/03-typed.png",
+      "sha256": "6ba607d01f82ad90b728b69649cec937e549e3cbefdc1eadfd9e1175820c9a9e",
+      "bytes": 17825
+    },
+    {
+      "run": "host",
+      "path": "desktop-1024x768-uefi-candidate/04-erased.png",
+      "sha256": "d1a026925bce91ada4e49dab339e977f68314c0ae837faf531a0749b4ad69039",
+      "bytes": 17760
+    },
+    {
+      "run": "host",
+      "path": "desktop-1024x768-uefi-candidate/05-echoed.png",
+      "sha256": "c3e2a85c501b1df84147138ab6db22d631d5389138930ad67f65a2f82ce3d1c9",
+      "bytes": 17117
+    },
+    {
+      "run": "host",
+      "path": "desktop-640x480-bios-baseline/00-prompt.png",
+      "sha256": "bc42e56a2430d2eab17e41e21c3df7eea96547abd43c02c309a9f097aa5858e8",
+      "bytes": 4467
+    },
+    {
+      "run": "host",
+      "path": "desktop-640x480-bios-baseline/01-after-8-commands.png",
+      "sha256": "7081625e5528f882aef606b309f7d3827a0ca2f2060baf142d1e436dbca4064f",
+      "bytes": 9464
+    },
+    {
+      "run": "host",
+      "path": "desktop-640x480-bios-baseline/02-after-16-commands.png",
+      "sha256": "7081625e5528f882aef606b309f7d3827a0ca2f2060baf142d1e436dbca4064f",
+      "bytes": 9464
+    },
+    {
+      "run": "host",
+      "path": "desktop-640x480-bios-baseline/03-typed.png",
+      "sha256": "a85f9be837483491985073f3e18a2eee515dc8c9ddcb0fe95167df6939f5fe55",
+      "bytes": 9698
+    },
+    {
+      "run": "host",
+      "path": "desktop-640x480-bios-baseline/04-erased.png",
+      "sha256": "3552225a473f5fba3f88d033dc1e548b89692ba3bbf3242443a67b1d97b8971c",
+      "bytes": 9630
+    },
+    {
+      "run": "host",
+      "path": "desktop-640x480-bios-baseline/05-echoed.png",
+      "sha256": "c250fb0e2bb13e199984f574d3d052a57ab7eaa49a42b4cdabe3e761e29d2661",
+      "bytes": 9127
+    },
+    {
+      "run": "host",
+      "path": "desktop-640x480-bios-candidate/00-prompt.png",
+      "sha256": "bc42e56a2430d2eab17e41e21c3df7eea96547abd43c02c309a9f097aa5858e8",
+      "bytes": 4467
+    },
+    {
+      "run": "host",
+      "path": "desktop-640x480-bios-candidate/01-after-8-commands.png",
+      "sha256": "7081625e5528f882aef606b309f7d3827a0ca2f2060baf142d1e436dbca4064f",
+      "bytes": 9464
+    },
+    {
+      "run": "host",
+      "path": "desktop-640x480-bios-candidate/02-after-16-commands.png",
+      "sha256": "7081625e5528f882aef606b309f7d3827a0ca2f2060baf142d1e436dbca4064f",
+      "bytes": 9464
+    },
+    {
+      "run": "host",
+      "path": "desktop-640x480-bios-candidate/03-typed.png",
+      "sha256": "a85f9be837483491985073f3e18a2eee515dc8c9ddcb0fe95167df6939f5fe55",
+      "bytes": 9698
+    },
+    {
+      "run": "host",
+      "path": "desktop-640x480-bios-candidate/04-erased.png",
+      "sha256": "3552225a473f5fba3f88d033dc1e548b89692ba3bbf3242443a67b1d97b8971c",
+      "bytes": 9630
+    },
+    {
+      "run": "host",
+      "path": "desktop-640x480-bios-candidate/05-echoed.png",
+      "sha256": "c250fb0e2bb13e199984f574d3d052a57ab7eaa49a42b4cdabe3e761e29d2661",
+      "bytes": 9127
+    },
+    {
+      "run": "host",
+      "path": "gui-pointer-1024x768-bios-baseline/00-ready.png",
+      "sha256": "f498dd815f89358990086ecc48f94680f1d1abd2e83517ceedb3c1521c37558b",
+      "bytes": 7972
+    },
+    {
+      "run": "host",
+      "path": "gui-pointer-1024x768-bios-baseline/01-moved.png",
+      "sha256": "0a7fae58fbe30b8c016eef0d63bc04efbdfbf48887ccbd556115109bdacc4e58",
+      "bytes": 7978
+    },
+    {
+      "run": "host",
+      "path": "gui-pointer-1024x768-bios-baseline/02-clicked.png",
+      "sha256": "3814e66733e1139bf7cd48891ad88d18cfcdc30c7114c2f2739a6241d2566b09",
+      "bytes": 7980
+    },
+    {
+      "run": "host",
+      "path": "gui-pointer-1024x768-bios-baseline/03-top-left.png",
+      "sha256": "6fa27543f1f507ab7f51909705a5434a9e6cbe425d8c00130689f555e1ea8797",
+      "bytes": 7993
+    },
+    {
+      "run": "host",
+      "path": "gui-pointer-1024x768-bios-baseline/04-top-right.png",
+      "sha256": "4a6ea51c0841bcb0d5adc058f278624e9532793c8be9840778d084aef9f567d6",
+      "bytes": 7805
+    },
+    {
+      "run": "host",
+      "path": "gui-pointer-1024x768-bios-baseline/05-bottom-right.png",
+      "sha256": "c678e1d76abfad6e980a5667dd0627b6162e37a805ec1c11e9a83ecc57d49edc",
+      "bytes": 7792
+    },
+    {
+      "run": "host",
+      "path": "gui-pointer-1024x768-bios-baseline/06-bottom-left.png",
+      "sha256": "5845f32844733336ab5d29eaded357d670cefdd3dacd7462b9ebfd73849816d7",
+      "bytes": 7796
+    },
+    {
+      "run": "host",
+      "path": "gui-pointer-1024x768-bios-baseline/07-surface-left-edge.png",
+      "sha256": "8e9c735ab92b97f5a11c5ff049e3b7502165d5bf92b0927af171e9de61b678c8",
+      "bytes": 7992
+    },
+    {
+      "run": "host",
+      "path": "gui-pointer-1024x768-bios-baseline/08-surface-right-edge.png",
+      "sha256": "d72dea8c14a4754e897f70c6c5d54dcb984f04ab8871bd68a9c5db1f8699f717",
+      "bytes": 7976
+    },
+    {
+      "run": "host",
+      "path": "gui-pointer-1024x768-bios-candidate/00-ready.png",
+      "sha256": "f498dd815f89358990086ecc48f94680f1d1abd2e83517ceedb3c1521c37558b",
+      "bytes": 7972
+    },
+    {
+      "run": "host",
+      "path": "gui-pointer-1024x768-bios-candidate/01-moved.png",
+      "sha256": "0a7fae58fbe30b8c016eef0d63bc04efbdfbf48887ccbd556115109bdacc4e58",
+      "bytes": 7978
+    },
+    {
+      "run": "host",
+      "path": "gui-pointer-1024x768-bios-candidate/02-clicked.png",
+      "sha256": "3814e66733e1139bf7cd48891ad88d18cfcdc30c7114c2f2739a6241d2566b09",
+      "bytes": 7980
+    },
+    {
+      "run": "host",
+      "path": "gui-pointer-1024x768-bios-candidate/03-top-left.png",
+      "sha256": "6fa27543f1f507ab7f51909705a5434a9e6cbe425d8c00130689f555e1ea8797",
+      "bytes": 7993
+    },
+    {
+      "run": "host",
+      "path": "gui-pointer-1024x768-bios-candidate/04-top-right.png",
+      "sha256": "4a6ea51c0841bcb0d5adc058f278624e9532793c8be9840778d084aef9f567d6",
+      "bytes": 7805
+    },
+    {
+      "run": "host",
+      "path": "gui-pointer-1024x768-bios-candidate/05-bottom-right.png",
+      "sha256": "c678e1d76abfad6e980a5667dd0627b6162e37a805ec1c11e9a83ecc57d49edc",
+      "bytes": 7792
+    },
+    {
+      "run": "host",
+      "path": "gui-pointer-1024x768-bios-candidate/06-bottom-left.png",
+      "sha256": "5845f32844733336ab5d29eaded357d670cefdd3dacd7462b9ebfd73849816d7",
+      "bytes": 7796
+    },
+    {
+      "run": "host",
+      "path": "gui-pointer-1024x768-bios-candidate/07-surface-left-edge.png",
+      "sha256": "8e9c735ab92b97f5a11c5ff049e3b7502165d5bf92b0927af171e9de61b678c8",
+      "bytes": 7992
+    },
+    {
+      "run": "host",
+      "path": "gui-pointer-1024x768-bios-candidate/08-surface-right-edge.png",
+      "sha256": "d72dea8c14a4754e897f70c6c5d54dcb984f04ab8871bd68a9c5db1f8699f717",
+      "bytes": 7976
+    },
+    {
+      "run": "host",
+      "path": "gui-pointer-1024x768-uefi-baseline/00-ready.png",
+      "sha256": "f498dd815f89358990086ecc48f94680f1d1abd2e83517ceedb3c1521c37558b",
+      "bytes": 7972
+    },
+    {
+      "run": "host",
+      "path": "gui-pointer-1024x768-uefi-baseline/01-moved.png",
+      "sha256": "0a7fae58fbe30b8c016eef0d63bc04efbdfbf48887ccbd556115109bdacc4e58",
+      "bytes": 7978
+    },
+    {
+      "run": "host",
+      "path": "gui-pointer-1024x768-uefi-baseline/02-clicked.png",
+      "sha256": "3814e66733e1139bf7cd48891ad88d18cfcdc30c7114c2f2739a6241d2566b09",
+      "bytes": 7980
+    },
+    {
+      "run": "host",
+      "path": "gui-pointer-1024x768-uefi-baseline/03-top-left.png",
+      "sha256": "6fa27543f1f507ab7f51909705a5434a9e6cbe425d8c00130689f555e1ea8797",
+      "bytes": 7993
+    },
+    {
+      "run": "host",
+      "path": "gui-pointer-1024x768-uefi-baseline/04-top-right.png",
+      "sha256": "4a6ea51c0841bcb0d5adc058f278624e9532793c8be9840778d084aef9f567d6",
+      "bytes": 7805
+    },
+    {
+      "run": "host",
+      "path": "gui-pointer-1024x768-uefi-baseline/05-bottom-right.png",
+      "sha256": "c678e1d76abfad6e980a5667dd0627b6162e37a805ec1c11e9a83ecc57d49edc",
+      "bytes": 7792
+    },
+    {
+      "run": "host",
+      "path": "gui-pointer-1024x768-uefi-baseline/06-bottom-left.png",
+      "sha256": "5845f32844733336ab5d29eaded357d670cefdd3dacd7462b9ebfd73849816d7",
+      "bytes": 7796
+    },
+    {
+      "run": "host",
+      "path": "gui-pointer-1024x768-uefi-baseline/07-surface-left-edge.png",
+      "sha256": "8e9c735ab92b97f5a11c5ff049e3b7502165d5bf92b0927af171e9de61b678c8",
+      "bytes": 7992
+    },
+    {
+      "run": "host",
+      "path": "gui-pointer-1024x768-uefi-baseline/08-surface-right-edge.png",
+      "sha256": "d72dea8c14a4754e897f70c6c5d54dcb984f04ab8871bd68a9c5db1f8699f717",
+      "bytes": 7976
+    },
+    {
+      "run": "host",
+      "path": "gui-pointer-1024x768-uefi-candidate/00-ready.png",
+      "sha256": "f498dd815f89358990086ecc48f94680f1d1abd2e83517ceedb3c1521c37558b",
+      "bytes": 7972
+    },
+    {
+      "run": "host",
+      "path": "gui-pointer-1024x768-uefi-candidate/01-moved.png",
+      "sha256": "0a7fae58fbe30b8c016eef0d63bc04efbdfbf48887ccbd556115109bdacc4e58",
+      "bytes": 7978
+    },
+    {
+      "run": "host",
+      "path": "gui-pointer-1024x768-uefi-candidate/02-clicked.png",
+      "sha256": "3814e66733e1139bf7cd48891ad88d18cfcdc30c7114c2f2739a6241d2566b09",
+      "bytes": 7980
+    },
+    {
+      "run": "host",
+      "path": "gui-pointer-1024x768-uefi-candidate/03-top-left.png",
+      "sha256": "6fa27543f1f507ab7f51909705a5434a9e6cbe425d8c00130689f555e1ea8797",
+      "bytes": 7993
+    },
+    {
+      "run": "host",
+      "path": "gui-pointer-1024x768-uefi-candidate/04-top-right.png",
+      "sha256": "4a6ea51c0841bcb0d5adc058f278624e9532793c8be9840778d084aef9f567d6",
+      "bytes": 7805
+    },
+    {
+      "run": "host",
+      "path": "gui-pointer-1024x768-uefi-candidate/05-bottom-right.png",
+      "sha256": "c678e1d76abfad6e980a5667dd0627b6162e37a805ec1c11e9a83ecc57d49edc",
+      "bytes": 7792
+    },
+    {
+      "run": "host",
+      "path": "gui-pointer-1024x768-uefi-candidate/06-bottom-left.png",
+      "sha256": "5845f32844733336ab5d29eaded357d670cefdd3dacd7462b9ebfd73849816d7",
+      "bytes": 7796
+    },
+    {
+      "run": "host",
+      "path": "gui-pointer-1024x768-uefi-candidate/07-surface-left-edge.png",
+      "sha256": "8e9c735ab92b97f5a11c5ff049e3b7502165d5bf92b0927af171e9de61b678c8",
+      "bytes": 7992
+    },
+    {
+      "run": "host",
+      "path": "gui-pointer-1024x768-uefi-candidate/08-surface-right-edge.png",
+      "sha256": "d72dea8c14a4754e897f70c6c5d54dcb984f04ab8871bd68a9c5db1f8699f717",
+      "bytes": 7976
+    }
+  ]
+}
