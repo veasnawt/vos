@@ -65,6 +65,8 @@
   - no Rust state, no locking change;
   - same results for the same instance bits;
   - process isolation and frame ownership unchanged.
+- **R4-M1 status:** candidate on `codex/r4-m1-pmm` ([result](../results/r4-m1-pmm-rust.md)); not merged.
+- **Finding for R4-M3 (not changed by R4-M1):** the accepted `pmm_init_in` clears frames [0, 256) whatever `frames` is, so an instance with fewer than 256 frames (64, 128 or 192, which it accepts) has words written past `PMM_WORDS(frames)`. No in-tree caller is affected: the kernel uses `PMM_MAX_FRAMES` and the self-tests 16,384 frames. Any R4-M3 work on `pmm_init_in` must decide this explicitly.
 - **Following increments, each separately authorized:** R4-M2 alloc/free/reserve transitions with the hint; R4-M3 `pmm_init_in` memory-map classification; R4-V1 VMM read-only validation (`check_va`, `check_nonleaf`, canonical/range tests, `usercopy` `user_range`); R4-S1 scheduler queue decisions; R4-P1 process/capability checks (`io_scope_request_valid`, grants).
 - **Resource forecast for R4-M1** (same accounting; ledger ≈ 165 K raw now):
   - admission and completion transitions ≈ 2 × 210 K guarded;
@@ -76,19 +78,19 @@
 
 ## 4. R5 completion matrix (not met today)
 
-| Criterion | Required evidence | Status at 2c0890a3 + R3-G1 |
+| Criterion | Required evidence | Status at f5d470df + R4-M1 candidate |
 | --- | --- | --- |
 | Inventory of every C/asm module with owner and disposition | This table, maintained per increment | **Started** (this document) |
-| Verified Rust ownership of the approved migration targets | Frozen-C differential, mutants, panic-free link, symbol ownership per target | Boot, ELF, input, network protocols, virtio-net validation, framebuffer, desktop decisions (accepted); screen geometry (candidate) |
+| Verified Rust ownership of the approved migration targets | Frozen-C differential, mutants, panic-free link, symbol ownership per target | Boot, ELF, input, network protocols, virtio-net validation, framebuffer, desktop and screen decisions (accepted); PMM read-only checks (R4-M1 candidate) |
 | Justification for each retained C/asm boundary | Per-file rationale: CPU entry, context switch, MMIO/DMA drivers, test harness | Assembly and device adapters justified informally; **not yet written per file** |
-| Memory, scheduler, process, security core (R4) migrated or justified | R4 increments | **Not started** |
+| Memory, scheduler, process, security core (R4) migrated or justified | R4 increments | **Started**: R4-M1 PMM read-only checks (candidate); allocation, VMM, scheduler and process work not started |
 | Storage (R3-S) | Migration after the SEC-02 resolution | **Blocked** (SEC-02) |
-| Graphics (R3-G) | Desktop, screen and GUI decisions | **In progress**: G1 accepted, G2 candidate, G3 planned; rendering and framebuffer ownership intentionally C |
+| Graphics (R3-G) | Desktop, screen and GUI decisions | **In progress**: G1 and G2 accepted, G3 planned; rendering and framebuffer ownership intentionally C |
 | Public userspace ABI v0–v5 + pointer v1 preserved | ABI tests, app compatibility boots | Preserved so far |
 | BIOS/UEFI and security regressions | Native suites, hostile-device and isolation matrices | Per increment |
 | Resource and memory-safety acceptance | Stack, image, performance policy, sanitizer evidence | Per increment; exceptions owner-approved |
 | Reproducible builds and complete publication evidence | Repro checks, CI, ledger | Per increment |
 
-R5 is **not** complete. The largest blockers are R4 (not started) and storage (SEC-02).
+R5 is **not** complete. The largest blockers are R4 (only R4-M1 in progress) and storage (SEC-02).
 
 Deferred: N6.4 (owner deferral), the storage migration (SEC-02), the USB/H-series hardware work, and the stale `test-ps2-pointer-native.py` execution proof (pre-existing).
