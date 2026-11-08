@@ -1,0 +1,135 @@
+{
+ "status": "PASS",
+ "scope": {
+  "accepted_pmm_c_sha256": "bb177a03b3f5fa45062a76a63aa25fc481800ff22464629733fca21c25af4cb5",
+  "production_pmm_c_sha256": "b26e4db632848df8a0d61ecc871e61776974a21ab2c10a02553bcacdf05fba6e",
+  "changed_statements": 1
+ },
+ "regression": {
+  "release": {
+   "cases": 27819,
+   "checks": 62656992,
+   "mismatches": 0,
+   "negative_faults": 3,
+   "digest": "aa6fef2bf2d8baac"
+  },
+  "sanitizer": {
+   "cases": 27819,
+   "checks": 62656992,
+   "mismatches": 0,
+   "negative_faults": 3,
+   "digest": "aa6fef2bf2d8baac"
+  }
+ },
+ "negative_control_release": [
+  "PMM INIT NEGATIVE CONTROL frames=64 frozen-C=fault fault_offset=bitmap_end",
+  "PMM INIT NEGATIVE CONTROL frames=128 frozen-C=fault fault_offset=bitmap_end",
+  "PMM INIT NEGATIVE CONTROL frames=192 frozen-C=fault fault_offset=bitmap_end"
+ ],
+ "negative_control_sanitizer": [
+  "PMM INIT NEGATIVE CONTROL frames=64 frozen-C=fault fault_offset=bitmap_end",
+  "PMM INIT NEGATIVE CONTROL frames=128 frozen-C=fault fault_offset=bitmap_end",
+  "PMM INIT NEGATIVE CONTROL frames=192 frozen-C=fault fault_offset=bitmap_end"
+ ],
+ "coverage": "PMM INIT COVERAGE small=7548 large=20160 max=2570 refused=111 seeded=27500 frame256=4684 ignored=18504 reserved=16619 overflow=10652",
+ "source_sha256": {
+  "arch/x86_64/pmm.c": "b26e4db632848df8a0d61ecc871e61776974a21ab2c10a02553bcacdf05fba6e",
+  "tests/reference/pmm-r4m1.c": "fb02c276cc23ae010c86c1c5deb274b0411d31153db7e03c5aa3e6a85353137b",
+  "tests/reference/pmm-r4m1h.json": "88c7efd6f5aa92174d010439cbe3274fca4448126131cbec5f609bfa9bd10f19",
+  "tests/host/pmm-init-regression.c": "9500dcbc5235e8a26f981e00519dea18acb55a92d2dcc1a8b98a2d9ddf48a5e0",
+  "arch/x86_64/rust/pmm.rs": "83ec9aaa51a9a7258672e3c1a41797aca5ab8fd5ca9853ff81f6313c764c96d9",
+  "scripts/test-pmm-init.py": "760ce7c22d94ac71c808cdf5d658700375ba24554818f7e1a224d7b0a348145c"
+ },
+ "mutations": {
+  "restore-unbounded-clear": {
+   "detected": true,
+   "how": "fault (guard page, SIGSEGV -11)"
+  },
+  "off-by-one-small-instance": {
+   "detected": true,
+   "how": "fault (guard page, SIGSEGV -11)"
+  },
+  "off-by-one-large-instance": {
+   "detected": true,
+   "how": "fault (guard page, SIGSEGV -11)"
+  },
+  "boundary-threshold-128": {
+   "detected": true,
+   "how": "fault (guard page, SIGSEGV -11)"
+  },
+  "boundary-max-not-min": {
+   "detected": true,
+   "how": "fault (guard page, SIGSEGV -11)"
+  },
+  "boundary-512": {
+   "detected": true,
+   "how": "fault (guard page, SIGSEGV -11)"
+  },
+  "boundary-frames-as-bytes": {
+   "detected": true,
+   "how": "fault (guard page, SIGSEGV -11)"
+  },
+  "zeroing-avail-short": {
+   "detected": true,
+   "how": 2282
+  },
+  "zeroing-alloc-short": {
+   "detected": true,
+   "how": 5708
+  },
+  "zeroing-avail-dropped": {
+   "detected": true,
+   "how": 5180
+  },
+  "low-memory-unprotected": {
+   "detected": true,
+   "how": 4414
+  },
+  "large-protect-rounding": {
+   "detected": true,
+   "how": 1800
+  },
+  "large-free-inward-rounding": {
+   "detected": true,
+   "how": 1562
+  },
+  "large-overflowing-entry": {
+   "detected": true,
+   "how": 334
+  },
+  "large-ignored-bytes": {
+   "detected": true,
+   "how": 1487
+  },
+  "large-reservation-pass": {
+   "detected": true,
+   "how": 1076
+  },
+  "large-usable-count": {
+   "detected": true,
+   "how": 1046
+  },
+  "large-limit-clip": {
+   "detected": true,
+   "how": "fault (guard page, SIGSEGV -11)"
+  },
+  "error-max-frames": {
+   "detected": true,
+   "how": "fault (guard page, SIGSEGV -11)"
+  },
+  "error-entry-size": {
+   "detected": true,
+   "how": 42
+  }
+ },
+ "run": "worker r1 (GCC 15.2 in the sandbox); host GCC 13.4 run gave the same digest aa6fef2bf2d8baac",
+ "r4m1_gate_preserved": {
+  "status": "PASS",
+  "digest": "a4f7a96ad9362c6b",
+  "mutations": 42,
+  "pmm_init_in_c_frame": {
+   "frozen": 72,
+   "production": 72
+  }
+ }
+}

@@ -1,0 +1,237 @@
+{
+ "campaign": "r4-m1h-pmm-init-v1",
+ "plan_sha256": "15abde43872ad02c61be9238ea6d73fe9e65db3cd0fc9dfb1d686c22b0ac66a5",
+ "root_procedure_sha256": "234c25688828da5d465355bd3cee32956e3d80350609dcc040f29e8d4a8e1f78",
+ "boot_sha256": "14438e12f4a3f5d27fdd8935ea5b22dae87c51e9d1150112dbd6551e0747cf2a",
+ "payload_sha256": "c6e088cdd32dcfc7bad958d2c8c91f7169a4e7bd720f69089748c38ffe9f9d90",
+ "source_commit": "084051544f35ed2ee94e21b95b2aef7937959cff",
+ "root_approval": "owner, for r1 and r2 (r3 only as a separately approved repair; not used)",
+ "runs": {
+  "r1": {
+   "status": "PASS",
+   "seal": "43a4221bb199f015f745d663511aa70031c2aeae5598cc2a3015c96c422e51da",
+   "elapsed_s": 558.5,
+   "retained_bytes": 3048018,
+   "jobs": [
+    {
+     "name": "containment",
+     "rc": 0,
+     "seconds": 0.11,
+     "memory_peak_mb": 14
+    },
+    {
+     "name": "build",
+     "rc": 0,
+     "seconds": 12.56,
+     "memory_peak_mb": 152
+    },
+    {
+     "name": "repro",
+     "rc": 0,
+     "seconds": 12.06,
+     "memory_peak_mb": 152
+    },
+    {
+     "name": "pmminit",
+     "rc": 0,
+     "seconds": 38.06,
+     "memory_peak_mb": 87
+    },
+    {
+     "name": "pmmrust",
+     "rc": 0,
+     "seconds": 26.26,
+     "memory_peak_mb": 387
+    },
+    {
+     "name": "pmmnative",
+     "rc": 0,
+     "seconds": 61.55,
+     "memory_peak_mb": 200
+    },
+    {
+     "name": "selftests",
+     "rc": 0,
+     "seconds": 118.44,
+     "memory_peak_mb": 211
+    },
+    {
+     "name": "net-a",
+     "rc": 0,
+     "seconds": 55.95,
+     "memory_peak_mb": 212
+    },
+    {
+     "name": "vnet-full",
+     "rc": 0,
+     "seconds": 48.53,
+     "memory_peak_mb": 307
+    },
+    {
+     "name": "net-b",
+     "rc": 0,
+     "seconds": 94.16,
+     "memory_peak_mb": 226
+    },
+    {
+     "name": "usb2c2native",
+     "rc": 0,
+     "seconds": 40.15,
+     "memory_peak_mb": 284
+    }
+   ],
+   "candidate_sha256": [
+    "5727a83a3b745cb129227e452c7913c023d5b46376e120294286c1fbb79044fb  build/x86_64/vos.bin",
+    "679402a8738763cd6f3dfa0d951763d48078d24b321437f20f13aebcc2e6aa1f  build/x86_64/rust/libvos_kernel.a",
+    "0f1cc3f60400e4413c8ea146a657b88e996c7e12c0cc2d45d104cafbf51c2690  build/x86_64/vos.iso",
+    "092d960caa48bd6ae4564da50e93c1e617c4a4935fa5b509b1e22d6f4c990212  build/x86_64/vos-uefi.iso"
+   ],
+   "reproducible": "KERNEL_AND_ARCHIVE_BYTE_IDENTICAL",
+   "toolchain": [
+    "gcc (Ubuntu 15.2.0-16ubuntu1) 15.2.0",
+    "rustc 1.100.0-nightly (2e2b193f8 2026-09-02)"
+   ],
+   "selftest_images": [
+    "PASS pmm-exhaust",
+    "PASS mp",
+    "PASS mp-2G",
+    "PASS mp-max",
+    "PASS stress",
+    "PASS stress-2G",
+    "PASS stress-max"
+   ],
+   "native_observer": [
+    {
+     "case": "bios-128M",
+     "passed": true,
+     "exit": 33,
+     "calls": {
+      "F": 300,
+      "S": 300,
+      "C": 24
+     },
+     "replay_identical": true
+    },
+    {
+     "case": "bios-2G",
+     "passed": true,
+     "exit": 33,
+     "calls": {
+      "F": 300,
+      "S": 300,
+      "C": 24
+     },
+     "replay_identical": true
+    },
+    {
+     "case": "uefi-128M",
+     "passed": true,
+     "exit": 33,
+     "calls": {
+      "F": 300,
+      "S": 300,
+      "C": 24
+     },
+     "replay_identical": true
+    },
+    {
+     "case": "uefi-2G",
+     "passed": true,
+     "exit": 33,
+     "calls": {
+      "F": 300,
+      "S": 300,
+      "C": 24
+     },
+     "replay_identical": true
+    }
+   ],
+   "screenshots_retained": {
+    "screen-bios": "c65dc55469a992522f0635479ac96855126587f1037147f6d628e0061cb904cd",
+    "screen-uefi": "d3d478d2e6f21f0cd0bcb3388bf94d1765191b4b25f3c1961a513625a42fb3e4"
+   },
+   "usb2c2_native": {
+    "passed": true,
+    "cases": [
+     "bios-normal-qemu-xhci",
+     "bios-dma-qemu-xhci",
+     "bios-both-qemu-xhci",
+     "bios-dma-none",
+     "uefi-normal-qemu-xhci",
+     "uefi-dma-qemu-xhci",
+     "uefi-both-qemu-xhci",
+     "uefi-dma-none"
+    ],
+    "failures": [],
+    "apps_sha256": [
+     "e7af3ee56164f587f7ca1338f7ddfcb202b6f4310f10b4dcba6a2576743cb181  build/h-apps/vsh.elf",
+     "c6c6416195a0f18d680d7f8f19be52ce02ff02912ef3bac45324fbe88006cd06  build/h-apps/hello.elf",
+     "77104da3b33caf809daf5e6674ac4e2fa9edf6a9e2e5dd59828514df76490d32  build/h-apps/rixie.elf",
+     "a21bab23c7183c7534d4b6beabd35b4222cd9faf65b0ad8ea868fd153e112bd2  build/h-apps/gui-demo.elf"
+    ]
+   }
+  },
+  "r2": {
+   "status": "PASS",
+   "seal": "27a151894adf3ad9c519d07c5d8cfb98acbd6de5b1beeae879b6f8b8c79b50d0",
+   "elapsed_s": 2425.1,
+   "retained_bytes": 1670368,
+   "jobs": [
+    {
+     "name": "ci-build",
+     "rc": 0,
+     "seconds": 52.9,
+     "memory_peak_mb": 152
+    },
+    {
+     "name": "ci-boot",
+     "rc": 0,
+     "seconds": 211.77,
+     "memory_peak_mb": 387
+    },
+    {
+     "name": "ci-r2",
+     "rc": 0,
+     "seconds": 235.78,
+     "memory_peak_mb": 408
+    },
+    {
+     "name": "ci-net",
+     "rc": 0,
+     "seconds": 323.97,
+     "memory_peak_mb": 1641
+    },
+    {
+     "name": "ci-gfx",
+     "rc": 0,
+     "seconds": 741.34,
+     "memory_peak_mb": 131
+    },
+    {
+     "name": "ci-usb2",
+     "rc": 0,
+     "seconds": 64.73,
+     "memory_peak_mb": 269
+    },
+    {
+     "name": "ci-contain",
+     "rc": 0,
+     "seconds": 136.59,
+     "memory_peak_mb": 230
+    },
+    {
+     "name": "ci-survey",
+     "rc": 0,
+     "seconds": 268.03,
+     "memory_peak_mb": 197
+    },
+    {
+     "name": "ci-qemu",
+     "rc": 0,
+     "seconds": 230.59,
+     "memory_peak_mb": 266
+    }
+   ]
+  }
+ }
+}
