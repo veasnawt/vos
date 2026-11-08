@@ -1,0 +1,228 @@
+{
+ "steps": [
+  {
+   "step": "Verify legacy i386 Multiboot kernel",
+   "group": "freestanding-core",
+   "before": "success",
+   "after": "success"
+  },
+  {
+   "step": "Validate separately built user ELF profiles",
+   "group": "freestanding-core",
+   "before": "success",
+   "after": "success"
+  },
+  {
+   "step": "Verify migrated ELF bounds and hosted compatibility",
+   "group": "freestanding-core",
+   "before": "success",
+   "after": "success"
+  },
+  {
+   "step": "Verify the Rust Multiboot2 parser (frozen C differential, production ownership, stack, panic-free link)",
+   "group": "freestanding-core",
+   "before": "success",
+   "after": "success"
+  },
+  {
+   "step": "Verify Rust boot reservations and EFI boundary (B1)",
+   "group": "freestanding-core",
+   "before": "success",
+   "after": "success"
+  },
+  {
+   "step": "Verify bounded Rust boot-HID core and existing input contracts (H1-B)",
+   "group": "freestanding-core",
+   "before": "success",
+   "after": "success"
+  },
+  {
+   "step": "Verify production Rust PS/2 decoder and input compatibility",
+   "group": "freestanding-core",
+   "before": "success",
+   "after": "success"
+  },
+  {
+   "step": "Verify Rust PS/2 keyboard decoder and frozen C equivalence",
+   "group": "freestanding-core",
+   "before": "success",
+   "after": "success"
+  },
+  {
+   "step": "Verify Rust console line extraction and frozen C equivalence",
+   "group": "freestanding-core",
+   "before": "success",
+   "after": "success"
+  },
+  {
+   "step": "Verify Rust console editing and frozen C equivalence",
+   "group": "freestanding-core",
+   "before": "success",
+   "after": "success"
+  },
+  {
+   "step": "Verify Rust blocking console reader and frozen C equivalence",
+   "group": "freestanding-core",
+   "before": "success",
+   "after": "success"
+  },
+  {
+   "step": "Verify Rust shared PS/2 routing, pointer polling and frozen driver equivalence",
+   "group": "freestanding-core",
+   "before": "success",
+   "after": "success"
+  },
+  {
+   "step": "Verify Rust keyboard queue extraction and frozen C equivalence",
+   "group": "freestanding-core",
+   "before": "success",
+   "after": "success"
+  },
+  {
+   "step": "Verify Rust ordinary keyboard polling and frozen C equivalence",
+   "group": "freestanding-core",
+   "before": "success",
+   "after": "success"
+  },
+  {
+   "step": "Verify Rust bounded PS/2 controller reads and frozen C lifecycle equivalence",
+   "group": "freestanding-core",
+   "before": "success",
+   "after": "success"
+  },
+  {
+   "step": "Verify Rust bounded PS/2 controller writes and frozen C lifecycle equivalence",
+   "group": "freestanding-core",
+   "before": "success",
+   "after": "success"
+  },
+  {
+   "step": "Verify Rust PS/2 controller lifecycle and frozen C equivalence",
+   "group": "freestanding-core",
+   "before": "success",
+   "after": "success"
+  },
+  {
+   "step": "Verify Rust ARP/IPv4/UDP core and frozen C network equivalence",
+   "group": "freestanding-core",
+   "before": "success",
+   "after": "success"
+  },
+  {
+   "step": "Run host ARP/IPv4/UDP/TCP protocol suites against the Rust network core",
+   "group": "freestanding-core",
+   "before": "success",
+   "after": "success"
+  },
+  {
+   "step": "Verify Rust TCP core against the frozen accepted C TCP (two oracle configurations, mutation controls, frames)",
+   "group": "freestanding-core",
+   "before": "success",
+   "after": "success"
+  },
+  {
+   "step": "Verify Rust virtio-net validation against the frozen accepted driver (transcript differential, mutation controls)",
+   "group": "freestanding-core",
+   "before": "success",
+   "after": "success"
+  },
+  {
+   "step": "Verify the virtio-net RX used-ring re-read fix against a hostile device (negative control, mutations, honest-device equivalence)",
+   "group": "freestanding-core",
+   "before": "success",
+   "after": "success"
+  },
+  {
+   "step": "Verify the Rust framebuffer validation (frozen C differential, production ownership, stack, panic-free link)",
+   "group": "freestanding-graphics",
+   "before": "success",
+   "after": "success"
+  },
+  {
+   "step": "Verify Rust desktop request and layout decisions against the frozen accepted C (differential, mutation controls, ownership)",
+   "group": "freestanding-graphics",
+   "before": "success",
+   "after": "success"
+  },
+  {
+   "step": "Verify Rust screen geometry and bounds decisions against the frozen accepted screen.c (whole-module differential, mutation controls, ownership)",
+   "group": "freestanding-graphics",
+   "before": "success",
+   "after": "success"
+  },
+  {
+   "step": "Verify read-only USB.1 probing and input diagnostics",
+   "group": "freestanding-usb",
+   "before": "success",
+   "after": "success"
+  },
+  {
+   "step": "Verify USB.2-C1 read-only xHCI qualification and USB.2-B ownership",
+   "group": "freestanding-usb",
+   "before": "success",
+   "after": "success"
+  },
+  {
+   "step": "Verify USB.2-C2 DMA ownership model and adapter",
+   "group": "freestanding-usb",
+   "before": "success",
+   "after": "success"
+  },
+  {
+   "step": "Verify USB.2-C3a firmware residue guard, dry-run lifecycle and panic-free link",
+   "group": "freestanding-usb",
+   "before": "success",
+   "after": "success"
+  },
+  {
+   "step": "Verify USB.2-C3a.2 early UEFI firmware memory exclusion",
+   "group": "freestanding-usb",
+   "before": "success",
+   "after": "success"
+  },
+  {
+   "step": "Verify USB.2-C3b.1 read-only containment dry-run (no write path)",
+   "group": "freestanding-usb",
+   "before": "success",
+   "after": "success"
+  },
+  {
+   "step": "Verify USB.2-C3b.2 QEMU-only containment executor and production isolation",
+   "group": "freestanding-usb",
+   "before": "success",
+   "after": "success"
+  },
+  {
+   "step": "Verify USB.2-C4.1 hosted initialization protocol model (no kernel code, no device access)",
+   "group": "freestanding-usb",
+   "before": "success",
+   "after": "success"
+  },
+  {
+   "step": "Verify USB.2-C4.2a hosted backend contract (no kernel code, no device access)",
+   "group": "freestanding-usb",
+   "before": "success",
+   "after": "success"
+  },
+  {
+   "step": "Verify USB.3-A hosted EHCI qualification and handoff model (no kernel code, no device access)",
+   "group": "freestanding-usb",
+   "before": "success",
+   "after": "success"
+  },
+  {
+   "step": "Verify the read-only USB survey (hosted tests, mutation controls, production panic-free link)",
+   "group": "freestanding-usb",
+   "before": "success",
+   "after": "success"
+  },
+  {
+   "step": "Verify the read-only firmware-table lease (hosted, real devmap.c, sanitizers, mutation controls)",
+   "group": "freestanding-usb",
+   "before": "success",
+   "after": "success"
+  }
+ ],
+ "setup_success_in_every_group": true,
+ "mismatch": []
+}

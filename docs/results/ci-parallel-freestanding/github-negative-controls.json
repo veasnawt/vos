@@ -1,0 +1,45 @@
+{
+  "positive": {
+    "run": 42496233386,
+    "ref": "codex/ci-parallel-freestanding @ 7f6ed2a (pull_request)",
+    "groups": {
+      "core": "success",
+      "graphics": "success",
+      "usb": "success"
+    },
+    "aggregator": "success"
+  },
+  "failed_group": {
+    "run": 42496270398,
+    "ref": "ci-negative-agg-fail @ bc7fa6f (workflow_dispatch)",
+    "injected": "graphics group: a step \"exit 1\" after checkout",
+    "groups": {
+      "core": "success",
+      "graphics": "failure",
+      "usb": "success"
+    },
+    "aggregator": "failure"
+  },
+  "skipped_group": {
+    "run": 42496273355,
+    "ref": "ci-negative-agg-skip @ 18d362b (workflow_dispatch)",
+    "injected": "USB group: if: ${{ false }}",
+    "groups": {
+      "core": "success",
+      "graphics": "success",
+      "usb": "skipped"
+    },
+    "aggregator": "failure"
+  },
+  "cancelled_groups": {
+    "run": 42496276468,
+    "ref": "codex/ci-parallel-freestanding @ 7f6ed2a (workflow_dispatch), run cancelled after every group started",
+    "groups": {
+      "core": "cancelled",
+      "graphics": "cancelled",
+      "usb": "cancelled"
+    },
+    "aggregator": "failure (ran because of always(); exit 1)"
+  },
+  "control_branches": "ci-negative-agg-fail and ci-negative-agg-skip are throwaway control branches (never merged), like the existing ci-negative-* branches"
+}
