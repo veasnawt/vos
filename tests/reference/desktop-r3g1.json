@@ -1,0 +1,10 @@
+{
+  "baseline": "2c0890a3155953c85369f281c036f3c46560ef39",
+  "sources_sha256": {
+    "desktop-r3g1.c": "183816b5662fb774d9696188d431afd115ae252e8f4ff031b8eda7a081941187"
+  },
+  "git_blobs": {
+    "desktop-r3g1.c": "d67f9aa53a4285143c7c9c027631de1a2f27f902"
+  },
+  "purpose": "Byte-identical accepted arch/x86_64/desktop.c at main 2c0890a3 (tree f3ec9622, same blob at f3c6048): the frozen R3-G1 differential reference for desktop_requested() and desktop_compute(). desktop.h is unchanged. Not linked into the kernel."
+}
