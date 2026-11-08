@@ -121,19 +121,27 @@ static int buffer_ok(const void *buffer,uint32_t length,int output)
 static int choose_features(uint64_t offered) {return vos_rust_vnet_features_ok(offered);}
 static int queue_size_ok(unsigned size) {return vos_rust_vnet_queue_size_ok(size);}
 /* The ring reads stay here, in the accepted order (count first, then id and
- * len of each entry through the volatile pointer); Rust decides on each value. */
-static int used_ok(const struct net_queue *q,unsigned count,int tx)
+ * len of each entry through the volatile pointer); Rust decides on each value.
+ * R3-N3-S: returns -1 if the entries are invalid; otherwise the head entry's
+ * values exactly as read and validated here, packed as len << 3 | id (0 for an
+ * empty ring). Validated RX entries have id < VNET_QUEUE = 8 and
+ * 26 <= len <= 1526, so the packing is exact and nonnegative. vnet_receive
+ * uses these values instead of reading the device-writable entry again. */
+_Static_assert(VNET_QUEUE==8 && VNET_HEADER+VNET_FRAME_MAX<(1u<<28),"used_validate packs len << 3 | id");
+static int32_t used_validate(const struct net_queue *q,unsigned count,int tx)
 {
-    if (!vos_rust_vnet_used_count_ok(count,tx)) return 0;
-    uint32_t seen=0;
+    if (!vos_rust_vnet_used_count_ok(count,tx)) return -1;
+    uint32_t seen=0,head=0;
     for (unsigned n=0;n<count;n++) {
         unsigned at=(uint16_t)(q->consumed+n)%VNET_QUEUE;
         uint32_t id=q->entries[at].id,len=q->entries[at].len;
         seen=vos_rust_vnet_used_entry(seen,id,len,tx);
-        if (seen==VNET_USED_INVALID) return 0;
+        if (seen==VNET_USED_INVALID) return -1;
+        if (!n) head=len<<3|id;
     }
-    return 1;
+    return (int32_t)head;
 }
+static int used_ok(const struct net_queue *q,unsigned count,int tx) {return used_validate(q,count,tx)>=0;}
 /* MRG_RXBUF is never negotiated. Exactly one used descriptor is the packet;
  * num_buffers cannot authorize additional buffers. QEMU 10.2.1's socket RX
  * path leaves that field zero although virtio 1.2 asks devices to set it to 1.
@@ -246,9 +254,12 @@ int vnet_receive(void *frame,uint32_t capacity,uint32_t *length)
     if (!vos_rust_vnet_capacity_ok(capacity) || !buffer_ok(frame,capacity,1) || !buffer_ok(length,sizeof(*length),1) ||
         vos_rust_vnet_rx_outputs_overlap(a,capacity,b)) return VNET_EINVAL;
     struct net_queue *q=&queues[0];uint16_t count=(uint16_t)(q->used[1]-q->consumed);fence();
-    if (!used_ok(q,count,0)) return broken("invalid RX completion",VNET_EPROTO);
+    int32_t head=used_validate(q,count,0);
+    if (head<0) return broken("invalid RX completion",VNET_EPROTO);
     if (!count) return VNET_EAGAIN;
-    uint32_t id=q->entries[q->consumed%VNET_QUEUE].id,n=q->entries[q->consumed%VNET_QUEUE].len-VNET_HEADER;
+    /* R3-N3-S: consume the validated head id (< VNET_QUEUE) and len; the
+     * device-writable used entry is never read a second time. */
+    uint32_t id=(uint32_t)head&(VNET_QUEUE-1),n=((uint32_t)head>>3)-VNET_HEADER;
     uint8_t *p=phys_to_virt(net.pool[RX_BASE+id]);
     memcpy(net.last_rx_header,p,VNET_HEADER);net.last_rx_length=n;
     if (!header_ok(p) || q->desc[id].addr!=net.pool[RX_BASE+id] || q->desc[id].len!=VNET_HEADER+VNET_FRAME_MAX || q->desc[id].flags!=2 || q->desc[id].next)
