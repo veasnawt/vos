@@ -106,7 +106,10 @@ def main():
             detected = r is None or r['mismatches'] > 0
             need(detected, 'mutation not detected: ' + name)
             report['mutations'][name] = {'detected': True, 'mismatches': r['mismatches'] if r else ('hang (60 s)' if text == 'TIMEOUT' else 'abnormal exit')}
+            # release each mutant's build products (staticlib with libcore, objects, binary) so the gate's footprint stays
+            # bounded on size-limited build mounts; the logs are kept (r3-g1-desktop-v1 r2 STOP: build tmpfs exhausted)
             shutil.rmtree(d)
+            for f in (lib, out / ('root-mutant-%s.rs' % name), out / ('ref-mutant-%s.o' % name), out / ('diff-mutant-%s' % name)): f.unlink(missing_ok=True)
         # linked kernel: ownership, panic freedom, call targets, frames
         k = kdir / 'vos.bin'
         syms = subprocess.run(['nm', k], capture_output=True, text=True, check=True).stdout
