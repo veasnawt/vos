@@ -25,10 +25,18 @@ def console_steps():
     steps += [('type', 'echo erase-test-abcdef'), ('shot', 'typed'), ('keys', ['backspace'] * 7), ('shot', 'erased'),
               ('keys', ['ret']), ('prompt', None), ('shot', 'echoed')]
     return steps
-POINTER = [('shot', 'ready'), ('mouse', (12, -8)), ('shot', 'moved'), ('mouse', (0, 0, True)), ('mouse', (0, 0, False)), ('shot', 'clicked'),
-           ('mouse', (-3000, -3000)), ('shot', 'top-left'), ('mouse', (3000, 0)), ('shot', 'top-right'),
-           ('mouse', (0, 3000)), ('shot', 'bottom-right'), ('mouse', (-3000, 0)), ('shot', 'bottom-left'),
-           ('mouse', (512 - 128, -768 + 384)), ('shot', 'surface-left-edge'), ('mouse', (255, 0)), ('shot', 'surface-right-edge')]
+# (shot name, expected cursor tip): at 1024x768 the 256x160 surface is centred at (384, 310); the cursor starts at its centre.
+POINTER = [('shot', ('ready', (512, 390))), ('mouse', (12, -8)), ('shot', ('moved', (524, 382))), ('mouse', (0, 0, True)), ('mouse', (0, 0, False)),
+           ('shot', ('clicked', (524, 382))), ('mouse', (-1200, -900)), ('shot', ('top-left', (0, 0))), ('mouse', (1200, 0)), ('shot', ('top-right', (1023, 0))),
+           ('mouse', (0, 900)), ('shot', ('bottom-right', (1023, 767))), ('mouse', (-1200, 0)), ('shot', ('bottom-left', (0, 767))),
+           ('mouse', (384, -384)), ('shot', ('surface-left-edge', (384, 383))), ('mouse', (255, 0)), ('shot', ('surface-right-edge', (639, 383)))]
+STEP = 60   # largest relative motion per input event; larger single events lose motion on the emulated PS/2 path
+def tip(ppm):
+    """The cursor's arrow tip: the first outline pixel (0x101a2a) in reading order, or None."""
+    head = ppm.split(b'\n', 3); w, h = map(int, head[1].split()); data = head[3]
+    i = data.find(b'\x10\x1a\x2a')
+    while i >= 0 and i % 3: i = data.find(b'\x10\x1a\x2a', i + 1)
+    return None if i < 0 else ((i // 3) % w, (i // 3) // w)
 # (name, firmwares, cmdline, gfxpayload, xres, yres, apps, steps)
 def cases(gui):
     c = [('console-1024x768', ('bios', 'uefi'), 'vos.apps=1', '1024x768x32', 1024, 768, ('vsh', 'hello', 'rixie'), console_steps()),
@@ -72,13 +80,16 @@ def boot(folder, fw, iso, xres, yres, steps, ready):
             wait(lambda b: ready in b, 90); q = H.QMP(sock); settle()
             for kind, arg in steps:
                 if kind == 'shot':
+                    arg, expect = arg if isinstance(arg, tuple) else (arg, None)
                     n = len(shots); ppm = folder / ('%02d-%s.ppm' % (n, arg)); png = folder / ('%02d-%s.png' % (n, arg))
                     q.command('screendump', {'filename': str(ppm)}); q.command('screendump', {'filename': str(png), 'format': 'png'})
                     for _ in range(200):
                         if ppm.exists() and png.exists() and ppm.stat().st_size: break
                         time.sleep(.05)
                     blob = ppm.read_bytes(); need(blob.startswith(b'P6\n'), 'raw PPM screendump')
-                    shots.append(dict(step=arg, ppm_sha256=hashlib.sha256(blob).hexdigest(), png=png.name, png_sha256=sha(png))); ppm.unlink()
+                    at = tip(blob) if expect else None
+                    if expect: need(at == expect, '%s: cursor tip %s, expected %s' % (arg, at, expect))
+                    shots.append(dict(step=arg, ppm_sha256=hashlib.sha256(blob).hexdigest(), png=png.name, png_sha256=sha(png), cursor_tip=at)); ppm.unlink()
                 elif kind == 'command':
                     n = data().count(PROMPT); q.text(arg); q.key('ret'); wait(lambda b: b.count(PROMPT) > n); settle()
                 elif kind == 'type': q.text(arg); settle()
@@ -87,11 +98,14 @@ def boot(folder, fw, iso, xres, yres, steps, ready):
                     settle()
                 elif kind == 'prompt': n = data().count(PROMPT); wait(lambda b: b.count(PROMPT) >= n); settle()
                 elif kind == 'mouse':
-                    e = []
-                    if arg[0]: e.append({'type': 'rel', 'data': {'axis': 'x', 'value': arg[0]}})
-                    if arg[1]: e.append({'type': 'rel', 'data': {'axis': 'y', 'value': arg[1]}})
-                    if len(arg) > 2: e.append({'type': 'btn', 'data': {'button': 'left', 'down': arg[2]}})
-                    q.command('input-send-event', {'events': e}); settle()
+                    dx, dy = arg[0], arg[1]
+                    while dx or dy:   # bounded steps so no motion is lost
+                        sx = max(-STEP, min(STEP, dx)); sy = max(-STEP, min(STEP, dy)); dx -= sx; dy -= sy; e = []
+                        if sx: e.append({'type': 'rel', 'data': {'axis': 'x', 'value': sx}})
+                        if sy: e.append({'type': 'rel', 'data': {'axis': 'y', 'value': sy}})
+                        q.command('input-send-event', {'events': e}); time.sleep(.04)
+                    if len(arg) > 2: q.command('input-send-event', {'events': [{'type': 'btn', 'data': {'button': 'left', 'down': arg[2]}}]})
+                    settle()
             b = data()
         finally:
             if q: q.close()
@@ -133,7 +147,7 @@ def main():
                     iso.unlink()
                 b, c = row['baseline'], row['candidate']
                 need(b['markers'] == c['markers'], '%s %s identical desktop/screen markers' % (name, fw))
-                need([s['step'] for s in b['shots']] == [s['step'] for s in c['shots']], '%s %s same steps' % (name, fw))
+                need([(s['step'], s['cursor_tip']) for s in b['shots']] == [(s['step'], s['cursor_tip']) for s in c['shots']], '%s %s same steps and cursor positions' % (name, fw))
                 diff = [s['step'] for s, t in zip(b['shots'], c['shots']) if s['ppm_sha256'] != t['ppm_sha256']]
                 need(not diff, '%s %s pixel-identical screens at every step (differ: %s)' % (name, fw, diff))
                 row['pixel_identical_steps'] = len(c['shots']); report['cases'].append(row); print(name, fw, 'PASS', len(c['shots']), 'steps', flush=True)
