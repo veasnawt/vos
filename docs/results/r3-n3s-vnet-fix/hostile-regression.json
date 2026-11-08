@@ -1,0 +1,106 @@
+{
+  "gate": "scripts/test-vnet-hostile.py",
+  "cases": 440,
+  "fixed_driver": {
+    "cases": 440,
+    "violations": []
+  },
+  "negative_control_frozen_f3683869": {
+    "memory_violations": 160,
+    "second_reads": 273,
+    "wrong_results": 248,
+    "ubsan_pool_out_of_bounds": 112,
+    "examples": {
+      "violation": [
+        "c0-id0-both",
+        "c0-id0-to-id10",
+        "c0-id0-to-id2147483647"
+      ],
+      "wrong": [
+        "c0-id0-len-to-0",
+        "c0-id0-len-to-11",
+        "c0-id0-len-to-1527"
+      ]
+    }
+  },
+  "mutations": {
+    "reread-both": {
+      "detected": true,
+      "violations": 681,
+      "first": "c0-id0-honest: head entry read more than once"
+    },
+    "reread-id": {
+      "detected": true,
+      "violations": 481,
+      "first": "c0-id0-honest: head entry read more than once"
+    },
+    "reread-len": {
+      "detected": true,
+      "violations": 657,
+      "first": "c0-id0-honest: head entry read more than once"
+    },
+    "head-from-last-entry": {
+      "detected": true,
+      "violations": 8,
+      "first": "multi3-id0-to-id9: multi-completion head not used"
+    },
+    "head-len-dropped": {
+      "detected": true,
+      "violations": 424,
+      "first": "c0-id0-honest: validated packet not delivered"
+    }
+  },
+  "honest_device_transcripts": {
+    "release": {
+      "identical": true,
+      "sha256": "6603e58bb2e3f8a459b255cb06e5664c8eb9afc21c28d04fccffa65345f4d547"
+    },
+    "sanitizer": {
+      "identical": true,
+      "sha256": "6603e58bb2e3f8a459b255cb06e5664c8eb9afc21c28d04fccffa65345f4d547"
+    }
+  },
+  "host_suite": "virtio-net host: 251 checks PASS (real driver, PCI/DMA model, reset quarantine)",
+  "source_sha256": {
+    "arch/x86_64/virtio_net.c": "4391fcbd1216b99c3b9fc437b19e4357648dbfbc904c20b037ea18b3ac96f6aa",
+    "tests/host/vnet-hostile.c": "3b26deff34288a084b46aa6a398a2ae21a9983f961c6b1605d9cb5cc1058cf1d",
+    "tests/host/vnet-differential.c": "3423c7ed5b5b58895730b0f9b3c24535c3835e3688697fb7a1981eb12e5fc803",
+    "tests/reference/virtio-net-r3n3.c": "f1c6b16137f1d5b1aa54bceb5a48cf12001262fe9e0c470e75f95f8f1481bb8d",
+    "tests/reference/net-r3n3s.json": "994c5ead41d524c9889af9cc0d74b5e06a4c04450fa35240a19cf1d39ea0775e",
+    "scripts/test-vnet-hostile.py": "639fb7febf72f522a3febc4fb924901e219f40f5c335b6a21a80d67c4cfb5ad1"
+  },
+  "worker": "accepted R2 worker, GCC 15 (run r1)",
+  "host_gcc13": {
+    "status": "PASS",
+    "fixed_violations": [],
+    "negative_control": {
+      "memory_violations": 160,
+      "second_reads": 273,
+      "wrong_results": 248,
+      "ubsan_pool_out_of_bounds": 112,
+      "examples": {
+        "violation": [
+          "c0-id0-both",
+          "c0-id0-to-id10",
+          "c0-id0-to-id2147483647"
+        ],
+        "wrong": [
+          "c0-id0-len-to-0",
+          "c0-id0-len-to-11",
+          "c0-id0-len-to-1527"
+        ]
+      }
+    },
+    "mutations_detected": true,
+    "transcripts": {
+      "release": {
+        "identical": true,
+        "sha256": "6603e58bb2e3f8a459b255cb06e5664c8eb9afc21c28d04fccffa65345f4d547"
+      },
+      "sanitizer": {
+        "identical": true,
+        "sha256": "6603e58bb2e3f8a459b255cb06e5664c8eb9afc21c28d04fccffa65345f4d547"
+      }
+    }
+  }
+}

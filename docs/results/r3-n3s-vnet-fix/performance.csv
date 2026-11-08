@@ -1,0 +1,5 @@
+workload,frozen_f3683869_ns,fixed_ns,percent,where
+receive_validate_copy_republish,189.190,188.512,-0.36,worker-gcc15
+send_and_completion,240.212,238.600,-0.67,worker-gcc15
+receive_validate_copy_republish,202.307,198.840,-1.71,host-gcc13
+send_and_completion,254.995,254.370,-0.25,host-gcc13

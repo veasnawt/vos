@@ -1,0 +1,77 @@
+{
+  "candidate_commits": [
+    "ed738280 fix",
+    "a2742509 tests"
+  ],
+  "baseline": "f3683869901c22226f5472bbe737fcb58c798e5d",
+  "issue": "R3-N3-S-1 (see r3-n3s-vnet-fix.md)",
+  "fixed_violations": [],
+  "negative_control": {
+    "memory_violations": 160,
+    "second_reads": 273,
+    "wrong_results": 248,
+    "ubsan_pool_out_of_bounds": 112,
+    "examples": {
+      "violation": [
+        "c0-id0-both",
+        "c0-id0-to-id10",
+        "c0-id0-to-id2147483647"
+      ],
+      "wrong": [
+        "c0-id0-len-to-0",
+        "c0-id0-len-to-11",
+        "c0-id0-len-to-1527"
+      ]
+    }
+  },
+  "mutations": {
+    "reread-both": true,
+    "reread-id": true,
+    "reread-len": true,
+    "head-from-last-entry": true,
+    "head-len-dropped": true
+  },
+  "honest_device_transcripts_identical": true,
+  "r3n3_transcript_records": 216823,
+  "host_suite": "virtio-net host: 251 checks PASS (real driver, PCI/DMA model, reset quarantine)",
+  "frame_growth": {},
+  "performance_worker": {
+    "receive_validate_copy_republish": {
+      "frozen_ns": 189.19,
+      "fixed_ns": 188.5125,
+      "percent": -0.3581056081188305
+    },
+    "send_and_completion": {
+      "frozen_ns": 240.21249999999998,
+      "fixed_ns": 238.6,
+      "percent": -0.6712806369360447
+    }
+  },
+  "regressions_over_5_percent": [],
+  "campaign": {
+    "id": "r3-n3s-vnet-fix-v1",
+    "runs": {
+      "r1": {
+        "status": "PASS",
+        "seal": "9e4077e7fe1cc463e3c4fd55cd4d4814541875a22c2432ac9c9f65e0181923c2"
+      },
+      "r2": {
+        "status": "PASS",
+        "seal": "60ed8da3ee657d190b03b7eb62874498ee3403d7b713289664e4fde60fe194d5"
+      }
+    }
+  },
+  "host_ci_gcc13": {
+    "steps": 37,
+    "failed": [],
+    "notes": [
+      "informational; non-gating on host (host lacks some CI packages)",
+      "test-usb2c3b2.py (QEMU) NOT RUN on host"
+    ]
+  },
+  "limitations": [
+    "closes the one vnet_receive used-entry double read; not a proof that every device DMA race is removed",
+    "QEMU verification, a host device model and static analysis only; no physical-hardware acceptance",
+    "host micro-benchmarks against a device model, not NIC throughput"
+  ]
+}

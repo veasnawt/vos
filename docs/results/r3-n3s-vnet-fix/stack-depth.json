@@ -1,0 +1,93 @@
+{
+  "method": "static whole-path depth over linked kernels (GOT-indirect calls resolved); base = main f3683869, fixed = ed738280; same rustc",
+  "vnet_receive_frame": {
+    "gcc15": {
+      "base": 72,
+      "fixed": 72
+    },
+    "gcc13": {
+      "base": 72,
+      "fixed": 72
+    }
+  },
+  "r3n3_gate_frames_worker": {
+    "rust": {
+      "vos_rust_vnet_features_ok": 0,
+      "vos_rust_vnet_queue_size_ok": 0,
+      "vos_rust_vnet_queues_ok": 0,
+      "vos_rust_vnet_used_count_ok": 0,
+      "vos_rust_vnet_used_entry": 0,
+      "vos_rust_vnet_header_ok": 0,
+      "vos_rust_vnet_notify_ok": 0,
+      "vos_rust_vnet_send_length_ok": 0,
+      "vos_rust_vnet_tx_wire": 0,
+      "vos_rust_vnet_capacity_ok": 0,
+      "vos_rust_vnet_rx_outputs_overlap": 0
+    },
+    "c_driver": {
+      "vnet_init": {
+        "C_frozen": 56,
+        "C_production": 56
+      },
+      "vnet_send": {
+        "C_frozen": 24,
+        "C_production": 24
+      },
+      "vnet_receive": {
+        "C_frozen": 72,
+        "C_production": 72
+      },
+      "vnet_stop": {
+        "C_frozen": 8,
+        "C_production": 8
+      },
+      "vnet_info": {
+        "C_frozen": 0,
+        "C_production": 0
+      }
+    }
+  },
+  "frame_growth": {},
+  "paths": {
+    "vnet_init": {
+      "base_gcc15": 312,
+      "fixed_gcc15": 312,
+      "base_gcc13": 304,
+      "fixed_gcc13": 304
+    },
+    "vnet_send": {
+      "base_gcc15": 328,
+      "fixed_gcc15": 328,
+      "base_gcc13": 336,
+      "fixed_gcc13": 336
+    },
+    "vnet_receive": {
+      "base_gcc15": 344,
+      "fixed_gcc15": 344,
+      "base_gcc13": 352,
+      "fixed_gcc13": 352
+    },
+    "vnet_stop": {
+      "base_gcc15": 264,
+      "fixed_gcc15": 264,
+      "base_gcc13": 272,
+      "fixed_gcc13": 272
+    },
+    "net_boot_run": {
+      "base_gcc15": 7944,
+      "fixed_gcc15": 7944,
+      "base_gcc13": 7960,
+      "fixed_gcc13": 7960
+    },
+    "kernel_main": {
+      "base_gcc15": 11944,
+      "fixed_gcc15": 11944,
+      "base_gcc13": 11920,
+      "fixed_gcc13": 11920
+    }
+  },
+  "rejected_shapes": {
+    "out-parameters": "vnet_receive 88 B under GCC 13 (+16 B; path 352 -> 368)",
+    "struct return": "88 B under GCC 13 and GCC 15"
+  }
+}
