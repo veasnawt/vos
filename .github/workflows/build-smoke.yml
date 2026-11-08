@@ -99,6 +99,9 @@ jobs:
             --archive build/x86_64/rust/libvos_kernel.a \
             --kernel-dir build/x86_64 --rustc "$RUSTC" --out build/r4-m1-pmm-ci
 
+      - name: Verify the bounded PMM low-memory clear against the frozen accepted pmm_init_in (guard pages, negative control, mutation controls)
+        run: python3 -I -B scripts/test-pmm-init.py --rustc "$RUSTC" --out build/r4-m1h-pmm-init-ci
+
       - name: Verify bounded Rust boot-HID core and existing input contracts (H1-B)
         run: python3 -I -B scripts/test-boot-hid.py --rustc "$RUSTC" --out build/h1b-hid-ci
 
