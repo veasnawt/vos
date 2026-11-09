@@ -1,0 +1,39 @@
+== pmmtransnative/bios-128M serial (VOS_TEST image; sampled Rust transitions replayed identically through the frozen C; exit 33)
+pmm: 262144 frames tracked below 1 GiB, 32089 usable (128356 KiB), 0 bytes of RAM above 1 GiB ignored
+selftest: pmm-synthetic 41 cases, 0 failed
+selftest: 1000 frames from 0x286000 to 0x671000
+selftest: pmm free frames 32086, oracle 32086, ignored above 1 GiB 0
+selftest: pmm-kernel 48 cases, 0 failed
+selftest: vmm 81 cases, 0 failed
+selftest: kmap 99 cases, 0 failed
+selftest: user 198 cases, 0 failed
+VOS-TEST: PASS
+== pmmtransnative/uefi-2G serial (VOS_TEST image; sampled Rust transitions replayed identically through the frozen C; exit 33)
+pmm: 262144 frames tracked below 1 GiB, 257544 usable (1030176 KiB), 1068634112 bytes of RAM above 1 GiB ignored
+selftest: pmm-synthetic 41 cases, 0 failed
+selftest: 1000 frames from 0x286000 to 0x66d000
+selftest: pmm free frames 257541, oracle 257541, ignored above 1 GiB 1068634112
+selftest: pmm-kernel 48 cases, 0 failed
+selftest: vmm 81 cases, 0 failed
+selftest: kmap 99 cases, 0 failed
+selftest: user 198 cases, 0 failed
+VOS-TEST: PASS
+== selftests/pmm-exhaust serial
+pmm: 262144 frames tracked below 1 GiB, 32088 usable (128352 KiB), 0 bytes of RAM above 1 GiB ignored
+selftest: pmm-synthetic 41 cases, 0 failed
+selftest: pmm free frames 32085, oracle 32085, ignored above 1 GiB 0
+selftest: pmm-kernel 48 cases, 0 failed
+selftest: drained 32085 frames
+selftest: pmm-exhaust 5 cases, 0 failed
+== selftests/stress-max serial
+pmm: 262144 frames tracked below 1 GiB, 32052 usable (128208 KiB), 0 bytes of RAM above 1 GiB ignored
+selftest: pmm-synthetic 41 cases, 0 failed
+selftest: pmm free frames 32049, oracle 32049, ignored above 1 GiB 0
+selftest: pmm-kernel 66 cases, 0 failed
+selftest: stress 30 cases, 0 failed
+VOS-TEST: PASS
+== usb2c2native/bios-both-qemu-xhci serial (qualification reserves frames; DMA exercise with teardown audit)
+pmm: 262144 frames tracked below 1 GiB, 31910 usable (127640 KiB), 0 bytes of RAM above 1 GiB ignored
+usb2c1: read-only xHCI qualification; QEMU 1b36:000d 16 KiB profile; PCI bus 0 only
+usb2c1: QUALIFIED: profile qualified
+usb2c2: PASS; unpublished pages released exactly; one deliberate quarantine retained for the boot; no PCI/xHCI access, DMA publication or device ownership transfer

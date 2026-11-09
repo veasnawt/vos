@@ -1,0 +1,300 @@
+{
+ "status": "PASS",
+ "differential": {
+  "release": {
+   "ops": 503135,
+   "checks": 1006975,
+   "mismatches": 0,
+   "digest": "897cebc925a1aa2b"
+  },
+  "sanitizer": {
+   "ops": 503135,
+   "checks": 1006975,
+   "mismatches": 0,
+   "digest": "897cebc925a1aa2b"
+  }
+ },
+ "coverage": "PMM TRANSITION COVERAGE alloc=348841,47572,16778,0,0,0,0,0,0,2630,0 free=1951,57446,0,1924,540,1321,933,0,0,3351,0 reserve=152,16829,0,1006,293,782,0,0,0,207,572 layouts=135,90,92,82,91,86,85 failed=2630 exhaust=16778 reuse=2933 phys_alias=177 nonmultiple=20 over_max=20 refusal=25 outside_storage=7",
+ "unsafe": {
+  "core": 0,
+  "adapter_blocks": 16,
+  "adapter_entry_points": 3,
+  "references_to_c_memory": 0
+ },
+ "rust": {
+  "pmm_alloc_in": {
+   "frame": 16,
+   "instructions": 72
+  },
+  "pmm_free_in": {
+   "frame": 0,
+   "instructions": 66
+  },
+  "pmm_reserve_in": {
+   "frame": 0,
+   "instructions": 55
+  }
+ },
+ "frozen_c_transition_frames": {
+  "pmm_alloc_in": 0,
+  "pmm_free_in": 24,
+  "pmm_reserve_in": 0
+ },
+ "c_frames": {
+  "pmm_init_in": {
+   "frozen": 72,
+   "production": 72
+  },
+  "pmm_init": {
+   "frozen": 0,
+   "production": 0
+  },
+  "pmm_alloc_frame": {
+   "frozen": 24,
+   "production": 24
+  },
+  "pmm_free_frame": {
+   "frozen": 8,
+   "production": 8
+  },
+  "pmm_reserve_frame": {
+   "frozen": 8,
+   "production": 8
+  }
+ },
+ "c_frame_growth": {},
+ "source_sha256": {
+  "kernel/rust/mm/pmm_transition.rs": "9d9b65a9a54b53a604a37deecccb367f8c03851846974f79355e2f8b8eaa922d",
+  "arch/x86_64/rust/pmm_transition.rs": "d899ee324c3cfbfb92353767c8a303208270dbf1ced06514c27ca454436e7810",
+  "kernel/rust/mm/pmm.rs": "15f5d4ed7e0b85419b7b00ad6091e4c32e1a92113bfa68077134b764a4fede24",
+  "arch/x86_64/rust/pmm.rs": "83ec9aaa51a9a7258672e3c1a41797aca5ab8fd5ca9853ff81f6313c764c96d9",
+  "arch/x86_64/pmm.c": "7a07ced9ad80699c36575d7df9fd1d3367488a639f5d6e558f576d7e78913021",
+  "arch/x86_64/pmm.h": "5e52f6c667854b06d2cafdd2e6ebc32e019981e6814789e15252cf772185ff00",
+  "arch/x86_64/rust/kernel_probe.rs": "f790f7a460841445fe9592f388254e2fc5d5ba1190222018278f3edcfe13111b",
+  "tests/host/pmm-transition-differential.c": "2529d8dfdb24f05e8cf66c693c09c404ae5a892c5144181874671adce550084f",
+  "tests/reference/pmm-r4m2.c": "b26e4db632848df8a0d61ecc871e61776974a21ab2c10a02553bcacdf05fba6e",
+  "tests/reference/pmm-r4m2.json": "854353d17a94a14eb2faf34cd2ff7363c8488a2212af5d0c7108b8d762c3b7f4",
+  "scripts/test-pmm-transition.py": "51cb2e3260c25c8cc94eb6276e2dfc2e408d49005f45b8b32acaffa297233b83"
+ },
+ "mutations": {
+  "alloc-phys-after-state": {
+   "detected": true,
+   "how": 3209
+  },
+  "alloc-ready": {
+   "detected": true,
+   "how": 97209
+  },
+  "alloc-hint-ignored": {
+   "detected": true,
+   "how": 276442
+  },
+  "alloc-bound": {
+   "detected": true,
+   "how": 47103
+  },
+  "alloc-free-bits": {
+   "detected": true,
+   "how": 258916
+  },
+  "alloc-lowest-bit": {
+   "detected": true,
+   "how": 233897
+  },
+  "alloc-frame-number": {
+   "detected": true,
+   "how": 350541
+  },
+  "alloc-free-zero": {
+   "detected": true,
+   "how": 64727
+  },
+  "alloc-low-limit": {
+   "detected": true,
+   "how": 177773
+  },
+  "alloc-frame-bound": {
+   "detected": true,
+   "how": 22135
+  },
+  "alloc-corrupt-not-failed": {
+   "detected": true,
+   "how": 87716
+  },
+  "alloc-set-bit": {
+   "detected": true,
+   "how": 257913
+  },
+  "alloc-free-count": {
+   "detected": true,
+   "how": 250738
+  },
+  "alloc-hint-update": {
+   "detected": true,
+   "how": 384936
+  },
+  "alloc-phys-value": {
+   "detected": true,
+   "how": 188695
+  },
+  "alloc-phys-written-first": {
+   "detected": true,
+   "how": 5412
+  },
+  "alloc-count-check": {
+   "detected": true,
+   "how": 14674
+  },
+  "alloc-count-not-failed": {
+   "detected": true,
+   "how": 64486
+  },
+  "alloc-enomem-hint": {
+   "detected": true,
+   "how": 42249
+  },
+  "alloc-enomem-hint-kept": {
+   "detected": true,
+   "how": 16190
+  },
+  "free-bit": {
+   "detected": true,
+   "how": 89759
+  },
+  "free-count": {
+   "detected": true,
+   "how": 90797
+  },
+  "free-hint-direction": {
+   "detected": true,
+   "how": 75163
+  },
+  "free-hint-kept": {
+   "detected": true,
+   "how": 62915
+  },
+  "free-word": {
+   "detected": true,
+   "how": 89942
+  },
+  "free-check-skipped": {
+   "detected": true,
+   "how": 300513
+  },
+  "reserve-ready": {
+   "detected": true,
+   "how": 60298
+  },
+  "reserve-align": {
+   "detected": true,
+   "how": 24858
+  },
+  "reserve-range": {
+   "detected": true,
+   "how": 59
+  },
+  "reserve-protected": {
+   "detected": true,
+   "how": 74121
+  },
+  "reserve-in-use": {
+   "detected": true,
+   "how": 111348
+  },
+  "reserve-precedence": {
+   "detected": true,
+   "how": 52
+  },
+  "reserve-free-zero": {
+   "detected": true,
+   "how": 28514
+  },
+  "reserve-corrupt-sets-failed": {
+   "detected": true,
+   "how": 10463
+  },
+  "reserve-count": {
+   "detected": true,
+   "how": 59956
+  },
+  "bit-test": {
+   "detected": true,
+   "how": 18197
+  },
+  "glue-null": {
+   "detected": true,
+   "how": "SIGSEGV"
+  },
+  "glue-aligned": {
+   "detected": true,
+   "how": "SIGSEGV"
+  },
+  "glue-storage-bound": {
+   "detected": true,
+   "how": "SIGSEGV"
+  },
+  "glue-word-offset": {
+   "detected": true,
+   "how": "SIGSEGV"
+  },
+  "glue-frames-field": {
+   "detected": true,
+   "how": 169798
+  },
+  "glue-free-field": {
+   "detected": true,
+   "how": 277177
+  },
+  "glue-hint-field": {
+   "detected": true,
+   "how": 454596
+  },
+  "glue-avail-pointer": {
+   "detected": true,
+   "how": 459977
+  },
+  "glue-alloc-write-target": {
+   "detected": true,
+   "how": 268766
+  },
+  "glue-phys-not-written": {
+   "detected": true,
+   "how": 208437
+  },
+  "glue-state-not-written": {
+   "detected": true,
+   "how": 134848
+  },
+  "glue-reserve-phys": {
+   "detected": true,
+   "how": 49444
+  }
+ },
+ "run": "worker r1 (GCC 15.2 sandbox); host GCC 13.4 run gave the same digest 897cebc925a1aa2b",
+ "preserved": {
+  "r4m1": {
+   "status": "PASS",
+   "digest": "a4f7a96ad9362c6b",
+   "mutations": 42
+  },
+  "r4m1h": {
+   "status": "PASS",
+   "digest": "aa6fef2bf2d8baac",
+   "negative_faults": 3,
+   "mutations": 20,
+   "scope": {
+    "accepted_pmm_c_sha256": "bb177a03b3f5fa45062a76a63aa25fc481800ff22464629733fca21c25af4cb5",
+    "hardened_pmm_c_sha256": "b26e4db632848df8a0d61ecc871e61776974a21ab2c10a02553bcacdf05fba6e",
+    "production_pmm_c_sha256": "7a07ced9ad80699c36575d7df9fd1d3367488a639f5d6e558f576d7e78913021",
+    "changed_statements": 1,
+    "init_functions_identical": [
+     "count_bits",
+     "set_frames",
+     "clear_frames",
+     "protect",
+     "pmm_init_in"
+    ]
+   }
+  }
+ }
+}
