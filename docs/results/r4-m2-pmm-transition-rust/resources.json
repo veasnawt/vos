@@ -1,0 +1,164 @@
+{
+ "whole_path_depth": {
+  "gcc13": {
+   "roots": {
+    "kernel_main": [
+     11936,
+     11936
+    ],
+    "exception_handler": [
+     4560,
+     4560
+    ],
+    "pmm_alloc_frame": [
+     272,
+     272
+    ],
+    "pmm_free_frame": [
+     256,
+     256
+    ],
+    "pmm_reserve_frame": [
+     256,
+     256
+    ],
+    "pmm_alloc_in": [
+     0,
+     16
+    ],
+    "pmm_free_in": [
+     32,
+     0
+    ],
+    "pmm_reserve_in": [
+     0,
+     0
+    ],
+    "pmm_free_check_in": [
+     0,
+     0
+    ]
+   },
+   "increased": {
+    "pmm_alloc_in": [
+     0,
+     16
+    ]
+   },
+   "decreased_count": 1,
+   "recursion": []
+  },
+  "gcc15": {
+   "roots": {
+    "kernel_main": [
+     11984,
+     11984
+    ],
+    "exception_handler": [
+     4592,
+     4592
+    ],
+    "pmm_alloc_frame": [
+     288,
+     288
+    ],
+    "pmm_free_frame": [
+     272,
+     272
+    ],
+    "pmm_reserve_frame": [
+     272,
+     272
+    ],
+    "pmm_alloc_in": [
+     0,
+     16
+    ],
+    "pmm_free_in": [
+     32,
+     0
+    ],
+    "pmm_reserve_in": [
+     0,
+     0
+    ],
+    "pmm_free_check_in": [
+     0,
+     0
+    ]
+   },
+   "increased": {
+    "pmm_alloc_in": [
+     0,
+     16
+    ]
+   },
+   "decreased_count": 1,
+   "recursion": []
+  }
+ },
+ "image": {
+  "gcc13": {
+   "vos_bin": [
+    1166240,
+    1163936
+   ],
+   "defined_text": [
+    273710,
+    273921
+   ],
+   "layout_end": "0x1ec000 both"
+  },
+  "gcc15": {
+   "vos_bin": [
+    1170944,
+    1168848
+   ],
+   "defined_text": [
+    279032,
+    279242
+   ],
+   "layout_end": "0x1ed000 both"
+  }
+ },
+ "performance": {
+  "method": "10 alternating runs x 9 samples, taskset -c 0, -O2 -fno-builtin -U_FORTIFY_SOURCE; frozen C (pmm-r4m2.c) vs kernel archive; median of run medians",
+  "results": {
+   "gcc13": {
+    "alloc_in+free_in_ns": {
+     "frozen_c": 12.656,
+     "rust": 11.872,
+     "change_pct": -6.2
+    },
+    "long_scan_alloc+free_ns": {
+     "frozen_c": 1383.25,
+     "rust": 1210.25,
+     "change_pct": -12.5
+    },
+    "reserve_in+free_in_ns": {
+     "frozen_c": 12.354,
+     "rust": 12.329,
+     "change_pct": -0.2
+    }
+   },
+   "gcc15": {
+    "alloc_in+free_in_ns": {
+     "frozen_c": 12.404,
+     "rust": 11.959,
+     "change_pct": -3.6
+    },
+    "long_scan_alloc+free_ns": {
+     "frozen_c": 1362.1,
+     "rust": 1221.65,
+     "change_pct": -10.3
+    },
+    "reserve_in+free_in_ns": {
+     "frozen_c": 11.572,
+     "rust": 11.907,
+     "change_pct": 2.9
+    }
+   }
+  }
+ },
+ "note": "base = main 74c2341b tree (branch base 8f883a99); candidate = b15767d6"
+}

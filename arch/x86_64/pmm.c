@@ -11,11 +11,6 @@ static uint64_t count_bits(uint64_t x)  /* no popcnt: the build targets baseline
     return n;
 }
 
-static int test_bit(const uint64_t *bm, uint64_t frame)
-{
-    return (bm[frame / 64] >> (frame % 64)) & 1;
-}
-
 static void set_frames(uint64_t *bm, uint64_t first, uint64_t end)
 {
     for (uint64_t f = first; f < end; f++)
@@ -108,75 +103,16 @@ int pmm_init_in(struct pmm *p, uint64_t *avail, uint64_t *alloc, uint64_t frames
     return PMM_OK;
 }
 
-int pmm_alloc_in(struct pmm *p, uint64_t *phys)
-{
-    *phys = 0;
-    if (p->state != PMM_READY)
-        return PMM_ENOTREADY;
-
-    for (uint64_t w = p->hint; w < PMM_WORDS(p->frames); w++) {
-        uint64_t m = p->avail[w] & ~p->alloc[w];
-
-        if (!m)
-            continue;
-        uint64_t frame = w * 64 + (uint64_t)__builtin_ctzll(m);
-        if (p->free == 0 || frame * PAGE_SIZE < PMM_LOW_LIMIT || frame >= p->frames) {
-            p->state = PMM_FAILED;
-            return PMM_ECORRUPT;
-        }
-        p->alloc[w] |= 1ULL << (frame % 64);
-        p->free--;
-        p->hint = w;
-        *phys = frame * PAGE_SIZE;
-        return PMM_OK;
-    }
-    if (p->free != 0) {                 /* the count claims frames the bitmap lacks */
-        p->state = PMM_FAILED;
-        return PMM_ECORRUPT;
-    }
-    p->hint = PMM_WORDS(p->frames);
-    return PMM_ENOMEM;
-}
+/*
+ * R4-M2: pmm_alloc_in, pmm_free_in (its mutation and state update after pmm_free_check_in) and pmm_reserve_in (pmm.h ABI
+ * unchanged) are Rust: kernel/rust/mm/pmm_transition.rs behind arch/x86_64/rust/pmm_transition.rs. The accepted C is
+ * tests/reference/pmm-r4m2.c.
+ */
 
 /*
  * R4-M1: pmm_free_check_in, pmm_frame_state_in and pmm_check_in (the read-only checks, pmm.h ABI unchanged) are
  * Rust: kernel/rust/mm/pmm.rs behind arch/x86_64/rust/pmm.rs. The accepted C is tests/reference/pmm-r4m1.c.
  */
-
-int pmm_free_in(struct pmm *p, uint64_t phys)
-{
-    int err = pmm_free_check_in(p, phys);
-
-    if (err != PMM_OK)
-        return err;
-
-    uint64_t frame = phys / PAGE_SIZE;
-    p->alloc[frame / 64] &= ~(1ULL << (frame % 64));
-    p->free++;
-    if (frame / 64 < p->hint)
-        p->hint = frame / 64;
-    return PMM_OK;
-}
-
-int pmm_reserve_in(struct pmm *p, uint64_t phys)
-{
-    if (p->state != PMM_READY)
-        return PMM_ENOTREADY;
-    if (phys % PAGE_SIZE != 0)
-        return PMM_EALIGN;
-    if (phys >= p->frames * PAGE_SIZE)
-        return PMM_ERANGE;
-    uint64_t frame = phys / PAGE_SIZE;
-    if (!test_bit(p->avail, frame))
-        return PMM_EPROTECTED;
-    if (test_bit(p->alloc, frame))
-        return PMM_EINUSE;
-    if (p->free == 0)
-        return PMM_ECORRUPT;
-    p->alloc[frame / 64] |= 1ULL << (frame % 64);
-    p->free--;
-    return PMM_OK;
-}
 
 /* ---- the kernel allocator ---- */
 

@@ -1,0 +1,259 @@
+{
+ "worker_run": "r1",
+ "transition_observer": {
+  "qemu_only": true,
+  "physical_hardware": "NOT TESTED",
+  "cases": [
+   {
+    "case": "bios-128M",
+    "memory": "128M",
+    "firmware": "SeaBIOS",
+    "addresses": {
+     "pmm_alloc_in": "0xffffffff8016ca90",
+     "pmm_free_in": "0xffffffff8016ce00",
+     "pmm_reserve_in": "0xffffffff8016cee0"
+    },
+    "passed": true,
+    "hits": {
+     "A": 3003,
+     "F": 2997,
+     "R": 0
+    },
+    "recorded": {
+     "A": 16,
+     "F": 16,
+     "R": 0
+    },
+    "recorded_small_instances": {
+     "A": 6,
+     "F": 12,
+     "R": 0
+    },
+    "results": {
+     "A": [
+      "0",
+      "2"
+     ],
+     "F": [
+      "0",
+      "3",
+      "4",
+      "5",
+      "6"
+     ],
+     "R": []
+    },
+    "exit_status": 33,
+    "markers": [
+     "selftest: pmm-synthetic ",
+     "selftest: pmm-kernel ",
+     "selftest: vmm ",
+     "selftest: kmap ",
+     "selftest: user ",
+     "VOS-TEST: PASS"
+    ],
+    "replay_identical": true
+   },
+   {
+    "case": "bios-2G",
+    "memory": "2G",
+    "firmware": "SeaBIOS",
+    "addresses": {
+     "pmm_alloc_in": "0xffffffff8016ca90",
+     "pmm_free_in": "0xffffffff8016ce00",
+     "pmm_reserve_in": "0xffffffff8016cee0"
+    },
+    "passed": true,
+    "hits": {
+     "A": 3003,
+     "F": 2997,
+     "R": 0
+    },
+    "recorded": {
+     "A": 16,
+     "F": 16,
+     "R": 0
+    },
+    "recorded_small_instances": {
+     "A": 6,
+     "F": 12,
+     "R": 0
+    },
+    "results": {
+     "A": [
+      "0",
+      "2"
+     ],
+     "F": [
+      "0",
+      "3",
+      "4",
+      "5",
+      "6"
+     ],
+     "R": []
+    },
+    "exit_status": 33,
+    "markers": [
+     "selftest: pmm-synthetic ",
+     "selftest: pmm-kernel ",
+     "selftest: vmm ",
+     "selftest: kmap ",
+     "selftest: user ",
+     "VOS-TEST: PASS"
+    ],
+    "replay_identical": true
+   },
+   {
+    "case": "uefi-128M",
+    "memory": "128M",
+    "firmware": "OVMF",
+    "addresses": {
+     "pmm_alloc_in": "0xffffffff8016ca90",
+     "pmm_free_in": "0xffffffff8016ce00",
+     "pmm_reserve_in": "0xffffffff8016cee0"
+    },
+    "passed": true,
+    "hits": {
+     "A": 3003,
+     "F": 2997,
+     "R": 0
+    },
+    "recorded": {
+     "A": 16,
+     "F": 16,
+     "R": 0
+    },
+    "recorded_small_instances": {
+     "A": 6,
+     "F": 12,
+     "R": 0
+    },
+    "results": {
+     "A": [
+      "0",
+      "2"
+     ],
+     "F": [
+      "0",
+      "3",
+      "4",
+      "5",
+      "6"
+     ],
+     "R": []
+    },
+    "exit_status": 33,
+    "markers": [
+     "selftest: pmm-synthetic ",
+     "selftest: pmm-kernel ",
+     "selftest: vmm ",
+     "selftest: kmap ",
+     "selftest: user ",
+     "VOS-TEST: PASS"
+    ],
+    "replay_identical": true
+   },
+   {
+    "case": "uefi-2G",
+    "memory": "2G",
+    "firmware": "OVMF",
+    "addresses": {
+     "pmm_alloc_in": "0xffffffff8016ca90",
+     "pmm_free_in": "0xffffffff8016ce00",
+     "pmm_reserve_in": "0xffffffff8016cee0"
+    },
+    "passed": true,
+    "hits": {
+     "A": 3003,
+     "F": 2997,
+     "R": 0
+    },
+    "recorded": {
+     "A": 16,
+     "F": 16,
+     "R": 0
+    },
+    "recorded_small_instances": {
+     "A": 6,
+     "F": 12,
+     "R": 0
+    },
+    "results": {
+     "A": [
+      "0",
+      "2"
+     ],
+     "F": [
+      "0",
+      "3",
+      "4",
+      "5",
+      "6"
+     ],
+     "R": []
+    },
+    "exit_status": 33,
+    "markers": [
+     "selftest: pmm-synthetic ",
+     "selftest: pmm-kernel ",
+     "selftest: vmm ",
+     "selftest: kmap ",
+     "selftest: user ",
+     "VOS-TEST: PASS"
+    ],
+    "replay_identical": true
+   }
+  ],
+  "test_kernel_sha256": "2644d5c349b484d9ceebe45f46b9f590065d44232c1bb779d99cdedb9b4f80a3",
+  "rust_addresses": {
+   "pmm_alloc_in": "0xffffffff8016ca90",
+   "pmm_free_in": "0xffffffff8016ce00",
+   "pmm_reserve_in": "0xffffffff8016cee0"
+  },
+  "sources_sha256": {
+   "scripts/test-pmm-transition-native.py": "a82ad8c834992d496a32159e744f34a61c6b10f568c0a4b2ce7469ca87a87358",
+   "tests/host/pmm-transition-replay.c": "7320ad9093b90b419c20e253f2905f8d3cc4e04f139edde3957136b4d80279cd",
+   "tests/reference/pmm-r4m2.c": "b26e4db632848df8a0d61ecc871e61776974a21ab2c10a02553bcacdf05fba6e"
+  },
+  "passed": true
+ },
+ "r4m1_observer_and_screens": {
+  "passed": true,
+  "cases": [
+   {
+    "case": "bios-128M",
+    "passed": true,
+    "exit_status": 33
+   },
+   {
+    "case": "bios-2G",
+    "passed": true,
+    "exit_status": 33
+   },
+   {
+    "case": "uefi-128M",
+    "passed": true,
+    "exit_status": 33
+   },
+   {
+    "case": "uefi-2G",
+    "passed": true,
+    "exit_status": 33
+   }
+  ],
+  "screenshots": {
+   "screen-bios": "3f8d75c8387b7f802a6ac6ffd213fd7068a91a09b3db85baa5d844a99f5b823d",
+   "screen-uefi": "6f3db100a6da5c1b77065aca14e1cb67b0bc63752474825da45ec13817386439"
+  }
+ },
+ "selftest_images": [
+  "PASS pmm-exhaust",
+  "PASS mp",
+  "PASS mp-2G",
+  "PASS mp-max",
+  "PASS stress",
+  "PASS stress-2G",
+  "PASS stress-max"
+ ]
+}

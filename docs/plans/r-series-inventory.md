@@ -66,8 +66,9 @@
   - same results for the same instance bits;
   - process isolation and frame ownership unchanged.
 - **R4-M1 status:** accepted, merged through PR #71 at `36368bc8` ([result](../results/r4-m1-pmm-rust.md)), with owner-approved, source-bound stack and performance exceptions.
-- **R4-M1H (candidate):** the accepted `pmm_init_in` cleared frames [0, 256) whatever `frames` was, writing past `PMM_WORDS(frames)` for valid 64-, 128- and 192-frame instances (no in-tree caller). It is bounded to min(frames, 256) in C, with no change to any defined result ([result](../results/r4-m1h-pmm-init.md)). The hardened `pmm.c` is the reference for R4-M2 and R4-M3.
-- **Following increments, each separately authorized:** R4-M2 alloc/free/reserve transitions with the hint; R4-M3 `pmm_init_in` memory-map classification; R4-V1 VMM read-only validation (`check_va`, `check_nonleaf`, canonical/range tests, `usercopy` `user_range`); R4-S1 scheduler queue decisions; R4-P1 process/capability checks (`io_scope_request_valid`, grants).
+- **R4-M1H (accepted, PR #72 at `74c2341b`):** the accepted `pmm_init_in` cleared frames [0, 256) whatever `frames` was, writing past `PMM_WORDS(frames)` for valid 64-, 128- and 192-frame instances (no in-tree caller). It is bounded to min(frames, 256) in C, with no change to any defined result ([result](../results/r4-m1h-pmm-init.md)). The hardened `pmm.c` is the reference for R4-M2 and R4-M3.
+- **R4-M2 (candidate):** `pmm_alloc_in`, `pmm_free_in`'s mutation and `pmm_reserve_in` in safe Rust behind a raw-pointer adapter that forms no reference to C memory ([result](../results/r4-m2-pmm-transition-rust.md)); not merged.
+- **Following increments, each separately authorized:** R4-M3 `pmm_init_in` memory-map classification; R4-V1 VMM read-only validation (`check_va`, `check_nonleaf`, canonical/range tests, `usercopy` `user_range`); R4-S1 scheduler queue decisions; R4-P1 process/capability checks (`io_scope_request_valid`, grants).
 - **Resource forecast for R4-M1** (same accounting; ledger ≈ 165 K raw now):
   - admission and completion transitions ≈ 2 × 210 K guarded;
   - receipts 100 K raw (125 K guarded);
@@ -78,12 +79,12 @@
 
 ## 4. R5 completion matrix (not met today)
 
-| Criterion | Required evidence | Status at 36368bc8 + R4-M1H candidate |
+| Criterion | Required evidence | Status at 74c2341b + R4-M2 candidate |
 | --- | --- | --- |
 | Inventory of every C/asm module with owner and disposition | This table, maintained per increment | **Started** (this document) |
 | Verified Rust ownership of the approved migration targets | Frozen-C differential, mutants, panic-free link, symbol ownership per target | Boot, ELF, input, network protocols, virtio-net validation, framebuffer, desktop and screen decisions, PMM read-only checks (accepted) |
 | Justification for each retained C/asm boundary | Per-file rationale: CPU entry, context switch, MMIO/DMA drivers, test harness | Assembly and device adapters justified informally; **not yet written per file** |
-| Memory, scheduler, process, security core (R4) migrated or justified | R4 increments | **Started**: R4-M1 PMM read-only checks (accepted); R4-M1H init hardening (candidate); allocation, VMM, scheduler and process work not started |
+| Memory, scheduler, process, security core (R4) migrated or justified | R4 increments | **Started**: R4-M1 PMM read-only checks and R4-M1H init hardening (accepted); R4-M2 PMM transitions (candidate); `pmm_init_in`, VMM, scheduler and process work not started |
 | Storage (R3-S) | Migration after the SEC-02 resolution | **Blocked** (SEC-02) |
 | Graphics (R3-G) | Desktop, screen and GUI decisions | **In progress**: G1 and G2 accepted, G3 planned; rendering and framebuffer ownership intentionally C |
 | Public userspace ABI v0–v5 + pointer v1 preserved | ABI tests, app compatibility boots | Preserved so far |
@@ -91,6 +92,6 @@
 | Resource and memory-safety acceptance | Stack, image, performance policy, sanitizer evidence | Per increment; exceptions owner-approved |
 | Reproducible builds and complete publication evidence | Repro checks, CI, ledger | Per increment |
 
-R5 is **not** complete. The largest blockers are R4 (only R4-M1 accepted, R4-M1H in progress) and storage (SEC-02).
+R5 is **not** complete. The largest blockers are R4 (R4-M1 and R4-M1H accepted, R4-M2 in progress) and storage (SEC-02).
 
 Deferred: N6.4 (owner deferral), the storage migration (SEC-02), the USB/H-series hardware work, and the stale `test-ps2-pointer-native.py` execution proof (pre-existing).

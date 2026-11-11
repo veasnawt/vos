@@ -1,0 +1,178 @@
+{
+ "campaign": "r4-m2-pmm-mutate-v1",
+ "plan_sha256": "aff385adae892f9a22ecb26427d7249d43ca6b8a0515443b63476bacad0b78ea",
+ "root_procedure_sha256": "effb4b0639985647a4153c1ca09c1fbe55f701258fff0154141684fe73388335",
+ "boot_sha256": "14438e12f4a3f5d27fdd8935ea5b22dae87c51e9d1150112dbd6551e0747cf2a",
+ "payload_sha256": "c6e088cdd32dcfc7bad958d2c8c91f7169a4e7bd720f69089748c38ffe9f9d90",
+ "source_commit": "b15767d62a7a2ded78ace84d37bd5741a0564163",
+ "root_approval": "owner, for r1 and r2 (r3 only as a separately approved repair; not used)",
+ "runs": {
+  "r1": {
+   "status": "PASS",
+   "seal": "d9d47c5426ade984a19eb182734bb3ac2a2f309506a86851979450579673b973",
+   "elapsed_s": 1078.6,
+   "retained_bytes": 3075205,
+   "jobs": [
+    {
+     "name": "containment",
+     "rc": 0,
+     "seconds": 0.11,
+     "memory_peak_mb": 16
+    },
+    {
+     "name": "build",
+     "rc": 0,
+     "seconds": 20.98,
+     "memory_peak_mb": 552
+    },
+    {
+     "name": "repro",
+     "rc": 0,
+     "seconds": 14.11,
+     "memory_peak_mb": 156
+    },
+    {
+     "name": "pmmtransition",
+     "rc": 0,
+     "seconds": 371.69,
+     "memory_peak_mb": 211
+    },
+    {
+     "name": "pmmrust",
+     "rc": 0,
+     "seconds": 29.27,
+     "memory_peak_mb": 386
+    },
+    {
+     "name": "pmminit",
+     "rc": 0,
+     "seconds": 41.39,
+     "memory_peak_mb": 87
+    },
+    {
+     "name": "pmmnative",
+     "rc": 0,
+     "seconds": 143.03,
+     "memory_peak_mb": 250
+    },
+    {
+     "name": "selftests",
+     "rc": 0,
+     "seconds": 126.8,
+     "memory_peak_mb": 211
+    },
+    {
+     "name": "net-a",
+     "rc": 0,
+     "seconds": 66.34,
+     "memory_peak_mb": 212
+    },
+    {
+     "name": "vnet-full",
+     "rc": 0,
+     "seconds": 54.48,
+     "memory_peak_mb": 310
+    },
+    {
+     "name": "net-b",
+     "rc": 0,
+     "seconds": 103.0,
+     "memory_peak_mb": 226
+    },
+    {
+     "name": "usb2c2native",
+     "rc": 0,
+     "seconds": 41.4,
+     "memory_peak_mb": 283
+    }
+   ],
+   "candidate_sha256": [
+    "09bd3b59d3781df8227888d6664839270ea0b29106e8763ce5478aa0a74d4a41  build/x86_64/vos.bin",
+    "7ac2cfce632e935060ebf0a86a6645b95322f2c465ce83976e40456bb791e03e  build/x86_64/rust/libvos_kernel.a",
+    "fe543ce8eb617146ef5ae29a9ae97b67fe1556abbd8b610237f4668bab412bb2  build/x86_64/vos.iso",
+    "052e206db73b1e9538c24c1cad367bc92a0881e415646d70e46e0cc0a7b2f61e  build/x86_64/vos-uefi.iso"
+   ],
+   "reproducible": "KERNEL_AND_ARCHIVE_BYTE_IDENTICAL",
+   "toolchain": [
+    "gcc (Ubuntu 15.2.0-16ubuntu1) 15.2.0",
+    "rustc 1.100.0-nightly (2e2b193f8 2026-09-02)"
+   ],
+   "usb2c2_native": {
+    "passed": true,
+    "cases": [
+     "bios-normal-qemu-xhci",
+     "bios-dma-qemu-xhci",
+     "bios-both-qemu-xhci",
+     "bios-dma-none",
+     "uefi-normal-qemu-xhci",
+     "uefi-dma-qemu-xhci",
+     "uefi-both-qemu-xhci",
+     "uefi-dma-none"
+    ],
+    "failures": []
+   }
+  },
+  "r2": {
+   "status": "PASS",
+   "seal": "7ed2dad7cbf499e4b760beed9445f9f1966ada6d966be0eb51eb514bcc006d69",
+   "elapsed_s": 3194.2,
+   "retained_bytes": 1691239,
+   "jobs": [
+    {
+     "name": "ci-build",
+     "rc": 0,
+     "seconds": 58.65,
+     "memory_peak_mb": 157
+    },
+    {
+     "name": "ci-boot",
+     "rc": 0,
+     "seconds": 650.79,
+     "memory_peak_mb": 389
+    },
+    {
+     "name": "ci-r2",
+     "rc": 0,
+     "seconds": 298.48,
+     "memory_peak_mb": 408
+    },
+    {
+     "name": "ci-net",
+     "rc": 0,
+     "seconds": 364.46,
+     "memory_peak_mb": 1641
+    },
+    {
+     "name": "ci-gfx",
+     "rc": 0,
+     "seconds": 939.93,
+     "memory_peak_mb": 127
+    },
+    {
+     "name": "ci-usb2",
+     "rc": 0,
+     "seconds": 65.0,
+     "memory_peak_mb": 271
+    },
+    {
+     "name": "ci-contain",
+     "rc": 0,
+     "seconds": 143.16,
+     "memory_peak_mb": 230
+    },
+    {
+     "name": "ci-survey",
+     "rc": 0,
+     "seconds": 286.72,
+     "memory_peak_mb": 200
+    },
+    {
+     "name": "ci-qemu",
+     "rc": 0,
+     "seconds": 226.81,
+     "memory_peak_mb": 247
+    }
+   ]
+  }
+ }
+}
