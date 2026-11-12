@@ -35,6 +35,7 @@ mod desktop;
 mod screen;
 mod pmm;
 mod pmm_transition;
+mod vmm_check;
 
 // SAFETY: this private kernel symbol is defined exactly once, with the scalar
 // System V C ABI declared in rust_kernel.h. It does not accept pointers.

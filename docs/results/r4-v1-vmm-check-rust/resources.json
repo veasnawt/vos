@@ -1,0 +1,344 @@
+{
+ "stack": {
+  "method": "static analysis of the linked kernel (frames = pushes + constant rsp allocations; whole path = frame + deepest direct callee chain), base 61cc985c tree vs candidate d8dfc72, both compilers; every function compared",
+  "gcc15": {
+   "changed_functions": {
+    "vmm_unmap": {
+     "frame": [
+      168,
+      184
+     ],
+     "whole_path": [
+      448,
+      464
+     ]
+    }
+   },
+   "deepest_paths": {
+    "kernel_main": {
+     "frame": [
+      1816,
+      1816
+     ],
+     "path": [
+      11984,
+      11984
+     ]
+    },
+    "exception_handler": {
+     "frame": [
+      40,
+      40
+     ],
+     "path": [
+      4592,
+      4592
+     ]
+    }
+   },
+   "deepest_chain_through_vmm_unmap": {
+    "note": "conservative variant counting tail jumps as calls",
+    "boot_entry": [
+     3032,
+     3048
+    ],
+    "thread_broker": [
+     1008,
+     1024
+    ],
+    "proc_create": [
+     720,
+     736
+    ],
+    "stack_bytes": 16384,
+    "smallest_remaining_margin": 13336
+   }
+  },
+  "gcc13": {
+   "changed_functions": {},
+   "deepest_paths": {
+    "kernel_main": {
+     "frame": [
+      1816,
+      1816
+     ],
+     "path": [
+      11936,
+      11936
+     ]
+    },
+    "exception_handler": {
+     "frame": [
+      40,
+      40
+     ],
+     "path": [
+      4560,
+      4560
+     ]
+    }
+   },
+   "deepest_chain_through_vmm_unmap": {
+    "boot_entry": [
+     3016,
+     3016
+    ],
+    "thread_broker": [
+     992,
+     992
+    ]
+   }
+  },
+  "rust_leaf_frames": {
+   "vos_rust_vmm_canonical": 0,
+   "vos_rust_vmm_check_va": 0,
+   "vos_rust_vmm_check_nonleaf": 0,
+   "vos_rust_user_range": 0
+  },
+  "dynamic_stack": "only the pre-existing exc_common 16-byte alignment (unchanged)",
+  "recursion": "only the pre-existing bounded exec.c cycle (unchanged; no VMM or user-copy function in it)"
+ },
+ "image": {
+  "loaded_layout": "identical LOAD segments, base and candidate",
+  "sizes": {
+   "gcc15": {
+    "text": [
+     348160,
+     348160
+    ],
+    "data": [
+     552,
+     552
+    ],
+    "bss": [
+     617984,
+     617984
+    ]
+   },
+   "gcc13": {
+    "text": [
+     344064,
+     344064
+    ],
+    "data": [
+     552,
+     552
+    ],
+    "bss": [
+     617984,
+     617984
+    ]
+   }
+  }
+ },
+ "performance": {
+  "method": "paired in one process: frozen C (tests/reference) vs production C + the kernel Rust archive; 10 alternating runs x 9 samples, taskset -c 0; kernel code-generation flags (-O2 -ffreestanding -fno-builtin -mgeneral-regs-only -mno-red-zone -mno-sse ...) without -mcmodel=kernel; median of run medians, ns per operation. The page-table paths run on a 1 GiB process arena with the CR3 read and INVLPG stubbed (no TLB flush), so they measure the software path only.",
+  "gcc15": {
+   "direct canonical": {
+    "frozen_c_ns": 2.186,
+    "rust_ns": 2.196,
+    "delta_ns": 0.01,
+    "change_pct": 0.5
+   },
+   "direct check_va": {
+    "frozen_c_ns": 3.41,
+    "rust_ns": 4.021,
+    "delta_ns": 0.611,
+    "change_pct": 17.9
+   },
+   "direct check_nonleaf": {
+    "frozen_c_ns": 1.924,
+    "rust_ns": 2.713,
+    "delta_ns": 0.789,
+    "change_pct": 41.0
+   },
+   "direct user_range": {
+    "frozen_c_ns": 2.65,
+    "rust_ns": 2.529,
+    "delta_ns": -0.121,
+    "change_pct": -4.6
+   },
+   "vmm_map+vmm_unmap (tables present)": {
+    "frozen_c_ns": 71.841,
+    "rust_ns": 72.609,
+    "delta_ns": 0.767,
+    "change_pct": 1.1
+   },
+   "vmm_map+vmm_unmap (3 tables created and released)": {
+    "frozen_c_ns": 1000.844,
+    "rust_ns": 987.813,
+    "delta_ns": -13.031,
+    "change_pct": -1.3
+   },
+   "vmm_lookup (mapped 4 KiB page)": {
+    "frozen_c_ns": 68.255,
+    "rust_ns": 65.235,
+    "delta_ns": -3.02,
+    "change_pct": -4.4
+   },
+   "vmm_map refusals (unaligned + upper half)": {
+    "frozen_c_ns": 6.091,
+    "rust_ns": 9.572,
+    "delta_ns": 3.481,
+    "change_pct": 57.2
+   },
+   "user_writable (1 byte)": {
+    "frozen_c_ns": 72.086,
+    "rust_ns": 70.158,
+    "delta_ns": -1.928,
+    "change_pct": -2.7
+   },
+   "user_writable (16 pages)": {
+    "frozen_c_ns": 1113.969,
+    "rust_ns": 1068.272,
+    "delta_ns": -45.697,
+    "change_pct": -4.1
+   },
+   "user_writable refusals (out of range + zero length)": {
+    "frozen_c_ns": 4.055,
+    "rust_ns": 5.922,
+    "delta_ns": 1.867,
+    "change_pct": 46.1
+   },
+   "copy_from_user (64 bytes)": {
+    "frozen_c_ns": 181.055,
+    "rust_ns": 177.877,
+    "delta_ns": -3.178,
+    "change_pct": -1.8
+   },
+   "copy_to_user (64 bytes)": {
+    "frozen_c_ns": 173.611,
+    "rust_ns": 170.349,
+    "delta_ns": -3.262,
+    "change_pct": -1.9
+   },
+   "copy_from_user (4096 bytes)": {
+    "frozen_c_ns": 227.368,
+    "rust_ns": 225.1,
+    "delta_ns": -2.269,
+    "change_pct": -1.0
+   },
+   "copy_to_user (4096 bytes)": {
+    "frozen_c_ns": 229.908,
+    "rust_ns": 225.019,
+    "delta_ns": -4.89,
+    "change_pct": -2.1
+   }
+  },
+  "gcc13": {
+   "direct canonical": {
+    "frozen_c_ns": 2.212,
+    "rust_ns": 2.205,
+    "delta_ns": -0.007,
+    "change_pct": -0.3
+   },
+   "direct check_va": {
+    "frozen_c_ns": 3.417,
+    "rust_ns": 4.027,
+    "delta_ns": 0.61,
+    "change_pct": 17.9
+   },
+   "direct check_nonleaf": {
+    "frozen_c_ns": 1.933,
+    "rust_ns": 2.7,
+    "delta_ns": 0.767,
+    "change_pct": 39.7
+   },
+   "direct user_range": {
+    "frozen_c_ns": 2.698,
+    "rust_ns": 2.525,
+    "delta_ns": -0.173,
+    "change_pct": -6.4
+   },
+   "vmm_map+vmm_unmap (tables present)": {
+    "frozen_c_ns": 66.213,
+    "rust_ns": 78.751,
+    "delta_ns": 12.538,
+    "change_pct": 18.9
+   },
+   "vmm_map+vmm_unmap (3 tables created and released)": {
+    "frozen_c_ns": 977.328,
+    "rust_ns": 994.421,
+    "delta_ns": 17.093,
+    "change_pct": 1.7
+   },
+   "vmm_lookup (mapped 4 KiB page)": {
+    "frozen_c_ns": 66.558,
+    "rust_ns": 68.674,
+    "delta_ns": 2.117,
+    "change_pct": 3.2
+   },
+   "vmm_map refusals (unaligned + upper half)": {
+    "frozen_c_ns": 7.299,
+    "rust_ns": 9.526,
+    "delta_ns": 2.226,
+    "change_pct": 30.5
+   },
+   "user_writable (1 byte)": {
+    "frozen_c_ns": 72.231,
+    "rust_ns": 72.681,
+    "delta_ns": 0.45,
+    "change_pct": 0.6
+   },
+   "user_writable (16 pages)": {
+    "frozen_c_ns": 1081.733,
+    "rust_ns": 1111.541,
+    "delta_ns": 29.808,
+    "change_pct": 2.8
+   },
+   "user_writable refusals (out of range + zero length)": {
+    "frozen_c_ns": 4.371,
+    "rust_ns": 5.681,
+    "delta_ns": 1.31,
+    "change_pct": 30.0
+   },
+   "copy_from_user (64 bytes)": {
+    "frozen_c_ns": 179.447,
+    "rust_ns": 182.543,
+    "delta_ns": 3.096,
+    "change_pct": 1.7
+   },
+   "copy_to_user (64 bytes)": {
+    "frozen_c_ns": 173.162,
+    "rust_ns": 176.131,
+    "delta_ns": 2.968,
+    "change_pct": 1.7
+   },
+   "copy_from_user (4096 bytes)": {
+    "frozen_c_ns": 226.013,
+    "rust_ns": 229.136,
+    "delta_ns": 3.123,
+    "change_pct": 1.4
+   },
+   "copy_to_user (4096 bytes)": {
+    "frozen_c_ns": 227.708,
+    "rust_ns": 230.637,
+    "delta_ns": 2.929,
+    "change_pct": 1.3
+   }
+  },
+  "isolated_reruns_map_unmap_tables_present_ns": {
+   "gcc13": [
+    [
+     66.33,
+     78.867
+    ],
+    [
+     66.392,
+     78.836
+    ]
+   ],
+   "gcc15": [
+    [
+     72.225,
+     72.425
+    ],
+    [
+     71.855,
+     72.989
+    ]
+   ]
+  },
+  "note": "Each forwarded decision is now a real call (the C inlined it): two check_va and six check_nonleaf calls per map+unmap pair. GCC 13 shows that cost in full; with GCC 15 the frozen C is itself slower on this path."
+ }
+}

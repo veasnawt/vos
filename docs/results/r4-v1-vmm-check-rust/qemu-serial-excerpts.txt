@@ -1,0 +1,43 @@
+== boot-128M (worker r1, QEMU) ==
+cpu: wp=on nx=on smep=unsupported umip=unsupported smap=unsupported x87=off(em)
+vmm: audit passed: kernel alias 1004 x 4 KiB + 510 x 2 MiB supervisor pages, 117 ring-0 executable (all kernel text, none writable), 0 lower-half tables
+proc[hello]: exited status 0, all frames reclaimed
+selftest: vmm 81 cases, 0 failed
+selftest: kmap 99 cases, 0 failed
+user[badptr]: ABCD
+selftest: user 198 cases, 0 failed
+VOS-TEST: PASS
+== uefi-2G (worker r1, QEMU) ==
+selftest: vmm 81 cases, 0 failed
+selftest: kmap 99 cases, 0 failed
+selftest: user 198 cases, 0 failed
+VOS-TEST: PASS
+== cpu-max (worker r1, QEMU) ==
+cpu: wp=on nx=on smep=on umip=on smap=on x87=off(em)
+selftest: user 198 cases, 0 failed
+VOS-TEST: PASS
+== kernel-lowaccess (worker r1, QEMU) ==
+vmm: identity probe 0x100000 = 0xe85250d6
+vmm: identity map removed
+exc: #PF vec=14 err=0x0 cs=0x8 rip=0xffffffff8015bc37 rflags=0x210086 cr2=0x100000 ss=0x10 rsp=0xffffffff8019e8d0 stack=kernel
+panic: #PF page fault
+VOS-TEST: FAIL
+== vmm-stale-tlb (worker r1, QEMU) ==
+vmm-test: stale-tlb read through VT ok
+exc: #PF vec=14 err=0x0 cs=0x8 rip=0xffffffff8015bd2d rflags=0x10006 cr2=0x200000000000 ss=0x10 rsp=0xffffffff8019e8c0 stack=kernel
+panic: #PF page fault
+VOS-TEST: FAIL
+== vmm-nx (worker r1, QEMU) ==
+vmm-test: kernel text control returned
+exc: #PF vec=14 err=0x11 cs=0x8 rip=0x200000000000 rflags=0x10006 cr2=0x200000000000 ss=0x10 rsp=0xffffffff8019e8c8 stack=kernel
+panic: #PF page fault
+VOS-TEST: FAIL
+== vmm-readonly (worker r1, QEMU) ==
+vmm-test: read-only page readable
+exc: #PF vec=14 err=0x3 cs=0x8 rip=0xffffffff8015be64 rflags=0x10006 cr2=0x200000000000 ss=0x10 rsp=0xffffffff8019e8d0 stack=kernel
+panic: #PF page fault
+VOS-TEST: FAIL
+== ipc (worker r1, QEMU) ==
+selftest: ipc 30 cases, 0 failed
+ipc: 12 scenarios, 0 failed
+VOS-TEST: PASS

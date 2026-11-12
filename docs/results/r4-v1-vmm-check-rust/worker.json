@@ -1,0 +1,174 @@
+{
+ "campaign": "r4-v1-vmm-validate-v1",
+ "plan_sha256": "1771608ba6c7a444b414214f6bbf682ea72fb30bf35cf2d2cbf8055d1fc297f5",
+ "root_procedure_sha256": "36e8c2d3765441e630e2df7b7f449d26b22c5685000923d4a0a71f8ef9551018",
+ "boot_sha256": "14438e12f4a3f5d27fdd8935ea5b22dae87c51e9d1150112dbd6551e0747cf2a",
+ "driver_sha256": "dc6146872a3f063db5e3341f3dabc22db3d52ca365f3e9241747ac04af4b409f",
+ "payload_sha256": "c6e088cdd32dcfc7bad958d2c8c91f7169a4e7bd720f69089748c38ffe9f9d90",
+ "jobs_sha256": {
+  "r1": "0df42e085396589beb489e333f59cdce604ad6590467ae331f719739bbde3eae",
+  "r2": "b36824771310e0b8ca06ba9034030f00f95c1c0ec2a18b9483225b711bfb8482"
+ },
+ "source_commit": "d8dfc72b50037b1b4ed3f8490f83886f1b88a90c",
+ "root_approval": "owner, for r1 and r2 with these exact hashes (r3 only as a separately approved repair; not used)",
+ "derivation": "count-asserted rename of the approved R4-M2 campaign: the root procedure differs only in the campaign names and the ledger hash; BOOT and payload are byte-identical",
+ "runs": {
+  "r1": {
+   "status": "PASS",
+   "seal": "37e8d9563dce374bb5d8375e58ab1598c4f1fc64c3b8a1be766a3aa5ab511318",
+   "elapsed_s": 1190.5,
+   "retained_bytes": 3215163,
+   "jobs": [
+    {
+     "name": "containment",
+     "rc": 0,
+     "seconds": 0.11,
+     "memory_peak_mb": 13
+    },
+    {
+     "name": "build",
+     "rc": 0,
+     "seconds": 21.64,
+     "memory_peak_mb": 567
+    },
+    {
+     "name": "repro",
+     "rc": 0,
+     "seconds": 13.97,
+     "memory_peak_mb": 150
+    },
+    {
+     "name": "vmmcheck",
+     "rc": 0,
+     "seconds": 57.87,
+     "memory_peak_mb": 191
+    },
+    {
+     "name": "pmmgates",
+     "rc": 0,
+     "seconds": 334.88,
+     "memory_peak_mb": 375
+    },
+    {
+     "name": "pmmnative",
+     "rc": 0,
+     "seconds": 136.85,
+     "memory_peak_mb": 238
+    },
+    {
+     "name": "vmmnative",
+     "rc": 0,
+     "seconds": 173.66,
+     "memory_peak_mb": 183
+    },
+    {
+     "name": "selftests",
+     "rc": 0,
+     "seconds": 120.22,
+     "memory_peak_mb": 200
+    },
+    {
+     "name": "net-a",
+     "rc": 0,
+     "seconds": 58.86,
+     "memory_peak_mb": 202
+    },
+    {
+     "name": "vnet-full",
+     "rc": 0,
+     "seconds": 50.94,
+     "memory_peak_mb": 296
+    },
+    {
+     "name": "net-b",
+     "rc": 0,
+     "seconds": 98.03,
+     "memory_peak_mb": 216
+    },
+    {
+     "name": "usb2c2native",
+     "rc": 0,
+     "seconds": 40.32,
+     "memory_peak_mb": 271
+    }
+   ],
+   "candidate_sha256": [
+    "189bddcef424737864fa5e585f68ac71e096ea76c962b1b526c6835f8d668daa  build/x86_64/vos.bin",
+    "028830da463df3d782ad17309f2f672161ba293f6351fb9b726ec9d801e3d2a0  build/x86_64/rust/libvos_kernel.a",
+    "23d378f552cd38d42608594b505dd869c2daa71f382c5b3d0935a69073978515  build/x86_64/vos.iso",
+    "920a6ed5d845445e08fd5909e86ffbba6e3de0e8ba62bbb9a66b0ddfdafd1420  build/x86_64/vos-uefi.iso"
+   ],
+   "reproducible": "KERNEL_AND_ARCHIVE_BYTE_IDENTICAL",
+   "compiler": [
+    "gcc (Ubuntu 15.2.0-16ubuntu1) 15.2.0",
+    "rustc 1.100.0-nightly (2e2b193f8 2026-09-02)"
+   ],
+   "tree": "clean at d8dfc72b50037b1b4ed3f8490f83886f1b88a90c for the whole run"
+  },
+  "r2": {
+   "status": "PASS",
+   "seal": "8d2cfc2f070afa7446f736bbc195d469f4caf3dd512eff6390b83689fe52fcb9",
+   "elapsed_s": 2730.0,
+   "retained_bytes": 1716160,
+   "jobs": [
+    {
+     "name": "ci-build",
+     "rc": 0,
+     "seconds": 57.75,
+     "memory_peak_mb": 150
+    },
+    {
+     "name": "ci-boot",
+     "rc": 0,
+     "seconds": 551.18,
+     "memory_peak_mb": 371
+    },
+    {
+     "name": "ci-r2",
+     "rc": 0,
+     "seconds": 246.91,
+     "memory_peak_mb": 390
+    },
+    {
+     "name": "ci-net",
+     "rc": 0,
+     "seconds": 336.06,
+     "memory_peak_mb": 1561
+    },
+    {
+     "name": "ci-gfx",
+     "rc": 0,
+     "seconds": 692.77,
+     "memory_peak_mb": 125
+    },
+    {
+     "name": "ci-usb2",
+     "rc": 0,
+     "seconds": 60.89,
+     "memory_peak_mb": 257
+    },
+    {
+     "name": "ci-contain",
+     "rc": 0,
+     "seconds": 134.03,
+     "memory_peak_mb": 222
+    },
+    {
+     "name": "ci-survey",
+     "rc": 0,
+     "seconds": 249.62,
+     "memory_peak_mb": 191
+    },
+    {
+     "name": "ci-qemu",
+     "rc": 0,
+     "seconds": 226.88,
+     "memory_peak_mb": 241
+    }
+   ],
+   "purpose": "CI equivalence: the three Freestanding groups and the QEMU smoke steps of build-smoke.yml, including the new R4-V1 step",
+   "tree": "clean at d8dfc72b50037b1b4ed3f8490f83886f1b88a90c at admission; documentation drafts (docs/ and README.md only) were added to the worktree while the run was in progress; no source, test, script or workflow file differed from the commit"
+  }
+ },
+ "failed_runs": "none"
+}

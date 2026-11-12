@@ -1,0 +1,150 @@
+{
+ "status": "PASS",
+ "run": "worker r1, commit d8dfc72b50037b1b4ed3f8490f83886f1b88a90c, GCC 15.2.0, rustc nightly-2026-09-03",
+ "kernel_sha256": "189bddcef424737864fa5e585f68ac71e096ea76c962b1b526c6835f8d668daa",
+ "archive_sha256": "028830da463df3d782ad17309f2f672161ba293f6351fb9b726ec9d801e3d2a0",
+ "scope": {
+  "forwarders": 4,
+  "include_lines": 2,
+  "other_bytes_changed": 0
+ },
+ "unsafe": {
+  "core": 0,
+  "adapter_blocks": 0,
+  "adapter_no_mangle_attributes": 4,
+  "pointer_parameters": 0
+ },
+ "constants_bound": 20,
+ "differential": {
+  "release": {
+   "cases": 273257460,
+   "mismatches": 0,
+   "digest": "52bd0e90a314beb6"
+  },
+  "sanitizer": {
+   "cases": 273257460,
+   "mismatches": 0,
+   "digest": "52bd0e90a314beb6"
+  }
+ },
+ "coverage": "VMM CHECK COVERAGE canonical=23089552,13965748,3085094 check_va=10001135,3963046,23089552,1567,3085094 check_nonleaf=4805811,14285623,2160344,11623614 user_range=6316,10012616,12086786,667285,17252317 callers=2005665,66313344,31868574,19888377",
+ "rust": {
+  "vos_rust_vmm_canonical": {
+   "frame": 0,
+   "instructions": 6
+  },
+  "vos_rust_vmm_check_va": {
+   "frame": 0,
+   "instructions": 24
+  },
+  "vos_rust_vmm_check_nonleaf": {
+   "frame": 0,
+   "instructions": 13
+  },
+  "vos_rust_user_range": {
+   "frame": 0,
+   "instructions": 12
+  }
+ },
+ "c_frames": {
+  "vmm_map": {
+   "frozen": 136,
+   "production": 136
+  },
+  "vmm_unmap": {
+   "frozen": 168,
+   "production": 184
+  },
+  "vmm_lookup": {
+   "frozen": 72,
+   "production": 72
+  },
+  "user_writable": {
+   "frozen": 56,
+   "production": 56
+  },
+  "copy_to_user": {
+   "frozen": 104,
+   "production": 104
+  },
+  "copy_from_user": {
+   "frozen": 104,
+   "production": 104
+  }
+ },
+ "c_frame_growth": {
+  "vmm_unmap": {
+   "frozen": 168,
+   "production": 184
+  }
+ },
+ "mutations": {
+  "canonical-lower-bound": 10,
+  "canonical-upper-bound": 2,
+  "canonical-and": 1216900,
+  "canonical-lower-only": 261268,
+  "va-noncanon-result": 731944,
+  "va-kernel-bound": 1,
+  "va-kernel-skipped": 130634,
+  "va-align-before-kernel": 130604,
+  "va-align-modulus": 72,
+  "va-align-skipped": 176080,
+  "va-range-before-align": 100752,
+  "va-null-guard-bound": 3,
+  "va-map-end-bound": 4,
+  "va-null-guard-skipped": 1105,
+  "va-map-end-skipped": 4,
+  "nonleaf-ps-level": 439198,
+  "nonleaf-ps-level-range": 613937,
+  "nonleaf-ps-swapped": 1886715,
+  "nonleaf-ps-ignored": 1667391,
+  "nonleaf-bits-before-ps": 1667391,
+  "nonleaf-allows-nx": 720,
+  "nonleaf-allows-dirty": 758,
+  "nonleaf-allows-pwt": 708,
+  "nonleaf-allows-pcd": 722,
+  "nonleaf-allows-global": 714,
+  "nonleaf-allows-software-bits": 3946,
+  "nonleaf-allows-high-bits": 9422,
+  "nonleaf-refuses-accessed": 72604,
+  "nonleaf-refuses-user": 72630,
+  "nonleaf-address-mask": 136036,
+  "nonleaf-corrupt-result": 1743628,
+  "range-start-bound": 10,
+  "range-start-skipped": 4211,
+  "range-end-bound": 4,
+  "range-end-skipped": 159830,
+  "range-length-bound": 95208,
+  "range-length-base": 229289,
+  "range-length-ignored": 365766,
+  "range-overflowing-sum": 40987,
+  "glue-canonical-negated": 1340394,
+  "glue-check-va-is-canonical": 1164314,
+  "glue-level-truncated": 582,
+  "glue-entry-truncated": 16546,
+  "glue-length-truncated": 363967,
+  "glue-range-arguments-swapped": 124251,
+  "c-check-va-forwards-canonical": 1039767,
+  "c-canonical-forwards-check-va": 307823,
+  "c-nonleaf-level-shifted": 438943,
+  "c-user-range-inverted": 1225320,
+  "c-user-range-length-halved": 218750,
+  "c-writable-zero-length-shortcut-removed": 43740,
+  "c-copy-from-zero-length-shortcut-removed": 21870
+ },
+ "mutations_detected": "52 of 52",
+ "source_sha256": {
+  "kernel/rust/mm/vmm_check.rs": "89135c372b173c1f340cc0ce3c19fbe5f687dd2878000b299c2946199aece8fd",
+  "arch/x86_64/rust/vmm_check.rs": "15ef86801e1be29cb5a8a20453e6476bc48d50e65fd888b9ef068a6e9c018b00",
+  "arch/x86_64/vmm.c": "02b6e003cff8cbcbbaebaa8ec498f370feb972b065dd9c2552f5e59aae8aed2d",
+  "arch/x86_64/usercopy.c": "dd31c9cbb1804d123195483889a9e284f10b11376641f85b147891dd232a01ab",
+  "arch/x86_64/rust_kernel.h": "397eea5bf82b557b3a0209a38390c11a38668e5244cea112c71c9e666b57b7ac",
+  "arch/x86_64/rust/kernel_probe.rs": "f733c43e6b1bf31448c9866bebdf553699fc33eb0bf80dd648b240d7a408f3d1",
+  "tests/host/vmm-check-differential.c": "4c5abef7a47e020e2de5db7cedca3c12c1416e798822ce956496b809ea8c3256",
+  "tests/reference/vmm-r4v1.c": "a640d087381359ea9633a9866313db89ce8f0cbf689b1919e49a63fb8fda8820",
+  "tests/reference/usercopy-r4v1.c": "68e6d0c8742ab7fac2723ed7a8db01e27db3f2c78d891915a8095f82afa3f459",
+  "tests/reference/vmm-r4v1.json": "861c6f3bc8191a85b624a1043a5303db0f09f463c53ee3b0206f48dee848ea88",
+  "scripts/test-vmm-check.py": "b4637c26f578100ac85083ab6d10c2bc591acad0c198c2457b50c34135abdf49"
+ },
+ "preserved": "complete result.json, build logs and differential transcripts are retained in the maintainer ledger campaign r4-v1-vmm-validate-v1"
+}

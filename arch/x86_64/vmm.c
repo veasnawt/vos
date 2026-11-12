@@ -7,6 +7,7 @@
 #include "memlayout.h"
 #include "panic.h"
 #include "pmm.h"
+#include "rust_kernel.h" /* R4-V1: canonical, check_va and check_nonleaf are decided in Rust. */
 
 extern char __kernel_phys_start[], __kernel_phys_end[];
 
@@ -23,7 +24,7 @@ static const char *diag = "";
 
 static int canonical(uint64_t va)
 {
-    return va < LOWER_HALF_END || va >= UPPER_HALF_START;
+    return vos_rust_vmm_canonical(va);
 }
 
 static int in_kernel_image(uint64_t pa)
@@ -58,25 +59,13 @@ static int active(uint64_t root)
 /* A present non-leaf entry at `level` (3..1) that may be followed. */
 static int check_nonleaf(uint64_t e, int level)
 {
-    if (e & PTE_PS)
-        return level == 3 ? VMM_ECORRUPT : VMM_ELARGE;  /* PS is reserved in a PML4E */
-    if (e & ~NONLEAF_BITS)
-        return VMM_ECORRUPT;
-    return VMM_OK;
+    return vos_rust_vmm_check_nonleaf(e, level);   /* PS first (reserved in a PML4E), then NONLEAF_BITS */
 }
 
 /* Validation shared by map and unmap. */
 static int check_va(uint64_t va)
 {
-    if (!canonical(va))
-        return VMM_ENONCANON;
-    if (va >= UPPER_HALF_START)
-        return VMM_EKERNEL;
-    if (va % PAGE_SIZE != 0)
-        return VMM_EALIGN;
-    if (va < NULL_GUARD_END || va >= LOWER_MAP_END)
-        return VMM_ERANGE;
-    return VMM_OK;
+    return vos_rust_vmm_check_va(va);   /* non-canonical, upper half, alignment, range: in this order */
 }
 
 #ifdef VOS_TEST
