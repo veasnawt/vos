@@ -1,0 +1,21 @@
+{
+  "baseline": "61cc985c87e7810264ea0d931c1456341e837cd2",
+  "sources_sha256": {
+    "vmm-r4v1.c": "a640d087381359ea9633a9866313db89ce8f0cbf689b1919e49a63fb8fda8820",
+    "usercopy-r4v1.c": "68e6d0c8742ab7fac2723ed7a8db01e27db3f2c78d891915a8095f82afa3f459"
+  },
+  "git_blobs": {
+    "vmm-r4v1.c": "31b3e644b1d2d262348acd18ab631c4e8c458123",
+    "usercopy-r4v1.c": "fb9baa9480f97b964a75fff9318fbafe484efa4f"
+  },
+  "purpose": "Byte-identical arch/x86_64/vmm.c and usercopy.c at main 61cc985c (R4-M2 merged; tree 4caf1c04): the frozen R4-V1 references for canonical, check_va, check_nonleaf and user_range, and the scope anchor for every other function of both files. Not linked into the kernel. unchanged_sha256 pins the headers both sides are compiled with and the accepted R4-M1/R4-M2 Rust, which R4-V1 must not modify.",
+  "unchanged_sha256": {
+    "arch/x86_64/vmm.h": "af44213515f2e7d4d0df96f59ebdaceb3da2c4959f3450887f090871a75b87ed",
+    "arch/x86_64/memlayout.h": "9887adc7633f93f0ae296d40363de6a880dd21fc8ae9289d7ddfd8cf2a0ac8eb",
+    "arch/x86_64/usercopy.h": "d88f71d6a287eba4546213bbb3e2f9343e140a6d8300cf350b5fc6e8d71cb5a7",
+    "kernel/rust/mm/pmm.rs": "15f5d4ed7e0b85419b7b00ad6091e4c32e1a92113bfa68077134b764a4fede24",
+    "arch/x86_64/rust/pmm.rs": "83ec9aaa51a9a7258672e3c1a41797aca5ab8fd5ca9853ff81f6313c764c96d9",
+    "kernel/rust/mm/pmm_transition.rs": "9d9b65a9a54b53a604a37deecccb367f8c03851846974f79355e2f8b8eaa922d",
+    "arch/x86_64/rust/pmm_transition.rs": "d899ee324c3cfbfb92353767c8a303208270dbf1ced06514c27ca454436e7810"
+  }
+}

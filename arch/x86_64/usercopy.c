@@ -2,6 +2,7 @@
 #include "lib.h"
 #include "memlayout.h"
 #include "panic.h"
+#include "rust_kernel.h" /* R4-V1: user_range is decided in Rust. */
 #include "syscall.h"
 #include "vmm.h"
 
@@ -21,7 +22,7 @@ static int user_page_writable(uint64_t root, uint64_t va, struct vmm_mapping *m)
 /* [uptr, uptr + len) inside the user range, without overflow. */
 static int user_range(uint64_t uptr, size_t len)
 {
-    return uptr >= USER_IMAGE_START && uptr < LOWER_HALF_END && len <= LOWER_HALF_END - uptr;
+    return vos_rust_user_range(uptr, len);
 }
 
 int user_writable(uint64_t root, uint64_t uptr, size_t len)

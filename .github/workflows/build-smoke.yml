@@ -108,6 +108,12 @@ jobs:
             --archive build/x86_64/rust/libvos_kernel.a \
             --kernel-dir build/x86_64 --rustc "$RUSTC" --out build/r4-m2-pmm-transition-ci
 
+      - name: Verify Rust VMM and user-range validation against the frozen accepted vmm.c and usercopy.c (three-way differential, unchanged callers, mutation controls, ownership)
+        run: |
+          python3 -I -B scripts/test-vmm-check.py \
+            --archive build/x86_64/rust/libvos_kernel.a \
+            --kernel-dir build/x86_64 --rustc "$RUSTC" --out build/r4-v1-vmm-check-ci
+
       - name: Verify bounded Rust boot-HID core and existing input contracts (H1-B)
         run: python3 -I -B scripts/test-boot-hid.py --rustc "$RUSTC" --out build/h1b-hid-ci
 

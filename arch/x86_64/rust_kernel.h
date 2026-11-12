@@ -123,6 +123,13 @@ struct pointer_packet;
 int vos_rust_keyboard_pointer_poll(struct keyboard *k, struct pointer_packet *p);
 unsigned vos_rust_keyboard_pointer_lost(struct keyboard *k);
 
+/* R4-V1: the scalar validation decisions of vmm.c and usercopy.c (kernel/rust/mm/vmm_check.rs). canonical and
+ * user_range return exactly 0 or 1; check_va and check_nonleaf return a VMM_* code. */
+int vos_rust_vmm_canonical(uint64_t va);
+int vos_rust_vmm_check_va(uint64_t va);
+int vos_rust_vmm_check_nonleaf(uint64_t e, int level);
+int vos_rust_user_range(uint64_t uptr, size_t len);
+
 uint64_t vos_rust_probe(uint64_t seed, uint64_t salt);
 /* R1: exactly 0 or 1; valid iff off <= size && len <= size - off. */
 int vos_rust_elf_inside(uint64_t size, uint64_t off, uint64_t len);
