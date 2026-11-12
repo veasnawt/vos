@@ -1,0 +1,107 @@
+{
+ "worker_run": "r1",
+ "qemu_only": true,
+ "physical_hardware": "NOT TESTED",
+ "vmmnative": {
+  "summary": {
+   "boot-128M": "PASS",
+   "boot-2G": "PASS",
+   "cpu-max": "PASS",
+   "uefi-128M": "PASS",
+   "uefi-2G": "PASS",
+   "kernel-lowaccess": "PASS",
+   "vmm-stale-tlb": "PASS",
+   "vmm-nx": "PASS",
+   "vmm-readonly": "PASS",
+   "ipc": "PASS",
+   "ipc-2G": "PASS",
+   "ipc-max": "PASS"
+  },
+  "images_sha256": {
+   "build/x86_64-test/vos.bin": "57c2ca5d08e8a5a61ba2ec3789e580560afffd24e2de83ccc01e1d18777d7ad3",
+   "build/x86_64-test/vos.iso": "5425a1f810f84c38112e8a9aa96bbd9a87e284a686dbd7306310113038d0720e",
+   "build/x86_64-test/vos-uefi.iso": "f21ebd352e2e134c5367a8860745743de50ccf8a1da5dc3d8cb2e8ba07a51c03",
+   "build/x86_64-test-kernel-lowaccess/vos.bin": "b8fbf9092d3a68886d22718e80ba977a11a8766550748914cb4c5f6c00cb73a4",
+   "build/x86_64-test-vmm-stale-tlb/vos.bin": "133d26289f8e445425480140c21efa7e7a3591e4941435de22c65525153147c5",
+   "build/x86_64-test-vmm-nx/vos.bin": "a5a3dc461bba9b7b08c8a6926d0fec4ebf790fffad17e81222edc5df93d79323",
+   "build/x86_64-test-vmm-readonly/vos.bin": "6404ee158a986e95fd7be3a1bb9b923aa0eaab38efdcf79dc24990f5ed0aa437",
+   "build/x86_64-test-ipc/vos.bin": "f71f743b548302c2ba261745e82b0689d5ad148a1e388732706ef0b22d5b03d7"
+  },
+  "selftest_lines": {
+   "boot-128M": [
+    "cpu: wp=on nx=on smep=unsupported umip=unsupported smap=unsupported x87=off(em)",
+    "vmm: audit passed: kernel alias 1004 x 4 KiB + 510 x 2 MiB supervisor pages, 117 ring-0 executable (all kernel text, none writable), 0 lower-half tables",
+    "selftest: vmm 81 cases, 0 failed",
+    "selftest: kmap 99 cases, 0 failed",
+    "selftest: user 198 cases, 0 failed"
+   ],
+   "boot-2G": [
+    "cpu: wp=on nx=on smep=unsupported umip=unsupported smap=unsupported x87=off(em)",
+    "vmm: audit passed: kernel alias 1004 x 4 KiB + 510 x 2 MiB supervisor pages, 117 ring-0 executable (all kernel text, none writable), 0 lower-half tables",
+    "selftest: vmm 81 cases, 0 failed",
+    "selftest: kmap 99 cases, 0 failed",
+    "selftest: user 198 cases, 0 failed"
+   ],
+   "cpu-max": [
+    "cpu: wp=on nx=on smep=on umip=on smap=on x87=off(em)",
+    "vmm: audit passed: kernel alias 1004 x 4 KiB + 510 x 2 MiB supervisor pages, 117 ring-0 executable (all kernel text, none writable), 0 lower-half tables",
+    "selftest: vmm 81 cases, 0 failed",
+    "selftest: kmap 99 cases, 0 failed",
+    "selftest: user 198 cases, 0 failed"
+   ],
+   "uefi-128M": [
+    "cpu: wp=on nx=on smep=unsupported umip=unsupported smap=unsupported x87=off(em)",
+    "vmm: audit passed: kernel alias 1004 x 4 KiB + 510 x 2 MiB supervisor pages, 117 ring-0 executable (all kernel text, none writable), 0 lower-half tables",
+    "selftest: vmm 81 cases, 0 failed",
+    "selftest: kmap 99 cases, 0 failed",
+    "selftest: user 198 cases, 0 failed"
+   ],
+   "uefi-2G": [
+    "cpu: wp=on nx=on smep=unsupported umip=unsupported smap=unsupported x87=off(em)",
+    "vmm: audit passed: kernel alias 1004 x 4 KiB + 510 x 2 MiB supervisor pages, 117 ring-0 executable (all kernel text, none writable), 0 lower-half tables",
+    "selftest: vmm 81 cases, 0 failed",
+    "selftest: kmap 99 cases, 0 failed",
+    "selftest: user 198 cases, 0 failed"
+   ]
+  }
+ },
+ "selftests": {
+  "pmm-exhaust": "PASS",
+  "mp": "PASS",
+  "mp-2G": "PASS",
+  "mp-max": "PASS",
+  "stress": "PASS",
+  "stress-2G": "PASS",
+  "stress-max": "PASS"
+ },
+ "pmm_observers": {
+  "passed": true,
+  "screenshots": [
+   {
+    "case": "screen-bios",
+    "firmware": "SeaBIOS",
+    "passed": true,
+    "png": "screen.png",
+    "png_sha256": "1d526d605c954954825bb23fc68c8850c20e74f901a327ca1a8274e1fbc5de51",
+    "pmm_lines": [
+     "pmm: 262144 frames tracked below 1 GiB, 32239 usable (128956 KiB), 0 bytes of RAM above 1 GiB ignored"
+    ]
+   },
+   {
+    "case": "screen-uefi",
+    "firmware": "OVMF",
+    "passed": true,
+    "png": "screen.png",
+    "png_sha256": "714cff59a11b7fd70a12932c1c16c670c65d34feb4c7c32823a84cacfb62abfb",
+    "pmm_lines": [
+     "pmm: 262144 frames tracked below 1 GiB, 21058 usable (84232 KiB), 0 bytes of RAM above 1 GiB ignored"
+    ]
+   }
+  ]
+ },
+ "screenshot": {
+  "file": "screen-uefi.png",
+  "source": "worker r1: the production candidate kernel booted from vos-uefi.iso under OVMF in QEMU (scripts/test-pmm-native.py screendump); it shows the VMM audit line, a user program run and \"boot: checks passed\"",
+  "sha256": "714cff59a11b7fd70a12932c1c16c670c65d34feb4c7c32823a84cacfb62abfb"
+ }
+}
