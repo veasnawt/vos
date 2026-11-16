@@ -1,0 +1,25 @@
+{
+  "ledger": "synthetic VLE-1 fixture",
+  "revision": 18,
+  "numbers": {
+    "int": 1,
+    "float": 1,
+    "exp": 1E+5,
+    "negzero": -0,
+    "tiny": 1.5e-7,
+    "big": 12345678901234567891
+  },
+  "order": {
+    "2": 4,
+    "10": 3,
+    "a": 20,
+    "z": 1,
+    "m": "new last"
+  },
+  "text": "caf\u00e9 \ud83d\ude00 tab\t quote\" back\\ ctl\u0001 del\u007f slash/",
+  "empty_l": [],
+  "list": [
+    9
+  ],
+  "\u043a\u043b\u044e\u0447": "\ud83d\udd12 key"
+}
