@@ -1,0 +1,2 @@
+TEST KEYS ONLY. Both private seeds are SHA-256 of public phrases (see make_fixtures); they authenticate nothing.
+test.pub signs the fixture anchors; other.pub is a different key for the wrong-key vector.
