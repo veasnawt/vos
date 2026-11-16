@@ -1,0 +1,149 @@
+{
+ "campaign": "r4-m3-pmm-init-v1",
+ "plan_sha256": "738e54e581ee39c87ea895a2b0f4abc0509d02b18a0bee0da9adcd5c363d2d09",
+ "root_procedure_sha256": "3e7ff9719b355efa0965f3e7b378746db2352414fa112e2bf677ff70ec74211d",
+ "boot_sha256": "14438e12f4a3f5d27fdd8935ea5b22dae87c51e9d1150112dbd6551e0747cf2a",
+ "driver_sha256": "b0ea0cdb4e5e40399b7c2a8c71142602beab32d997fe262e01c13884069aca25",
+ "payload_sha256": "c6e088cdd32dcfc7bad958d2c8c91f7169a4e7bd720f69089748c38ffe9f9d90",
+ "source_commit": "9c1b0daab1b5d3bad70c3ce447a225f570b7a527",
+ "root_approval": "owner, for r1 and r2; then, after r1 stopped, for the repair run r3 with jobs-r3 8ea735d3, skipping r2 (CI equivalence from the exact-head GitHub CI; the receipts cap left room for one more run)",
+ "derivation": "count-asserted rename of the approved R4-V1 campaign: the root procedure differs only in the campaign names and the ledger hash; BOOT and payload are byte-identical",
+ "runs": {
+  "r1": {
+   "status": "STOP",
+   "primary": "JOB_FAILED:pmmgates:rc=1",
+   "seal": "4620f42ec3a3dc29aa9efbefd8f31fc0a000040c3cc8de17fe384d3e4e971ba4",
+   "jobs_sha256": "c8e925ed6ad3540cdd98a76ce45fcfa856ac5259ca9e7f1a3e16ccb7d88c435d",
+   "elapsed_s": 508.8,
+   "retained_bytes": 1278356,
+   "jobs": [
+    {
+     "name": "containment",
+     "rc": 0,
+     "seconds": 0.11,
+     "memory_peak_mb": 13
+    },
+    {
+     "name": "build",
+     "rc": 0,
+     "seconds": 20.3,
+     "memory_peak_mb": 567
+    },
+    {
+     "name": "repro",
+     "rc": 0,
+     "seconds": 11.2,
+     "memory_peak_mb": 159
+    },
+    {
+     "name": "pmminit",
+     "rc": 0,
+     "seconds": 171.9,
+     "memory_peak_mb": 212
+    },
+    {
+     "name": "pmmgates",
+     "rc": 1,
+     "seconds": 257.32,
+     "memory_peak_mb": 373
+    }
+   ],
+   "cause": "campaign definition defect, not a source defect: the derived job file gave the new R4-M3 gate the output directory build/r1/pmminit, which the R4-M1H gate in the pmmgates job also uses; the R4-M1H gate refused the non-fresh directory (exit 1). The R4-M3, R4-M1 and R4-M2 gates had passed; the remaining seven jobs did not run."
+  },
+  "r3": {
+   "status": "PASS",
+   "primary": null,
+   "seal": "d41b352e41322286fbff12bec2e5ff31848421534abdf6b3b345fb895bffd6fb",
+   "jobs_sha256": "8ea735d3035fbd0147cf7edbc5a915fa1b9a4f9e7b0dbdd1b6b98e216a34d987",
+   "elapsed_s": 1283.9,
+   "retained_bytes": 3288616,
+   "jobs": [
+    {
+     "name": "containment",
+     "rc": 0,
+     "seconds": 0.11,
+     "memory_peak_mb": 16
+    },
+    {
+     "name": "build",
+     "rc": 0,
+     "seconds": 20.1,
+     "memory_peak_mb": 568
+    },
+    {
+     "name": "repro",
+     "rc": 0,
+     "seconds": 10.75,
+     "memory_peak_mb": 159
+    },
+    {
+     "name": "pmminitrust",
+     "rc": 0,
+     "seconds": 170.83,
+     "memory_peak_mb": 217
+    },
+    {
+     "name": "pmmgates",
+     "rc": 0,
+     "seconds": 334.27,
+     "memory_peak_mb": 373
+    },
+    {
+     "name": "pmmnative",
+     "rc": 0,
+     "seconds": 159.58,
+     "memory_peak_mb": 239
+    },
+    {
+     "name": "vmmnative",
+     "rc": 0,
+     "seconds": 151.13,
+     "memory_peak_mb": 184
+    },
+    {
+     "name": "selftests",
+     "rc": 0,
+     "seconds": 108.57,
+     "memory_peak_mb": 200
+    },
+    {
+     "name": "net-a",
+     "rc": 0,
+     "seconds": 51.13,
+     "memory_peak_mb": 202
+    },
+    {
+     "name": "vnet-full",
+     "rc": 0,
+     "seconds": 44.37,
+     "memory_peak_mb": 296
+    },
+    {
+     "name": "net-b",
+     "rc": 0,
+     "seconds": 87.62,
+     "memory_peak_mb": 216
+    },
+    {
+     "name": "usb2c2native",
+     "rc": 0,
+     "seconds": 39.15,
+     "memory_peak_mb": 271
+    }
+   ],
+   "candidate_sha256": [
+    "e75fb7e9877b902e02a4aaab7dfb46f167af62f2d43b93f103c47c7c3070e83b  build/x86_64/vos.bin",
+    "dbfc19812257c06d518e2c00699355f2fe9be192c4d55c7108c4e7c60ef15ca5  build/x86_64/rust/libvos_kernel.a",
+    "6b3a6c1dc44da5733eba5f1cbbf15a7224d98ae4738b25865593cd961003f2fc  build/x86_64/vos.iso",
+    "3c70917d5b2857e72fab9f64bd5a872d204f750b97495b01e4ee98690787df46  build/x86_64/vos-uefi.iso"
+   ],
+   "reproducible": "KERNEL_AND_ARCHIVE_BYTE_IDENTICAL",
+   "compiler": [
+    "gcc (Ubuntu 15.2.0-16ubuntu1) 15.2.0",
+    "rustc 1.100.0-nightly (2e2b193f8 2026-09-02)"
+   ],
+   "repair": "owner-approved repair of r1: jobs-r3 equals the approved jobs-r1 except build/r1 -> build/r3 and the R4-M3 gate output renamed pmminitrust (all 16 output directories unique)"
+  }
+ },
+ "r2": "not run (owner decision)"
+}

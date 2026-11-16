@@ -1,0 +1,120 @@
+{
+ "worker_run": "r3",
+ "qemu_only": true,
+ "physical_hardware": "NOT TESTED",
+ "init_observer": {
+  "passed": true,
+  "rust_address": "0xffffffff8016c8a0",
+  "test_kernel_sha256": "64820955ae47d153f3ea146fce5c96bfdb774bb04f49e86d2bbf7fa723521e46",
+  "cases": [
+   {
+    "case": "bios-128M",
+    "firmware": "SeaBIOS",
+    "memory": "128M",
+    "passed": true,
+    "calls": 22,
+    "results": {
+     "0": 16,
+     "7": 3,
+     "8": 3
+    },
+    "kernel_instance": {
+     "usable": 32089,
+     "ignored_bytes": 0
+    },
+    "pmm_line": "pmm: 262144 frames tracked below 1 GiB, 32089 usable (128356 KiB), 0 bytes of RAM above 1 GiB ignored",
+    "exit_status": 33,
+    "replay_identical": true
+   },
+   {
+    "case": "bios-2G",
+    "firmware": "SeaBIOS",
+    "memory": "2G",
+    "passed": true,
+    "calls": 22,
+    "results": {
+     "0": 16,
+     "7": 3,
+     "8": 3
+    },
+    "kernel_instance": {
+     "usable": 261497,
+     "ignored_bytes": 1073610752
+    },
+    "pmm_line": "pmm: 262144 frames tracked below 1 GiB, 261497 usable (1045988 KiB), 1073610752 bytes of RAM above 1 GiB ignored",
+    "exit_status": 33,
+    "replay_identical": true
+   },
+   {
+    "case": "uefi-128M",
+    "firmware": "OVMF",
+    "memory": "128M",
+    "passed": true,
+    "calls": 22,
+    "results": {
+     "0": 16,
+     "7": 3,
+     "8": 3
+    },
+    "kernel_instance": {
+     "usable": 20908,
+     "ignored_bytes": 0
+    },
+    "pmm_line": "pmm: 262144 frames tracked below 1 GiB, 20908 usable (83632 KiB), 0 bytes of RAM above 1 GiB ignored",
+    "exit_status": 33,
+    "replay_identical": true
+   },
+   {
+    "case": "uefi-2G",
+    "firmware": "OVMF",
+    "memory": "2G",
+    "passed": true,
+    "calls": 22,
+    "results": {
+     "0": 16,
+     "7": 3,
+     "8": 3
+    },
+    "kernel_instance": {
+     "usable": 257544,
+     "ignored_bytes": 1068634112
+    },
+    "pmm_line": "pmm: 262144 frames tracked below 1 GiB, 257544 usable (1030176 KiB), 1068634112 bytes of RAM above 1 GiB ignored",
+    "exit_status": 33,
+    "replay_identical": true
+   }
+  ]
+ },
+ "vmm_user_process": {
+  "boot-128M": "PASS",
+  "boot-2G": "PASS",
+  "cpu-max": "PASS",
+  "uefi-128M": "PASS",
+  "uefi-2G": "PASS",
+  "kernel-lowaccess": "PASS",
+  "vmm-stale-tlb": "PASS",
+  "vmm-nx": "PASS",
+  "vmm-readonly": "PASS",
+  "ipc": "PASS",
+  "ipc-2G": "PASS",
+  "ipc-max": "PASS"
+ },
+ "selftests": {
+  "pmm-exhaust": "PASS",
+  "mp": "PASS",
+  "mp-2G": "PASS",
+  "mp-max": "PASS",
+  "stress": "PASS",
+  "stress-2G": "PASS",
+  "stress-max": "PASS"
+ },
+ "pmm_observers": {
+  "r4m1": true,
+  "r4m2": true
+ },
+ "screenshot": {
+  "file": "screen-uefi.png",
+  "source": "worker r3: the production candidate kernel booted from vos-uefi.iso under OVMF in QEMU (scripts/test-pmm-native.py screendump); it shows the pmm line produced by the Rust pmm_init_in",
+  "sha256": "ad5b71a37cfe88e3f09b94a732ae72a65ef931b6a2f9f3fea3bd2a97688359e1"
+ }
+}

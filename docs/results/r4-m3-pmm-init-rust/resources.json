@@ -1,0 +1,245 @@
+{
+ "stack": {
+  "method": "static analysis of the linked kernel (frames = pushes + constant rsp allocations; whole path = frame + deepest direct callee chain), main 5af23469 tree vs candidate 9c1b0daa, both compilers; every function compared",
+  "gcc15": {
+   "changed_functions": {
+    "pmm_init": {
+     "frame": [
+      0,
+      0
+     ],
+     "whole_path": [
+      80,
+      72
+     ]
+    },
+    "pmm_init_in": {
+     "frame": [
+      72,
+      72
+     ],
+     "whole_path": [
+      80,
+      72
+     ]
+    }
+   },
+   "roots": {
+    "kernel_main": {
+     "frame": [
+      1816,
+      1816
+     ],
+     "path": [
+      11984,
+      11984
+     ]
+    },
+    "exception_handler": {
+     "frame": [
+      40,
+      40
+     ],
+     "path": [
+      4592,
+      4592
+     ]
+    },
+    "pmm_init": {
+     "frame": [
+      0,
+      0
+     ],
+     "path": [
+      80,
+      72
+     ]
+    },
+    "pmm_init_in": {
+     "frame": [
+      72,
+      72
+     ],
+     "path": [
+      80,
+      72
+     ]
+    }
+   },
+   "deepest_chain_through_pmm_init_in": [
+    1920,
+    1912
+   ]
+  },
+  "gcc13": {
+   "changed_functions": {
+    "pmm_init": {
+     "frame": [
+      0,
+      0
+     ],
+     "whole_path": [
+      96,
+      72
+     ]
+    },
+    "pmm_init_in": {
+     "frame": [
+      88,
+      72
+     ],
+     "whole_path": [
+      96,
+      72
+     ]
+    }
+   },
+   "roots": {
+    "kernel_main": {
+     "frame": [
+      1816,
+      1816
+     ],
+     "path": [
+      11936,
+      11936
+     ]
+    },
+    "exception_handler": {
+     "frame": [
+      40,
+      40
+     ],
+     "path": [
+      4560,
+      4560
+     ]
+    },
+    "pmm_init": {
+     "frame": [
+      0,
+      0
+     ],
+     "path": [
+      96,
+      72
+     ]
+    },
+    "pmm_init_in": {
+     "frame": [
+      88,
+      72
+     ],
+     "path": [
+      96,
+      72
+     ]
+    }
+   },
+   "deepest_chain_through_pmm_init_in": [
+    1936,
+    1912
+   ]
+  },
+  "note": "the core helpers are #[inline(always)]: out of line they made the Rust frame 120 B (whole path 176 B), above the C",
+  "dynamic_stack": "only the pre-existing exc_common 16-byte alignment (unchanged)",
+  "recursion": "only the pre-existing bounded exec.c cycle (unchanged); pmm_init_in reaches only boot_mmap_entry"
+ },
+ "image": {
+  "loaded_layout": "identical LOAD segments, base and candidate, both compilers",
+  "sizes": {
+   "gcc15": {
+    "text": [
+     348160,
+     348160
+    ],
+    "data": [
+     552,
+     552
+    ],
+    "bss": [
+     617984,
+     617984
+    ]
+   },
+   "gcc13": {
+    "text": [
+     344064,
+     344064
+    ],
+    "data": [
+     552,
+     552
+    ],
+    "bss": [
+     617984,
+     617984
+    ]
+   }
+  }
+ },
+ "performance": {
+  "method": "paired in one process: frozen C pmm_init_in (tests/reference/pmm-r4m3.c) vs the kernel Rust archive of commit 9c1b0daa (archive dbfc1981, the same as worker r3); 10 alternating runs x 9 samples, taskset -c 0; kernel code-generation flags; median of run medians, microseconds per initialization",
+  "gcc15": {
+   "BIOS map, 128 MiB": {
+    "usable_frames": 32243,
+    "frozen_c_us": 77.187,
+    "rust_us": 27.376,
+    "delta_us": -49.811,
+    "change_pct": -64.5
+   },
+   "BIOS map, 2 GiB": {
+    "usable_frames": 261651,
+    "frozen_c_us": 554.738,
+    "rust_us": 186.246,
+    "delta_us": -368.493,
+    "change_pct": -66.4
+   },
+   "fragmented map, 64 entries and 80 reservations": {
+    "usable_frames": 192400,
+    "frozen_c_us": 522.318,
+    "rust_us": 142.554,
+    "delta_us": -379.764,
+    "change_pct": -72.7
+   },
+   "small instance, 16384 frames": {
+    "usable_frames": 15872,
+    "frozen_c_us": 34.76,
+    "rust_us": 11.416,
+    "delta_us": -23.344,
+    "change_pct": -67.2
+   }
+  },
+  "gcc13": {
+   "BIOS map, 128 MiB": {
+    "usable_frames": 32243,
+    "frozen_c_us": 76.9,
+    "rust_us": 27.446,
+    "delta_us": -49.454,
+    "change_pct": -64.3
+   },
+   "BIOS map, 2 GiB": {
+    "usable_frames": 261651,
+    "frozen_c_us": 555.563,
+    "rust_us": 186.338,
+    "delta_us": -369.225,
+    "change_pct": -66.5
+   },
+   "fragmented map, 64 entries and 80 reservations": {
+    "usable_frames": 192400,
+    "frozen_c_us": 522.673,
+    "rust_us": 142.601,
+    "delta_us": -380.072,
+    "change_pct": -72.7
+   },
+   "small instance, 16384 frames": {
+    "usable_frames": 15872,
+    "frozen_c_us": 34.715,
+    "rust_us": 11.417,
+    "delta_us": -23.298,
+    "change_pct": -67.1
+   }
+  },
+  "cause": "the Rust sets and clears a run of frames a word at a time; the C did it bit by bit. The stored words are the same (whole-state differential)."
+ }
+}

@@ -1,0 +1,26 @@
+== bios-128M (worker r3, QEMU, init observer) ==
+efi: no EFI map (BIOS): e820 protection only
+pmm: 262144 frames tracked below 1 GiB, 32089 usable (128356 KiB), 0 bytes of RAM above 1 GiB ignored
+selftest: pmm-synthetic 41 cases, 0 failed
+selftest: pmm-kernel 48 cases, 0 failed
+VOS-TEST: PASS
+== bios-2G (worker r3, QEMU, init observer) ==
+efi: no EFI map (BIOS): e820 protection only
+pmm: 262144 frames tracked below 1 GiB, 261497 usable (1045988 KiB), 1073610752 bytes of RAM above 1 GiB ignored
+selftest: pmm-synthetic 41 cases, 0 failed
+selftest: pmm-kernel 48 cases, 0 failed
+VOS-TEST: PASS
+== uefi-128M (worker r3, QEMU, init observer) ==
+efi: 9725 frames excluded in 8 ranges from 120 descriptors, coalesced 0
+pmm: 262144 frames tracked below 1 GiB, 20908 usable (83632 KiB), 0 bytes of RAM above 1 GiB ignored
+efi: 20908 usable frames remain (floor 2048)
+selftest: pmm-synthetic 41 cases, 0 failed
+selftest: pmm-kernel 48 cases, 0 failed
+VOS-TEST: PASS
+== uefi-2G (worker r3, QEMU, init observer) ==
+efi: 3712 frames excluded in 1 ranges from 119 descriptors, coalesced 0
+pmm: 262144 frames tracked below 1 GiB, 257544 usable (1030176 KiB), 1068634112 bytes of RAM above 1 GiB ignored
+efi: 257544 usable frames remain (floor 2048)
+selftest: pmm-synthetic 41 cases, 0 failed
+selftest: pmm-kernel 48 cases, 0 failed
+VOS-TEST: PASS

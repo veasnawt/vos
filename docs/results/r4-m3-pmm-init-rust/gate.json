@@ -1,0 +1,185 @@
+{
+ "status": "PASS",
+ "run": "worker r3, commit 9c1b0daab1b5d3bad70c3ce447a225f570b7a527, GCC 15.2.0, rustc nightly-2026-09-03",
+ "kernel_sha256": "e75fb7e9877b902e02a4aaab7dfb46f167af62f2d43b93f103c47c7c3070e83b",
+ "archive_sha256": "dbfc19812257c06d518e2c00699355f2fe9be192c4d55c7108c4e7c60ef15ca5",
+ "scope": {
+  "moved_functions": [
+   "count_bits",
+   "set_frames",
+   "clear_frames",
+   "protect",
+   "pmm_init_in"
+  ],
+  "other_bytes_changed": 0,
+  "frozen_pmm_c_sha256": "7a07ced9ad80699c36575d7df9fd1d3367488a639f5d6e558f576d7e78913021",
+  "production_pmm_c_sha256": "17def0a15e7de17ae09210b5f7445909d5b7a2fab4dc86cd76227679f9357ec6"
+ },
+ "unsafe": {
+  "core": 0,
+  "adapter_blocks": 24,
+  "adapter_entry_points": 1,
+  "references_to_c_memory": 0
+ },
+ "constants_bound": 31,
+ "differential": {
+  "release": {
+   "cases": 22905,
+   "checks": 45810,
+   "mismatches": 0,
+   "digest": "bb798065b3e127e4"
+  },
+  "sanitizer": {
+   "cases": 22905,
+   "checks": 45810,
+   "mismatches": 0,
+   "digest": "bb798065b3e127e4"
+  }
+ },
+ "coverage": "PMM INIT COVERAGE rc=16895,1511,2798 layouts=2612,2667,2625,2629,2692,2622,2740,2617 refusals=370,179,391,427,334 small=1664 max=1061 ignored=4288 overflow=29758 reserved=4592 low=12817 round=11457 nousable=5034 aliased=12034",
+ "rust": {
+  "pmm_init_in": {
+   "frame": 72,
+   "whole_path": 72,
+   "frozen_c_frame": 72,
+   "instructions": 426,
+   "reaches": {}
+  }
+ },
+ "c_frames": {
+  "pmm_init": {
+   "frozen": 0,
+   "production": 0
+  },
+  "pmm_alloc_frame": {
+   "frozen": 24,
+   "production": 24
+  },
+  "pmm_free_frame": {
+   "frozen": 8,
+   "production": 8
+  },
+  "pmm_reserve_frame": {
+   "frozen": 8,
+   "production": 8
+  }
+ },
+ "c_frame_growth": {},
+ "mutations": {
+  "instance-not-zeroed": "abnormal exit (fault or abort)",
+  "state-not-failed-first": 1286,
+  "einval-bitmaps-ignored": 511,
+  "einval-frames-zero": 27,
+  "einval-frames-multiple": 66,
+  "einval-frames-max": "abnormal exit (fault or abort)",
+  "emmap-no-info-ignored": "abnormal exit (fault or abort)",
+  "emmap-entries-zero": "abnormal exit (fault or abort)",
+  "emmap-version": 152,
+  "emmap-entry-size-minimum": 44,
+  "emmap-entry-size-multiple": 56,
+  "bitmap-pointers-not-stored": 8445,
+  "frames-not-stored": 4334,
+  "zero-avail-short": "abnormal exit (fault or abort)",
+  "zero-alloc-short": 3698,
+  "zero-alloc-dropped": 3719,
+  "free-type": 2050,
+  "free-overflow-accepted": 387,
+  "ignored-from-limit": 783,
+  "ignored-dropped": 2490,
+  "ignored-not-accumulated": 1056,
+  "free-limit-clip": 4491,
+  "free-inward-start": 34,
+  "free-inward-end": 59,
+  "free-clears-instead": 890,
+  "free-frame-number": 708,
+  "protect-applies-to-ram": 890,
+  "protect-pass-dropped": 1454,
+  "protect-overflow-skipped": 530,
+  "protect-end-rounding": 319,
+  "protect-not-clipped": 5454,
+  "protect-sets-instead": 2678,
+  "protect-instance-check-dropped": 21,
+  "reservations-dropped": 594,
+  "reservations-short": 177,
+  "reservation-empty-unaligned": 4,
+  "low-memory-unprotected": 2363,
+  "low-clear-unbounded": 2222,
+  "low-clear-max-not-min": 3112,
+  "low-clear-sets": 4334,
+  "count-short": 370,
+  "count-bits": 560,
+  "count-not-accumulated": 801,
+  "free-count": 890,
+  "hint": 4334,
+  "state-not-ready": 4334,
+  "run-mask-low": 776,
+  "run-mask-high": 802,
+  "run-word-loop": 8111,
+  "storage-bound-with-word-loop": "abnormal exit (fault or abort)",
+  "glue-zero-instance-short": 3917,
+  "glue-state-offset": 5609,
+  "glue-ignored-offset": 2490,
+  "glue-usable-offset": 890,
+  "glue-free-offset": 890,
+  "glue-hint-offset": 890,
+  "glue-frames-offset": 4334,
+  "glue-bitmap-pointers-swapped": 7359,
+  "glue-alloc-zeroes-avail": 3719,
+  "glue-instance-check-inverted": 8210,
+  "glue-mmap-offset": "abnormal exit (fault or abort)",
+  "glue-entries-offset": 8744,
+  "glue-tag-fields-swapped": 8744,
+  "glue-entry-length-offset": 3465,
+  "glue-entry-type-offset": 2787,
+  "glue-entry-base-offset": 3176,
+  "glue-range-end-offset": 516,
+  "glue-range-size": 426,
+  "glue-resv-count-offset": 626,
+  "glue-resv-bound-dropped": "abnormal exit (fault or abort)",
+  "glue-null-instance-accepted": "abnormal exit (fault or abort)",
+  "glue-misaligned-instance-accepted": 18,
+  "glue-misaligned-bitmap-accepted": 60,
+  "glue-null-entry-accepted": "abnormal exit (fault or abort)"
+ },
+ "mutations_detected": "74 of 74",
+ "source_sha256": {
+  "kernel/rust/mm/pmm_init.rs": "10550838746e818f890624b0584a10b83beb0bf3dc5db40a6e56831b75a42883",
+  "arch/x86_64/rust/pmm_init.rs": "1288e226918e89c93e94157417832221091a7044e6c961403f918a22f853c911",
+  "arch/x86_64/pmm.c": "17def0a15e7de17ae09210b5f7445909d5b7a2fab4dc86cd76227679f9357ec6",
+  "arch/x86_64/pmm.h": "5e52f6c667854b06d2cafdd2e6ebc32e019981e6814789e15252cf772185ff00",
+  "arch/x86_64/rust/kernel_probe.rs": "057fc4391e8fdd3f874712570c4d820484ea8216f7cc02160343c35edafc6914",
+  "tests/host/pmm-init-differential.c": "51b4f4f7db221117eddd94d738381ddd506c0ccd0aef3fb8f6f31ea749c0e385",
+  "tests/reference/pmm-r4m3.c": "7a07ced9ad80699c36575d7df9fd1d3367488a639f5d6e558f576d7e78913021",
+  "tests/reference/pmm-r4m3.json": "1dec89ee83ffe757bd8ddfe43028d5129b6156abf645881de90d7ab6027c00c9",
+  "scripts/test-pmm-init-rust.py": "1f6a55a274971fa31804bae14babc65b83e474dc19d89149c5b3765a739d0c57"
+ },
+ "preserved_gates": {
+  "pmmrust": {
+   "status": "PASS",
+   "digest": "a4f7a96ad9362c6b",
+   "mutations": 42
+  },
+  "pmminit": {
+   "status": "PASS",
+   "digest": "aa6fef2bf2d8baac",
+   "mutations": 20
+  },
+  "pmmtransition": {
+   "status": "PASS",
+   "digest": "897cebc925a1aa2b",
+   "mutations": 48
+  },
+  "vmmcheck": {
+   "status": "PASS",
+   "digest": "52bd0e90a314beb6",
+   "mutations": 52
+  }
+ },
+ "preserved_gate_names": {
+  "pmmrust": "R4-M1 checks",
+  "pmminit": "R4-M1H bounded clear (now on the Rust)",
+  "pmmtransition": "R4-M2 transitions",
+  "vmmcheck": "R4-V1 VMM checks"
+ },
+ "preserved": "complete result.json, build logs and differential transcripts are retained in the maintainer ledger campaign r4-m3-pmm-init-v1"
+}
