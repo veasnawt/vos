@@ -1,0 +1,21 @@
+{
+  "baseline": "5af23469561ad51339630fe98b6b330129ab3005",
+  "sources_sha256": {
+    "pmm-r4m3.c": "7a07ced9ad80699c36575d7df9fd1d3367488a639f5d6e558f576d7e78913021"
+  },
+  "git_blobs": {
+    "pmm-r4m3.c": "428dce79b05fbdae07a13ed7d00cabca4f67c5fd"
+  },
+  "purpose": "Byte-identical complete arch/x86_64/pmm.c at main 5af23469 (R4-V1 merged; tree 99ef55e5): the frozen R4-M3 reference for pmm_init_in and its helpers (count_bits, set_frames, clear_frames, protect), and the scope anchor for the rest of the file. Its wrappers call the accepted R4-M1/R4-M2 Rust. Not linked into the kernel. unchanged_sha256 pins the headers both sides are compiled with and the accepted R4-M1/R4-M2 Rust, which R4-M3 must not modify.",
+  "unchanged_sha256": {
+    "arch/x86_64/pmm.h": "5e52f6c667854b06d2cafdd2e6ebc32e019981e6814789e15252cf772185ff00",
+    "arch/x86_64/bootinfo.h": "dee2dc79290b8547353f124744e32c3637e116e2cd783ca5a3322e7dadb2819c",
+    "arch/x86_64/multiboot2.h": "479b38b37410df97a23ce31986f5d567b4602e22b1541bdd26dd3991bee23fa4",
+    "arch/x86_64/resv.h": "628451431b905a983b4b5860d92ae72ce7bc8b66652b7410713cebeaf131bfdd",
+    "arch/x86_64/memlayout.h": "9887adc7633f93f0ae296d40363de6a880dd21fc8ae9289d7ddfd8cf2a0ac8eb",
+    "kernel/rust/mm/pmm.rs": "15f5d4ed7e0b85419b7b00ad6091e4c32e1a92113bfa68077134b764a4fede24",
+    "arch/x86_64/rust/pmm.rs": "83ec9aaa51a9a7258672e3c1a41797aca5ab8fd5ca9853ff81f6313c764c96d9",
+    "kernel/rust/mm/pmm_transition.rs": "9d9b65a9a54b53a604a37deecccb367f8c03851846974f79355e2f8b8eaa922d",
+    "arch/x86_64/rust/pmm_transition.rs": "d899ee324c3cfbfb92353767c8a303208270dbf1ced06514c27ca454436e7810"
+  }
+}

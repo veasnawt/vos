@@ -43,12 +43,15 @@ def sha(p):
 
 PMM_GLUE, PMM_CORE = 'arch/x86_64/rust/pmm.rs', 'kernel/rust/mm/pmm.rs'
 PMM_TGLUE, PMM_TCORE = 'arch/x86_64/rust/pmm_transition.rs', 'kernel/rust/mm/pmm_transition.rs'
+PMM_IGLUE, PMM_ICORE = 'arch/x86_64/rust/pmm_init.rs', 'kernel/rust/mm/pmm_init.rs'
 
 
 def build_pmm(rustc, out, report):
-    """The production Rust PMM code pmm.c calls (R4-M1 checks, R4-M2 alloc/free/reserve) as a host staticlib (nothing else)."""
+    """The production Rust PMM code pmm.c calls (R4-M1 checks, R4-M2 alloc/free/reserve, R4-M3 init) as a host staticlib (nothing else).
+    Its pmm_init_in calls boot_mmap_entry, which the test defines."""
     root, lib = out / 'pmm-root.rs', out / 'libpmm-host.a'
     root.write_text('#![no_std]\n#[path=' + json.dumps(str(ROOT / PMM_GLUE)) + '] mod pmm;\n#[path=' + json.dumps(str(ROOT / PMM_TGLUE)) + '] mod pmm_transition;\n'
+                    '#[path=' + json.dumps(str(ROOT / PMM_IGLUE)) + '] mod pmm_init;\n'
                     'unsafe extern "C" {fn abort()->!;}\n#[panic_handler] fn p(_: &core::panic::PanicInfo)->! {unsafe{abort()}}\n'
                     '// host test only: precompiled core references the personality even with panic=abort\n'
                     '#[unsafe(no_mangle)] pub extern "C" fn rust_eh_personality() {}\n')
@@ -77,7 +80,7 @@ def main():
     for name, _why, old, new in M:
         if src.count(old) != 1 or old == new:
             raise SystemExit(f'mutant {name}: anchor occurs {src.count(old)} times (or no change)')
-    report = {'hosted_only': True, 'device_access': False, 'sources_sha256': {str(p.relative_to(ROOT)): sha(p) for p in (DEVMAP, ROOT / TEST, Path(__file__), ROOT / 'arch/x86_64/xhci_survey.c', ROOT / 'arch/x86_64/pmm.c', ROOT / PMM_GLUE, ROOT / PMM_CORE, ROOT / PMM_TGLUE, ROOT / PMM_TCORE)},
+    report = {'hosted_only': True, 'device_access': False, 'sources_sha256': {str(p.relative_to(ROOT)): sha(p) for p in (DEVMAP, ROOT / TEST, Path(__file__), ROOT / 'arch/x86_64/xhci_survey.c', ROOT / 'arch/x86_64/pmm.c', ROOT / PMM_GLUE, ROOT / PMM_CORE, ROOT / PMM_TGLUE, ROOT / PMM_TCORE, ROOT / PMM_IGLUE, ROOT / PMM_ICORE)},
               'commands': [], 'required_mutants': REQUIRED}
     base = ['gcc', '-std=gnu11', '-Wall', '-Wextra', '-ffunction-sections', '-fdata-sections', '-Wl,--gc-sections', '-fno-pie', '-no-pie', '-Iarch/x86_64']
     san = ['-O1', '-g', '-fsanitize=address,undefined', '-fno-sanitize-recover=all', '-fno-omit-frame-pointer']
