@@ -35,6 +35,7 @@ mod desktop;
 mod screen;
 mod pmm;
 mod pmm_transition;
+mod pmm_init;
 mod vmm_check;
 
 // SAFETY: this private kernel symbol is defined exactly once, with the scalar
